@@ -17,8 +17,9 @@ function App() {
 
 function Innards() {
   const { isLoading, error, data } = useQuery('api?', () =>
-    fetch('http://localhost:8080/api/data').then(result => result.text()))
+    fetch('http://localhost:8080/api/tripoint').then(result => result.json()))
 
+  console.log('got: ' + JSON.stringify(data));
 
   return <div className="App">
     <header className="App-header">
@@ -27,9 +28,6 @@ function Innards() {
         Edit <code>src/App.js</code> and save to reload.
       </p>
       {isLoading && <p>loading!</p>}
-      <p>
-        {data}
-      </p>
       <a
         className="App-link"
         href="https://reactjs.org"
