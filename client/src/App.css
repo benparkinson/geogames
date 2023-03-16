@@ -1,3 +1,5 @@
+@import "~leaflet/dist/leaflet.css";
+
 .App {
   text-align: center;
 }
@@ -36,4 +38,49 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+#map {
+  height: 80vh;
+}
+
+.leaflet-container {
+  height: 80vh;
+}
+
+#input {
+  background-color: #c8cfe8;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: 0;
+  margin-right: 0;
+  height: 20vh;
+}
+
+#answer-header {
+  margin-left: 5rem !important;
+}
+
+#result {
+  margin-left: 1rem;
+}
+
+#give-up {
+  width: 95%;
+}
+
+#guess {
+  width: 95%;
+}
+
+#new-game-div {
+  margin-left: auto;
+}
+
+.correct {
+  background-color: #7cba61;
+}
+
+.incorrect {
+  background-color: #b55a55;
 }
