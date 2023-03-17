@@ -1,18 +1,39 @@
 import { useQuery } from "react-query";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
+import { useState } from "react";
 
 export function Tripoint() {
   const { isLoading, error, data } = useQuery("api?", () =>
     fetch("http://localhost:8080/api/tripoint").then((result) => result.json())
   );
+  const [guesses, setGuesses] = useState(Array(5).fill(""));
 
   console.log("got: " + JSON.stringify(data));
 
+  function guessBoxName(index) {
+    return "Country " + (index + 1);
+  }
+
   function renderBoxes(tripoint) {
     return tripoint.countryNames.map((name, index) => (
-      <GuessBox key={index} countryName={name} index={index + 1} />
+      <GuessBox
+        key={index}
+        value={guesses[index]}
+        name={guessBoxName(index)}
+        onChange={handleGuessInput}
+      />
     ));
+  }
+
+  function handleGuessInput({ target }) {
+    const newGuesses = guesses.map((guess, i) => {
+      if (guessBoxName(i) === target.name) {
+        return target.value;
+      }
+      return guess;
+    });
+    setGuesses(newGuesses);
   }
 
   function renderMap(tripoint) {
