@@ -2,14 +2,15 @@ import { useQuery } from "react-query";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
+import { Button } from "./Button";
 
 export function Tripoint() {
   const { isLoading, error, data } = useQuery("api?", () =>
     fetch("http://localhost:8080/api/tripoint").then((result) => result.json())
   );
   const [guesses, setGuesses] = useState(Array(5).fill(""));
-
-  console.log("got: " + JSON.stringify(data));
+  const [correctnessArray, setCorrectnessArray] = useState(Array(5).fill(null));
+  const [gaveUp, setGaveUp] = useState(false);
 
   function guessBoxName(index) {
     return "Country " + (index + 1);
@@ -22,13 +23,15 @@ export function Tripoint() {
         value={guesses[index]}
         name={guessBoxName(index)}
         onChange={handleGuessInput}
+        correct={correctnessArray[index]}
+        disabled={gaveUp}
       />
     ));
   }
 
   function handleGuessInput({ target }) {
     const newGuesses = guesses.map((guess, i) => {
-      if (guessBoxName(i) === target.name) {
+      if (guessBoxName(i) === target.name && !correctnessArray[i]) {
         return target.value;
       }
       return guess;
@@ -50,6 +53,33 @@ export function Tripoint() {
     );
   }
 
+  function submitGuesses() {
+    const correctAnswers = new Set(data.countryNames.slice());
+    const newCorrectness = correctnessArray.slice();
+    guesses.forEach((guess, index) => {
+      if (correctAnswers.delete(guess)) {
+        newCorrectness[index] = true;
+      } else {
+        newCorrectness[index] = false;
+      }
+    });
+    setCorrectnessArray(newCorrectness);
+  }
+
+  function giveUp() {
+    const correctAnswers = data.countryNames.slice();
+    const newGuesses = guesses.slice();
+    correctAnswers.forEach((country, index) => {
+      newGuesses[index] = country;
+    });
+    setGuesses(newGuesses);
+    setGaveUp(true);
+  }
+
+  function newTripoint() {
+    console.log("just refresh");
+  }
+
   return (
     <div className="d-flex flex-column vh-100">
       <div className="container flex-fill">
@@ -63,24 +93,18 @@ export function Tripoint() {
           </div>
 
           <div className="m-1 column justify-content-center align-items-center">
-            <div>
-              <button type="button" id="guess" className="m-1 btn btn-success">
-                Submit
-              </button>
+            <div className="m-1">
+              <Button bootstrapClass="btn-success" text={"Submit"} onClick={submitGuesses} />
             </div>
-            <div>
-              <button type="button" id="give-up" className="m-1 btn btn-secondary">
-                Give Up
-              </button>
+            <div className="m-1">
+              <Button bootstrapClass="btn-secondary" text={"Give Up"} onClick={giveUp} />
             </div>
           </div>
 
           <div id="result"></div>
 
           <div id="new-game-div">
-            <button type="button" id="new-game" className="btn btn-primary">
-              New Tripoint
-            </button>
+            <Button bootstrapClass="btn-primary" text={"New Tripoint"} onClick={newTripoint} />
           </div>
         </div>
       </div>
