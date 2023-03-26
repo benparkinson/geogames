@@ -1,16 +1,21 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
+import { CenterUpdater } from "../map/CenterUpdater";
+import { SERVER_ENDPOINT } from "../api/Gateway";
+
+const TRIPOINT_LOOKUP = "tripoints";
 
 export function Tripoint() {
-  const { isLoading, error, data } = useQuery("api?", () =>
-    fetch("http://localhost:8080/api/tripoint").then((result) => result.json())
+  const { isLoading, error, data } = useQuery(TRIPOINT_LOOKUP, () =>
+    fetch(SERVER_ENDPOINT + "/api/tripoint").then((result) => result.json())
   );
   const [guesses, setGuesses] = useState(Array(5).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(5).fill(null));
   const [gaveUp, setGaveUp] = useState(false);
+  const queryClient = useQueryClient();
 
   function guessBoxName(index) {
     return "Country " + (index + 1);
@@ -49,6 +54,7 @@ export function Tripoint() {
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
         <Marker position={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
+        <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
       </MapContainer>
     );
   }
@@ -77,7 +83,7 @@ export function Tripoint() {
   }
 
   function newTripoint() {
-    console.log("just refresh");
+    queryClient.invalidateQueries(TRIPOINT_LOOKUP);
   }
 
   return (
