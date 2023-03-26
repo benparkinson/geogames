@@ -17,6 +17,10 @@ export function Tripoint() {
   const [gaveUp, setGaveUp] = useState(false);
   const queryClient = useQueryClient();
 
+  function canRender() {
+    return !error && !isLoading;
+  }
+
   function guessBoxName(index) {
     return "Country " + (index + 1);
   }
@@ -89,13 +93,13 @@ export function Tripoint() {
   return (
     <div className="d-flex flex-column vh-100">
       <div className="container flex-fill">
-        <div id="map">{isLoading || renderMap(data)}</div>
+        <div id="map">{canRender() && renderMap(data)}</div>
         <div id="input" className="row align-items-center">
           <div id="answer-header" className="m-1">
             <h4>Answers:</h4>
           </div>
           <div id="text-boxes" className="column justify-content-center align-items-center">
-            {isLoading || renderBoxes(data)}
+            {canRender() && renderBoxes(data)}
           </div>
 
           <div className="m-1 column justify-content-center align-items-center">
