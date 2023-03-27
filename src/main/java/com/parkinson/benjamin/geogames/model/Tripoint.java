@@ -11,10 +11,10 @@ import lombok.Setter;
 public class Tripoint {
 
   private Coordinate coordinate;
-  private Set<String> countryNames;
+  private Set<Country> countries;
 
-  public Tripoint(Coordinate coordinate, Set<String> countryNames) {
+  public Tripoint(Coordinate coordinate, Set<Country> countries) {
     this.coordinate = coordinate;
-    this.countryNames = countryNames;
+    this.countries = countries;
   }
 }

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
@@ -12,9 +12,10 @@ export function Tripoint() {
   const { isLoading, error, data } = useQuery(TRIPOINT_LOOKUP, () =>
     fetch(SERVER_ENDPOINT + "/api/tripoint").then((result) => result.json())
   );
-  const [guesses, setGuesses] = useState(Array(5).fill(""));
-  const [correctnessArray, setCorrectnessArray] = useState(Array(5).fill(null));
+  const [guesses, setGuesses] = useState(Array(3).fill(""));
+  const [correctnessArray, setCorrectnessArray] = useState(Array(3).fill(null));
   const [gaveUp, setGaveUp] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
   const queryClient = useQueryClient();
 
   function canRender() {
@@ -25,8 +26,12 @@ export function Tripoint() {
     return "Country " + (index + 1);
   }
 
+  function countryNames(tripoint) {
+    return tripoint.countries.map((country) => country.name);
+  }
+
   function renderBoxes(tripoint) {
-    return tripoint.countryNames.map((name, index) => (
+    return countryNames(tripoint).map((name, index) => (
       <GuessBox
         key={index}
         value={guesses[index]}
@@ -41,6 +46,7 @@ export function Tripoint() {
   function handleGuessInput({ target }) {
     const newGuesses = guesses.map((guess, i) => {
       if (guessBoxName(i) === target.name && !correctnessArray[i]) {
+        setCorrectnessByIndex(null, i);
         return target.value;
       }
       return guess;
@@ -48,7 +54,19 @@ export function Tripoint() {
     setGuesses(newGuesses);
   }
 
+  function setCorrectnessByIndex(correctness, index) {
+    const arrayCopy = correctnessArray.slice();
+    arrayCopy[index] = correctness;
+    setCorrectnessArray(arrayCopy);
+  }
+
   function renderMap(tripoint) {
+    const borders = tripoint.countries.map((country) =>
+      country.coordinates.map((coord) => [coord.latitude, coord.longitude])
+    );
+
+    const color = gaveUp ? "darkred" : "LightGoldenRodYellow";
+
     return (
       <MapContainer
         center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]}
@@ -58,13 +76,18 @@ export function Tripoint() {
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
         <Marker position={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
+        {gameOver &&
+          borders.map((border, index) => {
+            return <Polyline key={index} positions={border} color={color} noClip={true} />;
+          })}
+
         <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
       </MapContainer>
     );
   }
 
   function submitGuesses() {
-    const correctAnswers = new Set(data.countryNames.slice());
+    const correctAnswers = new Set(countryNames(data).slice());
     const newCorrectness = correctnessArray.slice();
     guesses.forEach((guess, index) => {
       if (correctAnswers.delete(guess)) {
@@ -74,19 +97,25 @@ export function Tripoint() {
       }
     });
     setCorrectnessArray(newCorrectness);
+    setGameOver(newCorrectness.every((answer) => answer));
   }
 
   function giveUp() {
-    const correctAnswers = data.countryNames.slice();
+    const correctAnswers = countryNames(data).slice();
     const newGuesses = guesses.slice();
     correctAnswers.forEach((country, index) => {
       newGuesses[index] = country;
     });
     setGuesses(newGuesses);
     setGaveUp(true);
+    setGameOver(true);
   }
 
   function newTripoint() {
+    setGaveUp(false);
+    setGameOver(false);
+    setCorrectnessArray(Array(3).fill(null));
+    setGuesses(Array(3).fill(""));
     queryClient.invalidateQueries(TRIPOINT_LOOKUP);
   }
 

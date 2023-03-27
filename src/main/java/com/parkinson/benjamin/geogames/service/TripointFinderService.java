@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,9 +27,9 @@ public class TripointFinderService {
     }));
 
     List<Tripoint> allTripoints = countriesByCoordinate.entrySet().stream()
-        .filter(entry -> entry.getValue().size() >= 3)
+        .filter(entry -> entry.getValue().size() == 3)
         .map(entry -> new Tripoint(entry.getKey(),
-            entry.getValue().stream().map(Country::getName).collect(Collectors.toSet())))
+            entry.getValue()))
         .toList();
 
     return allTripoints.get(random.nextInt(allTripoints.size()));
