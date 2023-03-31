@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline, GeoJSON, Tooltip } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
@@ -27,7 +27,7 @@ export function Tripoint() {
   }
 
   function countryNames(tripoint) {
-    return tripoint.countries.map((country) => country.name);
+    return tripoint.countries.map((country) => country.properties.name);
   }
 
   function renderBoxes(tripoint) {
@@ -61,11 +61,13 @@ export function Tripoint() {
   }
 
   function renderMap(tripoint) {
-    const borders = tripoint.countries.map((country) =>
-      country.coordinates.map((coord) => [coord.latitude, coord.longitude])
-    );
-
     const color = gaveUp ? "darkred" : "LightGoldenRodYellow";
+
+    const borders = tripoint.countries.map((country) => (
+      <GeoJSON key={country.properties.name} data={country} color={color}>
+        <Tooltip>{country.properties.name}</Tooltip>
+      </GeoJSON>
+    ));
 
     return (
       <MapContainer
@@ -76,10 +78,7 @@ export function Tripoint() {
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
         <Marker position={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
-        {gameOver &&
-          borders.map((border, index) => {
-            return <Polyline key={index} positions={border} color={color} noClip={true} />;
-          })}
+        {gameOver && borders}
 
         <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
       </MapContainer>

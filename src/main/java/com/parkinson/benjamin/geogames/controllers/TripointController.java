@@ -1,7 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
-import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
+import com.parkinson.benjamin.geogames.model.geojson.CountryGeoData;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.TripointFinderService;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class TripointController {
   @GetMapping("/api/tripoint")
   @CrossOrigin(origins = "http://localhost:3000")
   public Tripoint findRandomTripoint() throws IOException {
-    List<Country> countries = countryLoaderService.loadCountries();
+    List<CountryGeoData> countries = countryLoaderService.loadCountries();
     return tripointFinderService.findTripoint(countries);
   }
 
