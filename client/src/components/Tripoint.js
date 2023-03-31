@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { MapContainer, TileLayer, Marker, Polyline, GeoJSON, Tooltip } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
