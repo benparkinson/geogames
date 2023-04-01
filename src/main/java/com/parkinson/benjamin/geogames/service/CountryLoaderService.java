@@ -17,7 +17,7 @@ public class CountryLoaderService {
   private final ObjectMapper objectMapper = new ObjectMapper().configure(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-  @Cacheable("countripomes")
+  @Cacheable("countries")
   public List<CountryGeoData> loadCountries() throws IOException {
     File coordinates = new ClassPathResource("data/countries.geo.json").getFile();
 
