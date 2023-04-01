@@ -1,0 +1,56 @@
+#map {
+  height: 80vh;
+}
+
+.leaflet-container {
+  height: 80vh;
+}
+
+#input {
+  background-color: #c8cfe8;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: 0;
+  margin-right: 0;
+  height: 20vh;
+}
+
+#answer-header {
+  margin-left: 5rem !important;
+}
+
+#result {
+  margin-left: 1rem;
+}
+
+#give-up {
+  width: 95%;
+}
+
+#guess {
+  width: 95%;
+}
+
+#new-game-div {
+  margin-left: auto;
+}
+
+.correct {
+  background-color: #7cba61;
+}
+
+.incorrect {
+  background-color: #b55a55;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}

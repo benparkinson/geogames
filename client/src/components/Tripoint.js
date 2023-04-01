@@ -1,14 +1,13 @@
 import { useQuery, useQueryClient } from "react-query";
-import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
-import { CenterUpdater } from "../map/CenterUpdater";
+import TripointMapWrapper from "../map/tripointMapWrapper";
 import { SERVER_ENDPOINT } from "../api/Gateway";
 
 const TRIPOINT_LOOKUP = "tripoints";
 
-export function Tripoint() {
+function Tripoint() {
   const { isLoading, error, data } = useQuery(TRIPOINT_LOOKUP, () =>
     fetch(SERVER_ENDPOINT + "/api/tripoint").then((result) => result.json())
   );
@@ -61,28 +60,7 @@ export function Tripoint() {
   }
 
   function renderMap(tripoint) {
-    const color = gaveUp ? "darkred" : "LightGoldenRodYellow";
-
-    const borders = tripoint.countries.map((country) => (
-      <GeoJSON key={country.properties.name} data={country} color={color}>
-        <Tooltip>{country.properties.name}</Tooltip>
-      </GeoJSON>
-    ));
-
-    return (
-      <MapContainer
-        center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]}
-        zoom={4}
-        maxZoom={6}
-        minZoom={4}
-      >
-        <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-        <Marker position={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
-        {gameOver && borders}
-
-        <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
-      </MapContainer>
-    );
+    return <TripointMapWrapper tripoint={tripoint} gameOver={gameOver} gaveUp={gaveUp} />;
   }
 
   function submitGuesses() {
@@ -123,25 +101,20 @@ export function Tripoint() {
       <div className="container flex-fill">
         <div id="map">{canRender() && renderMap(data)}</div>
         <div id="input" className="row align-items-center">
-          <div id="answer-header" className="m-1">
-            <h4>Answers:</h4>
-          </div>
-          <div id="text-boxes" className="column justify-content-center align-items-center">
+          <div id="text-boxes" className="col justify-content-center align-items-center">
             {canRender() && renderBoxes(data)}
           </div>
 
-          <div className="m-1 column justify-content-center align-items-center">
-            <div className="m-1">
+          <div className="col justify-content-center align-items-center">
+            <div className="m-1 d-flex justify-content-center">
               <Button bootstrapClass="btn-success" text={"Submit"} onClick={submitGuesses} />
             </div>
-            <div className="m-1">
+            <div className="m-1 d-flex justify-content-center">
               <Button bootstrapClass="btn-secondary" text={"Give Up"} onClick={giveUp} />
             </div>
           </div>
 
-          <div id="result"></div>
-
-          <div id="new-game-div">
+          <div id="new-game-div" className="col d-flex justify-content-center align-items-center">
             <Button bootstrapClass="btn-primary" text={"New Tripoint"} onClick={newTripoint} />
           </div>
         </div>
@@ -149,3 +122,5 @@ export function Tripoint() {
     </div>
   );
 }
+
+export default Tripoint;

@@ -1,13 +1,9 @@
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import "./App.css";
-import { client } from "./api/Gateway";
-import { Tripoint } from "./components/Tripoint";
-import { setupMap } from "./map/MapHelper";
+import { client } from "../src/api/Gateway";
+import Tripoint from "../src/components/Tripoint";
 
-function App() {
-  setupMap();
-
+function TripointPage() {
   return (
     <QueryClientProvider client={client}>
       <Tripoint />
@@ -16,4 +12,4 @@ function App() {
   );
 }
 
-export default App;
+export default TripointPage;
