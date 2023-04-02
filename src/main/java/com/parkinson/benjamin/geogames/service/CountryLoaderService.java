@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.model.geojson.CountryGeoData;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,7 +20,7 @@ public class CountryLoaderService {
 
   @Cacheable("countries")
   public List<CountryGeoData> loadCountries() throws IOException {
-    File coordinates = new ClassPathResource("data/countries.geo.json").getFile();
+    InputStream coordinates = new ClassPathResource("data/countries.geo.json").getInputStream();
 
     CountryGeoData[] countries = objectMapper.readValue(coordinates, CountryGeoData[].class);
     return Arrays.asList(countries);

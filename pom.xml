@@ -112,7 +112,7 @@
             <configuration>
               <target>
                 <copy todir="${project.build.directory}/classes/public">
-                  <fileset dir="${project.basedir}/client/build"/>
+                  <fileset dir="${project.basedir}/client/out"/>
                 </copy>
               </target>
             </configuration>
