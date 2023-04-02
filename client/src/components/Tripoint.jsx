@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
-import TripointMapWrapper from "../map/tripointMapWrapper";
+import TripointMapWrapper from "../map/TripointMapWrapper";
 import { SERVER_ENDPOINT } from "../api/Gateway";
 
 const TRIPOINT_LOOKUP = "tripoints";
