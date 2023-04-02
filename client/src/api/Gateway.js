@@ -8,4 +8,4 @@ export const client = new QueryClient({
   },
 });
 
-export const SERVER_ENDPOINT = "http://localhost:8080";
+export const SERVER_ENDPOINT = "";

@@ -14,7 +14,7 @@ function MenuPage() {
             <div className="col">
               <h4>Welcome to Geogames (working title)</h4>
               <h6>Games:</h6>
-              <Link href="/tripoint">
+              <Link href="/tripoint.html">
                 <Button text={"Tripoint"} bootstrapClass={"btn-info"}></Button>
               </Link>
             </div>
