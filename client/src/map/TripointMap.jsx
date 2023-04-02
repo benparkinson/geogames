@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet
 import L from "leaflet";
 import { CenterUpdater } from "./CenterUpdater";
 
-function Map({ tripoint, gaveUp, gameOver }) {
+function TripointMap({ tripoint, gaveUp, gameOver }) {
   let markerIcon = L.icon({
     iconUrl: "/flag.png",
     iconSize: [32, 32],
@@ -36,4 +36,4 @@ function Map({ tripoint, gaveUp, gameOver }) {
   );
 }
 
-export default Map;
+export default TripointMap;
