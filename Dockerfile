@@ -1,7 +1,6 @@
 FROM openjdk:17-jdk-slim
 
-CMD ["./mvnw", "clean", "install"]
-
-CMD ["java", "-jar", "target/geogames-0.0.1-SNAPSHOT.jar"]
+RUN mvn clean install
 
 EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "target/geogames-0.0.1-SNAPSHOT.jar"]
