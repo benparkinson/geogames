@@ -1,5 +1,11 @@
+import Link from "next/link";
+
 function MenuPage() {
-  return <div>Next.js is working</div>;
+  return (
+    <div>
+      <Link href="/tripoint">Tripoint</Link>
+    </div>
+  );
 }
 
 export default MenuPage;

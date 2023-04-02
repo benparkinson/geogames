@@ -3,7 +3,6 @@ package com.parkinson.benjamin.geogames.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.model.geojson.CountryGeoData;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
