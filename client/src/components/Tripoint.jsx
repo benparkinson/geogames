@@ -29,6 +29,10 @@ function Tripoint() {
     return tripoint.countries.map((country) => country.properties.name);
   }
 
+  function extractCountries(tripoint) {
+    return tripoint.countries.map((country) => country.properties);
+  }
+
   function renderBoxes(tripoint) {
     return countryNames(tripoint).map((name, index) => (
       <GuessBox
@@ -64,13 +68,25 @@ function Tripoint() {
   }
 
   function submitGuesses() {
+    const countries = extractCountries(data);
+
     const correctAnswers = new Set(
       countryNames(data)
         .slice()
         .map((name) => name.toLowerCase())
     );
     const newCorrectness = correctnessArray.slice();
-    guesses.forEach((guess, index) => {
+    const guessesCopy = guesses.slice();
+
+    guessesCopy.forEach((guess, index) => {
+      countries.forEach((country) =>
+        country.additionalNames.forEach((additionalName) => {
+          if (guess.toLowerCase() === additionalName.toLowerCase()) {
+            guess = country.name;
+          }
+        })
+      );
+
       if (correctAnswers.delete(guess.toLowerCase())) {
         newCorrectness[index] = true;
       } else {
