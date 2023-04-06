@@ -64,10 +64,14 @@ function Tripoint() {
   }
 
   function submitGuesses() {
-    const correctAnswers = new Set(countryNames(data).slice());
+    const correctAnswers = new Set(
+      countryNames(data)
+        .slice()
+        .map((name) => name.toLowerCase())
+    );
     const newCorrectness = correctnessArray.slice();
     guesses.forEach((guess, index) => {
-      if (correctAnswers.delete(guess)) {
+      if (correctAnswers.delete(guess.toLowerCase())) {
         newCorrectness[index] = true;
       } else {
         newCorrectness[index] = false;
