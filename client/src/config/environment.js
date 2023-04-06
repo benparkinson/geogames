@@ -1,4 +1,4 @@
 export default function isProduction() {
-  console.log(process.env.REACT_APP_RUNNING_ENV);
-  return process.env.REACT_APP_RUNNING_ENV === "production";
+  console.log(process.env.NODE_ENV);
+  return process.env.NODE_ENV === "production";
 }
