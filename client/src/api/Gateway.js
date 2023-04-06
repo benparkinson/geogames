@@ -1,4 +1,5 @@
 import { QueryClient } from "react-query";
+import isProduction from "../config/environment";
 
 export const client = new QueryClient({
   defaultOptions: {
@@ -8,4 +9,10 @@ export const client = new QueryClient({
   },
 });
 
-export const SERVER_ENDPOINT = "";
+export function serverEndpoint() {
+  if (isProduction()) {
+    return "";
+  } else {
+    return "http://localhost:8080";
+  }
+}

@@ -1,8 +1,17 @@
 import Link from "next/link";
 import Head from "next/head";
 import { Button } from "../src/components/Button";
+import isProduction from "../src/config/environment";
 
 function MenuPage() {
+  function createLink(pageName) {
+    if (isProduction()) {
+      return "/" + pageName + ".html";
+    } else {
+      return "/" + pageName;
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -14,7 +23,7 @@ function MenuPage() {
             <div className="col">
               <h4>Welcome to Geogames (working title)</h4>
               <h6>Games:</h6>
-              <Link href="/tripoint.html">
+              <Link href={createLink("tripoint")}>
                 <Button text={"Tripoint"} bootstrapClass={"btn-info"}></Button>
               </Link>
             </div>

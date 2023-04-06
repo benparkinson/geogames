@@ -3,13 +3,13 @@ import { GuessBox } from "./GuessBox";
 import { useState } from "react";
 import { Button } from "./Button";
 import TripointMapWrapper from "../map/TripointMapWrapper";
-import { SERVER_ENDPOINT } from "../api/Gateway";
+import { serverEndpoint } from "../api/Gateway";
 
 const TRIPOINT_LOOKUP = "tripoints";
 
 function Tripoint() {
   const { isLoading, error, data } = useQuery(TRIPOINT_LOOKUP, () =>
-    fetch(SERVER_ENDPOINT + "/api/tripoint").then((result) => result.json())
+    fetch(serverEndpoint() + "/api/tripoint").then((result) => result.json())
   );
   const [guesses, setGuesses] = useState(Array(3).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(3).fill(null));
