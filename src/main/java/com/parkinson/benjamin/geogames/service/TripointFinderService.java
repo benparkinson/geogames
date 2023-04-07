@@ -2,8 +2,8 @@ package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Tripoint;
-import com.parkinson.benjamin.geogames.model.geojson.CountryGeoData;
-import com.parkinson.benjamin.geogames.model.geojson.CountryGeometry;
+import com.parkinson.benjamin.geogames.model.geojson.GeoData;
+import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class TripointFinderService {
 
-  public Tripoint findTripoint(List<CountryGeoData> countries) {
-    Random random = new Random(System.currentTimeMillis());
+  private final Random random = new Random(System.currentTimeMillis());
 
-    Map<Coordinate, Set<CountryGeoData>> countriesByCoordinate = new HashMap<>();
+  public Tripoint findTripoint(List<GeoData> countries) {
+    Map<Coordinate, Set<GeoData>> countriesByCoordinate = new HashMap<>();
 
     countries.forEach(country -> getCoordinates(country.getGeometry())
         .forEach(coordinate -> {
-          Set<CountryGeoData> countriesWithCoordinate = countriesByCoordinate
+          Set<GeoData> countriesWithCoordinate = countriesByCoordinate
               .computeIfAbsent(coordinate, k -> new HashSet<>());
           countriesWithCoordinate.add(country);
         }));
@@ -36,9 +36,9 @@ public class TripointFinderService {
     return allTripoints.get(random.nextInt(allTripoints.size()));
   }
 
-  public List<Coordinate> getCoordinates(CountryGeometry countryGeometry) {
+  public List<Coordinate> getCoordinates(GeoGeometry geoGeometry) {
 
-    List<List<Number>> allCoordinates = countryGeometry.getAllCoordinates();
+    List<List<Number>> allCoordinates = geoGeometry.flattenedCoordinates();
 
     return allCoordinates.stream().map(coordList -> {
       if (coordList.size() != 2) {

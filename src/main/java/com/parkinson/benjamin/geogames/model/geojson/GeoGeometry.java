@@ -8,25 +8,27 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CountryGeometry {
+public class GeoGeometry {
 
   private static final String POLYGON = "Polygon";
   private static final String MULTI_POLYGON = "MultiPolygon";
+  private static final String MULTI_LINE_STRING = "MultiLineString";
 
   private String type;
 
   private List coordinates;
 
-  public CountryGeometry(String type, List coordinates) {
-    if (!type.equals(POLYGON) && !type.equals(MULTI_POLYGON)) {
+  public GeoGeometry(String type, List coordinates) {
+    if (!type.equals(POLYGON) && !type.equals(MULTI_POLYGON)
+        && !type.equals(MULTI_LINE_STRING)) {
       throw new IllegalArgumentException();
     }
     this.type = type;
     this.coordinates = coordinates;
   }
 
-  public List<List<Number>> getAllCoordinates() {
-    if (this.type.equals(POLYGON)) {
+  public List<List<Number>> flattenedCoordinates() {
+    if (this.type.equals(POLYGON) || this.type.equals(MULTI_LINE_STRING)) {
       return getPolygonCoordinates();
     } else if (this.type.equals(MULTI_POLYGON)) {
       return getMultiPolygonCoordinates();

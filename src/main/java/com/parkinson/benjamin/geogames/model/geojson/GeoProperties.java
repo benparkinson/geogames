@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CountryProperties {
+public class GeoProperties {
 
   private String name;
 
