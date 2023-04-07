@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "react-query";
-import { GuessBox } from "./GuessBox";
+import { GuessBox } from "../components/GuessBox";
 import { useState } from "react";
-import { Button } from "./Button";
+import { Button } from "../components/Button";
 import TripointMapWrapper from "../map/TripointMapWrapper";
 import { serverEndpoint } from "../api/Gateway";
 

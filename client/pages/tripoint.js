@@ -1,7 +1,7 @@
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { client } from "../src/api/Gateway";
-import Tripoint from "../src/components/Tripoint";
+import Tripoint from "../src/games/Tripoint";
 import Head from "next/head";
 
 function TripointPage() {
