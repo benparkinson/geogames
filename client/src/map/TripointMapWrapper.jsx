@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
-function TripointMapWrapper({ tripoint, gameOver, gaveUp }) {
+function TripointMapWrapper({ data, gameOver, gaveUp }) {
   const TripointMap = useMemo(
     () =>
       dynamic(() => import("./TripointMap"), {
@@ -10,7 +10,7 @@ function TripointMapWrapper({ tripoint, gameOver, gaveUp }) {
       }),
     []
   );
-  return <TripointMap tripoint={tripoint} gameOver={gameOver} gaveUp={gaveUp} />;
+  return <TripointMap tripoint={data} gameOver={gameOver} gaveUp={gaveUp} />;
 }
 
 export default TripointMapWrapper;
