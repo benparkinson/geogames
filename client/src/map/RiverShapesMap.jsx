@@ -12,7 +12,7 @@ function RiverShapesMap({ river, gaveUp, gameOver }) {
   const mapCenter = arrayMid(middle).slice().reverse();
 
   return (
-    <MapContainer zoom={7} maxZoom={7} minZoom={5} center={mapCenter}>
+    <MapContainer zoom={7} maxZoom={7} minZoom={3} center={mapCenter}>
       {gameOver && (
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
       )}
