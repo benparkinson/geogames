@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
-function RiverShapesMapWrapper({ river, gameOver, gaveUp }) {
+function RiverShapesMapWrapper({ data, gameOver, gaveUp }) {
   const RiverShapesMap = useMemo(
     () =>
       dynamic(() => import("./RiverShapesMap"), {
@@ -10,7 +10,7 @@ function RiverShapesMapWrapper({ river, gameOver, gaveUp }) {
       }),
     []
   );
-  return <RiverShapesMap river={river} gameOver={gameOver} gaveUp={gaveUp} />;
+  return <RiverShapesMap river={data} gameOver={gameOver} gaveUp={gaveUp} />;
 }
 
 export default RiverShapesMapWrapper;
