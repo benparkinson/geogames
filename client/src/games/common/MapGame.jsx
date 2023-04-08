@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
 import { serverEndpoint } from "../../api/Gateway";
 import MapGameInput from "./MapGameInput";
+import Spinner from "../../components/Spinner";
 
 function MapGame({
   dataName,
@@ -12,7 +13,7 @@ function MapGame({
   correctAnswersFunction,
   checkAdditionalAnswers,
 }) {
-  const { isLoading, error, data } = useQuery(serverRoute, () =>
+  const { error, data, isFetching } = useQuery(serverRoute, () =>
     fetch(serverEndpoint() + serverRoute).then((result) => result.json())
   );
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
@@ -21,8 +22,8 @@ function MapGame({
   const [gameOver, setGameOver] = useState(false);
   const queryClient = useQueryClient();
 
-  function canRender() {
-    return !error && !isLoading;
+  function canRenderMap() {
+    return !error && !isFetching;
   }
 
   function handleGuessInput({ target }) {
@@ -44,6 +45,14 @@ function MapGame({
 
   function renderMap() {
     return <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} />;
+  }
+
+  function renderSpinner() {
+    return (
+      <div className="d-flex height-80-vh justify-content-center align-items-center">
+        <Spinner />
+      </div>
+    );
   }
 
   function submitGuesses() {
@@ -89,7 +98,7 @@ function MapGame({
   return (
     <div className="d-flex flex-column vh-100">
       <div className="container flex-fill">
-        <div id="map">{canRender() && renderMap(data)}</div>
+        <div className="height-80-vh">{canRenderMap() ? renderMap(data) : renderSpinner()}</div>
         <MapGameInput
           dataName={dataName}
           guesses={guesses}
