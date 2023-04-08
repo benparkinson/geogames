@@ -6,7 +6,11 @@ function RiverShapesMap({ river, gaveUp, gameOver }) {
     return array[Math.round((array.length - 1) / 2)];
   }
 
-  const color = gaveUp ? "darkred" : "LightGoldenRodYellow";
+  const riverLine = gaveUp ? (
+    <GeoJSON color={"darkred"} data={river} key={river.properties.name + "gaveUp"} />
+  ) : (
+    <GeoJSON color={"LightGoldenRodYellow"} data={river} key={river.properties.name} />
+  );
 
   const middle = arrayMid(river.geometry.coordinates);
   const mapCenter = arrayMid(middle).slice().reverse();
@@ -17,7 +21,7 @@ function RiverShapesMap({ river, gaveUp, gameOver }) {
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
       )}
 
-      <GeoJSON color={color} data={river} key={river.properties.name} />
+      {riverLine}
       <CenterUpdater center={mapCenter} />
     </MapContainer>
   );

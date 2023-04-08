@@ -2,7 +2,7 @@
       "type": "Feature",
       "properties": {
         "destination": "Atlantic Ocean",
-        "name": "Rio Amazonas",
+        "name": "Amazon",
         "type": "waterway",
         "waterway": "river"
       },

@@ -2,7 +2,7 @@
       "type": "Feature",
       "properties": {
         "destination": "Gulf of Mexico",
-        "name": "Mississippi River",
+        "name": "Mississippi",
         "type": "waterway",
         "waterway": "river"
       },
