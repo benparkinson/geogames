@@ -56,6 +56,10 @@ function MapGame({
   }
 
   function submitGuesses() {
+    if (gameOver) {
+      return;
+    }
+
     const correctAnswers = new Set();
     const answersArray = correctAnswersFunction(data).map((answer) => answer.toLowerCase());
     answersArray.forEach((ans) => correctAnswers.add(ans));
@@ -77,6 +81,10 @@ function MapGame({
   }
 
   function giveUp() {
+    if (gameOver) {
+      return;
+    }
+
     const correctAnswers = correctAnswersFunction(data);
     const newGuesses = guesses.slice();
     correctAnswers.forEach((country, index) => {

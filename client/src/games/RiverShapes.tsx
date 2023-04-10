@@ -1,4 +1,5 @@
 import RiverShapesMapWrapper from "../map/RiverShapesMapWrapper";
+import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
 import MapGame from "./common/MapGame";
 
 function RiverShapes() {
@@ -25,6 +26,13 @@ function RiverShapes() {
       checkAdditionalAnswers={checkAdditionalAnswers}
     />
   );
+}
+
+export class River implements GeoJsonObject {
+  type: "MultiLineString";
+  bbox?: BBox;
+  properties: GeoJsonProperties
+  geometry: MultiLineString
 }
 
 export default RiverShapes;
