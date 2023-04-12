@@ -6,7 +6,7 @@ import { LatLngTuple } from "leaflet";
 
 function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps) {
 
-  function arrayMid(array: any[]) {
+  function arrayMid<Type>(array: Type[]): Type {
     return array[Math.round((array.length - 1) / 2)];
   }
 

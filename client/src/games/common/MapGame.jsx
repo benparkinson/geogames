@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
 import { serverEndpoint } from "../../api/Gateway";
+import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import Spinner from "../../components/Spinner";
 
@@ -11,10 +12,10 @@ function MapGame({
   guessBoxName,
   MapComponent,
   correctAnswersFunction,
-  checkAdditionalAnswers,
+  checkAdditionalAnswers
 }) {
   const { error, data, isFetching } = useQuery(serverRoute, () =>
-    fetch(serverEndpoint() + serverRoute).then((result) => result.json())
+    fetch(serverEndpoint() + serverRoute).then(result => result.json())
   );
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
@@ -61,8 +62,10 @@ function MapGame({
     }
 
     const correctAnswers = new Set();
-    const answersArray = correctAnswersFunction(data).map((answer) => answer.toLowerCase());
-    answersArray.forEach((ans) => correctAnswers.add(ans));
+    const answersArray = correctAnswersFunction(data).map(answer => normaliseString(answer));
+    answersArray.forEach(ans => correctAnswers.add(ans));
+
+    console.log(correctAnswers);
 
     const newCorrectness = correctnessArray.slice();
     const guessesCopy = guesses.slice();
@@ -70,14 +73,14 @@ function MapGame({
     guessesCopy.forEach((guess, index) => {
       guess = checkAdditionalAnswers(guess, data);
 
-      if (correctAnswers.delete(guess.toLowerCase())) {
+      if (correctAnswers.delete(normaliseString(guess))) {
         newCorrectness[index] = true;
       } else {
         newCorrectness[index] = false;
       }
     });
     setCorrectnessArray(newCorrectness);
-    setGameOver(newCorrectness.every((answer) => answer));
+    setGameOver(newCorrectness.every(answer => answer));
   }
 
   function giveUp() {

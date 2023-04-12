@@ -1,4 +1,5 @@
 import TripointMapWrapper from "../map/TripointMapWrapper";
+import { normaliseString } from "../helper/stringHelper";
 import MapGame from "./common/MapGame";
 
 function Tripoint() {
@@ -7,11 +8,11 @@ function Tripoint() {
   }
 
   function countryNames(tripoint) {
-    return tripoint.countries.map((country) => country.properties.name);
+    return tripoint.countries.map(country => country.properties.name);
   }
 
   function extractCountries(tripoint) {
-    return tripoint.countries.map((country) => country.properties);
+    return tripoint.countries.map(country => country.properties);
   }
 
   function correctAnswers(tripoint) {
@@ -23,9 +24,9 @@ function Tripoint() {
 
     let normalisedGuess = guess;
 
-    countries.forEach((country) =>
-      country.additionalNames.forEach((additionalName) => {
-        if (guess.toLowerCase() === additionalName.toLowerCase()) {
+    countries.forEach(country =>
+      country.additionalNames.forEach(additionalName => {
+        if (normaliseString(guess) === normaliseString(additionalName)) {
           normalisedGuess = country.name;
         }
       })
