@@ -2,16 +2,16 @@ import RiverShapesMapWrapper from "../map/RiverShapesMapWrapper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
 import MapGame from "./common/MapGame";
 
-function RiverShapes() {
-  function guessBoxName() {
+function RiverShapes(): JSX.Element {
+  function guessBoxName(): string {
     return "River name";
   }
 
-  function correctAnswers(river) {
+  function correctAnswers(river: River): string[] {
     return [river.properties.name];
   }
 
-  function checkAdditionalAnswers(guess, river) {
+  function checkAdditionalAnswers(guess: string, river: River): string {
     return guess;
   }
 

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
-import { serverEndpoint } from "../../api/Gateway";
+import { serverEndpoint } from "../../api/gateway";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import Spinner from "../../components/Spinner";

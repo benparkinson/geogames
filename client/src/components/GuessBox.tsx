@@ -1,5 +1,5 @@
-export function GuessBox({ value, name, onChange, correct, disabled }) {
-  function readCorrectness() {
+export function GuessBox({ value, name, onChange, correct, disabled }: GuessBoxProps): JSX.Element {
+  function readCorrectness(): String {
     if (correct) {
       return " correct";
     } else if (false === correct) {
@@ -21,4 +21,12 @@ export function GuessBox({ value, name, onChange, correct, disabled }) {
       ></input>
     </div>
   );
+}
+
+export class GuessBoxProps {
+  value: string;
+  name: string;
+  onChange: (e: React.FormEvent<HTMLInputElement>) => void;
+  correct: boolean;
+  disabled: boolean;
 }

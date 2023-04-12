@@ -2,9 +2,10 @@ import Link from "next/link";
 import Head from "next/head";
 import { Button } from "../src/components/Button";
 import isProduction from "../src/config/environment";
+import { ignoreClick } from "../src/helper/buttonHelper";
 
-function MenuPage() {
-  function createLink(pageName) {
+function MenuPage(): JSX.Element {
+  function createLink(pageName): string {
     if (isProduction()) {
       return "/" + pageName + ".html";
     } else {
@@ -24,12 +25,12 @@ function MenuPage() {
             <h6>Games:</h6>
             <div className="m-1">
               <Link href={createLink("tripoint")}>
-                <Button text={"Tripoint"} bootstrapClass={"btn-info"}></Button>
+                <Button text={"Tripoint"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
               </Link>
             </div>
             <div className="m-1">
               <Link href={createLink("rivershapes")}>
-                <Button text={"Rivers by Shape"} bootstrapClass={"btn-info"}></Button>
+                <Button text={"Rivers by Shape"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
               </Link>
             </div>
           </div>

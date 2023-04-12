@@ -1,19 +1,19 @@
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { client } from "../src/api/Gateway";
-import RiverShapes from "../src/games/RiverShapes";
+import { client } from "../src/api/gateway";
+import Tripoint from "../src/games/Tripoint";
 import Head from "next/head";
 
-function RiverShapePage() {
+function TripointPage(): JSX.Element {
   return (
     <QueryClientProvider client={client}>
       <Head>
-        <title>Rivers by Shape | Geogames</title>
+        <title>Tripoint | Geogames</title>
       </Head>
-      <RiverShapes />
+      <Tripoint />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
 
-export default RiverShapePage;
+export default TripointPage;

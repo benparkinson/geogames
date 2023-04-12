@@ -1,7 +1,7 @@
 import { QueryClient } from "react-query";
 import isProduction from "../config/environment";
 
-export const client = new QueryClient({
+export const client: QueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -9,7 +9,7 @@ export const client = new QueryClient({
   },
 });
 
-export function serverEndpoint() {
+export function serverEndpoint(): string {
   if (isProduction()) {
     return "";
   } else {

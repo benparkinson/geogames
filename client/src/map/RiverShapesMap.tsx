@@ -4,16 +4,16 @@ import { CenterUpdater } from "./CenterUpdater";
 import { River } from "../games/RiverShapes";
 import { LatLngTuple } from "leaflet";
 
-function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps) {
+function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps): JSX.Element {
 
   function arrayMid<Type>(array: Type[]): Type {
     return array[Math.round((array.length - 1) / 2)];
   }
 
   const riverLine = gaveUp ? (
-    <GeoJSON pathOptions={{color:"darkred"}} data={river} key={river.properties.name + "gaveUp"} />
+    <GeoJSON pathOptions={{ color: "darkred" }} data={river} key={river.properties.name + "gaveUp"} />
   ) : (
-    <GeoJSON pathOptions={{color:"LightGoldenRodYellow"}} data={river} key={river.properties.name} />
+    <GeoJSON pathOptions={{ color: "LightGoldenRodYellow" }} data={river} key={river.properties.name} />
   );
 
   const middle: Position[] = arrayMid(river.geometry.coordinates);
