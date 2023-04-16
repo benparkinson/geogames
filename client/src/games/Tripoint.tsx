@@ -1,25 +1,26 @@
-import TripointMapWrapper from "../map/TripointMapWrapper";
+import TripointMapWrapper from "../map/TripointMapWrapper.jsx";
 import { normaliseString } from "../helper/stringHelper";
+import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGame";
 
-function Tripoint() {
-  function guessBoxName(index) {
+function Tripoint(): JSX.Element {
+  function guessBoxName(index: number): string {
     return "Country " + (index + 1);
   }
 
-  function countryNames(tripoint) {
+  function countryNames(tripoint: TripointModel): string[] {
     return tripoint.countries.map(country => country.properties.name);
   }
 
-  function extractCountries(tripoint) {
+  function extractCountries(tripoint: TripointModel): GeoJsonProperties[] {
     return tripoint.countries.map(country => country.properties);
   }
 
-  function correctAnswers(tripoint) {
+  function correctAnswers(tripoint: TripointModel): string[] {
     return countryNames(tripoint).slice();
   }
 
-  function checkAdditionalAnswers(guess, tripoint) {
+  function checkAdditionalAnswers(guess: string, tripoint: TripointModel): string {
     const countries = extractCountries(tripoint);
 
     let normalisedGuess = guess;
@@ -45,6 +46,23 @@ function Tripoint() {
       checkAdditionalAnswers={checkAdditionalAnswers}
     />
   );
+}
+
+export class TripointModel {
+  coordinate: TripointCoordinate;
+  countries: TripointCountry[];
+}
+
+export class TripointCoordinate {
+  latitude: number;
+  longitude: number;
+}
+
+export class TripointCountry implements GeoJsonObject {
+  type: "MultiPolygon" | "Polygon";
+  bbox?: BBox;
+  properties: GeoJsonProperties
+  geometry: MultiPolygon | Polygon
 }
 
 export default Tripoint;

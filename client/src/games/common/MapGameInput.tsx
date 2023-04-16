@@ -11,8 +11,8 @@ function MapGameInput({
   submitGuesses,
   giveUp,
   newData,
-}) {
-  function renderBoxes() {
+}: MapGameInputProps): JSX.Element {
+  function renderBoxes(): JSX.Element[] {
     return guesses.map((g, index) => (
       <GuessBox
         key={index}
@@ -45,6 +45,18 @@ function MapGameInput({
       </div>
     </div>
   );
+}
+
+export class MapGameInputProps {
+  dataName: string;
+  guesses: string[];
+  correctnessArray: boolean[];
+  guessBoxName: (index: number) => string;
+  gaveUp: boolean;
+  handleGuessInput: (e: React.FormEvent<HTMLInputElement>) => void;
+  submitGuesses: (e: React.MouseEvent<HTMLInputElement>) => void;
+  giveUp: (e: React.MouseEvent<HTMLInputElement>) => void;
+  newData: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 export default MapGameInput;

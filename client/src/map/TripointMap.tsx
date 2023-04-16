@@ -1,18 +1,19 @@
 import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { CenterUpdater } from "./CenterUpdater";
+import { TripointModel } from "../games/Tripoint";
 
-function TripointMap({ tripoint, gaveUp, gameOver }) {
+function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
   let markerIcon = L.icon({
     iconUrl: "/flag.png",
     iconSize: [32, 32],
     iconAnchor: [24, 32],
   });
 
-  const color = gaveUp ? "darkred" : "LightGoldenRodYellow";
+  const color = gaveUp ? { color: "darkred" } : { color: "LightGoldenRodYellow" };
 
   const borders = tripoint.countries.map((country) => (
-    <GeoJSON key={country.properties.name} data={country} color={color}>
+    <GeoJSON key={country.properties.name} data={country} pathOptions={color}>
       <Tooltip>{country.properties.name}</Tooltip>
     </GeoJSON>
   ));
@@ -34,6 +35,12 @@ function TripointMap({ tripoint, gaveUp, gameOver }) {
       <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
     </MapContainer>
   );
+}
+
+export class TripointMapProps {
+  tripoint: TripointModel;
+  gaveUp: boolean;
+  gameOver: boolean;
 }
 
 export default TripointMap;

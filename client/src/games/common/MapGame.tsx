@@ -5,7 +5,7 @@ import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import Spinner from "../../components/Spinner";
 
-function MapGame({
+function MapGame<Type>({
   dataName,
   serverRoute,
   guessBoxCount,
@@ -13,7 +13,7 @@ function MapGame({
   MapComponent,
   correctAnswersFunction,
   checkAdditionalAnswers
-}) {
+}: MapGameProps<Type>): JSX.Element {
   const { error, data, isFetching } = useQuery(serverRoute, () =>
     fetch(serverEndpoint() + serverRoute).then(result => result.json())
   );
@@ -23,7 +23,7 @@ function MapGame({
   const [gameOver, setGameOver] = useState(false);
   const queryClient = useQueryClient();
 
-  function canRenderMap() {
+  function canRenderMap(): boolean {
     return !error && !isFetching;
   }
 
@@ -38,7 +38,7 @@ function MapGame({
     setGuesses(newGuesses);
   }
 
-  function setCorrectnessByIndex(correctness, index) {
+  function setCorrectnessByIndex(correctness: boolean, index: number) {
     const arrayCopy = correctnessArray.slice();
     arrayCopy[index] = correctness;
     setCorrectnessArray(arrayCopy);
@@ -48,7 +48,7 @@ function MapGame({
     return <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} />;
   }
 
-  function renderSpinner() {
+  function renderSpinner(): JSX.Element {
     return (
       <div className="d-flex height-80-vh justify-content-center align-items-center">
         <Spinner />
@@ -109,7 +109,7 @@ function MapGame({
   return (
     <div className="d-flex flex-column vh-100">
       <div className="container flex-fill">
-        <div className="height-80-vh">{canRenderMap() ? renderMap(data) : renderSpinner()}</div>
+        <div className="height-80-vh">{canRenderMap() ? renderMap() : renderSpinner()}</div>
         <MapGameInput
           dataName={dataName}
           guesses={guesses}
@@ -124,6 +124,16 @@ function MapGame({
       </div>
     </div>
   );
+}
+
+export class MapGameProps<Type> {
+  dataName: string;
+  serverRoute: string;
+  guessBoxCount: number;
+  guessBoxName: (index: number) => string;;
+  MapComponent: any;
+  correctAnswersFunction: (data: Type) => string[];
+  checkAdditionalAnswers: (guess: string, data: Type) => string;
 }
 
 export default MapGame;
