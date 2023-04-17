@@ -11,12 +11,12 @@ function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps): JSX.E
   }
 
   const riverLine = gaveUp ? (
-    <GeoJSON pathOptions={{ color: "darkred" }} data={river} key={river.properties.name + "gaveUp"} />
+    <GeoJSON pathOptions={{ color: "darkred" }} data={river.geoData} key={river.name + "gaveUp"} />
   ) : (
-    <GeoJSON pathOptions={{ color: "LightGoldenRodYellow" }} data={river} key={river.properties.name} />
+    <GeoJSON pathOptions={{ color: "LightGoldenRodYellow" }} data={river.geoData} key={river.name} />
   );
 
-  const middle: Position[] = arrayMid(river.geometry.coordinates);
+  const middle: Position[] = arrayMid(river.geoData.geometry.coordinates);
   const mapCenter: Position = arrayMid(middle).slice().reverse();
 
   return (

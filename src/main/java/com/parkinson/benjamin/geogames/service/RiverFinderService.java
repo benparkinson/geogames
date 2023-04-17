@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.util.List;
 import java.util.Random;
@@ -10,7 +11,7 @@ public class RiverFinderService {
 
   private final Random random = new Random(System.currentTimeMillis());
 
-  public GeoData findRiver(List<GeoData> rivers) {
+  public River findRiver(List<River> rivers) {
     return rivers.get(random.nextInt(rivers.size()));
   }
 

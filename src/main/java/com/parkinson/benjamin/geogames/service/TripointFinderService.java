@@ -3,8 +3,8 @@ package com.parkinson.benjamin.geogames.service;
 import static com.parkinson.benjamin.geogames.helper.TripointHelper.getCoordinates;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
+import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
-import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +18,12 @@ public class TripointFinderService {
 
   private final Random random = new Random(System.currentTimeMillis());
 
-  public Tripoint findTripoint(List<GeoData> countries) {
-    Map<Coordinate, Set<GeoData>> countriesByCoordinate = new HashMap<>();
+  public Tripoint findTripoint(List<Country> countries) {
+    Map<Coordinate, Set<Country>> countriesByCoordinate = new HashMap<>();
 
-    countries.forEach(country -> getCoordinates(country.getGeometry())
+    countries.forEach(country -> getCoordinates(country.geoData().geometry())
         .forEach(coordinate -> {
-          Set<GeoData> countriesWithCoordinate = countriesByCoordinate
+          Set<Country> countriesWithCoordinate = countriesByCoordinate
               .computeIfAbsent(coordinate, k -> new HashSet<>());
           countriesWithCoordinate.add(country);
         }));

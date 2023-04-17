@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,18 +18,16 @@ public class CountryLoaderService extends FileLoaderService {
   }
 
   @Cacheable("countries")
-  public List<GeoData> loadCountries() throws IOException {
-    GeoData[] countries = loadFile("data/countries.geo.json", GeoData[].class);
+  public List<Country> loadCountries() throws IOException {
+    GeoData[] countryGeoData = loadFile("data/countries.geo.json", GeoData[].class);
     Map<String, List<String>> additionalNamesByCountryName =
         loadFile("data/additionalNames.json", Map.class);
 
-    Arrays.stream(countries)
-        .forEach(geoData ->
-            geoData.getProperties().setAdditionalNames(
-                additionalNamesByCountryName.getOrDefault(
-                    geoData.getProperties().getName(),
-                    Collections.emptyList())));
-
-    return Arrays.asList(countries);
+    return Arrays.stream(countryGeoData)
+        .map(geoData -> {
+          List<String> additionalNames = additionalNamesByCountryName.getOrDefault(
+              geoData.properties().name(), Collections.emptyList());
+          return new Country(geoData.properties().name(), additionalNames, geoData);
+        }).toList();
   }
 }

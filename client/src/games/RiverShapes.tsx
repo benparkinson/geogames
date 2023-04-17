@@ -8,7 +8,7 @@ function RiverShapes(): JSX.Element {
   }
 
   function correctAnswers(river: River): string[] {
-    return [river.properties.name];
+    return [river.name];
   }
 
   function checkAdditionalAnswers(guess: string, river: River): string {
@@ -28,11 +28,16 @@ function RiverShapes(): JSX.Element {
   );
 }
 
-export class River implements GeoJsonObject {
+export class River {
+  name: string;
+  geoData: RiverGeoData;
+}
+
+export class RiverGeoData implements GeoJsonObject {
   type: "MultiLineString";
   bbox?: BBox;
-  properties: GeoJsonProperties
-  geometry: MultiLineString
+  properties: GeoJsonProperties;
+  geometry: MultiLineString;
 }
 
 export default RiverShapes;

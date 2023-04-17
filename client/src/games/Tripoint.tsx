@@ -9,11 +9,7 @@ function Tripoint(): JSX.Element {
   }
 
   function countryNames(tripoint: TripointModel): string[] {
-    return tripoint.countries.map(country => country.properties.name);
-  }
-
-  function extractCountries(tripoint: TripointModel): GeoJsonProperties[] {
-    return tripoint.countries.map(country => country.properties);
+    return tripoint.countries.map(country => country.name);
   }
 
   function correctAnswers(tripoint: TripointModel): string[] {
@@ -21,11 +17,9 @@ function Tripoint(): JSX.Element {
   }
 
   function checkAdditionalAnswers(guess: string, tripoint: TripointModel): string {
-    const countries = extractCountries(tripoint);
+    let normalisedGuess: string = guess;
 
-    let normalisedGuess = guess;
-
-    countries.forEach(country =>
+    tripoint.countries.forEach((country: TripointCountry) =>
       country.additionalNames.forEach(additionalName => {
         if (normaliseString(guess) === normaliseString(additionalName)) {
           normalisedGuess = country.name;
@@ -58,11 +52,17 @@ export class TripointCoordinate {
   longitude: number;
 }
 
-export class TripointCountry implements GeoJsonObject {
+export class TripointCountry {
+  name: string;
+  additionalNames: string[];
+  geoData: TripointGeoData;
+}
+
+export class TripointGeoData implements GeoJsonObject {
   type: "MultiPolygon" | "Polygon";
   bbox?: BBox;
-  properties: GeoJsonProperties
-  geometry: MultiPolygon | Polygon
+  properties: GeoJsonProperties;
+  geometry: MultiPolygon | Polygon;
 }
 
 export default Tripoint;

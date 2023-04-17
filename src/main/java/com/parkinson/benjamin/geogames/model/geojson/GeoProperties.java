@@ -1,16 +1,5 @@
 package com.parkinson.benjamin.geogames.model.geojson;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.util.List;
+public record GeoProperties(String name) {
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class GeoProperties {
-
-  private String name;
-
-  private List<String> additionalNames;
 }

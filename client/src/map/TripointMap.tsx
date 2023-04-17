@@ -13,8 +13,8 @@ function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
   const color = gaveUp ? { color: "darkred" } : { color: "LightGoldenRodYellow" };
 
   const borders = tripoint.countries.map((country) => (
-    <GeoJSON key={country.properties.name} data={country} pathOptions={color}>
-      <Tooltip>{country.properties.name}</Tooltip>
+    <GeoJSON key={country.name} data={country.geoData} pathOptions={color}>
+      <Tooltip>{country.name}</Tooltip>
     </GeoJSON>
   ));
 

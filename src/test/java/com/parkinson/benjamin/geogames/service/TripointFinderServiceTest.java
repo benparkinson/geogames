@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
+import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -19,25 +20,21 @@ public class TripointFinderServiceTest {
     List<List<List<Double>>> coordinates = List.of(List.of(List.of(12.34, 56.78)));
     GeoGeometry geometry = new GeoGeometry("Polygon", coordinates);
 
-    GeoData country1 = new GeoData();
-    GeoProperties geoProperties1 = new GeoProperties();
-    geoProperties1.setName("Aruba");
-    country1.setProperties(geoProperties1);
-    country1.setGeometry(geometry);
-    GeoData country2 = new GeoData();
-    GeoProperties geoProperties2 = new GeoProperties();
-    geoProperties2.setName("Jamaica");
-    country2.setProperties(geoProperties2);
-    country2.setGeometry(geometry);
-    GeoData country3 = new GeoData();
-    GeoProperties geoProperties3 = new GeoProperties();
-    geoProperties3.setName("Ooh I wanna take ya");
-    country3.setProperties(geoProperties3);
-    country3.setGeometry(geometry);
+    GeoProperties geoProperties1 = new GeoProperties("Aruba");
+    GeoData geoData1 = new GeoData("Feature", geoProperties1, geometry);
+    GeoProperties geoProperties2 = new GeoProperties("Jamaica");
+    GeoData geoData2 = new GeoData("Feature", geoProperties2, geometry);
+    GeoProperties geoProperties3 = new GeoProperties("Ooh I wanna take ya");
+    GeoData geoData3 = new GeoData("Feature", geoProperties3, geometry);
 
-    Tripoint tripoint = service.findTripoint(List.of(country1, country2, country3));
+    Tripoint tripoint = service.findTripoint(
+        List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3)));
 
-    assertThat(tripoint.getCoordinate()).isEqualTo(new Coordinate(56.78, 12.34));
+    assertThat(tripoint.coordinate()).isEqualTo(new Coordinate(56.78, 12.34));
+  }
+
+  private Country createCountry(GeoData geoData) {
+    return new Country(geoData.properties().name(), List.of(), geoData);
   }
 
 }

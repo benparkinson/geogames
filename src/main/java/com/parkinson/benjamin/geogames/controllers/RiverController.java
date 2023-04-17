@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
@@ -25,8 +26,8 @@ public class RiverController {
 
   @GetMapping("/api/river-shape")
   @CrossOrigin(origins = "http://localhost:3000")
-  public GeoData findRandomRiverShape() throws IOException {
-    List<GeoData> rivers = riverLoaderService.loadRivers();
+  public River findRandomRiverShape() throws IOException {
+    List<River> rivers = riverLoaderService.loadRivers();
     return riverFinderService.findRiver(rivers);
   }
 
