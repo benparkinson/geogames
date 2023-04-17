@@ -19,9 +19,9 @@ public class CountryLoaderService extends FileLoaderService {
 
   @Cacheable("countries")
   public List<Country> loadCountries() throws IOException {
-    GeoData[] countryGeoData = loadFile("data/countries.geo.json", GeoData[].class);
+    GeoData[] countryGeoData = loadFile("data/countries/countries.geo.json", GeoData[].class);
     Map<String, List<String>> additionalNamesByCountryName =
-        loadFile("data/additionalNames.json", Map.class);
+        loadFile("data/countries/additionalNames.json", Map.class);
 
     return Arrays.stream(countryGeoData)
         .map(geoData -> {
