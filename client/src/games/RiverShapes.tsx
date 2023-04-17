@@ -1,4 +1,5 @@
 import RiverShapesMapWrapper from "../map/RiverShapesMapWrapper";
+import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
 import MapGame from "./common/MapGame";
 
@@ -12,7 +13,15 @@ function RiverShapes(): JSX.Element {
   }
 
   function checkAdditionalAnswers(guess: string, river: River): string {
-    return guess;
+    let normalisedGuess: string = guess;
+
+    river.additionalNames.forEach(additionalName => {
+      if (normaliseString(guess) === normaliseString(additionalName)) {
+        normalisedGuess = river.name;
+      }
+    });
+
+    return normalisedGuess;
   }
 
   return (
@@ -30,6 +39,7 @@ function RiverShapes(): JSX.Element {
 
 export class River {
   name: string;
+  additionalNames: string[];
   geoData: RiverGeoData;
 }
 

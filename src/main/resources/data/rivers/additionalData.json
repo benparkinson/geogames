@@ -1,0 +1,82 @@
+{
+  "Amazon": {
+    "additionalNames": ["Rio Amazonas"],
+    "continent": "South America"
+  },
+  "Congo": {
+    "names": ["Congo River"],
+    "continent": "Africa"
+  },
+  "Danube": {
+    "names": [""],
+    "continent": "Europe"
+  },
+  "Dnieper": {
+    "names": ["Dnipro"],
+    "continent": "Europe"
+  },
+  "Ganges": {
+    "names": ["Ganga", "Padma"],
+    "continent": "Asia"
+  },
+  "Indus": {
+    "names": ["Sindhu"],
+    "continent": "Asia"
+  },
+  "Mekong": {
+    "names": ["Mekong River"],
+    "continent": "Asia"
+  },
+  "Mississippi": {
+    "names": ["Mississippi River"],
+    "continent": "North America"
+  },
+  "Murray River": {
+    "names": ["Murray"],
+    "continent": "Australia"
+  },
+  "Niger": {
+    "names": ["Niger River"],
+    "continent": "Africa"
+  },
+  "Nile": {
+    "names": ["River Nile"],
+    "continent": "Africa"
+  },
+  "Rhine": {
+    "names": [""],
+    "continent": "Europe"
+  },
+  "Rhone": {
+    "names": ["Rhône"],
+    "continent": "Europe"
+  },
+  "Rio Grande": {
+    "names": ["Rio Bravo", "Río Bravo", "Río Bravo del Norte"],
+    "continent": "North America"
+  },
+  "Volga": {
+    "names": [""],
+    "continent": "Europe"
+  },
+  "Yangtze": {
+    "names": ["Yangzi"],
+    "continent": "Asia"
+  },
+  "Yellow River": {
+    "names": ["Huang He", "Yellow"],
+    "continent": "Asia"
+  },
+  "Yenisei": {
+    "names": ["Yenisey", "Enisei", "Jenisej"],
+    "continent": "Asia"
+  },
+  "Yukon River": {
+    "names": ["Yukon"],
+    "continent": "North America"
+  },
+  "Zambezi": {
+    "names": ["Zambeze", "Zambesi"],
+    "continent": "Africa"
+  }
+}

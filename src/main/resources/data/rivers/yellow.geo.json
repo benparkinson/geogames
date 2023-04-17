@@ -2,7 +2,7 @@
       "type": "Feature",
       "properties": {
         "destination": "Bohai Sea",
-        "name": "Huang He",
+        "name": "Yellow River",
         "type": "waterway",
         "waterway": "river"
       },
