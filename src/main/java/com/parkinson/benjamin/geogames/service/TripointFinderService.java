@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,14 @@ public class TripointFinderService {
 
   private final Random random = new Random(System.currentTimeMillis());
 
-  public Tripoint findTripoint(List<Country> countries) {
+  public Tripoint findTripoint(List<Country> countries, Optional<Double> excludingLatitude) {
     Map<Coordinate, Set<Country>> countriesByCoordinate = new HashMap<>();
 
     countries.forEach(country -> getCoordinates(country.geoData().geometry())
+        .stream()
+        .filter(coordinate -> excludingLatitude
+            .map(lat -> !lat.equals(coordinate.latitude()))
+            .orElse(true))
         .forEach(coordinate -> {
           Set<Country> countriesWithCoordinate = countriesByCoordinate
               .computeIfAbsent(coordinate, k -> new HashSet<>());

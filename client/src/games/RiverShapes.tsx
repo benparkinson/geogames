@@ -24,10 +24,15 @@ function RiverShapes(): JSX.Element {
     return normalisedGuess;
   }
 
+  function queryParams(river: River): string {
+    return "";
+  }
+
   return (
     <MapGame
       dataName={"River"}
       serverRoute={"/api/river-shape"}
+      queryParamsFromPreviousResponse={queryParams}
       guessBoxCount={1}
       guessBoxName={guessBoxName}
       MapComponent={RiverShapesMapWrapper}

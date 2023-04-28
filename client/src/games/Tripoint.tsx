@@ -29,10 +29,18 @@ function Tripoint(): JSX.Element {
     return normalisedGuess;
   }
 
+  function queryParams(tripoint: TripointModel): string {
+    if (!tripoint) {
+      return "";
+    }
+    return "lastLat=" + tripoint.coordinate.latitude;
+  }
+
   return (
     <MapGame
       dataName={"Tripoint"}
       serverRoute={"/api/tripoint"}
+      queryParamsFromPreviousResponse={queryParams}
       guessBoxCount={3}
       guessBoxName={guessBoxName}
       MapComponent={TripointMapWrapper}

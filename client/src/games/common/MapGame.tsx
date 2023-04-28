@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { serverEndpoint } from "../../api/gateway";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
@@ -8,20 +8,35 @@ import Spinner from "../../components/Spinner";
 function MapGame<Type>({
   dataName,
   serverRoute,
+  queryParamsFromPreviousResponse,
   guessBoxCount,
   guessBoxName,
   MapComponent,
   correctAnswersFunction,
   checkAdditionalAnswers
 }: MapGameProps<Type>): JSX.Element {
-  const { error, data, isFetching } = useQuery(serverRoute, () =>
-    fetch(serverEndpoint() + serverRoute).then(result => result.json())
+  const [previousResponse, setPreviousResponse] = useState(null);
+  const { error, data, isFetching } = useQuery(serverRoute, getData()
   );
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
   const [gaveUp, setGaveUp] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (data) {
+      setPreviousResponse(data)
+    }
+  }, [data])
+
+  function getData() {
+    const endpoint = serverEndpoint() + serverRoute;
+    const params = queryParamsFromPreviousResponse(previousResponse);
+
+    return () => fetch(endpoint + "?" + params).then(result => result.json());
+  }
 
   function canRenderMap(): boolean {
     return !error && !isFetching;
@@ -129,6 +144,7 @@ function MapGame<Type>({
 export class MapGameProps<Type> {
   dataName: string;
   serverRoute: string;
+  queryParamsFromPreviousResponse: (data: Type) => string;
   guessBoxCount: number;
   guessBoxName: (index: number) => string;;
   MapComponent: any;
