@@ -18,11 +18,16 @@ import java.util.List;
 @RestController
 public class RiverController {
 
-  @Autowired
-  private RiverLoaderService riverLoaderService;
+  private final RiverLoaderService riverLoaderService;
+
+  private final RiverFinderService riverFinderService;
 
   @Autowired
-  private RiverFinderService riverFinderService;
+  public RiverController(RiverLoaderService riverLoaderService,
+      RiverFinderService riverFinderService) {
+    this.riverLoaderService = riverLoaderService;
+    this.riverFinderService = riverFinderService;
+  }
 
   @GetMapping("/api/river-shape")
   @CrossOrigin(origins = "http://localhost:3000")

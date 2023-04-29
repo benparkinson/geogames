@@ -15,11 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TripointController {
 
-  @Autowired
-  private CountryLoaderService countryLoaderService;
+  private final CountryLoaderService countryLoaderService;
+
+  private final TripointFinderService tripointFinderService;
 
   @Autowired
-  private TripointFinderService tripointFinderService;
+  public TripointController(CountryLoaderService countryLoaderService,
+      TripointFinderService tripointFinderService) {
+    this.countryLoaderService = countryLoaderService;
+    this.tripointFinderService = tripointFinderService;
+  }
 
   @GetMapping("/api/tripoint")
   @CrossOrigin(origins = "http://localhost:3000")
