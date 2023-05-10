@@ -2,7 +2,6 @@ package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
-import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.TripointFinderService;
 import java.io.IOException;

@@ -1,8 +1,13 @@
 package com.parkinson.benjamin.geogames.dao;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,16 +16,21 @@ public final class Game {
   @Id
   @GeneratedValue
   private long id;
-  private String name;
+  private GameType name;
+  @Lob
+  @Column
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<GameRound> rounds;
 
   public Game() {
   }
 
-  public Game(String name) {
+  public Game(GameType name, List<GameRound> rounds) {
     this.name = name;
+    this.rounds = rounds;
   }
 
-  public Game(long id, String name) {
+  public Game(long id, GameType name) {
     this.id = id;
     this.name = name;
   }
@@ -33,12 +43,20 @@ public final class Game {
     this.id = id;
   }
 
-  public String getName() {
+  public GameType getName() {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName(GameType name) {
     this.name = name;
+  }
+
+  public List<GameRound> getRounds() {
+    return rounds;
+  }
+
+  public void setRounds(List<GameRound> rounds) {
+    this.rounds = rounds;
   }
 
   @Override

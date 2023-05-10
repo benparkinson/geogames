@@ -1,7 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.model.River;
-import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.util.List;
 import java.util.Random;
 import org.springframework.stereotype.Service;
