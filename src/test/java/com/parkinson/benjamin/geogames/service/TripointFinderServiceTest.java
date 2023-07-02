@@ -1,17 +1,17 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
-import org.junit.jupiter.api.Test;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 public class TripointFinderServiceTest {
 
@@ -49,7 +49,7 @@ public class TripointFinderServiceTest {
 
     List<Country> countries = List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3));
 
-    List<Tripoint> randomTripoints = service.findRandomTripoints(countries, 1);
+    List<GameData> randomTripoints = service.findRandomTripoints(countries, 1);
     assertThat(randomTripoints).hasSize(1);
   }
 

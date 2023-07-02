@@ -6,6 +6,7 @@ import static org.zalando.logbook.json.JsonPathBodyFilters.jsonPath;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.zalando.logbook.BodyFilter;
 
 @Configuration
@@ -15,6 +16,12 @@ public class LogConfig {
   public BodyFilter bodyFilter() {
     return merge(
         defaultValue(),
-        jsonPath("$..coordinates").delete());
+        ignoredPaths());
+  }
+
+  private BodyFilter ignoredPaths() {
+    return merge(
+        jsonPath("$..coordinates").delete(),
+        jsonPath("$..rounds").delete());
   }
 }
