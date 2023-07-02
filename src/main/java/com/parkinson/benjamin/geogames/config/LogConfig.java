@@ -8,20 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.zalando.logbook.BodyFilter;
+import org.zalando.logbook.Strategy;
+import org.zalando.logbook.WithoutBodyStrategy;
 
 @Configuration
 public class LogConfig {
 
   @Bean
-  public BodyFilter bodyFilter() {
-    return merge(
-        defaultValue(),
-        ignoredPaths());
+  public Strategy strategy() {
+    return new WithoutBodyStrategy();
   }
 
-  private BodyFilter ignoredPaths() {
-    return merge(
-        jsonPath("$..coordinates").delete(),
-        jsonPath("$..rounds").delete());
-  }
 }
