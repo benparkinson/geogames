@@ -8,8 +8,7 @@ import jakarta.persistence.Lob;
 import java.util.Objects;
 
 @Entity
-
-public final class GameRound {
+public final class GameRoundEntity {
   @Id
   @GeneratedValue
   private int id;
@@ -19,10 +18,10 @@ public final class GameRound {
   @Column
   private String jsonBlob;
 
-  public GameRound() {
+  public GameRoundEntity() {
   }
 
-  public GameRound(int index, String jsonBlob) {
+  public GameRoundEntity(int index, String jsonBlob) {
     this.index = index;
     this.jsonBlob = jsonBlob;
   }
@@ -57,8 +56,8 @@ public final class GameRound {
       return true;
     if (o == null || getClass() != o.getClass())
       return false;
-    GameRound gameRound = (GameRound) o;
-    return id == gameRound.id && Objects.equals(jsonBlob, gameRound.jsonBlob);
+    GameRoundEntity gameRoundEntity = (GameRoundEntity) o;
+    return id == gameRoundEntity.id && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
   }
 
   @Override
