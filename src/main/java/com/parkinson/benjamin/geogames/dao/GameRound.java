@@ -8,8 +8,8 @@ import jakarta.persistence.Lob;
 import java.util.Objects;
 
 @Entity
-public final class GameRound {
 
+public final class GameRound {
   @Id
   @GeneratedValue
   private int id;

@@ -12,7 +12,8 @@ function MapGame<Type>({
   guessBoxName,
   MapComponent,
   correctAnswersFunction,
-  checkAdditionalAnswers
+  checkAdditionalAnswers,
+  roundFunctions
 }: MapGameProps<Type>): JSX.Element {
   const { error, data, isFetching } = useQuery(serverRoute, () =>
     fetch(serverEndpoint() + serverRoute).then(result => result.json())
@@ -65,8 +66,6 @@ function MapGame<Type>({
     const answersArray = correctAnswersFunction(data).map(answer => normaliseString(answer));
     answersArray.forEach(ans => correctAnswers.add(ans));
 
-    console.log(correctAnswers);
-
     const newCorrectness = correctnessArray.slice();
     const guessesCopy = guesses.slice();
 
@@ -99,11 +98,34 @@ function MapGame<Type>({
   }
 
   function newData() {
+    clearInput();
+    queryClient.invalidateQueries(serverRoute);
+  }
+
+  function clearInput() {
     setGaveUp(false);
     setGameOver(false);
     setCorrectnessArray(Array(guessBoxCount).fill(null));
     setGuesses(Array(guessBoxCount).fill(""));
-    queryClient.invalidateQueries(serverRoute);
+  }
+
+  if (roundFunctions) {
+    enrichRoundFunctions();
+  }
+
+  function enrichRoundFunctions() {
+    const nextRound = roundFunctions.nextRound;
+    const prevRound = roundFunctions.prevRound;
+
+    roundFunctions.nextRound = () => {
+      nextRound();
+      clearInput();
+    }
+
+    roundFunctions.prevRound = () => {
+      prevRound();
+      clearInput();
+    }
   }
 
   return (
@@ -120,6 +142,7 @@ function MapGame<Type>({
           submitGuesses={submitGuesses}
           giveUp={giveUp}
           newData={newData}
+          roundFunctions={roundFunctions}
         />
       </div>
     </div>
@@ -134,6 +157,14 @@ export class MapGameProps<Type> {
   MapComponent: any;
   correctAnswersFunction: (data: Type) => string[];
   checkAdditionalAnswers: (guess: string, data: Type) => string;
+  roundFunctions?: RoundFunctions;
+}
+
+export class RoundFunctions {
+  nextRound: () => void;
+  prevRound: () => void;
+  hasPreviousRound: boolean;
+  hasNextRound: boolean;
 }
 
 export default MapGame;

@@ -1,42 +1,16 @@
-import Link from "next/link";
+import { QueryClientProvider } from "react-query";
+import { client } from "../src/api/gateway";
+import HomePage from "../src/components/HomePage";
 import Head from "next/head";
-import { Button } from "../src/components/Button";
-import isProduction from "../src/config/environment";
-import { ignoreClick } from "../src/helper/buttonHelper";
 
 function MenuPage(): JSX.Element {
-  function createLink(pageName): string {
-    if (isProduction()) {
-      return "/" + pageName + ".html";
-    } else {
-      return "/" + pageName;
-    }
-  }
-
   return (
-    <div>
+    <QueryClientProvider client={client}>
       <Head>
         <title>Geogames!</title>
       </Head>
-      <div className="d-flex vh-100">
-        <div className="container d-flex justify-content-center align-items-center text-center">
-          <div className="row d-flex flex-column">
-            <h4>Welcome to Geogames (working title)</h4>
-            <h6>Games:</h6>
-            <div className="m-1">
-              <Link href={createLink("tripoint")}>
-                <Button text={"Tripoint"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
-              </Link>
-            </div>
-            <div className="m-1">
-              <Link href={createLink("rivershapes")}>
-                <Button text={"Rivers by Shape"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <HomePage />
+    </QueryClientProvider>
   );
 }
 
