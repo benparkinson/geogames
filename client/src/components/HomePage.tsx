@@ -16,6 +16,7 @@ function HomePage(): JSX.Element {
             router.push("/games/tripoint/" + gameId)
         }
     });
+    // todo rivers mutation
 
     function createLink(pageName): string {
         if (isProduction()) {
@@ -37,6 +38,9 @@ function HomePage(): JSX.Element {
                     <h6>New game (5 rounds):</h6>
                     <div className="m-1">
                         <Button text={"Tripoint"} bootstrapClass={"btn-info"} onClick={newGame}></Button>
+                    </div>
+                    <div className="m-1">
+                        <Button text={"Rivers"} bootstrapClass={"btn-info"} onClick={newGame}></Button>
                     </div>
                     <h6>Random round:</h6>
                     <div className="m-1">

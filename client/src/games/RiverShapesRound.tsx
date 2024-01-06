@@ -6,7 +6,6 @@ import { GameRoundModel } from "./common/Model";
 
 function RiverShapes({ gameId, round, nextRound, prevRound }): JSX.Element {
   function getRiver(gameRound: GameRoundModel): River {
-    console.log(gameRound);
     return JSON.parse(gameRound.jsonBlob);
   }
 
@@ -32,6 +31,9 @@ function RiverShapes({ gameId, round, nextRound, prevRound }): JSX.Element {
     return normalisedGuess;
   }
 
+  if (!gameId) {
+    return <></>;
+  }
   return (
     <MapGame
       dataName={"River"}

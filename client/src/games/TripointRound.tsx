@@ -6,7 +6,6 @@ import { GameRoundModel } from "./common/Model";
 
 function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
   function getTripoint(gameRound: GameRoundModel): TripointModel {
-    console.log(gameRound);
     return JSON.parse(gameRound.jsonBlob);
   }
 
