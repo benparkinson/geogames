@@ -79,19 +79,12 @@ public class GameService {
     return Optional.empty();
   }
 
-  public Optional<Game> getGameById(long gameId, Optional<Integer> round) {
+  public Optional<GameRound> getGameRound(long gameId, int round) {
     Optional<GameEntity> game = gameRepository.findById(gameId);
-    Optional<GameEntity> gameWithRound = game.map(g -> new GameEntity(g.getName(),
-        g.getRounds().stream().filter(r -> r.getIndex() == round.orElse(0)).toList()));
+    Optional<GameRoundEntity> gameRound = game.flatMap(g -> g.getRounds().stream()
+            .filter(r -> r.getIndex() == round).findFirst());
+    int totalRoundCount = game.map(GameEntity::getRounds).map(List::size).orElse(0);
 
-    return gameWithRound.map(this::convertEntity);
+    return gameRound.map(r -> new GameRound(r.getJsonBlob(), totalRoundCount));
   }
-
-  private Game convertEntity(GameEntity gameEntity) {
-    var gameRounds = gameEntity.getRounds().stream().map(roundEntity ->
-        new GameRound(roundEntity.getJsonBlob())).toList();
-
-    return new Game(gameRounds);
-  }
-
 }

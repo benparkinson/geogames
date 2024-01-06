@@ -2,11 +2,12 @@ import TripointMapWrapper from "../map/TripointRoundMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGame";
-import { GameModel } from "./common/Model";
+import { GameRoundModel } from "./common/Model";
 
 function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
-  function getTripoint(game: GameModel): TripointModel {
-    return JSON.parse(game.rounds[0].jsonBlob);
+  function getTripoint(gameRound: GameRoundModel): TripointModel {
+    console.log(gameRound);
+    return JSON.parse(gameRound.jsonBlob);
   }
 
   function guessBoxName(index: number): string {
@@ -17,13 +18,13 @@ function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
     return tripoint.countries.map(country => country.name);
   }
 
-  function correctAnswers(game: GameModel): string[] {
-    const tripoint = getTripoint(game);
+  function correctAnswers(gameRound: GameRoundModel): string[] {
+    const tripoint = getTripoint(gameRound);
     return countryNames(tripoint).slice();
   }
 
-  function checkAdditionalAnswers(guess: string, game: GameModel): string {
-    const tripoint = getTripoint(game);
+  function checkAdditionalAnswers(guess: string, gameRound: GameRoundModel): string {
+    const tripoint = getTripoint(gameRound);
     let normalisedGuess: string = guess;
 
     tripoint.countries.forEach((country: TripointCountry) =>
@@ -43,7 +44,7 @@ function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
     return (
       <MapGame
         dataName={"Tripoint"}
-        serverRoute={"/api/games/" + gameId + "?round=" + round}
+        serverRoute={"/api/games/" + gameId + "/rounds/" + round}
         guessBoxCount={3}
         guessBoxName={guessBoxName}
         MapComponent={TripointMapWrapper}
