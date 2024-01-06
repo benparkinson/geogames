@@ -6,6 +6,7 @@ import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.GameType;
+import com.parkinson.benjamin.geogames.helper.OptionalHelper;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Game;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.parkinson.benjamin.geogames.helper.OptionalHelper.*;
 
 @Service
 public class GameService {
@@ -83,8 +86,10 @@ public class GameService {
     Optional<GameEntity> game = gameRepository.findById(gameId);
     Optional<GameRoundEntity> gameRound = game.flatMap(g -> g.getRounds().stream()
             .filter(r -> r.getIndex() == round).findFirst());
-    int totalRoundCount = game.map(GameEntity::getRounds).map(List::size).orElse(0);
 
-    return gameRound.map(r -> new GameRound(r.getJsonBlob(), totalRoundCount));
+    return map(game, gameRound, (g, r) -> {
+      int totalRoundCount = g.getRounds().size();
+      return new GameRound(g.getName(), r.getJsonBlob(), totalRoundCount);
+    });
   }
 }

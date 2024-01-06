@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.model;
 
-public record GameRound(String jsonBlob, int totalRoundCount) {
+import com.parkinson.benjamin.geogames.dao.GameType;
+
+public record GameRound(GameType gameType, String jsonBlob, int totalRoundCount) {
 
 }

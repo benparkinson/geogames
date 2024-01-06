@@ -4,7 +4,7 @@ import { useState } from "react";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { client } from "../../../src/api/gateway";
-import Tripoint from "../../../src/games/TripointRound";
+import RiverShapes from "../../../src/games/RiverShapesRound";
 
 function TripointPage(params): JSX.Element {
     const router = useRouter()
@@ -26,9 +26,9 @@ function TripointPage(params): JSX.Element {
     return (
         <QueryClientProvider client={client}>
             <Head>
-                <title>Tripoint | Geogames</title>
+                <title>Rivers | Geogames</title>
             </Head>
-            <Tripoint gameId={gameId} round={round} nextRound={nextRound} prevRound={prevRound} />
+            <RiverShapes gameId={gameId} round={round} nextRound={nextRound} prevRound={prevRound} />
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
