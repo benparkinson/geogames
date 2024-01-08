@@ -1,43 +1,26 @@
-import Head from "next/head";
-import Link from "next/link";
 import { useMutation } from "react-query";
 import { serverEndpoint } from "../api/gateway";
-import isProduction from "../config/environment";
-import { ignoreClick } from "../helper/buttonHelper";
 import { Button } from "./Button";
 import { useRouter } from "next/router";
 
 function HomePage(): JSX.Element {
-    const router = useRouter()
-    const newTripointGameMutation = useMutation({
-        mutationFn: () => fetch(serverEndpoint() + "/api/games?gameType=TRIPOINT", { method: "POST" }).then(result => result.json()),
-        onSuccess: (data) => {
-            const gameId = data.id;
-            router.push("/games/" + gameId)
+    const router = useRouter();
+    const newGameMutation = useMutation((gameType: string) =>
+        fetch(serverEndpoint() + "/api/games?gameType=" + gameType, { method: "POST" }).then(result => result.json()),
+        {
+            onSuccess: (data: { id: any; }) => {
+                const gameId = data.id;
+                router.push("/games/" + gameId)
+            }
         }
-    });
-    const newRiverGameMutation = useMutation({
-        mutationFn: () => fetch(serverEndpoint() + "/api/games?gameType=RIVERS_BY_SHAPE", { method: "POST" }).then(result => result.json()),
-        onSuccess: (data) => {
-            const gameId = data.id;
-            router.push("/games/" + gameId)
-        }
-    });
-
-    function createLink(pageName): string {
-        if (isProduction()) {
-            return "/" + pageName + ".html";
-        } else {
-            return "/" + pageName;
-        }
-    }
+    );
 
     function newTripointGame(event: React.MouseEvent<HTMLInputElement>): void {
-        newTripointGameMutation.mutate();
+        newGameMutation.mutate("TRIPOINT");
     }
 
     function newRiverGame(event: React.MouseEvent<HTMLInputElement>): void {
-        newRiverGameMutation.mutate();
+        newGameMutation.mutate("RIVERS_BY_SHAPE");
     }
 
     return (
