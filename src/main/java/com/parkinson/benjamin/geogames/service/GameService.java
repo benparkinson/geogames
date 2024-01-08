@@ -1,14 +1,14 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static com.parkinson.benjamin.geogames.helper.OptionalHelper.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.GameType;
-import com.parkinson.benjamin.geogames.helper.OptionalHelper;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.Game;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameRound;
 import com.parkinson.benjamin.geogames.model.River;
@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import static com.parkinson.benjamin.geogames.helper.OptionalHelper.*;
 
 @Service
 public class GameService {
@@ -32,9 +30,13 @@ public class GameService {
   private final ObjectMapper objectMapper;
 
   @Autowired
-  public GameService(GameRepository gameRepository, CountryLoaderService countryLoaderService,
-      TripointFinderService tripointFinderService, RiverLoaderService riverLoaderService,
-      RiverFinderService riverFinderService, ObjectMapper objectMapper) {
+  public GameService(
+      GameRepository gameRepository,
+      CountryLoaderService countryLoaderService,
+      TripointFinderService tripointFinderService,
+      RiverLoaderService riverLoaderService,
+      RiverFinderService riverFinderService,
+      ObjectMapper objectMapper) {
     this.gameRepository = gameRepository;
     this.countryLoaderService = countryLoaderService;
     this.tripointFinderService = tripointFinderService;
@@ -84,12 +86,15 @@ public class GameService {
 
   public Optional<GameRound> getGameRound(long gameId, int round) {
     Optional<GameEntity> game = gameRepository.findById(gameId);
-    Optional<GameRoundEntity> gameRound = game.flatMap(g -> g.getRounds().stream()
-            .filter(r -> r.getIndex() == round).findFirst());
+    Optional<GameRoundEntity> gameRound =
+        game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
 
-    return map(game, gameRound, (g, r) -> {
-      int totalRoundCount = g.getRounds().size();
-      return new GameRound(g.getName(), r.getJsonBlob(), totalRoundCount);
-    });
+    return map(
+        game,
+        gameRound,
+        (g, r) -> {
+          int totalRoundCount = g.getRounds().size();
+          return new GameRound(g.getName(), r.getJsonBlob(), totalRoundCount);
+        });
   }
 }

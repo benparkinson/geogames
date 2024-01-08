@@ -1,12 +1,12 @@
 package com.parkinson.benjamin.geogames.helper;
 
-import com.parkinson.benjamin.geogames.model.Coordinate;
-import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import org.junit.jupiter.api.Test;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.parkinson.benjamin.geogames.model.Coordinate;
+import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class TripointHelperTest {
 
@@ -37,8 +37,6 @@ public class TripointHelperTest {
     List<List<List<Double>>> coordinates = List.of(List.of(List.of(12.34, 56.78, 43.21)));
     GeoGeometry geometry = new GeoGeometry("Polygon", coordinates);
 
-    assertThrows(IllegalArgumentException.class, () ->
-        TripointHelper.getCoordinates(geometry));
+    assertThrows(IllegalArgumentException.class, () -> TripointHelper.getCoordinates(geometry));
   }
-
 }

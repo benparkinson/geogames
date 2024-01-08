@@ -24,10 +24,13 @@ public class CountryLoaderService extends FileLoaderService {
         loadFile("data/countries/additionalNames.json", Map.class);
 
     return Arrays.stream(countryGeoData)
-        .map(geoData -> {
-          List<String> additionalNames = additionalNamesByCountryName.getOrDefault(
-              geoData.properties().name(), Collections.emptyList());
-          return new Country(geoData.properties().name(), additionalNames, geoData);
-        }).toList();
+        .map(
+            geoData -> {
+              List<String> additionalNames =
+                  additionalNamesByCountryName.getOrDefault(
+                      geoData.properties().name(), Collections.emptyList());
+              return new Country(geoData.properties().name(), additionalNames, geoData);
+            })
+        .toList();
   }
 }

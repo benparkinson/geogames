@@ -12,13 +12,15 @@ public final class TripointHelper {
 
     List<List<Number>> allCoordinates = geoGeometry.flattenedCoordinates();
 
-    return allCoordinates.stream().map(coordList -> {
-      if (coordList.size() != 2) {
-        throw new IllegalArgumentException("This is not a coordinate");
-      }
+    return allCoordinates.stream()
+        .map(
+            coordList -> {
+              if (coordList.size() != 2) {
+                throw new IllegalArgumentException("This is not a coordinate");
+              }
 
-      return new Coordinate(coordList.get(1).doubleValue(), coordList.get(0).doubleValue());
-    }).toList();
+              return new Coordinate(coordList.get(1).doubleValue(), coordList.get(0).doubleValue());
+            })
+        .toList();
   }
-
 }

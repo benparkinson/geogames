@@ -9,17 +9,12 @@ import java.util.Objects;
 
 @Entity
 public final class GameRoundEntity {
-  @Id
-  @GeneratedValue
-  private int id;
+  @Id @GeneratedValue private int id;
 
   private int index;
-  @Lob
-  @Column
-  private String jsonBlob;
+  @Lob @Column private String jsonBlob;
 
-  public GameRoundEntity() {
-  }
+  public GameRoundEntity() {}
 
   public GameRoundEntity(int index, String jsonBlob) {
     this.index = index;
@@ -52,10 +47,8 @@ public final class GameRoundEntity {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
     GameRoundEntity gameRoundEntity = (GameRoundEntity) o;
     return id == gameRoundEntity.id && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
   }

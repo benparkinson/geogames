@@ -29,8 +29,9 @@ public class TripointFinderServiceTest {
     GeoProperties geoProperties3 = new GeoProperties("Ooh I wanna take ya");
     GeoData geoData3 = new GeoData("Feature", geoProperties3, geometry);
 
-    Tripoint tripoint = service.findTripoint(
-        List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3)));
+    Tripoint tripoint =
+        service.findTripoint(
+            List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3)));
 
     assertThat(tripoint.coordinate()).isEqualTo(new Coordinate(56.78, 12.34));
   }
@@ -47,7 +48,8 @@ public class TripointFinderServiceTest {
     GeoProperties geoProperties3 = new GeoProperties("Ooh I wanna take ya");
     GeoData geoData3 = new GeoData("Feature", geoProperties3, geometry);
 
-    List<Country> countries = List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3));
+    List<Country> countries =
+        List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3));
 
     List<GameData> randomTripoints = service.findRandomTripoints(countries, 1);
     assertThat(randomTripoints).hasSize(1);
@@ -68,5 +70,4 @@ public class TripointFinderServiceTest {
   private Country createCountry(GeoData geoData) {
     return new Country(geoData.properties().name(), List.of(), geoData);
   }
-
 }

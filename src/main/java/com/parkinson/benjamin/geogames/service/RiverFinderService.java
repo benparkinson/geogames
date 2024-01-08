@@ -19,8 +19,7 @@ public class RiverFinderService {
   public List<River> findRandomRivers(List<River> rivers, int howMany) {
     if (rivers.size() < howMany) {
       throw new IllegalArgumentException(
-          "Can't give you %d rivers, I only know about %d!".formatted(howMany,
-              rivers.size()));
+          "Can't give you %d rivers, I only know about %d!".formatted(howMany, rivers.size()));
     }
 
     Set<River> randomRivers = new HashSet<>();
@@ -31,5 +30,4 @@ public class RiverFinderService {
 
     return randomRivers.stream().toList();
   }
-
 }

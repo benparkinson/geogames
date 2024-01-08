@@ -4,7 +4,5 @@ import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.util.List;
 
-public record River(String name, List<String> additionalNames, String continent,
-                    GeoData geoData) implements GameData {
-
-}
+public record River(String name, List<String> additionalNames, String continent, GeoData geoData)
+    implements GameData {}

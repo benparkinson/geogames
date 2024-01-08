@@ -34,8 +34,12 @@ public class RiverLoaderService extends FileLoaderService {
       GeoData geoData = readFile(resource.getInputStream(), GeoData.class);
       String name = geoData.properties().name();
       Map additionalData = additionalDataByRiverName.get(name);
-      rivers.add(new River(name, (List<String>) additionalData.get("names"),
-          (String) additionalData.get("continent"), geoData));
+      rivers.add(
+          new River(
+              name,
+              (List<String>) additionalData.get("names"),
+              (String) additionalData.get("continent"),
+              geoData));
     }
 
     return rivers;

@@ -29,14 +29,18 @@ public class GameController {
   public ResponseEntity<GameCreationResponse> createGame(@RequestParam GameType gameType)
       throws IOException {
 
-    return gameService.createGame(gameType).map(ResponseEntity::ok)
+    return gameService
+        .createGame(gameType)
+        .map(ResponseEntity::ok)
         .orElse(ResponseEntity.badRequest().build());
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "api/games/{gameId}/rounds/{round}")
-  public ResponseEntity<GameRound> getGameRound(@PathVariable long gameId,
-      @PathVariable int round) {
-    return gameService.getGameRound(gameId, round).map(ResponseEntity::ok)
+  public ResponseEntity<GameRound> getGameRound(
+      @PathVariable long gameId, @PathVariable int round) {
+    return gameService
+        .getGameRound(gameId, round)
+        .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }
 }

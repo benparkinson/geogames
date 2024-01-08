@@ -9,8 +9,7 @@ public record GeoGeometry(String type, List coordinates) {
   private static final String MULTI_LINE_STRING = "MultiLineString";
 
   public GeoGeometry {
-    if (!type.equals(POLYGON) && !type.equals(MULTI_POLYGON)
-        && !type.equals(MULTI_LINE_STRING)) {
+    if (!type.equals(POLYGON) && !type.equals(MULTI_POLYGON) && !type.equals(MULTI_LINE_STRING)) {
       throw new IllegalArgumentException();
     }
   }
@@ -27,17 +26,11 @@ public record GeoGeometry(String type, List coordinates) {
 
   private List<List<Number>> getMultiPolygonCoordinates() {
     List<List<List<List<Number>>>> realCoords = coordinates;
-    return realCoords.stream()
-        .flatMap(List::stream)
-        .flatMap(List::stream)
-        .toList();
+    return realCoords.stream().flatMap(List::stream).flatMap(List::stream).toList();
   }
 
   private List<List<Number>> getPolygonCoordinates() {
     List<List<List<Number>>> realCoords = coordinates;
-    return realCoords.stream()
-        .flatMap(List::stream)
-        .toList();
+    return realCoords.stream().flatMap(List::stream).toList();
   }
-
 }

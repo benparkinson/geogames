@@ -11,8 +11,8 @@ public abstract class FileLoaderService {
   private final ObjectMapper objectMapper;
 
   public FileLoaderService() {
-    objectMapper = new ObjectMapper().configure(
-        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper =
+        new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   protected <T> T loadFile(String resourceFileName, Class<T> clazz) throws IOException {

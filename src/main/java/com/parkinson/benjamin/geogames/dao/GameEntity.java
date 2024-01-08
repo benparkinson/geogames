@@ -13,17 +13,15 @@ import java.util.Objects;
 @Entity
 public final class GameEntity {
 
-  @Id
-  @GeneratedValue
-  private long id;
+  @Id @GeneratedValue private long id;
   private GameType name;
+
   @Lob
   @Column
   @OneToMany(cascade = CascadeType.ALL)
   private List<GameRoundEntity> rounds;
 
-  public GameEntity() {
-  }
+  public GameEntity() {}
 
   public GameEntity(GameType name, List<GameRoundEntity> rounds) {
     this.name = name;
@@ -68,8 +66,7 @@ public final class GameEntity {
       return false;
     }
     var that = (GameEntity) obj;
-    return this.id == that.id &&
-        Objects.equals(this.name, that.name);
+    return this.id == that.id && Objects.equals(this.name, that.name);
   }
 
   @Override
@@ -79,10 +76,6 @@ public final class GameEntity {
 
   @Override
   public String toString() {
-    return "GameEntity[" +
-        "id=" + id + ", " +
-        "name=" + name + ']';
+    return "GameEntity[" + "id=" + id + ", " + "name=" + name + ']';
   }
-
-
 }
