@@ -6,6 +6,7 @@ import { serverEndpoint } from "../../../src/api/gateway";
 import Tripoint from "../../../src/games/TripointRound";
 import { GameRoundModel } from "../../../src/games/common/Model";
 import Spinner from "../../../src/components/Spinner";
+import RiverShapes from "../RiverShapesRound";
 
 function GameRoundPage({ gameId }): JSX.Element {
     const [round, setRound] = useState(0)
@@ -28,11 +29,11 @@ function GameRoundPage({ gameId }): JSX.Element {
     function renderGame(data: GameRoundModel) {
         const hasNextRound = round < data.totalRoundCount - 1;
         const hasPrevRound = round > 0;
+        const roundData = JSON.parse(data.jsonBlob);
         if (data.gameType == "TRIPOINT") {
-            const tripoint = JSON.parse(data.jsonBlob);
-            return <Tripoint tripoint={tripoint} nextRound={nextRound} prevRound={prevRound} hasNextRound={hasNextRound} hasPrevRound={hasPrevRound} />
+            return <Tripoint tripoint={roundData} nextRound={nextRound} prevRound={prevRound} hasNextRound={hasNextRound} hasPrevRound={hasPrevRound} />
         } else if (data.gameType == "RIVERS_BY_SHAPE") {
-            return <div>Rivers</div>
+            return <RiverShapes river={roundData} nextRound={nextRound} prevRound={prevRound} hasNextRound={hasNextRound} hasPrevRound={hasPrevRound} />
         }
         else {
             return <div>Unknown game type...</div>

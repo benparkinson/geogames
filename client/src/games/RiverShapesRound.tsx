@@ -1,49 +1,37 @@
 import RiverShapesMapWrapper from "../map/RiverShapesMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
-import MapGame from "./common/MapGame";
-import { GameRoundModel } from "./common/Model";
+import MapGame from "./common/MapGameRound";
 
-function RiverShapes({ gameId, round, nextRound, prevRound }): JSX.Element {
-  function getRiver(gameRound: GameRoundModel): River {
-    return JSON.parse(gameRound.jsonBlob);
-  }
-
+function RiverShapes({ river, nextRound, prevRound, hasNextRound, hasPrevRound }): JSX.Element {
   function guessBoxName(): string {
     return "River name";
   }
 
-  function correctAnswers(game: GameRoundModel): string[] {
-    const river = getRiver(game);
-    return [river.name];
+  function correctAnswers(riverModel: River): string[] {
+    return [riverModel.name];
   }
 
-  function checkAdditionalAnswers(guess: string, game: GameRoundModel): string {
-    const river = getRiver(game);
+  function checkAdditionalAnswers(guess: string, riverModel: River): string {
     let normalisedGuess: string = guess;
 
-    river.additionalNames.forEach(additionalName => {
+    riverModel.additionalNames.forEach(additionalName => {
       if (normaliseString(guess) === normaliseString(additionalName)) {
-        normalisedGuess = river.name;
+        normalisedGuess = riverModel.name;
       }
     });
 
     return normalisedGuess;
   }
-
-  if (!gameId) {
-    return <></>;
-  }
   return (
     <MapGame
-      dataName={"River"}
-      serverRoute={"/api/games/" + gameId + "/rounds/" + round}
+      data={river}
       guessBoxCount={1}
       guessBoxName={guessBoxName}
       MapComponent={RiverShapesMapWrapper}
       correctAnswersFunction={correctAnswers}
       checkAdditionalAnswers={checkAdditionalAnswers}
-      roundFunctions={{ nextRound: nextRound, prevRound: prevRound, hasPreviousRound: round > 0, hasNextRound: round < 4 }}
+      roundFunctions={{ nextRound: nextRound, prevRound: prevRound, hasPreviousRound: hasPrevRound, hasNextRound: hasNextRound }}
     />
   );
 }
