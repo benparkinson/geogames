@@ -1,6 +1,6 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Button } from "../../components/Button";
-import { RoundFunctions } from "./MapGame";
+import { Round } from "./Model";
 
 function MapGameInput({
   guesses,
@@ -10,7 +10,7 @@ function MapGameInput({
   handleGuessInput,
   submitGuesses,
   giveUp,
-  roundFunctions,
+  round: round,
 }: MapGameInputProps): JSX.Element {
   function renderBoxes(): JSX.Element[] {
     return guesses.map((g, index) => (
@@ -26,25 +26,21 @@ function MapGameInput({
   }
 
   function renderRoundButtons(): JSX.Element {
-    if (roundFunctions) {
-      return (
-        <div className="col d-flex justify-content-center align-items-center">
-          <div className="m-1 d-flex justify-content-center">
-            <Button bootstrapClass="btn-primary" text={"Previous Round"} onClick={roundFunctions.prevRound} disabled={!roundFunctions.hasPreviousRound} />
-          </div>
-          <div className="m-1 d-flex justify-content-center">
-            <Button bootstrapClass="btn-primary" text={"Next Round"} onClick={roundFunctions.nextRound} disabled={!roundFunctions.hasNextRound} />
-          </div>
+    return (
+      <div className="col d-flex justify-content-center align-items-center">
+        <div className="m-1 d-flex justify-content-center">
+          <Button bootstrapClass="btn-primary" text={"Previous Round"} onClick={round.prevRound} disabled={!round.hasPreviousRound} />
         </div>
-      );
-    } else {
-      return <></>;
-    }
+        <div className="m-1 d-flex justify-content-center">
+          <Button bootstrapClass="btn-primary" text={"Next Round"} onClick={round.nextRound} disabled={!round.hasNextRound} />
+        </div>
+      </div>
+    );
   }
 
   return (
     <div id="input" className="row align-items-center">
-      <div id="text-boxes" className="col justify-content-center align-items-center">
+      <div className="col justify-content-center align-items-center">
         {renderBoxes()}
       </div>
 
@@ -57,7 +53,10 @@ function MapGameInput({
         </div>
       </div>
 
-      <div id="new-game-div" className="col d-flex justify-content-center align-items-center">
+      <div id="new-game-div" className="col justify-content-center align-items-center">
+        <div className="m-1 d-flex justify-content-center">
+          Round {round.currentRound + 1}/{round.totalRoundCount}
+        </div>
         {renderRoundButtons()}
       </div>
     </div>
@@ -72,7 +71,7 @@ export class MapGameInputProps {
   handleGuessInput: (e: React.FormEvent<HTMLInputElement>) => void;
   submitGuesses: (e: React.MouseEvent<HTMLInputElement>) => void;
   giveUp: (e: React.MouseEvent<HTMLInputElement>) => void;
-  roundFunctions?: RoundFunctions;
+  round: Round;
 }
 
 export default MapGameInput;

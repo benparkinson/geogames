@@ -4,36 +4,37 @@ import { useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { serverEndpoint } from "../../../src/api/gateway";
 import Tripoint from "../Tripoint";
-import { GameRoundModel } from "../../../src/games/common/Model";
+import { GameRoundModel, Round } from "../../../src/games/common/Model";
 import Spinner from "../../../src/components/Spinner";
 import RiverShapes from "../RiverShapes";
 
 function GameRoundPage({ gameId }): JSX.Element {
-    const [round, setRound] = useState(0)
+    const [currentRound, setRound] = useState(0)
     const { error, data, isFetching } = useQuery(createUrl(), () =>
         fetch(serverEndpoint() + createUrl()).then(result => result.json())
     );
 
     function createUrl() {
-        return "/api/games/" + gameId + "/rounds/" + round;
+        return "/api/games/" + gameId + "/rounds/" + currentRound;
     }
 
     function nextRound(): void {
-        setRound(round + 1)
+        setRound(currentRound + 1)
     }
 
     function prevRound(): void {
-        setRound(round - 1)
+        setRound(currentRound - 1)
     }
 
     function renderGame(data: GameRoundModel) {
-        const hasNextRound = round < data.totalRoundCount - 1;
-        const hasPrevRound = round > 0;
+        const hasNextRound = currentRound < data.totalRoundCount - 1;
+        const hasPrevRound = currentRound > 0;
         const roundData = JSON.parse(data.jsonBlob);
+        const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount);
         if (data.gameType == "TRIPOINT") {
-            return <Tripoint tripoint={roundData} nextRound={nextRound} prevRound={prevRound} hasNextRound={hasNextRound} hasPrevRound={hasPrevRound} />
+            return <Tripoint tripoint={roundData} round={round} />
         } else if (data.gameType == "RIVERS_BY_SHAPE") {
-            return <RiverShapes river={roundData} nextRound={nextRound} prevRound={prevRound} hasNextRound={hasNextRound} hasPrevRound={hasPrevRound} />
+            return <RiverShapes river={roundData} round={round} />
         }
         else {
             return <div>Unknown game type...</div>

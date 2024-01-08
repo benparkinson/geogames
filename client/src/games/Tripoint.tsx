@@ -3,7 +3,7 @@ import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGame";
 
-function Tripoint({ tripoint, nextRound, prevRound, hasNextRound, hasPrevRound }): JSX.Element {
+function Tripoint({ tripoint, round }): JSX.Element {
   function guessBoxName(index: number): string {
     return "Country " + (index + 1);
   }
@@ -38,7 +38,7 @@ function Tripoint({ tripoint, nextRound, prevRound, hasNextRound, hasPrevRound }
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
         checkAdditionalAnswers={checkAdditionalAnswers}
-        roundFunctions={{ nextRound: nextRound, prevRound: prevRound, hasPreviousRound: hasPrevRound, hasNextRound: hasNextRound }}
+        round={round}
       />
     );
   }

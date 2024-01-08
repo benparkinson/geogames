@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { normaliseString } from "../../helper/stringHelper";
-import MapGameInput from "./MapGameInputRound";
+import MapGameInput from "./MapGameInput";
+import { Round } from "./Model";
 
 function MapGame<Type>({
   data,
@@ -9,7 +10,7 @@ function MapGame<Type>({
   MapComponent,
   correctAnswersFunction,
   checkAdditionalAnswers,
-  roundFunctions
+  round: round
 }: MapGameProps<Type>): JSX.Element {
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
@@ -84,20 +85,20 @@ function MapGame<Type>({
     setGuesses(Array(guessBoxCount).fill(""));
   }
 
-  if (roundFunctions) {
+  if (round) {
     enrichRoundFunctions();
   }
 
   function enrichRoundFunctions() {
-    const nextRound = roundFunctions.nextRound;
-    const prevRound = roundFunctions.prevRound;
+    const nextRound = round.nextRound;
+    const prevRound = round.prevRound;
 
-    roundFunctions.nextRound = () => {
+    round.nextRound = () => {
       nextRound();
       clearInput();
     }
 
-    roundFunctions.prevRound = () => {
+    round.prevRound = () => {
       prevRound();
       clearInput();
     }
@@ -115,7 +116,7 @@ function MapGame<Type>({
           handleGuessInput={handleGuessInput}
           submitGuesses={submitGuesses}
           giveUp={giveUp}
-          roundFunctions={roundFunctions}
+          round={round}
         />
       </div>
     </div>
@@ -129,14 +130,7 @@ export class MapGameProps<Type> {
   MapComponent: any;
   correctAnswersFunction: (data: Type) => string[];
   checkAdditionalAnswers: (guess: string, data: Type) => string;
-  roundFunctions?: RoundFunctions;
-}
-
-export class RoundFunctions {
-  nextRound: () => void;
-  prevRound: () => void;
-  hasPreviousRound: boolean;
-  hasNextRound: boolean;
+  round: Round;
 }
 
 export default MapGame;
