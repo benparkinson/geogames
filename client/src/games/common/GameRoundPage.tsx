@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { serverEndpoint } from "../../../src/api/gateway";
-import Tripoint from "../../../src/games/TripointRound";
+import Tripoint from "../Tripoint";
 import { GameRoundModel } from "../../../src/games/common/Model";
 import Spinner from "../../../src/components/Spinner";
-import RiverShapes from "../RiverShapesRound";
+import RiverShapes from "../RiverShapes";
 
 function GameRoundPage({ gameId }): JSX.Element {
     const [round, setRound] = useState(0)

@@ -1,7 +1,7 @@
 import RiverShapesMapWrapper from "../map/RiverShapesMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
-import MapGame from "./common/MapGameRound";
+import MapGame from "./common/MapGame";
 
 function RiverShapes({ river, nextRound, prevRound, hasNextRound, hasPrevRound }): JSX.Element {
   function guessBoxName(): string {

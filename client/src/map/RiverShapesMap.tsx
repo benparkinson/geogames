@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import type { Position } from "geojson";
 import { CenterUpdater } from "./CenterUpdater";
-import { River } from "../games/RiverShapesRound";
+import { River } from "../games/RiverShapes";
 import { LatLngTuple } from "leaflet";
 
 function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps): JSX.Element {

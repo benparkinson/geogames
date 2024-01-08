@@ -1,7 +1,7 @@
 import TripointMapWrapper from "../map/TripointMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
-import MapGame from "./common/MapGameRound";
+import MapGame from "./common/MapGame";
 
 function Tripoint({ tripoint, nextRound, prevRound, hasNextRound, hasPrevRound }): JSX.Element {
   function guessBoxName(index: number): string {

@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { CenterUpdater } from "./CenterUpdater";
-import { TripointModel } from "../games/TripointRound";
+import { TripointModel } from "../games/Tripoint";
 
 function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
   let markerIcon = L.icon({
