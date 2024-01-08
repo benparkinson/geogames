@@ -52,17 +52,6 @@ function HomePage(): JSX.Element {
                     <div className="m-1">
                         <Button text={"Rivers"} bootstrapClass={"btn-info"} onClick={newRiverGame}></Button>
                     </div>
-                    <h6>Random round:</h6>
-                    <div className="m-1">
-                        <Link href={createLink("tripoint")}>
-                            <Button text={"Tripoint"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
-                        </Link>
-                    </div>
-                    <div className="m-1">
-                        <Link href={createLink("rivershapes")}>
-                            <Button text={"Rivers by Shape"} bootstrapClass={"btn-info"} onClick={ignoreClick}></Button>
-                        </Link>
-                    </div>
                 </div>
             </div>
         </div>

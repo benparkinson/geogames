@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import { River } from "../games/RiverShapes";
+import { River } from "../games/RiverShapesRound";
 import { MapProps } from "./MapProps";
 
 function RiverShapesMapWrapper({ data, gameOver, gaveUp }: MapProps<River>) {

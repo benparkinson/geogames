@@ -1,4 +1,4 @@
-import TripointMapWrapper from "../map/TripointRoundMapWrapper";
+import TripointMapWrapper from "../map/TripointMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGameRound";

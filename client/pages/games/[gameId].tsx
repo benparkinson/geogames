@@ -3,7 +3,7 @@ import { client } from "../../src/api/gateway";
 import GameRoundPage from "../../src/games/common/GameRoundPage";
 import { useRouter } from "next/router";
 
-function TripointPage(params): JSX.Element {
+function GameParentPage(params): JSX.Element {
     const router = useRouter();
     const { gameId } = router.query;
 
@@ -14,4 +14,4 @@ function TripointPage(params): JSX.Element {
     );
 }
 
-export default TripointPage;
+export default GameParentPage;

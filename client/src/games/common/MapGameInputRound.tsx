@@ -1,6 +1,6 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Button } from "../../components/Button";
-import { RoundFunctions } from "./MapGame";
+import { RoundFunctions } from "./MapGameRound";
 
 function MapGameInput({
   guesses,

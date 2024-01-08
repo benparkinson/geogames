@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import { TripointModel } from "../games/Tripoint";
+import { TripointModel } from "../games/TripointRound";
 import { MapProps } from "./MapProps";
 
 function TripointMapWrapper({ data, gameOver, gaveUp }: MapProps<TripointModel>): JSX.Element {
