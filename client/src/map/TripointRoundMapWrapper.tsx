@@ -1,9 +1,9 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import { GameRoundModel } from "../games/common/Model";
 import { MapProps } from "./MapProps";
+import { TripointModel } from "../games/Tripoint";
 
-function TripointMapWrapper({ data, gameOver, gaveUp }: MapProps<GameRoundModel>): JSX.Element {
+function TripointMapWrapper({ data, gameOver, gaveUp }: MapProps<TripointModel>): JSX.Element {
   const TripointMap = useMemo(
     () =>
       dynamic(() => import("./TripointMap"), {
@@ -13,9 +13,7 @@ function TripointMapWrapper({ data, gameOver, gaveUp }: MapProps<GameRoundModel>
     []
   );
 
-  const tripoint = JSON.parse(data.jsonBlob)
-
-  return <TripointMap tripoint={tripoint} gameOver={gameOver} gaveUp={gaveUp} />;
+  return <TripointMap tripoint={data} gameOver={gameOver} gaveUp={gaveUp} />;
 }
 
 export default TripointMapWrapper;

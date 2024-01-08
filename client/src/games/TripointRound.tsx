@@ -1,14 +1,9 @@
 import TripointMapWrapper from "../map/TripointRoundMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
-import MapGame from "./common/MapGame";
-import { GameRoundModel } from "./common/Model";
+import MapGame from "./common/MapGameRound";
 
-function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
-  function getTripoint(gameRound: GameRoundModel): TripointModel {
-    return JSON.parse(gameRound.jsonBlob);
-  }
-
+function Tripoint({ tripoint, nextRound, prevRound, hasNextRound, hasPrevRound }): JSX.Element {
   function guessBoxName(index: number): string {
     return "Country " + (index + 1);
   }
@@ -17,13 +12,11 @@ function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
     return tripoint.countries.map(country => country.name);
   }
 
-  function correctAnswers(gameRound: GameRoundModel): string[] {
-    const tripoint = getTripoint(gameRound);
+  function correctAnswers(tripoint: TripointModel): string[] {
     return countryNames(tripoint).slice();
   }
 
-  function checkAdditionalAnswers(guess: string, gameRound: GameRoundModel): string {
-    const tripoint = getTripoint(gameRound);
+  function checkAdditionalAnswers(guess: string, tripoint: TripointModel): string {
     let normalisedGuess: string = guess;
 
     tripoint.countries.forEach((country: TripointCountry) =>
@@ -37,19 +30,15 @@ function Tripoint({ gameId, round, nextRound, prevRound }): JSX.Element {
   }
 
   function renderMapGame() {
-    if (!gameId) {
-      return <></>;
-    }
     return (
       <MapGame
-        dataName={"Tripoint"}
-        serverRoute={"/api/games/" + gameId + "/rounds/" + round}
+        data={tripoint}
         guessBoxCount={3}
         guessBoxName={guessBoxName}
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
         checkAdditionalAnswers={checkAdditionalAnswers}
-        roundFunctions={{ nextRound: nextRound, prevRound: prevRound, hasPreviousRound: round > 0, hasNextRound: round < 4 }}
+        roundFunctions={{ nextRound: nextRound, prevRound: prevRound, hasPreviousRound: hasPrevRound, hasNextRound: hasNextRound }}
       />
     );
   }
