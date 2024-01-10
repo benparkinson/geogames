@@ -47,16 +47,19 @@ public class GameService {
     this.objectMapper = objectMapper;
   }
 
-  public Optional<GameCreationResponse> createGame(GameType gameType, int numberOfRounds) throws IOException {
+  public Optional<GameCreationResponse> createGame(GameType gameType, int numberOfRounds)
+      throws IOException {
     if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
       throw new IllegalArgumentException(
-          "Number of rounds must be between 1 and %d, was %d!".formatted(MAX_ROUNDS, numberOfRounds));
+          "Number of rounds must be between 1 and %d, was %d!"
+              .formatted(MAX_ROUNDS, numberOfRounds));
     }
 
     if (gameType == GameType.TRIPOINT) {
 
       List<Country> countries = countryLoaderService.loadCountries();
-      List<GameData> randomTripoints = tripointFinderService.findRandomTripoints(countries, numberOfRounds);
+      List<GameData> randomTripoints =
+          tripointFinderService.findRandomTripoints(countries, numberOfRounds);
 
       List<GameRoundEntity> gameRoundEntities = new ArrayList<>(randomTripoints.size());
       for (int i = 0; i < randomTripoints.size(); i++) {
