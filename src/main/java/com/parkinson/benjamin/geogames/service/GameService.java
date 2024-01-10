@@ -45,12 +45,12 @@ public class GameService {
     this.objectMapper = objectMapper;
   }
 
-  public Optional<GameCreationResponse> createGame(GameType gameType) throws IOException {
+  public Optional<GameCreationResponse> createGame(GameType gameType, int numberOfRounds) throws IOException {
 
     if (gameType == GameType.TRIPOINT) {
 
       List<Country> countries = countryLoaderService.loadCountries();
-      List<GameData> randomTripoints = tripointFinderService.findRandomTripoints(countries, 5);
+      List<GameData> randomTripoints = tripointFinderService.findRandomTripoints(countries, numberOfRounds);
 
       List<GameRoundEntity> gameRoundEntities = new ArrayList<>(randomTripoints.size());
       for (int i = 0; i < randomTripoints.size(); i++) {
@@ -67,7 +67,7 @@ public class GameService {
     if (gameType == GameType.RIVERS_BY_SHAPE) {
 
       List<River> rivers = riverLoaderService.loadRivers();
-      List<River> randomRivers = riverFinderService.findRandomRivers(rivers, 5);
+      List<River> randomRivers = riverFinderService.findRandomRivers(rivers, numberOfRounds);
       List<GameRoundEntity> gameRoundEntities = new ArrayList<>(randomRivers.size());
 
       for (int i = 0; i < randomRivers.size(); i++) {

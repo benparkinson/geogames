@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.dao.GameType;
+import com.parkinson.benjamin.geogames.model.GameCreationRequest;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameRound;
 import com.parkinson.benjamin.geogames.service.GameService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,11 +28,11 @@ public class GameController {
   }
 
   @RequestMapping(method = RequestMethod.POST, path = "api/games")
-  public ResponseEntity<GameCreationResponse> createGame(@RequestParam GameType gameType)
+  public ResponseEntity<GameCreationResponse> createGame(@RequestBody GameCreationRequest request)
       throws IOException {
 
     return gameService
-        .createGame(gameType)
+        .createGame(request.gameType(), request.numberOfRounds())
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.badRequest().build());
   }
