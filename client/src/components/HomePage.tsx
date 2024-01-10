@@ -30,6 +30,10 @@ function HomePage(): JSX.Element {
         newGameMutation.mutate(new GameRequest(selectedGameType.name, numberOfRounds));
     }
 
+    function renderDropDownItem(gameType: GameType): JSX.Element {
+        return <Dropdown.Item onClick={() => setSelectedGameType(gameType)}>{gameType.displayName}</Dropdown.Item>
+    }
+
     return (
         <div className="d-flex vh-100" id="main-page">
             <div className="container d-flex justify-content-center align-items-center text-center">
@@ -49,8 +53,9 @@ function HomePage(): JSX.Element {
                         <div className="d-flex">
                             <div className="m-2">Game type: </div>
                             <DropdownButton id="dropdown-basic-button" title={selectedGameType.displayName}>
-                                <Dropdown.Item onClick={() => setSelectedGameType(TripointGameType)}>{TripointGameType.displayName}</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setSelectedGameType(RiversGameType)}>{RiversGameType.displayName}</Dropdown.Item>
+                                {renderDropDownItem(TripointGameType)}
+                                {renderDropDownItem(RiversGameType)}
+                                {renderDropDownItem(RandomSelectionGameType)}
                             </DropdownButton>
                         </div>
                         <div className="d-flex">
@@ -94,5 +99,6 @@ class GameRequest {
 
 const TripointGameType = new GameType("TRIPOINT", "Tripoint");
 const RiversGameType = new GameType("RIVERS_BY_SHAPE", "Rivers by shape");
+const RandomSelectionGameType = new GameType("RANDOM", "Random selection");
 
 export default HomePage;

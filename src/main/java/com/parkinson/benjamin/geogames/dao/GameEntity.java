@@ -14,8 +14,6 @@ import java.util.Objects;
 public final class GameEntity {
 
   @Id @GeneratedValue private long id;
-  private GameType name;
-
   @Lob
   @Column
   @OneToMany(cascade = CascadeType.ALL)
@@ -23,14 +21,12 @@ public final class GameEntity {
 
   public GameEntity() {}
 
-  public GameEntity(GameType name, List<GameRoundEntity> rounds) {
-    this.name = name;
+  public GameEntity(List<GameRoundEntity> rounds) {
     this.rounds = rounds;
   }
 
-  public GameEntity(long id, GameType name) {
+  public GameEntity(long id) {
     this.id = id;
-    this.name = name;
   }
 
   public long getId() {
@@ -39,14 +35,6 @@ public final class GameEntity {
 
   public void setId(long id) {
     this.id = id;
-  }
-
-  public GameType getName() {
-    return name;
-  }
-
-  public void setName(GameType name) {
-    this.name = name;
   }
 
   public List<GameRoundEntity> getRounds() {
@@ -66,16 +54,16 @@ public final class GameEntity {
       return false;
     }
     var that = (GameEntity) obj;
-    return this.id == that.id && Objects.equals(this.name, that.name);
+    return this.id == that.id;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name);
+    return Objects.hash(id);
   }
 
   @Override
   public String toString() {
-    return "GameEntity[" + "id=" + id + ", " + "name=" + name + ']';
+    return "GameEntity[" + "id=" + id + "]";
   }
 }

@@ -1,3 +1,5 @@
 package com.parkinson.benjamin.geogames.dao;
 
-public interface GameData {}
+public interface GameData {
+  GameType gameType();
+}

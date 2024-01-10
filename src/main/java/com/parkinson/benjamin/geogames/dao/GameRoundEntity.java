@@ -12,12 +12,16 @@ public final class GameRoundEntity {
   @Id @GeneratedValue private int id;
 
   private int index;
+
+  private GameType gameType;
+
   @Lob @Column private String jsonBlob;
 
   public GameRoundEntity() {}
 
-  public GameRoundEntity(int index, String jsonBlob) {
+  public GameRoundEntity(int index, GameType gameType, String jsonBlob) {
     this.index = index;
+    this.gameType = gameType;
     this.jsonBlob = jsonBlob;
   }
 
@@ -37,6 +41,14 @@ public final class GameRoundEntity {
     this.index = index;
   }
 
+  public GameType getGameType() {
+    return gameType;
+  }
+
+  public void setGameType(GameType gameType) {
+    this.gameType = gameType;
+  }
+
   public String getJsonBlob() {
     return jsonBlob;
   }
@@ -50,11 +62,11 @@ public final class GameRoundEntity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     GameRoundEntity gameRoundEntity = (GameRoundEntity) o;
-    return id == gameRoundEntity.id && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
+    return id == gameRoundEntity.id && gameType == gameRoundEntity.gameType && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, jsonBlob);
+    return Objects.hash(id, gameType, jsonBlob);
   }
 }
