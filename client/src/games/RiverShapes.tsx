@@ -23,6 +23,7 @@ function RiverShapes({ river, round }): JSX.Element {
 
     return normalisedGuess;
   }
+
   return (
     <MapGame
       data={river}
@@ -33,6 +34,7 @@ function RiverShapes({ river, round }): JSX.Element {
       checkAdditionalAnswers={checkAdditionalAnswers}
       round={round}
       explanation={explanation}
+      clues={["Continent: " + river.continent]}
     />
   );
 }
@@ -41,6 +43,7 @@ export class River {
   name: string;
   additionalNames: string[];
   geoData: RiverGeoData;
+  continent: string;
 }
 
 export class RiverGeoData implements GeoJsonObject {

@@ -11,7 +11,8 @@ function MapGame<Type>({
   correctAnswersFunction,
   checkAdditionalAnswers,
   round,
-  explanation
+  explanation,
+  clues
 }: MapGameProps<Type>): JSX.Element {
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
@@ -108,7 +109,7 @@ function MapGame<Type>({
   return (
     <div className="d-flex flex-column vh-100">
       <div className="container flex-fill">
-        <div className="height-80-vh">{renderMap()}</div>
+        <div className="height-70-vh">{renderMap()}</div>
         <MapGameInput
           guesses={guesses}
           correctnessArray={correctnessArray}
@@ -119,6 +120,7 @@ function MapGame<Type>({
           giveUp={giveUp}
           round={round}
           explanation={explanation}
+          clues={clues}
         />
       </div>
     </div>
@@ -134,6 +136,7 @@ export class MapGameProps<Type> {
   checkAdditionalAnswers: (guess: string, data: Type) => string;
   round: Round;
   explanation: string;
+  clues?: string[];
 }
 
 export default MapGame;

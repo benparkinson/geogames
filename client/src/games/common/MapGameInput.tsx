@@ -13,7 +13,8 @@ function MapGameInput({
   submitGuesses,
   giveUp,
   round,
-  explanation
+  explanation,
+  clues
 }: MapGameInputProps): JSX.Element {
   const [openExplanationModal, setOpenExplanationModal] = useState(false);
 
@@ -43,6 +44,16 @@ function MapGameInput({
     );
   }
 
+  function renderClues(): JSX.Element[] {
+    if (clues) {
+      return clues.map((clue, index) => (
+        <div key={index} className="m-1">
+          {clue}
+        </div>
+      ));
+    }
+  }
+
   return (
     <div id="input" className="row align-items-center">
       <div className="col justify-content-center align-items-center">
@@ -61,6 +72,11 @@ function MapGameInput({
         </div>
       </div>
 
+      <div className="col justify-content-center align-items-center">
+        <div className="m-1 d-flex justify-content-center">
+          {renderClues()}
+        </div>
+      </div>
       <div id="new-game-div" className="col justify-content-center align-items-center">
         <div className="m-1 d-flex justify-content-center">
           Round {round.currentRound + 1}/{round.totalRoundCount}
@@ -94,6 +110,7 @@ export class MapGameInputProps {
   giveUp: (e: React.MouseEvent<HTMLInputElement>) => void;
   round: Round;
   explanation: string;
+  clues?: string[];
 }
 
 export default MapGameInput;
