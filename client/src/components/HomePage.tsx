@@ -22,11 +22,12 @@ function HomePage(): JSX.Element {
             }
         }
     );
-    const [openModal, setOpenModal] = useState(false)
-    const [selectedGameType, setSelectedGameType] = useState(TripointGameType)
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedGameType, setSelectedGameType] = useState(TripointGameType);
+    const [numberOfRounds, setNumberOfRounds] = useState(5);
 
     function startGame(): void {
-        newGameMutation.mutate(new GameRequest(selectedGameType.name, 5));
+        newGameMutation.mutate(new GameRequest(selectedGameType.name, numberOfRounds));
     }
 
     return (
@@ -35,7 +36,7 @@ function HomePage(): JSX.Element {
                 <div className="row d-flex flex-column">
                     <h4>Welcome to Geogames (working title)</h4>
                     <div className="m-1">
-                        <Button text={"New game (5 rounds)"} bootstrapClass={"btn-info"} onClick={() => setOpenModal(true)}></Button>
+                        <Button text={"New game"} bootstrapClass={"btn-info"} onClick={() => setOpenModal(true)}></Button>
                     </div>
                 </div>
                 <Modal show={openModal} onHide={() => setOpenModal(false)}>
@@ -44,12 +45,24 @@ function HomePage(): JSX.Element {
                             New game?
                         </Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className="d-flex">
-                        <div className="m-2">Game type: </div>
-                        <DropdownButton id="dropdown-basic-button" title={selectedGameType.displayName}>
-                            <Dropdown.Item onClick={() => setSelectedGameType(TripointGameType)}>{TripointGameType.displayName}</Dropdown.Item>
-                            <Dropdown.Item onClick={() => setSelectedGameType(RiversGameType)}>{RiversGameType.displayName}</Dropdown.Item>
-                        </DropdownButton>
+                    <Modal.Body>
+                        <div className="d-flex">
+                            <div className="m-2">Game type: </div>
+                            <DropdownButton id="dropdown-basic-button" title={selectedGameType.displayName}>
+                                <Dropdown.Item onClick={() => setSelectedGameType(TripointGameType)}>{TripointGameType.displayName}</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setSelectedGameType(RiversGameType)}>{RiversGameType.displayName}</Dropdown.Item>
+                            </DropdownButton>
+                        </div>
+                        <div className="d-flex">
+                            <div className="m-2">Number of rounds: </div>
+                            <DropdownButton id="dropdown-basic-button" title={numberOfRounds}>
+                                <Dropdown.Item onClick={() => setNumberOfRounds(1)}>1</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setNumberOfRounds(2)}>2</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setNumberOfRounds(3)}>3</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setNumberOfRounds(4)}>4</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setNumberOfRounds(5)}>5</Dropdown.Item>
+                            </DropdownButton>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button text={"Close"} bootstrapClass={"btn-secondary"} onClick={() => setOpenModal(false)}></Button>

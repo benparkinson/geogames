@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
 
+  private static final int MAX_ROUNDS = 10;
+
   private final GameRepository gameRepository;
   private final CountryLoaderService countryLoaderService;
   private final TripointFinderService tripointFinderService;
@@ -46,6 +48,10 @@ public class GameService {
   }
 
   public Optional<GameCreationResponse> createGame(GameType gameType, int numberOfRounds) throws IOException {
+    if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
+      throw new IllegalArgumentException(
+          "Number of rounds must be between 1 and %d, was %d!".formatted(MAX_ROUNDS, numberOfRounds));
+    }
 
     if (gameType == GameType.TRIPOINT) {
 
