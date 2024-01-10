@@ -1,6 +1,8 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Button } from "../../components/Button";
 import { Round } from "./Model";
+import { Modal } from "react-bootstrap";
+import { useState } from "react";
 
 function MapGameInput({
   guesses,
@@ -10,8 +12,11 @@ function MapGameInput({
   handleGuessInput,
   submitGuesses,
   giveUp,
-  round: round,
+  round,
+  explanation
 }: MapGameInputProps): JSX.Element {
+  const [openExplanationModal, setOpenExplanationModal] = useState(false);
+
   function renderBoxes(): JSX.Element[] {
     return guesses.map((g, index) => (
       <GuessBox
@@ -51,6 +56,9 @@ function MapGameInput({
         <div className="m-1 d-flex justify-content-center">
           <Button bootstrapClass="btn-secondary" text={"Give Up"} onClick={giveUp} />
         </div>
+        <div className="m-1 d-flex justify-content-center">
+          <Button bootstrapClass="btn-info" text={"Help"} onClick={() => setOpenExplanationModal(true)} />
+        </div>
       </div>
 
       <div id="new-game-div" className="col justify-content-center align-items-center">
@@ -59,6 +67,19 @@ function MapGameInput({
         </div>
         {renderRoundButtons()}
       </div>
+      <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Help
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {explanation}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button text={"Ok!"} bootstrapClass={"btn-primary"} onClick={() => setOpenExplanationModal(false)}></Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
@@ -72,6 +93,7 @@ export class MapGameInputProps {
   submitGuesses: (e: React.MouseEvent<HTMLInputElement>) => void;
   giveUp: (e: React.MouseEvent<HTMLInputElement>) => void;
   round: Round;
+  explanation: string;
 }
 
 export default MapGameInput;

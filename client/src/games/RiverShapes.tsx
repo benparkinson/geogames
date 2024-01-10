@@ -32,6 +32,7 @@ function RiverShapes({ river, round }): JSX.Element {
       correctAnswersFunction={correctAnswers}
       checkAdditionalAnswers={checkAdditionalAnswers}
       round={round}
+      explanation={explanation}
     />
   );
 }
@@ -48,5 +49,7 @@ export class RiverGeoData implements GeoJsonObject {
   properties: GeoJsonProperties;
   geometry: MultiLineString;
 }
+
+const explanation: string = "Guess the name of the river from its shape! You can zoom in and out of the map to help you.";
 
 export default RiverShapes;

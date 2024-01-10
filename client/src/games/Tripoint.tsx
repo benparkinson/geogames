@@ -39,6 +39,7 @@ function Tripoint({ tripoint, round }): JSX.Element {
         correctAnswersFunction={correctAnswers}
         checkAdditionalAnswers={checkAdditionalAnswers}
         round={round}
+        explanation={explanation}
       />
     );
   }
@@ -68,5 +69,7 @@ export class TripointGeoData implements GeoJsonObject {
   properties: GeoJsonProperties;
   geometry: MultiPolygon | Polygon;
 }
+
+const explanation: string = "Guess the countries that meet at this tripoint! You can zoom in and out of the map to help you.";
 
 export default Tripoint;

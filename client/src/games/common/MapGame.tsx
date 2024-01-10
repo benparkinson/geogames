@@ -10,7 +10,8 @@ function MapGame<Type>({
   MapComponent,
   correctAnswersFunction,
   checkAdditionalAnswers,
-  round: round
+  round,
+  explanation
 }: MapGameProps<Type>): JSX.Element {
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
@@ -117,6 +118,7 @@ function MapGame<Type>({
           submitGuesses={submitGuesses}
           giveUp={giveUp}
           round={round}
+          explanation={explanation}
         />
       </div>
     </div>
@@ -131,6 +133,7 @@ export class MapGameProps<Type> {
   correctAnswersFunction: (data: Type) => string[];
   checkAdditionalAnswers: (guess: string, data: Type) => string;
   round: Round;
+  explanation: string;
 }
 
 export default MapGame;

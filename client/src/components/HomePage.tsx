@@ -30,8 +30,12 @@ function HomePage(): JSX.Element {
         newGameMutation.mutate(new GameRequest(selectedGameType.name, numberOfRounds));
     }
 
-    function renderDropDownItem(gameType: GameType): JSX.Element {
+    function renderGameTypeDropDownItem(gameType: GameType): JSX.Element {
         return <Dropdown.Item onClick={() => setSelectedGameType(gameType)}>{gameType.displayName}</Dropdown.Item>
+    }
+
+    function renderRoundCountDropDownItem(roundCount: number): JSX.Element {
+        return <Dropdown.Item onClick={() => setNumberOfRounds(roundCount)}>{roundCount}</Dropdown.Item>
     }
 
     return (
@@ -53,19 +57,19 @@ function HomePage(): JSX.Element {
                         <div className="d-flex">
                             <div className="m-2">Game type: </div>
                             <DropdownButton id="dropdown-basic-button" title={selectedGameType.displayName}>
-                                {renderDropDownItem(TripointGameType)}
-                                {renderDropDownItem(RiversGameType)}
-                                {renderDropDownItem(RandomSelectionGameType)}
+                                {renderGameTypeDropDownItem(TripointGameType)}
+                                {renderGameTypeDropDownItem(RiversGameType)}
+                                {renderGameTypeDropDownItem(RandomSelectionGameType)}
                             </DropdownButton>
                         </div>
                         <div className="d-flex">
                             <div className="m-2">Number of rounds: </div>
                             <DropdownButton id="dropdown-basic-button" title={numberOfRounds}>
-                                <Dropdown.Item onClick={() => setNumberOfRounds(1)}>1</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setNumberOfRounds(2)}>2</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setNumberOfRounds(3)}>3</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setNumberOfRounds(4)}>4</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setNumberOfRounds(5)}>5</Dropdown.Item>
+                                {renderRoundCountDropDownItem(1)}
+                                {renderRoundCountDropDownItem(2)}
+                                {renderRoundCountDropDownItem(3)}
+                                {renderRoundCountDropDownItem(4)}
+                                {renderRoundCountDropDownItem(5)}
                             </DropdownButton>
                         </div>
                     </Modal.Body>
