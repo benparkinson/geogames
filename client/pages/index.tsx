@@ -9,7 +9,9 @@ function MenuPage(): JSX.Element {
       <Head>
         <title>Geogames!</title>
       </Head>
-      <HomePage />
+      <div id="root">
+        <HomePage />
+      </div>
     </QueryClientProvider>
   );
 }
