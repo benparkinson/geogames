@@ -9,9 +9,11 @@ import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.GameType;
+import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameRound;
+import com.parkinson.benjamin.geogames.model.GameRoundAnswerRequest;
 import com.parkinson.benjamin.geogames.model.River;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -146,7 +148,23 @@ public class GameService {
         gameRound,
         (g, r) -> {
           int totalRoundCount = g.getRounds().size();
-          return new GameRound(r.getGameType(), r.getJsonBlob(), totalRoundCount);
+          return new GameRound(r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
+        });
+  }
+
+  public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
+    Optional<GameEntity> game = gameRepository.findById(gameId);
+    Optional<GameRoundEntity> gameRound =
+        game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
+
+    return map(
+        game,
+        gameRound,
+        (g, r) -> {
+          r.setAnswerState(answerState);
+          gameRepository.save(g);
+          int totalRoundCount = g.getRounds().size();
+          return new GameRound(r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
         });
   }
 }

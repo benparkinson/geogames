@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.controllers;
 import com.parkinson.benjamin.geogames.model.GameCreationRequest;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameRound;
+import com.parkinson.benjamin.geogames.model.GameRoundAnswerRequest;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,15 @@ public class GameController {
       @PathVariable long gameId, @PathVariable int round) {
     return gameService
         .getGameRound(gameId, round)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @RequestMapping(method = RequestMethod.POST, path = "api/games/{gameId}/rounds/{round}/answers")
+  public ResponseEntity<GameRound> submitAnswer(
+      @PathVariable long gameId, @PathVariable int round, @RequestBody GameRoundAnswerRequest answer) {
+    return gameService
+        .submitAnswer(gameId, round, answer.answerState())
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

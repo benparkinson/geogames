@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.dao;
 
+import com.parkinson.benjamin.geogames.model.AnswerState;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,12 +18,15 @@ public final class GameRoundEntity {
 
   @Lob @Column private String jsonBlob;
 
+  private AnswerState answerState;
+
   public GameRoundEntity() {}
 
   public GameRoundEntity(int index, GameType gameType, String jsonBlob) {
     this.index = index;
     this.gameType = gameType;
     this.jsonBlob = jsonBlob;
+    this.answerState = AnswerState.UNANSWERED;
   }
 
   public int getId() {
@@ -55,6 +59,14 @@ public final class GameRoundEntity {
 
   public void setJsonBlob(String jsonBlob) {
     this.jsonBlob = jsonBlob;
+  }
+
+  public AnswerState getAnswerState() {
+    return answerState;
+  }
+
+  public void setAnswerState(AnswerState answerState) {
+    this.answerState = answerState;
   }
 
   @Override
