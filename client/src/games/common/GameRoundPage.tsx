@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { serverEndpoint } from "../../../src/api/gateway";
 import Tripoint from "../Tripoint";
@@ -12,6 +12,13 @@ function GameRoundPage({ gameId }): JSX.Element {
     const [currentRound, setRound] = useState(0)
     const { error, data, isFetching } = useQuery(createUrl(), () =>
         fetch(serverEndpoint() + createUrl()).then(result => result.json())
+    );
+    const submitAnswerMutation = useMutation((answerState: string) =>
+        fetch(serverEndpoint() + createUrl() + "/answers", {
+            method: "POST", headers: {
+                "Content-Type": "application/json",
+            }, body: JSON.stringify({ answerState: answerState })
+        })
     );
 
     function createUrl() {
@@ -26,15 +33,19 @@ function GameRoundPage({ gameId }): JSX.Element {
         setRound(currentRound - 1)
     }
 
+    function submitAnswer(answerState: string): void {
+        submitAnswerMutation.mutate(answerState);
+    }
+
     function renderGame(data: GameRoundModel) {
         const hasNextRound = currentRound < data.totalRoundCount - 1;
         const hasPrevRound = currentRound > 0;
         const roundData = JSON.parse(data.jsonBlob);
-        const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount);
+        const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount, data.answerState);
         if (data.gameType == "TRIPOINT") {
-            return <Tripoint tripoint={roundData} round={round} />
+            return <Tripoint tripoint={roundData} round={round} submitAnswer={submitAnswer} />
         } else if (data.gameType == "RIVERS_BY_SHAPE") {
-            return <RiverShapes river={roundData} round={round} />
+            return <RiverShapes river={roundData} round={round} submitAnswer={submitAnswer} />
         }
         else {
             return <div>Unknown game type...</div>
@@ -75,3 +86,7 @@ function GameRoundPage({ gameId }): JSX.Element {
 }
 
 export default GameRoundPage;
+
+export const CORRECT_ANSWER: string = "CORRECT";
+export const GAVE_UP: string = "GAVE_UP";
+export const UNANSWERED: string = "UNANSWERED";

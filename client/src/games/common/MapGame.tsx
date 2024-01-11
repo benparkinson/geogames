@@ -2,6 +2,7 @@ import { useState } from "react";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import { Round } from "./Model";
+import { CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./GameRoundPage";
 
 function MapGame<Type>({
   data,
@@ -12,12 +13,14 @@ function MapGame<Type>({
   checkAdditionalAnswers,
   round,
   explanation,
-  clues
+  clues,
+  submitAnswer,
+  answerState
 }: MapGameProps<Type>): JSX.Element {
   const [guesses, setGuesses] = useState(Array(guessBoxCount).fill(""));
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
-  const [gaveUp, setGaveUp] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
+  const [gaveUp, setGaveUp] = useState(answerState === GAVE_UP);
+  const [gameOver, setGameOver] = useState(answerState !== UNANSWERED);
 
   function handleGuessInput({ target }) {
     const newGuesses = guesses.map((guess, i) => {
@@ -62,7 +65,11 @@ function MapGame<Type>({
       }
     });
     setCorrectnessArray(newCorrectness);
-    setGameOver(newCorrectness.every(answer => answer));
+    const correct = newCorrectness.every(answer => answer)
+    if (correct) {
+      submitAnswer(CORRECT_ANSWER);
+    }
+    setGameOver(correct);
   }
 
   function giveUp() {
@@ -70,14 +77,22 @@ function MapGame<Type>({
       return;
     }
 
+    setCorrectAnswers(false);
+    submitAnswer(GAVE_UP);
+    setGaveUp(true);
+    setGameOver(true);
+  }
+
+  function setCorrectAnswers(userCorrect: boolean) {
     const correctAnswers = correctAnswersFunction(data);
     const newGuesses = guesses.slice();
     correctAnswers.forEach((country, index) => {
       newGuesses[index] = country;
     });
     setGuesses(newGuesses);
-    setGaveUp(true);
-    setGameOver(true);
+    const newCorrectness = correctnessArray.slice();
+    newCorrectness.fill(userCorrect);
+    setCorrectnessArray(newCorrectness);
   }
 
   function clearInput() {
@@ -89,6 +104,10 @@ function MapGame<Type>({
 
   if (round) {
     enrichRoundFunctions();
+  }
+
+  if (gameOver && guesses.every(guess => guess === "")) {
+    setCorrectAnswers(!gaveUp);
   }
 
   function enrichRoundFunctions() {
@@ -137,6 +156,8 @@ export class MapGameProps<Type> {
   round: Round;
   explanation: string;
   clues?: string[];
+  submitAnswer: (answerState: string) => void;
+  answerState: string;
 }
 
 export default MapGame;
