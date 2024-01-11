@@ -47,7 +47,9 @@ public class GameController {
 
   @RequestMapping(method = RequestMethod.POST, path = "api/games/{gameId}/rounds/{round}/answers")
   public ResponseEntity<GameRound> submitAnswer(
-      @PathVariable long gameId, @PathVariable int round, @RequestBody GameRoundAnswerRequest answer) {
+      @PathVariable long gameId,
+      @PathVariable int round,
+      @RequestBody GameRoundAnswerRequest answer) {
     return gameService
         .submitAnswer(gameId, round, answer.answerState())
         .map(ResponseEntity::ok)

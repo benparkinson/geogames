@@ -13,11 +13,9 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameRound;
-import com.parkinson.benjamin.geogames.model.GameRoundAnswerRequest;
 import com.parkinson.benjamin.geogames.model.River;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +79,9 @@ public class GameService {
       Map<GameType, Integer> gameTypeCount = new HashMap<>();
       for (int i = 0; i < numberOfRounds; i++) {
         int randomGameType = random.nextInt(GameType.values().length);
-        gameTypeCount.put(GameType.values()[randomGameType], gameTypeCount.getOrDefault(GameType.values()[randomGameType], 0) + 1);
+        gameTypeCount.put(
+            GameType.values()[randomGameType],
+            gameTypeCount.getOrDefault(GameType.values()[randomGameType], 0) + 1);
       }
 
       List<GameData> allGameData = new ArrayList<>(numberOfRounds);
@@ -148,7 +148,8 @@ public class GameService {
         gameRound,
         (g, r) -> {
           int totalRoundCount = g.getRounds().size();
-          return new GameRound(r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
+          return new GameRound(
+              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
         });
   }
 
@@ -164,7 +165,8 @@ public class GameService {
           r.setAnswerState(answerState);
           gameRepository.save(g);
           int totalRoundCount = g.getRounds().size();
-          return new GameRound(r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
+          return new GameRound(
+              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
         });
   }
 }

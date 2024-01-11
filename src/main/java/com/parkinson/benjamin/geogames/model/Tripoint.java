@@ -6,8 +6,8 @@ import java.util.Set;
 
 public record Tripoint(Coordinate coordinate, Set<Country> countries) implements GameData {
 
-    @Override
-    public GameType gameType() {
-      return GameType.TRIPOINT;
-    }
+  @Override
+  public GameType gameType() {
+    return GameType.TRIPOINT;
+  }
 }

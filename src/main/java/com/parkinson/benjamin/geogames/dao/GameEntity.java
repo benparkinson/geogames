@@ -14,6 +14,7 @@ import java.util.Objects;
 public final class GameEntity {
 
   @Id @GeneratedValue private long id;
+
   @Lob
   @Column
   @OneToMany(cascade = CascadeType.ALL)

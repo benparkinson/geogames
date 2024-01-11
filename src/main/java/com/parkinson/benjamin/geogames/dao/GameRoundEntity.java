@@ -74,7 +74,9 @@ public final class GameRoundEntity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     GameRoundEntity gameRoundEntity = (GameRoundEntity) o;
-    return id == gameRoundEntity.id && gameType == gameRoundEntity.gameType && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
+    return id == gameRoundEntity.id
+        && gameType == gameRoundEntity.gameType
+        && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
   }
 
   @Override
