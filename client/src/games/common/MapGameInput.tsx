@@ -54,6 +54,14 @@ function MapGameInput({
     }
   }
 
+  function renderScoreDescription(): string {
+    if (round.gameCompleted) {
+      return "Final";
+    } else {
+      return "Current";
+    }
+  }
+
   return (
     <div id="input" className="row align-items-center">
       <div className="col justify-content-center align-items-center">
@@ -82,7 +90,7 @@ function MapGameInput({
           Round {round.currentRound + 1}/{round.totalRoundCount}
         </div>
         <div className="m-1 d-flex justify-content-center">
-          Current score: {round.score}/{round.totalRoundCount}
+          {renderScoreDescription()} score: {round.score}/{round.totalRoundCount}
         </div>
         {renderRoundButtons()}
       </div>

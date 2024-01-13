@@ -21,8 +21,9 @@ export class Round {
     totalRoundCount: number;
     answerState: string;
     score: number;
+    gameCompleted: boolean;
 
-    constructor(nextRound: () => void, prevRound: () => void, hasPreviousRound: boolean, hasNextRound: boolean, currentRound: number, totalRoundCount: number, answerState: string, score: number) {
+    constructor(nextRound: () => void, prevRound: () => void, hasPreviousRound: boolean, hasNextRound: boolean, currentRound: number, totalRoundCount: number, answerState: string, score: number, gameCompleted: boolean) {
         this.nextRound = nextRound;
         this.prevRound = prevRound;
         this.hasPreviousRound = hasPreviousRound;
@@ -31,5 +32,6 @@ export class Round {
         this.totalRoundCount = totalRoundCount;
         this.answerState = answerState;
         this.score = score;
+        this.gameCompleted = gameCompleted;
     }
 }

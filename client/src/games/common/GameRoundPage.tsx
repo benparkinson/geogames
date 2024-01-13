@@ -46,8 +46,9 @@ function GameRoundPage({ gameId }): JSX.Element {
         const hasNextRound = currentRound < data.totalRoundCount - 1;
         const hasPrevRound = currentRound > 0;
         const roundData = JSON.parse(data.jsonBlob);
+        const gameCompleted = data.gameResult.gameState == "FINISHED";
         const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount, data.answerState,
-            data.gameResult.score);
+            data.gameResult.score, gameCompleted);
         if (data.gameType == "TRIPOINT") {
             return <Tripoint tripoint={roundData} round={round} submitAnswer={submitAnswer} />
         } else if (data.gameType == "RIVERS_BY_SHAPE") {
