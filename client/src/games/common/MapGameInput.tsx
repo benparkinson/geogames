@@ -81,6 +81,9 @@ function MapGameInput({
         <div className="m-1 d-flex justify-content-center">
           Round {round.currentRound + 1}/{round.totalRoundCount}
         </div>
+        <div className="m-1 d-flex justify-content-center">
+          Current score: {round.score}/{round.totalRoundCount}
+        </div>
         {renderRoundButtons()}
       </div>
       <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>

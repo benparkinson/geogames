@@ -3,4 +3,8 @@ package com.parkinson.benjamin.geogames.model;
 import com.parkinson.benjamin.geogames.dao.GameType;
 
 public record GameRound(
-    GameType gameType, String jsonBlob, int totalRoundCount, AnswerState answerState) {}
+    GameType gameType,
+    String jsonBlob,
+    int totalRoundCount,
+    AnswerState answerState,
+    GameResult gameResult) {}

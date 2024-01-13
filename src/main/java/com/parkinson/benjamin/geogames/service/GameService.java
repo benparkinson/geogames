@@ -12,7 +12,9 @@ import com.parkinson.benjamin.geogames.dao.GameType;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
+import com.parkinson.benjamin.geogames.model.GameResult;
 import com.parkinson.benjamin.geogames.model.GameRound;
+import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.River;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,9 +112,7 @@ public class GameService {
 
   private List<GameData> getXRandomTripoints(int numberOfRounds) throws IOException {
     List<Country> countries = countryLoaderService.loadCountries();
-    List<GameData> randomTripoints =
-        tripointFinderService.findRandomTripoints(countries, numberOfRounds);
-    return randomTripoints;
+      return tripointFinderService.findRandomTripoints(countries, numberOfRounds);
   }
 
   @NotNull
@@ -123,8 +123,7 @@ public class GameService {
 
   private List<GameData> getXRandomRivers(int numberOfRounds) throws IOException {
     List<River> rivers = riverLoaderService.loadRivers();
-    List<GameData> randomRivers = riverFinderService.findRandomRivers(rivers, numberOfRounds);
-    return randomRivers;
+      return riverFinderService.findRandomRivers(rivers, numberOfRounds);
   }
 
   private List<GameRoundEntity> createGameRounds(List<GameData> gameData)
@@ -143,20 +142,42 @@ public class GameService {
     Optional<GameRoundEntity> gameRound =
         game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
 
+    GameResult gameResult = calculateGameResult(game);
+
     return map(
         game,
         gameRound,
         (g, r) -> {
           int totalRoundCount = g.getRounds().size();
           return new GameRound(
-              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
+              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState(), gameResult);
         });
+  }
+
+  @NotNull
+  private static GameResult calculateGameResult(Optional<GameEntity> game) {
+    List<GameRoundEntity> rounds = game.map(GameEntity::getRounds).orElse(Collections.emptyList());
+    int roundsUnanswered =
+        rounds.stream().filter(r -> r.getAnswerState() == AnswerState.UNANSWERED).toList().size();
+    int roundsCorrect =
+        rounds.stream().filter(r -> r.getAnswerState() == AnswerState.CORRECT).toList().size();
+    GameState gameState;
+    if (roundsUnanswered == 0) {
+      gameState = GameState.FINISHED;
+    } else if (roundsUnanswered == rounds.size()) {
+      gameState = GameState.CREATED;
+    } else {
+      gameState = GameState.IN_PROGRESS;
+    }
+    return new GameResult(gameState, roundsUnanswered, roundsCorrect);
   }
 
   public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
     Optional<GameEntity> game = gameRepository.findById(gameId);
     Optional<GameRoundEntity> gameRound =
         game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
+
+    GameResult gameResult = calculateGameResult(game);
 
     return map(
         game,
@@ -166,7 +187,7 @@ public class GameService {
           gameRepository.save(g);
           int totalRoundCount = g.getRounds().size();
           return new GameRound(
-              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState());
+              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState(), gameResult);
         });
   }
 }

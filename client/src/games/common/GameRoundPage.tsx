@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { serverEndpoint } from "../../../src/api/gateway";
+import { client, serverEndpoint } from "../../../src/api/gateway";
 import Tripoint from "../Tripoint";
 import { GameRoundModel, Round } from "../../../src/games/common/Model";
 import Spinner from "../../../src/components/Spinner";
@@ -18,7 +18,12 @@ function GameRoundPage({ gameId }): JSX.Element {
             method: "POST", headers: {
                 "Content-Type": "application/json",
             }, body: JSON.stringify({ answerState: answerState })
-        })
+        }).then(result => result.json()),
+        {
+            onSuccess: () => {
+                client.invalidateQueries(createUrl());
+            }
+        }
     );
 
     function createUrl() {
@@ -41,7 +46,8 @@ function GameRoundPage({ gameId }): JSX.Element {
         const hasNextRound = currentRound < data.totalRoundCount - 1;
         const hasPrevRound = currentRound > 0;
         const roundData = JSON.parse(data.jsonBlob);
-        const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount, data.answerState);
+        const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount, data.answerState,
+            data.gameResult.score);
         if (data.gameType == "TRIPOINT") {
             return <Tripoint tripoint={roundData} round={round} submitAnswer={submitAnswer} />
         } else if (data.gameType == "RIVERS_BY_SHAPE") {
