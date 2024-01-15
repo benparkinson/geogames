@@ -1,21 +1,37 @@
-.height-70-vh {
-  padding-top: 5vh;
-  height: 70vh;
+.map {
+  margin-top: 5px;
+  min-height: 400px;
+  max-height: 60vh;
   box-sizing: content-box !important;
 }
 
 .leaflet-container {
-  height: 70vh;
+  min-height: 400px;
+  max-height: 60vh;
   box-sizing: content-box !important;
+}
+
+.map-game {
+  min-width: 400px;
+  max-width: 65vh;
+}
+
+.help-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
 }
 
 #input {
   background-color: #c8cfe8;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: 0;
   margin-right: 0;
-  height: 20vh;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  min-height: 20vh;
   box-sizing: content-box !important;
 }
 

@@ -11,12 +11,9 @@ function MapGameInput({
   gaveUp,
   handleGuessInput,
   submitGuesses,
-  giveUp,
   round,
-  explanation,
   clues
 }: MapGameInputProps): JSX.Element {
-  const [openExplanationModal, setOpenExplanationModal] = useState(false);
 
   function renderBoxes(): JSX.Element[] {
     return guesses.map((g, index) => (
@@ -64,28 +61,7 @@ function MapGameInput({
 
   return (
     <div id="input" className="row align-items-center">
-      <div className="col justify-content-center align-items-center">
-        {renderBoxes()}
-      </div>
-
-      <div className="col justify-content-center align-items-center">
-        <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-success" text={"Submit"} onClick={submitGuesses} />
-        </div>
-        <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-secondary" text={"Give Up"} onClick={giveUp} />
-        </div>
-        <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-info" text={"Help"} onClick={() => setOpenExplanationModal(true)} />
-        </div>
-      </div>
-
-      <div className="col justify-content-center align-items-center">
-        <div className="m-1 d-flex justify-content-center">
-          {renderClues()}
-        </div>
-      </div>
-      <div id="new-game-div" className="col justify-content-center align-items-center">
+      <div id="new-game-div" className="d-flex justify-content-center align-items-center">
         <div className="m-1 d-flex justify-content-center">
           Round {round.currentRound + 1}/{round.totalRoundCount}
         </div>
@@ -94,19 +70,21 @@ function MapGameInput({
         </div>
         {renderRoundButtons()}
       </div>
-      <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Help
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {explanation}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button text={"Ok!"} bootstrapClass={"btn-primary"} onClick={() => setOpenExplanationModal(false)}></Button>
-        </Modal.Footer>
-      </Modal>
+      <div className="col justify-content-center align-items-center">
+        {renderBoxes()}
+      </div>
+
+      <div className="col justify-content-center align-items-center">
+        <div className="m-1 d-flex justify-content-center">
+          <Button bootstrapClass="btn-success" text={"Submit"} onClick={submitGuesses} />
+        </div>
+      </div>
+
+      <div className="col justify-content-center align-items-center">
+        <div className="m-1 d-flex justify-content-center">
+          {renderClues()}
+        </div>
+      </div>
     </div>
   );
 }
@@ -118,9 +96,7 @@ export class MapGameInputProps {
   gaveUp: boolean;
   handleGuessInput: (e: React.FormEvent<HTMLInputElement>) => void;
   submitGuesses: (e: React.MouseEvent<HTMLInputElement>) => void;
-  giveUp: (e: React.MouseEvent<HTMLInputElement>) => void;
   round: Round;
-  explanation: string;
   clues?: string[];
 }
 

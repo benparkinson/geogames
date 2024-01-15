@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import { Round } from "./Model";
 import { CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./GameRoundPage";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+import { Button, Modal, Overlay, Tooltip } from "react-bootstrap";
+import HelpButton from "./HelpButton";
 
 function MapGame<Type>({
   data,
@@ -21,6 +25,9 @@ function MapGame<Type>({
   const [correctnessArray, setCorrectnessArray] = useState(Array(guessBoxCount).fill(null));
   const [gaveUp, setGaveUp] = useState(answerState === GAVE_UP);
   const [gameOver, setGameOver] = useState(answerState !== UNANSWERED);
+  const [openExplanationModal, setOpenExplanationModal] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const target = useRef(null);
 
   function handleGuessInput({ target }) {
     const newGuesses = guesses.map((guess, i) => {
@@ -125,10 +132,19 @@ function MapGame<Type>({
     }
   }
 
+  function handleHelpButtonClick() {
+
+  }
+
+  function openGameExplanationModal() {
+    setOpenExplanationModal(true);
+  }
+
   return (
-    <div className="d-flex flex-column vh-100">
-      <div className="container flex-fill">
-        <div className="height-70-vh">{renderMap()}</div>
+    <div className="d-flex flex-column">
+      <div className="container flex-fill map-game">
+        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} />
+        <div className="map">{renderMap()}</div>
         <MapGameInput
           guesses={guesses}
           correctnessArray={correctnessArray}
@@ -136,12 +152,23 @@ function MapGame<Type>({
           gaveUp={gaveUp}
           handleGuessInput={handleGuessInput}
           submitGuesses={submitGuesses}
-          giveUp={giveUp}
           round={round}
-          explanation={explanation}
           clues={clues}
         />
       </div>
+      <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Help
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {explanation}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={"primary"} onClick={() => setOpenExplanationModal(false)}>Ok!</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
