@@ -8,7 +8,6 @@ import Answer from "./Answer";
 function MapGameInput({
   gameOver,
   round,
-  clues,
   answers,
   submitGuess
 }: MapGameInputProps): JSX.Element {
@@ -39,6 +38,13 @@ function MapGameInput({
     ));
   }
 
+  function nextRoundDisabled(): boolean {
+    if (!round.hasNextRound) {
+      return true;
+    }
+    return !gameOver;
+  }
+
   function renderRoundButtons(): JSX.Element {
     return (
       <div className="col d-flex justify-content-center align-items-center">
@@ -46,7 +52,7 @@ function MapGameInput({
           <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>Previous Round</Button>
         </div>
         <div className="m-1 d-flex justify-content-center">
-          <Button variant="primary" onClick={round.nextRound} disabled={!round.hasNextRound}>Next Round</Button>
+          <Button variant="primary" onClick={round.nextRound} disabled={nextRoundDisabled()}>Next Round</Button>
         </div>
       </div>
     );
@@ -98,7 +104,6 @@ function MapGameInput({
 export class MapGameInputProps {
   gameOver: boolean;
   round: Round;
-  clues?: string[];
   answers: AnswerModel[];
   submitGuess: (guess: string) => boolean;
 }

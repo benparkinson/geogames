@@ -126,7 +126,6 @@ function MapGame<Type>({
         <MapGameInput
           gameOver={gameOver}
           round={round}
-          clues={clues}
           answers={attemptedGuesses}
           submitGuess={submitGuess}
         />
