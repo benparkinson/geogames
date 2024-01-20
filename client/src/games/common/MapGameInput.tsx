@@ -26,6 +26,7 @@ function MapGameInput({
         onChange={handleGuessChange}
         correct={null}
         disabled={gameOver}
+        handleEnterKey={handleSubmitClick}
       />
     );
   }
@@ -49,16 +50,6 @@ function MapGameInput({
         </div>
       </div>
     );
-  }
-
-  function renderClues(): JSX.Element[] {
-    if (clues) {
-      return clues.map((clue, index) => (
-        <div key={index} className="m-1">
-          {clue}
-        </div>
-      ));
-    }
   }
 
   function renderScoreDescription(): string {
@@ -97,11 +88,6 @@ function MapGameInput({
         </div>
       </div>
 
-      <div className="col justify-content-center align-items-center">
-        <div className="m-1 d-flex justify-content-center">
-          {renderClues()}
-        </div>
-      </div>
       <div className="m-1 d-flex">
         {renderAnswers()}
       </div>

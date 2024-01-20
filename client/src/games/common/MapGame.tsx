@@ -22,6 +22,7 @@ function MapGame<Type>({
   const [gaveUp, setGaveUp] = useState(answerState === GAVE_UP);
   const [gameOver, setGameOver] = useState(answerState !== UNANSWERED);
   const [openExplanationModal, setOpenExplanationModal] = useState(false);
+  const [openClueModal, setOpenClueModal] = useState(false);
 
   function renderMap() {
     return <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} />;
@@ -113,10 +114,14 @@ function MapGame<Type>({
     setOpenExplanationModal(true);
   }
 
+  function openRoundClueModal() {
+    setOpenClueModal(true);
+  }
+
   return (
     <div className="d-flex flex-column">
       <div className="container flex-fill map-game">
-        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} />
+        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={openRoundClueModal} />
         <div className="map">{renderMap()}</div>
         <MapGameInput
           gameOver={gameOver}
@@ -137,6 +142,23 @@ function MapGame<Type>({
         </Modal.Body>
         <Modal.Footer>
           <Button variant={"primary"} onClick={() => setOpenExplanationModal(false)}>Ok!</Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={openClueModal} onHide={() => setOpenClueModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Clues
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {clues && clues.map((clue, index) => (
+            <div key={index} className="m-1">
+              {clue}
+            </div>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={"primary"} onClick={() => setOpenClueModal(false)}>Thanks!</Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -74,3 +74,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.tooltip-inner {
+  background-color: #b5c7d6;
+  color: #000000;
+}

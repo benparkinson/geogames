@@ -1,4 +1,4 @@
-export function GuessBox({ value, name, onChange, correct, disabled }: GuessBoxProps): JSX.Element {
+export function GuessBox({ value, name, onChange, correct, disabled, handleEnterKey }: GuessBoxProps): JSX.Element {
   function readCorrectness(): String {
     if (correct) {
       return " correct";
@@ -18,6 +18,12 @@ export function GuessBox({ value, name, onChange, correct, disabled }: GuessBoxP
         value={value}
         onChange={onChange}
         disabled={disabled}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleEnterKey();
+          }
+        }}
       ></input>
     </div>
   );
@@ -29,4 +35,5 @@ export class GuessBoxProps {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
   correct: boolean;
   disabled: boolean;
+  handleEnterKey: () => void;
 }
