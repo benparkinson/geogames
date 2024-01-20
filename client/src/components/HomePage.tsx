@@ -1,15 +1,15 @@
 import { useMutation } from "react-query";
 import { serverEndpoint } from "../api/gateway";
-import { Button } from "./Button";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Modal from 'react-bootstrap/Modal';
+import { Button, Spinner } from "react-bootstrap";
 
 function HomePage(): JSX.Element {
     const router = useRouter();
-    const newGameMutation = useMutation((gameRequest: GameRequest) =>
+    const { mutate, isLoading } = useMutation((gameRequest: GameRequest) =>
         fetch(serverEndpoint() + "/api/games", {
             method: "POST", headers: {
                 "Content-Type": "application/json",
@@ -27,7 +27,7 @@ function HomePage(): JSX.Element {
     const [numberOfRounds, setNumberOfRounds] = useState(5);
 
     function startGame(): void {
-        newGameMutation.mutate(new GameRequest(selectedGameType.name, numberOfRounds));
+        mutate(new GameRequest(selectedGameType.name, numberOfRounds));
     }
 
     function renderGameTypeDropDownItem(gameType: GameType): JSX.Element {
@@ -44,7 +44,7 @@ function HomePage(): JSX.Element {
                 <div className="row d-flex flex-column">
                     <h4>Welcome to Geogames (working title)</h4>
                     <div className="m-1">
-                        <Button text={"New game"} bootstrapClass={"btn-info"} onClick={() => setOpenModal(true)}></Button>
+                        <Button variant="info" onClick={() => setOpenModal(true)}>New game</Button>
                     </div>
                 </div>
                 <Modal show={openModal} onHide={() => setOpenModal(false)}>
@@ -74,8 +74,8 @@ function HomePage(): JSX.Element {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button text={"Close"} bootstrapClass={"btn-secondary"} onClick={() => setOpenModal(false)}></Button>
-                        <Button text={"Go!"} bootstrapClass={"btn-info"} onClick={() => startGame()}></Button>
+                        <Button variant="secondary" onClick={() => setOpenModal(false)}>Close</Button>
+                        <Button variant="info" onClick={() => startGame()} disabled={isLoading}>{isLoading ? <Spinner /> : "Go!"}</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

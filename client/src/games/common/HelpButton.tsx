@@ -7,7 +7,7 @@ interface HelpButtonProps {
     openClueModal?: () => void;
 }
 
-const HelpButton = ({ giveUp, openExplanationModal, openClueModal }): JSX.Element => {
+const HelpButton = ({ giveUp, openExplanationModal, openClueModal }: HelpButtonProps): JSX.Element => {
     const [showHelp, setShowHelp] = useState(false);
     const target = useRef(null);
 
