@@ -121,7 +121,7 @@ function MapGame<Type>({
   return (
     <div className="d-flex flex-column">
       <div className="container flex-fill map-game">
-        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={openRoundClueModal} />
+        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={clues && openRoundClueModal} />
         <div className="map">{renderMap()}</div>
         <MapGameInput
           gameOver={gameOver}
