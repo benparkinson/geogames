@@ -4,10 +4,6 @@ import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } fr
 import MapGame from "./common/MapGame";
 
 function Tripoint({ tripoint, round, submitAnswer }): JSX.Element {
-  function guessBoxName(index: number): string {
-    return "Country " + (index + 1);
-  }
-
   function countryNames(tripoint: TripointModel): string[] {
     return tripoint.countries.map(country => country.name);
   }
@@ -29,19 +25,26 @@ function Tripoint({ tripoint, round, submitAnswer }): JSX.Element {
     return normalisedGuess;
   }
 
+  function isAnswerCorrect(guess: string, tripoint: TripointModel): boolean {
+    const normalisedGuess = checkAdditionalAnswers(guess, tripoint);
+
+    return correctAnswers(tripoint)
+      .map(answer => normaliseString(answer))
+      .includes(normaliseString(normalisedGuess));
+  }
+
   function renderMapGame() {
     return (
       <MapGame
         data={tripoint}
         guessBoxCount={3}
-        guessBoxName={guessBoxName}
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
-        checkAdditionalAnswers={checkAdditionalAnswers}
         round={round}
         explanation={explanation}
         submitAnswer={submitAnswer}
         answerState={round.answerState}
+        isAnswerCorrect={isAnswerCorrect}
       />
     );
   }

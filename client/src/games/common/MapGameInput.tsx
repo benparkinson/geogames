@@ -1,30 +1,39 @@
 import { GuessBox } from "../../components/GuessBox";
-import { Button } from "../../components/Button";
 import { Round } from "./Model";
-import { Modal } from "react-bootstrap";
+import { Answer } from "./MapGame";
+import { Button } from "react-bootstrap";
 import { useState } from "react";
 
 function MapGameInput({
-  guesses,
-  correctnessArray,
-  guessBoxName,
-  gaveUp,
-  handleGuessInput,
-  submitGuesses,
+  gameOver,
   round,
-  clues
+  clues,
+  answers,
+  submitGuess
 }: MapGameInputProps): JSX.Element {
+  const [guess, setGuess] = useState("");
 
-  function renderBoxes(): JSX.Element[] {
-    return guesses.map((g, index) => (
+  function handleGuessChange(e: React.FormEvent<HTMLInputElement>) {
+    setGuess(e.currentTarget.value);
+  }
+
+  function renderGuessBox(): JSX.Element {
+    return (
       <GuessBox
-        key={index}
-        value={guesses[index]}
-        name={guessBoxName(index)}
-        onChange={handleGuessInput}
-        correct={correctnessArray[index]}
-        disabled={gaveUp}
+        value={guess}
+        name={'Guess'}
+        onChange={handleGuessChange}
+        correct={null}
+        disabled={gameOver}
       />
+    );
+  }
+
+  function renderAnswers(): JSX.Element[] {
+    return answers.map((answer, index) => (
+      <div className="m-1" key={index}>
+        {answer.answer} ({answer.correct ? "correct" : "incorrect"})
+      </div>
     ));
   }
 
@@ -32,10 +41,10 @@ function MapGameInput({
     return (
       <div className="col d-flex justify-content-center align-items-center">
         <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-primary" text={"Previous Round"} onClick={round.prevRound} disabled={!round.hasPreviousRound} />
+          <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>Previous Round</Button>
         </div>
         <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-primary" text={"Next Round"} onClick={round.nextRound} disabled={!round.hasNextRound} />
+          <Button variant="primary" onClick={round.nextRound} disabled={!round.hasNextRound}>Next Round</Button>
         </div>
       </div>
     );
@@ -59,6 +68,13 @@ function MapGameInput({
     }
   }
 
+  function handleSubmitClick() {
+    const guessSubmitted = submitGuess(guess);
+    if (guessSubmitted) {
+      setGuess("");
+    }
+  }
+
   return (
     <div id="input" className="row align-items-center">
       <div id="new-game-div" className="d-flex justify-content-center align-items-center">
@@ -71,12 +87,12 @@ function MapGameInput({
         {renderRoundButtons()}
       </div>
       <div className="col justify-content-center align-items-center">
-        {renderBoxes()}
+        {renderGuessBox()}
       </div>
 
       <div className="col justify-content-center align-items-center">
         <div className="m-1 d-flex justify-content-center">
-          <Button bootstrapClass="btn-success" text={"Submit"} onClick={submitGuesses} />
+          <Button variant="success" onClick={handleSubmitClick}>Submit</Button>
         </div>
       </div>
 
@@ -85,19 +101,19 @@ function MapGameInput({
           {renderClues()}
         </div>
       </div>
+      <div className="m-1 d-flex">
+        {renderAnswers()}
+      </div>
     </div>
   );
 }
 
 export class MapGameInputProps {
-  guesses: string[];
-  correctnessArray: boolean[];
-  guessBoxName: (index: number) => string;
-  gaveUp: boolean;
-  handleGuessInput: (e: React.FormEvent<HTMLInputElement>) => void;
-  submitGuesses: (e: React.MouseEvent<HTMLInputElement>) => void;
+  gameOver: boolean;
   round: Round;
   clues?: string[];
+  answers: Answer[];
+  submitGuess: (guess: string) => boolean;
 }
 
 export default MapGameInput;

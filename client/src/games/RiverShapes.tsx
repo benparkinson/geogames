@@ -4,9 +4,6 @@ import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'ge
 import MapGame from "./common/MapGame";
 
 function RiverShapes({ river, round, submitAnswer }): JSX.Element {
-  function guessBoxName(): string {
-    return "River name";
-  }
 
   function correctAnswers(riverModel: River): string[] {
     return [riverModel.name];
@@ -24,19 +21,24 @@ function RiverShapes({ river, round, submitAnswer }): JSX.Element {
     return normalisedGuess;
   }
 
+  function isAnswerCorrect(guess: string, riverModel: River): boolean {
+    const normalisedGuess = checkAdditionalAnswers(guess, riverModel);
+
+    return normaliseString(normalisedGuess) === normaliseString(riverModel.name);
+  }
+
   return (
     <MapGame
       data={river}
       guessBoxCount={1}
-      guessBoxName={guessBoxName}
       MapComponent={RiverShapesMapWrapper}
       correctAnswersFunction={correctAnswers}
-      checkAdditionalAnswers={checkAdditionalAnswers}
       round={round}
       explanation={explanation}
       clues={["Continent: " + river.continent]}
       submitAnswer={submitAnswer}
       answerState={round.answerState}
+      isAnswerCorrect={isAnswerCorrect}
     />
   );
 }
