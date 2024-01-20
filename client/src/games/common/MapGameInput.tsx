@@ -1,8 +1,9 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Round } from "./Model";
-import { Answer } from "./MapGame";
+import { AnswerModel } from "./MapGame";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
+import Answer from "./Answer";
 
 function MapGameInput({
   gameOver,
@@ -32,7 +33,7 @@ function MapGameInput({
   function renderAnswers(): JSX.Element[] {
     return answers.map((answer, index) => (
       <div className="m-1" key={index}>
-        {answer.answer} ({answer.correct ? "correct" : "incorrect"})
+        <Answer answer={answer.answer} isCorrect={answer.correct} />
       </div>
     ));
   }
@@ -112,7 +113,7 @@ export class MapGameInputProps {
   gameOver: boolean;
   round: Round;
   clues?: string[];
-  answers: Answer[];
+  answers: AnswerModel[];
   submitGuess: (guess: string) => boolean;
 }
 

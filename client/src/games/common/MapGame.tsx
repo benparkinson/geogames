@@ -36,7 +36,7 @@ function MapGame<Type>({
       return false;
     }
 
-    const allGuesses = attemptedGuesses.map((answer: Answer) => {
+    const allGuesses = attemptedGuesses.map((answer: AnswerModel) => {
       return normaliseString(answer.answer)
     });
 
@@ -45,11 +45,11 @@ function MapGame<Type>({
     }
 
     const correct = isAnswerCorrect(guess, data)
-    const answer = new Answer(guess, correct);
+    const answer = new AnswerModel(guess, correct);
 
     const newAttemptedGuesses = [...attemptedGuesses, answer];
 
-    const correctCount = newAttemptedGuesses.filter((answer: Answer) => {
+    const correctCount = newAttemptedGuesses.filter((answer: AnswerModel) => {
       return answer.correct;
     }).length;
 
@@ -77,7 +77,7 @@ function MapGame<Type>({
     const correctAnswers = correctAnswersFunction(data);
 
     setAttemptedGuesses(correctAnswers.map((answer, index) => {
-      return new Answer(answer, true);
+      return new AnswerModel(answer, true);
     }));
   }
 
@@ -156,7 +156,7 @@ export class MapGameProps<Type> {
   isAnswerCorrect: (guess: string, data: Type) => boolean;
 }
 
-export class Answer {
+export class AnswerModel {
   answer: string;
   correct: boolean;
 
