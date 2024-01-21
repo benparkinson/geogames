@@ -49,10 +49,10 @@ function MapGameInput({
     return (
       <div className="col d-flex justify-content-center align-items-center">
         <div className="m-1 d-flex justify-content-center">
-          <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>Previous Round</Button>
+          <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>{"<"}</Button>
         </div>
         <div className="m-1 d-flex justify-content-center">
-          <Button variant="primary" onClick={round.nextRound} disabled={nextRoundDisabled()}>Next Round</Button>
+          <Button variant="primary" onClick={round.nextRound} disabled={nextRoundDisabled()}>{">"}</Button>
         </div>
       </div>
     );
@@ -74,8 +74,8 @@ function MapGameInput({
   }
 
   return (
-    <div id="input" className="row align-items-center">
-      <div id="new-game-div" className="d-flex justify-content-center align-items-center">
+    <div id="input" className="row">
+      <div id="new-game-div" className="d-flex align-items-center">
         <div className="m-1 d-flex justify-content-center">
           Round {round.currentRound + 1}/{round.totalRoundCount}
         </div>
@@ -84,17 +84,15 @@ function MapGameInput({
         </div>
         {renderRoundButtons()}
       </div>
-      <div className="col justify-content-center align-items-center">
+      <div id="new-game-div" className="d-flex align-items-center justify-content-center">
         {renderGuessBox()}
-      </div>
 
-      <div className="col justify-content-center align-items-center">
-        <div className="m-1 d-flex justify-content-center">
+        <div className="m-2 d-flex justify-content-center">
           <Button variant="success" onClick={handleSubmitClick}>Submit</Button>
         </div>
       </div>
 
-      <div className="m-1 d-flex">
+      <div className="m-1 d-flex flex-wrap">
         {renderAnswers()}
       </div>
     </div>

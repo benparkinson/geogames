@@ -23,6 +23,15 @@
   margin-top: 5px;
 }
 
+.background {
+  background-color: #c8cfe8;
+  min-height: 100vh;
+}
+
+#main-page {
+  background-color: #c8cfe8;
+}
+
 #input {
   background-color: #c8cfe8;
   padding-left: 10px;
@@ -31,7 +40,6 @@
   margin-right: 0;
   padding-bottom: 10px;
   padding-top: 10px;
-  min-height: 20vh;
   box-sizing: content-box !important;
 }
 
