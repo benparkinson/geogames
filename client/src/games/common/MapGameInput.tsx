@@ -1,7 +1,7 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Round } from "./Model";
 import { AnswerModel } from "./MapGame";
-import { Button } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
 import { useState } from "react";
 import Answer from "./Answer";
 
@@ -47,7 +47,7 @@ function MapGameInput({
 
   function renderRoundButtons(): JSX.Element {
     return (
-      <div className="col d-flex justify-content-center align-items-center">
+      <div className="d-flex ms-auto">
         <div className="m-1 d-flex justify-content-center">
           <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>{"<"}</Button>
         </div>
@@ -67,16 +67,15 @@ function MapGameInput({
 
   return (
     <div id="input" className="row">
-      <div id="new-game-div" className="d-flex align-items-center">
-        {renderRoundButtons()}
-      </div>
-      <div id="new-game-div" className="d-flex align-items-center justify-content-center">
+      <Stack direction="horizontal" gap={1}>
         {renderGuessBox()}
 
         <div className="m-2 d-flex justify-content-center">
           <Button variant="success" onClick={handleSubmitClick}>Submit</Button>
         </div>
-      </div>
+
+        {renderRoundButtons()}
+      </Stack>
 
       <div className="m-1 d-flex flex-wrap">
         {renderAnswers()}
