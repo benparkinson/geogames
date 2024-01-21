@@ -9,6 +9,7 @@
   min-height: 400px;
   max-height: 60vh;
   box-sizing: content-box !important;
+  border-radius: 2%;
 }
 
 .map-game {

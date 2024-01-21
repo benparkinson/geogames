@@ -124,10 +124,10 @@ function MapGame<Type>({
       <div className="container flex-fill map-game">
 
         <Stack direction="horizontal" gap={3}>
-          <div className="p-1">
+          <div className="pt-1">
             <MapGameScore round={round} />
           </div>
-          <div className="ms-auto p-1">
+          <div className="ms-auto pt-1">
             <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={clues && openRoundClueModal} />
           </div>
         </Stack>
