@@ -28,13 +28,10 @@
 
 #input {
   background-color: #c8cfe8;
-  padding-left: 2px;
-  padding-right: 2px;
   margin-left: 0;
   margin-right: 0;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  box-sizing: content-box !important;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 #answer-header {
