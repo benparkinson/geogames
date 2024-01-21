@@ -16,13 +16,6 @@
   max-width: 65vh;
 }
 
-.help-button-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 5px;
-}
-
 .background {
   background-color: #c8cfe8;
   min-height: 100vh;

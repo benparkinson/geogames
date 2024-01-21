@@ -3,8 +3,9 @@ import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import { Round } from "./Model";
 import { CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./GameRoundPage";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Stack } from "react-bootstrap";
 import HelpButton from "./HelpButton";
+import MapGameScore from "./MapGameScore";
 
 function MapGame<Type>({
   data,
@@ -121,7 +122,16 @@ function MapGame<Type>({
   return (
     <div className="d-flex flex-column background">
       <div className="container flex-fill map-game">
-        <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={clues && openRoundClueModal} />
+
+        <Stack direction="horizontal" gap={3}>
+          <div className="p-1">
+            <MapGameScore round={round} />
+          </div>
+          <div className="ms-auto p-1">
+            <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={clues && openRoundClueModal} />
+          </div>
+        </Stack>
+
         <div className="map">{renderMap()}</div>
         <MapGameInput
           gameOver={gameOver}

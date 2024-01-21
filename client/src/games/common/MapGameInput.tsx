@@ -58,14 +58,6 @@ function MapGameInput({
     );
   }
 
-  function renderScoreDescription(): string {
-    if (round.gameCompleted) {
-      return "Final";
-    } else {
-      return "Current";
-    }
-  }
-
   function handleSubmitClick() {
     const guessSubmitted = submitGuess(guess);
     if (guessSubmitted) {
@@ -76,12 +68,6 @@ function MapGameInput({
   return (
     <div id="input" className="row">
       <div id="new-game-div" className="d-flex align-items-center">
-        <div className="m-1 d-flex justify-content-center">
-          Round {round.currentRound + 1}/{round.totalRoundCount}
-        </div>
-        <div className="m-1 d-flex justify-content-center">
-          {renderScoreDescription()} score: {round.score}/{round.totalRoundCount}
-        </div>
         {renderRoundButtons()}
       </div>
       <div id="new-game-div" className="d-flex align-items-center justify-content-center">

@@ -22,7 +22,7 @@ const HelpButton = ({ giveUp, openExplanationModal, openClueModal }: HelpButtonP
     }
 
     return (
-        <div className="help-button-container">
+        <div>
             <Button ref={target} variant="secondary" onClick={() => setShowHelp(!showHelp)}>?</Button>
             <Overlay target={target.current} show={showHelp} placement="bottom" >
                 {(props) => (
