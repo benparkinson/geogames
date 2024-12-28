@@ -2,7 +2,9 @@ package com.parkinson.benjamin.geogames.helper;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TripointHelper {
 
@@ -21,6 +23,6 @@ public final class TripointHelper {
 
               return new Coordinate(coordList.get(1).doubleValue(), coordList.get(0).doubleValue());
             })
-        .toList();
+        .collect(Collectors.toCollection(LinkedList::new));
   }
 }

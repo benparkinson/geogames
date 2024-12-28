@@ -1,3 +1,6 @@
 package com.parkinson.benjamin.geogames.model.geojson;
 
-public record GeoProperties(String name) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record GeoProperties(@JsonProperty("ADMIN") String name) {
+}

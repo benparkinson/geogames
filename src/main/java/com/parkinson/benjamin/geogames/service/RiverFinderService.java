@@ -13,10 +13,6 @@ public class RiverFinderService {
 
   private final Random random = new Random(System.currentTimeMillis());
 
-  public River findRiver(List<River> rivers) {
-    return rivers.get(random.nextInt(rivers.size()));
-  }
-
   public List<GameData> findRandomRivers(List<River> rivers, int howMany) {
     if (rivers.size() < howMany) {
       throw new IllegalArgumentException(

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import com.parkinson.benjamin.geogames.model.Tripoint;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class GameService {
 
   private final GameRepository gameRepository;
   private final CountryLoaderService countryLoaderService;
+  private final TripointLoaderService tripointLoaderService;
   private final TripointFinderService tripointFinderService;
   private final RiverLoaderService riverLoaderService;
   private final RiverFinderService riverFinderService;
@@ -47,12 +49,14 @@ public class GameService {
   public GameService(
       GameRepository gameRepository,
       CountryLoaderService countryLoaderService,
+      TripointLoaderService tripointLoaderService,
       TripointFinderService tripointFinderService,
       RiverLoaderService riverLoaderService,
       RiverFinderService riverFinderService,
       ObjectMapper objectMapper) {
     this.gameRepository = gameRepository;
     this.countryLoaderService = countryLoaderService;
+    this.tripointLoaderService = tripointLoaderService;
     this.tripointFinderService = tripointFinderService;
     this.riverLoaderService = riverLoaderService;
     this.riverFinderService = riverFinderService;
@@ -111,8 +115,8 @@ public class GameService {
   }
 
   private List<GameData> getXRandomTripoints(int numberOfRounds) throws IOException {
-    List<Country> countries = countryLoaderService.loadCountries();
-      return tripointFinderService.findRandomTripoints(countries, numberOfRounds);
+    List<Tripoint> tripoints = tripointLoaderService.loadTripoints();
+    return tripointFinderService.findRandomTripoints(tripoints, numberOfRounds);
   }
 
   @NotNull
