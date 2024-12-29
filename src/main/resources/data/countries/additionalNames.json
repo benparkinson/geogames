@@ -1,9 +1,10 @@
 {
-  "Czech Republic": ["Czechia", "Czech Rep."],
-  "Macedonia": ["North Macedonia", "Former Yugoslav Republic of Macedonia", "FYROM"],
+  "Czechia": ["Czech Republic", "Czech Rep."],
+  "North Macedonia": ["Macedonia", "Former Yugoslav Republic of Macedonia", "FYROM"],
   "Equatorial Guinea": ["Eq. Guinea"],
   "Laos": ["Lao PDR", "LPDR"],
   "Guinea Bissau": ["Guinea-Bissau"],
+  "China": ["People's Republic of China"],
   "Ivory Coast": ["Cote d'Ivoire", "Côte d'Ivoire"],
   "Democratic Republic of the Congo": ["DRC"],
   "Swaziland": ["eSwatini"],

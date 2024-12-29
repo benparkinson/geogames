@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import com.parkinson.benjamin.geogames.model.Tripoint;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +106,6 @@ public class GameService {
     return Optional.of(new GameCreationResponse(saved.getId()));
   }
 
-  @NotNull
   private List<GameRoundEntity> createTripointRounds(int numberOfRounds) throws IOException {
     List<GameData> randomTripoints = getXRandomTripoints(numberOfRounds);
 
@@ -119,7 +117,6 @@ public class GameService {
     return tripointFinderService.findRandomTripoints(tripoints, numberOfRounds);
   }
 
-  @NotNull
   private List<GameRoundEntity> createRiversByShapeRounds(int numberOfRounds) throws IOException {
     List<GameData> randomRivers = getXRandomRivers(numberOfRounds);
     return createGameRounds(randomRivers);
@@ -158,7 +155,6 @@ public class GameService {
         });
   }
 
-  @NotNull
   private static GameResult calculateGameResult(Optional<GameEntity> game) {
     List<GameRoundEntity> rounds = game.map(GameEntity::getRounds).orElse(Collections.emptyList());
     int roundsUnanswered =
