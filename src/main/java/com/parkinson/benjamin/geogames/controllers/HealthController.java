@@ -45,7 +45,7 @@ public class HealthController {
       try {
         status.set(Status.WARMING_UP);
         tripointLoaderService.loadTripoints();
-        riverLoaderService.loadRivers();
+        //riverLoaderService.loadRivers();
         status.set(Status.WARM);
       } catch (IOException e) {
         throw new RuntimeException(e);
