@@ -13,7 +13,7 @@ public class TripointWriter {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   public void writeTripoints(List<Tripoint> tripoints, Path destination) throws IOException {
-    String value = objectMapper.writeValueAsString(tripoints);
+    String value = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tripoints);
 
     Files.write(destination, List.of(value));
   }
