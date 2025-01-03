@@ -17,14 +17,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HealthController {
 
   private AtomicReference<Status> status = new AtomicReference<>(Status.COLD);
-  private final CountryLoaderService countryLoaderService;
   private final TripointLoaderService tripointLoaderService;
   private final RiverLoaderService riverLoaderService;
 
   @Autowired
-  public HealthController(CountryLoaderService countryLoaderService,
+  public HealthController(
       TripointLoaderService tripointLoaderService, RiverLoaderService riverLoaderService) {
-    this.countryLoaderService = countryLoaderService;
     this.tripointLoaderService = tripointLoaderService;
     this.riverLoaderService = riverLoaderService;
   }
@@ -35,28 +33,21 @@ public class HealthController {
       return ResponseEntity.ok("Server running and warmed up!");
     } else {
       triggerWarmup();
-      return ResponseEntity.status(502).body("warming up...");
+      return ResponseEntity.status(502).body("Warming up...");
     }
   }
 
   private void triggerWarmup() {
     if (status.get().equals(Status.WARMING_UP)) {
-      System.out.println("warmup still in progress, be patient...");
       return;
     }
     CompletableFuture.runAsync(() -> {
       try {
         status.set(Status.WARMING_UP);
-        System.out.println("countries");
-        countryLoaderService.loadCountries();
-        System.out.println("tripoints");
         tripointLoaderService.loadTripoints();
-        System.out.println("rivers");
         riverLoaderService.loadRivers();
         status.set(Status.WARM);
-        System.out.println("done!");
       } catch (IOException e) {
-        System.out.println("warmup failed!");
         throw new RuntimeException(e);
       }
     });
