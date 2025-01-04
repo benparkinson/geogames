@@ -2,9 +2,7 @@ package com.parkinson.benjamin.geogames.model;
 
 import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.dao.GameType;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public record Tripoint(Coordinate coordinate, Set<Country> countries) implements GameData {

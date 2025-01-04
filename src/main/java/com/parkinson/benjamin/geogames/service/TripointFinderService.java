@@ -25,8 +25,7 @@ public class TripointFinderService {
   public List<GameData> findRandomTripoints(int totalTripoints, int howMany) throws IOException {
     if (totalTripoints < howMany) {
       throw new IllegalArgumentException(
-          "Can't give you %d tripoints, I only know about %d!"
-              .formatted(howMany, totalTripoints));
+          "Can't give you %d tripoints, I only know about %d!".formatted(howMany, totalTripoints));
     }
 
     Set<GameData> tripoints = new HashSet<>();

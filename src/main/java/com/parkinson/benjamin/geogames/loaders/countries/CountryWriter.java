@@ -1,14 +1,13 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
+import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.Tripoint;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
 
 public class CountryWriter {
 
@@ -23,7 +22,5 @@ public class CountryWriter {
           Path.of(destinationFolder.toString(), convertCountryNameToFileName(country.name())),
           List.of(value));
     }
-
   }
-
 }

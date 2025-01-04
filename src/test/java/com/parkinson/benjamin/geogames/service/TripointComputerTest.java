@@ -1,9 +1,5 @@
 package com.parkinson.benjamin.geogames.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.loaders.tripoint.TripointComputer;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
@@ -34,7 +30,7 @@ public class TripointComputerTest {
         List.of(createCountry(geoData1), createCountry(geoData2), createCountry(geoData3));
 
     List<Tripoint> randomTripoints = service.computeTripoints(countries);
-//    assertThat(randomTripoints).hasSize(1);
+    //    assertThat(randomTripoints).hasSize(1);
   }
 
   private Country createCountry(GeoData geoData) {

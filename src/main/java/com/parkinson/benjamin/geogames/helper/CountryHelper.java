@@ -7,5 +7,4 @@ public final class CountryHelper {
   public static String convertCountryNameToFileName(String countryName) {
     return countryName.replaceAll(" ", "").replaceAll("\\.", "") + ".json";
   }
-
 }

@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
+
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
@@ -9,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
 
 @Service
 public class CountryLoaderService extends FileLoaderService {

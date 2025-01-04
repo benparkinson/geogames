@@ -1,6 +1,5 @@
 package com.parkinson.benjamin.geogames.loaders.tripoint;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import java.io.IOException;
@@ -15,11 +14,10 @@ public class TripointWriter {
   public void writeTripoints(List<Tripoint> tripoints, Path destinationFolder) throws IOException {
 
     for (int i = 0; i < tripoints.size(); i++) {
-      String value = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tripoints.get(i));
+      String value =
+          objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tripoints.get(i));
 
       Files.write(Path.of(destinationFolder.toString(), (i + 1) + ".json"), List.of(value));
     }
-
   }
-
 }

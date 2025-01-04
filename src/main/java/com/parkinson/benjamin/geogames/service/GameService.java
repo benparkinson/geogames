@@ -10,7 +10,6 @@ import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.GameType;
 import com.parkinson.benjamin.geogames.model.AnswerState;
-import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameCreationResponse;
 import com.parkinson.benjamin.geogames.model.GameResult;
 import com.parkinson.benjamin.geogames.model.GameRound;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import com.parkinson.benjamin.geogames.model.Tripoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,7 +122,7 @@ public class GameService {
 
   private List<GameData> getXRandomRivers(int numberOfRounds) throws IOException {
     List<River> rivers = riverLoaderService.loadRivers();
-      return riverFinderService.findRandomRivers(rivers, numberOfRounds);
+    return riverFinderService.findRandomRivers(rivers, numberOfRounds);
   }
 
   private List<GameRoundEntity> createGameRounds(List<GameData> gameData)
