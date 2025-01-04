@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TripointLoaderService extends FileLoaderService {
-  
-  public int countTripoints() throws IOException {
-    File folder = new ClassPathResource("processed/tripoints/").getFile();
-    File[] files = folder.listFiles();
-    return files.length;
+
+  public int countTripoints() {
+    // can't count files when running as a .jar
+    // todo write a metadata file of tripoints and save the number there?
+    return 172;
   }
 
   public Tripoint loadTripointByIndex(int index) throws IOException {
