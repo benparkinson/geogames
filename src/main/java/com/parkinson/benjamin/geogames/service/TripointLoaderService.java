@@ -10,7 +10,7 @@ public class TripointLoaderService extends FileLoaderService {
   public int countTripoints() {
     // can't count files when running as a .jar
     // todo write a metadata file of tripoints and save the number there?
-    return 172;
+    return 170;
   }
 
   public Tripoint loadTripointByIndex(int index) throws IOException {

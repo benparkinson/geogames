@@ -76,7 +76,7 @@ public class TripointComputer {
               }
             });
 
-    return tripoints;
+    return tripoints.stream().filter(tripoint -> tripoint.countries().size() == 3).toList();
   }
 
   private double convertToDecimalCoordinate(String dmsString) {
