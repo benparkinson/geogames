@@ -9,7 +9,7 @@ import MapGameScore from "./MapGameScore";
 
 function MapGame<Type>({
   data,
-  guessBoxCount,
+  answerCount,
   MapComponent,
   correctAnswersFunction,
   round,
@@ -56,7 +56,7 @@ function MapGame<Type>({
     }).length;
 
     setAttemptedGuesses(newAttemptedGuesses);
-    if (correctCount === guessBoxCount) {
+    if (correctCount === answerCount) {
       console.log("All correct!")
       submitAnswer(CORRECT_ANSWER);
       setGameOver(true);
@@ -75,10 +75,10 @@ function MapGame<Type>({
     setGameOver(true);
   }
 
-  function setCorrectAnswers(userCorrect: boolean) {
+  function setCorrectAnswers(_userCorrect: boolean) {
     const correctAnswers = correctAnswersFunction(data);
 
-    setAttemptedGuesses(correctAnswers.map((answer, index) => {
+    setAttemptedGuesses(correctAnswers.map((answer, _index) => {
       return new AnswerModel(answer, true);
     }));
   }
@@ -119,6 +119,29 @@ function MapGame<Type>({
     setOpenClueModal(true);
   }
 
+  function renderCorrectAnswerChips() {
+    return <div className="p-1 m-1 row">
+      <Stack direction="horizontal" gap={1} className="mx-auto">
+        {[...Array(answerCount)].map((_value: undefined, index: number) => <div key={index} className="mx-auto d-flex justify-content-center">
+          <Button disabled variant={determineAnswerChipColour(index)} />
+        </div>
+        )}
+      </Stack>
+    </div>;
+  }
+
+  function determineAnswerChipColour(chipIndex: number) {
+    const correctCount = attemptedGuesses.filter((answer: AnswerModel) => {
+      return answer.correct;
+    }).length;
+
+    if (correctCount - 1 < chipIndex) {
+      return "secondary";
+    }
+
+    return "success";
+  }
+
   return (
     <div className="d-flex flex-column background">
       <div className="container flex-fill map-game">
@@ -133,6 +156,9 @@ function MapGame<Type>({
         </Stack>
 
         <div className="map">{renderMap()}</div>
+
+        {answerCount > 1 && renderCorrectAnswerChips()}
+
         <MapGameInput
           gameOver={gameOver}
           round={round}
@@ -176,7 +202,7 @@ function MapGame<Type>({
 
 export class MapGameProps<Type> {
   data: Type;
-  guessBoxCount: number;
+  answerCount: number;
   MapComponent: any;
   correctAnswersFunction: (data: Type) => string[];
   round: Round;

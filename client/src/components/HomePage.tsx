@@ -24,7 +24,7 @@ function HomePage(): JSX.Element {
     );
     const [openModal, setOpenModal] = useState(false);
     const [selectedGameType, setSelectedGameType] = useState(TripointGameType);
-    const [numberOfRounds, setNumberOfRounds] = useState(5);
+    const [numberOfRounds, setNumberOfRounds] = useState(3);
 
     function startGame(): void {
         mutate(new GameRequest(selectedGameType.name, numberOfRounds));

@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.dao;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ public final class GameRoundEntity {
 
   private int index;
 
+  @Convert(converter = GameTypeConverter.class)
   private GameType gameType;
 
   @Lob @Column private String jsonBlob;

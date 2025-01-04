@@ -3,7 +3,7 @@ import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
 import MapGame from "./common/MapGame";
 
-function RiverShapes({ river, round, submitAnswer }): JSX.Element {
+function RiverShapes({ river, round, answerCount, submitAnswer }): JSX.Element {
 
   function correctAnswers(riverModel: River): string[] {
     return [riverModel.name];
@@ -30,7 +30,7 @@ function RiverShapes({ river, round, submitAnswer }): JSX.Element {
   return (
     <MapGame
       data={river}
-      guessBoxCount={1}
+      answerCount={answerCount}
       MapComponent={RiverShapesMapWrapper}
       correctAnswersFunction={correctAnswers}
       round={round}

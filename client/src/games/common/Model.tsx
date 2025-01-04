@@ -1,7 +1,7 @@
 export class GameRoundModel {
     jsonBlob: string;
     totalRoundCount: number;
-    gameType: string;
+    gameType: GameTypeModel;
     answerState: string;
     gameResult: GameResultModel;
 }
@@ -10,6 +10,11 @@ export class GameResultModel {
     gameState: string;
     roundsUnanswered: number;
     score: number;
+}
+
+export class GameTypeModel {
+    name: string;
+    answerCount: number;
 }
 
 export class Round {

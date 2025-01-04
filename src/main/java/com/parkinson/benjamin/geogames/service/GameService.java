@@ -70,11 +70,11 @@ public class GameService {
 
     List<GameRoundEntity> gameRoundEntities = new ArrayList<>(numberOfRounds);
 
-    if (GameType.TRIPOINT.name().equals(gameType)) {
+    if (GameType.TRIPOINT.getName().equals(gameType)) {
       gameRoundEntities.addAll(createTripointRounds(numberOfRounds));
     }
 
-    if (GameType.RIVERS_BY_SHAPE.name().equals(gameType)) {
+    if (GameType.RIVERS_BY_SHAPE.getName().equals(gameType)) {
       gameRoundEntities.addAll(createRiversByShapeRounds(numberOfRounds));
     }
 

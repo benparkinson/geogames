@@ -67,7 +67,7 @@ function MapGameInput({
 
   return (
     <div id="input" className="row">
-      <Stack direction="horizontal" gap={1}>
+      <Stack direction="horizontal" gap={1} className="mx-auto">
         {renderGuessBox()}
 
         <div className="m-2 d-flex justify-content-center">

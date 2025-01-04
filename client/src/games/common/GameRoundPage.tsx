@@ -49,10 +49,11 @@ function GameRoundPage({ gameId }): JSX.Element {
         const gameCompleted = data.gameResult.gameState == "FINISHED";
         const round = new Round(nextRound, prevRound, hasPrevRound, hasNextRound, currentRound, data.totalRoundCount, data.answerState,
             data.gameResult.score, gameCompleted);
-        if (data.gameType == "TRIPOINT") {
-            return <Tripoint tripoint={roundData} round={round} submitAnswer={submitAnswer} />
-        } else if (data.gameType == "RIVERS_BY_SHAPE") {
-            return <RiverShapes river={roundData} round={round} submitAnswer={submitAnswer} />
+
+        if (data.gameType.name == "TRIPOINT") {
+            return <Tripoint tripoint={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
+        } else if (data.gameType.name == "RIVERS_BY_SHAPE") {
+            return <RiverShapes river={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
         }
         else {
             return <div>Unknown game type...</div>
@@ -63,9 +64,9 @@ function GameRoundPage({ gameId }): JSX.Element {
         if (isFetching) {
             return <title>Loading... | Geogames</title>
         }
-        if (data.gameType == "TRIPOINT") {
+        if (data.gameType.name == "TRIPOINT") {
             return <title>Tripoint | Geogames</title>
-        } else if (data.gameType == "RIVERS_BY_SHAPE") {
+        } else if (data.gameType.name == "RIVERS_BY_SHAPE") {
             return <title>Rivers | Geogames</title>
         }
         else {
