@@ -12,10 +12,14 @@ public class TripointWriter {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  public void writeTripoints(List<Tripoint> tripoints, Path destination) throws IOException {
-    String value = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tripoints);
+  public void writeTripoints(List<Tripoint> tripoints, Path destinationFolder) throws IOException {
 
-    Files.write(destination, List.of(value));
+    for (int i = 0; i < tripoints.size(); i++) {
+      String value = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tripoints.get(i));
+
+      Files.write(Path.of(destinationFolder.toString(), (i + 1) + ".json"), List.of(value));
+    }
+
   }
 
 }

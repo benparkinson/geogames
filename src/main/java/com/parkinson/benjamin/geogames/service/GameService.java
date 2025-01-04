@@ -113,7 +113,7 @@ public class GameService {
   }
 
   private List<GameData> getXRandomTripoints(int numberOfRounds) throws IOException {
-    List<Tripoint> tripoints = tripointLoaderService.loadTripoints();
+    int tripoints = tripointLoaderService.countTripoints();
     return tripointFinderService.findRandomTripoints(tripoints, numberOfRounds);
   }
 

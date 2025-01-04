@@ -15,12 +15,12 @@ import org.junit.jupiter.api.Test;
 
 public class TripointFinderTest {
 
-  private final TripointFinderService service = new TripointFinderService();
+  private final TripointFinderService service = new TripointFinderService(null);
 
   @Test
   public void rejectsRequestForTooManyTripoints() {
     assertThrows(IllegalArgumentException.class, () -> service.findRandomTripoints(
-        Collections.emptyList(), 1));
+        0, 1));
   }
 
 }

@@ -8,12 +8,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public abstract class FileLoaderService {
 
-  private final ObjectMapper objectMapper;
-
-  public FileLoaderService() {
-    objectMapper =
-        new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-  }
+  private final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
   protected <T> T loadFile(String resourceFileName, Class<T> clazz) throws IOException {
     InputStream coordinates = new ClassPathResource(resourceFileName).getInputStream();

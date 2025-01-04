@@ -10,12 +10,10 @@ import java.util.Map;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
+
 @Service
 public class CountryLoaderService extends FileLoaderService {
-
-  public CountryLoaderService() {
-    super();
-  }
 
   @Cacheable("countries")
   public List<Country> loadCountries() throws IOException {
@@ -32,5 +30,17 @@ public class CountryLoaderService extends FileLoaderService {
               return new Country(geoData.properties().name(), additionalNames, geoData);
             })
         .toList();
+  }
+
+  public Country loadCountryByName(String name) throws IOException {
+    String fileName = convertCountryNameToFileName(name);
+    GeoData geoData = loadFile("processed/countries/" + fileName, GeoData.class);
+    Map<String, List<String>> additionalNamesByCountryName =
+        loadFile("data/countries/additionalNames.json", Map.class);
+
+    List<String> additionalNames =
+        additionalNamesByCountryName.getOrDefault(
+            geoData.properties().name(), Collections.emptyList());
+    return new Country(geoData.properties().name(), additionalNames, geoData);
   }
 }

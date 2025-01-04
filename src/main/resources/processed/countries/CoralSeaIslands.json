@@ -1,0 +1,14 @@
+{
+  "name" : "Coral Sea Islands",
+  "additionalNames" : [ ],
+  "geoData" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Coral Sea Islands"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ 154.3912866550001, -21.030043226999865 ], [ 154.38851972700002, -21.029066664999974 ], [ 154.3912866550001, -21.02874114399995 ], [ 154.3912866550001, -21.030043226999865 ] ] ] ]
+    }
+  }
+}
