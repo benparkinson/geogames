@@ -7,4 +7,4 @@ RUN mvn -f /usr/src/app/pom.xml clean install -DskipTests
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /usr/src/app/target/geogames-0.0.1-SNAPSHOT.jar /usr/app/geogames-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/usr/app/geogames-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "-Xmx400M", "/usr/app/geogames-0.0.1-SNAPSHOT.jar"]
