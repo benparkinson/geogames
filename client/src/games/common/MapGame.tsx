@@ -57,7 +57,6 @@ function MapGame<Type>({
 
     setAttemptedGuesses(newAttemptedGuesses);
     if (correctCount === answerCount) {
-      console.log("All correct!")
       submitAnswer(CORRECT_ANSWER);
       setGameOver(true);
     }
@@ -139,7 +138,7 @@ function MapGame<Type>({
       return "secondary";
     }
 
-    return "success";
+    return gaveUp ? "danger" : "success";
   }
 
   return (

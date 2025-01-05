@@ -11,7 +11,7 @@ export const client: QueryClient = new QueryClient({
 
 export function serverEndpoint(): string {
   if (isProduction()) {
-    return "";
+    return "https://geogames-web-service.onrender.com/";
   } else {
     return "http://localhost:8080";
   }
