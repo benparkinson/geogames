@@ -2,8 +2,11 @@ import TripointMapWrapper from "../map/TripointMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGame";
+import { useState } from "react";
 
 function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
+  const [data, setData] = useState(tripoint);
+
   function countryNames(tripoint: TripointModel): string[] {
     return tripoint.countries.map(country => country.name);
   }
@@ -33,10 +36,36 @@ function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
       .includes(normaliseString(normalisedGuess));
   }
 
+  function showRandomCountryBorder(): void {
+    const remaining = data.countries
+      .filter(country => !country.showAsHint)
+
+    const alreadyShown = data.countries.filter(country => country.showAsHint);
+
+    if (remaining.length === 0) {
+      return;
+    }
+
+    const randomCountry = remaining[Math.floor(Math.random() * remaining.length)];
+
+    randomCountry.showAsHint = true;
+
+    const newCountries = [...alreadyShown, randomCountry];
+    newCountries.push(...remaining.filter(country => country !== randomCountry));
+
+    const newData = {
+      ...data,
+      countries: newCountries
+    }
+
+    setData(newData);
+  }
+
   function renderMapGame() {
+
     return (
       <MapGame
-        data={tripoint}
+        data={data}
         answerCount={answerCount}
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
@@ -45,6 +74,7 @@ function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
         submitAnswer={submitAnswer}
         answerState={round.answerState}
         isAnswerCorrect={isAnswerCorrect}
+        displayMapHint={showRandomCountryBorder}
       />
     );
   }
@@ -66,6 +96,7 @@ export class TripointCountry {
   name: string;
   additionalNames: string[];
   geoData: TripointGeoData;
+  showAsHint: boolean = false;
 }
 
 export class TripointGeoData implements GeoJsonObject {

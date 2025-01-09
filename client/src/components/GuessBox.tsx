@@ -33,7 +33,7 @@ export class GuessBoxProps {
   value: string;
   name: string;
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
-  correct: boolean;
+  correct?: boolean;
   disabled: boolean;
   handleEnterKey: () => void;
 }

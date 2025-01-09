@@ -9,7 +9,8 @@ function MapGameInput({
   gameOver,
   round,
   answers,
-  submitGuess
+  submitGuess,
+  displayMapHint
 }: MapGameInputProps): JSX.Element {
   const [guess, setGuess] = useState("");
 
@@ -21,7 +22,7 @@ function MapGameInput({
     return (
       <GuessBox
         value={guess}
-        name={'Guess'}
+        name={'Guess a country...'}
         onChange={handleGuessChange}
         correct={null}
         disabled={gameOver}
@@ -49,10 +50,10 @@ function MapGameInput({
     return (
       <div className="d-flex ms-auto">
         <div className="m-1 d-flex justify-content-center">
-          <Button variant="primary" onClick={round.prevRound} disabled={!round.hasPreviousRound}>{"<"}</Button>
+          <Button variant="light" onClick={round.prevRound} disabled={!round.hasPreviousRound} >{"⏮️"}</Button>
         </div>
         <div className="m-1 d-flex justify-content-center">
-          <Button variant="primary" onClick={round.nextRound} disabled={nextRoundDisabled()}>{">"}</Button>
+          <Button variant="light" onClick={round.nextRound} disabled={nextRoundDisabled()}>{"⏭️"}</Button>
         </div>
       </div>
     );
@@ -65,15 +66,25 @@ function MapGameInput({
     }
   }
 
+  function handleClueClick() {
+    if (displayMapHint && !gameOver) {
+      displayMapHint();
+    }
+  }
+
   return (
     <div id="input" className="row">
       <Stack direction="horizontal" gap={1} className="mx-auto">
         {renderGuessBox()}
 
-        <div className="m-2 d-flex justify-content-center">
-          <Button variant="success" onClick={handleSubmitClick}>Submit</Button>
-        </div>
+        <div className="m-1 d-flex justify-content-center">
+          <Button variant="info" onClick={handleSubmitClick}>🌍</Button>
 
+        </div>
+        <div className="m-1 d-flex justify-content-center">
+
+          <Button variant="warning" onClick={handleClueClick}>💡</Button>
+        </div>
         {renderRoundButtons()}
       </Stack>
 
@@ -89,6 +100,7 @@ export class MapGameInputProps {
   round: Round;
   answers: AnswerModel[];
   submitGuess: (guess: string) => boolean;
+  displayMapHint?: () => void;
 }
 
 export default MapGameInput;

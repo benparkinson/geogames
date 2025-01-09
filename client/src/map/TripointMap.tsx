@@ -12,11 +12,18 @@ function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
 
   const color = gaveUp ? { color: "darkred" } : { color: "LightGoldenRodYellow" };
 
-  const borders = tripoint.countries.map((country) => (
+  const answerBorders = tripoint.countries.map((country) => (
     <GeoJSON key={country.name} data={country.geoData} pathOptions={color}>
       <Tooltip>{country.name}</Tooltip>
     </GeoJSON>
   ));
+
+  const clueBorders = tripoint.countries
+    .filter(country => country.showAsHint)
+    .map((country) => (
+      <GeoJSON key={country.name} data={country.geoData} pathOptions={color}>
+      </GeoJSON>
+    ));
 
   return (
     <MapContainer
@@ -30,7 +37,8 @@ function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
         icon={markerIcon}
         position={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]}
       />
-      {gameOver && borders}
+      {gameOver && answerBorders}
+      {!gameOver && clueBorders}
 
       <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
     </MapContainer>

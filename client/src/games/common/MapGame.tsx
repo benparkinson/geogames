@@ -15,6 +15,7 @@ function MapGame<Type>({
   round,
   explanation,
   clues,
+  displayMapHint,
   submitAnswer,
   answerState,
   isAnswerCorrect
@@ -163,6 +164,7 @@ function MapGame<Type>({
           round={round}
           answers={attemptedGuesses}
           submitGuess={submitGuess}
+          displayMapHint={displayMapHint}
         />
       </div>
       <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>
@@ -210,6 +212,7 @@ export class MapGameProps<Type> {
   submitAnswer: (answerState: string) => void;
   answerState: string;
   isAnswerCorrect: (guess: string, data: Type) => boolean;
+  displayMapHint?: () => void;
 }
 
 export class AnswerModel {
