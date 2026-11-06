@@ -35,8 +35,6 @@ public class GameService {
   private static final Random random = new Random(System.currentTimeMillis());
 
   private final GameRepository gameRepository;
-  private final CountryLoaderService countryLoaderService;
-  private final TripointLoaderService tripointLoaderService;
   private final TripointFinderService tripointFinderService;
   private final RiverLoaderService riverLoaderService;
   private final RiverFinderService riverFinderService;
@@ -45,15 +43,11 @@ public class GameService {
   @Autowired
   public GameService(
       GameRepository gameRepository,
-      CountryLoaderService countryLoaderService,
-      TripointLoaderService tripointLoaderService,
       TripointFinderService tripointFinderService,
       RiverLoaderService riverLoaderService,
       RiverFinderService riverFinderService,
       ObjectMapper objectMapper) {
     this.gameRepository = gameRepository;
-    this.countryLoaderService = countryLoaderService;
-    this.tripointLoaderService = tripointLoaderService;
     this.tripointFinderService = tripointFinderService;
     this.riverLoaderService = riverLoaderService;
     this.riverFinderService = riverFinderService;
@@ -111,8 +105,7 @@ public class GameService {
   }
 
   private List<GameData> getXRandomTripoints(int numberOfRounds) throws IOException {
-    int tripoints = tripointLoaderService.countTripoints();
-    return tripointFinderService.findRandomTripoints(tripoints, numberOfRounds);
+    return tripointFinderService.findRandomTripoints(numberOfRounds);
   }
 
   private List<GameRoundEntity> createRiversByShapeRounds(int numberOfRounds) throws IOException {
