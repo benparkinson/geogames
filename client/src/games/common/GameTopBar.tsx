@@ -1,31 +1,34 @@
 import Link from "next/link";
 import { Button } from "react-bootstrap";
-import { ChevronLeft, ChevronRight, HouseFill } from "react-bootstrap-icons";
-import { Round } from "./Model";
+import { HouseFill } from "react-bootstrap-icons";
+import { CORRECT_ANSWER, GAVE_UP, Round } from "./Model";
+import RoundProgress from "./RoundProgress";
 
-export default function GameTopBar({ round, gameOver }: { round: Round; gameOver: boolean }): JSX.Element {
-  const nextDisabled = !round.hasNextRound || !gameOver;
+export default function GameTopBar({ round, gameOver, gaveUp }: { round: Round; gameOver: boolean; gaveUp: boolean }): JSX.Element {
   const scoreText = round.gameCompleted
     ? `Final score ${round.score} / ${round.totalRoundCount}`
     : `Score ${round.score}`;
+
+  // Reflect the local state of the current round straight away, without waiting for the refetch.
+  const states = round.roundAnswerStates.slice();
+  if (gameOver) {
+    states[round.currentRound] = gaveUp ? GAVE_UP : CORRECT_ANSWER;
+  }
 
   return (
     <div className="d-flex align-items-center justify-content-between px-3 py-2 gap-2">
       <Link href="/" aria-label="Home" className="text-decoration-none text-dark fw-semibold text-nowrap">
         <HouseFill aria-hidden="true" /> <span className="d-none d-sm-inline">Geogames</span>
       </Link>
-      <div className="small text-muted text-nowrap">
-        Round {round.currentRound + 1} of {round.totalRoundCount} · {scoreText}
+      <div className="d-flex align-items-center gap-2 small text-muted overflow-hidden">
+        <span className="d-none d-sm-inline text-nowrap">Round {round.currentRound + 1} of {round.totalRoundCount}</span>
+        <RoundProgress states={states} currentRound={round.currentRound} goToRound={round.goToRound} />
       </div>
-      <div className="d-flex gap-2">
-        <Button size="sm" variant="outline-secondary" onClick={round.prevRound} disabled={!round.hasPreviousRound} aria-label="Previous round">
-          <ChevronLeft aria-hidden="true" /> <span className="d-none d-sm-inline">Previous</span>
-        </Button>
-        <span title={!gameOver && round.hasNextRound ? "Answer or reveal this round first" : undefined}>
-          <Button size="sm" variant="outline-secondary" onClick={round.nextRound} disabled={nextDisabled} aria-label="Next round">
-            <span className="d-none d-sm-inline">Next round</span> <ChevronRight aria-hidden="true" />
-          </Button>
-        </span>
+      <div className="d-flex align-items-center gap-2 small text-muted text-nowrap">
+        {scoreText}
+        {round.gameCompleted && (
+          <Button size="sm" variant="outline-primary" onClick={round.showSummary}>Results</Button>
+        )}
       </div>
     </div>
   );

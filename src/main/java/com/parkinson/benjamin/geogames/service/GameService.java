@@ -18,6 +18,7 @@ import com.parkinson.benjamin.geogames.model.River;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +147,7 @@ public class GameService {
         });
   }
 
-  private static GameResult calculateGameResult(Optional<GameEntity> game) {
+  static GameResult calculateGameResult(Optional<GameEntity> game) {
     List<GameRoundEntity> rounds = game.map(GameEntity::getRounds).orElse(Collections.emptyList());
     int roundsUnanswered =
         rounds.stream().filter(r -> r.getAnswerState() == AnswerState.UNANSWERED).toList().size();
@@ -160,7 +161,12 @@ public class GameService {
     } else {
       gameState = GameState.IN_PROGRESS;
     }
-    return new GameResult(gameState, roundsUnanswered, roundsCorrect);
+    List<AnswerState> roundAnswerStates =
+        rounds.stream()
+            .sorted(Comparator.comparingInt(GameRoundEntity::getIndex))
+            .map(GameRoundEntity::getAnswerState)
+            .toList();
+    return new GameResult(gameState, roundsUnanswered, roundsCorrect, roundAnswerStates);
   }
 
   public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
@@ -168,14 +174,13 @@ public class GameService {
     Optional<GameRoundEntity> gameRound =
         game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
 
-    GameResult gameResult = calculateGameResult(game);
-
     return map(
         game,
         gameRound,
         (g, r) -> {
           r.setAnswerState(answerState);
           gameRepository.save(g);
+          GameResult gameResult = calculateGameResult(game);
           int totalRoundCount = g.getRounds().size();
           return new GameRound(
               r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState(), gameResult);

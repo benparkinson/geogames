@@ -1,6 +1,4 @@
-import { useMutation } from "react-query";
-import { serverEndpoint } from "../api/gateway";
-import { useRouter } from "next/router";
+import { useCreateGame } from "../api/games";
 import { useState } from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -8,26 +6,13 @@ import Modal from 'react-bootstrap/Modal';
 import { Button, Spinner } from "react-bootstrap";
 
 function HomePage(): JSX.Element {
-    const router = useRouter();
-    const { mutate, isLoading } = useMutation((gameRequest: GameRequest) =>
-        fetch(serverEndpoint() + "/api/games", {
-            method: "POST", headers: {
-                "Content-Type": "application/json",
-            }, body: JSON.stringify(gameRequest)
-        }).then(result => result.json()),
-        {
-            onSuccess: (data: { id: any; }) => {
-                const gameId = data.id;
-                router.push("/games/" + gameId)
-            }
-        }
-    );
+    const { createGame, isLoading } = useCreateGame();
     const [openModal, setOpenModal] = useState(false);
     const [selectedGameType, setSelectedGameType] = useState(TripointGameType);
     const [numberOfRounds, setNumberOfRounds] = useState(3);
 
     function startGame(): void {
-        mutate(new GameRequest(selectedGameType.name, numberOfRounds));
+        createGame(selectedGameType.name, numberOfRounds);
     }
 
     function renderGameTypeDropDownItem(gameType: GameType): JSX.Element {
@@ -89,15 +74,6 @@ class GameType {
     constructor(name: string, displayName: string) {
         this.name = name;
         this.displayName = displayName;
-    }
-}
-
-class GameRequest {
-    gameType: string;
-    numberOfRounds: number;
-    constructor(gameType: string, numberOfRounds: number) {
-        this.gameType = gameType;
-        this.numberOfRounds = numberOfRounds;
     }
 }
 

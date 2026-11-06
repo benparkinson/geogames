@@ -9,7 +9,7 @@ function GameParentPage(params): JSX.Element {
 
     return (
         <QueryClientProvider client={client}>
-            {gameId && <GameRoundPage gameId={gameId} />}
+            {gameId && <GameRoundPage key={gameId as string} gameId={gameId as string} />}
         </QueryClientProvider>
     );
 }
