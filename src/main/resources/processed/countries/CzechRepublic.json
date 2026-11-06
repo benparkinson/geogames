@@ -1,6 +1,6 @@
 {
   "name" : "Czech Republic",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Czechia", "Czech Rep." ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
