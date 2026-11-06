@@ -1,60 +1,5 @@
-.map {
-  margin-top: 5px;
-  min-height: 400px;
-  max-height: 60vh;
-  box-sizing: content-box !important;
-}
-
-.leaflet-container {
-  min-height: 400px;
-  max-height: 60vh;
-  box-sizing: content-box !important;
-  border-radius: 2%;
-}
-
-.map-game {
-  min-width: 400px;
-  max-width: 65vh;
-}
-
-.background {
-  background-color: #c8cfe8;
-  min-height: 100vh;
-}
-
 #main-page {
   background-color: #c8cfe8;
-}
-
-#input {
-  background-color: #c8cfe8;
-  margin-left: 0;
-  margin-right: 0;
-  padding-bottom: 5px;
-}
-
-#answer-header {
-  margin-left: 5rem !important;
-}
-
-#result {
-  margin-left: 1rem;
-}
-
-#give-up {
-  width: 95%;
-}
-
-#guess {
-  width: 95%;
-}
-
-.correct {
-  background-color: #7cba61;
-}
-
-.incorrect {
-  background-color: #b55a55;
 }
 
 body {
@@ -77,3 +22,58 @@ code {
 @keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
 .shake { animation: shake 0.3s; }
 @media (prefers-reduced-motion: reduce) { .shake { animation: none; } }
+
+:root {
+  --gg-bg: #c8cfe8;
+  --gg-panel-bg: #ffffff;
+  --gg-panel-width: 360px;
+  --gg-map-blank: #2f3b52;
+}
+
+.game-screen {
+  display: grid;
+  height: 100vh;
+  height: 100dvh;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "top" "map" "panel";
+  background: var(--gg-bg);
+}
+.game-top   { grid-area: top; }
+.game-map   { grid-area: map; position: relative; min-height: 0; }
+.game-panel {
+  grid-area: panel;
+  background: var(--gg-panel-bg);
+  max-height: 50dvh;
+  overflow-y: auto;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0 -2px 12px rgb(0 0 0 / 0.12);
+}
+.game-map .leaflet-container { position: absolute; inset: 0; height: 100%; width: 100%; }
+.game-map--blank .leaflet-container { background: var(--gg-map-blank); }
+.map-caption {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  pointer-events: none;
+  max-width: calc(100% - 1.5rem);
+  text-align: center;
+  background: rgb(0 0 0 / 0.65);
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+}
+.answer-slot-empty { border: 2px dashed #adb5bd; }
+
+@media (min-width: 992px) {
+  .game-screen {
+    grid-template-columns: minmax(0, 1fr) var(--gg-panel-width);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "top top" "map panel";
+  }
+  .game-panel { max-height: none; border-radius: 0; box-shadow: -2px 0 12px rgb(0 0 0 / 0.08); }
+}

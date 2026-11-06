@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { CenterUpdater } from "./CenterUpdater";
+import { MapResizer } from "./MapResizer";
 import { TripointModel } from "../games/Tripoint";
 
 function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
@@ -40,7 +41,8 @@ function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
       {gameOver && answerBorders}
       {!gameOver && clueBorders}
 
-      <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} />
+      <CenterUpdater center={[tripoint.coordinate.latitude, tripoint.coordinate.longitude]} zoom={5} />
+      <MapResizer />
     </MapContainer>
   );
 }
