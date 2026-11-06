@@ -59,3 +59,4 @@ client/yarn-debug.log*
 client/yarn-error.log*
 
 client/next-env.d.ts
+*.tsbuildinfo

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { GameRoundModel } from "../games/common/Model";
 import { serverEndpoint } from "./gateway";
 
@@ -21,8 +21,8 @@ export function useCreateGame(): {
   error: unknown;
 } {
   const router = useRouter();
-  const { mutate, isLoading, error } = useMutation(
-    async (request: { gameType: string; numberOfRounds: number }) => {
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: async (request: { gameType: string; numberOfRounds: number }) => {
       const response = await fetch(serverEndpoint() + "/api/games", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,16 +33,14 @@ export function useCreateGame(): {
       }
       return response.json() as Promise<{ id: number }>;
     },
-    {
-      onSuccess: (data) => {
-        router.push("/games/" + data.id);
-      },
-    }
-  );
+    onSuccess: (data) => {
+      router.push("/games/" + data.id);
+    },
+  });
 
   return {
     createGame: (gameType, numberOfRounds) => mutate({ gameType, numberOfRounds }),
-    isLoading,
+    isLoading: isPending,
     error,
   };
 }

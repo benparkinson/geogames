@@ -6,6 +6,7 @@ import { Lightbulb } from "react-bootstrap-icons";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
+import { MapProps } from "../../map/MapProps";
 
 function MapGame<Type>({
   data,
@@ -22,7 +23,7 @@ function MapGame<Type>({
   submitAnswer,
   answerState,
   isAnswerCorrect
-}: MapGameProps<Type>): JSX.Element {
+}: MapGameProps<Type>): React.JSX.Element {
   const [attemptedGuesses, setAttemptedGuesses] = useState<AnswerModel[]>(() =>
     answerState !== UNANSWERED
       ? correctAnswersFunction(data).map(a => new AnswerModel(a, true))
@@ -165,7 +166,7 @@ export type GuessResult =
 export class MapGameProps<Type> {
   data: Type;
   answerCount: number;
-  MapComponent: any;
+  MapComponent: React.ComponentType<MapProps<Type>>;
   correctAnswersFunction: (data: Type) => string[];
   round: Round;
   prompt: string;

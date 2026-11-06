@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button, Spinner } from "react-bootstrap";
 import { CheckLg, EyeFill, HouseFill } from "react-bootstrap-icons";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import { fetchRound, roundUrl, useCreateGame } from "../../api/games";
 import { answerNames, gameTypeLabel } from "./answers";
 import { CORRECT_ANSWER, GameRoundModel } from "./Model";
@@ -10,13 +10,13 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   gameId: string;
   totalRoundCount: number;
   onOpenRound: (round: number) => void;
-}): JSX.Element {
-  const results = useQueries(
-    Array.from({ length: totalRoundCount }, (_v, i) => ({
-      queryKey: roundUrl(gameId, i),
+}): React.JSX.Element {
+  const results = useQueries({
+    queries: Array.from({ length: totalRoundCount }, (_v, i) => ({
+      queryKey: [roundUrl(gameId, i)],
       queryFn: () => fetchRound(gameId, i),
-    }))
-  );
+    })),
+  });
   const { createGame, isLoading: creating, error: createError } = useCreateGame();
 
   const rounds = results.map(r => r.data as GameRoundModel | undefined);

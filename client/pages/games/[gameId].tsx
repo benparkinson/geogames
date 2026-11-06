@@ -1,9 +1,9 @@
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { client } from "../../src/api/gateway";
 import GameRoundPage from "../../src/games/common/GameRoundPage";
 import { useRouter } from "next/router";
 
-function GameParentPage(params): JSX.Element {
+function GameParentPage(): React.JSX.Element {
     const router = useRouter();
     const { gameId } = router.query;
 

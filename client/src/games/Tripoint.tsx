@@ -5,7 +5,7 @@ import MapGame from "./common/MapGame";
 import { useMemo, useState } from "react";
 import { useCountryNames } from "../api/countries";
 
-function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
+function Tripoint({ tripoint, round, answerCount, submitAnswer }): React.JSX.Element {
   const [data, setData] = useState(tripoint);
   const { data: countryList } = useCountryNames();
 
@@ -61,6 +61,8 @@ function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
       return;
     }
 
+    // Only called from an event handler, never during render.
+    // eslint-disable-next-line react-hooks/purity
     const randomCountry = remaining[Math.floor(Math.random() * remaining.length)];
 
     randomCountry.showAsHint = true;

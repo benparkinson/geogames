@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Geogames: geography quiz games. The backend is Spring Boot 3 / Java 17 / Maven, at the repo root. The frontend is Next.js 13 / React 18 / TypeScript, in `client/`. It uses react-query, react-bootstrap and react-leaflet.
+Geogames: geography quiz games. The backend is Spring Boot 4 / Java 17 / Maven, at the repo root. The frontend is Next.js 16 / React 19 / TypeScript, in `client/`. It uses TanStack Query (`@tanstack/react-query`), react-bootstrap and react-leaflet.
 
 ## Commands
 
@@ -18,12 +18,12 @@ Backend (repo root; use `./mvnw` or `mvnw.cmd` if `mvn` isn't installed):
 Frontend (`client/`):
 - Dev server with hot reload on port 3000: `npm run dev`. It calls the backend at `http://localhost:8080`.
 - Lint: `npm run lint`
-- Production static export: `npm run build`. This runs `next build && next export` and writes to `client/out/`.
+- Production static export: `npm run build`. This runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `client/out/`.
 - The frontend has no tests. Ignore `client/README.md`; it is leftover Create React App boilerplate.
 
 ## Architecture
 
-**Build coupling.** The Maven `frontend-maven-plugin` installs Node 18 into `target/`, then runs `npm install` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
+**Build coupling.** The Maven `frontend-maven-plugin` installs Node 24 into `target/`, then runs `npm ci` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
 
 **Environment switching.** `client/src/api/gateway.ts` (`serverEndpoint()`) picks the backend URL from `NODE_ENV`: production uses `https://geogames-web-service.onrender.com`, anything else uses `localhost:8080`. CORS origins are hard-coded in `@CrossOrigin` on both `GameController` and `CountryController`. Update both if the hosting changes.
 

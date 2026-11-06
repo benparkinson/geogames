@@ -3,7 +3,7 @@ import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from 'geojson';
 import MapGame from "./common/MapGame";
 
-function RiverShapes({ river, round, answerCount, submitAnswer }): JSX.Element {
+function RiverShapes({ river, round, answerCount, submitAnswer }): React.JSX.Element {
 
   function correctAnswers(riverModel: River): string[] {
     return [riverModel.name];

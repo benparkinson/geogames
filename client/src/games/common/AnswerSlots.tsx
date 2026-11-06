@@ -5,7 +5,7 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
   found: string[];
   gaveUp: boolean;
   allAnswers: string[];
-}): JSX.Element {
+}): React.JSX.Element {
   const label = `Answers: ${found.length} of ${answerCount} found`;
 
   return (

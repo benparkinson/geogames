@@ -3,7 +3,7 @@ import { FitBounds } from "./FitBounds";
 import { MapResizer } from "./MapResizer";
 import { River } from "../games/RiverShapes";
 
-function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps): JSX.Element {
+function RiverShapesMap({ river, gaveUp, gameOver }: RiverShapesMapProps): React.JSX.Element {
   const riverLine = gaveUp ? (
     <GeoJSON pathOptions={{ color: "darkred" }} data={river.geoData} key={river.name + "gaveUp"} />
   ) : (
