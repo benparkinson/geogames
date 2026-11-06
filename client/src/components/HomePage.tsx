@@ -4,7 +4,7 @@ import { serverEndpoint } from "../api/gateway";
 import { useCreateGame } from "../api/games";
 import { GAME_OPTIONS, GameOption, ROUND_OPTIONS } from "../games/gameTypes";
 
-function HomePage(): JSX.Element {
+function HomePage(): React.JSX.Element {
     const { createGame, isLoading, error } = useCreateGame();
     const [selected, setSelected] = useState<GameOption["name"]>("TRIPOINT");
     const [rounds, setRounds] = useState(5);
@@ -18,11 +18,13 @@ function HomePage(): JSX.Element {
 
     useEffect(() => {
         if (!isLoading) {
-            setSlow(false);
             return;
         }
         const timer = setTimeout(() => setSlow(true), 3000);
-        return () => clearTimeout(timer);
+        return () => {
+            clearTimeout(timer);
+            setSlow(false);
+        };
     }, [isLoading]);
 
     function handleKeyDown(e: React.KeyboardEvent, index: number): void {
@@ -39,7 +41,7 @@ function HomePage(): JSX.Element {
         cardRefs.current[next]?.focus();
     }
 
-    function renderCard(option: GameOption, index: number): JSX.Element {
+    function renderCard(option: GameOption, index: number): React.JSX.Element {
         const isSelected = option.name === selected;
         return (
             <div className="col-12 col-sm-4" key={option.name}>

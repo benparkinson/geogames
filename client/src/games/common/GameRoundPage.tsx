@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { client, serverEndpoint } from "../../../src/api/gateway";
 import { fetchRound, roundUrl } from "../../../src/api/games";
 import GameSummary from "./GameSummary";
@@ -10,22 +10,24 @@ import { GameRoundModel, Round, UNANSWERED } from "../../../src/games/common/Mod
 import { Spinner } from "react-bootstrap";
 import RiverShapes from "../RiverShapes";
 
-function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
+function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     const [currentRound, setRound] = useState(0)
     const [showSummary, setShowSummary] = useState(false)
-    const { error, data, isLoading } = useQuery(createUrl(), () => fetchRound(gameId, currentRound));
-    const submitAnswerMutation = useMutation((answerState: string) =>
-        fetch(serverEndpoint() + createUrl() + "/answers", {
-            method: "POST", headers: {
-                "Content-Type": "application/json",
-            }, body: JSON.stringify({ answerState: answerState })
-        }).then(result => result.json()),
-        {
-            onSuccess: () => {
-                client.invalidateQueries(createUrl());
-            }
-        }
-    );
+    const { error, data, isLoading } = useQuery({
+        queryKey: [createUrl()],
+        queryFn: () => fetchRound(gameId, currentRound),
+    });
+    const submitAnswerMutation = useMutation({
+        mutationFn: (answerState: string) =>
+            fetch(serverEndpoint() + createUrl() + "/answers", {
+                method: "POST", headers: {
+                    "Content-Type": "application/json",
+                }, body: JSON.stringify({ answerState: answerState })
+            }).then(result => result.json()),
+        onSuccess: () => {
+            client.invalidateQueries({ queryKey: [createUrl()] });
+        },
+    });
 
     function createUrl() {
         return roundUrl(gameId, currentRound);
@@ -95,7 +97,7 @@ function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
         }
     }
 
-    function renderSpinner(): JSX.Element {
+    function renderSpinner(): React.JSX.Element {
         return (
             <div className="d-flex min-vh-100 justify-content-center align-items-center">
                 <Spinner animation="border" variant="success" />

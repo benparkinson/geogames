@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { ArrowRight, CheckCircleFill, EyeFill } from "react-bootstrap-icons";
 import { Round } from "./Model";
 
-export default function RoundResult({ gaveUp, round }: { gaveUp: boolean; round: Round }): JSX.Element {
+export default function RoundResult({ gaveUp, round }: { gaveUp: boolean; round: Round }): React.JSX.Element {
   return (
     <div className="round-result mb-3">
       <div className={"mb-2 fw-semibold " + (gaveUp ? "text-secondary" : "text-success")} aria-live="polite">

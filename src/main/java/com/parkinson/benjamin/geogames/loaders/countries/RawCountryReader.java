@@ -1,7 +1,5 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
@@ -10,12 +8,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /** Reads the raw Natural Earth export plus the alias file into {@link Country} objects. */
 public class RawCountryReader {
 
   private final ObjectMapper objectMapper =
-      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build();
 
   @SuppressWarnings("unchecked")
   public List<Country> readCountries(Path countriesGeoJson, Path additionalNamesJson)

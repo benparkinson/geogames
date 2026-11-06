@@ -1,6 +1,6 @@
 import { useId } from "react";
 
-export function GuessBox({ value, name, onChange, disabled, className, autoFocus, suggestions }: GuessBoxProps): JSX.Element {
+export function GuessBox({ value, name, onChange, disabled, className, autoFocus, suggestions }: GuessBoxProps): React.JSX.Element {
   const listId = useId();
 
   return (

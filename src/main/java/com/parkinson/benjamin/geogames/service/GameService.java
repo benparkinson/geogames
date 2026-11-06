@@ -2,8 +2,6 @@ package com.parkinson.benjamin.geogames.service;
 
 import static com.parkinson.benjamin.geogames.helper.OptionalHelper.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
@@ -26,6 +24,7 @@ import java.util.Optional;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class GameService {
@@ -119,8 +118,7 @@ public class GameService {
     return riverFinderService.findRandomRivers(rivers, numberOfRounds);
   }
 
-  private List<GameRoundEntity> createGameRounds(List<GameData> gameData)
-      throws JsonProcessingException {
+  private List<GameRoundEntity> createGameRounds(List<GameData> gameData) {
     List<GameRoundEntity> gameRoundEntities = new ArrayList<>(gameData.size());
     for (int i = 0; i < gameData.size(); i++) {
       GameData gameDatum = gameData.get(i);

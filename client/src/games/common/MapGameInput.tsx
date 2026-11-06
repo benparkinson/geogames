@@ -22,7 +22,7 @@ function MapGameInput({
   giveUp,
   inputPlaceholder,
   suggestions
-}: MapGameInputProps): JSX.Element {
+}: MapGameInputProps): React.JSX.Element {
   const [guess, setGuess] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [shakeCount, setShakeCount] = useState(0);

@@ -5,7 +5,7 @@ export default function RoundProgress({ states, currentRound, goToRound }: {
   states: string[];
   currentRound: number;
   goToRound: (round: number) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const firstUnanswered = states.findIndex(s => s === UNANSWERED);
 
   function canVisit(i: number): boolean {

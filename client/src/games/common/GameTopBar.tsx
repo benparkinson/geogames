@@ -4,7 +4,7 @@ import { HouseFill } from "react-bootstrap-icons";
 import { CORRECT_ANSWER, GAVE_UP, Round } from "./Model";
 import RoundProgress from "./RoundProgress";
 
-export default function GameTopBar({ round, gameOver, gaveUp }: { round: Round; gameOver: boolean; gaveUp: boolean }): JSX.Element {
+export default function GameTopBar({ round, gameOver, gaveUp }: { round: Round; gameOver: boolean; gaveUp: boolean }): React.JSX.Element {
   const scoreText = round.gameCompleted
     ? `Final score ${round.score} / ${round.totalRoundCount}`
     : `Score ${round.score}`;

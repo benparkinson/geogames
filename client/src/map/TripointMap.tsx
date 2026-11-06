@@ -5,7 +5,7 @@ import { MapResizer } from "./MapResizer";
 import { TripointModel } from "../games/Tripoint";
 
 function TripointMap({ tripoint, gaveUp, gameOver }: TripointMapProps) {
-  let markerIcon = L.icon({
+  const markerIcon = L.icon({
     iconUrl: "/flag.png",
     iconSize: [32, 32],
     iconAnchor: [24, 32],
