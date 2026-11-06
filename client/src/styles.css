@@ -107,3 +107,8 @@ code {
 @media (min-width: 576px) {
   .round-dot { width: 28px; height: 28px; font-size: 0.8rem; }
 }
+
+.game-card { transition: box-shadow 0.15s; }
+.game-card:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.15); }
+@media (min-width: 576px) { .w-sm-auto { width: auto !important; } }
+@media (prefers-reduced-motion: reduce) { .game-card { transition: none; } }
