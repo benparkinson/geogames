@@ -118,6 +118,8 @@ function MapGame<Type>({
       />
       <MapGameInput
         gameOver={gameOver}
+        gaveUp={gaveUp}
+        round={round}
         wrongGuesses={attemptedGuesses.filter(a => !a.correct)}
         submitGuess={submitGuess}
         useHint={useHint}
@@ -131,7 +133,7 @@ function MapGame<Type>({
 
   return (
     <GameLayout
-      topBar={<GameTopBar round={round} gameOver={gameOver} />}
+      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} />}
       map={map}
       panel={panel}
       mapClassName={showBlankMap ? "game-map--blank" : undefined}

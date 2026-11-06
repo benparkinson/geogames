@@ -77,3 +77,33 @@ code {
   }
   .game-panel { max-height: none; border-radius: 0; box-shadow: -2px 0 12px rgb(0 0 0 / 0.08); }
 }
+
+.round-progress {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 3px;
+  max-width: 100%;
+}
+.round-dot {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #6c757d;
+  background: transparent;
+  color: #495057;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+.round-dot--correct { background: var(--bs-success, #198754); border-color: var(--bs-success, #198754); color: #fff; }
+.round-dot--revealed { background: var(--bs-secondary, #6c757d); border-color: var(--bs-secondary, #6c757d); color: #fff; }
+.round-dot--current { box-shadow: 0 0 0 2px var(--bs-primary, #0d6efd); }
+.round-dot:disabled { opacity: 0.5; }
+@media (min-width: 576px) {
+  .round-dot { width: 28px; height: 28px; font-size: 0.8rem; }
+}

@@ -1,11 +1,19 @@
 import { GuessBox } from "../../components/GuessBox";
+import { Round } from "./Model";
+import RoundResult from "./RoundResult";
 import { AnswerModel, GuessResult, HintConfig } from "./MapGame";
 import { Button } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import { EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
 
+function prefersPreciseInput(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches;
+}
+
 function MapGameInput({
   gameOver,
+  gaveUp,
+  round,
   wrongGuesses,
   submitGuess,
   useHint,
@@ -71,33 +79,39 @@ function MapGameInput({
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
-        <div className="flex-grow-1">
-          <GuessBox
-            key={shakeCount}
-            className={shakeCount > 0 ? "shake" : undefined}
-            autoFocus={shakeCount > 0}
-            value={guess}
-            name={inputPlaceholder}
-            onChange={e => setGuess(e.currentTarget.value)}
-            disabled={gameOver}
-          />
-        </div>
-        <Button type="submit" variant="primary" disabled={gameOver}>Guess</Button>
-      </form>
+      {gameOver ? (
+        <RoundResult gaveUp={gaveUp} round={round} />
+      ) : (
+        <>
+        <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
+          <div className="flex-grow-1">
+            <GuessBox
+              key={shakeCount}
+              className={shakeCount > 0 ? "shake" : undefined}
+              autoFocus={shakeCount > 0 || prefersPreciseInput()}
+              value={guess}
+              name={inputPlaceholder}
+              onChange={e => setGuess(e.currentTarget.value)}
+              disabled={gameOver}
+            />
+          </div>
+          <Button type="submit" variant="primary" disabled={gameOver}>Guess</Button>
+        </form>
 
-      <div className="d-flex flex-wrap gap-2 mb-2">
-        {hints && (
-          <span title={hintTitle}>
-            <Button variant="outline-warning" onClick={useHint} disabled={gameOver || hintsLeft <= 0}>
-              <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
-            </Button>
-          </span>
-        )}
-        <Button variant="outline-danger" onClick={handleRevealClick} disabled={gameOver}>
-          <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
-        </Button>
-      </div>
+        <div className="d-flex flex-wrap gap-2 mb-2">
+          {hints && (
+            <span title={hintTitle}>
+              <Button variant="outline-warning" onClick={useHint} disabled={gameOver || hintsLeft <= 0}>
+                <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
+              </Button>
+            </span>
+          )}
+          <Button variant="outline-danger" onClick={handleRevealClick} disabled={gameOver}>
+            <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
+          </Button>
+        </div>
+        </>
+      )}
 
       <div className="guess-feedback small" aria-live="polite">{feedback}</div>
 
@@ -119,6 +133,8 @@ function MapGameInput({
 
 export class MapGameInputProps {
   gameOver: boolean;
+  gaveUp: boolean;
+  round: Round;
   wrongGuesses: AnswerModel[];
   submitGuess: (guess: string) => GuessResult;
   useHint: () => void;

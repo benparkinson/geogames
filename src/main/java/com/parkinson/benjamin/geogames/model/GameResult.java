@@ -1,3 +1,6 @@
 package com.parkinson.benjamin.geogames.model;
 
-public record GameResult(GameState gameState, int roundsUnanswered, int score) {}
+import java.util.List;
+
+public record GameResult(
+    GameState gameState, int roundsUnanswered, int score, List<AnswerState> roundAnswerStates) {}
