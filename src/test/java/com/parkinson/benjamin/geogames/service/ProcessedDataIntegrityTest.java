@@ -1,0 +1,52 @@
+package com.parkinson.benjamin.geogames.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.TripointDefinition;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+
+public class ProcessedDataIntegrityTest {
+
+  // Tripoints with no border junction nearby, removed during the country file migration.
+  private static final List<Set<String>> DROPPED =
+      List.of(
+          Set.of("Somalia", "Djibouti", "Ethiopia"),
+          Set.of("Ethiopia", "South Sudan", "Kenya"),
+          Set.of("Azerbaijan", "Iran", "Turkmenistan"),
+          Set.of("Russia", "Kazakhstan", "Azerbaijan"),
+          Set.of("Kazakhstan", "Azerbaijan", "Turkmenistan"),
+          Set.of("Pakistan", "India", "China"));
+
+  private final TripointLoaderService tripointLoaderService = new TripointLoaderService();
+  private final CountryLoaderService countryLoaderService = new CountryLoaderService();
+
+  @Test
+  public void tripointsAreWellFormed() throws IOException {
+    List<TripointDefinition> definitions = tripointLoaderService.loadTripointDefinitions();
+
+    assertEquals(164, definitions.size());
+    for (TripointDefinition definition : definitions) {
+      Set<String> names = new HashSet<>(definition.countryNames());
+      assertEquals(3, names.size(), "expected 3 distinct countries in " + definition);
+      assertFalse(DROPPED.contains(names), "dropped tripoint is back: " + names);
+    }
+  }
+
+  @Test
+  public void everyTripointCountryLoads() throws IOException {
+    for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
+      for (String name : definition.countryNames()) {
+        Country country = countryLoaderService.loadCountryByName(name);
+        assertEquals(name, country.name());
+        assertNotNull(country.geoData().geometry(), "no geometry for " + name);
+      }
+    }
+  }
+}

@@ -8,8 +8,10 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.io.IOException;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled("hits Wikipedia")
 public class TripointComputerTest {
 
   private final TripointComputer service = new TripointComputer();

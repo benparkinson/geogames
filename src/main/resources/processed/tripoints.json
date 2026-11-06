@@ -1,0 +1,985 @@
+[ {
+  "coordinate" : {
+    "latitude" : 23.51735117600012,
+    "longitude" : 11.96886071700007
+  },
+  "countryNames" : [ "Niger", "Algeria", "Libya" ]
+}, {
+  "coordinate" : {
+    "latitude" : 30.228905335000093,
+    "longitude" : 9.519707885000116
+  },
+  "countryNames" : [ "Algeria", "Libya", "Tunisia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 24.995064596000176,
+    "longitude" : -4.821613117999902
+  },
+  "countryNames" : [ "Mauritania", "Algeria", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : 19.142243551000064,
+    "longitude" : 4.228609660000103
+  },
+  "countryNames" : [ "Niger", "Algeria", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : 27.285415751000087,
+    "longitude" : -8.68238521299989
+  },
+  "countryNames" : [ "Mauritania", "Algeria", "Western Sahara" ]
+}, {
+  "coordinate" : {
+    "latitude" : 27.661439311000095,
+    "longitude" : -8.682385212999918
+  },
+  "countryNames" : [ "Algeria", "Western Sahara", "Morocco" ]
+}, {
+  "coordinate" : {
+    "latitude" : -4.635323180999947,
+    "longitude" : 13.073702840000067
+  },
+  "countryNames" : [ "Republic of Congo", "Angola", "Democratic Republic of the Congo" ]
+}, {
+  "coordinate" : {
+    "latitude" : -10.872306822999846,
+    "longitude" : 23.96745650200009
+  },
+  "countryNames" : [ "Angola", "Democratic Republic of the Congo", "Zambia" ]
+}, {
+  "coordinate" : {
+    "latitude" : -17.641144306999877,
+    "longitude" : 23.381652466000105
+  },
+  "countryNames" : [ "Angola", "Namibia", "Zambia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 11.896535950000072,
+    "longitude" : 2.390168904000092
+  },
+  "countryNames" : [ "Niger", "Burkina Faso", "Benin" ]
+}, {
+  "coordinate" : {
+    "latitude" : 10.99274098700009,
+    "longitude" : 0.901474243000081
+  },
+  "countryNames" : [ "Togo", "Burkina Faso", "Benin" ]
+}, {
+  "coordinate" : {
+    "latitude" : 11.695773010000025,
+    "longitude" : 3.596400187000114
+  },
+  "countryNames" : [ "Niger", "Nigeria", "Benin" ]
+}, {
+  "coordinate" : {
+    "latitude" : -24.75249318399993,
+    "longitude" : 19.981446574000046
+  },
+  "countryNames" : [ "Botswana", "Namibia", "South Africa" ]
+}, {
+  "coordinate" : {
+    "latitude" : -17.794106546999984,
+    "longitude" : 25.259780721000112
+  },
+  "countryNames" : [ "Botswana", "Namibia", "Zambia" ]
+}, {
+  "coordinate" : {
+    "latitude" : -22.186706644999987,
+    "longitude" : 29.350073689000055
+  },
+  "countryNames" : [ "Zimbabwe", "Botswana", "South Africa" ]
+}, {
+  "coordinate" : {
+    "latitude" : -17.794106546999984,
+    "longitude" : 25.259780721000112
+  },
+  "countryNames" : [ "Zimbabwe", "Botswana", "Zambia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 9.488724263000051,
+    "longitude" : -2.68921097799992
+  },
+  "countryNames" : [ "Ghana", "Ivory Coast", "Burkina Faso" ]
+}, {
+  "coordinate" : {
+    "latitude" : 10.425488790000117,
+    "longitude" : -5.522578084999879
+  },
+  "countryNames" : [ "Ivory Coast", "Burkina Faso", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : 11.13498036700014,
+    "longitude" : -0.16610917099996
+  },
+  "countryNames" : [ "Ghana", "Togo", "Burkina Faso" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.910977275000107,
+    "longitude" : 0.218466838000012
+  },
+  "countryNames" : [ "Niger", "Burkina Faso", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : -2.720711364999886,
+    "longitude" : 29.015365438000117
+  },
+  "countryNames" : [ "Democratic Republic of the Congo", "Rwanda", "Burundi" ]
+}, {
+  "coordinate" : {
+    "latitude" : -4.449804788999899,
+    "longitude" : 29.404178915000188
+  },
+  "countryNames" : [ "Tanzania", "Democratic Republic of the Congo", "Burundi" ]
+}, {
+  "coordinate" : {
+    "latitude" : -2.400627542999914,
+    "longitude" : 30.554599650000142
+  },
+  "countryNames" : [ "Tanzania", "Rwanda", "Burundi" ]
+}, {
+  "coordinate" : {
+    "latitude" : 7.523262838000107,
+    "longitude" : 15.48104943900006
+  },
+  "countryNames" : [ "Cameroon", "Central African Republic", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 2.23645375600006,
+    "longitude" : 16.1966646730001
+  },
+  "countryNames" : [ "Republic of Congo", "Cameroon", "Central African Republic" ]
+}, {
+  "coordinate" : {
+    "latitude" : 13.077988383000076,
+    "longitude" : 14.0649084880001
+  },
+  "countryNames" : [ "Cameroon", "Nigeria", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 2.161057841000073,
+    "longitude" : 13.294567912000076
+  },
+  "countryNames" : [ "Republic of Congo", "Cameroon", "Gabon" ]
+}, {
+  "coordinate" : {
+    "latitude" : 2.165760396000053,
+    "longitude" : 11.322078491000042
+  },
+  "countryNames" : [ "Cameroon", "Equatorial Guinea", "Gabon" ]
+}, {
+  "coordinate" : {
+    "latitude" : 10.919153747000152,
+    "longitude" : 22.861064087000074
+  },
+  "countryNames" : [ "Sudan", "Central African Republic", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 3.476868998000086,
+    "longitude" : 18.626387166000086
+  },
+  "countryNames" : [ "Republic of Congo", "Democratic Republic of the Congo", "Central African Republic" ]
+}, {
+  "coordinate" : {
+    "latitude" : 5.070725199000094,
+    "longitude" : 27.441301310000142
+  },
+  "countryNames" : [ "Democratic Republic of the Congo", "Central African Republic", "South Sudan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 8.689327330000168,
+    "longitude" : 24.170328031000054
+  },
+  "countryNames" : [ "Sudan", "Central African Republic", "South Sudan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 22.9956637600001,
+    "longitude" : 14.979909027000133
+  },
+  "countryNames" : [ "Niger", "Libya", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 19.496123759000028,
+    "longitude" : 23.981305786000036
+  },
+  "countryNames" : [ "Libya", "Sudan", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 13.704100037000089,
+    "longitude" : 13.607313680000061
+  },
+  "countryNames" : [ "Niger", "Nigeria", "Chad" ]
+}, {
+  "coordinate" : {
+    "latitude" : 7.55798940000011,
+    "longitude" : -8.485446329999888
+  },
+  "countryNames" : [ "Ivory Coast", "Guinea", "Liberia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 10.161990662000122,
+    "longitude" : -7.989662638999988
+  },
+  "countryNames" : [ "Ivory Coast", "Guinea", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : 12.465906880000162,
+    "longitude" : 42.37945926900005
+  },
+  "countryNames" : [ "Djibouti", "Ethiopia", "Eritrea" ]
+}, {
+  "coordinate" : {
+    "latitude" : -1.388389587999896,
+    "longitude" : 29.577915080000167
+  },
+  "countryNames" : [ "Democratic Republic of the Congo", "Uganda", "Rwanda" ]
+}, {
+  "coordinate" : {
+    "latitude" : 3.490201518000148,
+    "longitude" : 30.839543498000097
+  },
+  "countryNames" : [ "Democratic Republic of the Congo", "Uganda", "South Sudan" ]
+}, {
+  "coordinate" : {
+    "latitude" : -8.19412404299986,
+    "longitude" : 30.752106975000203
+  },
+  "countryNames" : [ "Tanzania", "Democratic Republic of the Congo", "Zambia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 21.99535105400004,
+    "longitude" : 24.981244751000133
+  },
+  "countryNames" : [ "Egypt", "Libya", "Sudan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.263523254000091,
+    "longitude" : 36.52637984200004
+  },
+  "countryNames" : [ "Ethiopia", "Sudan", "Eritrea" ]
+}, {
+  "coordinate" : {
+    "latitude" : 3.977226054000184,
+    "longitude" : 41.8850191650001
+  },
+  "countryNames" : [ "Somalia", "Ethiopia", "Kenya" ]
+}, {
+  "coordinate" : {
+    "latitude" : 9.454592111000082,
+    "longitude" : 34.070697863000134
+  },
+  "countryNames" : [ "Ethiopia", "Sudan", "South Sudan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 12.673387757000043,
+    "longitude" : -13.72827876799991
+  },
+  "countryNames" : [ "Guinea", "Senegal", "Guinea Bissau" ]
+}, {
+  "coordinate" : {
+    "latitude" : 8.484625346000115,
+    "longitude" : -10.282235879999888
+  },
+  "countryNames" : [ "Guinea", "Sierra Leone", "Liberia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 12.403895162000111,
+    "longitude" : -11.38842159099994
+  },
+  "countryNames" : [ "Guinea", "Senegal", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : 4.219691875000109,
+    "longitude" : 33.97707808500007
+  },
+  "countryNames" : [ "Uganda", "South Sudan", "Kenya" ]
+}, {
+  "coordinate" : {
+    "latitude" : -1.00257334399987,
+    "longitude" : 33.904214315000075
+  },
+  "countryNames" : [ "Tanzania", "Uganda", "Kenya" ]
+}, {
+  "coordinate" : {
+    "latitude" : -11.573556009999876,
+    "longitude" : 34.964614706000106
+  },
+  "countryNames" : [ "Tanzania", "Mozambique", "Malawi" ]
+}, {
+  "coordinate" : {
+    "latitude" : -14.013872171999878,
+    "longitude" : 33.20270674700009
+  },
+  "countryNames" : [ "Zambia", "Mozambique", "Malawi" ]
+}, {
+  "coordinate" : {
+    "latitude" : -9.407900085999856,
+    "longitude" : 32.92086348500018
+  },
+  "countryNames" : [ "Tanzania", "Zambia", "Malawi" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.774939067000105,
+    "longitude" : -12.2641304119999
+  },
+  "countryNames" : [ "Mauritania", "Senegal", "Mali" ]
+}, {
+  "coordinate" : {
+    "latitude" : -25.9581043499999,
+    "longitude" : 31.949243204000084
+  },
+  "countryNames" : [ "Swaziland", "South Africa", "Mozambique" ]
+}, {
+  "coordinate" : {
+    "latitude" : -26.840014342999922,
+    "longitude" : 32.113884318000146
+  },
+  "countryNames" : [ "Swaziland", "South Africa", "Mozambique" ]
+}, {
+  "coordinate" : {
+    "latitude" : -22.39733978299992,
+    "longitude" : 31.288921753000068
+  },
+  "countryNames" : [ "Zimbabwe", "South Africa", "Mozambique" ]
+}, {
+  "coordinate" : {
+    "latitude" : -15.635995380999915,
+    "longitude" : 30.396263061000127
+  },
+  "countryNames" : [ "Zimbabwe", "Zambia", "Mozambique" ]
+}, {
+  "coordinate" : {
+    "latitude" : -1.066836591999945,
+    "longitude" : 30.471785843000163
+  },
+  "countryNames" : [ "Tanzania", "Uganda", "Rwanda" ]
+}, {
+  "coordinate" : {
+    "latitude" : -22.822223409,
+    "longitude" : -67.19390417499997
+  },
+  "countryNames" : [ "Chile", "Argentina", "Bolivia" ]
+}, {
+  "coordinate" : {
+    "latitude" : -22.23445566799991,
+    "longitude" : -62.65035721899997
+  },
+  "countryNames" : [ "Argentina", "Paraguay", "Bolivia" ]
+}, {
+  "coordinate" : {
+    "latitude" : -25.574944883999834,
+    "longitude" : -54.60020261299988
+  },
+  "countryNames" : [ "Argentina", "Paraguay", "Brazil" ]
+}, {
+  "coordinate" : {
+    "latitude" : -30.18296274799988,
+    "longitude" : -57.61169836499994
+  },
+  "countryNames" : [ "Argentina", "Uruguay", "Brazil" ]
+}, {
+  "coordinate" : {
+    "latitude" : 17.814314270000025,
+    "longitude" : -89.16049617499996
+  },
+  "countryNames" : [ "Belize", "Mexico", "Guatemala" ]
+}, {
+  "coordinate" : {
+    "latitude" : -20.165124612999918,
+    "longitude" : -58.15879675299999
+  },
+  "countryNames" : [ "Paraguay", "Bolivia", "Brazil" ]
+}, {
+  "coordinate" : {
+    "latitude" : -10.952301940999916,
+    "longitude" : -69.57763464399997
+  },
+  "countryNames" : [ "Bolivia", "Brazil", "Peru" ]
+}, {
+  "coordinate" : {
+    "latitude" : -17.506588197999974,
+    "longitude" : -69.51003631099988
+  },
+  "countryNames" : [ "Chile", "Bolivia", "Peru" ]
+}, {
+  "coordinate" : {
+    "latitude" : -4.236484476999848,
+    "longitude" : -69.96494950399997
+  },
+  "countryNames" : [ "Colombia", "Brazil", "Peru" ]
+}, {
+  "coordinate" : {
+    "latitude" : 1.222510478000103,
+    "longitude" : -66.87506058799994
+  },
+  "countryNames" : [ "Venezuela", "Colombia", "Brazil" ]
+}, {
+  "coordinate" : {
+    "latitude" : 1.941613871000101,
+    "longitude" : -56.48181901099994
+  },
+  "countryNames" : [ "Guyana", "Brazil", "Suriname" ]
+}, {
+  "coordinate" : {
+    "latitude" : 5.202138367000188,
+    "longitude" : -60.73985367899988
+  },
+  "countryNames" : [ "Venezuela", "Guyana", "Brazil" ]
+}, {
+  "coordinate" : {
+    "latitude" : -0.107020771999842,
+    "longitude" : -75.28348791499988
+  },
+  "countryNames" : [ "Colombia", "Ecuador", "Peru" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.415477804000133,
+    "longitude" : -89.36162085
+  },
+  "countryNames" : [ "Honduras", "El Salvador", "Guatemala" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.02166900600018,
+    "longitude" : 74.54235396300012
+  },
+  "countryNames" : [ "Pakistan", "Afghanistan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.23111358700004,
+    "longitude" : 74.89230676300014
+  },
+  "countryNames" : [ "Afghanistan", "Tajikistan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 29.85817861000011,
+    "longitude" : 60.8443787030001
+  },
+  "countryNames" : [ "Pakistan", "Afghanistan", "Iran" ]
+}, {
+  "coordinate" : {
+    "latitude" : 35.618498840000086,
+    "longitude" : 61.26967574100013
+  },
+  "countryNames" : [ "Afghanistan", "Iran", "Turkmenistan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.18886810300006,
+    "longitude" : 67.78054447500011
+  },
+  "countryNames" : [ "Afghanistan", "Uzbekistan", "Tajikistan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.364180400000095,
+    "longitude" : 66.51958785000011
+  },
+  "countryNames" : [ "Afghanistan", "Uzbekistan", "Turkmenistan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.29045237300015,
+    "longitude" : 45.00239994400013
+  },
+  "countryNames" : [ "Armenia", "Azerbaijan", "Georgia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 38.86370127400009,
+    "longitude" : 46.13587080900018
+  },
+  "countryNames" : [ "Armenia", "Azerbaijan", "Iran" ]
+}, {
+  "coordinate" : {
+    "latitude" : 39.702797343000086,
+    "longitude" : 44.77455855300022
+  },
+  "countryNames" : [ "Armenia", "Turkey", "Azerbaijan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.10658762600009,
+    "longitude" : 43.44042810000022
+  },
+  "countryNames" : [ "Armenia", "Turkey", "Georgia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.89044159000015,
+    "longitude" : 46.43089156100004
+  },
+  "countryNames" : [ "Russia", "Azerbaijan", "Georgia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 39.63990171200008,
+    "longitude" : 44.80699282900011
+  },
+  "countryNames" : [ "Turkey", "Azerbaijan", "Iran" ]
+}, {
+  "coordinate" : {
+    "latitude" : 21.977574362000027,
+    "longitude" : 92.57587854000016
+  },
+  "countryNames" : [ "Bangladesh", "Myanmar", "India" ]
+}, {
+  "coordinate" : {
+    "latitude" : 27.315543111000167,
+    "longitude" : 88.8923307700002
+  },
+  "countryNames" : [ "India", "Bhutan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 27.75944366500009,
+    "longitude" : 91.63288700400003
+  },
+  "countryNames" : [ "India", "Bhutan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.34574045800018,
+    "longitude" : 105.18430790300008
+  },
+  "countryNames" : [ "Cambodia", "Thailand", "Laos" ]
+}, {
+  "coordinate" : {
+    "latitude" : 14.704581605000087,
+    "longitude" : 107.52039270000009
+  },
+  "countryNames" : [ "Cambodia", "Laos", "Vietnam" ]
+}, {
+  "coordinate" : {
+    "latitude" : 31.211448958000133,
+    "longitude" : 34.24835085700013
+  },
+  "countryNames" : [ "Israel", "Egypt", "Palestine" ]
+}, {
+  "coordinate" : {
+    "latitude" : 28.21747772300013,
+    "longitude" : 97.3234957280001
+  },
+  "countryNames" : [ "Myanmar", "India", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 30.196969300000035,
+    "longitude" : 80.99601688700011
+  },
+  "countryNames" : [ "Nepal", "India", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 27.8608845010001,
+    "longitude" : 88.1182178140001
+  },
+  "countryNames" : [ "Nepal", "India", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.14192006500015,
+    "longitude" : 44.76613529500011
+  },
+  "countryNames" : [ "Turkey", "Iran", "Iraq" ]
+}, {
+  "coordinate" : {
+    "latitude" : 32.11814402300017,
+    "longitude" : 39.14637496000009
+  },
+  "countryNames" : [ "Saudi Arabia", "Jordan", "Iraq" ]
+}, {
+  "coordinate" : {
+    "latitude" : 33.37168507900016,
+    "longitude" : 38.774511352000076
+  },
+  "countryNames" : [ "Syria", "Jordan", "Iraq" ]
+}, {
+  "coordinate" : {
+    "latitude" : 29.09574452700015,
+    "longitude" : 46.53243575000013
+  },
+  "countryNames" : [ "Saudi Arabia", "Iraq", "Kuwait" ]
+}, {
+  "coordinate" : {
+    "latitude" : 37.10998402900019,
+    "longitude" : 42.35723840300014
+  },
+  "countryNames" : [ "Syria", "Turkey", "Iraq" ]
+}, {
+  "coordinate" : {
+    "latitude" : 32.74428151400009,
+    "longitude" : 35.75743453000021
+  },
+  "countryNames" : [ "Israel", "Syria", "Jordan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 31.49161895800013,
+    "longitude" : 35.4585380450001
+  },
+  "countryNames" : [ "Israel", "Jordan", "Palestine" ]
+}, {
+  "coordinate" : {
+    "latitude" : 33.40672170000009,
+    "longitude" : 35.82109989400013
+  },
+  "countryNames" : [ "Israel", "Syria", "Lebanon" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.18951894100003,
+    "longitude" : 80.21032841000007
+  },
+  "countryNames" : [ "Kazakhstan", "Kyrgyzstan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.24814585400016,
+    "longitude" : 70.9477930090001
+  },
+  "countryNames" : [ "Kazakhstan", "Uzbekistan", "Kyrgyzstan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.085273743000144,
+    "longitude" : 87.3237960210001
+  },
+  "countryNames" : [ "Russia", "Kazakhstan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.32171661400004,
+    "longitude" : 55.978422486000085
+  },
+  "countryNames" : [ "Kazakhstan", "Uzbekistan", "Turkmenistan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 39.44834259000014,
+    "longitude" : 73.63264204900017
+  },
+  "countryNames" : [ "Tajikistan", "Kyrgyzstan", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 40.23837188800009,
+    "longitude" : 70.9589551190002
+  },
+  "countryNames" : [ "Uzbekistan", "Tajikistan", "Kyrgyzstan" ]
+}, {
+  "coordinate" : {
+    "latitude" : 21.55269073500007,
+    "longitude" : 101.15902388500015
+  },
+  "countryNames" : [ "Myanmar", "Laos", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 20.317804870000046,
+    "longitude" : 100.09929528800015
+  },
+  "countryNames" : [ "Thailand", "Myanmar", "Laos" ]
+}, {
+  "coordinate" : {
+    "latitude" : 22.397548726000053,
+    "longitude" : 102.11865523300008
+  },
+  "countryNames" : [ "Laos", "China", "Vietnam" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.82326487300011,
+    "longitude" : 116.68427779200016
+  },
+  "countryNames" : [ "Mongolia", "Russia", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.165837301000096,
+    "longitude" : 87.81632409700006
+  },
+  "countryNames" : [ "Mongolia", "Russia", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.53048004200015,
+    "longitude" : 130.5307711190001
+  },
+  "countryNames" : [ "Russia", "North Korea", "China" ]
+}, {
+  "coordinate" : {
+    "latitude" : 22.70357655900007,
+    "longitude" : 55.186842895000126
+  },
+  "countryNames" : [ "Saudi Arabia", "Oman", "United Arab Emirates" ]
+}, {
+  "coordinate" : {
+    "latitude" : 18.99563751300009,
+    "longitude" : 51.97861495000021
+  },
+  "countryNames" : [ "Yemen", "Saudi Arabia", "Oman" ]
+}, {
+  "coordinate" : {
+    "latitude" : 40.84939402300006,
+    "longitude" : 20.96526249200008
+  },
+  "countryNames" : [ "North Macedonia", "Albania", "Greece" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.873181662000036,
+    "longitude" : 20.56714725800009
+  },
+  "countryNames" : [ "North Macedonia", "Albania", "Kosovo" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.54675811800004,
+    "longitude" : 20.064955688000055
+  },
+  "countryNames" : [ "Montenegro", "Albania", "Kosovo" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.595385641000064,
+    "longitude" : 1.42929732200011
+  },
+  "countryNames" : [ "Andorra", "Spain", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.5027814740001,
+    "longitude" : 1.707006470000067
+  },
+  "countryNames" : [ "Andorra", "Spain", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 48.76643015600007,
+    "longitude" : 13.815724731000074
+  },
+  "countryNames" : [ "Austria", "Czech Republic", "Germany" ]
+}, {
+  "coordinate" : {
+    "latitude" : 48.60416615800008,
+    "longitude" : 16.945042766000142
+  },
+  "countryNames" : [ "Austria", "Czech Republic", "Slovakia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 47.53454710200006,
+    "longitude" : 9.547481674000068
+  },
+  "countryNames" : [ "Austria", "Switzerland", "Germany" ]
+}, {
+  "coordinate" : {
+    "latitude" : 48.005443014,
+    "longitude" : 17.148337850000075
+  },
+  "countryNames" : [ "Austria", "Slovakia", "Hungary" ]
+}, {
+  "coordinate" : {
+    "latitude" : 46.86277374300005,
+    "longitude" : 16.09403527800012
+  },
+  "countryNames" : [ "Austria", "Slovenia", "Hungary" ]
+}, {
+  "coordinate" : {
+    "latitude" : 46.51974558600003,
+    "longitude" : 13.700951375000102
+  },
+  "countryNames" : [ "Austria", "Slovenia", "Italy" ]
+}, {
+  "coordinate" : {
+    "latitude" : 46.86442738900007,
+    "longitude" : 10.453811076000136
+  },
+  "countryNames" : [ "Austria", "Switzerland", "Italy" ]
+}, {
+  "coordinate" : {
+    "latitude" : 47.262801005000114,
+    "longitude" : 9.52115482500011
+  },
+  "countryNames" : [ "Austria", "Switzerland", "Liechtenstein" ]
+}, {
+  "coordinate" : {
+    "latitude" : 47.05687042300008,
+    "longitude" : 9.581202840000032
+  },
+  "countryNames" : [ "Austria", "Switzerland", "Liechtenstein" ]
+}, {
+  "coordinate" : {
+    "latitude" : 55.666990866000106,
+    "longitude" : 26.594531291000067
+  },
+  "countryNames" : [ "Belarus", "Lithuania", "Latvia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 56.14241404300013,
+    "longitude" : 28.148906697000115
+  },
+  "countryNames" : [ "Russia", "Belarus", "Latvia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 53.93929270400008,
+    "longitude" : 23.485625448000064
+  },
+  "countryNames" : [ "Belarus", "Lithuania", "Poland" ]
+}, {
+  "coordinate" : {
+    "latitude" : 51.51739919100004,
+    "longitude" : 23.606238241000142
+  },
+  "countryNames" : [ "Belarus", "Ukraine", "Poland" ]
+}, {
+  "coordinate" : {
+    "latitude" : 52.10056772900013,
+    "longitude" : 31.764344930000078
+  },
+  "countryNames" : [ "Russia", "Belarus", "Ukraine" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.537752585000135,
+    "longitude" : 5.790684855000023
+  },
+  "countryNames" : [ "Luxembourg", "Belgium", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 50.120456035000075,
+    "longitude" : 6.11748661300004
+  },
+  "countryNames" : [ "Luxembourg", "Belgium", "Germany" ]
+}, {
+  "coordinate" : {
+    "latitude" : 50.74992665600014,
+    "longitude" : 5.994910116000114
+  },
+  "countryNames" : [ "Netherlands", "Belgium", "Germany" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.559212138000106,
+    "longitude" : 18.43735477700011
+  },
+  "countryNames" : [ "Montenegro", "Bosnia and Herzegovina", "Croatia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 44.86563466400004,
+    "longitude" : 19.015820760000082
+  },
+  "countryNames" : [ "Serbia", "Bosnia and Herzegovina", "Croatia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 43.532796122000065,
+    "longitude" : 19.195344686000055
+  },
+  "countryNames" : [ "Montenegro", "Serbia", "Bosnia and Herzegovina" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.33577260400011,
+    "longitude" : 22.916977986000063
+  },
+  "countryNames" : [ "North Macedonia", "Bulgaria", "Greece" ]
+}, {
+  "coordinate" : {
+    "latitude" : 41.71303639700011,
+    "longitude" : 26.333358602000118
+  },
+  "countryNames" : [ "Bulgaria", "Turkey", "Greece" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.31343902600014,
+    "longitude" : 22.345023234000053
+  },
+  "countryNames" : [ "North Macedonia", "Serbia", "Bulgaria" ]
+}, {
+  "coordinate" : {
+    "latitude" : 44.22843453900005,
+    "longitude" : 22.691640373000098
+  },
+  "countryNames" : [ "Serbia", "Bulgaria", "Romania" ]
+}, {
+  "coordinate" : {
+    "latitude" : 45.931202698000064,
+    "longitude" : 18.90130578600008
+  },
+  "countryNames" : [ "Serbia", "Croatia", "Hungary" ]
+}, {
+  "coordinate" : {
+    "latitude" : 46.50171051000012,
+    "longitude" : 16.515301554000075
+  },
+  "countryNames" : [ "Slovenia", "Croatia", "Hungary" ]
+}, {
+  "coordinate" : {
+    "latitude" : 50.8584471640001,
+    "longitude" : 14.810392700000136
+  },
+  "countryNames" : [ "Czech Republic", "Germany", "Poland" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.51026072200008,
+    "longitude" : 18.833196249000082
+  },
+  "countryNames" : [ "Czech Republic", "Slovakia", "Poland" ]
+}, {
+  "coordinate" : {
+    "latitude" : 57.527600810000095,
+    "longitude" : 27.352934611000137
+  },
+  "countryNames" : [ "Estonia", "Russia", "Latvia" ]
+}, {
+  "coordinate" : {
+    "latitude" : 69.02726064100013,
+    "longitude" : 28.95407718900009
+  },
+  "countryNames" : [ "Russia", "Finland", "Norway" ]
+}, {
+  "coordinate" : {
+    "latitude" : 69.03635569300009,
+    "longitude" : 20.623164510000038
+  },
+  "countryNames" : [ "Sweden", "Finland", "Norway" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.45534865200011,
+    "longitude" : 6.345307071000093
+  },
+  "countryNames" : [ "Luxembourg", "Germany", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 47.58461854400011,
+    "longitude" : 7.586028488000125
+  },
+  "countryNames" : [ "Switzerland", "Germany", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 45.925259909,
+    "longitude" : 7.022082560000115
+  },
+  "countryNames" : [ "Switzerland", "Italy", "France" ]
+}, {
+  "coordinate" : {
+    "latitude" : 46.10809112600013,
+    "longitude" : 20.24282596900008
+  },
+  "countryNames" : [ "Serbia", "Hungary", "Romania" ]
+}, {
+  "coordinate" : {
+    "latitude" : 47.9467385870001,
+    "longitude" : 22.877600546000053
+  },
+  "countryNames" : [ "Ukraine", "Hungary", "Romania" ]
+}, {
+  "coordinate" : {
+    "latitude" : 48.40479848300008,
+    "longitude" : 22.13283980300011
+  },
+  "countryNames" : [ "Ukraine", "Slovakia", "Hungary" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.246289302000065,
+    "longitude" : 21.564065710000108
+  },
+  "countryNames" : [ "North Macedonia", "Serbia", "Kosovo" ]
+}, {
+  "coordinate" : {
+    "latitude" : 42.8274386600001,
+    "longitude" : 20.345352010000028
+  },
+  "countryNames" : [ "Montenegro", "Serbia", "Kosovo" ]
+}, {
+  "coordinate" : {
+    "latitude" : 54.35626983700003,
+    "longitude" : 22.76721968600006
+  },
+  "countryNames" : [ "Russia", "Lithuania", "Poland" ]
+}, {
+  "coordinate" : {
+    "latitude" : 48.25896759100014,
+    "longitude" : 26.617889038000044
+  },
+  "countryNames" : [ "Moldova", "Ukraine", "Romania" ]
+}, {
+  "coordinate" : {
+    "latitude" : 45.46177398700003,
+    "longitude" : 28.19949792500006
+  },
+  "countryNames" : [ "Moldova", "Ukraine", "Romania" ]
+}, {
+  "coordinate" : {
+    "latitude" : 49.0721996060001,
+    "longitude" : 22.539636678000136
+  },
+  "countryNames" : [ "Ukraine", "Slovakia", "Poland" ]
+} ]

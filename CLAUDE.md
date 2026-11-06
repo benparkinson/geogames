@@ -41,10 +41,10 @@ Frontend (`client/`):
 
 **Leaflet and SSR.** Leaflet can't render on the server. Each map has a `*MapWrapper.tsx` that loads the real `*Map.tsx` with `next/dynamic` and `ssr: false`. Follow this pattern for new maps.
 
-**Geo data pipeline** (`src/main/resources`):
-- `data/` holds the raw sources: `countries/countries.geo.json`, `countries/additionalNames.json` (aliases), `rivers/*.geo.json` and `rivers/additionalData.json`.
-- `processed/` holds files generated offline. These are standalone `main` programs, not part of the Spring app:
-  - `loaders/countries/CountryLoaderMain <outDir>` writes `processed/countries/*.json`.
-  - `loaders/tripoint/TripointLoaderMain <outDir>` computes tripoints from country borders (`TripointComputer`) and writes `processed/tripoints/{1..N}.json`.
-- `TripointLoaderService.countTripoints()` **hard-codes 170**, because files can't be counted inside a jar. Update it if you regenerate tripoints.
-- Rivers are loaded at runtime by classpath glob and cached (`@Cacheable("rivers")`). `data/rivers/processRiverImport.sh` strips extra properties from raw river exports.
+**Geo data pipeline**:
+- `geodata/countries/` (repo root, **not** in the jar) holds the raw sources: `countries.geo.json` (Natural Earth) and `additionalNames.json` (aliases). `src/main/resources/data/rivers/` still holds the raw river data, loaded at runtime. `processRiverImport.sh` strips extra properties from raw river exports.
+- `src/main/resources/processed/` holds files generated offline by standalone `main` programs, not part of the Spring app:
+  - `loaders/countries/CountryLoaderMain <countries.geo.json> <additionalNames.json> <outDir>` writes `processed/countries/*.json` (one `Country` per file). Editing `additionalNames.json` means re-running this.
+  - `loaders/tripoint/TripointLoaderMain <processedCountriesDir> <outFile>` scrapes Wikipedia's list of tripoints and writes the single file `processed/tripoints.json`, an array of `{coordinate, countryNames}`. Each Wikipedia coordinate is snapped by `TripointSnapper` to the vertex where the three countries' borders meet. A tripoint with no such vertex within 30 km is dropped. The tripoint count comes from the file, so there's nothing to update by hand.
+- At runtime `TripointFinderService` picks random definitions from `tripoints.json` and loads each country with `CountryLoaderService.loadCountryByName`, so the `jsonBlob` sent to the frontend still contains full country geometry.
+- Rivers are loaded at runtime by classpath glob and cached (`@Cacheable("rivers")`).
