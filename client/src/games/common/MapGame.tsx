@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
-import { Round } from "./Model";
-import { CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./GameRoundPage";
-import { Button, Modal, Stack } from "react-bootstrap";
-import HelpButton from "./HelpButton";
+import { Round, CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./Model";
+import { Button, Stack } from "react-bootstrap";
+import { Lightbulb } from "react-bootstrap-icons";
 import MapGameScore from "./MapGameScore";
 
 function MapGame<Type>({
@@ -13,55 +12,59 @@ function MapGame<Type>({
   MapComponent,
   correctAnswersFunction,
   round,
-  explanation,
-  clues,
-  displayMapHint,
+  prompt,
+  inputPlaceholder,
+  hints,
   submitAnswer,
   answerState,
   isAnswerCorrect
 }: MapGameProps<Type>): JSX.Element {
-  const [attemptedGuesses, setAttemptedGuesses] = useState(new Array());
+  const [attemptedGuesses, setAttemptedGuesses] = useState<AnswerModel[]>(() =>
+    answerState !== UNANSWERED
+      ? correctAnswersFunction(data).map(a => new AnswerModel(a, true))
+      : []
+  );
   const [gaveUp, setGaveUp] = useState(answerState === GAVE_UP);
   const [gameOver, setGameOver] = useState(answerState !== UNANSWERED);
-  const [openExplanationModal, setOpenExplanationModal] = useState(false);
-  const [openClueModal, setOpenClueModal] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [hintTexts, setHintTexts] = useState<string[]>([]);
 
   function renderMap() {
     return <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} />;
   }
 
-  function submitGuess(guess: string) {
+  function submitGuess(guess: string): GuessResult {
     if (gameOver) {
-      return false;
+      return { kind: "over" };
     }
 
-    if (guess === "") {
-      return false;
+    const trimmed = guess.trim();
+    if (trimmed === "") {
+      return { kind: "empty" };
     }
 
-    const allGuesses = attemptedGuesses.map((answer: AnswerModel) => {
-      return normaliseString(answer.answer)
-    });
-
-    if (allGuesses.includes(normaliseString(guess))) {
-      return false;
+    const allGuesses = attemptedGuesses.map((answer: AnswerModel) => normaliseString(answer.answer));
+    if (allGuesses.includes(normaliseString(trimmed))) {
+      return { kind: "duplicate", guess: trimmed };
     }
 
-    const correct = isAnswerCorrect(guess, data)
-    const answer = new AnswerModel(guess, correct);
-
-    const newAttemptedGuesses = [...attemptedGuesses, answer];
-
-    const correctCount = newAttemptedGuesses.filter((answer: AnswerModel) => {
-      return answer.correct;
-    }).length;
+    const correct = isAnswerCorrect(trimmed, data);
+    const newAttemptedGuesses = [...attemptedGuesses, new AnswerModel(trimmed, correct)];
+    const correctCount = newAttemptedGuesses.filter(answer => answer.correct).length;
 
     setAttemptedGuesses(newAttemptedGuesses);
-    if (correctCount === answerCount) {
+
+    if (!correct) {
+      return { kind: "wrong", guess: trimmed };
+    }
+
+    const remaining = answerCount - correctCount;
+    if (remaining <= 0) {
       submitAnswer(CORRECT_ANSWER);
       setGameOver(true);
+      return { kind: "correct", remaining: 0 };
     }
-    return true;
+    return { kind: "correct", remaining };
   }
 
   function giveUp() {
@@ -69,54 +72,22 @@ function MapGame<Type>({
       return;
     }
 
-    setCorrectAnswers(false);
+    setAttemptedGuesses(correctAnswersFunction(data).map(a => new AnswerModel(a, true)));
     submitAnswer(GAVE_UP);
     setGaveUp(true);
     setGameOver(true);
   }
 
-  function setCorrectAnswers(_userCorrect: boolean) {
-    const correctAnswers = correctAnswersFunction(data);
-
-    setAttemptedGuesses(correctAnswers.map((answer, _index) => {
-      return new AnswerModel(answer, true);
-    }));
-  }
-
-  function clearInput() {
-    setGaveUp(false);
-    setGameOver(false);
-  }
-
-  if (round) {
-    enrichRoundFunctions();
-  }
-
-  if (gameOver && attemptedGuesses.length === 0) {
-    setCorrectAnswers(!gaveUp);
-  }
-
-  function enrichRoundFunctions() {
-    const nextRound = round.nextRound;
-    const prevRound = round.prevRound;
-
-    round.nextRound = () => {
-      nextRound();
-      clearInput();
+  function useHint() {
+    if (gameOver || !hints || hintsUsed >= hints.total) {
+      return;
     }
 
-    round.prevRound = () => {
-      prevRound();
-      clearInput();
+    const text = hints.use(hintsUsed);
+    if (text) {
+      setHintTexts([...hintTexts, text]);
     }
-  }
-
-  function openGameExplanationModal() {
-    setOpenExplanationModal(true);
-  }
-
-  function openRoundClueModal() {
-    setOpenClueModal(true);
+    setHintsUsed(hintsUsed + 1);
   }
 
   function renderCorrectAnswerChips() {
@@ -150,56 +121,49 @@ function MapGame<Type>({
           <div className="pt-1">
             <MapGameScore round={round} />
           </div>
-          <div className="ms-auto pt-1">
-            <HelpButton giveUp={giveUp} openExplanationModal={openGameExplanationModal} openClueModal={clues && openRoundClueModal} />
-          </div>
         </Stack>
 
         <div className="map">{renderMap()}</div>
 
         {answerCount > 1 && renderCorrectAnswerChips()}
 
+        <div className="m-1">
+          <div>{prompt}</div>
+          {hintTexts.map((text, index) => (
+            <div key={index} className="small text-muted">
+              <Lightbulb aria-hidden="true" /> {text}
+            </div>
+          ))}
+        </div>
+
         <MapGameInput
           gameOver={gameOver}
           round={round}
           answers={attemptedGuesses}
           submitGuess={submitGuess}
-          displayMapHint={displayMapHint}
+          useHint={useHint}
+          hintsUsed={hintsUsed}
+          hints={hints}
+          giveUp={giveUp}
+          inputPlaceholder={inputPlaceholder}
         />
       </div>
-      <Modal show={openExplanationModal} onHide={() => setOpenExplanationModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Help
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {explanation}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant={"primary"} onClick={() => setOpenExplanationModal(false)}>Ok!</Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={openClueModal} onHide={() => setOpenClueModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Clues
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {clues && clues.map((clue, index) => (
-            <div key={index} className="m-1">
-              {clue}
-            </div>
-          ))}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant={"primary"} onClick={() => setOpenClueModal(false)}>Thanks!</Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }
+
+export interface HintConfig {
+  total: number;
+  description: string;
+  use: (hintIndex: number) => string | null;
+}
+
+export type GuessResult =
+  | { kind: "empty" }
+  | { kind: "duplicate"; guess: string }
+  | { kind: "wrong"; guess: string }
+  | { kind: "correct"; remaining: number }
+  | { kind: "over" };
 
 export class MapGameProps<Type> {
   data: Type;
@@ -207,12 +171,12 @@ export class MapGameProps<Type> {
   MapComponent: any;
   correctAnswersFunction: (data: Type) => string[];
   round: Round;
-  explanation: string;
-  clues?: string[];
+  prompt: string;
+  inputPlaceholder: string;
+  hints?: HintConfig;
   submitAnswer: (answerState: string) => void;
   answerState: string;
   isAnswerCorrect: (guess: string, data: Type) => boolean;
-  displayMapHint?: () => void;
 }
 
 export class AnswerModel {
