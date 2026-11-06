@@ -6,7 +6,7 @@ import { client, serverEndpoint } from "../../../src/api/gateway";
 import { fetchRound, roundUrl } from "../../../src/api/games";
 import GameSummary from "./GameSummary";
 import Tripoint from "../Tripoint";
-import { GameRoundModel, Round } from "../../../src/games/common/Model";
+import { GameRoundModel, Round, UNANSWERED } from "../../../src/games/common/Model";
 import { Spinner } from "react-bootstrap";
 import RiverShapes from "../RiverShapes";
 
@@ -58,7 +58,7 @@ function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
             answerState: data.answerState,
             score: data.gameResult.score,
             gameCompleted,
-            roundAnswerStates: data.gameResult.roundAnswerStates,
+            roundAnswerStates: roundAnswerStates(data),
         });
 
         if (data.gameType.name == "TRIPOINT") {
@@ -69,6 +69,16 @@ function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
         else {
             return <div>Unknown game type...</div>
         }
+    }
+
+    // Older backends don't send roundAnswerStates; fall back to what this response tells us.
+    function roundAnswerStates(data: GameRoundModel): string[] {
+        if (Array.isArray(data.gameResult?.roundAnswerStates)) {
+            return data.gameResult.roundAnswerStates;
+        }
+        const states: string[] = Array(data.totalRoundCount).fill(UNANSWERED);
+        states[currentRound] = data.answerState;
+        return states;
     }
 
     function renderTitle() {
