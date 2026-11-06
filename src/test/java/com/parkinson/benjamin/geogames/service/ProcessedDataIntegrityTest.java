@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 public class ProcessedDataIntegrityTest {
 
@@ -25,7 +26,8 @@ public class ProcessedDataIntegrityTest {
           Set.of("Pakistan", "India", "China"));
 
   private final TripointLoaderService tripointLoaderService = new TripointLoaderService();
-  private final CountryLoaderService countryLoaderService = new CountryLoaderService();
+  private final CountryLoaderService countryLoaderService =
+      new CountryLoaderService(new PathMatchingResourcePatternResolver());
 
   @Test
   public void tripointsAreWellFormed() throws IOException {

@@ -4,7 +4,7 @@ import { Round } from "./Model";
 
 export default function RoundResult({ gaveUp, round }: { gaveUp: boolean; round: Round }): JSX.Element {
   return (
-    <div className="mb-3">
+    <div className="round-result mb-3">
       <div className={"mb-2 fw-semibold " + (gaveUp ? "text-secondary" : "text-success")} aria-live="polite">
         {gaveUp ? (
           <><EyeFill aria-hidden="true" /> Answer revealed</>

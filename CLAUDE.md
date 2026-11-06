@@ -25,10 +25,11 @@ Frontend (`client/`):
 
 **Build coupling.** The Maven `frontend-maven-plugin` installs Node 18 into `target/`, then runs `npm install` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
 
-**Environment switching.** `client/src/api/gateway.ts` (`serverEndpoint()`) picks the backend URL from `NODE_ENV`: production uses `https://geogames-web-service.onrender.com`, anything else uses `localhost:8080`. CORS origins are hard-coded in `@CrossOrigin` on `GameController`. Update both if the hosting changes.
+**Environment switching.** `client/src/api/gateway.ts` (`serverEndpoint()`) picks the backend URL from `NODE_ENV`: production uses `https://geogames-web-service.onrender.com`, anything else uses `localhost:8080`. CORS origins are hard-coded in `@CrossOrigin` on both `GameController` and `CountryController`. Update both if the hosting changes.
 
 **Game flow / API** (`GameController` → `GameService`):
 - `POST /api/games` with `{gameType, numberOfRounds}` (1–10). `gameType` is `TRIPOINT`, `RIVERS_BY_SHAPE`, or `RANDOM` (a mix of both).
+- `GET /api/countries` returns `[{name, additionalNames}]` for every processed country. It is used for Tripoint autocomplete and guess validation, and is cached.
 - `GET /api/games/{id}/rounds/{round}` returns a `GameRound`: the game type, `jsonBlob`, the total round count, the answer state and the overall `GameResult`.
 - `POST /api/games/{id}/rounds/{round}/answers` with `{answerState}` (`CORRECT` / `GAVE_UP`).
 - Games are stored with JPA in an **in-memory H2** database (`application.properties`), so they are lost on restart. Each `GameRoundEntity` stores its round data as a serialized JSON string (`jsonBlob`, a `GameData` implementation such as `Tripoint` or `River`). The frontend `JSON.parse`s it.

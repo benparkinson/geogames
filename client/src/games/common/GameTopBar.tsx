@@ -17,7 +17,7 @@ export default function GameTopBar({ round, gameOver, gaveUp }: { round: Round; 
 
   return (
     <div className="d-flex align-items-center justify-content-between px-3 py-2 gap-2">
-      <Link href="/" aria-label="Home" className="text-decoration-none text-dark fw-semibold text-nowrap">
+      <Link href="/" aria-label="Home" className="text-decoration-none text-body fw-semibold text-nowrap">
         <HouseFill aria-hidden="true" /> <span className="d-none d-sm-inline">Geogames</span>
       </Link>
       <div className="d-flex align-items-center gap-2 small text-muted overflow-hidden">

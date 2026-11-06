@@ -13,14 +13,14 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
       {Array.from({ length: answerCount }, (_v, i) => {
         if (i < found.length) {
           return (
-            <span key={i} className="badge rounded-pill bg-success fs-6 fw-normal">
+            <span key={i} className="slot--filled badge rounded-pill bg-success fs-6 fw-normal">
               {found[i]} <CheckLg aria-hidden="true" />
             </span>
           );
         }
         if (gaveUp && allAnswers[i]) {
           return (
-            <span key={i} className="badge rounded-pill bg-secondary fs-6 fw-normal" title="Revealed">
+            <span key={i} className="slot--filled badge rounded-pill bg-secondary fs-6 fw-normal" title="Revealed">
               {allAnswers[i]} <EyeFill aria-hidden="true" />
               <span className="visually-hidden"> (revealed)</span>
             </span>

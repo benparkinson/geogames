@@ -20,7 +20,8 @@ function MapGameInput({
   hintsUsed,
   hints,
   giveUp,
-  inputPlaceholder
+  inputPlaceholder,
+  suggestions
 }: MapGameInputProps): JSX.Element {
   const [guess, setGuess] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -46,6 +47,10 @@ function MapGameInput({
         break;
       case "duplicate":
         setFeedback(`You've already guessed ${result.guess}.`);
+        break;
+      case "unknown":
+        setFeedback(`We don't recognise "${result.guess}" as a country. Check the spelling.`);
+        setShakeCount(shakeCount + 1);
         break;
       case "wrong":
         setFeedback(`"${result.guess}" isn't right. Try again.`);
@@ -120,7 +125,7 @@ function MapGameInput({
           <div className="text-muted" style={{ fontSize: "0.7rem" }}>Wrong guesses</div>
           <div className="d-flex flex-wrap gap-1">
             {wrongGuesses.map((a, i) => (
-              <span key={i} className="badge bg-light text-muted fw-normal text-decoration-line-through border">
+              <span key={i} className="badge bg-body-secondary text-body-secondary fw-normal text-decoration-line-through border">
                 <XLg aria-hidden="true" /> {a.answer}
               </span>
             ))}
@@ -142,6 +147,7 @@ export class MapGameInputProps {
   hints?: HintConfig;
   giveUp: () => void;
   inputPlaceholder: string;
+  suggestions?: string[];
 }
 
 export default MapGameInput;
