@@ -39,7 +39,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   return (
     <div className="min-vh-100" style={{ background: "var(--gg-bg)" }}>
       <div className="px-3 py-2">
-        <Link href="/" aria-label="Home" className="text-decoration-none text-dark fw-semibold">
+        <Link href="/" aria-label="Home" className="text-decoration-none text-body fw-semibold">
           <HouseFill aria-hidden="true" /> Geogames
         </Link>
       </div>

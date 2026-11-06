@@ -7,7 +7,7 @@ import { fetchRound, roundUrl } from "../../../src/api/games";
 import GameSummary from "./GameSummary";
 import Tripoint from "../Tripoint";
 import { GameRoundModel, Round } from "../../../src/games/common/Model";
-import Spinner from "../../../src/components/Spinner";
+import { Spinner } from "react-bootstrap";
 import RiverShapes from "../RiverShapes";
 
 function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
@@ -88,7 +88,7 @@ function GameRoundPage({ gameId }: { gameId: string }): JSX.Element {
     function renderSpinner(): JSX.Element {
         return (
             <div className="d-flex min-vh-100 justify-content-center align-items-center">
-                <Spinner />
+                <Spinner animation="border" variant="success" />
             </div>
         );
     }

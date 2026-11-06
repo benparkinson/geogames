@@ -12,9 +12,9 @@ public abstract class FileLoaderService {
       new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
   protected <T> T loadFile(String resourceFileName, Class<T> clazz) throws IOException {
-    InputStream coordinates = new ClassPathResource(resourceFileName).getInputStream();
-
-    return readFile(coordinates, clazz);
+    try (InputStream inputStream = new ClassPathResource(resourceFileName).getInputStream()) {
+      return readFile(inputStream, clazz);
+    }
   }
 
   protected <T> T readFile(InputStream inputStream, Class<T> clazz) throws IOException {

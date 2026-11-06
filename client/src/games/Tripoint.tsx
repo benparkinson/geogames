@@ -2,10 +2,25 @@ import TripointMapWrapper from "../map/TripointMapWrapper";
 import { normaliseString } from "../helper/stringHelper";
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import MapGame from "./common/MapGame";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useCountryNames } from "../api/countries";
 
 function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
   const [data, setData] = useState(tripoint);
+  const { data: countryList } = useCountryNames();
+
+  const suggestions = useMemo(() => countryList?.map(c => c.name), [countryList]);
+  const knownNames = useMemo(() => {
+    if (!countryList) {
+      return null;
+    }
+    const names = new Set<string>();
+    countryList.forEach(c => {
+      names.add(normaliseString(c.name));
+      c.additionalNames.forEach(alias => names.add(normaliseString(alias)));
+    });
+    return names;
+  }, [countryList]);
 
   function countryNames(tripoint: TripointModel): string[] {
     return tripoint.countries.map(country => country.name);
@@ -70,6 +85,8 @@ function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
         round={round}
+        suggestions={suggestions}
+        isKnownGuess={knownNames ? (guess: string) => knownNames.has(normaliseString(guess)) : undefined}
         prompt={`Name the ${answerCount} countries that meet at the flag.`}
         inputPlaceholder="Country name…"
         hints={{

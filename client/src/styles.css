@@ -1,7 +1,3 @@
-#main-page {
-  background-color: #c8cfe8;
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
@@ -12,11 +8,6 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-.tooltip-inner {
-  background-color: #b5c7d6;
-  color: #000000;
 }
 
 @keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
@@ -67,7 +58,7 @@ code {
   border-radius: 1rem;
   font-size: 0.8rem;
 }
-.answer-slot-empty { border: 2px dashed #adb5bd; }
+.answer-slot-empty { border: 2px dashed var(--bs-border-color); }
 
 @media (min-width: 992px) {
   .game-screen {
@@ -94,9 +85,9 @@ code {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid #6c757d;
+  border: 1px solid var(--bs-secondary-color);
   background: transparent;
-  color: #495057;
+  color: var(--bs-body-color);
   font-size: 0.65rem;
   line-height: 1;
 }
@@ -112,3 +103,20 @@ code {
 .game-card:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.15); }
 @media (min-width: 576px) { .w-sm-auto { width: auto !important; } }
 @media (prefers-reduced-motion: reduce) { .game-card { transition: none; } }
+
+[data-bs-theme="dark"] {
+  --gg-bg: #161a23;
+  --gg-panel-bg: #222838;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes slot-in { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .slot--filled { animation: slot-in 150ms ease-out; }
+
+  @keyframes result-in { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .round-result { animation: result-in 200ms ease-out; }
+
+  .game-card, .round-dot {
+    transition: box-shadow 120ms, border-color 120ms, background-color 120ms;
+  }
+}

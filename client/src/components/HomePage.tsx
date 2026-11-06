@@ -49,7 +49,7 @@ function HomePage(): JSX.Element {
                     aria-checked={isSelected}
                     tabIndex={isSelected ? 0 : -1}
                     ref={el => { cardRefs.current[index] = el; }}
-                    className={"game-card w-100 h-100 text-start rounded-3 p-3 " + (isSelected ? "border border-2 border-primary bg-primary-subtle" : "border bg-white")}
+                    className={"game-card w-100 h-100 text-start rounded-3 p-3 " + (isSelected ? "border border-2 border-primary bg-primary-subtle" : "border bg-body")}
                     onClick={() => setSelected(option.name)}
                     onKeyDown={e => handleKeyDown(e, index)}
                 >
@@ -100,6 +100,12 @@ function HomePage(): JSX.Element {
                         )}
                     </div>
                 </div>
+
+                <footer className="small text-muted text-center mt-5">
+                    Icons: <a href="https://www.flaticon.com/free-icons/location-marker" title="location-marker icons">Earthz Stocker</a>,{" "}
+                    <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
+                    River data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)
+                </footer>
             </div>
         </div>
     );

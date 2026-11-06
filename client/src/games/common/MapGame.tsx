@@ -16,6 +16,8 @@ function MapGame<Type>({
   prompt,
   inputPlaceholder,
   blankMapCaption,
+  suggestions,
+  isKnownGuess,
   hints,
   submitAnswer,
   answerState,
@@ -48,6 +50,10 @@ function MapGame<Type>({
     const allGuesses = attemptedGuesses.map((answer: AnswerModel) => normaliseString(answer.answer));
     if (allGuesses.includes(normaliseString(trimmed))) {
       return { kind: "duplicate", guess: trimmed };
+    }
+
+    if (isKnownGuess && !isKnownGuess(trimmed)) {
+      return { kind: "unknown", guess: trimmed };
     }
 
     const correct = isAnswerCorrect(trimmed, data);
@@ -127,6 +133,7 @@ function MapGame<Type>({
         hints={hints}
         giveUp={giveUp}
         inputPlaceholder={inputPlaceholder}
+        suggestions={suggestions}
       />
     </>
   );
@@ -150,6 +157,7 @@ export interface HintConfig {
 export type GuessResult =
   | { kind: "empty" }
   | { kind: "duplicate"; guess: string }
+  | { kind: "unknown"; guess: string }
   | { kind: "wrong"; guess: string }
   | { kind: "correct"; remaining: number }
   | { kind: "over" };
@@ -163,6 +171,8 @@ export class MapGameProps<Type> {
   prompt: string;
   inputPlaceholder: string;
   blankMapCaption?: string;
+  suggestions?: string[];
+  isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;
   submitAnswer: (answerState: string) => void;
   answerState: string;
