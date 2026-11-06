@@ -1,4 +1,4 @@
-export function GuessBox({ value, name, onChange, disabled, className }: GuessBoxProps): JSX.Element {
+export function GuessBox({ value, name, onChange, disabled, className, autoFocus }: GuessBoxProps): JSX.Element {
   return (
     <input
       className={"answer-attempt form-control" + (className ? " " + className : "")}
@@ -10,6 +10,7 @@ export function GuessBox({ value, name, onChange, disabled, className }: GuessBo
       value={value}
       onChange={onChange}
       disabled={disabled}
+      autoFocus={autoFocus}
     />
   );
 }
@@ -20,4 +21,5 @@ export class GuessBoxProps {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
   disabled: boolean;
   className?: string;
+  autoFocus?: boolean;
 }

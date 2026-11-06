@@ -94,6 +94,7 @@ function MapGameInput({
           <GuessBox
             key={shakeCount}
             className={shakeCount > 0 ? "shake" : undefined}
+            autoFocus={shakeCount > 0}
             value={guess}
             name={inputPlaceholder}
             onChange={e => setGuess(e.currentTarget.value)}
