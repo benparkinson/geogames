@@ -1,3 +1,4 @@
+import { GAME_OPTIONS } from "../gameTypes";
 import { GameRoundModel } from "./Model";
 
 export function answerNames(round: GameRoundModel): string[] {
@@ -12,12 +13,5 @@ export function answerNames(round: GameRoundModel): string[] {
 }
 
 export function gameTypeLabel(gameTypeName: string): string {
-  switch (gameTypeName) {
-    case "TRIPOINT":
-      return "Tripoint";
-    case "RIVERS_BY_SHAPE":
-      return "River";
-    default:
-      return gameTypeName;
-  }
+  return GAME_OPTIONS.find(o => o.name === gameTypeName)?.singular ?? gameTypeName;
 }

@@ -7,7 +7,7 @@ function MenuPage(): JSX.Element {
   return (
     <QueryClientProvider client={client}>
       <Head>
-        <title>Geogames!</title>
+        <title>Geogames</title>
       </Head>
       <div id="root">
         <HomePage />
