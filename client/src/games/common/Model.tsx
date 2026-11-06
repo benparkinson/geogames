@@ -40,3 +40,7 @@ export class Round {
         this.gameCompleted = gameCompleted;
     }
 }
+
+export const CORRECT_ANSWER: string = "CORRECT";
+export const GAVE_UP: string = "GAVE_UP";
+export const UNANSWERED: string = "UNANSWERED";

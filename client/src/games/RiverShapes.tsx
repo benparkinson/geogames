@@ -34,8 +34,13 @@ function RiverShapes({ river, round, answerCount, submitAnswer }): JSX.Element {
       MapComponent={RiverShapesMapWrapper}
       correctAnswersFunction={correctAnswers}
       round={round}
-      explanation={explanation}
-      clues={["Continent: " + river.continent]}
+      prompt="Name this river from its shape."
+      inputPlaceholder="River name…"
+      hints={{
+        total: 1,
+        description: "Shows which continent the river is in",
+        use: () => `Continent: ${river.continent}`
+      }}
       submitAnswer={submitAnswer}
       answerState={round.answerState}
       isAnswerCorrect={isAnswerCorrect}
@@ -56,7 +61,5 @@ export class RiverGeoData implements GeoJsonObject {
   properties: GeoJsonProperties;
   geometry: MultiLineString;
 }
-
-const explanation: string = "Guess the name of the river from its shape! You can zoom in and out of the map to help you.";
 
 export default RiverShapes;

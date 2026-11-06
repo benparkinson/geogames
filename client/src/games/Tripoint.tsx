@@ -70,11 +70,19 @@ function Tripoint({ tripoint, round, answerCount, submitAnswer }): JSX.Element {
         MapComponent={TripointMapWrapper}
         correctAnswersFunction={correctAnswers}
         round={round}
-        explanation={explanation}
+        prompt={`Name the ${answerCount} countries that meet at the flag.`}
+        inputPlaceholder="Country name…"
+        hints={{
+          total: data.countries.length,
+          description: "Shows the outline of one of the countries",
+          use: () => {
+            showRandomCountryBorder();
+            return null;
+          }
+        }}
         submitAnswer={submitAnswer}
         answerState={round.answerState}
         isAnswerCorrect={isAnswerCorrect}
-        displayMapHint={showRandomCountryBorder}
       />
     );
   }
@@ -105,7 +113,5 @@ export class TripointGeoData implements GeoJsonObject {
   properties: GeoJsonProperties;
   geometry: MultiPolygon | Polygon;
 }
-
-const explanation: string = "Guess the countries that meet at this tripoint! You can zoom in and out of the map to help you.";
 
 export default Tripoint;

@@ -10,7 +10,7 @@ import RiverShapes from "../RiverShapes";
 
 function GameRoundPage({ gameId }): JSX.Element {
     const [currentRound, setRound] = useState(0)
-    const { error, data, isFetching } = useQuery(createUrl(), () =>
+    const { error, data, isLoading } = useQuery(createUrl(), () =>
         fetch(serverEndpoint() + createUrl()).then(result => result.json())
     );
     const submitAnswerMutation = useMutation((answerState: string) =>
@@ -51,9 +51,9 @@ function GameRoundPage({ gameId }): JSX.Element {
             data.gameResult.score, gameCompleted);
 
         if (data.gameType.name == "TRIPOINT") {
-            return <Tripoint tripoint={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
+            return <Tripoint key={currentRound} tripoint={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
         } else if (data.gameType.name == "RIVERS_BY_SHAPE") {
-            return <RiverShapes river={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
+            return <RiverShapes key={currentRound} river={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
         }
         else {
             return <div>Unknown game type...</div>
@@ -61,7 +61,7 @@ function GameRoundPage({ gameId }): JSX.Element {
     }
 
     function renderTitle() {
-        if (isFetching) {
+        if (!data) {
             return <title>Loading... | Geogames</title>
         }
         if (data.gameType.name == "TRIPOINT") {
@@ -87,14 +87,10 @@ function GameRoundPage({ gameId }): JSX.Element {
             <Head>
                 {renderTitle()}
             </Head>
-            {isFetching ? renderSpinner() : renderGame(data)}
+            {isLoading || !data ? renderSpinner() : renderGame(data)}
             <ReactQueryDevtools initialIsOpen={false} />
         </>
     );
 }
 
 export default GameRoundPage;
-
-export const CORRECT_ANSWER: string = "CORRECT";
-export const GAVE_UP: string = "GAVE_UP";
-export const UNANSWERED: string = "UNANSWERED";
