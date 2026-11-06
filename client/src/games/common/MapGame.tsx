@@ -2,9 +2,10 @@ import { useState } from "react";
 import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
 import { Round, CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./Model";
-import { Button, Stack } from "react-bootstrap";
 import { Lightbulb } from "react-bootstrap-icons";
-import MapGameScore from "./MapGameScore";
+import GameLayout from "./GameLayout";
+import GameTopBar from "./GameTopBar";
+import AnswerSlots from "./AnswerSlots";
 
 function MapGame<Type>({
   data,
@@ -14,6 +15,7 @@ function MapGame<Type>({
   round,
   prompt,
   inputPlaceholder,
+  blankMapCaption,
   hints,
   submitAnswer,
   answerState,
@@ -90,65 +92,50 @@ function MapGame<Type>({
     setHintsUsed(hintsUsed + 1);
   }
 
-  function renderCorrectAnswerChips() {
-    return <div className="p-1 m-1 row">
-      <Stack direction="horizontal" gap={1} className="mx-auto">
-        {[...Array(answerCount)].map((_value: undefined, index: number) => <div key={index} className="mx-auto d-flex justify-content-center">
-          <Button disabled variant={determineAnswerChipColour(index)} />
+  const foundAnswers = attemptedGuesses.filter(a => a.correct).map(a => a.answer);
+  const showBlankMap = !!blankMapCaption && !gameOver;
+
+  const map = (
+    <>
+      {renderMap()}
+      {showBlankMap && <div className="map-caption">{blankMapCaption}</div>}
+    </>
+  );
+
+  const panel = (
+    <>
+      <div className="mb-2">{prompt}</div>
+      {hintTexts.map((text, index) => (
+        <div key={index} className="small text-muted mb-1">
+          <Lightbulb aria-hidden="true" /> {text}
         </div>
-        )}
-      </Stack>
-    </div>;
-  }
-
-  function determineAnswerChipColour(chipIndex: number) {
-    const correctCount = attemptedGuesses.filter((answer: AnswerModel) => {
-      return answer.correct;
-    }).length;
-
-    if (correctCount - 1 < chipIndex) {
-      return "secondary";
-    }
-
-    return gaveUp ? "danger" : "success";
-  }
+      ))}
+      <AnswerSlots
+        answerCount={answerCount}
+        found={foundAnswers}
+        gaveUp={gaveUp}
+        allAnswers={gaveUp ? attemptedGuesses.map(a => a.answer) : []}
+      />
+      <MapGameInput
+        gameOver={gameOver}
+        wrongGuesses={attemptedGuesses.filter(a => !a.correct)}
+        submitGuess={submitGuess}
+        useHint={useHint}
+        hintsUsed={hintsUsed}
+        hints={hints}
+        giveUp={giveUp}
+        inputPlaceholder={inputPlaceholder}
+      />
+    </>
+  );
 
   return (
-    <div className="d-flex flex-column background">
-      <div className="container flex-fill map-game">
-
-        <Stack direction="horizontal" gap={3}>
-          <div className="pt-1">
-            <MapGameScore round={round} />
-          </div>
-        </Stack>
-
-        <div className="map">{renderMap()}</div>
-
-        {answerCount > 1 && renderCorrectAnswerChips()}
-
-        <div className="m-1">
-          <div>{prompt}</div>
-          {hintTexts.map((text, index) => (
-            <div key={index} className="small text-muted">
-              <Lightbulb aria-hidden="true" /> {text}
-            </div>
-          ))}
-        </div>
-
-        <MapGameInput
-          gameOver={gameOver}
-          round={round}
-          answers={attemptedGuesses}
-          submitGuess={submitGuess}
-          useHint={useHint}
-          hintsUsed={hintsUsed}
-          hints={hints}
-          giveUp={giveUp}
-          inputPlaceholder={inputPlaceholder}
-        />
-      </div>
-    </div>
+    <GameLayout
+      topBar={<GameTopBar round={round} gameOver={gameOver} />}
+      map={map}
+      panel={panel}
+      mapClassName={showBlankMap ? "game-map--blank" : undefined}
+    />
   );
 }
 
@@ -173,6 +160,7 @@ export class MapGameProps<Type> {
   round: Round;
   prompt: string;
   inputPlaceholder: string;
+  blankMapCaption?: string;
   hints?: HintConfig;
   submitAnswer: (answerState: string) => void;
   answerState: string;

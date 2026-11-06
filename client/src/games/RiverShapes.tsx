@@ -34,6 +34,7 @@ function RiverShapes({ river, round, answerCount, submitAnswer }): JSX.Element {
       MapComponent={RiverShapesMapWrapper}
       correctAnswersFunction={correctAnswers}
       round={round}
+      blankMapCaption="Shape only. The satellite map appears when you answer."
       prompt="Name this river from its shape."
       inputPlaceholder="River name…"
       hints={{

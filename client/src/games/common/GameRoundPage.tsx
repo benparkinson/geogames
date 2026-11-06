@@ -76,7 +76,7 @@ function GameRoundPage({ gameId }): JSX.Element {
 
     function renderSpinner(): JSX.Element {
         return (
-            <div className="d-flex height-80-vh justify-content-center align-items-center">
+            <div className="d-flex min-vh-100 justify-content-center align-items-center">
                 <Spinner />
             </div>
         );
