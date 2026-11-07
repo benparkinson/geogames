@@ -18,4 +18,10 @@ public class RiverGamesConfig {
     return new RiverRoundGenerator(
         GameType.RIVERS_BY_SHAPE, rivers, random, river -> true, river -> List.of());
   }
+
+  @Bean
+  RoundGenerator riversOnMap(RiverLoaderService rivers, Random random) {
+    return new RiverRoundGenerator(
+        GameType.RIVERS_ON_MAP, rivers, random, river -> true, river -> List.of());
+  }
 }

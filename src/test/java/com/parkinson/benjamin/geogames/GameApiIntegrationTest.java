@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
+import com.parkinson.benjamin.geogames.model.GameType;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,6 +118,24 @@ class GameApiIntegrationTest {
   }
 
   @Test
+  void createsARiverOnMapGame() throws Exception {
+    int id = createGame("RIVERS_ON_MAP", 2);
+
+    for (int i = 0; i < 2; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("RIVERS_ON_MAP");
+      assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      assertThat((String) JsonPath.read(blob, "$.river.name")).isNotBlank();
+      assertThat((Object) JsonPath.read(blob, "$.river.geoData")).isNotNull();
+      assertThat((Object) JsonPath.read(blob, "$.river.source")).isNotNull();
+      assertThat((Object) JsonPath.read(blob, "$.river.mouth")).isNotNull();
+      assertThat((List<?>) JsonPath.read(blob, "$.river.countries")).isNotNull();
+    }
+  }
+
+  @Test
   void createsARandomGame() throws Exception {
     int id = createGame("RANDOM", 10);
     Set<String> subjects = new HashSet<>();
@@ -124,7 +144,7 @@ class GameApiIntegrationTest {
       String round = getRound(id, i);
       assertThat((int) JsonPath.read(round, "$.totalRoundCount")).isEqualTo(10);
       assertThat((String) JsonPath.read(round, "$.gameType.name"))
-          .isIn("TRIPOINT", "RIVERS_BY_SHAPE");
+          .isIn(Arrays.stream(GameType.values()).map(GameType::name).toList());
 
       String blob = JsonPath.read(round, "$.jsonBlob");
       String type = JsonPath.read(round, "$.gameType.name");

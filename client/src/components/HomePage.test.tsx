@@ -74,6 +74,9 @@ describe("HomePage choosing a game", () => {
     expect(card(/River Shapes/)).toHaveFocus();
 
     await user.keyboard("{ArrowDown}");
+    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowRight}");
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowRight}");
@@ -84,7 +87,7 @@ describe("HomePage choosing a game", () => {
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowUp}");
-    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
   });
 
   it("ignores other keys", async () => {
