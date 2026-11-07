@@ -131,10 +131,29 @@ public class GameService {
                 findRound(game, round)
                     .map(
                         r -> {
-                          r.setAnswerState(answerState);
-                          gameRepository.save(game);
+                          if (recordAnswer(r, answerState)) {
+                            gameRepository.save(game);
+                          }
                           return toResponse(game, r);
                         }));
+  }
+
+  /**
+   * A round's answer is final. Sending the same answer again does nothing, so a retried request is
+   * harmless, but changing an answered round is a conflict.
+   *
+   * @return whether the round changed
+   */
+  private static boolean recordAnswer(GameRoundEntity round, AnswerState answerState) {
+    AnswerState current = round.getAnswerState();
+    if (current == answerState) {
+      return false;
+    }
+    if (current != AnswerState.UNANSWERED) {
+      throw new RoundAlreadyAnsweredException(round.getRoundNumber(), current, answerState);
+    }
+    round.setAnswerState(answerState);
+    return true;
   }
 
   private static Optional<GameRoundEntity> findRound(GameEntity game, int roundNumber) {

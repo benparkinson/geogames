@@ -19,6 +19,7 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
+import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -154,6 +155,22 @@ class GameControllerTest {
                 .content("{\"answerState\":\"UNANSWERED\"}"))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.detail").value("A round can't be answered with UNANSWERED"));
+  }
+
+  @Test
+  void changingAnAnsweredRoundIsAConflict() throws Exception {
+    when(gameService.submitAnswer(1L, 0, AnswerState.GAVE_UP))
+        .thenThrow(new RoundAlreadyAnsweredException(0, AnswerState.CORRECT, AnswerState.GAVE_UP));
+
+    mockMvc
+        .perform(
+            post("/api/games/1/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"GAVE_UP\"}"))
+        .andExpect(status().isConflict())
+        .andExpect(
+            jsonPath("$.detail")
+                .value("Round 0 was already answered CORRECT and can't be changed to GAVE_UP"));
   }
 
   @Test

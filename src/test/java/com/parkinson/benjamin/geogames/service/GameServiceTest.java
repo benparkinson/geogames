@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -422,16 +421,29 @@ class GameServiceTest {
   }
 
   @Test
-  void submitAnswerOverwritesAnAlreadyAnsweredRound() {
+  void submitAnswerRefusesToChangeAnAnsweredRound() {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
 
-    // TODO: a round that was answered CORRECT can later be changed to GAVE_UP, because the
-    // service never checks the existing state. Making answers final needs a frontend change too.
-    GameRound changed = service.submitAnswer(1L, 0, AnswerState.GAVE_UP).orElseThrow();
-    assertThat(changed.answerState()).isEqualTo(AnswerState.GAVE_UP);
-    assertThat(changed.gameResult().score()).isZero();
-    verify(gameRepository, times(1)).save(eq(game));
+    assertThatThrownBy(() -> service.submitAnswer(1L, 0, AnswerState.GAVE_UP))
+        .isInstanceOf(RoundAlreadyAnsweredException.class)
+        .hasMessageContaining("CORRECT")
+        .hasMessageContaining("GAVE_UP");
+
+    assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.CORRECT);
+    verify(gameRepository, never()).save(any());
+  }
+
+  @Test
+  void submittingTheSameAnswerAgainChangesNothing() {
+    GameEntity game = game(round(0, AnswerState.GAVE_UP));
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+
+    GameRound again = service.submitAnswer(1L, 0, AnswerState.GAVE_UP).orElseThrow();
+
+    assertThat(again.answerState()).isEqualTo(AnswerState.GAVE_UP);
+    assertThat(again.gameResult().gameState()).isEqualTo(GameState.FINISHED);
+    verify(gameRepository, never()).save(any());
   }
 
   @Test
@@ -497,14 +509,10 @@ class GameServiceTest {
   }
 
   @Test
-  void aGameWithNoRoundsCountsAsFinishedWithNothing() {
-    // TODO: a game with no rounds is reported as FINISHED (none unanswered) rather than as an
-    // error or an empty result. createGame never makes one, since it needs at least one round.
-    GameResult result = GameService.calculateGameResult(game());
-
-    assertThat(result.gameState()).isEqualTo(GameState.FINISHED);
-    assertThat(result.roundsUnanswered()).isZero();
-    assertThat(result.score()).isZero();
-    assertThat(result.roundAnswerStates()).isEmpty();
+  void aGameCannotBeMadeWithoutRounds() {
+    assertThatThrownBy(() -> game())
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("at least one round");
+    assertThatThrownBy(() -> new GameEntity(null)).isInstanceOf(IllegalArgumentException.class);
   }
 }

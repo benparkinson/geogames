@@ -54,7 +54,8 @@ export function useSubmitAnswer(gameId: string, round: number) {
   return useMutation({
     mutationFn: (answerState: AnswerState) =>
       postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", { answerState }),
-    onSuccess: () => {
+    // Refetch on failure too: if the server refused the answer (a round's answer is final), show what it holds.
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.round(gameId, round) });
     },
   });
