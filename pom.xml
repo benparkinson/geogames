@@ -141,7 +141,7 @@
 
           <java>
             <googleJavaFormat>
-              <version>1.28.0</version>
+              <version>1.35.0</version>
               <reflowLongStrings>true</reflowLongStrings>
               <formatJavadoc>false</formatJavadoc>
             </googleJavaFormat>

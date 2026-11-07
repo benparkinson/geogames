@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static com.parkinson.benjamin.geogames.TestFixtures.EXPECTED_COUNTRY_COUNT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,7 +21,9 @@ class CountryLoaderServiceTest {
   void loadsEveryCountryNameSorted() throws IOException {
     List<CountryName> names = service.loadCountryNames();
 
-    assertEquals(255, names.size());
+    assertEquals(EXPECTED_COUNTRY_COUNT, names.size());
+    assertTrue(names.stream().noneMatch(c -> "Siachen Glacier".equals(c.name())));
+    assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
     assertEquals(names.stream().sorted(Comparator.comparing(CountryName::name)).toList(), names);
     assertTrue(names.stream().anyMatch(c -> "France".equals(c.name())));
     names.forEach(c -> assertNotNull(c.additionalNames(), c.name()));
