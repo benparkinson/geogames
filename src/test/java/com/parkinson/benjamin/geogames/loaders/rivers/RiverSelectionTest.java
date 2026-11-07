@@ -24,7 +24,7 @@ class RiverSelectionTest {
   }
 
   private static RiverOverride override(boolean exclude, String name, String continent) {
-    return new RiverOverride(exclude, name, continent, null, null, null, null);
+    return new RiverOverride(exclude, name, continent, null, null, null, null, null, null, null);
   }
 
   private static Assembly assemble(
@@ -108,7 +108,16 @@ class RiverSelectionTest {
         Map.of(
             "Q7",
             new RiverOverride(
-                null, "Murray River", "Australia", List.of("Murray"), null, null, "m.json"));
+                null,
+                "Murray River",
+                "Australia",
+                List.of("Murray"),
+                null,
+                null,
+                "m.json",
+                null,
+                null,
+                null));
 
     Assembly assembly = assemble(Map.of(), Map.of(), overrides);
 

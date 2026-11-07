@@ -20,10 +20,12 @@
     "osmFile": "volga.geo.json"
   },
   "Q973": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q1229": {
-    "continent": "Europe"
+    "continent": "Europe",
+    "reverseFlow": true
   },
   "Q1265": {
     "exclude": true
@@ -64,7 +66,8 @@
       "Niger River"
     ],
     "continent": "Africa",
-    "osmFile": "niger.geo.json"
+    "osmFile": "niger.geo.json",
+    "reverseFlow": true
   },
   "Q3783": {
     "name": "Amazon",
@@ -89,10 +92,12 @@
       "Yangzi"
     ],
     "continent": "Asia",
-    "osmFile": "yangtze.geo.json"
+    "osmFile": "yangtze.geo.json",
+    "reverseFlow": true
   },
   "Q6862": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q7348": {
     "name": "Indus",
@@ -112,7 +117,8 @@
     "osmFile": "yellow.geo.json"
   },
   "Q8168": {
-    "continent": "Europe"
+    "continent": "Europe",
+    "reverseFlow": true
   },
   "Q8187": {
     "continent": "Europe"
@@ -149,10 +155,12 @@
     "continent": "Asia"
   },
   "Q26433": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q26439": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q34589": {
     "continent": "Asia"
@@ -191,7 +199,8 @@
     ]
   },
   "Q46841": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q55499": {
     "continent": "Asia"
@@ -216,13 +225,15 @@
     "continent": "Asia"
   },
   "Q78879": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q80240": {
     "continent": "Asia"
   },
   "Q82207": {
-    "continent": "Asia"
+    "continent": "Asia",
+    "reverseFlow": true
   },
   "Q82308": {
     "continent": "Europe"
@@ -317,7 +328,8 @@
     "continent": "Asia"
   },
   "Q209031": {
-    "continent": "Europe"
+    "continent": "Europe",
+    "reverseFlow": true
   },
   "Q209891": {
     "continent": "Europe"
@@ -345,5 +357,17 @@
       "Albert Nile",
       "Mountain Nile"
     ]
+  },
+  "Q131792": {
+    "reverseFlow": true
+  },
+  "Q156054": {
+    "reverseFlow": true
+  },
+  "Q548": {
+    "reverseFlow": true
+  },
+  "Q186901": {
+    "reverseFlow": true
   }
 }

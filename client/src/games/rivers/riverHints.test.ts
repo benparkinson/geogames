@@ -1,12 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { makeRiverData } from "../../test/fixtures";
-import { continentHint, firstLetterHint, textHints } from "./riverHints";
+import { continentHint, firstLetterHint, flowsThroughHint, textHints } from "./riverHints";
 
 describe("riverHints", () => {
   const river = makeRiverData();
 
   it("names the continent", () => {
     expect(continentHint(river)).toBe("Continent: Europe");
+  });
+
+  it("names the countries it flows through", () => {
+    expect(flowsThroughHint(river)).toBe("Flows through: Romania, Germany, Austria");
+  });
+
+  it("has nothing to say about countries when there are none", () => {
+    expect(flowsThroughHint({ ...river, countries: [] })).toBeNull();
   });
 
   it("gives the first letter", () => {

@@ -2,9 +2,12 @@ package com.parkinson.benjamin.geogames.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
 import java.io.IOException;
 import java.util.HashSet;
@@ -51,5 +54,30 @@ public class ProcessedDataIntegrityTest {
         assertNotNull(country.geoData().geometry(), "no geometry for " + name);
       }
     }
+  }
+
+  @Test
+  public void riversHaveEndsAndCountriesThatLoad() {
+    List<River> rivers = new RiverLoaderService(reader).loadRivers();
+
+    assertEquals(150, rivers.size());
+    for (River river : rivers) {
+      assertNotNull(river.source(), "no source for " + river.name());
+      assertNotNull(river.mouth(), "no mouth for " + river.name());
+      assertNotEquals(river.source(), river.mouth(), "source is mouth for " + river.name());
+      assertNotNull(river.countries(), "no countries for " + river.name());
+      for (String name : river.countries()) {
+        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+      }
+    }
+  }
+
+  @Test
+  public void enoughRiversCrossTwoCountriesForTheCountriesGame() {
+    long eligible =
+        new RiverLoaderService(reader)
+            .loadRivers().stream().filter(river -> river.countries().size() >= 2).count();
+
+    assertTrue(eligible >= 20, "only " + eligible + " rivers cross two or more countries");
   }
 }

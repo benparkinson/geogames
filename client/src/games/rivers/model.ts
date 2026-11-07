@@ -1,5 +1,5 @@
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from "geojson";
-import type { Country } from "../common/country";
+import type { Coordinate, Country } from "../common/country";
 
 export interface River {
   id: string;
@@ -7,6 +7,11 @@ export interface River {
   additionalNames: string[];
   geoData: RiverGeoData;
   continent: string;
+  /** Where the river starts and ends. */
+  source: Coordinate;
+  mouth: Coordinate;
+  /** Names of the countries it flows through, longest stretch first. */
+  countries: string[];
 }
 
 export interface RiverGeoData extends GeoJsonObject {

@@ -49,6 +49,9 @@ export function makeRiverData(): River {
     name: "Danube",
     additionalNames: ["Donau"],
     continent: "Europe",
+    source: { latitude: 48.0, longitude: 8.1 },
+    mouth: { latitude: 45.2, longitude: 29.7 },
+    countries: ["Romania", "Germany", "Austria"],
     geoData: {
       type: "Feature",
       properties: {},

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.loaders.rivers.AliasBuilder;
+import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -87,7 +88,16 @@ class RiverLoaderServiceTest {
     GeoData geoData =
         new GeoData(
             "Feature", new GeoProperties("Nile"), new GeoGeometry("MultiLineString", List.of()));
-    River nile = new River("Q3392", "Nile", List.of("Nil"), "Africa", geoData);
+    River nile =
+        new River(
+            "Q3392",
+            "Nile",
+            List.of("Nil"),
+            "Africa",
+            geoData,
+            new Coordinate(-2.0, 30.0),
+            new Coordinate(31.0, 31.5),
+            List.of("Egypt", "Sudan"));
     JsonResourceReader reader = mock(JsonResourceReader.class);
     when(reader.readAll(anyString(), eq(River.class))).thenReturn(List.of(nile));
 

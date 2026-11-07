@@ -9,7 +9,7 @@ class AliasBuilderTest {
 
   private static RiverOverride override(
       List<String> aliases, List<String> add, List<String> remove) {
-    return new RiverOverride(null, null, null, aliases, add, remove, null);
+    return new RiverOverride(null, null, null, aliases, add, remove, null, null, null, null);
   }
 
   @Test

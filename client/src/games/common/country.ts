@@ -13,3 +13,8 @@ export interface CountryGeoData extends GeoJsonObject {
   properties: GeoJsonProperties;
   geometry: MultiPolygon | Polygon;
 }
+
+export interface Coordinate {
+  latitude: number;
+  longitude: number;
+}

@@ -117,7 +117,15 @@ class GameServiceTest {
             "Feature", new GeoProperties("River" + n), new GeoGeometry("MultiLineString", lines));
     return new RiverRound(
         GameType.RIVERS_BY_SHAPE,
-        new River("Q" + n, "River" + n, List.of("Alias" + n), "Africa", geoData),
+        new River(
+            "Q" + n,
+            "River" + n,
+            List.of("Alias" + n),
+            "Africa",
+            geoData,
+            new Coordinate(0, 0),
+            new Coordinate(1, 1),
+            List.of()),
         List.of());
   }
 

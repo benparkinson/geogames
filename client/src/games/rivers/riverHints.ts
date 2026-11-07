@@ -6,6 +6,10 @@ export type HintBuilder = (river: River) => string | null;
 
 export const continentHint: HintBuilder = (river) => `Continent: ${river.continent}`;
 
+/** Names the countries the river flows through, or nothing when there are none to name. */
+export const flowsThroughHint: HintBuilder = (river) =>
+  river.countries.length === 0 ? null : `Flows through: ${river.countries.join(", ")}`;
+
 export const firstLetterHint: HintBuilder = (river) => {
   const letter = river.name.trim().charAt(0).toUpperCase();
   return letter ? `Starts with “${letter}”` : null;

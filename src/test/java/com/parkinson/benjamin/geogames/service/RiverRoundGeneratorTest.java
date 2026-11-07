@@ -23,7 +23,8 @@ class RiverRoundGeneratorTest {
 
   private final List<River> rivers =
       IntStream.range(0, 6)
-          .mapToObj(i -> new River("Q" + i, "River" + i, List.of(), "Asia", null))
+          .mapToObj(
+              i -> new River("Q" + i, "River" + i, List.of(), "Asia", null, null, null, List.of()))
           .toList();
   private final RiverLoaderService loader = mock(RiverLoaderService.class);
 
