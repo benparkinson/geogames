@@ -23,6 +23,10 @@ Frontend (`client/`):
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; the Leaflet-rendering map components are excluded). Tests are colocated with their source as `*.test.ts(x)` under `client/src`, and shared helpers (fixtures, a `fetch` router, a query-client wrapper) live in `client/src/test/`. Never put test files under `client/pages/`, because Next would treat them as routes. Test files are type-checked by `next build`, so import `describe`/`it`/`expect`/`vi` from `vitest` explicitly. Never render real Leaflet maps: mock the `*MapWrapper` modules. Testing Library only detects Jest's fake timers, so with `vi.useFakeTimers()` use `fireEvent` instead of `userEvent`. Components use TanStack Query through the provider in `pages/_app.tsx`, so tests wrap them in a `QueryClientProvider` (`renderWithClient` in `client/src/test/render.tsx`).
 - Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports.
 
+## Git workflow
+
+`main` is protected: changes must go through a pull request and the required `test` status check, so pushes to `main` are rejected. Never commit to or push `main`. Create a feature branch first, push that, and open a PR.
+
 ## Architecture
 
 **Build coupling.** The Maven `frontend-maven-plugin` installs Node 24 into `target/`, then runs `npm ci` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
