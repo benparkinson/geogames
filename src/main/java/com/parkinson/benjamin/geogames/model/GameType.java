@@ -8,7 +8,8 @@ public enum GameType {
   TRIPOINT(3),
   RIVERS_BY_SHAPE(1),
   RIVERS_ON_MAP(1),
-  RIVERS_BY_ENDS(1);
+  RIVERS_BY_ENDS(1),
+  RIVERS_BY_COUNTRIES(1);
 
   private final int answerCount;
 

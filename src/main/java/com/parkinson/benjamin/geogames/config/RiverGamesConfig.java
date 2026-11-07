@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.config;
 
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverRoundGenerator;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
@@ -9,7 +10,10 @@ import java.util.Random;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/** One round generator per river game type; they all use the same rivers. */
+/**
+ * One round generator per river game type; they all use the same rivers. To remove a variant,
+ * delete its bean, its {@code GameType} constant and its frontend module.
+ */
 @Configuration
 public class RiverGamesConfig {
 
@@ -33,5 +37,17 @@ public class RiverGamesConfig {
         random,
         river -> river.source() != null && river.mouth() != null,
         river -> List.of());
+  }
+
+  /** Only rivers through two or more countries: one outline alone is unguessable. */
+  @Bean
+  RoundGenerator riversByCountries(
+      RiverLoaderService rivers, CountryLoaderService countries, Random random) {
+    return new RiverRoundGenerator(
+        GameType.RIVERS_BY_COUNTRIES,
+        rivers,
+        random,
+        river -> river.countries() != null && river.countries().size() >= 2,
+        river -> river.countries().stream().map(countries::loadCountryByName).toList());
   }
 }

@@ -1,6 +1,7 @@
 import { GeoJSON, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { endFlagIcon, startFlagIcon } from "../../map/flagIcons";
-import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueOutlineOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import type { Country } from "../common/country";
 import type { River } from "./model";
 
 /** The river's line. Re-created when the player gives up so the colour changes. */
@@ -23,6 +24,17 @@ export function EndFlags({ river }: { river: River }): React.JSX.Element {
       <Marker icon={endFlagIcon} position={[river.mouth.latitude, river.mouth.longitude]}>
         <Tooltip>End</Tooltip>
       </Marker>
+    </>
+  );
+}
+
+/** The outline of each country the river flows through. */
+export function CountryOutlines({ countries }: { countries: Country[] }): React.JSX.Element {
+  return (
+    <>
+      {countries.map((country) => (
+        <GeoJSON key={country.name} data={country.geoData} pathOptions={clueOutlineOptions()} />
+      ))}
     </>
   );
 }
