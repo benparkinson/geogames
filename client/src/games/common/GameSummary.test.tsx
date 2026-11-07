@@ -50,7 +50,7 @@ describe("GameSummary", () => {
     expect(within(rows[0]).getByText("1. Tripoint")).toBeInTheDocument();
     expect(rows[0]).toHaveTextContent("Belgium, Netherlands, Germany");
     expect(rows[0]).toHaveTextContent("Correct");
-    expect(within(rows[1]).getByText("2. River")).toBeInTheDocument();
+    expect(within(rows[1]).getByText("2. River shape")).toBeInTheDocument();
     expect(rows[1]).toHaveTextContent("Danube");
     expect(rows[1]).toHaveTextContent("Revealed");
   });

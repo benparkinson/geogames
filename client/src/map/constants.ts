@@ -10,3 +10,10 @@ const REVEALED_COLOR = "darkred";
 export function answerPathOptions(gaveUp: boolean): PathOptions {
   return { color: gaveUp ? REVEALED_COLOR : ANSWER_COLOR };
 }
+
+const CLUE_COLOR = "#4a6fa5";
+
+/** Outline style for a clue shown before the answer: distinct from the answer colours. */
+export function clueOutlineOptions(): PathOptions {
+  return { color: CLUE_COLOR, weight: 2, fillColor: CLUE_COLOR, fillOpacity: 0.25 };
+}

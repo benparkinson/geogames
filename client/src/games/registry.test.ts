@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { makeRiverData, makeTripointData } from "../test/fixtures";
+import { makeRiverRoundData, makeTripointData } from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES"]);
   });
 
   it("has a unique type per module", () => {
@@ -26,13 +26,13 @@ describe("GAME_MODULES", () => {
   });
 
   it("lists the name of a river", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverData())).toEqual(["Danube"]);
+    expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
   });
 });
 
 describe("findGameModule", () => {
   it("finds a module by its type", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River");
+    expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River shape");
   });
 
   it("returns undefined for an unknown type, including the request-only RANDOM", () => {
@@ -43,7 +43,7 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers every game followed by a mix of them", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RANDOM"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "RANDOM"]);
     expect(MENU_OPTIONS[MENU_OPTIONS.length - 1]).toBe(RANDOM_OPTION);
   });
 

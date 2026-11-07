@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +61,7 @@ public class TripointFinderTest {
     TripointFinderService emptyService =
         new TripointFinderService(emptyLoader, mock(CountryLoaderService.class), new Random(5));
 
-    assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1));
+    assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1, Set.of()));
   }
 
   @Test
@@ -69,7 +71,7 @@ public class TripointFinderTest {
 
   @Test
   void returnsDistinctTripointsBuiltFromDefinitions() {
-    List<GameData> result = service.generate(3);
+    List<GameData> result = service.generate(3, Set.of());
 
     assertThat(result).hasSize(3);
     List<Coordinate> coordinates = result.stream().map(t -> ((Tripoint) t).coordinate()).toList();
@@ -91,7 +93,7 @@ public class TripointFinderTest {
 
   @Test
   void canReturnEveryDefinition() {
-    List<GameData> result = service.generate(definitions.size());
+    List<GameData> result = service.generate(definitions.size(), Set.of());
 
     assertThat(result.stream().map(t -> ((Tripoint) t).coordinate()).toList())
         .containsExactlyInAnyOrderElementsOf(
@@ -100,7 +102,7 @@ public class TripointFinderTest {
 
   @Test
   void returnsNothingWithoutLoadingCountriesWhenAskedForZero() {
-    assertThat(service.generate(0)).isEmpty();
+    assertThat(service.generate(0, Set.of())).isEmpty();
     verifyNoInteractions(countryLoader);
   }
 
@@ -109,8 +111,21 @@ public class TripointFinderTest {
     when(countryLoader.loadCountryByName(anyString()))
         .thenThrow(new UncheckedIOException(new IOException("boom")));
 
-    assertThatThrownBy(() -> service.generate(1))
+    assertThatThrownBy(() -> service.generate(1, Set.of()))
         .isInstanceOf(UncheckedIOException.class)
         .hasRootCauseMessage("boom");
+  }
+
+  @Test
+  void skipsExcludedSubjectsWithoutLoadingTheirCountries() {
+    Set<String> excluded = Set.of("tripoint:A0|B0|C0", "tripoint:A1|B1|C1");
+
+    List<GameData> result = service.generate(3, excluded);
+
+    assertThat(result).extracting(GameData::subjectId).doesNotContainAnyElementsOf(excluded);
+    verify(countryLoader, never()).loadCountryByName("A0");
+    verify(countryLoader, never()).loadCountryByName("A1");
+    assertThatThrownBy(() -> service.generate(4, excluded))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }

@@ -13,25 +13,29 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /** Writes one {@link River} JSON file per river. */
 public class RiverWriter {
 
   /** Clears {@code *.json} in the folder, then writes the rivers. Returns the files written. */
-  public List<Path> write(List<RiverCandidate> rivers, Path outDir) throws IOException {
+  public List<Path> write(List<RiverCandidate> rivers, Map<String, RiverFacts> facts, Path outDir)
+      throws IOException {
     Files.createDirectories(outDir);
     new CountryWriter().clearOutput(outDir);
 
     List<Path> written = new ArrayList<>();
     for (RiverCandidate river : rivers) {
       Path file = outDir.resolve(fileName(river));
-      Files.writeString(file, GeoJson.prettyWriter().writeValueAsString(toRiver(river)) + "\n");
+      Files.writeString(
+          file,
+          GeoJson.prettyWriter().writeValueAsString(toRiver(river, facts.get(river.qid()))) + "\n");
       written.add(file);
     }
     return written;
   }
 
-  static River toRiver(RiverCandidate candidate) {
+  static River toRiver(RiverCandidate candidate, RiverFacts facts) {
     List<List<List<Double>>> coordinates = new ArrayList<>();
     for (List<double[]> line : candidate.lines()) {
       List<List<Double>> points = new ArrayList<>();
@@ -46,7 +50,14 @@ public class RiverWriter {
             new GeoProperties(candidate.name()),
             new GeoGeometry("MultiLineString", coordinates));
     return new River(
-        candidate.qid(), candidate.name(), candidate.aliases(), candidate.continent(), geoData);
+        candidate.qid(),
+        candidate.name(),
+        candidate.aliases(),
+        candidate.continent(),
+        geoData,
+        facts.source(),
+        facts.mouth(),
+        facts.countries());
   }
 
   static String fileName(RiverCandidate river) {

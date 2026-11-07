@@ -1,20 +1,15 @@
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
-import { River } from "./model";
+import { RevealTiles, RiverLine } from "./RiverLayers";
+import { RiverRound } from "./model";
 
-function RiverShapesMap({ data: river, gaveUp, gameOver }: MapProps<River>): React.JSX.Element {
-  const riverLine = (
-    <GeoJSON pathOptions={answerPathOptions(gaveUp)} data={river.geoData} key={river.id + (gaveUp ? "gaveUp" : "")} />
-  );
-
+function RiverShapesMap({ data: { river }, gaveUp, gameOver }: MapProps<RiverRound>): React.JSX.Element {
   return (
     <MapContainer zoom={3} maxZoom={7} minZoom={3} center={[0, 0]}>
-      {gameOver && <TileLayer url={SATELLITE_TILE_URL} />}
-
-      {riverLine}
+      <RevealTiles show={gameOver} />
+      <RiverLine river={river} gaveUp={gaveUp} />
       <FitBounds data={river.geoData} id={river.id} />
       <MapResizer />
     </MapContainer>

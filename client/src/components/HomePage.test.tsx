@@ -51,16 +51,16 @@ describe("HomePage choosing a game", () => {
     renderHome();
 
     expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/Rivers/)).toHaveAttribute("aria-checked", "false");
+    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "false");
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "false");
   });
 
   it("selects a card when it is clicked", async () => {
     renderHome();
 
-    await userEvent.setup().click(card(/Rivers/));
+    await userEvent.setup().click(card(/River Shapes/));
 
-    expect(card(/Rivers/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "true");
     expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "false");
   });
 
@@ -70,10 +70,19 @@ describe("HomePage choosing a game", () => {
     card(/Tripoints/).focus();
 
     await user.keyboard("{ArrowRight}");
-    expect(card(/Rivers/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/Rivers/)).toHaveFocus();
+    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/River Shapes/)).toHaveFocus();
 
     await user.keyboard("{ArrowDown}");
+    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowRight}");
+    expect(card(/River Ends/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowRight}");
+    expect(card(/River Countries/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowRight}");
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowRight}");
@@ -84,7 +93,13 @@ describe("HomePage choosing a game", () => {
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowUp}");
-    expect(card(/Rivers/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/River Countries/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowUp}");
+    expect(card(/River Ends/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowUp}");
+    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
   });
 
   it("ignores other keys", async () => {

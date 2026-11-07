@@ -1,24 +1,31 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { makeRiverData, makeRoundProps } from "../../test/fixtures";
-import RiverShapesGame from "./RiverShapesGame";
+import { makeRiverRoundData, makeRoundProps } from "../../test/fixtures";
+import { makeRiverGame } from "./RiverGame";
+import { continentHint, textHints } from "./riverHints";
 
-vi.mock("./RiverShapesMapWrapper", () => ({
-  default: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
+const CAPTION = "Shape only. The satellite map appears when you answer.";
+
+const RiverGame = makeRiverGame({
+  MapComponent: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)} />
   ),
-}));
+  prompt: "Name this river from its shape.",
+  blankMap: true,
+  mapCaption: CAPTION,
+  hints: (river) => textHints(river, continentHint),
+});
 
 function renderRiver() {
   const submitAnswer = vi.fn();
-  render(<RiverShapesGame data={makeRiverData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
+  render(<RiverGame data={makeRiverRoundData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 
 const input = () => screen.getByRole("textbox", { name: "River name…" });
 
-describe("RiverShapesGame", () => {
+describe("makeRiverGame with the shape configuration", () => {
   it("asks for the river's name", () => {
     renderRiver();
 
@@ -62,13 +69,12 @@ describe("RiverShapesGame", () => {
 
   it("hides the satellite map until the round ends", async () => {
     renderRiver();
-    const caption = "Shape only. The satellite map appears when you answer.";
-    expect(screen.getByText(caption)).toBeInTheDocument();
+    expect(screen.getByText(CAPTION)).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "false");
 
     await userEvent.setup().type(input(), "Danube{Enter}");
 
-    expect(screen.queryByText(caption)).not.toBeInTheDocument();
+    expect(screen.queryByText(CAPTION)).not.toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "true");
   });
 });

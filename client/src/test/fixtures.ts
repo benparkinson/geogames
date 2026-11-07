@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 import type { GameRoundResponse } from "../api/types";
 import type { Round } from "../games/common/Model";
-import type { River } from "../games/rivers/model";
+import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
 
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
@@ -49,12 +49,20 @@ export function makeRiverData(): River {
     name: "Danube",
     additionalNames: ["Donau"],
     continent: "Europe",
+    source: { latitude: 48.0, longitude: 8.1 },
+    mouth: { latitude: 45.2, longitude: 29.7 },
+    countries: ["Romania", "Germany", "Austria"],
     geoData: {
       type: "Feature",
       properties: {},
       geometry: { type: "MultiLineString", coordinates: [[[0, 0], [1, 1]]] },
     },
   } as unknown as River;
+}
+
+/** The data of a round of any river game. */
+export function makeRiverRoundData(overrides: Partial<RiverRound> = {}): RiverRound {
+  return { river: makeRiverData(), countries: [], ...overrides };
 }
 
 export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
@@ -75,7 +83,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
 
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
-    jsonBlob: JSON.stringify(makeRiverData()),
+    jsonBlob: JSON.stringify(makeRiverRoundData()),
     gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1 },
     ...overrides,
   });

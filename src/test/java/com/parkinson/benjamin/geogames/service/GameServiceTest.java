@@ -26,12 +26,16 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
+import com.parkinson.benjamin.geogames.model.RiverRound;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -55,14 +59,21 @@ class GameServiceTest {
   private GameRepository gameRepository;
   private RoundGenerator tripointGenerator;
   private RoundGenerator riverGenerator;
+  private final Map<GameType, RoundGenerator> generators = new EnumMap<>(GameType.class);
   private GameService service;
 
   @BeforeEach
   void setUp() {
     gameRepository = mock(GameRepository.class);
-    tripointGenerator = generatorFor(GameType.TRIPOINT);
-    riverGenerator = generatorFor(GameType.RIVERS_BY_SHAPE);
-    service = serviceWith(new Random(1), tripointGenerator, riverGenerator);
+    for (GameType type : GameType.values()) {
+      RoundGenerator generator = generatorFor(type);
+      when(generator.generate(anyInt(), any()))
+          .thenAnswer(invocation -> roundsOf(type, invocation.getArgument(0)));
+      generators.put(type, generator);
+    }
+    tripointGenerator = generators.get(GameType.TRIPOINT);
+    riverGenerator = generators.get(GameType.RIVERS_BY_SHAPE);
+    service = allGeneratorsService(new Random(1));
 
     when(gameRepository.save(any(GameEntity.class)))
         .thenAnswer(
@@ -79,6 +90,14 @@ class GameServiceTest {
     RoundGenerator generator = mock(RoundGenerator.class);
     when(generator.gameType()).thenReturn(type);
     return generator;
+  }
+
+  private GameService allGeneratorsService(Random random) {
+    return new GameService(gameRepository, List.copyOf(generators.values()), objectMapper, random);
+  }
+
+  private List<GameData> roundsOf(GameType type, int count) {
+    return type == GameType.TRIPOINT ? tripoints(count) : rivers(count, type);
   }
 
   private GameService serviceWith(Random random, RoundGenerator... generators) {
@@ -109,12 +128,24 @@ class GameServiceTest {
         new Coordinate(n, n), Set.of(square("A" + n), square("B" + n), square("C" + n)));
   }
 
-  private static River river(int n) {
+  private static RiverRound river(int n, GameType type) {
+    int id = type.ordinal() * 100 + n;
     List<List<List<Double>>> lines = List.of(List.of(List.of(0.0, 0.0), List.of(1.0, 1.0)));
     GeoData geoData =
         new GeoData(
-            "Feature", new GeoProperties("River" + n), new GeoGeometry("MultiLineString", lines));
-    return new River("Q" + n, "River" + n, List.of("Alias" + n), "Africa", geoData);
+            "Feature", new GeoProperties("River" + id), new GeoGeometry("MultiLineString", lines));
+    return new RiverRound(
+        type,
+        new River(
+            "Q" + id,
+            "River" + id,
+            List.of("Alias" + id),
+            "Africa",
+            geoData,
+            new Coordinate(0, 0),
+            new Coordinate(1, 1),
+            List.of()),
+        List.of());
   }
 
   private List<GameData> tripoints(int count) {
@@ -122,7 +153,11 @@ class GameServiceTest {
   }
 
   private List<GameData> rivers(int count) {
-    return IntStream.range(0, count).<GameData>mapToObj(GameServiceTest::river).toList();
+    return rivers(count, GameType.RIVERS_BY_SHAPE);
+  }
+
+  private List<GameData> rivers(int count, GameType type) {
+    return IntStream.range(0, count).<GameData>mapToObj(n -> river(n, type)).toList();
   }
 
   private GameEntity savedGame() {
@@ -148,7 +183,7 @@ class GameServiceTest {
   @ParameterizedTest
   @ValueSource(ints = {1, 10})
   void acceptsBoundaryRoundCounts(int rounds) {
-    when(tripointGenerator.generate(rounds)).thenReturn(tripoints(rounds));
+    when(tripointGenerator.generate(rounds, Set.of())).thenReturn(tripoints(rounds));
 
     assertThat(service.createGame("TRIPOINT", rounds)).isNotNull();
     assertThat(savedGame().getRounds()).hasSize(rounds);
@@ -171,13 +206,13 @@ class GameServiceTest {
 
   @Test
   void createsTripointRounds() {
-    when(tripointGenerator.generate(3)).thenReturn(tripoints(3));
+    when(tripointGenerator.generate(3, Set.of())).thenReturn(tripoints(3));
 
     GameCreationResponse response = service.createGame("TRIPOINT", 3);
 
     assertThat(response).isEqualTo(new GameCreationResponse(SAVED_ID));
-    verify(tripointGenerator, times(1)).generate(3);
-    verify(riverGenerator, never()).generate(anyInt());
+    verify(tripointGenerator, times(1)).generate(3, Set.of());
+    verify(riverGenerator, never()).generate(anyInt(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(3);
@@ -194,12 +229,12 @@ class GameServiceTest {
 
   @Test
   void createsRiverRounds() {
-    when(riverGenerator.generate(2)).thenReturn(rivers(2));
+    when(riverGenerator.generate(2, Set.of())).thenReturn(rivers(2));
 
     service.createGame("RIVERS_BY_SHAPE", 2);
 
-    verify(riverGenerator).generate(2);
-    verify(tripointGenerator, never()).generate(anyInt());
+    verify(riverGenerator).generate(2, Set.of());
+    verify(tripointGenerator, never()).generate(anyInt(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(2);
@@ -209,40 +244,38 @@ class GameServiceTest {
       assertThat(round.getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
       JsonNode blob = parse(round.getJsonBlob());
-      assertThat(blob.has("name")).isTrue();
-      assertThat(blob.has("additionalNames")).isTrue();
-      assertThat(blob.has("continent")).isTrue();
-      assertThat(blob.has("geoData")).isTrue();
+      assertThat(blob.get("river").has("name")).isTrue();
+      assertThat(blob.get("gameType").asString()).isEqualTo("RIVERS_BY_SHAPE");
+      assertThat(blob.get("river").has("additionalNames")).isTrue();
+      assertThat(blob.get("river").has("continent")).isTrue();
+      assertThat(blob.get("river").has("geoData")).isTrue();
+      assertThat(blob.get("countries").size()).isZero();
     }
   }
 
   @RepeatedTest(20)
-  void createsRandomRoundsSplitAcrossBothTypes() {
+  void createsRandomRoundsSplitAcrossEveryType() {
     int total = 6;
-    when(tripointGenerator.generate(anyInt()))
-        .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
-    when(riverGenerator.generate(anyInt()))
-        .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
-    service = serviceWith(new Random(), tripointGenerator, riverGenerator);
+    service = allGeneratorsService(new Random());
 
     service.createGame("RANDOM", total);
 
-    ArgumentCaptor<Integer> tripointCount = ArgumentCaptor.forClass(Integer.class);
-    ArgumentCaptor<Integer> riverCount = ArgumentCaptor.forClass(Integer.class);
-    verify(tripointGenerator, atMost(1)).generate(tripointCount.capture());
-    verify(riverGenerator, atMost(1)).generate(riverCount.capture());
-    int tripoints = tripointCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
-    int rivers = riverCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
-    assertThat(tripoints + rivers).isEqualTo(total);
+    Map<GameType, Integer> requested = new EnumMap<>(GameType.class);
+    for (GameType type : GameType.values()) {
+      ArgumentCaptor<Integer> count = ArgumentCaptor.forClass(Integer.class);
+      verify(generators.get(type), atMost(1)).generate(count.capture(), any());
+      requested.put(type, count.getAllValues().stream().mapToInt(Integer::intValue).sum());
+    }
+    assertThat(requested.values().stream().mapToInt(Integer::intValue).sum()).isEqualTo(total);
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(total);
     assertThat(rounds.stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2, 3, 4, 5);
-    assertThat(rounds.stream().filter(r -> r.getGameType() == GameType.TRIPOINT).count())
-        .isEqualTo((long) tripoints);
-    assertThat(rounds.stream().filter(r -> r.getGameType() == GameType.RIVERS_BY_SHAPE).count())
-        .isEqualTo((long) rivers);
+    for (GameType type : GameType.values()) {
+      assertThat(rounds.stream().filter(r -> r.getGameType() == type).count())
+          .isEqualTo((long) requested.get(type));
+    }
   }
 
   @Test
@@ -267,7 +300,7 @@ class GameServiceTest {
 
   @Test
   void notEnoughDataForARequestedTypeIsABadRequestAndNothingIsSaved() {
-    when(tripointGenerator.generate(3))
+    when(tripointGenerator.generate(3, Set.of()))
         .thenThrow(
             new IllegalArgumentException("Can't give you 3 tripoints, I only know about 2!"));
 
@@ -279,17 +312,11 @@ class GameServiceTest {
 
   @Test
   void aMixedGameWithTheSameSeedGetsTheSameMixOfTypes() {
-    when(tripointGenerator.generate(anyInt()))
-        .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
-    when(riverGenerator.generate(anyInt()))
-        .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
-
     List<List<GameType>> mixes = new ArrayList<>();
     for (int run = 0; run < 2; run++) {
       GameRepository repository = mock(GameRepository.class);
       when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
-      new GameService(
-              repository, List.of(tripointGenerator, riverGenerator), objectMapper, new Random(7))
+      new GameService(repository, List.copyOf(generators.values()), objectMapper, new Random(7))
           .createGame("RANDOM", 10);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
@@ -297,6 +324,28 @@ class GameServiceTest {
     }
 
     assertThat(mixes.get(0)).hasSize(10).isEqualTo(mixes.get(1));
+  }
+
+  @Test
+  void aMixedGameTellsLaterGeneratorsWhichSubjectsEarlierOnesUsed() {
+    // Generators are called in GameType order, and each must be told every earlier subject.
+    Set<String> returnedSoFar = new HashSet<>();
+    for (GameType type : GameType.values()) {
+      when(generators.get(type).generate(anyInt(), any()))
+          .thenAnswer(
+              invocation -> {
+                Set<String> excluded = invocation.getArgument(1);
+                assertThat(excluded).isEqualTo(returnedSoFar);
+                List<GameData> made = roundsOf(type, invocation.getArgument(0));
+                made.forEach(data -> returnedSoFar.add(data.subjectId()));
+                return made;
+              });
+    }
+    service = allGeneratorsService(new Random(7));
+
+    service.createGame("RANDOM", 10);
+
+    assertThat(returnedSoFar).hasSize(10);
   }
 
   // ------------------------------------------------------------ getGameRound

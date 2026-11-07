@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
+import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,23 +9,29 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import tools.jackson.core.type.TypeReference;
 
 /**
  * Usage: RiverLoaderMain &lt;naturalEarth.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
- * &lt;osmDir&gt; &lt;outDir&gt; [maxRivers=150]
+ * &lt;osmDir&gt; &lt;countriesDir&gt; &lt;outDir&gt; [maxRivers=150]
  *
- * <p>Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
+ * <p>Also works out each river's source, mouth and countries (see {@link RiverEnds} and {@link
+ * RiverCountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
  * writing.
  */
 public class RiverLoaderMain {
 
+  private static final double LOW_CONFIDENCE = 0.6;
+
   public static void main(String[] args) throws IOException {
     Path osmDir = Path.of(args[3]);
-    Path outDir = Path.of(args[4]);
-    int maxRivers = args.length > 5 ? Integer.parseInt(args[5]) : 150;
+    Path countriesDir = Path.of(args[4]);
+    Path outDir = Path.of(args[5]);
+    int maxRivers = args.length > 6 ? Integer.parseInt(args[6]) : 150;
 
     Map<String, NaturalEarthRiver> groups = new NaturalEarthReader().read(Path.of(args[0]));
     Map<String, WikidataEntry> wikidata = readJson(Path.of(args[1]), new TypeReference<>() {});
@@ -37,9 +44,54 @@ public class RiverLoaderMain {
 
     List<RiverCandidate> rivers = new ArrayList<>(selection.selected());
     rivers.sort(Comparator.comparing(RiverCandidate::name).thenComparing(RiverCandidate::qid));
-    List<Path> files = new RiverWriter().write(rivers, outDir);
+
+    RiverCountryLocator locator =
+        new RiverCountryLocator(new ProcessedCountryReader().readCountries(countriesDir));
+    Map<String, RiverFacts> facts = new LinkedHashMap<>();
+    Map<String, Double> unlocatedKm = new LinkedHashMap<>();
+    for (RiverCandidate river : rivers) {
+      RiverCountryLocator.Result located = locator.locate(river.lines());
+      facts.put(
+          river.qid(), RiverFacts.compute(river.lines(), overrides.get(river.qid()), located));
+      unlocatedKm.put(river.qid(), located.unlocatedKm());
+    }
+    List<Path> files = new RiverWriter().write(rivers, facts, outDir);
 
     printSummary(rivers, files, assembly, selection);
+    printFactsSummary(rivers, overrides, facts, unlocatedKm);
+  }
+
+  private static void printFactsSummary(
+      List<RiverCandidate> rivers,
+      Map<String, RiverOverride> overrides,
+      Map<String, RiverFacts> facts,
+      Map<String, Double> unlocatedKm) {
+    System.out.println("Low flow confidence (< " + LOW_CONFIDENCE + "), no override decision:");
+    for (RiverCandidate c : rivers) {
+      RiverFacts f = facts.get(c.qid());
+      RiverOverride override = overrides.get(c.qid());
+      boolean decided =
+          override != null
+              && (override.reverseFlow() != null
+                  || (override.source() != null && override.mouth() != null));
+      if (f.flowConfidence() < LOW_CONFIDENCE && !decided) {
+        System.out.printf(
+            "  %s %s confidence=%.2f source=%s mouth=%s%n",
+            c.name(), c.qid(), f.flowConfidence(), f.source(), f.mouth());
+      }
+    }
+
+    Map<Integer, Integer> perCount = new TreeMap<>();
+    rivers.forEach(c -> perCount.merge(facts.get(c.qid()).countries().size(), 1, Integer::sum));
+    System.out.println("Rivers by number of countries:");
+    perCount.forEach((count, n) -> System.out.println("  " + count + " countries: " + n));
+
+    System.out.println("Rivers with more than 50 km in no country:");
+    for (RiverCandidate c : rivers) {
+      if (unlocatedKm.get(c.qid()) > 50) {
+        System.out.printf("  %s %s %.0f km%n", c.name(), c.qid(), unlocatedKm.get(c.qid()));
+      }
+    }
   }
 
   private static void printSummary(

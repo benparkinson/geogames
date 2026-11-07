@@ -45,7 +45,7 @@ async function reveal(user: ReturnType<typeof userEvent.setup>) {
 
 describe("MapGame fresh round", () => {
   it("starts with nothing found and the map still hiding the answer", () => {
-    renderGame({ blankMapCaption: "Shape only." });
+    renderGame({ blankMap: true, mapCaption: "Shape only." });
 
     expect(screen.getByText("Name them")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 0 of 2 found" })).toBeInTheDocument();
@@ -58,6 +58,20 @@ describe("MapGame fresh round", () => {
     renderGame();
 
     expect(screen.queryByText("Shape only.")).not.toBeInTheDocument();
+  });
+
+  it("can show a caption on a normal map", () => {
+    renderGame({ mapCaption: "Zoom is limited." });
+
+    expect(screen.getByText("Zoom is limited.")).toBeInTheDocument();
+    expect(document.querySelector(".game-map--blank")).toBeNull();
+  });
+
+  it("can blank the map without a caption", () => {
+    renderGame({ blankMap: true });
+
+    expect(document.querySelector(".game-map--blank")).not.toBeNull();
+    expect(document.querySelector(".map-caption")).toBeNull();
   });
 });
 
@@ -115,7 +129,7 @@ describe("MapGame guessing", () => {
 
   it("finishes the round exactly once when every answer is found", async () => {
     const user = userEvent.setup();
-    const { submitAnswer } = renderGame({ blankMapCaption: "Shape only." });
+    const { submitAnswer } = renderGame({ blankMap: true, mapCaption: "Shape only." });
 
     await guess(user, "France");
     await guess(user, "Spain");
