@@ -5,34 +5,35 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.parkinson.benjamin.geogames.dao.GameData;
+import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.api.GameResult;
+import com.parkinson.benjamin.geogames.api.GameRound;
+import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
-import com.parkinson.benjamin.geogames.dao.GameType;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.GameCreationResponse;
-import com.parkinson.benjamin.geogames.model.GameResult;
-import com.parkinson.benjamin.geogames.model.GameRound;
+import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
+import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,24 +53,16 @@ class GameServiceTest {
   private final ObjectMapper objectMapper = JsonMapper.builder().build();
 
   private GameRepository gameRepository;
-  private TripointFinderService tripointFinderService;
-  private RiverLoaderService riverLoaderService;
-  private RiverFinderService riverFinderService;
+  private RoundGenerator tripointGenerator;
+  private RoundGenerator riverGenerator;
   private GameService service;
 
   @BeforeEach
   void setUp() {
     gameRepository = mock(GameRepository.class);
-    tripointFinderService = mock(TripointFinderService.class);
-    riverLoaderService = mock(RiverLoaderService.class);
-    riverFinderService = mock(RiverFinderService.class);
-    service =
-        new GameService(
-            gameRepository,
-            tripointFinderService,
-            riverLoaderService,
-            riverFinderService,
-            objectMapper);
+    tripointGenerator = generatorFor(GameType.TRIPOINT);
+    riverGenerator = generatorFor(GameType.RIVERS_BY_SHAPE);
+    service = serviceWith(new Random(1), tripointGenerator, riverGenerator);
 
     when(gameRepository.save(any(GameEntity.class)))
         .thenAnswer(
@@ -81,6 +74,16 @@ class GameServiceTest {
   }
 
   // ---------------------------------------------------------------- fixtures
+
+  private static RoundGenerator generatorFor(GameType type) {
+    RoundGenerator generator = mock(RoundGenerator.class);
+    when(generator.gameType()).thenReturn(type);
+    return generator;
+  }
+
+  private GameService serviceWith(Random random, RoundGenerator... generators) {
+    return new GameService(gameRepository, List.of(generators), objectMapper, random);
+  }
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
@@ -144,10 +147,10 @@ class GameServiceTest {
 
   @ParameterizedTest
   @ValueSource(ints = {1, 10})
-  void acceptsBoundaryRoundCounts(int rounds) throws IOException {
-    when(tripointFinderService.findRandomTripoints(rounds)).thenReturn(tripoints(rounds));
+  void acceptsBoundaryRoundCounts(int rounds) {
+    when(tripointGenerator.generate(rounds)).thenReturn(tripoints(rounds));
 
-    assertThat(service.createGame("TRIPOINT", rounds)).isPresent();
+    assertThat(service.createGame("TRIPOINT", rounds)).isNotNull();
     assertThat(savedGame().getRounds()).hasSize(rounds);
   }
 
@@ -167,20 +170,20 @@ class GameServiceTest {
   }
 
   @Test
-  void createsTripointRounds() throws IOException {
-    when(tripointFinderService.findRandomTripoints(3)).thenReturn(tripoints(3));
+  void createsTripointRounds() {
+    when(tripointGenerator.generate(3)).thenReturn(tripoints(3));
 
-    Optional<GameCreationResponse> response = service.createGame("TRIPOINT", 3);
+    GameCreationResponse response = service.createGame("TRIPOINT", 3);
 
-    assertThat(response).contains(new GameCreationResponse(SAVED_ID));
-    verify(tripointFinderService, times(1)).findRandomTripoints(3);
-    verifyNoInteractions(riverLoaderService, riverFinderService);
+    assertThat(response).isEqualTo(new GameCreationResponse(SAVED_ID));
+    verify(tripointGenerator, times(1)).generate(3);
+    verify(riverGenerator, never()).generate(anyInt());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(3);
     for (int i = 0; i < 3; i++) {
       GameRoundEntity round = rounds.get(i);
-      assertThat(round.getIndex()).isEqualTo(i);
+      assertThat(round.getRoundNumber()).isEqualTo(i);
       assertThat(round.getGameType()).isSameAs(GameType.TRIPOINT);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
       JsonNode blob = parse(round.getJsonBlob());
@@ -190,21 +193,19 @@ class GameServiceTest {
   }
 
   @Test
-  void createsRiverRounds() throws IOException {
-    List<River> loaded = List.of(river(0), river(1), river(2));
-    when(riverLoaderService.loadRivers()).thenReturn(loaded);
-    when(riverFinderService.findRandomRivers(loaded, 2)).thenReturn(rivers(2));
+  void createsRiverRounds() {
+    when(riverGenerator.generate(2)).thenReturn(rivers(2));
 
     service.createGame("RIVERS_BY_SHAPE", 2);
 
-    verify(riverFinderService).findRandomRivers(loaded, 2);
-    verifyNoInteractions(tripointFinderService);
+    verify(riverGenerator).generate(2);
+    verify(tripointGenerator, never()).generate(anyInt());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(2);
     for (int i = 0; i < 2; i++) {
       GameRoundEntity round = rounds.get(i);
-      assertThat(round.getIndex()).isEqualTo(i);
+      assertThat(round.getRoundNumber()).isEqualTo(i);
       assertThat(round.getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
       JsonNode blob = parse(round.getJsonBlob());
@@ -216,30 +217,86 @@ class GameServiceTest {
   }
 
   @RepeatedTest(20)
-  void createsRandomRoundsSplitAcrossBothTypes() throws IOException {
+  void createsRandomRoundsSplitAcrossBothTypes() {
     int total = 6;
-    when(tripointFinderService.findRandomTripoints(anyInt()))
+    when(tripointGenerator.generate(anyInt()))
         .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
-    when(riverLoaderService.loadRivers()).thenReturn(List.of(river(0)));
-    when(riverFinderService.findRandomRivers(any(), anyInt()))
-        .thenAnswer(invocation -> rivers(invocation.getArgument(1)));
+    when(riverGenerator.generate(anyInt()))
+        .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
+    service = serviceWith(new Random(), tripointGenerator, riverGenerator);
 
     service.createGame("RANDOM", total);
 
     ArgumentCaptor<Integer> tripointCount = ArgumentCaptor.forClass(Integer.class);
     ArgumentCaptor<Integer> riverCount = ArgumentCaptor.forClass(Integer.class);
-    verify(tripointFinderService).findRandomTripoints(tripointCount.capture());
-    verify(riverFinderService).findRandomRivers(any(), riverCount.capture());
-    assertThat(tripointCount.getValue() + riverCount.getValue()).isEqualTo(total);
+    verify(tripointGenerator, atMost(1)).generate(tripointCount.capture());
+    verify(riverGenerator, atMost(1)).generate(riverCount.capture());
+    int tripoints = tripointCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
+    int rivers = riverCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
+    assertThat(tripoints + rivers).isEqualTo(total);
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(total);
-    assertThat(rounds.stream().map(GameRoundEntity::getIndex).toList())
+    assertThat(rounds.stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2, 3, 4, 5);
     assertThat(rounds.stream().filter(r -> r.getGameType() == GameType.TRIPOINT).count())
-        .isEqualTo((long) tripointCount.getValue());
+        .isEqualTo((long) tripoints);
     assertThat(rounds.stream().filter(r -> r.getGameType() == GameType.RIVERS_BY_SHAPE).count())
-        .isEqualTo((long) riverCount.getValue());
+        .isEqualTo((long) rivers);
+  }
+
+  @Test
+  void refusesToStartWithoutAGeneratorForEveryGameType() {
+    assertThatThrownBy(() -> serviceWith(new Random(1), tripointGenerator))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("RIVERS_BY_SHAPE");
+  }
+
+  @Test
+  void refusesToStartWithTwoGeneratorsForOneGameType() {
+    assertThatThrownBy(
+            () ->
+                serviceWith(
+                    new Random(1),
+                    tripointGenerator,
+                    generatorFor(GameType.TRIPOINT),
+                    riverGenerator))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("TRIPOINT");
+  }
+
+  @Test
+  void notEnoughDataForARequestedTypeIsABadRequestAndNothingIsSaved() {
+    when(tripointGenerator.generate(3))
+        .thenThrow(
+            new IllegalArgumentException("Can't give you 3 tripoints, I only know about 2!"));
+
+    assertThatThrownBy(() -> service.createGame("TRIPOINT", 3))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("tripoints");
+    verify(gameRepository, never()).save(any());
+  }
+
+  @Test
+  void aMixedGameWithTheSameSeedGetsTheSameMixOfTypes() {
+    when(tripointGenerator.generate(anyInt()))
+        .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
+    when(riverGenerator.generate(anyInt()))
+        .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
+
+    List<List<GameType>> mixes = new ArrayList<>();
+    for (int run = 0; run < 2; run++) {
+      GameRepository repository = mock(GameRepository.class);
+      when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
+      new GameService(
+              repository, List.of(tripointGenerator, riverGenerator), objectMapper, new Random(7))
+          .createGame("RANDOM", 10);
+      ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
+      verify(repository).save(captor.capture());
+      mixes.add(captor.getValue().getRounds().stream().map(GameRoundEntity::getGameType).toList());
+    }
+
+    assertThat(mixes.get(0)).hasSize(10).isEqualTo(mixes.get(1));
   }
 
   // ------------------------------------------------------------ getGameRound
@@ -270,7 +327,7 @@ class GameServiceTest {
 
     GameRound result = service.getGameRound(1L, 1).orElseThrow();
 
-    assertThat(result.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
+    assertThat(result.gameType()).isEqualTo(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE));
     assertThat(result.jsonBlob()).isEqualTo("{\"second\":true}");
     assertThat(result.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(result.totalRoundCount()).isEqualTo(2);
@@ -320,16 +377,25 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
 
-    // TODO: a round that was answered CORRECT can later be changed to GAVE_UP, and
-    // even reset to UNANSWERED, because the service never checks the existing state.
+    // TODO: a round that was answered CORRECT can later be changed to GAVE_UP, because the
+    // service never checks the existing state. Making answers final needs a frontend change too.
     GameRound changed = service.submitAnswer(1L, 0, AnswerState.GAVE_UP).orElseThrow();
     assertThat(changed.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(changed.gameResult().score()).isZero();
+    verify(gameRepository, times(1)).save(eq(game));
+  }
 
-    GameRound reset = service.submitAnswer(1L, 0, AnswerState.UNANSWERED).orElseThrow();
-    assertThat(reset.answerState()).isEqualTo(AnswerState.UNANSWERED);
-    assertThat(reset.gameResult().gameState()).isEqualTo(GameState.CREATED);
-    verify(gameRepository, times(2)).save(eq(game));
+  @Test
+  void submitAnswerRejectsUnansweredAndLeavesTheRoundAlone() {
+    GameEntity game = game(round(0, AnswerState.CORRECT));
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+
+    assertThatThrownBy(() -> service.submitAnswer(1L, 0, AnswerState.UNANSWERED))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("UNANSWERED");
+
+    assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.CORRECT);
+    verify(gameRepository, never()).save(any());
   }
 
   // ------------------------------------------------------ calculateGameResult
@@ -342,7 +408,7 @@ class GameServiceTest {
             round(0, AnswerState.CORRECT),
             round(1, AnswerState.GAVE_UP));
 
-    GameResult result = GameService.calculateGameResult(Optional.of(game));
+    GameResult result = GameService.calculateGameResult(game);
 
     assertThat(result.roundAnswerStates())
         .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP, AnswerState.UNANSWERED);
@@ -355,7 +421,7 @@ class GameServiceTest {
   void gameIsFinishedWhenEveryRoundIsAnswered() {
     GameEntity game = game(round(1, AnswerState.GAVE_UP), round(0, AnswerState.CORRECT));
 
-    GameResult result = GameService.calculateGameResult(Optional.of(game));
+    GameResult result = GameService.calculateGameResult(game);
 
     assertThat(result.gameState()).isEqualTo(GameState.FINISHED);
     assertThat(result.roundsUnanswered()).isZero();
@@ -367,7 +433,7 @@ class GameServiceTest {
   void gameIsCreatedWhenNothingIsAnswered() {
     GameEntity game = game(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
 
-    GameResult result = GameService.calculateGameResult(Optional.of(game));
+    GameResult result = GameService.calculateGameResult(game);
 
     assertThat(result.gameState()).isEqualTo(GameState.CREATED);
     assertThat(result.roundsUnanswered()).isEqualTo(2);
@@ -378,14 +444,14 @@ class GameServiceTest {
   void scoreCountsOnlyCorrectAnswers() {
     GameEntity game = game(round(0, AnswerState.GAVE_UP), round(1, AnswerState.GAVE_UP));
 
-    assertThat(GameService.calculateGameResult(Optional.of(game)).score()).isZero();
+    assertThat(GameService.calculateGameResult(game).score()).isZero();
   }
 
   @Test
-  void missingGameCountsAsFinishedWithNothing() {
-    // TODO: no game at all is reported as FINISHED (zero rounds, none unanswered)
-    // rather than as an error or an empty result.
-    GameResult result = GameService.calculateGameResult(Optional.empty());
+  void aGameWithNoRoundsCountsAsFinishedWithNothing() {
+    // TODO: a game with no rounds is reported as FINISHED (none unanswered) rather than as an
+    // error or an empty result. createGame never makes one, since it needs at least one round.
+    GameResult result = GameService.calculateGameResult(game());
 
     assertThat(result.gameState()).isEqualTo(GameState.FINISHED);
     assertThat(result.roundsUnanswered()).isZero();

@@ -1,33 +1,30 @@
 package com.parkinson.benjamin.geogames.dao;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * A game and its rounds. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
+ * equals}: two games are the same only if they are the same object.
+ */
 @Entity
-public final class GameEntity {
+public class GameEntity {
 
   @Id @GeneratedValue private long id;
 
-  @Lob
-  @Column
   @OneToMany(cascade = CascadeType.ALL)
+  @OrderBy("roundNumber")
   private List<GameRoundEntity> rounds;
 
   public GameEntity() {}
 
   public GameEntity(List<GameRoundEntity> rounds) {
     this.rounds = rounds;
-  }
-
-  public GameEntity(long id) {
-    this.id = id;
   }
 
   public long getId() {
@@ -44,23 +41,6 @@ public final class GameEntity {
 
   public void setRounds(List<GameRoundEntity> rounds) {
     this.rounds = rounds;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-    if (obj == null || obj.getClass() != this.getClass()) {
-      return false;
-    }
-    var that = (GameEntity) obj;
-    return this.id == that.id;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 
   @Override

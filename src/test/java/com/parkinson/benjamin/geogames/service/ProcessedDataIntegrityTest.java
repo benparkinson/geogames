@@ -25,9 +25,10 @@ public class ProcessedDataIntegrityTest {
           Set.of("Kazakhstan", "Azerbaijan", "Turkmenistan"),
           Set.of("Pakistan", "India", "China"));
 
-  private final TripointLoaderService tripointLoaderService = new TripointLoaderService();
-  private final CountryLoaderService countryLoaderService =
-      new CountryLoaderService(new PathMatchingResourcePatternResolver());
+  private final JsonResourceReader reader =
+      new JsonResourceReader(new PathMatchingResourcePatternResolver());
+  private final TripointLoaderService tripointLoaderService = new TripointLoaderService(reader);
+  private final CountryLoaderService countryLoaderService = new CountryLoaderService(reader);
 
   @Test
   public void tripointsAreWellFormed() throws IOException {

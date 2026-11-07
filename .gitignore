@@ -60,3 +60,6 @@ client/yarn-error.log*
 
 client/next-env.d.ts
 *.tsbuildinfo
+
+# stray root-level npm install; the real node_modules is client/node_modules
+/node_modules/

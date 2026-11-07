@@ -1,51 +1,47 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.dao.GameData;
+import com.parkinson.benjamin.geogames.helper.RandomPicker;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TripointFinderService {
-
-  private final Random random = new Random(System.currentTimeMillis());
+public class TripointFinderService implements RoundGenerator {
 
   private final TripointLoaderService tripointLoaderService;
   private final CountryLoaderService countryLoaderService;
+  private final Random random;
 
-  @Autowired
   public TripointFinderService(
-      TripointLoaderService tripointLoaderService, CountryLoaderService countryLoaderService) {
+      TripointLoaderService tripointLoaderService,
+      CountryLoaderService countryLoaderService,
+      Random random) {
     this.tripointLoaderService = tripointLoaderService;
     this.countryLoaderService = countryLoaderService;
+    this.random = random;
   }
 
-  public List<GameData> findRandomTripoints(int howMany) throws IOException {
-    List<TripointDefinition> definitions = tripointLoaderService.loadTripointDefinitions();
-    if (definitions.size() < howMany) {
-      throw new IllegalArgumentException(
-          "Can't give you %d tripoints, I only know about %d!"
-              .formatted(howMany, definitions.size()));
-    }
+  @Override
+  public GameType gameType() {
+    return GameType.TRIPOINT;
+  }
 
-    List<Integer> indices = new ArrayList<>(definitions.size());
-    for (int i = 0; i < definitions.size(); i++) {
-      indices.add(i);
-    }
-    Collections.shuffle(indices, random);
+  @Override
+  public List<GameData> generate(int count) {
+    List<TripointDefinition> chosen =
+        RandomPicker.pickDistinct(
+            tripointLoaderService.loadTripointDefinitions(), count, random, "tripoints");
 
-    List<GameData> tripoints = new ArrayList<>(howMany);
-    for (int i = 0; i < howMany; i++) {
-      TripointDefinition definition = definitions.get(indices.get(i));
+    List<GameData> tripoints = new ArrayList<>(count);
+    for (TripointDefinition definition : chosen) {
       Set<Country> countries = new HashSet<>();
       for (String countryName : definition.countryNames()) {
         countries.add(countryLoaderService.loadCountryByName(countryName));

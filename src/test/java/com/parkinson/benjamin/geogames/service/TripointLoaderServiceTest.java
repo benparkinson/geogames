@@ -6,10 +6,12 @@ import com.parkinson.benjamin.geogames.model.TripointDefinition;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 class TripointLoaderServiceTest {
 
-  private final TripointLoaderService service = new TripointLoaderService();
+  private final TripointLoaderService service =
+      new TripointLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
 
   @Test
   void loadsAllDefinitionsWithValidCoordinates() throws IOException {

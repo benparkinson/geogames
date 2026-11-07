@@ -4,50 +4,35 @@ import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountr
 
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryName;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CountryLoaderService extends FileLoaderService {
+public class CountryLoaderService {
 
-  private final ResourcePatternResolver resourcePatternResolver;
+  private final JsonResourceReader reader;
 
-  @Autowired
-  public CountryLoaderService(ResourcePatternResolver resourcePatternResolver) {
-    super();
-    this.resourcePatternResolver = resourcePatternResolver;
+  public CountryLoaderService(JsonResourceReader reader) {
+    this.reader = reader;
   }
 
   @Cacheable("country")
-  public Country loadCountryByName(String name) throws IOException {
+  public Country loadCountryByName(String name) {
     String fileName = convertCountryNameToFileName(name);
-    return loadFile("processed/countries/" + fileName, Country.class);
+    return reader.read("processed/countries/" + fileName, Country.class);
   }
 
   @Cacheable("countryNames")
-  public List<CountryName> loadCountryNames() throws IOException {
-    Resource[] resources =
-        resourcePatternResolver.getResources("classpath*:/processed/countries/*.json");
-    List<CountryName> names = new ArrayList<>(resources.length);
-
-    for (Resource resource : resources) {
-      try (InputStream inputStream = resource.getInputStream()) {
-        CountryName country = readFile(inputStream, CountryName.class);
-        List<String> additionalNames =
-            country.additionalNames() == null ? List.of() : country.additionalNames();
-        names.add(new CountryName(country.name(), additionalNames));
-      }
-    }
-
-    names.sort(Comparator.comparing(CountryName::name));
-    return List.copyOf(names);
+  public List<CountryName> loadCountryNames() {
+    return reader.readAll("classpath*:/processed/countries/*.json", CountryName.class).stream()
+        .map(
+            country ->
+                new CountryName(
+                    country.name(),
+                    country.additionalNames() == null ? List.of() : country.additionalNames()))
+        .sorted(Comparator.comparing(CountryName::name))
+        .toList();
   }
 }

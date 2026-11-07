@@ -1,121 +1,97 @@
 package com.parkinson.benjamin.geogames.service;
 
-import static com.parkinson.benjamin.geogames.helper.OptionalHelper.*;
-
-import com.parkinson.benjamin.geogames.dao.GameData;
+import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.api.GameResult;
+import com.parkinson.benjamin.geogames.api.GameRound;
+import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
-import com.parkinson.benjamin.geogames.dao.GameType;
 import com.parkinson.benjamin.geogames.model.AnswerState;
-import com.parkinson.benjamin.geogames.model.GameCreationResponse;
-import com.parkinson.benjamin.geogames.model.GameResult;
-import com.parkinson.benjamin.geogames.model.GameRound;
+import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
-import com.parkinson.benjamin.geogames.model.River;
-import java.io.IOException;
+import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class GameService {
 
   private static final int MAX_ROUNDS = 10;
-  private static final String RANDOM_GAME_SELECTION = "RANDOM";
-
-  private static final Random random = new Random(System.currentTimeMillis());
 
   private final GameRepository gameRepository;
-  private final TripointFinderService tripointFinderService;
-  private final RiverLoaderService riverLoaderService;
-  private final RiverFinderService riverFinderService;
+  private final Map<GameType, RoundGenerator> generators;
   private final ObjectMapper objectMapper;
+  private final Random random;
 
-  @Autowired
   public GameService(
       GameRepository gameRepository,
-      TripointFinderService tripointFinderService,
-      RiverLoaderService riverLoaderService,
-      RiverFinderService riverFinderService,
-      ObjectMapper objectMapper) {
+      List<RoundGenerator> roundGenerators,
+      ObjectMapper objectMapper,
+      Random random) {
     this.gameRepository = gameRepository;
-    this.tripointFinderService = tripointFinderService;
-    this.riverLoaderService = riverLoaderService;
-    this.riverFinderService = riverFinderService;
+    this.generators = generatorsByType(roundGenerators);
     this.objectMapper = objectMapper;
+    this.random = random;
   }
 
-  public Optional<GameCreationResponse> createGame(String gameType, int numberOfRounds)
-      throws IOException {
+  private static Map<GameType, RoundGenerator> generatorsByType(List<RoundGenerator> generators) {
+    Map<GameType, RoundGenerator> byType = new EnumMap<>(GameType.class);
+    for (RoundGenerator generator : generators) {
+      if (byType.put(generator.gameType(), generator) != null) {
+        throw new IllegalStateException(
+            "More than one round generator for game type " + generator.gameType());
+      }
+    }
+    for (GameType type : GameType.values()) {
+      if (!byType.containsKey(type)) {
+        throw new IllegalStateException("No round generator for game type " + type);
+      }
+    }
+    return byType;
+  }
+
+  @Transactional
+  public GameCreationResponse createGame(String gameType, int numberOfRounds) {
     if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
       throw new IllegalArgumentException(
           "Number of rounds must be between 1 and %d, was %d!"
               .formatted(MAX_ROUNDS, numberOfRounds));
     }
 
-    List<GameRoundEntity> gameRoundEntities = new ArrayList<>(numberOfRounds);
+    GameSelection selection = GameSelection.parse(gameType);
+    List<GameData> gameData =
+        selection.isRandom()
+            ? generateMixedRounds(numberOfRounds)
+            : generators.get(selection.type()).generate(numberOfRounds);
 
-    if (GameType.TRIPOINT.getName().equals(gameType)) {
-      gameRoundEntities.addAll(createTripointRounds(numberOfRounds));
-    }
+    GameEntity saved = gameRepository.save(new GameEntity(createGameRounds(gameData)));
 
-    if (GameType.RIVERS_BY_SHAPE.getName().equals(gameType)) {
-      gameRoundEntities.addAll(createRiversByShapeRounds(numberOfRounds));
-    }
-
-    if (RANDOM_GAME_SELECTION.equals(gameType)) {
-      Map<GameType, Integer> gameTypeCount = new HashMap<>();
-      for (int i = 0; i < numberOfRounds; i++) {
-        int randomGameType = random.nextInt(GameType.values().length);
-        gameTypeCount.put(
-            GameType.values()[randomGameType],
-            gameTypeCount.getOrDefault(GameType.values()[randomGameType], 0) + 1);
-      }
-
-      List<GameData> allGameData = new ArrayList<>(numberOfRounds);
-      allGameData.addAll(getXRandomTripoints(gameTypeCount.getOrDefault(GameType.TRIPOINT, 0)));
-      allGameData.addAll(getXRandomRivers(gameTypeCount.getOrDefault(GameType.RIVERS_BY_SHAPE, 0)));
-      Collections.shuffle(allGameData, random);
-      gameRoundEntities.addAll(createGameRounds(allGameData));
-    }
-
-    if (gameRoundEntities.isEmpty()) {
-      throw new IllegalArgumentException("Unknown game type %s!".formatted(gameType));
-    }
-
-    GameEntity newGameEntity = new GameEntity(gameRoundEntities);
-    GameEntity saved = gameRepository.save(newGameEntity);
-
-    return Optional.of(new GameCreationResponse(saved.getId()));
+    return new GameCreationResponse(saved.getId());
   }
 
-  private List<GameRoundEntity> createTripointRounds(int numberOfRounds) throws IOException {
-    List<GameData> randomTripoints = getXRandomTripoints(numberOfRounds);
+  /** Gives each round a random game type, then shuffles so the types come in a random order. */
+  private List<GameData> generateMixedRounds(int numberOfRounds) {
+    GameType[] types = GameType.values();
+    Map<GameType, Integer> roundsPerType = new EnumMap<>(GameType.class);
+    for (int i = 0; i < numberOfRounds; i++) {
+      roundsPerType.merge(types[random.nextInt(types.length)], 1, Integer::sum);
+    }
 
-    return createGameRounds(randomTripoints);
-  }
-
-  private List<GameData> getXRandomTripoints(int numberOfRounds) throws IOException {
-    return tripointFinderService.findRandomTripoints(numberOfRounds);
-  }
-
-  private List<GameRoundEntity> createRiversByShapeRounds(int numberOfRounds) throws IOException {
-    List<GameData> randomRivers = getXRandomRivers(numberOfRounds);
-    return createGameRounds(randomRivers);
-  }
-
-  private List<GameData> getXRandomRivers(int numberOfRounds) throws IOException {
-    List<River> rivers = riverLoaderService.loadRivers();
-    return riverFinderService.findRandomRivers(rivers, numberOfRounds);
+    List<GameData> allGameData = new ArrayList<>(numberOfRounds);
+    roundsPerType.forEach(
+        (type, count) -> allGameData.addAll(generators.get(type).generate(count)));
+    Collections.shuffle(allGameData, random);
+    return allGameData;
   }
 
   private List<GameRoundEntity> createGameRounds(List<GameData> gameData) {
@@ -128,29 +104,49 @@ public class GameService {
     return gameRoundEntities;
   }
 
+  @Transactional(readOnly = true)
   public Optional<GameRound> getGameRound(long gameId, int round) {
-    Optional<GameEntity> game = gameRepository.findById(gameId);
-    Optional<GameRoundEntity> gameRound =
-        game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
-
-    GameResult gameResult = calculateGameResult(game);
-
-    return map(
-        game,
-        gameRound,
-        (g, r) -> {
-          int totalRoundCount = g.getRounds().size();
-          return new GameRound(
-              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState(), gameResult);
-        });
+    return gameRepository
+        .findById(gameId)
+        .flatMap(game -> findRound(game, round).map(r -> toResponse(game, r)));
   }
 
-  static GameResult calculateGameResult(Optional<GameEntity> game) {
-    List<GameRoundEntity> rounds = game.map(GameEntity::getRounds).orElse(Collections.emptyList());
-    int roundsUnanswered =
-        rounds.stream().filter(r -> r.getAnswerState() == AnswerState.UNANSWERED).toList().size();
-    int roundsCorrect =
-        rounds.stream().filter(r -> r.getAnswerState() == AnswerState.CORRECT).toList().size();
+  @Transactional
+  public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
+    if (answerState == AnswerState.UNANSWERED) {
+      throw new IllegalArgumentException("A round can't be answered with " + answerState);
+    }
+
+    return gameRepository
+        .findById(gameId)
+        .flatMap(
+            game ->
+                findRound(game, round)
+                    .map(
+                        r -> {
+                          r.setAnswerState(answerState);
+                          gameRepository.save(game);
+                          return toResponse(game, r);
+                        }));
+  }
+
+  private static Optional<GameRoundEntity> findRound(GameEntity game, int roundNumber) {
+    return game.getRounds().stream().filter(r -> r.getRoundNumber() == roundNumber).findFirst();
+  }
+
+  private static GameRound toResponse(GameEntity game, GameRoundEntity round) {
+    return new GameRound(
+        GameTypeResponse.from(round.getGameType()),
+        round.getJsonBlob(),
+        game.getRounds().size(),
+        round.getAnswerState(),
+        calculateGameResult(game));
+  }
+
+  static GameResult calculateGameResult(GameEntity game) {
+    List<GameRoundEntity> rounds = game.getRounds();
+    int roundsUnanswered = (int) countInState(rounds, AnswerState.UNANSWERED);
+    int roundsCorrect = (int) countInState(rounds, AnswerState.CORRECT);
     GameState gameState;
     if (roundsUnanswered == 0) {
       gameState = GameState.FINISHED;
@@ -161,27 +157,13 @@ public class GameService {
     }
     List<AnswerState> roundAnswerStates =
         rounds.stream()
-            .sorted(Comparator.comparingInt(GameRoundEntity::getIndex))
+            .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
             .map(GameRoundEntity::getAnswerState)
             .toList();
     return new GameResult(gameState, roundsUnanswered, roundsCorrect, roundAnswerStates);
   }
 
-  public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
-    Optional<GameEntity> game = gameRepository.findById(gameId);
-    Optional<GameRoundEntity> gameRound =
-        game.flatMap(g -> g.getRounds().stream().filter(r -> r.getIndex() == round).findFirst());
-
-    return map(
-        game,
-        gameRound,
-        (g, r) -> {
-          r.setAnswerState(answerState);
-          gameRepository.save(g);
-          GameResult gameResult = calculateGameResult(game);
-          int totalRoundCount = g.getRounds().size();
-          return new GameRound(
-              r.getGameType(), r.getJsonBlob(), totalRoundCount, r.getAnswerState(), gameResult);
-        });
+  private static long countInState(List<GameRoundEntity> rounds, AnswerState state) {
+    return rounds.stream().filter(r -> r.getAnswerState() == state).count();
   }
 }
