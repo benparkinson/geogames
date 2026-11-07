@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-26 AS build
+FROM maven:3.9-eclipse-temurin-25 AS build
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 COPY client /usr/src/app/client

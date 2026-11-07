@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Geogames: geography quiz games. The backend is Spring Boot 4 / Java 17 / Maven, at the repo root. The frontend is Next.js 16 / React 19 / TypeScript, in `client/`. It uses TanStack Query (`@tanstack/react-query`), react-bootstrap and react-leaflet.
+Geogames: geography quiz games. The backend is Spring Boot 4 / Java 25 / Maven, at the repo root. The frontend is Next.js 16 / React 19 / TypeScript, in `client/`. It uses TanStack Query (`@tanstack/react-query`), react-bootstrap and react-leaflet.
 
 ## Commands
 
