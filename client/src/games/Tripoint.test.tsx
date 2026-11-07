@@ -131,7 +131,7 @@ describe("Tripoint hints", () => {
   });
 
   it("modifies the tripoint object it was given", async () => {
-    // Current behaviour: showRandomCountryBorder sets showAsHint on the country objects of the
+    // TODO: showRandomCountryBorder sets showAsHint on the country objects of the
     // `tripoint` prop itself instead of copying them first.
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
     vi.spyOn(Math, "random").mockReturnValue(0);

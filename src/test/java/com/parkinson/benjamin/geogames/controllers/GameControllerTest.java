@@ -81,7 +81,7 @@ class GameControllerTest {
   void createGameWithInvalidArgumentsFailsInsteadOfReturningBadRequest() throws Exception {
     when(gameService.createGame("FOO", 3)).thenThrow(new IllegalArgumentException("Unknown"));
 
-    // Current behaviour: there is no exception handler, so the IllegalArgumentException from the
+    // TODO: there is no exception handler, so the IllegalArgumentException from the
     // service escapes the controller (a 500 in a real server) instead of becoming a 400.
     assertThatThrownBy(
             () ->

@@ -14,7 +14,7 @@ class RiverLoaderServiceTest {
   void everyRiverFileHasCompleteAdditionalData() throws IOException {
     try (GenericApplicationContext context = new GenericApplicationContext()) {
       context.refresh();
-      // Current behaviour: a river file with no entry in additionalData.json causes a
+      // TODO: a river file with no entry in additionalData.json causes a
       // NullPointerException in loadRivers(), so this test doubles as a data integrity guard.
       List<River> rivers = new RiverLoaderService(context).loadRivers();
 

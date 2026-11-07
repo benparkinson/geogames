@@ -21,7 +21,7 @@ Frontend (`client/`):
 - Lint: `npm run lint`
 - Production static export: `npm run build`. This runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `client/out/`.
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; the Leaflet-rendering map components are excluded). Tests are colocated with their source as `*.test.ts(x)` under `client/src`, and shared helpers (fixtures, a `fetch` router, a query-client wrapper) live in `client/src/test/`. Never put test files under `client/pages/`, because Next would treat them as routes. Test files are type-checked by `next build`, so import `describe`/`it`/`expect`/`vi` from `vitest` explicitly. Never render real Leaflet maps: mock the `*MapWrapper` modules. Testing Library only detects Jest's fake timers, so with `vi.useFakeTimers()` use `fireEvent` instead of `userEvent`. `GameRoundPage` invalidates through the shared `client` from `api/gateway.ts`, so its tests must render with that client.
-- Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports. Don't run `npm ci` or Maven builds while the VS Code Java extension is importing the project: it runs the same `npm ci` in `client/` after a `pom.xml` change, and two at once fail with `ENOTEMPTY`. Wait for its `target/node ... npm ci` / `npm run build` processes to finish first.
+- Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports.
 - Ignore `client/README.md`; it is leftover Create React App boilerplate.
 
 ## Architecture

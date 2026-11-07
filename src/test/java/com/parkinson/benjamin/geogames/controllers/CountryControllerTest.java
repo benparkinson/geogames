@@ -54,7 +54,7 @@ class CountryControllerTest {
       throw new IllegalStateException(e);
     }
 
-    // Current behaviour: an IOException from the loader is not handled, so the request fails
+    // TODO: an IOException from the loader is not handled, so the request fails
     // (a 500 in a real server) instead of returning a descriptive error response.
     assertThatThrownBy(() -> mockMvc.perform(get("/api/countries")))
         .isInstanceOf(IOException.class)

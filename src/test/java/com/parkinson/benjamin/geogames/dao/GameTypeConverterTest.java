@@ -26,7 +26,7 @@ class GameTypeConverterTest {
 
   @Test
   void unknownAndNullNamesFallBackToRiversByShape() {
-    // Current behaviour: anything that is not "TRIPOINT" silently becomes RIVERS_BY_SHAPE, so a
+    // TODO: anything that is not "TRIPOINT" silently becomes RIVERS_BY_SHAPE, so a
     // corrupt or future game type name is never rejected.
     assertThat(converter.convertToEntityAttribute("SOMETHING_ELSE"))
         .isSameAs(GameType.RIVERS_BY_SHAPE);
@@ -35,7 +35,7 @@ class GameTypeConverterTest {
 
   @Test
   void nullGameTypeCannotBeConverted() {
-    // Current behaviour: a null game type throws a NullPointerException instead of mapping to null.
+    // TODO: a null game type throws a NullPointerException instead of mapping to null.
     assertThatThrownBy(() -> converter.convertToDatabaseColumn(null))
         .isInstanceOf(NullPointerException.class);
   }

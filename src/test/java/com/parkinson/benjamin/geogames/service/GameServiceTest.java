@@ -320,7 +320,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
 
-    // Current behaviour: a round that was answered CORRECT can later be changed to GAVE_UP, and
+    // TODO: a round that was answered CORRECT can later be changed to GAVE_UP, and
     // even reset to UNANSWERED, because the service never checks the existing state.
     GameRound changed = service.submitAnswer(1L, 0, AnswerState.GAVE_UP).orElseThrow();
     assertThat(changed.answerState()).isEqualTo(AnswerState.GAVE_UP);
@@ -383,7 +383,7 @@ class GameServiceTest {
 
   @Test
   void missingGameCountsAsFinishedWithNothing() {
-    // Current behaviour: no game at all is reported as FINISHED (zero rounds, none unanswered)
+    // TODO: no game at all is reported as FINISHED (zero rounds, none unanswered)
     // rather than as an error or an empty result.
     GameResult result = GameService.calculateGameResult(Optional.empty());
 

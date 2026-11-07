@@ -200,7 +200,7 @@ describe("MapGameInput states", () => {
   });
 
   it("does not render a suggestions list even when suggestions are given", () => {
-    // Current behaviour: `suggestions` is accepted as a prop but never passed to GuessBox, so the
+    // TODO: `suggestions` is accepted as a prop but never passed to GuessBox, so the
     // country autocomplete datalist that Tripoint builds is never rendered.
     const { container } = renderInput({ suggestions: ["France", "Spain"] });
 
