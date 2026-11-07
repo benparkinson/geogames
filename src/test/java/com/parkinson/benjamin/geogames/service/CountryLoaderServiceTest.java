@@ -14,7 +14,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 class CountryLoaderServiceTest {
 
   private final CountryLoaderService service =
-      new CountryLoaderService(new PathMatchingResourcePatternResolver());
+      new CountryLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
 
   @Test
   void loadsEveryCountryNameSorted() throws IOException {

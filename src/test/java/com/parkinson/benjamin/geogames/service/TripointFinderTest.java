@@ -9,13 +9,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.parkinson.benjamin.geogames.dao.GameData;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +31,10 @@ public class TripointFinderTest {
   private List<TripointDefinition> definitions;
 
   @BeforeEach
-  void setUp() throws IOException {
+  void setUp() {
     loader = mock(TripointLoaderService.class);
     countryLoader = mock(CountryLoaderService.class);
-    service = new TripointFinderService(loader, countryLoader);
+    service = new TripointFinderService(loader, countryLoader, new Random(5));
 
     definitions =
         IntStream.range(0, 5)
@@ -50,18 +53,23 @@ public class TripointFinderTest {
   }
 
   @Test
-  public void rejectsRequestForTooManyTripoints() throws IOException {
+  public void rejectsRequestForTooManyTripoints() {
     TripointLoaderService emptyLoader = mock(TripointLoaderService.class);
     when(emptyLoader.loadTripointDefinitions()).thenReturn(List.of());
     TripointFinderService emptyService =
-        new TripointFinderService(emptyLoader, mock(CountryLoaderService.class));
+        new TripointFinderService(emptyLoader, mock(CountryLoaderService.class), new Random(5));
 
-    assertThrows(IllegalArgumentException.class, () -> emptyService.findRandomTripoints(1));
+    assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1));
   }
 
   @Test
-  void returnsDistinctTripointsBuiltFromDefinitions() throws IOException {
-    List<GameData> result = service.findRandomTripoints(3);
+  void generatesRoundsOfTheTripointType() {
+    assertThat(service.gameType()).isSameAs(GameType.TRIPOINT);
+  }
+
+  @Test
+  void returnsDistinctTripointsBuiltFromDefinitions() {
+    List<GameData> result = service.generate(3);
 
     assertThat(result).hasSize(3);
     List<Coordinate> coordinates = result.stream().map(t -> ((Tripoint) t).coordinate()).toList();
@@ -82,8 +90,8 @@ public class TripointFinderTest {
   }
 
   @Test
-  void canReturnEveryDefinition() throws IOException {
-    List<GameData> result = service.findRandomTripoints(definitions.size());
+  void canReturnEveryDefinition() {
+    List<GameData> result = service.generate(definitions.size());
 
     assertThat(result.stream().map(t -> ((Tripoint) t).coordinate()).toList())
         .containsExactlyInAnyOrderElementsOf(
@@ -91,17 +99,18 @@ public class TripointFinderTest {
   }
 
   @Test
-  void returnsNothingWithoutLoadingCountriesWhenAskedForZero() throws IOException {
-    assertThat(service.findRandomTripoints(0)).isEmpty();
+  void returnsNothingWithoutLoadingCountriesWhenAskedForZero() {
+    assertThat(service.generate(0)).isEmpty();
     verifyNoInteractions(countryLoader);
   }
 
   @Test
-  void propagatesCountryLoadingFailures() throws IOException {
-    when(countryLoader.loadCountryByName(anyString())).thenThrow(new IOException("boom"));
+  void propagatesCountryLoadingFailures() {
+    when(countryLoader.loadCountryByName(anyString()))
+        .thenThrow(new UncheckedIOException(new IOException("boom")));
 
-    assertThatThrownBy(() -> service.findRandomTripoints(1))
-        .isInstanceOf(IOException.class)
-        .hasMessage("boom");
+    assertThatThrownBy(() -> service.generate(1))
+        .isInstanceOf(UncheckedIOException.class)
+        .hasRootCauseMessage("boom");
   }
 }

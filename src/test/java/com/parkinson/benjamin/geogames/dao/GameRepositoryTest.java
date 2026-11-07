@@ -1,8 +1,10 @@
 package com.parkinson.benjamin.geogames.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +37,7 @@ class GameRepositoryTest {
 
   private List<GameRoundEntity> sorted(GameEntity game) {
     return game.getRounds().stream()
-        .sorted(Comparator.comparingInt(GameRoundEntity::getIndex))
+        .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
         .toList();
   }
 
@@ -45,13 +47,13 @@ class GameRepositoryTest {
 
     List<GameRoundEntity> rounds = sorted(reloaded);
     assertThat(rounds).hasSize(3);
-    assertThat(rounds.get(0).getIndex()).isZero();
+    assertThat(rounds.get(0).getRoundNumber()).isZero();
     assertThat(rounds.get(0).getGameType()).isSameAs(GameType.TRIPOINT);
     assertThat(rounds.get(0).getJsonBlob()).isEqualTo("{\"first\":true}");
     assertThat(rounds.get(0).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
     assertThat(rounds.get(1).getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
     assertThat(rounds.get(1).getJsonBlob()).isEqualTo("{\"river\":true}");
-    assertThat(rounds.get(2).getIndex()).isEqualTo(2);
+    assertThat(rounds.get(2).getRoundNumber()).isEqualTo(2);
   }
 
   @Test
@@ -78,5 +80,66 @@ class GameRepositoryTest {
   @Test
   void findingAnUnknownIdGivesNothing() {
     assertThat(repository.findById(987_654L)).isEmpty();
+  }
+
+  @Test
+  void everyGameTypeIsStoredAndReadBackAsTheSameConstant() {
+    List<GameRoundEntity> rounds = new ArrayList<>();
+    for (GameType type : GameType.values()) {
+      rounds.add(new GameRoundEntity(rounds.size(), type, "{}"));
+    }
+
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds));
+
+    assertThat(sorted(reloaded).stream().map(GameRoundEntity::getGameType).toList())
+        .containsExactly(GameType.values());
+  }
+
+  @Test
+  void gameTypesAreStoredByName() {
+    GameEntity saved = repository.save(gameWithRounds("{}"));
+    entityManager.flush();
+
+    Object stored =
+        entityManager
+            .getEntityManager()
+            .createNativeQuery("select min(game_type) from game_round_entity")
+            .getSingleResult();
+
+    assertThat(stored).isEqualTo("RIVERS_BY_SHAPE");
+    assertThat(saved.getId()).isPositive();
+  }
+
+  @Test
+  void anUnknownStoredGameTypeFailsInsteadOfBecomingAnotherType() {
+    GameEntity saved = repository.save(gameWithRounds("{}"));
+    entityManager.flush();
+    entityManager.clear();
+
+    // Either the database refuses the bad name or loading the round does. It is never mapped to
+    // some other game type.
+    assertThatThrownBy(
+            () -> {
+              entityManager
+                  .getEntityManager()
+                  .createNativeQuery("update game_round_entity set game_type = 'SOMETHING_ELSE'")
+                  .executeUpdate();
+              entityManager.clear();
+              repository.findById(saved.getId()).orElseThrow().getRounds().size();
+            })
+        .isInstanceOf(RuntimeException.class);
+  }
+
+  @Test
+  void roundsComeBackInRoundNumberOrderWhateverOrderTheyWereSavedIn() {
+    List<GameRoundEntity> rounds = new ArrayList<>();
+    rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "{\"n\":2}"));
+    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "{\"n\":0}"));
+    rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "{\"n\":1}"));
+
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds));
+
+    assertThat(reloaded.getRounds().stream().map(GameRoundEntity::getRoundNumber).toList())
+        .containsExactly(0, 1, 2);
   }
 }

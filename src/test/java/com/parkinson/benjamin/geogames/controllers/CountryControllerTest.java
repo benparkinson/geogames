@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +49,12 @@ class CountryControllerTest {
 
   @Test
   void loadingFailureEscapesTheController() {
-    try {
-      when(countryLoaderService.loadCountryNames()).thenThrow(new IOException("disk"));
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
+    when(countryLoaderService.loadCountryNames())
+        .thenThrow(new UncheckedIOException(new IOException("disk")));
 
-    // TODO: an IOException from the loader is not handled, so the request fails
-    // (a 500 in a real server) instead of returning a descriptive error response.
+    // Data that won't load is a packaging bug, so it is meant to be a 500, not a 400.
     assertThatThrownBy(() -> mockMvc.perform(get("/api/countries")))
-        .isInstanceOf(IOException.class)
-        .hasMessage("disk");
+        .hasRootCauseInstanceOf(IOException.class)
+        .hasRootCauseMessage("disk");
   }
 }

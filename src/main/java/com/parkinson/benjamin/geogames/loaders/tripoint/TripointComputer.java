@@ -2,7 +2,6 @@ package com.parkinson.benjamin.geogames.loaders.tripoint;
 
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Tripoint;
-import com.parkinson.benjamin.geogames.model.Tripoint.TripointBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

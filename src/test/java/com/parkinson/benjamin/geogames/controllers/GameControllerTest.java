@@ -1,22 +1,23 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.parkinson.benjamin.geogames.dao.GameType;
+import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.api.GameResult;
+import com.parkinson.benjamin.geogames.api.GameRound;
+import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.model.AnswerState;
-import com.parkinson.benjamin.geogames.model.GameCreationResponse;
-import com.parkinson.benjamin.geogames.model.GameResult;
-import com.parkinson.benjamin.geogames.model.GameRound;
 import com.parkinson.benjamin.geogames.model.GameState;
+import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ class GameControllerTest {
 
   private static GameRound round() {
     return new GameRound(
-        GameType.TRIPOINT,
+        GameTypeResponse.from(GameType.TRIPOINT),
         "{\"countries\":[]}",
         3,
         AnswerState.UNANSWERED,
@@ -51,8 +52,7 @@ class GameControllerTest {
 
   @Test
   void createsAGame() throws Exception {
-    when(gameService.createGame("TRIPOINT", 3))
-        .thenReturn(Optional.of(new GameCreationResponse(42)));
+    when(gameService.createGame("TRIPOINT", 3)).thenReturn(new GameCreationResponse(42));
 
     mockMvc
         .perform(
@@ -66,30 +66,18 @@ class GameControllerTest {
   }
 
   @Test
-  void createGameReturnsBadRequestWhenServiceReturnsNothing() throws Exception {
-    when(gameService.createGame("TRIPOINT", 3)).thenReturn(Optional.empty());
+  void createGameWithInvalidArgumentsIsABadRequestWithAProblemBody() throws Exception {
+    when(gameService.createGame("FOO", 3)).thenThrow(new IllegalArgumentException("Unknown"));
 
     mockMvc
         .perform(
             post("/api/games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3}"))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void createGameWithInvalidArgumentsFailsInsteadOfReturningBadRequest() throws Exception {
-    when(gameService.createGame("FOO", 3)).thenThrow(new IllegalArgumentException("Unknown"));
-
-    // TODO: there is no exception handler, so the IllegalArgumentException from the
-    // service escapes the controller (a 500 in a real server) instead of becoming a 400.
-    assertThatThrownBy(
-            () ->
-                mockMvc.perform(
-                    post("/api/games")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"gameType\":\"FOO\",\"numberOfRounds\":3}")))
-        .hasRootCauseInstanceOf(IllegalArgumentException.class);
+                .content("{\"gameType\":\"FOO\",\"numberOfRounds\":3}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.detail").value("Unknown"));
   }
 
   // -------------------------------------------------------------- get round
@@ -152,6 +140,20 @@ class GameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"GAVE_UP\"}"))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void anAnswerTheServiceRejectsIsABadRequest() throws Exception {
+    when(gameService.submitAnswer(1L, 0, AnswerState.UNANSWERED))
+        .thenThrow(new IllegalArgumentException("A round can't be answered with UNANSWERED"));
+
+    mockMvc
+        .perform(
+            post("/api/games/1/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"UNANSWERED\"}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.detail").value("A round can't be answered with UNANSWERED"));
   }
 
   @Test

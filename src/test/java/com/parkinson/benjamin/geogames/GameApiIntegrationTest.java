@@ -2,7 +2,9 @@ package com.parkinson.benjamin.geogames;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
@@ -134,5 +136,57 @@ class GameApiIntegrationTest {
 
     List<String> names = JsonPath.read(body, "$[*].name");
     assertThat(names).hasSize(255).isSorted();
+  }
+
+  private void postGame(String body, int expectedStatus) throws Exception {
+    mockMvc
+        .perform(post("/api/games").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().is(expectedStatus));
+  }
+
+  @Test
+  void rejectsBadGameRequestsWithABadRequest() throws Exception {
+    postGame("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":0}", 400);
+    postGame("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":11}", 400);
+    postGame("{\"gameType\":\"NOPE\",\"numberOfRounds\":3}", 400);
+  }
+
+  @Test
+  void rejectsAnUnansweredAnswerAndLeavesTheRoundAlone() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    mockMvc
+        .perform(
+            post("/api/games/%d/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"UNANSWERED\"}"))
+        .andExpect(status().isBadRequest());
+
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("UNANSWERED");
+  }
+
+  @Test
+  void unknownGamesAndRoundsAreNotFound() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    mockMvc.perform(get("/api/games/999999/rounds/0")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/games/%d/rounds/99".formatted(id))).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void corsOriginsComeFromTheConfiguredProperty() throws Exception {
+    mockMvc
+        .perform(
+            options("/api/games")
+                .header("Origin", "http://localhost:3000")
+                .header("Access-Control-Request-Method", "POST"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"));
+    mockMvc
+        .perform(
+            options("/api/countries")
+                .header("Origin", "https://evil.example")
+                .header("Access-Control-Request-Method", "GET"))
+        .andExpect(status().isForbidden());
   }
 }

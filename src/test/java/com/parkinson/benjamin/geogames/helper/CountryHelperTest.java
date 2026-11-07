@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.JsonResourceReader;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,7 +28,7 @@ class CountryHelperTest {
   @Test
   void everyCountryNameMapsToAFileOnTheClasspath() throws IOException {
     CountryLoaderService service =
-        new CountryLoaderService(new PathMatchingResourcePatternResolver());
+        new CountryLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
 
     for (CountryName country : service.loadCountryNames()) {
       String path =

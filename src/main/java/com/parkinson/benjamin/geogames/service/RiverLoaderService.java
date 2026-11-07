@@ -2,44 +2,40 @@ package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.type.TypeReference;
 
 @Service
-public class RiverLoaderService extends FileLoaderService {
+public class RiverLoaderService {
 
-  private final ApplicationContext applicationContext;
+  /** What {@code additionalData.json} says about one river. */
+  record RiverMetadata(List<String> names, String continent) {}
 
-  @Autowired
-  public RiverLoaderService(ApplicationContext applicationContext) {
-    super();
-    this.applicationContext = applicationContext;
+  private final JsonResourceReader reader;
+
+  public RiverLoaderService(JsonResourceReader reader) {
+    this.reader = reader;
   }
 
   @Cacheable("rivers")
-  public List<River> loadRivers() throws IOException {
-    Resource[] resources = applicationContext.getResources("classpath*:/data/rivers/*.geo.json");
-    Map<String, Map> additionalDataByRiverName =
-        loadFile("data/rivers/additionalData.json", Map.class);
+  public List<River> loadRivers() {
+    Map<String, RiverMetadata> metadataByRiverName =
+        reader.read("data/rivers/additionalData.json", new TypeReference<>() {});
     List<River> rivers = new ArrayList<>();
 
-    for (Resource resource : resources) {
-      GeoData geoData = readFile(resource.getInputStream(), GeoData.class);
+    for (GeoData geoData : reader.readAll("classpath*:/data/rivers/*.geo.json", GeoData.class)) {
       String name = geoData.properties().name();
-      Map additionalData = additionalDataByRiverName.get(name);
-      rivers.add(
-          new River(
-              name,
-              (List<String>) additionalData.get("names"),
-              (String) additionalData.get("continent"),
-              geoData));
+      RiverMetadata metadata = metadataByRiverName.get(name);
+      if (metadata == null) {
+        throw new IllegalStateException(
+            "River %s has no entry in data/rivers/additionalData.json".formatted(name));
+      }
+      List<String> additionalNames = metadata.names() == null ? List.of() : metadata.names();
+      rivers.add(new River(name, additionalNames, metadata.continent(), geoData));
     }
 
     return rivers;

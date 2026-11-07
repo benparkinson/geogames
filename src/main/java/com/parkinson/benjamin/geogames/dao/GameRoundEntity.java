@@ -1,21 +1,27 @@
 package com.parkinson.benjamin.geogames.dao;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.GameType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import java.util.Objects;
 
+/**
+ * One round of a game. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
+ * equals}: two rounds are the same only if they are the same object.
+ */
 @Entity
-public final class GameRoundEntity {
-  @Id @GeneratedValue private int id;
+public class GameRoundEntity {
+  @Id @GeneratedValue private long id;
 
-  private int index;
+  /** Where this round comes in its game, counting from 0. */
+  private int roundNumber;
 
-  @Convert(converter = GameTypeConverter.class)
+  @Enumerated(EnumType.STRING)
   private GameType gameType;
 
   @Lob @Column private String jsonBlob;
@@ -24,27 +30,27 @@ public final class GameRoundEntity {
 
   public GameRoundEntity() {}
 
-  public GameRoundEntity(int index, GameType gameType, String jsonBlob) {
-    this.index = index;
+  public GameRoundEntity(int roundNumber, GameType gameType, String jsonBlob) {
+    this.roundNumber = roundNumber;
     this.gameType = gameType;
     this.jsonBlob = jsonBlob;
     this.answerState = AnswerState.UNANSWERED;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
-  public int getIndex() {
-    return index;
+  public int getRoundNumber() {
+    return roundNumber;
   }
 
-  public void setIndex(int index) {
-    this.index = index;
+  public void setRoundNumber(int roundNumber) {
+    this.roundNumber = roundNumber;
   }
 
   public GameType getGameType() {
@@ -69,20 +75,5 @@ public final class GameRoundEntity {
 
   public void setAnswerState(AnswerState answerState) {
     this.answerState = answerState;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    GameRoundEntity gameRoundEntity = (GameRoundEntity) o;
-    return id == gameRoundEntity.id
-        && gameType == gameRoundEntity.gameType
-        && Objects.equals(jsonBlob, gameRoundEntity.jsonBlob);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, gameType, jsonBlob);
   }
 }

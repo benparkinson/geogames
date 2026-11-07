@@ -1,30 +1,31 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.dao.GameData;
-import com.parkinson.benjamin.geogames.model.River;
-import java.util.HashSet;
+import com.parkinson.benjamin.geogames.helper.RandomPicker;
+import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RiverFinderService {
+public class RiverFinderService implements RoundGenerator {
 
-  private final Random random = new Random(System.currentTimeMillis());
+  private final RiverLoaderService riverLoaderService;
+  private final Random random;
 
-  public List<GameData> findRandomRivers(List<River> rivers, int howMany) {
-    if (rivers.size() < howMany) {
-      throw new IllegalArgumentException(
-          "Can't give you %d rivers, I only know about %d!".formatted(howMany, rivers.size()));
-    }
+  public RiverFinderService(RiverLoaderService riverLoaderService, Random random) {
+    this.riverLoaderService = riverLoaderService;
+    this.random = random;
+  }
 
-    Set<GameData> randomRivers = new HashSet<>();
-    while (randomRivers.size() < howMany) {
-      River river = rivers.get(random.nextInt(rivers.size()));
-      randomRivers.add(river);
-    }
+  @Override
+  public GameType gameType() {
+    return GameType.RIVERS_BY_SHAPE;
+  }
 
-    return randomRivers.stream().toList();
+  @Override
+  public List<GameData> generate(int count) {
+    return List.copyOf(
+        RandomPicker.pickDistinct(riverLoaderService.loadRivers(), count, random, "rivers"));
   }
 }
