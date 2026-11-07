@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -106,22 +109,33 @@ class GameApiIntegrationTest {
       assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
 
       String blob = JsonPath.read(round, "$.jsonBlob");
-      assertThat((String) JsonPath.read(blob, "$.name")).isNotBlank();
-      assertThat((String) JsonPath.read(blob, "$.continent")).isNotBlank();
-      assertThat((Object) JsonPath.read(blob, "$.geoData")).isNotNull();
+      assertThat((String) JsonPath.read(blob, "$.river.name")).isNotBlank();
+      assertThat((String) JsonPath.read(blob, "$.river.continent")).isNotBlank();
+      assertThat((Object) JsonPath.read(blob, "$.river.geoData")).isNotNull();
     }
   }
 
   @Test
   void createsARandomGame() throws Exception {
     int id = createGame("RANDOM", 10);
+    Set<String> subjects = new HashSet<>();
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
       assertThat((int) JsonPath.read(round, "$.totalRoundCount")).isEqualTo(10);
       assertThat((String) JsonPath.read(round, "$.gameType.name"))
           .isIn("TRIPOINT", "RIVERS_BY_SHAPE");
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      String type = JsonPath.read(round, "$.gameType.name");
+      if (type.equals("TRIPOINT")) {
+        List<String> names = JsonPath.read(blob, "$.countries[*].name");
+        subjects.add("tripoint:" + names.stream().sorted().collect(Collectors.joining("|")));
+      } else {
+        subjects.add("river:" + JsonPath.read(blob, "$.river.id"));
+      }
     }
+    assertThat(subjects).hasSize(10);
   }
 
   @Test

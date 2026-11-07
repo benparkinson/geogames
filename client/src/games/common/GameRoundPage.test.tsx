@@ -112,7 +112,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("Rivers | Geogames");
+    expect(title()).toBe("River Shapes | Geogames");
   });
 
   it("copes with a game type it does not know", async () => {

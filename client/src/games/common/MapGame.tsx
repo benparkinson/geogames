@@ -18,7 +18,8 @@ function MapGame<Type>({
   prompt,
   inputPlaceholder,
   answerNoun,
-  blankMapCaption,
+  blankMap,
+  mapCaption,
   suggestions,
   isKnownGuess,
   hints,
@@ -63,12 +64,13 @@ function MapGame<Type>({
   }
 
   const foundAnswers = guesses.flatMap(g => (g.answer === null ? [] : [g.answer]));
-  const showBlankMap = !!blankMapCaption && !gameOver;
+  const showBlankMap = !!blankMap && !gameOver;
+  const showCaption = !!mapCaption && !gameOver;
 
   const map = (
     <>
       <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} />
-      {showBlankMap && <div className="map-caption">{blankMapCaption}</div>}
+      {showCaption && <div className="map-caption">{mapCaption}</div>}
     </>
   );
 
@@ -131,7 +133,10 @@ export interface MapGameProps<Type> {
   inputPlaceholder: string;
   /** What the player is naming, singular: used in "We don't recognise "x" as a country". */
   answerNoun: string;
-  blankMapCaption?: string;
+  /** Shows a grey map instead of the real one while the round is being played. */
+  blankMap?: boolean;
+  /** A caption over the map while the round is being played. */
+  mapCaption?: string;
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;

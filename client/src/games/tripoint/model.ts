@@ -1,8 +1,8 @@
-import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from "geojson";
+import type { Country } from "../common/country";
 
 export interface TripointModel {
   coordinate: TripointCoordinate;
-  countries: TripointCountry[];
+  countries: Country[];
 }
 
 /** The tripoint plus the order in which hints reveal its countries (by name). */
@@ -13,17 +13,4 @@ export interface TripointRoundData extends TripointModel {
 export interface TripointCoordinate {
   latitude: number;
   longitude: number;
-}
-
-export interface TripointCountry {
-  name: string;
-  additionalNames: string[];
-  geoData: TripointGeoData;
-}
-
-export interface TripointGeoData extends GeoJsonObject {
-  type: "MultiPolygon" | "Polygon";
-  bbox?: BBox;
-  properties: GeoJsonProperties;
-  geometry: MultiPolygon | Polygon;
 }

@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 import type { GameRoundResponse } from "../api/types";
 import type { Round } from "../games/common/Model";
-import type { River } from "../games/rivers/model";
+import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
 
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
@@ -57,6 +57,11 @@ export function makeRiverData(): River {
   } as unknown as River;
 }
 
+/** The data of a round of any river game. */
+export function makeRiverRoundData(overrides: Partial<RiverRound> = {}): RiverRound {
+  return { river: makeRiverData(), countries: [], ...overrides };
+}
+
 export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return {
     jsonBlob: JSON.stringify(makeTripointData()),
@@ -75,7 +80,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
 
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
-    jsonBlob: JSON.stringify(makeRiverData()),
+    jsonBlob: JSON.stringify(makeRiverRoundData()),
     gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1 },
     ...overrides,
   });

@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { makeRiverData, makeRiverRound, makeRound } from "../test/fixtures";
+import { makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
 import { clientWrapper, newTestClient } from "../test/render";
 import type { AnswerState } from "../games/common/Model";
 import { fetchRound, toRoundView, useCreateGame, useRound, useSubmitAnswer } from "./games";
@@ -19,7 +19,7 @@ describe("fetchRound", () => {
     const view = await fetchRound("g1", 3);
 
     expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/games/g1/rounds/3");
-    expect(view.data).toEqual(makeRiverData());
+    expect(view.data).toEqual(makeRiverRoundData());
     expect(view.totalRoundCount).toBe(5);
     expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1 });
   });

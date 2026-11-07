@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { makeRiverData, makeTripointData } from "../test/fixtures";
+import { makeRiverRoundData, makeTripointData } from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
@@ -26,13 +26,13 @@ describe("GAME_MODULES", () => {
   });
 
   it("lists the name of a river", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverData())).toEqual(["Danube"]);
+    expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
   });
 });
 
 describe("findGameModule", () => {
   it("finds a module by its type", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River");
+    expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River shape");
   });
 
   it("returns undefined for an unknown type, including the request-only RANDOM", () => {

@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
@@ -72,7 +74,7 @@ public class GameService {
     List<GameData> gameData =
         selection.isRandom()
             ? generateMixedRounds(numberOfRounds)
-            : generators.get(selection.type()).generate(numberOfRounds);
+            : generators.get(selection.type()).generate(numberOfRounds, Set.of());
 
     GameEntity saved = gameRepository.save(new GameEntity(createGameRounds(gameData)));
 
@@ -88,8 +90,13 @@ public class GameService {
     }
 
     List<GameData> allGameData = new ArrayList<>(numberOfRounds);
+    Set<String> used = new HashSet<>();
     roundsPerType.forEach(
-        (type, count) -> allGameData.addAll(generators.get(type).generate(count)));
+        (type, count) -> {
+          List<GameData> generated = generators.get(type).generate(count, Set.copyOf(used));
+          generated.forEach(data -> used.add(data.subjectId()));
+          allGameData.addAll(generated);
+        });
     Collections.shuffle(allGameData, random);
     return allGameData;
   }

@@ -26,6 +26,7 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
+import com.parkinson.benjamin.geogames.model.RiverRound;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -109,12 +110,15 @@ class GameServiceTest {
         new Coordinate(n, n), Set.of(square("A" + n), square("B" + n), square("C" + n)));
   }
 
-  private static River river(int n) {
+  private static RiverRound river(int n) {
     List<List<List<Double>>> lines = List.of(List.of(List.of(0.0, 0.0), List.of(1.0, 1.0)));
     GeoData geoData =
         new GeoData(
             "Feature", new GeoProperties("River" + n), new GeoGeometry("MultiLineString", lines));
-    return new River("Q" + n, "River" + n, List.of("Alias" + n), "Africa", geoData);
+    return new RiverRound(
+        GameType.RIVERS_BY_SHAPE,
+        new River("Q" + n, "River" + n, List.of("Alias" + n), "Africa", geoData),
+        List.of());
   }
 
   private List<GameData> tripoints(int count) {
@@ -148,7 +152,7 @@ class GameServiceTest {
   @ParameterizedTest
   @ValueSource(ints = {1, 10})
   void acceptsBoundaryRoundCounts(int rounds) {
-    when(tripointGenerator.generate(rounds)).thenReturn(tripoints(rounds));
+    when(tripointGenerator.generate(rounds, Set.of())).thenReturn(tripoints(rounds));
 
     assertThat(service.createGame("TRIPOINT", rounds)).isNotNull();
     assertThat(savedGame().getRounds()).hasSize(rounds);
@@ -171,13 +175,13 @@ class GameServiceTest {
 
   @Test
   void createsTripointRounds() {
-    when(tripointGenerator.generate(3)).thenReturn(tripoints(3));
+    when(tripointGenerator.generate(3, Set.of())).thenReturn(tripoints(3));
 
     GameCreationResponse response = service.createGame("TRIPOINT", 3);
 
     assertThat(response).isEqualTo(new GameCreationResponse(SAVED_ID));
-    verify(tripointGenerator, times(1)).generate(3);
-    verify(riverGenerator, never()).generate(anyInt());
+    verify(tripointGenerator, times(1)).generate(3, Set.of());
+    verify(riverGenerator, never()).generate(anyInt(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(3);
@@ -194,12 +198,12 @@ class GameServiceTest {
 
   @Test
   void createsRiverRounds() {
-    when(riverGenerator.generate(2)).thenReturn(rivers(2));
+    when(riverGenerator.generate(2, Set.of())).thenReturn(rivers(2));
 
     service.createGame("RIVERS_BY_SHAPE", 2);
 
-    verify(riverGenerator).generate(2);
-    verify(tripointGenerator, never()).generate(anyInt());
+    verify(riverGenerator).generate(2, Set.of());
+    verify(tripointGenerator, never()).generate(anyInt(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(2);
@@ -209,19 +213,21 @@ class GameServiceTest {
       assertThat(round.getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
       JsonNode blob = parse(round.getJsonBlob());
-      assertThat(blob.has("name")).isTrue();
-      assertThat(blob.has("additionalNames")).isTrue();
-      assertThat(blob.has("continent")).isTrue();
-      assertThat(blob.has("geoData")).isTrue();
+      assertThat(blob.get("river").has("name")).isTrue();
+      assertThat(blob.get("gameType").asString()).isEqualTo("RIVERS_BY_SHAPE");
+      assertThat(blob.get("river").has("additionalNames")).isTrue();
+      assertThat(blob.get("river").has("continent")).isTrue();
+      assertThat(blob.get("river").has("geoData")).isTrue();
+      assertThat(blob.get("countries").size()).isZero();
     }
   }
 
   @RepeatedTest(20)
   void createsRandomRoundsSplitAcrossBothTypes() {
     int total = 6;
-    when(tripointGenerator.generate(anyInt()))
+    when(tripointGenerator.generate(anyInt(), any()))
         .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
-    when(riverGenerator.generate(anyInt()))
+    when(riverGenerator.generate(anyInt(), any()))
         .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
     service = serviceWith(new Random(), tripointGenerator, riverGenerator);
 
@@ -229,8 +235,8 @@ class GameServiceTest {
 
     ArgumentCaptor<Integer> tripointCount = ArgumentCaptor.forClass(Integer.class);
     ArgumentCaptor<Integer> riverCount = ArgumentCaptor.forClass(Integer.class);
-    verify(tripointGenerator, atMost(1)).generate(tripointCount.capture());
-    verify(riverGenerator, atMost(1)).generate(riverCount.capture());
+    verify(tripointGenerator, atMost(1)).generate(tripointCount.capture(), any());
+    verify(riverGenerator, atMost(1)).generate(riverCount.capture(), any());
     int tripoints = tripointCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
     int rivers = riverCount.getAllValues().stream().mapToInt(Integer::intValue).sum();
     assertThat(tripoints + rivers).isEqualTo(total);
@@ -267,7 +273,7 @@ class GameServiceTest {
 
   @Test
   void notEnoughDataForARequestedTypeIsABadRequestAndNothingIsSaved() {
-    when(tripointGenerator.generate(3))
+    when(tripointGenerator.generate(3, Set.of()))
         .thenThrow(
             new IllegalArgumentException("Can't give you 3 tripoints, I only know about 2!"));
 
@@ -279,9 +285,9 @@ class GameServiceTest {
 
   @Test
   void aMixedGameWithTheSameSeedGetsTheSameMixOfTypes() {
-    when(tripointGenerator.generate(anyInt()))
+    when(tripointGenerator.generate(anyInt(), any()))
         .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
-    when(riverGenerator.generate(anyInt()))
+    when(riverGenerator.generate(anyInt(), any()))
         .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
 
     List<List<GameType>> mixes = new ArrayList<>();
@@ -297,6 +303,29 @@ class GameServiceTest {
     }
 
     assertThat(mixes.get(0)).hasSize(10).isEqualTo(mixes.get(1));
+  }
+
+  @Test
+  void aMixedGameTellsLaterGeneratorsWhichSubjectsEarlierOnesUsed() {
+    // EnumMap order is TRIPOINT then RIVERS_BY_SHAPE, so the river generator sees the tripoints.
+    when(tripointGenerator.generate(anyInt(), any()))
+        .thenAnswer(invocation -> tripoints(invocation.getArgument(0)));
+    when(riverGenerator.generate(anyInt(), any()))
+        .thenAnswer(invocation -> rivers(invocation.getArgument(0)));
+    service = serviceWith(new Random(7), tripointGenerator, riverGenerator);
+
+    service.createGame("RANDOM", 10);
+
+    ArgumentCaptor<Integer> tripointCount = ArgumentCaptor.forClass(Integer.class);
+    ArgumentCaptor<Set<String>> tripointExcluded = ArgumentCaptor.forClass(Set.class);
+    verify(tripointGenerator).generate(tripointCount.capture(), tripointExcluded.capture());
+    assertThat(tripointExcluded.getValue()).isEmpty();
+
+    ArgumentCaptor<Set<String>> riverExcluded = ArgumentCaptor.forClass(Set.class);
+    verify(riverGenerator).generate(anyInt(), riverExcluded.capture());
+    assertThat(riverExcluded.getValue())
+        .hasSize(tripointCount.getValue())
+        .allMatch(subject -> subject.startsWith("tripoint:"));
   }
 
   // ------------------------------------------------------------ getGameRound

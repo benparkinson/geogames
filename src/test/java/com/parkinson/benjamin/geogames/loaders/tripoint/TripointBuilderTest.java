@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameType;
-import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -41,7 +40,5 @@ class TripointBuilderTest {
   @Test
   void gameTypes() {
     assertThat(new TripointBuilder().build().gameType()).isSameAs(GameType.TRIPOINT);
-    assertThat(new River("Q3392", "Nile", List.of(), "Africa", null).gameType())
-        .isSameAs(GameType.RIVERS_BY_SHAPE);
   }
 }

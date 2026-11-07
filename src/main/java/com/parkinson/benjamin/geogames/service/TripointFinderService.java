@@ -35,10 +35,15 @@ public class TripointFinderService implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects) {
     List<TripointDefinition> chosen =
         RandomPicker.pickDistinct(
-            tripointLoaderService.loadTripointDefinitions(), count, random, "tripoints");
+            tripointLoaderService.loadTripointDefinitions().stream()
+                .filter(d -> !excludedSubjects.contains(Tripoint.subjectId(d.countryNames())))
+                .toList(),
+            count,
+            random,
+            "tripoints");
 
     List<GameData> tripoints = new ArrayList<>(count);
     for (TripointDefinition definition : chosen) {
