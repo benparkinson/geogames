@@ -17,7 +17,9 @@ import tools.jackson.core.type.TypeReference;
 
 /**
  * Usage: RiverLoaderMain &lt;naturalEarth.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
- * &lt;osmDir&gt; &lt;countriesDir&gt; &lt;outDir&gt; [maxRivers=150]
+ * &lt;osmDir&gt; &lt;countriesDir&gt; &lt;outDir&gt;
+ *
+ * <p>Picks the most famous rivers of each continent, up to {@link RiverSelector#CONTINENT_QUOTAS}.
  *
  * <p>Also works out each river's source, mouth and countries (see {@link RiverEnds} and {@link
  * RiverCountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
@@ -31,7 +33,6 @@ public class RiverLoaderMain {
     Path osmDir = Path.of(args[3]);
     Path countriesDir = Path.of(args[4]);
     Path outDir = Path.of(args[5]);
-    int maxRivers = args.length > 6 ? Integer.parseInt(args[6]) : 150;
 
     Map<String, NaturalEarthRiver> groups = new NaturalEarthReader().read(Path.of(args[0]));
     Map<String, WikidataEntry> wikidata = readJson(Path.of(args[1]), new TypeReference<>() {});
@@ -40,7 +41,8 @@ public class RiverLoaderMain {
     RiverAssembler.Assembly assembly =
         new RiverAssembler(file -> readOsmLines(osmDir.resolve(file)))
             .assemble(groups, wikidata, overrides);
-    RiverSelector.Selection selection = RiverSelector.select(assembly.candidates(), maxRivers);
+    RiverSelector.Selection selection =
+        RiverSelector.select(assembly.candidates(), RiverSelector.CONTINENT_QUOTAS);
 
     List<RiverCandidate> rivers = new ArrayList<>(selection.selected());
     rivers.sort(Comparator.comparing(RiverCandidate::name).thenComparing(RiverCandidate::qid));
@@ -101,9 +103,12 @@ public class RiverLoaderMain {
       RiverSelector.Selection selection)
       throws IOException {
     System.out.println("Written: " + rivers.size());
+    Map<String, Integer> perContinent = new TreeMap<>();
+    rivers.forEach(c -> perContinent.merge(c.continent(), 1, Integer::sum));
+    perContinent.forEach((continent, n) -> System.out.println("  " + continent + ": " + n));
     System.out.println("Dropped:");
     assembly.dropped().forEach((reason, n) -> System.out.println("  " + n + " " + reason));
-    System.out.println("  " + selection.beyondLimit() + " beyond the limit");
+    System.out.println("  " + selection.beyondLimit() + " beyond the continent quotas");
     System.out.println("  " + selection.unresolved().size() + " unresolved continent (below)");
 
     long total = 0;

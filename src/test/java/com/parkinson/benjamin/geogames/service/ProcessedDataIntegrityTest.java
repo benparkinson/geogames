@@ -60,7 +60,7 @@ public class ProcessedDataIntegrityTest {
   public void riversHaveEndsAndCountriesThatLoad() {
     List<River> rivers = new RiverLoaderService(reader).loadRivers();
 
-    assertEquals(150, rivers.size());
+    assertEquals(50, rivers.size());
     for (River river : rivers) {
       assertNotNull(river.source(), "no source for " + river.name());
       assertNotNull(river.mouth(), "no mouth for " + river.name());
@@ -73,11 +73,11 @@ public class ProcessedDataIntegrityTest {
   }
 
   @Test
-  public void enoughRiversCrossTwoCountriesForTheCountriesGame() {
+  public void enoughRiversCrossThreeCountriesForTheCountriesGame() {
     long eligible =
         new RiverLoaderService(reader)
-            .loadRivers().stream().filter(river -> river.countries().size() >= 2).count();
+            .loadRivers().stream().filter(river -> river.countries().size() >= 3).count();
 
-    assertTrue(eligible >= 20, "only " + eligible + " rivers cross two or more countries");
+    assertTrue(eligible >= 10, "only " + eligible + " rivers cross three or more countries");
   }
 }
