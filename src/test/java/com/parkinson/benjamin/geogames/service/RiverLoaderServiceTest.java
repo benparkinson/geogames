@@ -34,6 +34,10 @@ class RiverLoaderServiceTest {
     for (River river : rivers) {
       assertThat(river.name()).as("name").isNotBlank();
       assertThat(river.additionalNames()).as("additionalNames of " + river.name()).isNotNull();
+      // A blank alias would match any guess that normalises to nothing, such as "!!!".
+      assertThat(river.additionalNames())
+          .as("additionalNames of " + river.name())
+          .allSatisfy(alias -> assertThat(alias).isNotBlank());
       assertThat(river.continent()).as("continent of " + river.name()).isNotBlank();
       assertThat(river.geoData().geometry().type())
           .as("geometry of " + river.name())

@@ -8,7 +8,7 @@
     "continent": "Africa"
   },
   "Danube": {
-    "names": [""],
+    "names": [],
     "continent": "Europe"
   },
   "Dnieper": {
@@ -44,7 +44,7 @@
     "continent": "Africa"
   },
   "Rhine": {
-    "names": [""],
+    "names": [],
     "continent": "Europe"
   },
   "Rhone": {
@@ -56,7 +56,7 @@
     "continent": "North America"
   },
   "Volga": {
-    "names": [""],
+    "names": [],
     "continent": "Europe"
   },
   "Yangtze": {
