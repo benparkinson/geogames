@@ -135,7 +135,7 @@ class GameApiIntegrationTest {
             .getContentAsString();
 
     List<String> names = JsonPath.read(body, "$[*].name");
-    assertThat(names).hasSize(255).isSorted();
+    assertThat(names).hasSize(TestFixtures.EXPECTED_COUNTRY_COUNT).isSorted();
   }
 
   private void postGame(String body, int expectedStatus) throws Exception {

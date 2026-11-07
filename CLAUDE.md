@@ -23,6 +23,10 @@ Frontend (`client/`):
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; the Leaflet-rendering map components are excluded). Tests are colocated with their source as `*.test.ts(x)` under `client/src`, and shared helpers (fixtures, a `fetch` router, a query-client wrapper) live in `client/src/test/`. Never put test files under `client/pages/`, because Next would treat them as routes. Test files are type-checked by `next build`, so import `describe`/`it`/`expect`/`vi` from `vitest` explicitly. Never render real Leaflet maps: mock the `*MapWrapper` modules. Testing Library only detects Jest's fake timers, so with `vi.useFakeTimers()` use `fireEvent` instead of `userEvent`. Components use TanStack Query through the provider in `pages/_app.tsx`, so tests wrap them in a `QueryClientProvider` (`renderWithClient` in `client/src/test/render.tsx`).
 - Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports.
 
+## Git workflow
+
+`main` is protected: changes must go through a pull request and the required `test` status check, so pushes to `main` are rejected. Never commit to or push `main`. Create a feature branch first, push that, and open a PR.
+
 ## Architecture
 
 **Build coupling.** The Maven `frontend-maven-plugin` installs Node 24 into `target/`, then runs `npm ci` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
@@ -50,9 +54,9 @@ Frontend (`client/`):
 **Frontend structure** (`client/src`). `api/` owns fetching (`fetchJson`), query keys, hooks and the one `JSON.parse` of `jsonBlob`, and components never call `fetch`. `games/common/` is the game-agnostic shell (round page, summary, `MapGame`, answer matching and guess reducer). Each `games/<name>/` folder holds one game: its module, component, model types and maps. `games/registry.ts` is the only list of games. `map/` holds the shared Leaflet helpers. The `QueryClientProvider` lives in `pages/_app.tsx`.
 
 **Geo data pipeline**:
-- `geodata/countries/` (repo root, **not** in the jar) holds the raw sources: `countries.geo.json` (Natural Earth) and `additionalNames.json` (aliases). `src/main/resources/data/rivers/` still holds the raw river data, loaded at runtime. `processRiverImport.sh` strips extra properties from raw river exports.
+- `geodata/countries/` (repo root, **not** in the jar) holds the raw sources: `countries.geo.json` (Natural Earth) `additionalNames.json` (aliases) and `excludedNames.json` (non-country features such as bases and reefs to skip). `src/main/resources/data/rivers/` still holds the raw river data, loaded at runtime. `processRiverImport.sh` strips extra properties from raw river exports.
 - `src/main/resources/processed/` holds files generated offline by standalone `main` programs, not part of the Spring app:
-  - `loaders/countries/CountryLoaderMain <countries.geo.json> <additionalNames.json> <outDir>` writes `processed/countries/*.json` (one `Country` per file). Editing `additionalNames.json` means re-running this.
+  - `loaders/countries/CountryLoaderMain <countries.geo.json> <additionalNames.json> <excludedNames.json> <outDir>` clears `*.json` in `outDir`, then writes `processed/countries/*.json` (one `Country` per file). Editing `additionalNames.json` or `excludedNames.json` means re-running this.
   - `loaders/tripoint/TripointLoaderMain <processedCountriesDir> <outFile>` scrapes Wikipedia's list of tripoints and writes the single file `processed/tripoints.json`, an array of `{coordinate, countryNames}`. Each Wikipedia coordinate is snapped by `TripointSnapper` to the vertex where the three countries' borders meet. A tripoint with no such vertex within 30 km is dropped. The tripoint count comes from the file, so there's nothing to update by hand.
 - At runtime `TripointFinderService` picks random definitions from `tripoints.json` and loads each country with `CountryLoaderService.loadCountryByName`, so the `jsonBlob` sent to the frontend still contains full country geometry.
 - Rivers are loaded at runtime by classpath glob and cached (`@Cacheable("rivers")`).

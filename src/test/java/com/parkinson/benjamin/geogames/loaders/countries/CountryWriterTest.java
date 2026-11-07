@@ -38,6 +38,20 @@ class CountryWriterTest {
   }
 
   @Test
+  void clearOutputDeletesJsonFilesOnly() throws IOException {
+    Files.writeString(directory.resolve("Old.json"), "{}");
+    Files.writeString(directory.resolve("notes.txt"), "keep");
+    Path sub = Files.createDirectory(directory.resolve("sub"));
+    Files.writeString(sub.resolve("Nested.json"), "{}");
+
+    new CountryWriter().clearOutput(directory);
+
+    assertThat(directory.resolve("Old.json")).doesNotExist();
+    assertThat(directory.resolve("notes.txt")).exists();
+    assertThat(sub.resolve("Nested.json")).exists();
+  }
+
+  @Test
   void outputRoundTripsThroughTheProcessedReader() throws IOException {
     List<Country> countries =
         List.of(country("Alpha", List.of("A")), country("Beta", List.of("B", "Bee")));
