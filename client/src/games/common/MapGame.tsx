@@ -86,7 +86,7 @@ function MapGame<Type>({
         answerCount={answerCount}
         found={foundAnswers}
         gaveUp={gaveUp}
-        allAnswers={gaveUp ? foundAnswers : []}
+        allAnswers={answers.map(a => a.name)}
       />
       <MapGameInput
         gameOver={gameOver}

@@ -151,7 +151,7 @@ describe("MapGame guessing", () => {
 });
 
 describe("MapGame giving up", () => {
-  it("reports GAVE_UP once and reveals every answer", async () => {
+  it("reports GAVE_UP once and reveals the answers that weren't found", async () => {
     const { submitAnswer } = renderGame();
 
     await reveal(userEvent.setup());
@@ -161,9 +161,24 @@ describe("MapGame giving up", () => {
     expect(screen.getByText("Answer revealed")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
-    expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Answers: 0 of 2 found" })).toBeInTheDocument();
     expect(screen.getByText("France")).toBeInTheDocument();
     expect(screen.getByText("Spain")).toBeInTheDocument();
+    expect(screen.getAllByText("(revealed)")).toHaveLength(2);
+  });
+
+  it("keeps a found answer and the wrong guesses, and reveals only the rest", async () => {
+    const user = userEvent.setup();
+    renderGame();
+
+    await guess(user, "Spain");
+    await guess(user, "Italy");
+    await reveal(user);
+
+    expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
+    expect(screen.getAllByText("(revealed)")).toHaveLength(1);
+    expect(screen.getByText("France")).toBeInTheDocument();
+    expect(screen.getByText("Italy")).toBeInTheDocument();
   });
 });
 
@@ -184,6 +199,7 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByText("Answer revealed")).toBeInTheDocument();
+    expect(screen.getAllByText("(revealed)")).toHaveLength(2);
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 });

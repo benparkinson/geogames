@@ -7,6 +7,8 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
   allAnswers: string[];
 }): React.JSX.Element {
   const label = `Answers: ${found.length} of ${answerCount} found`;
+  // After giving up, the slots after the found answers show the answers that weren't found.
+  const revealed = gaveUp ? allAnswers.filter(a => !found.includes(a)) : [];
 
   return (
     <div className="d-flex gap-2 flex-wrap mb-2" role="group" aria-label={label}>
@@ -18,12 +20,11 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
             </span>
           );
         }
-        // TODO: unreachable in practice. After "Reveal answer" the reducer marks every answer as found,
-        // so `found` already fills all the slots and the grey "revealed" style never shows.
-        if (gaveUp && allAnswers[i]) {
+        const revealedAnswer = revealed[i - found.length];
+        if (revealedAnswer) {
           return (
             <span key={i} className="slot--filled badge rounded-pill bg-secondary fs-6 fw-normal" title="Revealed">
-              {allAnswers[i]} <EyeFill aria-hidden="true" />
+              {revealedAnswer} <EyeFill aria-hidden="true" />
               <span className="visually-hidden"> (revealed)</span>
             </span>
           );

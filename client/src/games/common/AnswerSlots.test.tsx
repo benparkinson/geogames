@@ -39,4 +39,27 @@ describe("AnswerSlots", () => {
     expect(screen.getByText("Spain")).toBeInTheDocument();
     expect(screen.getAllByLabelText("Not found yet")).toHaveLength(1);
   });
+
+  it("reveals only the answers that weren't found, whatever order they were found in", () => {
+    render(
+      <AnswerSlots
+        answerCount={3}
+        found={["Italy"]}
+        gaveUp
+        allAnswers={["France", "Spain", "Italy"]}
+      />,
+    );
+
+    expect(screen.getAllByText("Italy")).toHaveLength(1);
+    expect(screen.getAllByText("(revealed)")).toHaveLength(2);
+    expect(screen.getByText("France")).toBeInTheDocument();
+    expect(screen.getByText("Spain")).toBeInTheDocument();
+  });
+
+  it("shows nothing as revealed before giving up", () => {
+    render(<AnswerSlots answerCount={2} found={[]} gaveUp={false} allAnswers={["France", "Spain"]} />);
+
+    expect(screen.queryByText("France")).not.toBeInTheDocument();
+    expect(screen.getAllByLabelText("Not found yet")).toHaveLength(2);
+  });
 });

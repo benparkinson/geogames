@@ -52,7 +52,11 @@ export function initialGuessState(answerState: AnswerState, answers: AnswerCandi
   if (answerState === UNANSWERED) {
     return { guesses: [], gaveUp: false, over: false, hintsUsed: 0 };
   }
-  return { guesses: allFound(answers), gaveUp: answerState === GAVE_UP, over: true, hintsUsed: 0 };
+  if (answerState === GAVE_UP) {
+    // The server doesn't keep the guesses, so every answer shows as revealed rather than found.
+    return { guesses: [], gaveUp: true, over: true, hintsUsed: 0 };
+  }
+  return { guesses: allFound(answers), gaveUp: false, over: true, hintsUsed: 0 };
 }
 
 export function guessReducer(state: GuessState, action: GuessAction, config: GuessConfig): GuessOutcome {
@@ -63,10 +67,9 @@ export function guessReducer(state: GuessState, action: GuessAction, config: Gue
       if (state.over) {
         return { state };
       }
-      // TODO: this replaces the guesses with every answer, so giving up marks all answers as found
-      // (see the unreachable "revealed" branch in AnswerSlots) and drops the wrong guesses list.
+      // Keep the guesses as they are: the answers not found yet are shown as revealed, not found.
       return {
-        state: { ...state, guesses: allFound(config.answers), gaveUp: true, over: true },
+        state: { ...state, gaveUp: true, over: true },
         finished: GAVE_UP,
       };
     case "hint":

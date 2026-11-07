@@ -39,6 +39,7 @@ describe("initialGuessState", () => {
 
     expect(state.over).toBe(true);
     expect(state.gaveUp).toBe(true);
+    expect(state.guesses).toEqual([]);
   });
 });
 
@@ -120,13 +121,14 @@ describe("guessReducer guesses", () => {
 });
 
 describe("guessReducer giving up", () => {
-  it("reveals every answer and finishes with GAVE_UP", () => {
-    const { state, finished } = guessReducer(guessAll(["Peru"]).state, { type: "giveUp" }, config);
+  it("finishes with GAVE_UP and keeps the guesses already made", () => {
+    const before = guessAll(["Peru", "Belgium"]).state;
+    const { state, finished } = guessReducer(before, { type: "giveUp" }, config);
 
     expect(finished).toBe("GAVE_UP");
     expect(state.gaveUp).toBe(true);
     expect(state.over).toBe(true);
-    expect(state.guesses.map((g) => g.answer)).toEqual(["Belgium", "Germany", "Netherlands"]);
+    expect(state.guesses).toEqual(before.guesses);
   });
 
   it("does nothing when the round is already over", () => {
