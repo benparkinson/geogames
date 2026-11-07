@@ -20,6 +20,11 @@ public class TripointComputer {
       Pattern.compile("^(\\d+)°(\\d+\\.?\\d*)?′?(\\d+\\.?\\d*)?″?([NSEW])$");
 
   public List<Tripoint> computeTripoints(List<Country> countries) throws IOException {
+    return computeTripoints(
+        countries, Jsoup.connect("http://en.wikipedia.org/wiki/List_of_tripoints").get());
+  }
+
+  List<Tripoint> computeTripoints(List<Country> countries, Document doc) {
     Map<String, Country> countriesByName = new HashMap<>();
     countries.forEach(
         country -> {
@@ -32,7 +37,6 @@ public class TripointComputer {
 
     List<Tripoint> tripoints = new ArrayList<>();
 
-    Document doc = Jsoup.connect("http://en.wikipedia.org/wiki/List_of_tripoints").get();
     doc.select("tr")
         .forEach(
             row -> {
@@ -79,7 +83,7 @@ public class TripointComputer {
     return tripoints.stream().filter(tripoint -> tripoint.countries().size() == 3).toList();
   }
 
-  private double convertToDecimalCoordinate(String dmsString) {
+  double convertToDecimalCoordinate(String dmsString) {
     Matcher matcher = decimalCoordPattern.matcher(dmsString);
 
     if (!matcher.find()) {

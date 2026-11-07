@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Hand-written tripoint table fixture</title></head>
+<body>
+<table>
+  <tbody>
+    <!-- header row: no links, skipped -->
+    <tr><th>Country 1</th><th>Country 2</th><th>Country 3</th><th>Coordinates</th></tr>
+
+    <!-- message box row: has a link but also .mbox-image, must be skipped -->
+    <tr>
+      <td class="mbox-image"><a href="/wiki/Warning">warning</a></td>
+      <td>This is a notice, not a tripoint.</td>
+    </tr>
+
+    <!-- valid row: three known countries by canonical name -->
+    <tr>
+      <td><span class="flagicon"></span><a href="/wiki/Alpha">Alpha</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Beta">Beta</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Gamma">Gamma</a></td>
+      <td><span class="geo-inline"><span class="latitude">47°35′N</span> <span class="longitude">9°33′E</span></span></td>
+    </tr>
+
+    <!-- valid row: Delta is only found through its alias, written in a different case -->
+    <tr>
+      <td><span class="flagicon"></span><a href="/wiki/Delta">DELTA-ALIAS</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Epsilon">epsilon</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Zeta">Zeta</a></td>
+      <td><span class="geo-inline"><span class="latitude">10°S</span> <span class="longitude">20°W</span></span></td>
+    </tr>
+
+    <!-- only two countries: filtered out -->
+    <tr>
+      <td><span class="flagicon"></span><a href="/wiki/Alpha">Alpha</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Beta">Beta</a></td>
+      <td><span class="geo-inline"><span class="latitude">1°N</span> <span class="longitude">1°E</span></span></td>
+    </tr>
+
+    <!-- one unknown country name: only two are recognised, so filtered out -->
+    <tr>
+      <td><span class="flagicon"></span><a href="/wiki/Alpha">Alpha</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Beta">Beta</a></td>
+      <td><span class="flagicon"></span><a href="/wiki/Nowhere">Nowhere</a></td>
+      <td><span class="geo-inline"><span class="latitude">2°N</span> <span class="longitude">2°E</span></span></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
