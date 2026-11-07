@@ -26,9 +26,24 @@ describe("LockedView", () => {
     render(<LockedView bounds={bounds} id="a" locked zoomOut={2} zoomIn={1} />);
 
     expect(fakeMap.getBoundsZoom).toHaveBeenCalledWith(bounds, false, L.point(48, 48));
-    expect(fakeMap.setMinZoom).toHaveBeenCalledWith(3);
-    expect(fakeMap.setMaxZoom).toHaveBeenCalledWith(6);
-    expect(fakeMap.setView).toHaveBeenCalledWith(bounds.getCenter(), 5);
+    expect(fakeMap.setMinZoom).toHaveBeenLastCalledWith(3);
+    expect(fakeMap.setMaxZoom).toHaveBeenLastCalledWith(6);
+    expect(fakeMap.setView).toHaveBeenCalledWith(bounds.getCenter(), 5, { animate: false });
+  });
+
+  it("moves to the bounds before narrowing the zoom, so Leaflet can't zoom around the old centre", () => {
+    fakeMap.getBoundsZoom.mockReturnValue(8);
+
+    render(<LockedView bounds={bounds} id="a" locked zoomOut={1} zoomIn={1} />);
+
+    const setViewOrder = fakeMap.setView.mock.invocationCallOrder[0];
+    const narrowMin = fakeMap.setMinZoom.mock.calls.findIndex(([z]) => z === 7);
+    const narrowMax = fakeMap.setMaxZoom.mock.calls.findIndex(([z]) => z === 9);
+    expect(fakeMap.setMinZoom.mock.invocationCallOrder[narrowMin]).toBeGreaterThan(setViewOrder);
+    expect(fakeMap.setMaxZoom.mock.invocationCallOrder[narrowMax]).toBeGreaterThan(setViewOrder);
+    // Before the move, the limits only ever widen to include the target zoom.
+    expect(fakeMap.setMinZoom.mock.calls[0][0]).toBeLessThanOrEqual(8);
+    expect(fakeMap.setMaxZoom.mock.calls[0][0]).toBeGreaterThanOrEqual(8);
   });
 
   it("turns off panning while locked", () => {

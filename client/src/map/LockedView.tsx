@@ -30,9 +30,16 @@ export function LockedView({
 
   useEffect(() => {
     const fit = map.getBoundsZoom(bounds, false, L.point(48, 48));
+    // Order matters. Narrowing the limits while the current zoom is outside them makes Leaflet
+    // start an animated zoom around the *current* centre, and Leaflet ignores any setView made
+    // while that animation runs, which strands the map at its initial [0, 0]. So widen the limits
+    // (which never moves the map), jump to the river without animating, then narrow the limits
+    // around a zoom that is already inside them.
+    map.setMinZoom(Math.min(fit - zoomOut, UNLOCKED_MIN_ZOOM));
+    map.setMaxZoom(Math.max(fit + zoomIn, UNLOCKED_MAX_ZOOM));
+    map.setView(bounds.getCenter(), fit, { animate: false });
     map.setMinZoom(fit - zoomOut);
     map.setMaxZoom(fit + zoomIn);
-    map.setView(bounds.getCenter(), fit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, id]);
 
