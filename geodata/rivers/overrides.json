@@ -1,0 +1,349 @@
+{
+  "Q584": {
+    "name": "Rhine",
+    "aliases": [],
+    "continent": "Europe",
+    "osmFile": "rhine.geo.json"
+  },
+  "Q602": {
+    "name": "Rhone",
+    "aliases": [
+      "Rhône"
+    ],
+    "continent": "Europe",
+    "osmFile": "rhone.geo.json"
+  },
+  "Q626": {
+    "name": "Volga",
+    "aliases": [],
+    "continent": "Europe",
+    "osmFile": "volga.geo.json"
+  },
+  "Q973": {
+    "continent": "Asia"
+  },
+  "Q1229": {
+    "continent": "Europe"
+  },
+  "Q1265": {
+    "exclude": true
+  },
+  "Q1497": {
+    "name": "Mississippi",
+    "aliases": [
+      "Mississippi River"
+    ],
+    "continent": "North America",
+    "osmFile": "mississippi.geo.json"
+  },
+  "Q1653": {
+    "name": "Danube",
+    "aliases": [],
+    "continent": "Europe",
+    "osmFile": "danube.geo.json"
+  },
+  "Q3392": {
+    "name": "Nile",
+    "aliases": [
+      "River Nile"
+    ],
+    "continent": "Africa",
+    "osmFile": "nile.geo.json"
+  },
+  "Q3503": {
+    "name": "Congo",
+    "aliases": [
+      "Congo River"
+    ],
+    "continent": "Africa",
+    "osmFile": "congo.geo.json"
+  },
+  "Q3542": {
+    "name": "Niger",
+    "aliases": [
+      "Niger River"
+    ],
+    "continent": "Africa",
+    "osmFile": "niger.geo.json"
+  },
+  "Q3783": {
+    "name": "Amazon",
+    "aliases": [
+      "Rio Amazonas"
+    ],
+    "continent": "South America",
+    "osmFile": "amazon.geo.json"
+  },
+  "Q5089": {
+    "name": "Ganges",
+    "aliases": [
+      "Ganga",
+      "Padma"
+    ],
+    "continent": "Asia",
+    "osmFile": "ganges.geo.json"
+  },
+  "Q5413": {
+    "name": "Yangtze",
+    "aliases": [
+      "Yangzi"
+    ],
+    "continent": "Asia",
+    "osmFile": "yangtze.geo.json"
+  },
+  "Q6862": {
+    "continent": "Asia"
+  },
+  "Q7348": {
+    "name": "Indus",
+    "aliases": [
+      "Sindhu"
+    ],
+    "continent": "Asia",
+    "osmFile": "indus.geo.json"
+  },
+  "Q7355": {
+    "name": "Yellow River",
+    "aliases": [
+      "Huang He",
+      "Yellow"
+    ],
+    "continent": "Asia",
+    "osmFile": "yellow.geo.json"
+  },
+  "Q8168": {
+    "continent": "Europe"
+  },
+  "Q8187": {
+    "continent": "Europe"
+  },
+  "Q8197": {
+    "continent": "Europe"
+  },
+  "Q8505": {
+    "removeAliases": [
+      "Tedzhen",
+      "Tedzhen river",
+      "Tejen river"
+    ]
+  },
+  "Q15243": {
+    "continent": "Europe"
+  },
+  "Q19682": {
+    "name": "Severn",
+    "addAliases": [
+      "River Severn"
+    ]
+  },
+  "Q19686": {
+    "name": "Thames",
+    "addAliases": [
+      "River Thames"
+    ]
+  },
+  "Q26390": {
+    "continent": "Asia"
+  },
+  "Q26428": {
+    "continent": "Asia"
+  },
+  "Q26433": {
+    "continent": "Asia"
+  },
+  "Q26439": {
+    "continent": "Asia"
+  },
+  "Q34589": {
+    "continent": "Asia"
+  },
+  "Q35591": {
+    "continent": "Asia"
+  },
+  "Q40855": {
+    "name": "Dnieper",
+    "aliases": [
+      "Dnipro"
+    ],
+    "continent": "Europe",
+    "osmFile": "dnieper.geo.json"
+  },
+  "Q41179": {
+    "name": "Mekong",
+    "aliases": [
+      "Mekong River"
+    ],
+    "continent": "Asia",
+    "osmFile": "mekong.geo.json"
+  },
+  "Q43106": {
+    "name": "Zambezi",
+    "aliases": [
+      "Zambeze",
+      "Zambesi"
+    ],
+    "continent": "Africa",
+    "osmFile": "zambezi.geo.json"
+  },
+  "Q45403": {
+    "removeAliases": [
+      "Sky river"
+    ]
+  },
+  "Q46841": {
+    "continent": "Asia"
+  },
+  "Q55499": {
+    "continent": "Asia"
+  },
+  "Q65383": {
+    "continent": "Europe"
+  },
+  "Q75745": {
+    "continent": "Asia"
+  },
+  "Q78707": {
+    "name": "Yenisei",
+    "aliases": [
+      "Yenisey",
+      "Enisei",
+      "Jenisej"
+    ],
+    "continent": "Asia",
+    "osmFile": "yenisei.geo.json"
+  },
+  "Q78861": {
+    "continent": "Asia"
+  },
+  "Q78879": {
+    "continent": "Asia"
+  },
+  "Q80240": {
+    "continent": "Asia"
+  },
+  "Q82207": {
+    "continent": "Asia"
+  },
+  "Q82308": {
+    "continent": "Europe"
+  },
+  "Q104437": {
+    "name": "Yukon River",
+    "aliases": [
+      "Yukon"
+    ],
+    "continent": "North America",
+    "osmFile": "yukon.geo.json"
+  },
+  "Q115456": {
+    "continent": "Asia"
+  },
+  "Q124653": {
+    "continent": "Asia"
+  },
+  "Q128102": {
+    "continent": "Asia"
+  },
+  "Q156557": {
+    "continent": "Asia"
+  },
+  "Q160636": {
+    "name": "Rio Grande",
+    "aliases": [
+      "Rio Bravo",
+      "Río Bravo",
+      "Río Bravo del Norte"
+    ],
+    "continent": "North America",
+    "osmFile": "riogrande.geo.json"
+  },
+  "Q162737": {
+    "continent": "Asia"
+  },
+  "Q172089": {
+    "continent": "Europe"
+  },
+  "Q179751": {
+    "continent": "Asia"
+  },
+  "Q183078": {
+    "name": "Murray River",
+    "aliases": [
+      "Murray"
+    ],
+    "continent": "Australia",
+    "osmFile": "murray.geo.json"
+  },
+  "Q191238": {
+    "continent": "Europe"
+  },
+  "Q191524": {
+    "continent": "Asia"
+  },
+  "Q191832": {
+    "continent": "Asia"
+  },
+  "Q192157": {
+    "continent": "Europe"
+  },
+  "Q192495": {
+    "continent": "Europe"
+  },
+  "Q192567": {
+    "continent": "Asia"
+  },
+  "Q192820": {
+    "name": "Shannon",
+    "addAliases": [
+      "River Shannon"
+    ]
+  },
+  "Q202796": {
+    "continent": "Europe"
+  },
+  "Q204347": {
+    "continent": "Europe"
+  },
+  "Q206694": {
+    "continent": "Asia"
+  },
+  "Q206850": {
+    "removeAliases": [
+      "Red",
+      "Yuan River"
+    ]
+  },
+  "Q207777": {
+    "continent": "Asia"
+  },
+  "Q209031": {
+    "continent": "Europe"
+  },
+  "Q209891": {
+    "continent": "Europe"
+  },
+  "Q211089": {
+    "continent": "Asia"
+  },
+  "Q217466": {
+    "continent": "Asia"
+  },
+  "Q257785": {
+    "continent": "Asia"
+  },
+  "Q272074": {
+    "aliases": [
+      "Snake"
+    ]
+  },
+  "Q483159": {
+    "continent": "Asia"
+  },
+  "Q4814791": {
+    "removeAliases": [
+      "Victoria Nile",
+      "Albert Nile",
+      "Mountain Nile"
+    ]
+  }
+}

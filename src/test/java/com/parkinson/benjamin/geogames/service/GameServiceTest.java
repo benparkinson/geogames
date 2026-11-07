@@ -114,7 +114,7 @@ class GameServiceTest {
     GeoData geoData =
         new GeoData(
             "Feature", new GeoProperties("River" + n), new GeoGeometry("MultiLineString", lines));
-    return new River("River" + n, List.of("Alias" + n), "Africa", geoData);
+    return new River("Q" + n, "River" + n, List.of("Alias" + n), "Africa", geoData);
   }
 
   private List<GameData> tripoints(int count) {

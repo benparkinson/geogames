@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Test;
 class RiverFinderServiceTest {
 
   private final List<River> rivers =
-      IntStream.range(0, 6).mapToObj(i -> new River("River" + i, List.of(), "Asia", null)).toList();
+      IntStream.range(0, 6)
+          .mapToObj(i -> new River("Q" + i, "River" + i, List.of(), "Asia", null))
+          .toList();
   private final RiverLoaderService loader = mock(RiverLoaderService.class);
   private final RiverFinderService service = new RiverFinderService(loader, new Random(3));
 

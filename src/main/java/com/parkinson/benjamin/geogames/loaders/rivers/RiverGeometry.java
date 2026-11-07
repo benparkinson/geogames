@@ -1,0 +1,112 @@
+package com.parkinson.benjamin.geogames.loaders.rivers;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+/** Simplifies and measures a river's lines. A line is a list of {lon, lat} points. */
+public final class RiverGeometry {
+
+  static final double START_TOLERANCE = 0.005;
+  static final double MAX_TOLERANCE = 0.16;
+  static final int MAX_POINTS = 600;
+  static final double MIN_LINE_KM = 5;
+  private static final double EARTH_RADIUS_KM = 6371.0088;
+
+  private RiverGeometry() {}
+
+  public static List<List<double[]>> simplify(List<List<double[]>> lines) {
+    double tolerance = START_TOLERANCE;
+    List<List<double[]>> result = simplifyAll(lines, tolerance);
+    while (pointCount(result) > MAX_POINTS && tolerance < MAX_TOLERANCE - 1e-9) {
+      tolerance *= 2;
+      result = simplifyAll(lines, tolerance);
+    }
+
+    result = dropShortLines(result);
+
+    // Safety net so the point cap always holds: drop the shortest lines until it does.
+    while (pointCount(result) > MAX_POINTS && result.size() > 1) {
+      List<double[]> shortest =
+          result.stream().min(Comparator.comparingDouble(RiverGeometry::lineKm)).get();
+      result = new ArrayList<>(result);
+      result.remove(shortest);
+    }
+    return round(result);
+  }
+
+  public static double lengthKm(List<List<double[]>> lines) {
+    return lines.stream().mapToDouble(RiverGeometry::lineKm).sum();
+  }
+
+  public static int pointCount(List<List<double[]>> lines) {
+    return lines.stream().mapToInt(List::size).sum();
+  }
+
+  static double lineKm(List<double[]> line) {
+    double km = 0;
+    for (int i = 1; i < line.size(); i++) {
+      km += haversineKm(line.get(i - 1), line.get(i));
+    }
+    return km;
+  }
+
+  static double haversineKm(double[] a, double[] b) {
+    double lat1 = Math.toRadians(a[1]);
+    double lat2 = Math.toRadians(b[1]);
+    double dLat = lat2 - lat1;
+    double dLon = Math.toRadians(b[0] - a[0]);
+    double h =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2)
+            + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
+  }
+
+  private static List<List<double[]>> simplifyAll(List<List<double[]>> lines, double tolerance) {
+    List<List<double[]>> result = new ArrayList<>();
+    for (List<double[]> line : lines) {
+      if (line.size() >= 2) {
+        result.add(DouglasPeucker.simplify(line, tolerance));
+      }
+    }
+    return result;
+  }
+
+  private static List<List<double[]>> dropShortLines(List<List<double[]>> lines) {
+    if (lines.isEmpty()) {
+      return lines;
+    }
+    List<double[]> longest =
+        lines.stream().max(Comparator.comparingDouble(RiverGeometry::lineKm)).get();
+    List<List<double[]>> result = new ArrayList<>();
+    for (List<double[]> line : lines) {
+      if (line == longest || lineKm(line) >= MIN_LINE_KM) {
+        result.add(line);
+      }
+    }
+    return result;
+  }
+
+  private static List<List<double[]>> round(List<List<double[]>> lines) {
+    List<List<double[]>> result = new ArrayList<>();
+    for (List<double[]> line : lines) {
+      List<double[]> rounded = new ArrayList<>();
+      for (double[] p : line) {
+        double[] r = {round4(p[0]), round4(p[1])};
+        if (rounded.isEmpty()
+            || rounded.get(rounded.size() - 1)[0] != r[0]
+            || rounded.get(rounded.size() - 1)[1] != r[1]) {
+          rounded.add(r);
+        }
+      }
+      if (rounded.size() >= 2) {
+        result.add(rounded);
+      }
+    }
+    return result;
+  }
+
+  private static double round4(double v) {
+    return Math.round(v * 10_000d) / 10_000d;
+  }
+}

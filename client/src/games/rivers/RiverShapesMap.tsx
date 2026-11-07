@@ -7,7 +7,7 @@ import { River } from "./model";
 
 function RiverShapesMap({ data: river, gaveUp, gameOver }: MapProps<River>): React.JSX.Element {
   const riverLine = (
-    <GeoJSON pathOptions={answerPathOptions(gaveUp)} data={river.geoData} key={river.name + (gaveUp ? "gaveUp" : "")} />
+    <GeoJSON pathOptions={answerPathOptions(gaveUp)} data={river.geoData} key={river.id + (gaveUp ? "gaveUp" : "")} />
   );
 
   return (
@@ -15,7 +15,7 @@ function RiverShapesMap({ data: river, gaveUp, gameOver }: MapProps<River>): Rea
       {gameOver && <TileLayer url={SATELLITE_TILE_URL} />}
 
       {riverLine}
-      <FitBounds data={river.geoData} id={river.name} />
+      <FitBounds data={river.geoData} id={river.id} />
       <MapResizer />
     </MapContainer>
   );

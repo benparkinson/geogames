@@ -45,6 +45,7 @@ export function makeTripointData(): TripointModel {
 
 export function makeRiverData(): River {
   return {
+    id: "Q1653",
     name: "Danube",
     additionalNames: ["Donau"],
     continent: "Europe",

@@ -1,0 +1,6897 @@
+{
+  "Q1010448" : {
+    "label" : "Burdekin River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1016767" : {
+    "label" : "Burnett River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1016839" : {
+    "label" : "Burnside River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1032656" : {
+    "label" : "Rapel River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1034421" : {
+    "label" : "Cape Fear River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q10362010" : {
+    "label" : "Indaiá River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q10362057" : {
+    "label" : "Itiquira River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1038418" : {
+    "label" : "Jinsha River",
+    "sitelinks" : 21,
+    "aliases" : [ "Chin-sha Chiang", "Chin-sha River", "Jinsha Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1043774" : {
+    "label" : "Mei River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q104437" : {
+    "label" : "Yukon River",
+    "sitelinks" : 94,
+    "aliases" : [ "Yukon" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1045185" : {
+    "label" : "Jialing River",
+    "sitelinks" : 29,
+    "aliases" : [ "Jialing Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1046685" : {
+    "label" : "Gan River",
+    "sitelinks" : 35,
+    "aliases" : [ "Gan Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1048219" : {
+    "label" : "Waikato River",
+    "sitelinks" : 45,
+    "aliases" : [ "Waikato" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1048696" : {
+    "label" : "Waiau River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1052530" : {
+    "label" : "Cedar River",
+    "sitelinks" : 11,
+    "aliases" : [ "Red Cedar", "Cedar River Valley", "Cedar Valley", "Red Cedar River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1054325" : {
+    "label" : "St. Clair River",
+    "sitelinks" : 35,
+    "aliases" : [ "St. Clair", "Riviere Sainte-Claire", "Rivière Sainte-Claire", "Saint Clair River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1057961" : {
+    "label" : "Ceyhan River",
+    "sitelinks" : 30,
+    "aliases" : [ "Ceyhan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1059228" : {
+    "label" : "Kwilu River",
+    "sitelinks" : 30,
+    "aliases" : [ "Kouilou", "Kuilu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1060631" : {
+    "label" : "Chambal River",
+    "sitelinks" : 47,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1061515" : {
+    "label" : "Ishikari River",
+    "sitelinks" : 38,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1063190" : {
+    "label" : "Yuan River",
+    "sitelinks" : 28,
+    "aliases" : [ "Yuanjiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1065046" : {
+    "label" : "Macquarie River",
+    "sitelinks" : 12,
+    "aliases" : [ "tinamirakuna", "Tinamirakuna / Macquarie River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1065265" : {
+    "label" : "Vym",
+    "sitelinks" : 29,
+    "aliases" : [ "Emva", "Yemva" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1068297" : {
+    "label" : "",
+    "sitelinks" : 29,
+    "aliases" : [ "Chatahouchie River", "Chattahoochee River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1071554" : {
+    "label" : "Chi River",
+    "sitelinks" : 21,
+    "aliases" : [ "Mae Nam Chi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1074381" : {
+    "label" : "Chinko River",
+    "sitelinks" : 10,
+    "aliases" : [ "Chinko" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1074898" : {
+    "label" : "Chara",
+    "sitelinks" : 28,
+    "aliases" : [ "Chara River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1074914" : {
+    "label" : "Uchur River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1075393" : {
+    "label" : "Dadu River",
+    "sitelinks" : 30,
+    "aliases" : [ "Dajin River", "Daduhe River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1076530" : {
+    "label" : "Sió",
+    "sitelinks" : 23,
+    "aliases" : [ "Sio" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q10856094" : {
+    "label" : "Namhan River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1089460" : {
+    "label" : "Chumar River",
+    "sitelinks" : 9,
+    "aliases" : [ "Qumar River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q10944123" : {
+    "label" : "Ziqu River",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q10965" : {
+    "label" : "Ebro",
+    "sitelinks" : 91,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q10990705" : {
+    "label" : "Olifants River",
+    "sitelinks" : 17,
+    "aliases" : [ "Cape Olifants Rivier", "Olifants River (Western Cape)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1099551" : {
+    "label" : "Severnaya Sosva",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q11047093" : {
+    "label" : "Lúrio River",
+    "sitelinks" : 14,
+    "aliases" : [ "Lúrio" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1106820" : {
+    "label" : "Wami River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1111329" : {
+    "label" : "Oloy River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1112393" : {
+    "label" : "Bahr el Zeraf",
+    "sitelinks" : 11,
+    "aliases" : [ "Phou", "Zeraf River", "Bahr ez Zeraf", "Giraffe River", "Phow" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1113020" : {
+    "label" : "Colville River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q11143225" : {
+    "label" : "Quan River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1120933" : {
+    "label" : "Kibali",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1129218" : {
+    "label" : "Balsas River",
+    "sitelinks" : 28,
+    "aliases" : [ "Atoyac River", "Mezcala River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1129810" : {
+    "label" : "Sebou River",
+    "sitelinks" : 37,
+    "aliases" : [ "Asif n Gigu", "Asif n Sbu", "Guigou River", "Sebou" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1130713" : {
+    "label" : "Kem River",
+    "sitelinks" : 33,
+    "aliases" : [ "Kem", "Kemj" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1131444" : {
+    "label" : "Copper River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1131514" : {
+    "label" : "Coppermine River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1131680" : {
+    "label" : "Xar Moron River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1136502" : {
+    "label" : "Minnesota River",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1137387" : {
+    "label" : "",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1138427" : {
+    "label" : "Selemdzha River",
+    "sitelinks" : 31,
+    "aliases" : [ "Selemdzha" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1139404" : {
+    "label" : "Msta",
+    "sitelinks" : 34,
+    "aliases" : [ "Msta River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1139466" : {
+    "label" : "Cree River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1139679" : {
+    "label" : "Usumacinta River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1142842" : {
+    "label" : "Omolon",
+    "sitelinks" : 35,
+    "aliases" : [ "Omolon River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1143331" : {
+    "label" : "Cuito River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1143718" : {
+    "label" : "Cumberland River",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1143852" : {
+    "label" : "Lek",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1146608" : {
+    "label" : "Moulouya River",
+    "sitelinks" : 46,
+    "aliases" : [ "Moulaya", "Moulouya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1146770" : {
+    "label" : "Cuyuni River",
+    "sitelinks" : 20,
+    "aliases" : [ "Manuel Alejandro Linares Ponce" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1147118" : {
+    "label" : "Sheksna",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1147392" : {
+    "label" : "Fox River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1149171" : {
+    "label" : "Kola",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1151727" : {
+    "label" : "Yongding River",
+    "sitelinks" : 29,
+    "aliases" : [ "Wuding River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1152951" : {
+    "label" : "Nederrijn",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q115456" : {
+    "label" : "Shilka",
+    "sitelinks" : 54,
+    "aliases" : [ "Shilka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1154778" : {
+    "label" : "Fen River",
+    "sitelinks" : 21,
+    "aliases" : [ "Fen He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1161204" : {
+    "label" : "Río San Juan",
+    "sitelinks" : 36,
+    "aliases" : [ "San Juan River", "El Desaguadero", "Rio San Juan", "River San Juan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1161673" : {
+    "label" : "Salinas River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1162365" : {
+    "label" : "Salado River",
+    "sitelinks" : 37,
+    "aliases" : [ "Río Salado" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1162389" : {
+    "label" : "Guárico River",
+    "sitelinks" : 15,
+    "aliases" : [ "Guarico River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America", "North America" ]
+  },
+  "Q1164945" : {
+    "label" : "Nipigon River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1165761" : {
+    "label" : "Branco River",
+    "sitelinks" : 33,
+    "aliases" : [ "Rio Branco", "White River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1167772" : {
+    "label" : "Saint Paul River",
+    "sitelinks" : 16,
+    "aliases" : [ "Diani River", "Niandi River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q117526" : {
+    "label" : "Juruá River",
+    "sitelinks" : 51,
+    "aliases" : [ "Rio Jurua", "Rio Juruá", "Río Yuruá" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q117615" : {
+    "label" : "Mamoré River",
+    "sitelinks" : 50,
+    "aliases" : [ "Mamore River", "Rio Mamoré" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q118251" : {
+    "label" : "Madeira River",
+    "sitelinks" : 81,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1183037" : {
+    "label" : "Taquari River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q118771" : {
+    "label" : "Rio Negro",
+    "sitelinks" : 82,
+    "aliases" : [ "Negro River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q118850" : {
+    "label" : "Chao Phraya River",
+    "sitelinks" : 76,
+    "aliases" : [ "Mae Nam Chao Phraya", "Maenam Chao Praya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1191116" : {
+    "label" : "Voronya",
+    "sitelinks" : 23,
+    "aliases" : [ "Voronya River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1192771" : {
+    "label" : "Tuo River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1193523" : {
+    "label" : "Luan River",
+    "sitelinks" : 22,
+    "aliases" : [ "Luan He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1194112" : {
+    "label" : "Mae Klong",
+    "sitelinks" : 25,
+    "aliases" : [ "Mae Nam Mae Klong" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1199792" : {
+    "label" : "Yobe River",
+    "sitelinks" : 27,
+    "aliases" : [ "Komadugu Yobe", "Komadougou Yobe", "Komadougou Yobé" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1208580" : {
+    "label" : "Yi River",
+    "sitelinks" : 13,
+    "aliases" : [ "Yi He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q12282935" : {
+    "label" : "Keele River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1229" : {
+    "label" : "Don",
+    "sitelinks" : 109,
+    "aliases" : [ "Tanais", "Don River", "River Don", "Tanaïs" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1231996" : {
+    "label" : "Dja River",
+    "sitelinks" : 26,
+    "aliases" : [ "Ngoko River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q123317" : {
+    "label" : "Macintyre River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1239783" : {
+    "label" : "Severn River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1241570" : {
+    "label" : "Donjek River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1241991" : {
+    "label" : "Albany River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q124653" : {
+    "label" : "Tobol",
+    "sitelinks" : 60,
+    "aliases" : [ "Tobol River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1250532" : {
+    "label" : "Sanaga",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1252126" : {
+    "label" : "Ráckeve-Soroksár Danube",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1256528" : {
+    "label" : "Black Volta",
+    "sitelinks" : 37,
+    "aliases" : [ "Black Volta River", "Mouhoun River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1259188" : {
+    "label" : "White Volta",
+    "sitelinks" : 40,
+    "aliases" : [ "Nakambé" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1261515" : {
+    "label" : "Iriri River",
+    "sitelinks" : 27,
+    "aliases" : [ "Rio Iriri" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q126153" : {
+    "label" : "Rivière Arnaud",
+    "sitelinks" : 11,
+    "aliases" : [ "Riviere Arnaud" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1264793" : {
+    "label" : "Dulgalakh River",
+    "sitelinks" : 20,
+    "aliases" : [ "Dulgalakh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1265" : {
+    "label" : "Colorado River",
+    "sitelinks" : 100,
+    "aliases" : [ "Rio Grande De Buena Esperanza", "Rio Grande de los Cosninas", "Rio Grande de los Martyres", "Seedekeeden", "Seeds Keedee", "Seeds Keeden", "Seeds Keeder", "Seeds-ke-Agie", "Seedskeedee Agie", "Seedskeeden", "Seetes-Ker-Der", "Green River", "North Fork", "Big River", "Grand River", "Blue River", "Rio de los Martires", "Rio Colorado", "Ahan Yava Kothickwa", "Ancon de San Andres", "Bunkara River", "Buqui Acqumuri", "Canon of the Colorado River", "El Rio de Buena Guia", "Gritetho", "Hah Weal Asientic", "Hahweel", "Javill", "Mar Bermejo", "Nah Oon Kara", "North Fork Colorado River", "North Fork of Grand River", "Pa-na-weap", "Packet-to", "Pagah", "Pocket-to", "Red River of California", "Red River of the West", "Rio Buena Guia", "Rio Colorado del Norte", "Rio Colorado Del Norte", "Rio Cosnina", "Rio de Buena Guia", "Rio del Norta", "Rio del Norte", "Rio Del Norte", "Rio del Tizon", "Rio Del Tizon", "Rio Grande de Buena Esperanza" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1266978" : {
+    "label" : "Ozhogina River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q126822" : {
+    "label" : "Olt River",
+    "sitelinks" : 56,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q12722938" : {
+    "label" : "Borcea branch",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q127892" : {
+    "label" : "Paraná River",
+    "sitelinks" : 89,
+    "aliases" : [ "Parana", "Parana River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q128102" : {
+    "label" : "Irtysh",
+    "sitelinks" : 96,
+    "aliases" : [ "Irtish", "Ertix R.", "Ertix River", "Irtish R.", "Irtish River", "Irtysh R.", "Irtysh River", "R. Ertix", "R. Irtish", "R. Irtysh", "River Ertix", "River Irtish", "River Irtysh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q128350" : {
+    "label" : "Lukuga River",
+    "sitelinks" : 35,
+    "aliases" : [ "Lukuga" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1288223" : {
+    "label" : "Mangoky River",
+    "sitelinks" : 30,
+    "aliases" : [ "Mangoky" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1288341" : {
+    "label" : "Miranda River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1293972" : {
+    "label" : "Luza",
+    "sitelinks" : 28,
+    "aliases" : [ "Luz", "Luza River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1295629" : {
+    "label" : "Suda",
+    "sitelinks" : 22,
+    "aliases" : [ "Suda River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q130892" : {
+    "label" : "South Platte River",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q131071" : {
+    "label" : "Willamette River",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q131210" : {
+    "label" : "Dniester",
+    "sitelinks" : 105,
+    "aliases" : [ "Dnister River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q131574" : {
+    "label" : "Vltava",
+    "sitelinks" : 87,
+    "aliases" : [ "Veltava" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q131792" : {
+    "label" : "Orinoco River",
+    "sitelinks" : 101,
+    "aliases" : [ "Orinoco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q13203321" : {
+    "label" : "Bolshoy Yugan",
+    "sitelinks" : 30,
+    "aliases" : [ "Bol'shoy Yugan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1321316" : {
+    "label" : "Lachlan River",
+    "sitelinks" : 25,
+    "aliases" : [ "Calare", "Galiyarr", "Kalare" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1321671" : {
+    "label" : "Luangwa River",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1326653" : {
+    "label" : "Corumbá River",
+    "sitelinks" : 10,
+    "aliases" : [ "Corumba River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q132726" : {
+    "label" : "Yamuna",
+    "sitelinks" : 100,
+    "aliases" : [ "Jumna", "Jamna", "Jumna river", "Yamuna River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1329599" : {
+    "label" : "Kokemäenjoki",
+    "sitelinks" : 28,
+    "aliases" : [ "Kokemäki River", "Kumo älv" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1333747" : {
+    "label" : "Holston River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1334522" : {
+    "label" : "Betwa River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q133476" : {
+    "label" : "Kamchatka River",
+    "sitelinks" : 48,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q13359982" : {
+    "label" : "Daly River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1338024" : {
+    "label" : "Klarälven",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1341908" : {
+    "label" : "Tuloma",
+    "sitelinks" : 26,
+    "aliases" : [ "Tuloma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q134350" : {
+    "label" : "Tisza",
+    "sitelinks" : 88,
+    "aliases" : [ "Tisa", "Theiss" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1344617" : {
+    "label" : "Chilia branch",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1345896" : {
+    "label" : "Mohawk River",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1346148" : {
+    "label" : "Motagua River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1347142" : {
+    "label" : "Tyung",
+    "sitelinks" : 25,
+    "aliases" : [ "Tyung River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q134750" : {
+    "label" : "St. Lawrence River",
+    "sitelinks" : 104,
+    "aliases" : [ "St. Lawrence", "Fleuve Saint-Laurent", "Saint Lawrence River", "St Lawrence River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1349924" : {
+    "label" : "Ventuari River",
+    "sitelinks" : 19,
+    "aliases" : [ "Río Ventuari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q135477" : {
+    "label" : "Chari River",
+    "sitelinks" : 64,
+    "aliases" : [ "Shari River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1356561" : {
+    "label" : "Pecos River",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1361278" : {
+    "label" : "Humboldt River",
+    "sitelinks" : 24,
+    "aliases" : [ "Buenaventura River", "Ogdens River", "Barren River", "Bishop Creek", "Bishops Creek", "East Fork Humboldt River", "Fremonts Creek", "Humbold River", "Lower Bishop Creek", "Marias River", "Marys River", "Pauls River", "Swampy River", "Unknown River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1363972" : {
+    "label" : "Atrato River",
+    "sitelinks" : 32,
+    "aliases" : [ "Atrato" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1364584" : {
+    "label" : "River Ness",
+    "sitelinks" : 32,
+    "aliases" : [ "Abhainn Nis", "Uisge Nis" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1367638" : {
+    "label" : "Kansas River",
+    "sitelinks" : 39,
+    "aliases" : [ "Kaw River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1369002" : {
+    "label" : "Maroni",
+    "sitelinks" : 31,
+    "aliases" : [ "Maroni Creek", "Marowijne river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America", "Europe" ]
+  },
+  "Q1369180" : {
+    "label" : "Sulina branch",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q13696" : {
+    "label" : "Adige",
+    "sitelinks" : 78,
+    "aliases" : [ "Adige River", "Etsch", "Atesis" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q13712" : {
+    "label" : "Tiber",
+    "sitelinks" : 104,
+    "aliases" : [ "Tevere", "Rumon", "Tiberis" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q138491" : {
+    "label" : "Jubba River",
+    "sitelinks" : 52,
+    "aliases" : [ "Juba", "Webi Jubba" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1393885" : {
+    "label" : "Hāwea River",
+    "sitelinks" : 5,
+    "aliases" : [ "Hawea River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1399312" : {
+    "label" : "Feather River",
+    "sitelinks" : 19,
+    "aliases" : [ "Río de las plumas" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1400022" : {
+    "label" : "Winnipeg River",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1410160" : {
+    "label" : "Skellefte River",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1413605" : {
+    "label" : "Great Kei River",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1416521" : {
+    "label" : "Xiliao River",
+    "sitelinks" : 16,
+    "aliases" : [ "West Liao River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1418174" : {
+    "label" : "Son River",
+    "sitelinks" : 36,
+    "aliases" : [ "Soan River", "Sone River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1419084" : {
+    "label" : "Parnaíba River",
+    "sitelinks" : 35,
+    "aliases" : [ "Parnaiba River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q141915" : {
+    "label" : "Shebelle River",
+    "sitelinks" : 47,
+    "aliases" : [ "Webi Shabeelle" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1419861" : {
+    "label" : "Tsiribihina River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1421409" : {
+    "label" : "Fitzroy River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1421418" : {
+    "label" : "Fitzroy River",
+    "sitelinks" : 19,
+    "aliases" : [ "Mardoowarra" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q142148" : {
+    "label" : "São Francisco River",
+    "sitelinks" : 75,
+    "aliases" : [ "Rio São Francisco do Norte", "São Francisco", "Rio São Francisco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q142604" : {
+    "label" : "Beni River",
+    "sitelinks" : 46,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q14290" : {
+    "label" : "Vaupés River",
+    "sitelinks" : 27,
+    "aliases" : [ "Vaupes River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q14294" : {
+    "label" : "Tagus",
+    "sitelinks" : 102,
+    "aliases" : [ "Tagus", "Tejo River", "Tejo", "Tajo", "Tagus River", "Tajo River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14299" : {
+    "label" : "Douro",
+    "sitelinks" : 89,
+    "aliases" : [ "Douro River", "Duero", "Duero River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14305" : {
+    "label" : "Guadiana",
+    "sitelinks" : 68,
+    "aliases" : [ "Guadiana River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14309" : {
+    "label" : "Guadalquivir",
+    "sitelinks" : 80,
+    "aliases" : [ "Baetis river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1430986" : {
+    "label" : "Sefid Rud",
+    "sitelinks" : 31,
+    "aliases" : [ "Amardos", "Safid River", "Safid Rud", "Sefid River", "Sefīd-Rūd", "Šāhrud" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1431174" : {
+    "label" : "Unzha",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1431323" : {
+    "label" : "Kennebec River",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1436100" : {
+    "label" : "Aripuanã River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q14366" : {
+    "label" : "Ticino",
+    "sitelinks" : 63,
+    "aliases" : [ "Ticino river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14369" : {
+    "label" : "Inn",
+    "sitelinks" : 80,
+    "aliases" : [ "Inn river", "Inn River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14372" : {
+    "label" : "Doubs",
+    "sitelinks" : 51,
+    "aliases" : [ "Doubs river", "Doubs River", "Le Doubs" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q143762" : {
+    "label" : "Delaware River",
+    "sitelinks" : 69,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q14383" : {
+    "label" : "Sava",
+    "sitelinks" : 83,
+    "aliases" : [ "Save" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14506269" : {
+    "label" : "Rivière Bell",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q14554" : {
+    "label" : "Minho River",
+    "sitelinks" : 56,
+    "aliases" : [ "Rio Minho", "Minho", "Río Miño" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1455933" : {
+    "label" : "Mun River",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1465920" : {
+    "label" : "Bolshoy Anyuy",
+    "sitelinks" : 22,
+    "aliases" : [ "Bol'shoy Anyuy" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1468689" : {
+    "label" : "Coco River",
+    "sitelinks" : 33,
+    "aliases" : [ "Segovia River", "Wangki River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1469" : {
+    "label" : "Loire",
+    "sitelinks" : 108,
+    "aliases" : [ "Loire River", "River Loire" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q14707960" : {
+    "label" : "Haw River",
+    "sitelinks" : 7,
+    "aliases" : [ "Hau River", "Saxapahaw" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1470945" : {
+    "label" : "Limay River",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1471" : {
+    "label" : "Seine",
+    "sitelinks" : 131,
+    "aliases" : [ "river Seine", "Seine River", "the Seine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1472009" : {
+    "label" : "Neuquén River",
+    "sitelinks" : 26,
+    "aliases" : [ "Neuquen River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1472376" : {
+    "label" : "Karkheh River",
+    "sitelinks" : 31,
+    "aliases" : [ "Kerkheh", "Rud-e Karḵeh", "Rūdkhāneh-ye Karkheh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1474782" : {
+    "label" : "Uda",
+    "sitelinks" : 20,
+    "aliases" : [ "Uda River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q14764" : {
+    "label" : "Esla",
+    "sitelinks" : 31,
+    "aliases" : [ "river Esla" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1478566" : {
+    "label" : "Santa Cruz River",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1479580" : {
+    "label" : "Sartang River",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1480564" : {
+    "label" : "Tambo River",
+    "sitelinks" : 24,
+    "aliases" : [ "Río Tambo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1490262" : {
+    "label" : "Whangaehu River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q14922567" : {
+    "label" : "Hurunui River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1497" : {
+    "label" : "Mississippi River",
+    "sitelinks" : 180,
+    "aliases" : [ "The Mississippi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1506343" : {
+    "label" : "Motala ström",
+    "sitelinks" : 25,
+    "aliases" : [ "Motala Ström" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1507416" : {
+    "label" : "Saint Croix River",
+    "sitelinks" : 16,
+    "aliases" : [ "St. Croix River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1510326" : {
+    "label" : "Waihou River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1511505" : {
+    "label" : "Little Yenisey",
+    "sitelinks" : 31,
+    "aliases" : [ "Little Yenisei", "Little Yenisei River", "Maly Yenisey", "Malyj Enisej", "Shishged Gol", "Shishged River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1511554" : {
+    "label" : "Lempa River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1514693" : {
+    "label" : "Malagarasi River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1515792" : {
+    "label" : "Wu River",
+    "sitelinks" : 27,
+    "aliases" : [ "Wu Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1518007" : {
+    "label" : "Mahaweli River",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q151858" : {
+    "label" : "Luapula River",
+    "sitelinks" : 32,
+    "aliases" : [ "Lwapula" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1519602" : {
+    "label" : "Grande River",
+    "sitelinks" : 28,
+    "aliases" : [ "Rio Grande" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1520212" : {
+    "label" : "Ōreti River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1520726" : {
+    "label" : "Yadkin River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q15243" : {
+    "label" : "Volkhov",
+    "sitelinks" : 53,
+    "aliases" : [ "Volkhov River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q15262256" : {
+    "label" : "Ngaruroro River",
+    "sitelinks" : 8,
+    "aliases" : [ "Ngaruroro Moko-tū-ā-raro ki Rangatira" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q15265425" : {
+    "label" : "river Pardo",
+    "sitelinks" : 8,
+    "aliases" : [ "Pardo River", "Rio Pardo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q15277375" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q1529669" : {
+    "label" : "White River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1533889" : {
+    "label" : "Gods River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1535066" : {
+    "label" : "South Nahanni River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1535123" : {
+    "label" : "Waimakariri River",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1535828" : {
+    "label" : "Sassandra River",
+    "sitelinks" : 31,
+    "aliases" : [ "Sassandra" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1536880" : {
+    "label" : "Kondoma",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1538813" : {
+    "label" : "Ulan Moron",
+    "sitelinks" : 13,
+    "aliases" : [ "Ulaan Moron", "Mar Chu", "Mar Qu", "Marqu", "T'o-t'o Ho", "T'uo-t'uo Ho", "To-to Ho", "Togtog Chu", "Togtog Qu", "Togtogqu", "Tuo Tuo", "Tuo Tuo R.", "Tuo Tuo River", "Tuo-tuo Ho", "Tuotuo He", "Tuotuo R.", "Tuotuo River", "Ulaan Mörön", "Ulan-muren", "Wulanmulun", "Wulanmulun R.", "Wulanmulun River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1540063" : {
+    "label" : "Victoria River",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1542610" : {
+    "label" : "James River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1542855" : {
+    "label" : "Grand River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1544156" : {
+    "label" : "Deseado River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1544834" : {
+    "label" : "Kentucky River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1546166" : {
+    "label" : "Grey River / Māwheranui",
+    "sitelinks" : 9,
+    "aliases" : [ "Grey River", "Grey River/Mawheranui", "Grey River/Mawheraui", "Māwheranui" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1546553" : {
+    "label" : "Koyukuk River",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1547693" : {
+    "label" : "Groundhog River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1548669" : {
+    "label" : "Great Bear River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1548748" : {
+    "label" : "Bolshoy Yenisei",
+    "sitelinks" : 28,
+    "aliases" : [ "Bol'shoj Enisej" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1553790" : {
+    "label" : "Miramichi River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1557811" : {
+    "label" : "Gwayi River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1559088" : {
+    "label" : "Mackenzie River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q156032" : {
+    "label" : "Red River",
+    "sitelinks" : 44,
+    "aliases" : [ "Red River of the South" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q156054" : {
+    "label" : "Tocantins River",
+    "sitelinks" : 72,
+    "aliases" : [ "Tocantins", "Rio Tocantins" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q156237" : {
+    "label" : "Western Bug",
+    "sitelinks" : 69,
+    "aliases" : [ "Bug River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q156557" : {
+    "label" : "Kura River",
+    "sitelinks" : 81,
+    "aliases" : [ "Kür", "Kura Nehri", "Mtkvari", "Kür çayı" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1569192" : {
+    "label" : "Sagavanirktok River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1569231" : {
+    "label" : "Nanpan River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q157042" : {
+    "label" : "Pripyat River",
+    "sitelinks" : 67,
+    "aliases" : [ "Pripiat River", "Prypiać", "Prypiać River", "Prypiat River", "Prypyat River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1584933" : {
+    "label" : "Roanoke River",
+    "sitelinks" : 26,
+    "aliases" : [ "Staunton River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q15890775" : {
+    "label" : "Nemor River",
+    "sitelinks" : 7,
+    "aliases" : [ "Nemor He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q15907862" : {
+    "label" : "Wuding River",
+    "sitelinks" : 8,
+    "aliases" : [ "Wuding He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1595409" : {
+    "label" : "Muskingum River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q15954437" : {
+    "label" : "Matsang Tsangpo",
+    "sitelinks" : 4,
+    "aliases" : [ "Damqog Zangbo", "Maquan River", "Martsang Tsangpo", "Tamchok Khanbap", "Matsang Tsangpo River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q160636" : {
+    "label" : "Rio Grande",
+    "sitelinks" : 91,
+    "aliases" : [ "Rio Bravo", "Río Grande", "Río Bravo", "Rio Bravo del Norte", "Río Bravo del Norte", "Rio Grande River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q160819" : {
+    "label" : "Gambia River",
+    "sitelinks" : 83,
+    "aliases" : [ "River Gambia", "River Gambra" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1610446" : {
+    "label" : "Lobaye River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1619907" : {
+    "label" : "Osage River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q162737" : {
+    "label" : "Angara",
+    "sitelinks" : 84,
+    "aliases" : [ "Angara River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1630635" : {
+    "label" : "Popigay River",
+    "sitelinks" : 21,
+    "aliases" : [ "Popigay" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1632022" : {
+    "label" : "South Esk River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1633955" : {
+    "label" : "Lerma River",
+    "sitelinks" : 19,
+    "aliases" : [ "Lerma" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1637839" : {
+    "label" : "Kouilou-Niari River",
+    "sitelinks" : 23,
+    "aliases" : [ "Kouilou-Niari", "Kwil-Niari", "Kwila-Niari", "Kwilu-Niari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1644" : {
+    "label" : "Elbe",
+    "sitelinks" : 122,
+    "aliases" : [ "Labe", "Elba", "Łaba", "Łobjo", "Elbe River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1644776" : {
+    "label" : "Culuene River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1648" : {
+    "label" : "Ems",
+    "sitelinks" : 60,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q164993" : {
+    "label" : "Kabompo River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1650" : {
+    "label" : "Weser",
+    "sitelinks" : 73,
+    "aliases" : [ "Werser" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1650057" : {
+    "label" : "Ivindo River",
+    "sitelinks" : 20,
+    "aliases" : [ "Ivindo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1653" : {
+    "label" : "Danube",
+    "sitelinks" : 200,
+    "aliases" : [ "Donau", "Danube River", "River Danube" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q16566821" : {
+    "label" : "Ituri",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1660903" : {
+    "label" : "Inangahua River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1661830" : {
+    "label" : "Indravati River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1667" : {
+    "label" : "Moselle",
+    "sitelinks" : 88,
+    "aliases" : [ "Mosel", "Mosel River", "Mosella River", "Moselle River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1668781" : {
+    "label" : "Sfântu Gheorghe branch",
+    "sitelinks" : 16,
+    "aliases" : [ "Brațul Sfântul Gheorghe", "Sfantu Gheorghe branch" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1669474" : {
+    "label" : "Rivière Nottaway",
+    "sitelinks" : 18,
+    "aliases" : [ "Riviere Nottaway" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q166966" : {
+    "label" : "Shatt al-Arab",
+    "sitelinks" : 78,
+    "aliases" : [ "Arvand", "Arvand Rud" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q16699" : {
+    "label" : "Záncara",
+    "sitelinks" : 17,
+    "aliases" : [ "Zancara" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1670" : {
+    "label" : "Main",
+    "sitelinks" : 90,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q167118" : {
+    "label" : "Stewart River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1675657" : {
+    "label" : "Ivanhoe River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1677915" : {
+    "label" : "St. Johns River",
+    "sitelinks" : 31,
+    "aliases" : [ "Saint Johns River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q16821611" : {
+    "label" : "Mogalakwena River",
+    "sitelinks" : 10,
+    "aliases" : [ "Magalakwena River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1699782" : {
+    "label" : "John Day River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q171009" : {
+    "label" : "Drava",
+    "sitelinks" : 76,
+    "aliases" : [ "Drave" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q171436" : {
+    "label" : "Uele River",
+    "sitelinks" : 44,
+    "aliases" : [ "Welle", "Uele", "Uele River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q171440" : {
+    "label" : "Mbomou River",
+    "sitelinks" : 39,
+    "aliases" : [ "Mbomou" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1714941" : {
+    "label" : "Jänisjoki",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q171649" : {
+    "label" : "Ubangi River",
+    "sitelinks" : 77,
+    "aliases" : [ "Oubangui" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q171675" : {
+    "label" : "Sutlej",
+    "sitelinks" : 72,
+    "aliases" : [ "Satadree", "Satluj River", "Sutlej River", "Satadru" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q171840" : {
+    "label" : "Japurá River",
+    "sitelinks" : 55,
+    "aliases" : [ "Japura River", "Rio Caqueta", "Rio Japurá", "Yapura" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q171847" : {
+    "label" : "Araguaia River",
+    "sitelinks" : 52,
+    "aliases" : [ "Araguay", "Rio Araguaia" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1718641" : {
+    "label" : "Karamea River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q172089" : {
+    "label" : "Oka",
+    "sitelinks" : 82,
+    "aliases" : [ "Oka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1724008" : {
+    "label" : "Purari River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1725372" : {
+    "label" : "Tongariro River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1726738" : {
+    "label" : "Chixoy River",
+    "sitelinks" : 11,
+    "aliases" : [ "Rio Chixoy" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q173017" : {
+    "label" : "Limpopo River",
+    "sitelinks" : 90,
+    "aliases" : [ "Limpopo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1739672" : {
+    "label" : "Pearl River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q175117" : {
+    "label" : "Moskva River",
+    "sitelinks" : 86,
+    "aliases" : [ "Moskva" ],
+    "continents" : [ "Europe" ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1753415" : {
+    "label" : "Kunges River",
+    "sitelinks" : 13,
+    "aliases" : [ "Chüngges", "Chüngges River", "Gongnaisi He", "Gongnaisi River", "Koungous", "Kunes", "Künes", "Kunes River", "Künes River", "Kunges", "Kungess", "Kungess River", "Künggüs", "Künggüs River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1755015" : {
+    "label" : "North Platte River",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1757394" : {
+    "label" : "Doce River",
+    "sitelinks" : 23,
+    "aliases" : [ "Rio Doce" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1760800" : {
+    "label" : "Pit River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1768704" : {
+    "label" : "Rangitīkei River",
+    "sitelinks" : 17,
+    "aliases" : [ "Rangitikei River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q177452" : {
+    "label" : "Tone River",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1778017" : {
+    "label" : "Kobuk River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1778840" : {
+    "label" : "Oum Er-Rbia River",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1781219" : {
+    "label" : "Rokel River",
+    "sitelinks" : 22,
+    "aliases" : [ "Seli", "Rokel", "Seli River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1781851" : {
+    "label" : "Alsek River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1783725" : {
+    "label" : "Pahang River",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q178396" : {
+    "label" : "Mana River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1784612" : {
+    "label" : "Selennyakh River",
+    "sitelinks" : 20,
+    "aliases" : [ "Selennyakh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q179251" : {
+    "label" : "Morava",
+    "sitelinks" : 67,
+    "aliases" : [ "Marus", "Morava river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q179444" : {
+    "label" : "Potomac River",
+    "sitelinks" : 76,
+    "aliases" : [ "Co-hon-go-roo-ta River", "Patawmeck River", "Patawomeck River", "Potowmac River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q179751" : {
+    "label" : "Aras River",
+    "sitelinks" : 81,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1804765" : {
+    "label" : "Tel River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q180558" : {
+    "label" : "Bafing River",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1808438" : {
+    "label" : "Chulyshman",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1809877" : {
+    "label" : "Richelieu River",
+    "sitelinks" : 21,
+    "aliases" : [ "Riviere Richelieu", "Rivière Richelieu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1813795" : {
+    "label" : "White River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q181475" : {
+    "label" : "Orange River",
+    "sitelinks" : 88,
+    "aliases" : [ "Gariep", "Senqu River", "Groote River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q181482" : {
+    "label" : "Darling River",
+    "sitelinks" : 74,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q18211213" : {
+    "label" : "Vina",
+    "sitelinks" : 11,
+    "aliases" : [ "Mba", "Vina River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q182343" : {
+    "label" : "Niagara River",
+    "sitelinks" : 67,
+    "aliases" : [ "Niagara" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q182445" : {
+    "label" : "Prut",
+    "sitelinks" : 73,
+    "aliases" : [ "Pruth" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q18278" : {
+    "label" : "Uruguay River",
+    "sitelinks" : 86,
+    "aliases" : [ "Uruguay" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q182942" : {
+    "label" : "Cuando River",
+    "sitelinks" : 47,
+    "aliases" : [ "Chobe River", "Kwando", "Linyanti River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q183078" : {
+    "label" : "Murray River",
+    "sitelinks" : 88,
+    "aliases" : [ "River Murray", "Indi Miky", "the Murray River", "the River Murray" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q18451" : {
+    "label" : "Ariège",
+    "sitelinks" : 43,
+    "aliases" : [ "Ariege" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1848950" : {
+    "label" : "Rogue River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1851423" : {
+    "label" : "Yapacaní River",
+    "sitelinks" : 12,
+    "aliases" : [ "Yapacani River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q18520774" : {
+    "label" : "Qezel Uzan",
+    "sitelinks" : 16,
+    "aliases" : [ "Ghezel Ozan", "Rūdkhāneh-ye Qezel Owzan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q185839" : {
+    "label" : "Markha",
+    "sitelinks" : 27,
+    "aliases" : [ "Markha River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1861088" : {
+    "label" : "Great Ruaha River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q186541" : {
+    "label" : "Kasai River",
+    "sitelinks" : 73,
+    "aliases" : [ "Kasaï", "Cassai" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q186901" : {
+    "label" : "Drina",
+    "sitelinks" : 66,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1871142" : {
+    "label" : "Lutto",
+    "sitelinks" : 20,
+    "aliases" : [ "Lotta", "Lotta River", "Lutto River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1877489" : {
+    "label" : "Penna River",
+    "sitelinks" : 23,
+    "aliases" : [ "Penner River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1877507" : {
+    "label" : "Lungwebungu River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q188773" : {
+    "label" : "Okavango River",
+    "sitelinks" : 79,
+    "aliases" : [ "Cubango", "Kavango" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q188940" : {
+    "label" : "Southern Bug",
+    "sitelinks" : 67,
+    "aliases" : [ "Boh River", "Buh Pivdennyi", "Hipanis", "Pivdennyi Buh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1889886" : {
+    "label" : "Yaqui River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1892251" : {
+    "label" : "Marais des Cygnes River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1893265" : {
+    "label" : "Pánuco River",
+    "sitelinks" : 20,
+    "aliases" : [ "Panuco River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1898456" : {
+    "label" : "Pelly River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q191238" : {
+    "label" : "Donets",
+    "sitelinks" : 71,
+    "aliases" : [ "Donetz", "Donets River", "Severskiy Donets", "Seversky Donets", "Siverskiy Donets", "Siversky Donets", "Siverskyi Donets", "Siverskyy Donets" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q191314" : {
+    "label" : "Godavari River",
+    "sitelinks" : 87,
+    "aliases" : [ "Godavari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q191524" : {
+    "label" : "Ishim",
+    "sitelinks" : 67,
+    "aliases" : [ "Yessil" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q191829" : {
+    "label" : "Magdalena River",
+    "sitelinks" : 79,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q191832" : {
+    "label" : "Aldan",
+    "sitelinks" : 58,
+    "aliases" : [ "Aldan River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q192157" : {
+    "label" : "Belaya",
+    "sitelinks" : 63,
+    "aliases" : [ "Agidel", "Belaya River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1922260" : {
+    "label" : "Black River",
+    "sitelinks" : 31,
+    "aliases" : [ "Sông Đà", "Lixian River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q192415" : {
+    "label" : "Volta River",
+    "sitelinks" : 78,
+    "aliases" : [ "Volta", "River Volta" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q192495" : {
+    "label" : "Vyatka",
+    "sitelinks" : 62,
+    "aliases" : [ "Vyatka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q192567" : {
+    "label" : "Ili River",
+    "sitelinks" : 67,
+    "aliases" : [ "Yili River", "Yili", "Ili", "I-li", "I-li River", "Ili R.", "R. Ili", "River Ili" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q192820" : {
+    "label" : "River Shannon",
+    "sitelinks" : 67,
+    "aliases" : [ "Shannon", "R. Shannon", "Shannon R.", "Shannon River", "An tSionainn" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q193499" : {
+    "label" : "Krishna River",
+    "sitelinks" : 82,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q193737" : {
+    "label" : "Tennessee River",
+    "sitelinks" : 68,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1939518" : {
+    "label" : "Mitchell River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1940419" : {
+    "label" : "Whanganui River",
+    "sitelinks" : 29,
+    "aliases" : [ "Wanganui River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1942546" : {
+    "label" : "Mōhaka River",
+    "sitelinks" : 9,
+    "aliases" : [ "Mohaka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1943153" : {
+    "label" : "Mōkau River",
+    "sitelinks" : 10,
+    "aliases" : [ "Mokau River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1950101" : {
+    "label" : "Motueka River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q196183" : {
+    "label" : "Wabash River",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q19682" : {
+    "label" : "River Severn",
+    "sitelinks" : 72,
+    "aliases" : [ "Severn", "Afon Hafren" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q19686" : {
+    "label" : "River Thames",
+    "sitelinks" : 131,
+    "aliases" : [ "Thames", "Tamesis", "the River Thames", "the Thames" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1968809" : {
+    "label" : "Rivière Eastmain",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1970278" : {
+    "label" : "Rio Conchos",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q19714" : {
+    "label" : "River Trent",
+    "sitelinks" : 59,
+    "aliases" : [ "Trent" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q197189" : {
+    "label" : "Zhang River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2001150" : {
+    "label" : "Ouham River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q200174" : {
+    "label" : "Marañón River",
+    "sitelinks" : 62,
+    "aliases" : [ "Marañon", "Río Marañón" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q200952" : {
+    "label" : "Ucayali River",
+    "sitelinks" : 61,
+    "aliases" : [ "Ucayali" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q201520" : {
+    "label" : "Geba River",
+    "sitelinks" : 37,
+    "aliases" : [ "Kayanga River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2015702" : {
+    "label" : "Manas River",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q201823" : {
+    "label" : "Warta",
+    "sitelinks" : 72,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q202796" : {
+    "label" : "Desna",
+    "sitelinks" : 65,
+    "aliases" : [ "Desna River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2028742" : {
+    "label" : "Ord River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2033279" : {
+    "label" : "Waitaki River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q204040" : {
+    "label" : "Mur",
+    "sitelinks" : 57,
+    "aliases" : [ "Mura" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q204127" : {
+    "label" : "Struma",
+    "sitelinks" : 51,
+    "aliases" : [ "Strymon", "Strymonas" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q204347" : {
+    "label" : "Maritsa",
+    "sitelinks" : 63,
+    "aliases" : [ "Evros" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q204806" : {
+    "label" : "Benue River",
+    "sitelinks" : 72,
+    "aliases" : [ "Benue", "Benuë", "Chadda River", "Tchadda River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q205428" : {
+    "label" : "Semliki River",
+    "sitelinks" : 36,
+    "aliases" : [ "French River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2056662" : {
+    "label" : "Pātea River",
+    "sitelinks" : 7,
+    "aliases" : [ "Patea River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2061230" : {
+    "label" : "Pee Dee River",
+    "sitelinks" : 14,
+    "aliases" : [ "Great Pee Dee River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2064454" : {
+    "label" : "Ramu",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q206694" : {
+    "label" : "Onon River",
+    "sitelinks" : 58,
+    "aliases" : [ "Onon" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q206850" : {
+    "label" : "Red River",
+    "sitelinks" : 62,
+    "aliases" : [ "Song Cai", "Yuan River", "Sông Cái", "Hong River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q207136" : {
+    "label" : "Þjórsá",
+    "sitelinks" : 45,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q207493" : {
+    "label" : "Mureș River",
+    "sitelinks" : 52,
+    "aliases" : [ "Maros River", "Mureş River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2076850" : {
+    "label" : "Shatt al-Hayy",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q207777" : {
+    "label" : "Ussuri",
+    "sitelinks" : 57,
+    "aliases" : [ "Ussuri River", "Wusuli River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q207903" : {
+    "label" : "Neris",
+    "sitelinks" : 57,
+    "aliases" : [ "Vilija", "Viliya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q208174" : {
+    "label" : "Dordogne",
+    "sitelinks" : 62,
+    "aliases" : [ "Duranius" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q209031" : {
+    "label" : "Narva",
+    "sitelinks" : 63,
+    "aliases" : [ "Narva River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2091859" : {
+    "label" : "Piako River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2092438" : {
+    "label" : "Sokoto River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2092571" : {
+    "label" : "Stikine River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q209530" : {
+    "label" : "Vaal River",
+    "sitelinks" : 59,
+    "aliases" : [ "Vaal" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q209540" : {
+    "label" : "Scioto River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2096856" : {
+    "label" : "Pongola River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q209891" : {
+    "label" : "Sura",
+    "sitelinks" : 63,
+    "aliases" : [ "Sura River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q210220" : {
+    "label" : "Zeya",
+    "sitelinks" : 51,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q210326" : {
+    "label" : "Songhua River",
+    "sitelinks" : 63,
+    "aliases" : [ "Sungari", "Sunghwari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q211089" : {
+    "label" : "Great Menderes River",
+    "sitelinks" : 53,
+    "aliases" : [ "Meander", "Maeander", "Büyük Menderes River", "Mæander" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q211328" : {
+    "label" : "Great Morava",
+    "sitelinks" : 50,
+    "aliases" : [ "Morava" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2116568" : {
+    "label" : "Pungwe River",
+    "sitelinks" : 25,
+    "aliases" : [ "Púngoè River", "Pungué", "Pungué River", "Rio Púngoè", "Rio Púnguè" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2116752" : {
+    "label" : "Cheyenne River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2117684" : {
+    "label" : "Pukaki River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2117755" : {
+    "label" : "Marico River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2121241" : {
+    "label" : "Santa River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2121586" : {
+    "label" : "Qin He",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2128582" : {
+    "label" : "Rainy River",
+    "sitelinks" : 18,
+    "aliases" : [ "Gojijii-ziibi", "Riviere a la Pluie", "Rivière à la Pluie" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2128994" : {
+    "label" : "Rakaia River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q213067" : {
+    "label" : "Svir",
+    "sitelinks" : 47,
+    "aliases" : [ "Svir'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2130963" : {
+    "label" : "Rangitaiki River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2130977" : {
+    "label" : "Rangitata River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q213576" : {
+    "label" : "Huai River",
+    "sitelinks" : 52,
+    "aliases" : [ "Hwai River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q213782" : {
+    "label" : "Putumayo River",
+    "sitelinks" : 50,
+    "aliases" : [ "Içá River", "Rio Içá", "Río Putumayo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q213967" : {
+    "label" : "Yonne",
+    "sitelinks" : 46,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q213975" : {
+    "label" : "Drin",
+    "sitelinks" : 52,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q21412709" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q21429219" : {
+    "label" : "Cuanza",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2143805" : {
+    "label" : "Thompson River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q214535" : {
+    "label" : "Glomma",
+    "sitelinks" : 53,
+    "aliases" : [ "Glommen", "Glåma", "Stor-Elv" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q214748" : {
+    "label" : "Göta älv",
+    "sitelinks" : 46,
+    "aliases" : [ "Göta Älv", "Göta River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q214768" : {
+    "label" : "Chulym",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q214779" : {
+    "label" : "Kemijoki",
+    "sitelinks" : 49,
+    "aliases" : [ "Kemi", "Kemi älv", "Kemi river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q214874" : {
+    "label" : "Jhelum River",
+    "sitelinks" : 67,
+    "aliases" : [ "Hydaspes", "Bihat", "Jehlam River", "Jehlum River", "Jhelam River", "Vehat", "Vitastā", "Vyeth" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2155503" : {
+    "label" : "River Oich",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2155722" : {
+    "label" : "Rivière George",
+    "sitelinks" : 13,
+    "aliases" : [ "Riviere a la Baleine", "Rivière à la Baleine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q215653" : {
+    "label" : "Tarn",
+    "sitelinks" : 45,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q216171" : {
+    "label" : "Waal",
+    "sitelinks" : 55,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q216188" : {
+    "label" : "Tom",
+    "sitelinks" : 48,
+    "aliases" : [ "Tom River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q216239" : {
+    "label" : "Kaveri",
+    "sitelinks" : 63,
+    "aliases" : [ "Cauvery", "Kaveri River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q216627" : {
+    "label" : "Dalälven",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q216875" : {
+    "label" : "Chenab River",
+    "sitelinks" : 76,
+    "aliases" : [ "Acesines", "Asikni", "Chandrabhaga", "Ashkini", "Chanab", "Chanha", "Chenab", "Chunab", "Iskmati" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q216941" : {
+    "label" : "Xi River",
+    "sitelinks" : 49,
+    "aliases" : [ "West River", "Xi Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2173757" : {
+    "label" : "Parbati River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q217466" : {
+    "label" : "Sakarya River",
+    "sitelinks" : 54,
+    "aliases" : [ "Sangarius" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q217818" : {
+    "label" : "IJssel",
+    "sitelinks" : 49,
+    "aliases" : [ "Gelderse IJssel" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q21791781" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q217954" : {
+    "label" : "Tsna",
+    "sitelinks" : 31,
+    "aliases" : [ "Tsna River (Moksha basin)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q21806680" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21806688" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21827666" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21842561" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q21842562" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q21847787" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q220503" : {
+    "label" : "Assiniboine River",
+    "sitelinks" : 30,
+    "aliases" : [ "Assiniboine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22074156" : {
+    "label" : "Contas River",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2207501" : {
+    "label" : "Trombetas River",
+    "sitelinks" : 20,
+    "aliases" : [ "Trombetas", "Rio Trombetas" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q220839" : {
+    "label" : "Luvua River",
+    "sitelinks" : 31,
+    "aliases" : [ "Luvwa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2216" : {
+    "label" : "Athabasca River",
+    "sitelinks" : 49,
+    "aliases" : [ "Athabasca" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2220" : {
+    "label" : "Peace River",
+    "sitelinks" : 48,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2223479" : {
+    "label" : "Santee River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2226" : {
+    "label" : "Slave River",
+    "sitelinks" : 40,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2228176" : {
+    "label" : "Sekong River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2237" : {
+    "label" : "North Saskatchewan River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22388151" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q2242" : {
+    "label" : "South Saskatchewan River",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2244" : {
+    "label" : "Beaver River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2249" : {
+    "label" : "Liard River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22507743" : {
+    "label" : "Fraser River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2251" : {
+    "label" : "Columbia River",
+    "sitelinks" : 91,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22555212" : {
+    "label" : "Koukourou",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q22590875" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q22600931" : {
+    "label" : "Lukeni",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2276894" : {
+    "label" : "Shangani River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2279579" : {
+    "label" : "Shire River",
+    "sitelinks" : 49,
+    "aliases" : [ "Shiré" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2291822" : {
+    "label" : "Skeena River",
+    "sitelinks" : 19,
+    "aliases" : [ "The Skeena" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2297877" : {
+    "label" : "Tombigbee River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2299655" : {
+    "label" : "Suwannee River",
+    "sitelinks" : 22,
+    "aliases" : [ "Suwanee River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2302661" : {
+    "label" : "Río Grande de Santiago",
+    "sitelinks" : 24,
+    "aliases" : [ "Rio Grande de Santiago", "Santiago River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2305285" : {
+    "label" : "Kovzha",
+    "sitelinks" : 19,
+    "aliases" : [ "Kovzha River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2307145" : {
+    "label" : "Taieri River",
+    "sitelinks" : 14,
+    "aliases" : [ "Taiari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2313261" : {
+    "label" : "Sprague River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q23145" : {
+    "label" : "Segre",
+    "sitelinks" : 41,
+    "aliases" : [ "Sicoris" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q23199583" : {
+    "label" : "Bandama",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q23199585" : {
+    "label" : "Bandama Blanc",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q23208733" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q23208854" : {
+    "label" : "Baoulé",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2324718" : {
+    "label" : "Taritatu",
+    "sitelinks" : 8,
+    "aliases" : [ "Idenburg", "Idenburg-rivier", "Taritatu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2331044" : {
+    "label" : "Stanislaus River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2338605" : {
+    "label" : "Kaduna River",
+    "sitelinks" : 29,
+    "aliases" : [ "River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2339502" : {
+    "label" : "Yurungkax He",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q234004" : {
+    "label" : "Narmada",
+    "sitelinks" : 66,
+    "aliases" : [ "Narbada", "Nerbudda" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2341287" : {
+    "label" : "Ying River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q23550" : {
+    "label" : "Velikaya",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2363673" : {
+    "label" : "Rio Mendoza",
+    "sitelinks" : 21,
+    "aliases" : [ "Mendoza", "Mendoza (River)", "Río Mendoza" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q23672111" : {
+    "label" : "Lom",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q237099" : {
+    "label" : "Orkhon River",
+    "sitelinks" : 51,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q237901" : {
+    "label" : "Tarim River",
+    "sitelinks" : 55,
+    "aliases" : [ "Tarim", "Echardes", "Echardes River", "Oechardes", "Oechardes River", "Oikhardes", "Oikhardes River", "River Echardes", "River Oechardes", "River Oikhardes", "River T'a-li-mu", "River Ta-li-mu", "River Talimu", "River Tarim", "T'a-li-mu", "T'a-li-mu Ho", "T'a-li-mu River", "Ta-li-mu", "Ta-li-mu Ho", "Ta-li-mu River", "Talimu", "Talimu He", "Talimu River", "Tarim He", "Tarim Ho" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2380766" : {
+    "label" : "Qiemo River",
+    "sitelinks" : 19,
+    "aliases" : [ "Cherchen River", "Qarqan He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q239883" : {
+    "label" : "Sangha",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2412334" : {
+    "label" : "Meade River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2416760" : {
+    "label" : "Thelon River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2423275" : {
+    "label" : "Ibicuí River",
+    "sitelinks" : 12,
+    "aliases" : [ "Ibicui River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2452912" : {
+    "label" : "Maputo River",
+    "sitelinks" : 32,
+    "aliases" : [ "Usutu River", "Great Usutu River", "Maputa River", "Lusutfu River", "Suthu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2459279" : {
+    "label" : "Tugaloo River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2459408" : {
+    "label" : "Tukituki River",
+    "sitelinks" : 7,
+    "aliases" : [ "Tuki Tuki River", "Tuki-Tuki River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2465863" : {
+    "label" : "Onilahy River",
+    "sitelinks" : 23,
+    "aliases" : [ "Onilahy" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2485103" : {
+    "label" : "Waiau Uwha River",
+    "sitelinks" : 9,
+    "aliases" : [ "Waiau River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2500257" : {
+    "label" : "Gurupí River",
+    "sitelinks" : 12,
+    "aliases" : [ "Gurupi River", "Rio Gurupi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2509519" : {
+    "label" : "Qianjiang River",
+    "sitelinks" : 10,
+    "aliases" : [ "Qian Jiang", "Qianjiang", "Qian River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q251648" : {
+    "label" : "Great Whale River",
+    "sitelinks" : 13,
+    "aliases" : [ "Grande riviere de la Baleine", "Grande rivière de la Baleine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q252472" : {
+    "label" : "Oti River",
+    "sitelinks" : 38,
+    "aliases" : [ "Pendjari River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q25272040" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2540733" : {
+    "label" : "Wairau River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2551387" : {
+    "label" : "Taimura River",
+    "sitelinks" : 12,
+    "aliases" : [ "Taymura" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2556345" : {
+    "label" : "Weir River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2565430" : {
+    "label" : "Dulce River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2565753" : {
+    "label" : "Jamanxim River",
+    "sitelinks" : 13,
+    "aliases" : [ "Rio Jamanxim" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2566437" : {
+    "label" : "Whakatāne River",
+    "sitelinks" : 7,
+    "aliases" : [ "Whakatane River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q2568291" : {
+    "label" : "Río Grande de Matagalpa",
+    "sitelinks" : 16,
+    "aliases" : [ "Río Grande", "Rio Grande de Matagalpa", "Río Quivasco", "Amaltara", "Awaltara" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q257785" : {
+    "label" : "Kızılırmak River",
+    "sitelinks" : 70,
+    "aliases" : [ "Alis", "Kizil", "Halys", "Kizilirmak", "Kızılırmak", "Halys River", "Marrassantiya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q2591927" : {
+    "label" : "Kadeï",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2599627" : {
+    "label" : "Yarlung",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q26068" : {
+    "label" : "Vitim",
+    "sitelinks" : 48,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26076" : {
+    "label" : "Irrawaddy River",
+    "sitelinks" : 86,
+    "aliases" : [ "Ayeyarwadi River", "Irawadi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2611819" : {
+    "label" : "Carcarañá River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2618598" : {
+    "label" : "Una River",
+    "sitelinks" : 7,
+    "aliases" : [ "Rio Una" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2619442" : {
+    "label" : "Tumnin",
+    "sitelinks" : 12,
+    "aliases" : [ "Tumnin River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26271" : {
+    "label" : "Purus River",
+    "sitelinks" : 56,
+    "aliases" : [ "Purus", "Rio Purus", "River Purus" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q26301" : {
+    "label" : "Ider River",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2634342" : {
+    "label" : "Benito River",
+    "sitelinks" : 28,
+    "aliases" : [ "Benito", "Uoro River", "Mbini", "Woleu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2635327" : {
+    "label" : "Tshuapa River",
+    "sitelinks" : 21,
+    "aliases" : [ "Tshwapa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q26358" : {
+    "label" : "Olyokma",
+    "sitelinks" : 44,
+    "aliases" : [ "Olyokma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26361" : {
+    "label" : "Podkamennaya Tunguska",
+    "sitelinks" : 50,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26374" : {
+    "label" : "Kotuy",
+    "sitelinks" : 32,
+    "aliases" : [ "Kotuy River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26390" : {
+    "label" : "Anadyr",
+    "sitelinks" : 58,
+    "aliases" : [ "Anadyr'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2639171" : {
+    "label" : "Brahmani River",
+    "sitelinks" : 19,
+    "aliases" : [ "Brahmani" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2641599" : {
+    "label" : "Toxkan He",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q26422" : {
+    "label" : "Salween River",
+    "sitelinks" : 75,
+    "aliases" : [ "Thanlwin", "Salween", "Nu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q26428" : {
+    "label" : "Nizhnyaya Tunguska",
+    "sitelinks" : 58,
+    "aliases" : [ "Nizhnyaya Tunguska River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26433" : {
+    "label" : "Vilyuy",
+    "sitelinks" : 58,
+    "aliases" : [ "Vilui River", "Vilyuy River", "Wilui River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q26439" : {
+    "label" : "Argun River",
+    "sitelinks" : 66,
+    "aliases" : [ "Argun", "Ergun", "Argoun", "Argoun R.", "Argun R.", "Ergun R.", "Ergun River", "R. Argoun", "R. Argun", "R. Ergun", "River Argoun", "River Argun", "River Ergun" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2645279" : {
+    "label" : "Litani",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America", "Europe" ]
+  },
+  "Q2656862" : {
+    "label" : "Taoer River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2669549" : {
+    "label" : "Yu River",
+    "sitelinks" : 14,
+    "aliases" : [ "Siang River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2670262" : {
+    "label" : "Jari River",
+    "sitelinks" : 20,
+    "aliases" : [ "jari river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q26799" : {
+    "label" : "Olenyok",
+    "sitelinks" : 50,
+    "aliases" : [ "Olenëk", "Olenyok River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q268532" : {
+    "label" : "Flathead River",
+    "sitelinks" : 13,
+    "aliases" : [ "North Fork of Flathead River", "North Fork of the Flathead River", "Flathead Creek", "Flathead River North Fork", "North Fork Flathead" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q269710" : {
+    "label" : "Fraser River",
+    "sitelinks" : 54,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q27035" : {
+    "label" : "Grijalva River",
+    "sitelinks" : 32,
+    "aliases" : [ "Río Grande", "Río Chiapa", "Mezcalapa River", "Tabasco River", "Río Grande de Chiapas", "Seleguá River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q270467" : {
+    "label" : "Bermejo",
+    "sitelinks" : 41,
+    "aliases" : [ "Bermejo River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q270499" : {
+    "label" : "Pend Oreille River",
+    "sitelinks" : 22,
+    "aliases" : [ "Bitter Root River", "Bitterroot River", "Clark Fork", "Clark's Fork", "Clarke Fork", "Clarkes Fork", "Clarks Fork", "Deer Lodge River", "Hell Gate River", "Missoula River", "Pend d'Oreille River", "Pend-d'Oreille River", "Silver Bow River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q270627" : {
+    "label" : "Colorado River",
+    "sitelinks" : 49,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q270717" : {
+    "label" : "Babine River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q271025" : {
+    "label" : "Nechako River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q271044" : {
+    "label" : "Mahanadi",
+    "sitelinks" : 54,
+    "aliases" : [ "Mahánadé", "Mahanadi River", "Mahānadī River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q271112" : {
+    "label" : "Ångermanälven",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q27149993" : {
+    "label" : "Batevito River",
+    "sitelinks" : 1,
+    "aliases" : [ "Batepito River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2717631" : {
+    "label" : "Ivaí River",
+    "sitelinks" : 13,
+    "aliases" : [ "Ivai River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q272074" : {
+    "label" : "Snake River",
+    "sitelinks" : 60,
+    "aliases" : [ "Sahaptin", "Mad River", "Lewis River", "Louis River", "Great Snake River", "Kimeonim", "Kimooenim", "Kooskooskee River", "Lewis and Clark's River", "Lewis Fork", "Saptin River", "Shawpatin", "Sho-sho-nepah", "Shoshone River", "South Fork of Snake River", "South Fork of the Snake River", "South Fork Snake River", "Yam-pah-pa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2722701" : {
+    "label" : "Banas River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q273456" : {
+    "label" : "Omo River",
+    "sitelinks" : 61,
+    "aliases" : [ "Umaa River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2736616" : {
+    "label" : "Asahan River",
+    "sitelinks" : 18,
+    "aliases" : [ "Aek Asahan", "Aek Toba", "Assarhan River", "Sei Asahan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2738652" : {
+    "label" : "Fimi River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2742774" : {
+    "label" : "Jequitinhonha River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2745932" : {
+    "label" : "Wind River",
+    "sitelinks" : 14,
+    "aliases" : [ "ビッグホーン川", "ワイルドリバー" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2750140" : {
+    "label" : "Kagera River",
+    "sitelinks" : 65,
+    "aliases" : [ "Akagera River", "Alexandra Nile" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2752709" : {
+    "label" : "Kabalebo River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q27538" : {
+    "label" : "Susquehanna River",
+    "sitelinks" : 54,
+    "aliases" : [ "Susquehanna", "Sasquehannagh", "Susquehannah River", "Susquehana River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q27803707" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q280696" : {
+    "label" : "Finlay River",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2829107" : {
+    "label" : "Akobo River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q283622" : {
+    "label" : "Atrek River",
+    "sitelinks" : 41,
+    "aliases" : [ "Rūdkhāneh-ye Atrak" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2839193" : {
+    "label" : "Tercero River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q284495" : {
+    "label" : "Teslin River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q28457542" : {
+    "label" : "Río Verde",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q284603" : {
+    "label" : "Porcupine River",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q285137" : {
+    "label" : "Dong River",
+    "sitelinks" : 23,
+    "aliases" : [ "Dong Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q286703" : {
+    "label" : "English River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2883844" : {
+    "label" : "Sous River",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q288695" : {
+    "label" : "Oka",
+    "sitelinks" : 37,
+    "aliases" : [ "Oka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2892300" : {
+    "label" : "Bayou Lafourche",
+    "sitelinks" : 5,
+    "aliases" : [ "Chetimachas River", "Fourche des Chetimaches", "Longest Main Street in the World", "Louisiana's Cajun Bayou" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q289460" : {
+    "label" : "Bani River",
+    "sitelinks" : 38,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q291233" : {
+    "label" : "Churchill River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q293988" : {
+    "label" : "Save River",
+    "sitelinks" : 29,
+    "aliases" : [ "Save", "Sabi River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2981909" : {
+    "label" : "Jutai River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2992976" : {
+    "label" : "Congaree River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q30066076" : {
+    "label" : "Kotto River",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3011855" : {
+    "label" : "Lucala River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3045328" : {
+    "label" : "Kelkit Brook",
+    "sitelinks" : 16,
+    "aliases" : [ "Kelkit Çayı" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3047" : {
+    "label" : "Saskatchewan River",
+    "sitelinks" : 48,
+    "aliases" : [ "Saskatchewan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3048862" : {
+    "label" : "Eel River",
+    "sitelinks" : 12,
+    "aliases" : [ "Sand Creek", "Brannan River", "East Lake Slough", "Eastlake Slough", "Hatyo", "Mendocino River", "Sout Eel River", "South Eel River", "Wee-Ot-Lolla", "Wee-yot", "Weeott" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3087412" : {
+    "label" : "Santiago River",
+    "sitelinks" : 15,
+    "aliases" : [ "Río Santiago" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3130973" : {
+    "label" : "Rio das Mortes",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3132188" : {
+    "label" : "Rio Chico (Santa Cruz)",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3132789" : {
+    "label" : "Wainganga River",
+    "sitelinks" : 16,
+    "aliases" : [ "Vainganga nadi", "Venu-ganga" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3134829" : {
+    "label" : "Ngounie River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q31379" : {
+    "label" : "La Grande River",
+    "sitelinks" : 15,
+    "aliases" : [ "Chisasibi", "La Grande Rivière", "La Grande Riviere" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3140" : {
+    "label" : "Hudson River",
+    "sitelinks" : 91,
+    "aliases" : [ "Hudson" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q317899" : {
+    "label" : "Ravi River",
+    "sitelinks" : 64,
+    "aliases" : [ "Hyarotis", "Airavati", "Hydraotis", "Iravati", "Rāvi River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3179125" : {
+    "label" : "Pibor River",
+    "sitelinks" : 20,
+    "aliases" : [ "River Pibor" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q317951" : {
+    "label" : "Mazowe River",
+    "sitelinks" : 18,
+    "aliases" : [ "Mazowe" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3181444" : {
+    "label" : "Simav Brook",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3182712" : {
+    "label" : "Kaladan River",
+    "sitelinks" : 17,
+    "aliases" : [ "Boinu", "Chhimtuipui", "Kissapanadi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q319590" : {
+    "label" : "Beas River",
+    "sitelinks" : 57,
+    "aliases" : [ "Beās River", "Vipasha" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q320649" : {
+    "label" : "Cunene River",
+    "sitelinks" : 59,
+    "aliases" : [ "Kunene River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3236437" : {
+    "label" : "Tumbes River",
+    "sitelinks" : 16,
+    "aliases" : [ "Puyango River", "Río Puyango", "Río Tumbes" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3258735" : {
+    "label" : "Lokoro River",
+    "sitelinks" : 8,
+    "aliases" : [ "Lokoro" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q328396" : {
+    "label" : "Mahakam River",
+    "sitelinks" : 36,
+    "aliases" : [ "Koetai-rivier", "Kutei River", "River Mahakam" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3285958" : {
+    "label" : "Maningory River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3292" : {
+    "label" : "Nelson River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q331162" : {
+    "label" : "Tana River",
+    "sitelinks" : 47,
+    "aliases" : [ "Tana", "Sagana River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3312383" : {
+    "label" : "Gamtoos River",
+    "sitelinks" : 23,
+    "aliases" : [ "Gamptoos River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q331455" : {
+    "label" : "Casiquiare canal",
+    "sitelinks" : 36,
+    "aliases" : [ "Casiquiare", "Cassiquiari", "Río Casiquiare" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3318" : {
+    "label" : "Churchill River",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3320633" : {
+    "label" : "Mongala River",
+    "sitelinks" : 16,
+    "aliases" : [ "Mongala" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3331364" : {
+    "label" : "Myittha River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3334104" : {
+    "label" : "Derung-Nmai River",
+    "sitelinks" : 4,
+    "aliases" : [ "Derung remai", "Derung River", "Dulong River", "Maykha River", "N'Mai Hka", "N'Mai River", "Nmai River", "Rameti", "Rvmètì", "Tarung River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3344120" : {
+    "label" : "North Fork Kuskokwim River",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q335575" : {
+    "label" : "Sacramento River",
+    "sitelinks" : 54,
+    "aliases" : [ "Sacramento (river)", "Sacramento river", "Sacramento River (United States)", "Sacramento River, California" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q338316" : {
+    "label" : "Pisco River",
+    "sitelinks" : 8,
+    "aliases" : [ "Río Pisco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3392" : {
+    "label" : "Nile",
+    "sitelinks" : 248,
+    "aliases" : [ "River Nile", "The Nile", "Nile River", "Nahr an Nīl", "Bahr en Nīl", "Nahr an Nil", "Nīl River", "Nilus River", "Shihor" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3411" : {
+    "label" : "Mackenzie River",
+    "sitelinks" : 81,
+    "aliases" : [ "Dehcho", "Deh Cho", "Fleuve Mackenzie", "Kuukpak", "Mackenzie (Severozápadní teritoria : řeka)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3432297" : {
+    "label" : "Rio Amapari",
+    "sitelinks" : 9,
+    "aliases" : [ "Amapari River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3458705" : {
+    "label" : "Mira River",
+    "sitelinks" : 14,
+    "aliases" : [ "Río Mira" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q34589" : {
+    "label" : "Euphrates",
+    "sitelinks" : 142,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3501984" : {
+    "label" : "Lesser Abay River",
+    "sitelinks" : 12,
+    "aliases" : [ "Gilgel Abay" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3503" : {
+    "label" : "Congo River",
+    "sitelinks" : 168,
+    "aliases" : [ "Zaire", "Congo River", "River Congo", "Zaire River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3511574" : {
+    "label" : "Indragiri River",
+    "sitelinks" : 20,
+    "aliases" : [ "Kuantan River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3523794" : {
+    "label" : "Kollidam River",
+    "sitelinks" : 10,
+    "aliases" : [ "Kollidam" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q35311383" : {
+    "label" : "Rungwa River",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q35411574" : {
+    "label" : "Luwegu River",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3542" : {
+    "label" : "Niger River",
+    "sitelinks" : 156,
+    "aliases" : [ "Niger", "fleuve Niger", "Quorra", "River Niger" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q35591" : {
+    "label" : "Tigris",
+    "sitelinks" : 130,
+    "aliases" : [ "Tigris River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3569" : {
+    "label" : "Senegal River",
+    "sitelinks" : 85,
+    "aliases" : [ "Senegal" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3633526" : {
+    "label" : "Mania River",
+    "sitelinks" : 18,
+    "aliases" : [ "Mania" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3642203" : {
+    "label" : "Gourits River",
+    "sitelinks" : 19,
+    "aliases" : [ "Gouritsrivier", "Gouritz River", "Gowritz River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3643149" : {
+    "label" : "Gamka River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3647352" : {
+    "label" : "Cojedes River",
+    "sitelinks" : 8,
+    "aliases" : [ "Río Cojedes" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q370750" : {
+    "label" : "Savannah River",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3718531" : {
+    "label" : "Kukhtuy",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q372490" : {
+    "label" : "Buna",
+    "sitelinks" : 42,
+    "aliases" : [ "Bojana" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q374772" : {
+    "label" : "Yellowstone River",
+    "sitelinks" : 51,
+    "aliases" : [ "Yellowstone", "Aahkawirahkata", "E-chee-dick-karsh-ah-shay", "Encheda-cahchi-ichi", "Mi tse a-da-zi", "Mi-tsi-a-da-zi", "Moehe'yoe", "Pierre Jaune", "River a la Biche", "River aux Roches Jaunes", "River Rockybone", "River Yellow Rock", "Roche Jaune", "the Yellowstone", "Waahukaahaanu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q37620" : {
+    "label" : "Scheldt",
+    "sitelinks" : 79,
+    "aliases" : [ "Le Sceau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q3773325" : {
+    "label" : "Talkheh River",
+    "sitelinks" : 17,
+    "aliases" : [ "Aji Chay", "Talkheh Rud" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3783" : {
+    "label" : "Amazon River",
+    "sitelinks" : 218,
+    "aliases" : [ "The Amazon", "Amazonian River", "River Amazon", "The Amazon River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q379648" : {
+    "label" : "Connecticut River",
+    "sitelinks" : 44,
+    "aliases" : [ "Connecticut River Estuary and Tidal River Wetlands Complex" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q380249" : {
+    "label" : "Adycha River",
+    "sitelinks" : 28,
+    "aliases" : [ "Adycha" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q385342" : {
+    "label" : "Desaguadero River",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q386331" : {
+    "label" : "Grande River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q390232" : {
+    "label" : "Ghaghara River",
+    "sitelinks" : 53,
+    "aliases" : [ "Karnali River", "Ghagra River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q391411" : {
+    "label" : "Gatineau River",
+    "sitelinks" : 12,
+    "aliases" : [ "Riviere Gatineau", "Rivière Gatineau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q392161" : {
+    "label" : "Saguenay River",
+    "sitelinks" : 28,
+    "aliases" : [ "Saguenay" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q393769" : {
+    "label" : "Tanana River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q40059" : {
+    "label" : "Jordan River",
+    "sitelinks" : 124,
+    "aliases" : [ "Jordan", "River Jordan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q403053" : {
+    "label" : "Ahuriri River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q40855" : {
+    "label" : "Dnieper",
+    "sitelinks" : 126,
+    "aliases" : [ "Dnepr", "Dnipro", "Dnieper River", "Dnipro River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q41179" : {
+    "label" : "Mekong River",
+    "sitelinks" : 118,
+    "aliases" : [ "Lancang River", "Lancang Jiang", "Lancang R.", "Lantzan Kiang", "Lantzan R.", "Lantzan River", "Lantzan-kiang", "Mekhong", "Mekhong R.", "Mékong", "Mekong R." ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q4140059" : {
+    "label" : "Notwane River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q41983" : {
+    "label" : "Marne",
+    "sitelinks" : 64,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q41986" : {
+    "label" : "Meuse",
+    "sitelinks" : 94,
+    "aliases" : [ "Maas", "Meuse River", "Maos", "Mosa", "Mouze", "Moûze" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q421658" : {
+    "label" : "Aksu River",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q425" : {
+    "label" : "Betsiboka River",
+    "sitelinks" : 34,
+    "aliases" : [ "Betsiboka" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q426516" : {
+    "label" : "Indalsälven",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q427437" : {
+    "label" : "Rivière Rupert",
+    "sitelinks" : 16,
+    "aliases" : [ "Riviere Rupert" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4277155" : {
+    "label" : "Malaya Ob",
+    "sitelinks" : 7,
+    "aliases" : [ "Malaya Ob'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q430799" : {
+    "label" : "Mukhavets River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q43106" : {
+    "label" : "Zambezi River",
+    "sitelinks" : 111,
+    "aliases" : [ "Zambesi", "Zambeze", "Zambezi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q434188" : {
+    "label" : "Altamaha River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q43990" : {
+    "label" : "Caniapiscau River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q44163" : {
+    "label" : "Koksoak River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q45403" : {
+    "label" : "Brahmaputra River",
+    "sitelinks" : 113,
+    "aliases" : [ "Brahmaputra", "Dihong", "Brahmapoutra", "Brahmapoutra R.", "Brahmapoutra River", "Brahmaputra R.", "Tsangpo-Brahmaputra", "Sky river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q461457" : {
+    "label" : "White Sea – Baltic Canal",
+    "sitelinks" : 51,
+    "aliases" : [ "White Sea Canal", "White Sea-Baltic Waterway" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q46841" : {
+    "label" : "Lena River",
+    "sitelinks" : 112,
+    "aliases" : [ "Lena" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4699515" : {
+    "label" : "Ajajú River",
+    "sitelinks" : 7,
+    "aliases" : [ "Ajaju River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q470542" : {
+    "label" : "Amgun River",
+    "sitelinks" : 35,
+    "aliases" : [ "Amgun'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q472816" : {
+    "label" : "Juruena River",
+    "sitelinks" : 32,
+    "aliases" : [ "Rio Juruena" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q474602" : {
+    "label" : "Gallegos River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q476317" : {
+    "label" : "Tugela River",
+    "sitelinks" : 46,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q476721" : {
+    "label" : "Vishera",
+    "sitelinks" : 44,
+    "aliases" : [ "Vishera River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4786963" : {
+    "label" : "Gongola River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q4786970" : {
+    "label" : "Hadejia River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q4787012" : {
+    "label" : "Ogun River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q4788899" : {
+    "label" : "Kangen River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q4814791" : {
+    "label" : "White Nile",
+    "sitelinks" : 89,
+    "aliases" : [ "Albert Nile", "An Nīl al Abyaḑ", "El Bahr el Abyad River", "Mountain Nile", "White Nile River", "بحر العرب في السودان" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q483159" : {
+    "label" : "Syr Darya",
+    "sitelinks" : 94,
+    "aliases" : [ "Sir", "Sirr", "Jaxartes", "Syrdarya", "Syr", "Iaxartes", "Iaxartes River", "Jaxartes River", "River Iaxartes", "River Jaxartes", "River Sir", "River Sirr", "River Syr", "River Yaxartes", "Sir Daria", "Sir Darya", "Sir River", "Sir-Daria", "Sîr-daria", "Sirr Darya", "Sirr River", "Syr River", "Syr-darya", "Yaxartes", "Yaxartes River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia", "Europe" ]
+  },
+  "Q4873719" : {
+    "label" : "Bavispe River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q48955716" : {
+    "label" : "Verkhnyaya Taymyra",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q490358" : {
+    "label" : "Exploits River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4915" : {
+    "label" : "Ohio River",
+    "sitelinks" : 89,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q491660" : {
+    "label" : "Anderson River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q492787" : {
+    "label" : "Des Moines River",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q49544" : {
+    "label" : "Xingu River",
+    "sitelinks" : 53,
+    "aliases" : [ "Xingu", "Rio Xingu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q496173" : {
+    "label" : "Rivière Péribonka",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q496274" : {
+    "label" : "Rivière Manicouagan",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q499797" : {
+    "label" : "Trinity River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q501027" : {
+    "label" : "Zeravshan",
+    "sitelinks" : 47,
+    "aliases" : [ "Zeravshan River", "the Zeravshan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q501253" : {
+    "label" : "Hai River",
+    "sitelinks" : 48,
+    "aliases" : [ "Pei-ho" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q506955" : {
+    "label" : "Pangani River",
+    "sitelinks" : 27,
+    "aliases" : [ "Rhaptus", "Luffu", "Jipe Ruvu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5077" : {
+    "label" : "Garonne",
+    "sitelinks" : 83,
+    "aliases" : [ "Garonne river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q508582" : {
+    "label" : "Courantyne River",
+    "sitelinks" : 29,
+    "aliases" : [ "Corentyn River", "Corentyne River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q5089" : {
+    "label" : "Ganges",
+    "sitelinks" : 180,
+    "aliases" : [ "Ganga", "Ganges River", "River Ganges", "Ganga Nadi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q509983" : {
+    "label" : "Caledon River",
+    "sitelinks" : 32,
+    "aliases" : [ "Mohokare River", "Wilhelminarivier" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5102010" : {
+    "label" : "Chirripó Duchi River",
+    "sitelinks" : 6,
+    "aliases" : [ "Chirripo Duchi River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q511067" : {
+    "label" : "Vasyugan",
+    "sitelinks" : 36,
+    "aliases" : [ "Vasyugan River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q5138059" : {
+    "label" : "Coari River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q514864" : {
+    "label" : "Fuerte River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5167806" : {
+    "label" : "Cooper River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q517787" : {
+    "label" : "Merrimack River",
+    "sitelinks" : 25,
+    "aliases" : [ "Merrimack", "Merrimac River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5179786" : {
+    "label" : "Cowpasture River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5214284" : {
+    "label" : "Dan River",
+    "sitelinks" : 10,
+    "aliases" : [ "Dan Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q524612" : {
+    "label" : "Paatsjoki",
+    "sitelinks" : 39,
+    "aliases" : [ "Báhčeveaijohka", "Paaččjokk", "Paatsjoki River", "Paččvei", "Pasvikelva", "Patsojoki" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q527521" : {
+    "label" : "Palyavaam",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q5299143" : {
+    "label" : "Dos Bois River",
+    "sitelinks" : 7,
+    "aliases" : [ "Rio dos Bois" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q5299851" : {
+    "label" : "Double Mountain Fork Brazos River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q532543" : {
+    "label" : "Katherine River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q5366081" : {
+    "label" : "Daling River",
+    "sitelinks" : 11,
+    "aliases" : [ "Daling He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q540956" : {
+    "label" : "Aruwimi River",
+    "sitelinks" : 36,
+    "aliases" : [ "Aruwimi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5413" : {
+    "label" : "Yangtze River",
+    "sitelinks" : 168,
+    "aliases" : [ "Yang-tse-kiang", "Yangtze", "Jiang", "Kian", "Changjiang", "Jiang River", "Chang Jiang", "Yangzi", "Blue River", "Kiang River", "Kiang", "Kyang", "Ch'ang Chiang", "Chang Jiang River", "Changjiang River", "Kyang River", "Yan-tse", "Yan-tse-kian", "Yang-tse", "Yang-tse River", "Yang-tsze", "Yang-tsze-kiang", "Yang-tze", "Yang-tze River", "Yangtse River", "Yangtse-chiang", "Yangtsze River", "Yangtzekiang", "Yangzi River", "Yantse Kiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5419" : {
+    "label" : "Missouri River",
+    "sitelinks" : 109,
+    "aliases" : [ "Missouri", "The Missouri" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q542539" : {
+    "label" : "Mahi River",
+    "sitelinks" : 27,
+    "aliases" : [ "Mophis (Roman name)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q545808" : {
+    "label" : "Cagayan River",
+    "sitelinks" : 33,
+    "aliases" : [ "Río Grande de Cagayán" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q546793" : {
+    "label" : "Molopo River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q548" : {
+    "label" : "Vistula",
+    "sitelinks" : 119,
+    "aliases" : [ "Weichsel", "Wisła", "Wisla", "Visla" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q552" : {
+    "label" : "Oder",
+    "sitelinks" : 107,
+    "aliases" : [ "Odra", "Oder River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q55498" : {
+    "label" : "Yalu River",
+    "sitelinks" : 70,
+    "aliases" : [ "Amrok", "Apnok Kang", "Yalu Chiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q55499" : {
+    "label" : "Tumen River",
+    "sitelinks" : 53,
+    "aliases" : [ "Tumen Ula" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q55500" : {
+    "label" : "Han River",
+    "sitelinks" : 66,
+    "aliases" : [ "Han Gang", "Han Jiang", "Hangang", "Han-gang", "Hanjiang", "Han Gang River", "Han R.", "Han River (Korea)", "Han-kang", "Han-kang River", "Han'gang", "Hang R.", "Hang River", "Hang-kiang", "Hangang River", "R. Han", "R. Hang", "R. Seoul", "R. Seul", "River Han", "River Hang", "River Seoul", "River Seul", "Seoul R.", "Seoul River", "Seul R.", "Seul River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q55501" : {
+    "label" : "Nakdong River",
+    "sitelinks" : 40,
+    "aliases" : [ "Rakdong River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q558643" : {
+    "label" : "Alabama River",
+    "sitelinks" : 37,
+    "aliases" : [ "Alabama" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q559283" : {
+    "label" : "Yarkand River",
+    "sitelinks" : 36,
+    "aliases" : [ "Yarkand", "Yarkend", "Yarkent", "Sirikol", "Sirikol River", "Yarkant", "Yarkant He", "Yarkant River", "Yarkend River", "Yarkent River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q559661" : {
+    "label" : "Liao River",
+    "sitelinks" : 63,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5622" : {
+    "label" : "Neman",
+    "sitelinks" : 80,
+    "aliases" : [ "Memel", "Niemen", "Nyoman", "Nemunas", "Nioman", "Neman River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q575695" : {
+    "label" : "Digul River",
+    "sitelinks" : 23,
+    "aliases" : [ "Sungai Digul", "Oewamba Rivier" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5763368" : {
+    "label" : "Ocoña River",
+    "sitelinks" : 11,
+    "aliases" : [ "Río Ocoña" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q576337" : {
+    "label" : "Vorma",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q582321" : {
+    "label" : "Mearim River",
+    "sitelinks" : 16,
+    "aliases" : [ "Rio Mearim" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q583044" : {
+    "label" : "Papaloapan River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q583285" : {
+    "label" : "Uda",
+    "sitelinks" : 32,
+    "aliases" : [ "Chuna" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q583565" : {
+    "label" : "River Derwent",
+    "sitelinks" : 27,
+    "aliases" : [ "Derwent River", "Derwent River, Tasmania", "Derwent River. Tas.", "River Derwent, Tasmania", "timtumili minanya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q584" : {
+    "label" : "Rhine",
+    "sitelinks" : 190,
+    "aliases" : [ "Rhine River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q586733" : {
+    "label" : "Yom River",
+    "sitelinks" : 24,
+    "aliases" : [ "Mae Nam Yom" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q588242" : {
+    "label" : "Tura",
+    "sitelinks" : 44,
+    "aliases" : [ "Tura River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q589583" : {
+    "label" : "Cả River",
+    "sitelinks" : 18,
+    "aliases" : [ "Hoi Lam Giang", "Lam River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q589911" : {
+    "label" : "Essequibo River",
+    "sitelinks" : 48,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q590533" : {
+    "label" : "Caroní River",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q592383" : {
+    "label" : "Ping River",
+    "sitelinks" : 27,
+    "aliases" : [ "Mae Nam Ping" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5925353" : {
+    "label" : "Huan River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q59446" : {
+    "label" : "Moose River",
+    "sitelinks" : 19,
+    "aliases" : [ "Moose (Ontario : řeka)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q59464" : {
+    "label" : "Mattagami River",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q59480" : {
+    "label" : "Missinaibi River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q595037" : {
+    "label" : "Ouémé River",
+    "sitelinks" : 35,
+    "aliases" : [ "Oueme River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q596106" : {
+    "label" : "Sabine River",
+    "sitelinks" : 24,
+    "aliases" : [ "Sabine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q596120" : {
+    "label" : "Mogami River",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q597753" : {
+    "label" : "Canadian River",
+    "sitelinks" : 39,
+    "aliases" : [ "South Canadian River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5991460" : {
+    "label" : "Igan River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q60065" : {
+    "label" : "Susitna River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q60067" : {
+    "label" : "Kuskokwim River",
+    "sitelinks" : 34,
+    "aliases" : [ "Kuskokwim River", "Kusko River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q601853" : {
+    "label" : "Salmon River",
+    "sitelinks" : 17,
+    "aliases" : [ "The River of No Return", "Lewis River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q602" : {
+    "label" : "Rhône",
+    "sitelinks" : 107,
+    "aliases" : [ "Rhone", "Rhone River", "Rhône River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q607546" : {
+    "label" : "Saint John River",
+    "sitelinks" : 29,
+    "aliases" : [ "St. John", "Rivière Saint-Jean", "Fleuve Saint-Jean" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q607976" : {
+    "label" : "Paranapanema River",
+    "sitelinks" : 25,
+    "aliases" : [ "Rio Paranapanema" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q6095187" : {
+    "label" : "Ituxi River",
+    "sitelinks" : 6,
+    "aliases" : [ "Rio Ituxi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q609560" : {
+    "label" : "Mataura River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q609625" : {
+    "label" : "Palar River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q60974" : {
+    "label" : "Ottawa River",
+    "sitelinks" : 55,
+    "aliases" : [ "Kichi-Sìbì", "Kitchissippi", "Riviere des Outaouais", "Rivière des Outaouais" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q611388" : {
+    "label" : "Huallaga River",
+    "sitelinks" : 34,
+    "aliases" : [ "Río Huallaga" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q6115723" : {
+    "label" : "Soto La Marina River",
+    "sitelinks" : 7,
+    "aliases" : [ "Río Soto La Marina" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q612112" : {
+    "label" : "Penzhina",
+    "sitelinks" : 31,
+    "aliases" : [ "Penzhina River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q613522" : {
+    "label" : "Clutha River / Mata-Au",
+    "sitelinks" : 24,
+    "aliases" : [ "Clutha River / Matau", "Clutha River/Mata-Au" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q615328" : {
+    "label" : "Hongshui River",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q615662" : {
+    "label" : "Komoé River",
+    "sitelinks" : 38,
+    "aliases" : [ "Komoe River", "Comoé River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q6176576" : {
+    "label" : "Jejuí Guazú River",
+    "sitelinks" : 10,
+    "aliases" : [ "Jejui Guazu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q617750" : {
+    "label" : "Aparima River",
+    "sitelinks" : 8,
+    "aliases" : [ "Jacob's River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q618313" : {
+    "label" : "Manawatū River",
+    "sitelinks" : 12,
+    "aliases" : [ "Manawatu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q621609" : {
+    "label" : "Wambuul Macquarie River",
+    "sitelinks" : 13,
+    "aliases" : [ "Wambool", "Macquarie River (New South Wales)", "Macquarie River Wambuul", "Wambuul" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q624223" : {
+    "label" : "Lufira River",
+    "sitelinks" : 25,
+    "aliases" : [ "Lufira" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q625404" : {
+    "label" : "Konqi He",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q626" : {
+    "label" : "Volga",
+    "sitelinks" : 189,
+    "aliases" : [ "Wolga", "Volga River", "R. Volga", "R. Wolga", "River Volga", "River Wolga", "Volga R.", "Wolga R.", "Wolga River", "Rā (in Scythian)", "Rha river (in Scythian)", "Oares (in Greek)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q635292" : {
+    "label" : "Baoulé",
+    "sitelinks" : 14,
+    "aliases" : [ "Baloué River", "Baoulé River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q635545" : {
+    "label" : "Suriname River",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q6380446" : {
+    "label" : "Kayan River",
+    "sitelinks" : 11,
+    "aliases" : [ "Sungai Kayan", "Bulungan River", "Sungai Bulungan", "Boeloengan Rivier", "Boetoengan Rivier" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q638127" : {
+    "label" : "Arctic Red River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q638735" : {
+    "label" : "Wairoa River",
+    "sitelinks" : 7,
+    "aliases" : [ "Wairoa Tāpoko Rau", "Wairoatapokorau", "Te Wairoa Hōpūpū Hōnengenenge Mātangi Rau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q638776" : {
+    "label" : "Wairoa River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q639478" : {
+    "label" : "Javaés River",
+    "sitelinks" : 10,
+    "aliases" : [ "Araguaia River Lower Branch", "Braco Menor do Rio Araguaia", "Braço Menor do Rio Araguaia", "Javaes River", "Lower Branch of the Araguaia River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q640366" : {
+    "label" : "Haliacmon",
+    "sitelinks" : 43,
+    "aliases" : [ "Aliakmonas", "Aliákmon", "Aliákmonas" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q641020" : {
+    "label" : "Kherlen River",
+    "sitelinks" : 48,
+    "aliases" : [ "Kern", "Kerülen", "Kerulen River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q643" : {
+    "label" : "Po",
+    "sitelinks" : 108,
+    "aliases" : [ "Po River", "River Po" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q643780" : {
+    "label" : "Monongahela River",
+    "sitelinks" : 33,
+    "aliases" : [ "Mon River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q645" : {
+    "label" : "Neva",
+    "sitelinks" : 96,
+    "aliases" : [ "Neva River", "River Neva" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q645191" : {
+    "label" : "Logone River",
+    "sitelinks" : 46,
+    "aliases" : [ "Logon River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q647052" : {
+    "label" : "Khopyor",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q651195" : {
+    "label" : "Naryn River",
+    "sitelinks" : 48,
+    "aliases" : [ "Narin", "Naryn", "Narin R.", "Narin River", "Naryn R.", "R. Narin", "R. Naryn", "River Narin", "River Naryn" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q651903" : {
+    "label" : "Baram River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q65383" : {
+    "label" : "Vychegda",
+    "sitelinks" : 53,
+    "aliases" : [ "Ezhva" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q655251" : {
+    "label" : "Meta River",
+    "sitelinks" : 29,
+    "aliases" : [ "Rio Meta" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q655754" : {
+    "label" : "Platte River",
+    "sitelinks" : 53,
+    "aliases" : [ "Platte" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q659546" : {
+    "label" : "Vienne",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q664874" : {
+    "label" : "Clark Fork",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q671890" : {
+    "label" : "Tvertsa",
+    "sitelinks" : 36,
+    "aliases" : [ "Tvertsa River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q6735274" : {
+    "label" : "Maicuru River",
+    "sitelinks" : 5,
+    "aliases" : [ "Rio Maicuru" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q673908" : {
+    "label" : "Republican River",
+    "sitelinks" : 18,
+    "aliases" : [ "Coster Blanches", "Ki-ra-ru-tah", "Ki-rara-tu", "Mahohevaohe", "Republican Fork", "Republican Fork of Kanzas River", "Riviere Republicaine" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6748803" : {
+    "label" : "Manganui River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q675028" : {
+    "label" : "Dora Baltea",
+    "sitelinks" : 37,
+    "aliases" : [ "Doire baltée" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q6809923" : {
+    "label" : "Buh He",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q686021" : {
+    "label" : "Allegheny River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6862" : {
+    "label" : "Amur River",
+    "sitelinks" : 114,
+    "aliases" : [ "Amur", "Heilong Jiang", "Black River", "Heilong River", "Saghalien Oula", "Saghalien-Oula", "Black Dragon River", "Heilongjiang River", "Saghalien River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q6886521" : {
+    "label" : "Moawhango River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q691791" : {
+    "label" : "French River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q695602" : {
+    "label" : "Blackwood River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q695947" : {
+    "label" : "Ingoda",
+    "sitelinks" : 39,
+    "aliases" : [ "Ingoda River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q6961571" : {
+    "label" : "Namekagon River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q707056" : {
+    "label" : "Tapti River",
+    "sitelinks" : 50,
+    "aliases" : [ "Tapti", "Tapi river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7080633" : {
+    "label" : "Ōhau River",
+    "sitelinks" : 3,
+    "aliases" : [ "Ohau River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q7093828" : {
+    "label" : "Ōngaaruhe River",
+    "sitelinks" : 7,
+    "aliases" : [ "Ongarue River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q7099902" : {
+    "label" : "Orari River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q713020" : {
+    "label" : "Ou River",
+    "sitelinks" : 13,
+    "aliases" : [ "Ou Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q715143" : {
+    "label" : "Poronay",
+    "sitelinks" : 27,
+    "aliases" : [ "Poronay River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q715361" : {
+    "label" : "Sungacha",
+    "sitelinks" : 30,
+    "aliases" : [ "Song'acha He", "Songacha" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q715373" : {
+    "label" : "Muling River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7161998" : {
+    "label" : "Seruyan River",
+    "sitelinks" : 7,
+    "aliases" : [ "Sungai Pembuang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7190395" : {
+    "label" : "Piauí River",
+    "sitelinks" : 4,
+    "aliases" : [ "Piaui River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q719436" : {
+    "label" : "Kazan River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q71996" : {
+    "label" : "Harricana River",
+    "sitelinks" : 19,
+    "aliases" : [ "Harricanaw River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q72075" : {
+    "label" : "Thlewiaza River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q72079" : {
+    "label" : "Ekwan River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7237856" : {
+    "label" : "Prairie Dog Town Fork Red River",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q723864" : {
+    "label" : "Katun",
+    "sitelinks" : 45,
+    "aliases" : [ "Katun'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q726693" : {
+    "label" : "Ialomița River",
+    "sitelinks" : 44,
+    "aliases" : [ "Ialomiţa River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q72673" : {
+    "label" : "Hayes River",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q726986" : {
+    "label" : "Mamberamo River",
+    "sitelinks" : 28,
+    "aliases" : [ "Mamberamo-rivier", "Mberamo Rivier", "Sungai Mamberamo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q729269" : {
+    "label" : "Min River",
+    "sitelinks" : 34,
+    "aliases" : [ "Min Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7322288" : {
+    "label" : "Ribeira River",
+    "sitelinks" : 1,
+    "aliases" : [ "Rio Ribeira" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q732790" : {
+    "label" : "Kwango River",
+    "sitelinks" : 47,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q7348" : {
+    "label" : "Indus River",
+    "sitelinks" : 159,
+    "aliases" : [ "Indus", "Sindh River", "Mehran River", "Indus R.", "R. Indus", "River Indus", "Sindhu River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7350" : {
+    "label" : "Panama Canal",
+    "sitelinks" : 162,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7355" : {
+    "label" : "Yellow River",
+    "sitelinks" : 155,
+    "aliases" : [ "Huang He", "Huanghe", "Hoang-ho", "Hoan-ho", "Hoan-ho R.", "Hoan-ho River", "Hoang ho", "Hoang-ho R.", "Hoang-ho River", "Hoangho", "Huang He R.", "Huang He River", "Huang-ho", "Huang-ho R.", "Huang-ho River", "Huanghe R.", "Huanghe River", "Whang-ho River", "Yellow R." ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7365612" : {
+    "label" : "Rong River",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q736575" : {
+    "label" : "Oulujoki",
+    "sitelinks" : 35,
+    "aliases" : [ "Ule älv" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q7375688" : {
+    "label" : "Ruakituri River",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q738357" : {
+    "label" : "Copiapó River",
+    "sitelinks" : 21,
+    "aliases" : [ "Copiapo River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q738986" : {
+    "label" : "Seym",
+    "sitelinks" : 49,
+    "aliases" : [ "Seym River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q739751" : {
+    "label" : "Fly River",
+    "sitelinks" : 45,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia", "Oceania" ]
+  },
+  "Q741351" : {
+    "label" : "Moscow Canal",
+    "sitelinks" : 42,
+    "aliases" : [ "Moscow-Volga Canal", "Moskva-Volga Canal" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q7414617" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q7418705" : {
+    "label" : "Sankh River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7419702" : {
+    "label" : "Santa Maria River",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q743160" : {
+    "label" : "Roper River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q745263" : {
+    "label" : "Teles Pires River",
+    "sitelinks" : 23,
+    "aliases" : [ "Rio São Manoel" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q746779" : {
+    "label" : "Ruvuma River",
+    "sitelinks" : 42,
+    "aliases" : [ "River Ruvuma", "Rovuma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q748195" : {
+    "label" : "Ruzizi River",
+    "sitelinks" : 49,
+    "aliases" : [ "Rusizi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q750021" : {
+    "label" : "Ogooué River",
+    "sitelinks" : 53,
+    "aliases" : [ "Ogooue River", "Ogowe", "Ogowe River", "Nazareth River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q750945" : {
+    "label" : "Tuscarawas River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q751347" : {
+    "label" : "San Joaquin River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q752674" : {
+    "label" : "Tapajós River",
+    "sitelinks" : 49,
+    "aliases" : [ "Tapajos" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q753765" : {
+    "label" : "Lomami River",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q753897" : {
+    "label" : "Atbarah River",
+    "sitelinks" : 47,
+    "aliases" : [ "Atbara", "Atbara river", "Black Nile", "Red Nile" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q754718" : {
+    "label" : "Durance",
+    "sitelinks" : 46,
+    "aliases" : [ "Durença", "Durènço" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q756091" : {
+    "label" : "Chusovaya",
+    "sitelinks" : 45,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q75745" : {
+    "label" : "Selenga",
+    "sitelinks" : 66,
+    "aliases" : [ "Selenge", "Selenga River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q7590407" : {
+    "label" : "St. Marys River",
+    "sitelinks" : 4,
+    "aliases" : [ "Saint Mary's River", "St. Marys River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7666170" : {
+    "label" : "Sengge Zangbo",
+    "sitelinks" : 6,
+    "aliases" : [ "Sengge Khabab", "Sengge Zangbu", "Shiquan He" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q769856" : {
+    "label" : "Bahr Aouk River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q773033" : {
+    "label" : "Jing River",
+    "sitelinks" : 11,
+    "aliases" : [ "River Jing" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q776071" : {
+    "label" : "Yaque del Norte River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q776155" : {
+    "label" : "Paranaíba River",
+    "sitelinks" : 30,
+    "aliases" : [ "Paranaiba River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q776873" : {
+    "label" : "Kaskaskia River",
+    "sitelinks" : 15,
+    "aliases" : [ "Okaw River", "Rarcon River", "skaskias River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q777999" : {
+    "label" : "Chambeshi River",
+    "sitelinks" : 37,
+    "aliases" : [ "Chambeze River", "Chambezi River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q7821148" : {
+    "label" : "Tongtian River",
+    "sitelinks" : 4,
+    "aliases" : [ "T'ung-t'ien Ho", "T'ung-t'ien R.", "T'ung-t'ien River", "Tongtian He", "Tongtian R.", "Tung-tien Ho", "Tung-tien R.", "Tung-tien River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q782845" : {
+    "label" : "Awash River",
+    "sitelinks" : 57,
+    "aliases" : [ "Awaash" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q783916" : {
+    "label" : "Moma River",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q7853674" : {
+    "label" : "Turakina River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q7856891" : {
+    "label" : "Tūtaekurī River",
+    "sitelinks" : 5,
+    "aliases" : [ "Tutaekuri River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q78707" : {
+    "label" : "Yenisei",
+    "sitelinks" : 104,
+    "aliases" : [ "Yenisei River", "Enisey", "Yenisey", "Jenisej", "River Yenisei", "Enisei", "Enisei River", "Enisey River", "Jenisej River", "River Enisei", "River Enisey", "River Jenisej", "River Yenisey", "Yenisey River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q7885257" : {
+    "label" : "Unini River",
+    "sitelinks" : 5,
+    "aliases" : [ "Rio Unini" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q78861" : {
+    "label" : "Yana",
+    "sitelinks" : 54,
+    "aliases" : [ "Yana River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q78879" : {
+    "label" : "Kolyma",
+    "sitelinks" : 79,
+    "aliases" : [ "Kolyma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q78898" : {
+    "label" : "Onega",
+    "sitelinks" : 41,
+    "aliases" : [ "Onega River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q789056" : {
+    "label" : "Bakoy River",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q789969" : {
+    "label" : "Bandama River",
+    "sitelinks" : 38,
+    "aliases" : [ "Bandama" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q79082" : {
+    "label" : "Kama",
+    "sitelinks" : 83,
+    "aliases" : [ "Kama River" ],
+    "continents" : [ "Europe" ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q79106" : {
+    "label" : "Mezen",
+    "sitelinks" : 43,
+    "aliases" : [ "Mezen'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q791642" : {
+    "label" : "Awatere River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q7960628" : {
+    "label" : "Waitoa River",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q798339" : {
+    "label" : "Back River",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q80240" : {
+    "label" : "Ural",
+    "sitelinks" : 112,
+    "aliases" : [ "Ural", "Yaik", "Jaik", "Ural River", "Zhayyq" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q80350" : {
+    "label" : "Winisk River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q8055142" : {
+    "label" : "Cuilco River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q8075313" : {
+    "label" : "Zuo River",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q809666" : {
+    "label" : "Barwon River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q813008" : {
+    "label" : "Bear River",
+    "sitelinks" : 17,
+    "aliases" : [ "Miller River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q814633" : {
+    "label" : "Bei River",
+    "sitelinks" : 27,
+    "aliases" : [ "Beijiang", "North River", "Bei Jiang", "Pei River", "Pe Kiang", "Pe-kiang", "Pei Chiang", "Pei Kiang", "Pei-chiang", "Pei-kiang", "Pekiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q81507" : {
+    "label" : "Nadym",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q81528" : {
+    "label" : "Pur",
+    "sitelinks" : 32,
+    "aliases" : [ "Pur River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q81555" : {
+    "label" : "Taz",
+    "sitelinks" : 40,
+    "aliases" : [ "Taz River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q81626" : {
+    "label" : "Pyasina",
+    "sitelinks" : 38,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q8168" : {
+    "label" : "Pechora",
+    "sitelinks" : 81,
+    "aliases" : [ "Pechöra", "Petchora" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q817337" : {
+    "label" : "Río Negro",
+    "sitelinks" : 43,
+    "aliases" : [ "Rio Negro" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q8175" : {
+    "label" : "Usa",
+    "sitelinks" : 33,
+    "aliases" : [ "Usva" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q8187" : {
+    "label" : "Northern Dvina",
+    "sitelinks" : 77,
+    "aliases" : [ "Dwina", "Severnaya Dvina" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q819448" : {
+    "label" : "Vuoksa",
+    "sitelinks" : 39,
+    "aliases" : [ "Vuoksi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q8197" : {
+    "label" : "Daugava",
+    "sitelinks" : 94,
+    "aliases" : [ "Düna", "Western Dvina", "Dzvina", "Daugava River", "Dźvina" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q8212" : {
+    "label" : "Pinega",
+    "sitelinks" : 37,
+    "aliases" : [ "Pinega River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q82175" : {
+    "label" : "Khatanga",
+    "sitelinks" : 45,
+    "aliases" : [ "Khatanga River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q82187" : {
+    "label" : "Anabar",
+    "sitelinks" : 46,
+    "aliases" : [ "Anabar River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q821911" : {
+    "label" : "Sobat River",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q82207" : {
+    "label" : "Indigirka",
+    "sitelinks" : 72,
+    "aliases" : [ "Protoka Srednyaya", "Indigirka River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q82228" : {
+    "label" : "Alazeya",
+    "sitelinks" : 42,
+    "aliases" : [ "Alazeya River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q82308" : {
+    "label" : "Kuban",
+    "sitelinks" : 71,
+    "aliases" : [ "Hypanis", "Kuban River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q827505" : {
+    "label" : "Volga–Don Canal",
+    "sitelinks" : 46,
+    "aliases" : [ "Volga-Don Canal", "Volgo-Donskoy Sudokhodnyy Kanal Imeni Vladimira Il'icha Lenina" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q82812" : {
+    "label" : "Sukhona",
+    "sitelinks" : 41,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q831383" : {
+    "label" : "Maya",
+    "sitelinks" : 34,
+    "aliases" : [ "Maya River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q831884" : {
+    "label" : "Xiang River",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q8319" : {
+    "label" : "Arkansas River",
+    "sitelinks" : 74,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q8321" : {
+    "label" : "Illinois River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q834000" : {
+    "label" : "Te Awa Kairangi / Hutt River",
+    "sitelinks" : 11,
+    "aliases" : [ "Hutt River", "Te Awa Kairangi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q834880" : {
+    "label" : "Chattooga River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q836444" : {
+    "label" : "Sanggan He",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q836812" : {
+    "label" : "Lualaba River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q836930" : {
+    "label" : "Buller River",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q837201" : {
+    "label" : "Vakh",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q837208" : {
+    "label" : "Muonio River",
+    "sitelinks" : 32,
+    "aliases" : [ "Kätkäsuvanto", "Muonio älv", "Muonioälven", "Muoniojoki", "Muonionjoki" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q838143" : {
+    "label" : "Gila River",
+    "sitelinks" : 43,
+    "aliases" : [ "Rio Azul", "Akee-mull", "Apache de Gila", "Brazo de Miraflores", "Cina`ahuwipi", "Hah-quah-sa eel", "Hela River", "Jila River", "Rio de las Balsas", "Rio del los Apostoles", "Rio del Nombre Jesus", "Rio Gila", "Xila River", "Zila River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q841359" : {
+    "label" : "Kapuas River",
+    "sitelinks" : 57,
+    "aliases" : [ "Great Kapoeas River", "Great Kapuas", "Kapuas Besar" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q841550" : {
+    "label" : "Ofanto",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q843308" : {
+    "label" : "Tekezé River",
+    "sitelinks" : 35,
+    "aliases" : [ "Tacazze", "Takkaze", "Tekeze River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q845520" : {
+    "label" : "Kalix River",
+    "sitelinks" : 34,
+    "aliases" : [ "Kalix älv", "Kalixälven" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q846063" : {
+    "label" : "Kafue River",
+    "sitelinks" : 47,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q847641" : {
+    "label" : "Wei River",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q847844" : {
+    "label" : "Liu River",
+    "sitelinks" : 14,
+    "aliases" : [ "Liu Jiang" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q848308" : {
+    "label" : "Sepik",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia", "Oceania" ]
+  },
+  "Q8493" : {
+    "label" : "Amu Darya",
+    "sitelinks" : 103,
+    "aliases" : [ "Amu", "Oxus", "Hamu", "Amudarya", "Amu River", "Amudaryo", "Amou daria", "Amu Daria", "Amu-daria", "Amu-Daria", "Amu-Darya", "Amudaria", "Hamu River", "Amu Dar'ya river", "River Amu Dar'ya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q849480" : {
+    "label" : "Napo River",
+    "sitelinks" : 40,
+    "aliases" : [ "Río Napo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q849494" : {
+    "label" : "Gandaki River",
+    "sitelinks" : 57,
+    "aliases" : [ "Narayani River", "Thak Khola", "Gandak River", "Kali Gandaki River", "Kaligandaki River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q849539" : {
+    "label" : "Tietê River",
+    "sitelinks" : 34,
+    "aliases" : [ "Rio Tietê", "Tiete River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q849693" : {
+    "label" : "Madre de Dios River",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q8505" : {
+    "label" : "Hari River",
+    "sitelinks" : 59,
+    "aliases" : [ "Arius", "Tarius", "Arios", "Tedzhen", "Tejen", "Areios", "Gerirud", "Tedzhen river", "Tejen river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q8510" : {
+    "label" : "Helmand River",
+    "sitelinks" : 66,
+    "aliases" : [ "Helmund", "Helmend", "Hirmand", "Helmud river" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q851368" : {
+    "label" : "Oconee River",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q853315" : {
+    "label" : "Apure River",
+    "sitelinks" : 30,
+    "aliases" : [ "Apure", "Río Apure" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q853332" : {
+    "label" : "Cauca River",
+    "sitelinks" : 40,
+    "aliases" : [ "Cauca" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q8542" : {
+    "label" : "Panj River",
+    "sitelinks" : 57,
+    "aliases" : [ "Ochus", "Panja", "Panja River", "Panj", "Ochus River", "Pandja", "Pandja River", "River Ochus", "River Pandja", "River Panj", "River Panja" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q854999" : {
+    "label" : "Bhima River",
+    "sitelinks" : 23,
+    "aliases" : [ "Bhīma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q8550" : {
+    "label" : "Pamir River",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q856509" : {
+    "label" : "Xunjiang",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q859548" : {
+    "label" : "Río Negro",
+    "sitelinks" : 37,
+    "aliases" : [ "Rio Negro" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q859686" : {
+    "label" : "Bighorn River",
+    "sitelinks" : 20,
+    "aliases" : [ "Big Horn River", "Arikusu Hukaahaanu", "Arikusu Huukaahaanu", "Big Wind River", "Great Horn River", "Ksaiyo'he", "Le Corne" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q859909" : {
+    "label" : "Rivière Natashquan",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q859934" : {
+    "label" : "Biya",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q860113" : {
+    "label" : "Bikin",
+    "sitelinks" : 32,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q863681" : {
+    "label" : "Kawarau River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q8642" : {
+    "label" : "Kankakee River",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q8665483" : {
+    "label" : "Black River",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q866875" : {
+    "label" : "Nen River",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q868103" : {
+    "label" : "Coatzacoalcos River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q870069" : {
+    "label" : "Chindwin River",
+    "sitelinks" : 41,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q875573" : {
+    "label" : "Han River",
+    "sitelinks" : 40,
+    "aliases" : [ "Hanjiang", "Han River (China)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q876857" : {
+    "label" : "Yalong River",
+    "sitelinks" : 32,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q882739" : {
+    "label" : "Blue Nile",
+    "sitelinks" : 95,
+    "aliases" : [ "Abai (river)", "Abai river", "Abai River", "Abay (river)", "Abay River", "Abbai River", "Abbay River", "Al-bahr al-Azraq", "Al-Bahr al-azraq", "Blue Nile River", "El Bahr el Azraq", "El Bahr el Azraq River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q899" : {
+    "label" : "Suez Canal",
+    "sitelinks" : 177,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q899815" : {
+    "label" : "Sankuru River",
+    "sitelinks" : 35,
+    "aliases" : [ "Lubilash" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q903306" : {
+    "label" : "Brazos River",
+    "sitelinks" : 42,
+    "aliases" : [ "Maligne", "La Trinidad", "Rio Colorado", "Colorado River", "Rio Trinidad", "Brazos de Dios", "Los Brazos de Dios", "Rio Brasos de Dios", "Rio Brazos de Dios", "Rio de los Brazos de Dios", "Rio Espiritu Santo", "The River of the Arms of God", "Tokonohono", "Uhkto'wusi'yohe" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q9071838" : {
+    "label" : "Ivinhema River",
+    "sitelinks" : 9,
+    "aliases" : [ "Rio Ivinheima" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q907883" : {
+    "label" : "Teesta River",
+    "sitelinks" : 42,
+    "aliases" : [ "Tista River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q909073" : {
+    "label" : "Caledonian Canal",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q909457" : {
+    "label" : "Kureyka",
+    "sitelinks" : 26,
+    "aliases" : [ "Liuma", "Kureika", "Lyuma", "Kureika River", "Kureyka River", "Liuma River", "Lyuma River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q913193" : {
+    "label" : "Murat River",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q916349" : {
+    "label" : "Guaporé River",
+    "sitelinks" : 41,
+    "aliases" : [ "Guapore River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q918867" : {
+    "label" : "Kanawha River",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q920267" : {
+    "label" : "Kheta",
+    "sitelinks" : 25,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q921081" : {
+    "label" : "Tekapo River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q921949" : {
+    "label" : "Broad River",
+    "sitelinks" : 11,
+    "aliases" : [ "Eswa Huppeday", "Eswan Happedaw", "Eswawpuddenah", "Line River", "Main Broad River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q9299577" : {
+    "label" : "Nhamundá River",
+    "sitelinks" : 9,
+    "aliases" : [ "Jamunda", "Jamundá", "Jamundá River", "Nhamunda River", "Rio Nhamundá", "Yamunda", "Yamundá" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q930543" : {
+    "label" : "Waiau Toa / Clarence River",
+    "sitelinks" : 11,
+    "aliases" : [ "Clarence River", "Waiau Toa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q932253" : {
+    "label" : "Jiulong Jiang",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q933176" : {
+    "label" : "San Juan River",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q93360" : {
+    "label" : "Bío Bío River",
+    "sitelinks" : 74,
+    "aliases" : [ "Bio Bio River", "Biobio River" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q934455" : {
+    "label" : "Ebola River",
+    "sitelinks" : 56,
+    "aliases" : [ "Legbala", "Ebola" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q936023" : {
+    "label" : "Rufiji River",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q936688" : {
+    "label" : "Mincio",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q939958" : {
+    "label" : "Tonle Sap River",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q940091" : {
+    "label" : "Pomahaka River",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q941329" : {
+    "label" : "Javary River",
+    "sitelinks" : 36,
+    "aliases" : [ "Javari", "Rio Javari", "Río Javari", "Rio Yavari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q946653" : {
+    "label" : "Mbam River",
+    "sitelinks" : 19,
+    "aliases" : [ "Mbam" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q947477" : {
+    "label" : "Madison River",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q949183" : {
+    "label" : "Tungabhadra River",
+    "sitelinks" : 39,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q952046" : {
+    "label" : "Mzingwane River",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q952429" : {
+    "label" : "Green River",
+    "sitelinks" : 40,
+    "aliases" : [ "Green (Wyoming : řeka)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q952823" : {
+    "label" : "New River",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q955354" : {
+    "label" : "Chubut River",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q968640" : {
+    "label" : "Klamath River",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q971590" : {
+    "label" : "Tamar River",
+    "sitelinks" : 15,
+    "aliases" : [ "River Tamar", "Kanamaluka", "Kanamaluka / River Tamar" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q973" : {
+    "label" : "Ob",
+    "sitelinks" : 112,
+    "aliases" : [ "Obi", "Ob River", "Ob R.", "Obi R.", "Obi River", "R. Ob", "R. Obi", "River Ob", "River Obi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q973135" : {
+    "label" : "Nam Ou",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q974630" : {
+    "label" : "Bytantay",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q976458" : {
+    "label" : "Min River",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q978496" : {
+    "label" : "Wisconsin River",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q979518" : {
+    "label" : "Barito River",
+    "sitelinks" : 40,
+    "aliases" : [ "Barito-rivier", "River Banjer" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  }
+}
