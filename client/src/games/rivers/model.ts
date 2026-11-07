@@ -1,6 +1,7 @@
 import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString } from "geojson";
 
 export interface River {
+  id: string;
   name: string;
   additionalNames: string[];
   geoData: RiverGeoData;

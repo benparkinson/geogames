@@ -106,7 +106,7 @@ function HomePage(): React.JSX.Element {
                 <footer className="small text-muted text-center mt-5">
                     Icons: <a href="https://www.flaticon.com/free-icons/location-marker" title="location-marker icons">Earthz Stocker</a>,{" "}
                     <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
-                    River data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)
+                    River data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL) · River lines: <a href="https://www.naturalearthdata.com/">Natural Earth</a>
                 </footer>
             </div>
         </div>

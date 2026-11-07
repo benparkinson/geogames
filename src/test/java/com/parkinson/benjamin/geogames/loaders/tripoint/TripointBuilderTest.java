@@ -41,7 +41,7 @@ class TripointBuilderTest {
   @Test
   void gameTypes() {
     assertThat(new TripointBuilder().build().gameType()).isSameAs(GameType.TRIPOINT);
-    assertThat(new River("Nile", List.of(), "Africa", null).gameType())
+    assertThat(new River("Q3392", "Nile", List.of(), "Africa", null).gameType())
         .isSameAs(GameType.RIVERS_BY_SHAPE);
   }
 }
