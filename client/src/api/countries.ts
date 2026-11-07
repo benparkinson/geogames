@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { serverEndpoint } from "./gateway";
+import { fetchJson } from "./http";
+import { queryKeys } from "./queryKeys";
 
 export interface CountryName {
   name: string;
@@ -8,14 +9,8 @@ export interface CountryName {
 
 export function useCountryNames() {
   return useQuery<CountryName[]>({
-    queryKey: ["countries"],
-    queryFn: async () => {
-      const response = await fetch(serverEndpoint() + "/api/countries");
-      if (!response.ok) {
-        throw new Error("Failed to load countries (" + response.status + ")");
-      }
-      return response.json();
-    },
+    queryKey: queryKeys.countries,
+    queryFn: () => fetchJson<CountryName[]>("/api/countries", "load countries"),
     staleTime: Infinity,
     gcTime: Infinity,
     retry: 1,

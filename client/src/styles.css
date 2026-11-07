@@ -120,3 +120,6 @@ code {
     transition: box-shadow 120ms, border-color 120ms, background-color 120ms;
   }
 }
+
+.page-bg { background: var(--gg-bg); }
+.wrong-guesses-label { font-size: 0.7rem; }

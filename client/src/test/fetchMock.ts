@@ -1,5 +1,13 @@
 import { vi } from "vitest";
 
+export interface RouteRequest {
+  url: string;
+  init?: RequestInit;
+}
+
+/** `unknown | function` would collapse to `unknown` and lose the function's parameter types. */
+type RouteBody = object | string | number | boolean | null | ((request: RouteRequest) => unknown);
+
 export interface Route {
   /** Defaults to GET. */
   method?: string;
@@ -7,7 +15,7 @@ export interface Route {
   url: string | RegExp;
   status?: number;
   /** JSON body, or a function that computes it from the request (called once per request). */
-  body?: unknown | ((request: { url: string; init?: RequestInit }) => unknown);
+  body?: RouteBody;
   /** Make fetch itself reject, like a network error. */
   networkError?: boolean;
 }

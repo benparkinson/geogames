@@ -1,37 +1,17 @@
 import Head from "next/head";
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { client, serverEndpoint } from "../../../src/api/gateway";
-import { fetchRound, roundUrl } from "../../../src/api/games";
+import { useRound, useSubmitAnswer } from "../../api/games";
+import { GameRoundView } from "../../api/types";
 import GameSummary from "./GameSummary";
-import Tripoint from "../Tripoint";
-import { GameRoundModel, Round, UNANSWERED } from "../../../src/games/common/Model";
-import { Spinner } from "react-bootstrap";
-import RiverShapes from "../RiverShapes";
+import { AnswerState, FINISHED, Round } from "./Model";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { findGameModule } from "../registry";
 
 function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     const [currentRound, setRound] = useState(0)
     const [showSummary, setShowSummary] = useState(false)
-    const { error, data, isLoading } = useQuery({
-        queryKey: [createUrl()],
-        queryFn: () => fetchRound(gameId, currentRound),
-    });
-    const submitAnswerMutation = useMutation({
-        mutationFn: (answerState: string) =>
-            fetch(serverEndpoint() + createUrl() + "/answers", {
-                method: "POST", headers: {
-                    "Content-Type": "application/json",
-                }, body: JSON.stringify({ answerState: answerState })
-            }).then(result => result.json()),
-        onSuccess: () => {
-            client.invalidateQueries({ queryKey: [createUrl()] });
-        },
-    });
-
-    function createUrl() {
-        return roundUrl(gameId, currentRound);
-    }
+    const { error, data, isLoading } = useRound(gameId, currentRound);
+    const submitAnswerMutation = useSubmitAnswer(gameId, currentRound);
 
     function nextRound(): void {
         setRound(currentRound + 1)
@@ -42,15 +22,15 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
         setShowSummary(false)
     }
 
-    function submitAnswer(answerState: string): void {
+    function submitAnswer(answerState: AnswerState): void {
         submitAnswerMutation.mutate(answerState);
     }
 
-    function renderGame(data: GameRoundModel) {
+    function renderGame(data: GameRoundView) {
         const hasNextRound = currentRound < data.totalRoundCount - 1;
-        const roundData = JSON.parse(data.jsonBlob);
-        const gameCompleted = data.gameResult.gameState == "FINISHED";
-        const round = new Round({
+        const roundData = data.data;
+        const gameCompleted = data.gameResult.gameState === FINISHED;
+        const round: Round = {
             nextRound,
             goToRound,
             showSummary: () => setShowSummary(true),
@@ -60,49 +40,26 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             answerState: data.answerState,
             score: data.gameResult.score,
             gameCompleted,
-            roundAnswerStates: roundAnswerStates(data),
-        });
+            roundAnswerStates: data.gameResult.roundAnswerStates,
+        };
 
-        if (data.gameType.name == "TRIPOINT") {
-            return <Tripoint key={currentRound} tripoint={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
-        } else if (data.gameType.name == "RIVERS_BY_SHAPE") {
-            return <RiverShapes key={currentRound} river={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
-        }
-        else {
+        const gameModule = findGameModule(data.gameType.name);
+        if (!gameModule) {
             return <div>Unknown game type...</div>
         }
-    }
-
-    // Older backends don't send roundAnswerStates; fall back to what this response tells us.
-    function roundAnswerStates(data: GameRoundModel): string[] {
-        if (Array.isArray(data.gameResult?.roundAnswerStates)) {
-            return data.gameResult.roundAnswerStates;
-        }
-        const states: string[] = Array(data.totalRoundCount).fill(UNANSWERED);
-        states[currentRound] = data.answerState;
-        return states;
+        // The key resets the round's state, and the game type can change between rounds of a mixed game.
+        return <gameModule.Component key={currentRound} data={roundData} round={round} answerCount={data.gameType.answerCount} submitAnswer={submitAnswer} />
     }
 
     function renderTitle() {
         if (!data) {
             return <title>Loading... | Geogames</title>
         }
-        if (data.gameType.name == "TRIPOINT") {
-            return <title>Tripoint | Geogames</title>
-        } else if (data.gameType.name == "RIVERS_BY_SHAPE") {
-            return <title>Rivers | Geogames</title>
-        }
-        else {
+        const gameModule = findGameModule(data.gameType.name);
+        if (!gameModule) {
             return <title>Unknown game! | Geogames</title>
         }
-    }
-
-    function renderSpinner(): React.JSX.Element {
-        return (
-            <div className="d-flex min-vh-100 justify-content-center align-items-center">
-                <Spinner animation="border" variant="success" />
-            </div>
-        );
+        return <title>{`${gameModule.title} | Geogames`}</title>
     }
 
     return (
@@ -111,10 +68,9 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
                 {renderTitle()}
             </Head>
             {error ? <div className="p-4 text-danger" role="alert">Couldn&apos;t load this round. Please refresh.</div>
-                : isLoading || !data ? renderSpinner()
+                : isLoading || !data ? <LoadingSpinner fullPage variant="success" />
                 : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} />
                 : renderGame(data)}
-            <ReactQueryDevtools initialIsOpen={false} />
         </>
     );
 }

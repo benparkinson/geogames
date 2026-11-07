@@ -1,25 +1,25 @@
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { client } from "../../api/gateway";
 import { callsTo, mockFetch } from "../../test/fetchMock";
 import { countryNames, makeRiverRound, makeRound } from "../../test/fixtures";
-import { GameRoundModel } from "./Model";
+import { GameRoundResponse } from "../../api/types";
+import { AnswerState } from "./Model";
 import GameRoundPage from "./GameRoundPage";
 
 vi.mock("next/head", () => ({ default: ({ children }: { children: React.ReactNode }) => <>{children}</> }));
 vi.mock("next/router", () => ({ useRouter: () => ({ push: vi.fn(), query: {} }) }));
-vi.mock("@tanstack/react-query-devtools", () => ({ ReactQueryDevtools: () => null }));
-vi.mock("../../map/TripointMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
-vi.mock("../../map/RiverShapesMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
+vi.mock("../tripoint/TripointMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
+vi.mock("../rivers/RiverShapesMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 
 const TRIPOINT_PROMPT = "Name the 3 countries that meet at the flag.";
 const RIVER_PROMPT = "Name this river from its shape.";
 
+let client: QueryClient;
+
 beforeEach(() => {
-  // This page invalidates through the shared client, so it must also be the one rendered with.
-  client.setDefaultOptions({ queries: { retry: false, refetchOnWindowFocus: false } });
+  client = new QueryClient({ defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } } });
 });
 
 afterEach(() => {
@@ -29,9 +29,9 @@ afterEach(() => {
 type Kind = "TRIPOINT" | "RIVERS_BY_SHAPE";
 
 /** A tiny in-memory game server that keeps round states and recomputes the game result. */
-function fakeServer(kinds: Kind[], initialStates: string[] = kinds.map(() => "UNANSWERED")) {
+function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): AnswerState => "UNANSWERED")) {
   const states = [...initialStates];
-  const build = (i: number): GameRoundModel => {
+  const build = (i: number): GameRoundResponse => {
     const base = kinds[i] === "TRIPOINT" ? makeRound() : makeRiverRound();
     const unanswered = states.filter((s) => s === "UNANSWERED").length;
     return {
@@ -75,7 +75,7 @@ const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
   callsTo(fetchMock).filter((c) => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
 
 async function solveTripoint(user: ReturnType<typeof userEvent.setup>) {
-  const input = screen.getByRole("textbox", { name: "Country name…" });
+  const input = screen.getByLabelText("Country name…");
   for (const name of ["Belgium", "Netherlands", "Germany"]) {
     await user.type(input, name + "{Enter}");
   }
@@ -104,7 +104,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(TRIPOINT_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("Tripoint | Geogames");
+    expect(title()).toBe("Tripoints | Geogames");
   });
 
   it("renders the river game and title", async () => {

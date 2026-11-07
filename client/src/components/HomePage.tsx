@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
-import { serverEndpoint } from "../api/gateway";
+import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
-import { GAME_OPTIONS, GameOption, ROUND_OPTIONS } from "../games/gameTypes";
+import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 function HomePage(): React.JSX.Element {
     const { createGame, isLoading, error } = useCreateGame();
-    const [selected, setSelected] = useState<GameOption["name"]>("TRIPOINT");
+    const [selected, setSelected] = useState<string>(MENU_OPTIONS[0].type);
     const [rounds, setRounds] = useState(5);
     const [slow, setSlow] = useState(false);
     const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     // Start waking a cold server while the player is still choosing.
     useEffect(() => {
-        fetch(serverEndpoint() + "/health", { mode: "no-cors" }).catch(() => { });
+        wakeServer();
     }, []);
 
     useEffect(() => {
@@ -30,21 +30,21 @@ function HomePage(): React.JSX.Element {
     function handleKeyDown(e: React.KeyboardEvent, index: number): void {
         let next: number;
         if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-            next = (index + 1) % GAME_OPTIONS.length;
+            next = (index + 1) % MENU_OPTIONS.length;
         } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-            next = (index - 1 + GAME_OPTIONS.length) % GAME_OPTIONS.length;
+            next = (index - 1 + MENU_OPTIONS.length) % MENU_OPTIONS.length;
         } else {
             return;
         }
         e.preventDefault();
-        setSelected(GAME_OPTIONS[next].name);
+        setSelected(MENU_OPTIONS[next].type);
         cardRefs.current[next]?.focus();
     }
 
-    function renderCard(option: GameOption, index: number): React.JSX.Element {
-        const isSelected = option.name === selected;
+    function renderCard(option: MenuOption, index: number): React.JSX.Element {
+        const isSelected = option.type === selected;
         return (
-            <div className="col-12 col-sm-4" key={option.name}>
+            <div className="col-12 col-sm-4" key={option.type}>
                 <button
                     type="button"
                     role="radio"
@@ -52,7 +52,7 @@ function HomePage(): React.JSX.Element {
                     tabIndex={isSelected ? 0 : -1}
                     ref={el => { cardRefs.current[index] = el; }}
                     className={"game-card w-100 h-100 text-start rounded-3 p-3 " + (isSelected ? "border border-2 border-primary bg-primary-subtle" : "border bg-body")}
-                    onClick={() => setSelected(option.name)}
+                    onClick={() => setSelected(option.type)}
                     onKeyDown={e => handleKeyDown(e, index)}
                 >
                     <option.Icon size={28} aria-hidden="true" />
@@ -64,14 +64,14 @@ function HomePage(): React.JSX.Element {
     }
 
     return (
-        <div className="min-vh-100 py-4" style={{ background: "var(--gg-bg)" }}>
+        <div className="min-vh-100 py-4 page-bg">
             <div className="container" style={{ maxWidth: 720 }}>
                 <h1 className="text-center mt-3">Geogames</h1>
                 <p className="lead text-center mb-4">Quick geography puzzles on a real map.</p>
 
                 <h2 className="h5">Choose a game</h2>
                 <div role="radiogroup" aria-label="Choose a game" className="row g-3 mb-4">
-                    {GAME_OPTIONS.map(renderCard)}
+                    {MENU_OPTIONS.map(renderCard)}
                 </div>
 
                 <div className="d-flex align-items-center gap-3 mb-4">

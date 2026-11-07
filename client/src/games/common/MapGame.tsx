@@ -1,110 +1,73 @@
 import { useState } from "react";
-import { normaliseString } from "../../helper/stringHelper";
 import MapGameInput from "./MapGameInput";
-import { Round, CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./Model";
+import { AnswerState, Round } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
+import { AnswerCandidate } from "./answers";
+import { GuessAction, guessReducer, GuessState, initialGuessState } from "./guessReducer";
 
 function MapGame<Type>({
   data,
   answerCount,
   MapComponent,
-  correctAnswersFunction,
+  answers,
   round,
   prompt,
   inputPlaceholder,
+  answerNoun,
   blankMapCaption,
   suggestions,
   isKnownGuess,
   hints,
   submitAnswer,
-  answerState,
-  isAnswerCorrect
 }: MapGameProps<Type>): React.JSX.Element {
-  const [attemptedGuesses, setAttemptedGuesses] = useState<AnswerModel[]>(() =>
-    answerState !== UNANSWERED
-      ? correctAnswersFunction(data).map(a => new AnswerModel(a, true))
-      : []
-  );
-  const [gaveUp, setGaveUp] = useState(answerState === GAVE_UP);
-  const [gameOver, setGameOver] = useState(answerState !== UNANSWERED);
-  const [hintsUsed, setHintsUsed] = useState(0);
+  const [guessState, setGuessState] = useState<GuessState>(() => initialGuessState(round.answerState, answers));
   const [hintTexts, setHintTexts] = useState<string[]>([]);
+  const { guesses, gaveUp, over: gameOver, hintsUsed } = guessState;
 
-  function renderMap() {
-    return <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} />;
+  function dispatch(action: GuessAction) {
+    const outcome = guessReducer(guessState, action, {
+      answers,
+      answerCount,
+      isKnownGuess,
+      hintsTotal: hints?.total ?? 0,
+    });
+    setGuessState(outcome.state);
+    if (outcome.finished) {
+      submitAnswer(outcome.finished);
+    }
+    return outcome;
   }
 
-  function submitGuess(guess: string): GuessResult {
-    if (gameOver) {
-      return { kind: "over" };
-    }
-
-    const trimmed = guess.trim();
-    if (trimmed === "") {
-      return { kind: "empty" };
-    }
-
-    const allGuesses = attemptedGuesses.map((answer: AnswerModel) => normaliseString(answer.answer));
-    if (allGuesses.includes(normaliseString(trimmed))) {
-      return { kind: "duplicate", guess: trimmed };
-    }
-
-    if (isKnownGuess && !isKnownGuess(trimmed)) {
-      return { kind: "unknown", guess: trimmed };
-    }
-
-    const correct = isAnswerCorrect(trimmed, data);
-    const newAttemptedGuesses = [...attemptedGuesses, new AnswerModel(trimmed, correct)];
-    const correctCount = newAttemptedGuesses.filter(answer => answer.correct).length;
-
-    setAttemptedGuesses(newAttemptedGuesses);
-
-    if (!correct) {
-      return { kind: "wrong", guess: trimmed };
-    }
-
-    const remaining = answerCount - correctCount;
-    if (remaining <= 0) {
-      submitAnswer(CORRECT_ANSWER);
-      setGameOver(true);
-      return { kind: "correct", remaining: 0 };
-    }
-    return { kind: "correct", remaining };
+  function submitGuess(guess: string) {
+    return dispatch({ type: "guess", text: guess }).result ?? { kind: "over" as const };
   }
 
   function giveUp() {
-    if (gameOver) {
-      return;
-    }
-
-    setAttemptedGuesses(correctAnswersFunction(data).map(a => new AnswerModel(a, true)));
-    submitAnswer(GAVE_UP);
-    setGaveUp(true);
-    setGameOver(true);
+    dispatch({ type: "giveUp" });
   }
 
-  function useHint() {
+  function takeHint() {
     if (gameOver || !hints || hintsUsed >= hints.total) {
       return;
     }
 
-    const text = hints.use(hintsUsed);
+    const text = hints.text?.(hintsUsed);
     if (text) {
       setHintTexts([...hintTexts, text]);
     }
-    setHintsUsed(hintsUsed + 1);
+    dispatch({ type: "hint" });
   }
 
-  const foundAnswers = attemptedGuesses.filter(a => a.correct).map(a => a.answer);
+  const foundAnswers = guesses.flatMap(g => (g.answer === null ? [] : [g.answer]));
   const showBlankMap = !!blankMapCaption && !gameOver;
 
   const map = (
     <>
-      {renderMap()}
+      <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} />
       {showBlankMap && <div className="map-caption">{blankMapCaption}</div>}
     </>
   );
@@ -121,19 +84,20 @@ function MapGame<Type>({
         answerCount={answerCount}
         found={foundAnswers}
         gaveUp={gaveUp}
-        allAnswers={gaveUp ? attemptedGuesses.map(a => a.answer) : []}
+        allAnswers={gaveUp ? foundAnswers : []}
       />
       <MapGameInput
         gameOver={gameOver}
         gaveUp={gaveUp}
         round={round}
-        wrongGuesses={attemptedGuesses.filter(a => !a.correct)}
+        wrongGuesses={guesses.filter(g => g.answer === null)}
         submitGuess={submitGuess}
-        useHint={useHint}
+        onHint={takeHint}
         hintsUsed={hintsUsed}
         hints={hints}
         giveUp={giveUp}
         inputPlaceholder={inputPlaceholder}
+        answerNoun={answerNoun}
         suggestions={suggestions}
       />
     </>
@@ -152,42 +116,26 @@ function MapGame<Type>({
 export interface HintConfig {
   total: number;
   description: string;
-  use: (hintIndex: number) => string | null;
+  /** Text to show for the hint at this index. Leave it out for hints that only change the map. */
+  text?: (hintIndex: number) => string | null;
 }
 
-export type GuessResult =
-  | { kind: "empty" }
-  | { kind: "duplicate"; guess: string }
-  | { kind: "unknown"; guess: string }
-  | { kind: "wrong"; guess: string }
-  | { kind: "correct"; remaining: number }
-  | { kind: "over" };
-
-export class MapGameProps<Type> {
+export interface MapGameProps<Type> {
   data: Type;
   answerCount: number;
   MapComponent: React.ComponentType<MapProps<Type>>;
-  correctAnswersFunction: (data: Type) => string[];
+  /** The answers to find, with the aliases that also count. */
+  answers: AnswerCandidate[];
   round: Round;
   prompt: string;
   inputPlaceholder: string;
+  /** What the player is naming, singular: used in "We don't recognise "x" as a country". */
+  answerNoun: string;
   blankMapCaption?: string;
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;
-  submitAnswer: (answerState: string) => void;
-  answerState: string;
-  isAnswerCorrect: (guess: string, data: Type) => boolean;
-}
-
-export class AnswerModel {
-  answer: string;
-  correct: boolean;
-
-  constructor(answer: string, correct: boolean) {
-    this.answer = answer;
-    this.correct = correct;
-  }
+  submitAnswer: (answerState: AnswerState) => void;
 }
 
 export default MapGame;

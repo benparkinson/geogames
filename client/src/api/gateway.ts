@@ -1,13 +1,6 @@
-import { QueryClient } from "@tanstack/react-query";
-import isProduction from "../config/environment";
-
-export const client: QueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+function isProduction(): boolean {
+  return process.env.NODE_ENV === "production";
+}
 
 export function serverEndpoint(): string {
   if (isProduction()) {

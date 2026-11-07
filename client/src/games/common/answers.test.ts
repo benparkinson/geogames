@@ -1,30 +1,28 @@
 import { describe, expect, it } from "vitest";
-import { makeRiverRound, makeRound } from "../../test/fixtures";
-import { GAME_OPTIONS } from "../gameTypes";
-import { answerNames, gameTypeLabel } from "./answers";
+import { matchAnswer } from "./answers";
 
-describe("answerNames", () => {
-  it("lists the three tripoint countries in blob order", () => {
-    expect(answerNames(makeRound())).toEqual(["Belgium", "Netherlands", "Germany"]);
+describe("matchAnswer", () => {
+  const candidates = [
+    { name: "Germany", additionalNames: ["Deutschland", "Federal Republic of Germany"] },
+    { name: "Côte d'Ivoire", additionalNames: ["Ivory Coast"] },
+  ];
+
+  it("returns the canonical name for a name, ignoring case, accents and punctuation", () => {
+    expect(matchAnswer("germany", candidates)).toBe("Germany");
+    expect(matchAnswer("cote d ivoire", candidates)).toBe("Côte d'Ivoire");
   });
 
-  it("lists the river name", () => {
-    expect(answerNames(makeRiverRound())).toEqual(["Danube"]);
+  it("returns the canonical name for an alias", () => {
+    expect(matchAnswer("DEUTSCHLAND", candidates)).toBe("Germany");
+    expect(matchAnswer("ivory-coast", candidates)).toBe("Côte d'Ivoire");
   });
 
-  it("returns nothing for an unknown game type", () => {
-    expect(answerNames(makeRound({ gameType: { name: "SOMETHING_ELSE", answerCount: 1 } }))).toEqual([]);
-  });
-});
-
-describe("gameTypeLabel", () => {
-  it("uses the singular label of every known game option", () => {
-    for (const option of GAME_OPTIONS) {
-      expect(gameTypeLabel(option.name)).toBe(option.singular);
-    }
+  it("returns null when nothing matches", () => {
+    expect(matchAnswer("France", candidates)).toBeNull();
+    expect(matchAnswer("Germ", candidates)).toBeNull();
   });
 
-  it("returns an unknown name as it is", () => {
-    expect(gameTypeLabel("SOMETHING_ELSE")).toBe("SOMETHING_ELSE");
+  it("returns null when there are no candidates", () => {
+    expect(matchAnswer("Germany", [])).toBeNull();
   });
 });

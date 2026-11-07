@@ -27,7 +27,7 @@ export function GuessBox({ value, name, onChange, disabled, className, autoFocus
   );
 }
 
-export class GuessBoxProps {
+interface GuessBoxProps {
   value: string;
   name: string;
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;

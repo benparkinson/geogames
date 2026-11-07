@@ -1,18 +1,63 @@
 import { useRouter } from "next/router";
-import { useMutation } from "@tanstack/react-query";
-import { GameRoundModel } from "../games/common/Model";
-import { serverEndpoint } from "./gateway";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AnswerState, UNANSWERED } from "../games/common/Model";
+import { fetchJson, postJson } from "./http";
+import { queryKeys } from "./queryKeys";
+import { GameRoundResponse, GameRoundView } from "./types";
 
-export function roundUrl(gameId: string, round: number): string {
+function roundUrl(gameId: string, round: number): string {
   return "/api/games/" + gameId + "/rounds/" + round;
 }
 
-export async function fetchRound(gameId: string, round: number): Promise<GameRoundModel> {
-  const response = await fetch(serverEndpoint() + roundUrl(gameId, round));
-  if (!response.ok) {
-    throw new Error("Failed to load round " + round + " (" + response.status + ")");
+export function toRoundView(response: GameRoundResponse, round: number): GameRoundView {
+  return {
+    gameType: response.gameType,
+    data: JSON.parse(response.jsonBlob),
+    totalRoundCount: response.totalRoundCount,
+    answerState: response.answerState,
+    gameResult: {
+      gameState: response.gameResult.gameState,
+      score: response.gameResult.score,
+      roundAnswerStates: roundAnswerStates(response, round),
+    },
+  };
+}
+
+// Older backends don't send roundAnswerStates; fall back to what this response tells us.
+function roundAnswerStates(response: GameRoundResponse, round: number): AnswerState[] {
+  if (Array.isArray(response.gameResult?.roundAnswerStates)) {
+    return response.gameResult.roundAnswerStates;
   }
-  return response.json();
+  const states: AnswerState[] = Array(response.totalRoundCount).fill(UNANSWERED);
+  states[round] = response.answerState;
+  return states;
+}
+
+export async function fetchRound(gameId: string, round: number): Promise<GameRoundView> {
+  const response = await fetchJson<GameRoundResponse>(roundUrl(gameId, round), `load round ${round}`);
+  return toRoundView(response, round);
+}
+
+export function roundQuery(gameId: string, round: number) {
+  return {
+    queryKey: queryKeys.round(gameId, round),
+    queryFn: () => fetchRound(gameId, round),
+  };
+}
+
+export function useRound(gameId: string, round: number) {
+  return useQuery(roundQuery(gameId, round));
+}
+
+export function useSubmitAnswer(gameId: string, round: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (answerState: AnswerState) =>
+      postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", { answerState }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.round(gameId, round) });
+    },
+  });
 }
 
 export function useCreateGame(): {
@@ -22,17 +67,8 @@ export function useCreateGame(): {
 } {
   const router = useRouter();
   const { mutate, isPending, error } = useMutation({
-    mutationFn: async (request: { gameType: string; numberOfRounds: number }) => {
-      const response = await fetch(serverEndpoint() + "/api/games", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create game (" + response.status + ")");
-      }
-      return response.json() as Promise<{ id: number }>;
-    },
+    mutationFn: (request: { gameType: string; numberOfRounds: number }) =>
+      postJson<{ id: number }>("/api/games", "create game", request),
     onSuccess: (data) => {
       router.push("/games/" + data.id);
     },

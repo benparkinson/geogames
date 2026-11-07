@@ -1,10 +1,27 @@
 import Link from "next/link";
 import { Button, Spinner } from "react-bootstrap";
-import { CheckLg, EyeFill, HouseFill } from "react-bootstrap-icons";
+import { CheckLg, EyeFill } from "react-bootstrap-icons";
+import HomeLink from "../../components/HomeLink";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
-import { fetchRound, roundUrl, useCreateGame } from "../../api/games";
-import { answerNames, gameTypeLabel } from "./answers";
-import { CORRECT_ANSWER, GameRoundModel } from "./Model";
+import { roundQuery, useCreateGame } from "../../api/games";
+import { GameRoundView } from "../../api/types";
+import { findGameModule, RANDOM_OPTION } from "../registry";
+import { CORRECT_ANSWER, UNANSWERED } from "./Model";
+
+function roundLabel(round: GameRoundView): string {
+  return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
+}
+
+function roundAnswers(round: GameRoundView): string[] {
+  return findGameModule(round.gameType.name)?.answerNames(round.data) ?? [];
+}
+
+/** The game type to start for "Play again": the one every round used, or a mix if they differed. */
+function playAgainType(rounds: GameRoundView[]): string {
+  const types = new Set(rounds.map(r => r.gameType.name));
+  return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
+}
 
 export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   gameId: string;
@@ -12,36 +29,24 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   onOpenRound: (round: number) => void;
 }): React.JSX.Element {
   const results = useQueries({
-    queries: Array.from({ length: totalRoundCount }, (_v, i) => ({
-      queryKey: [roundUrl(gameId, i)],
-      queryFn: () => fetchRound(gameId, i),
-    })),
+    queries: Array.from({ length: totalRoundCount }, (_v, i) => roundQuery(gameId, i)),
   });
   const { createGame, isLoading: creating, error: createError } = useCreateGame();
 
-  const rounds = results.map(r => r.data as GameRoundModel | undefined);
-  const loaded = rounds.every(r => !!r);
+  const all = results.flatMap(r => (r.data ? [r.data] : []));
 
-  if (!loaded) {
-    return (
-      <div className="d-flex min-vh-100 justify-content-center align-items-center" style={{ background: "var(--gg-bg)" }}>
-        <Spinner animation="border" />
-      </div>
-    );
+  if (all.length < totalRoundCount) {
+    return <LoadingSpinner fullPage className="page-bg" />;
   }
 
-  const all = rounds as GameRoundModel[];
   const correct = all.filter(r => r.answerState === CORRECT_ANSWER).length;
-  const revealed = all.filter(r => r.answerState !== CORRECT_ANSWER && r.answerState !== "UNANSWERED").length;
-  const types = new Set(all.map(r => r.gameType.name));
-  const gameType = types.size === 1 ? all[0].gameType.name : "RANDOM";
+  const revealed = all.filter(r => r.answerState !== CORRECT_ANSWER && r.answerState !== UNANSWERED).length;
+  const gameType = playAgainType(all);
 
   return (
-    <div className="min-vh-100" style={{ background: "var(--gg-bg)" }}>
+    <div className="min-vh-100 page-bg">
       <div className="px-3 py-2">
-        <Link href="/" aria-label="Home" className="text-decoration-none text-body fw-semibold">
-          <HouseFill aria-hidden="true" /> Geogames
-        </Link>
+        <HomeLink />
       </div>
       <div className="card mx-auto my-4 p-3" style={{ maxWidth: 560 }}>
         <h1 className="h3 mb-1">You scored {correct} / {totalRoundCount}</h1>
@@ -58,9 +63,9 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
                 onClick={() => onOpenRound(i)}
               >
                 <span>
-                  <span className="text-muted">{i + 1}. {gameTypeLabel(r.gameType.name)}</span>
+                  <span className="text-muted">{i + 1}. {roundLabel(r)}</span>
                   <br />
-                  {answerNames(r).join(", ")}
+                  {roundAnswers(r).join(", ")}
                 </span>
                 <span className={"text-nowrap " + (isCorrect ? "text-success" : "text-secondary")}>
                   {isCorrect

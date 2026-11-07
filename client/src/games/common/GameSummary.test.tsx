@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
 import { makeRiverRound, makeRound } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
-import { GameRoundModel } from "./Model";
+import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
@@ -12,7 +12,7 @@ vi.mock("next/router", () => ({ useRouter: () => router }));
 
 const roundsUrl = /\/api\/games\/g1\/rounds\/(\d+)$/;
 
-function roundsRoute(rounds: GameRoundModel[]): Route {
+function roundsRoute(rounds: GameRoundResponse[]): Route {
   return { url: roundsUrl, body: ({ url }) => rounds[Number(url.match(roundsUrl)![1])] };
 }
 
