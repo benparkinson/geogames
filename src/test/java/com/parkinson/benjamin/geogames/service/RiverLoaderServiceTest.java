@@ -22,6 +22,7 @@ class RiverLoaderServiceTest {
   private static final Set<String> CONTINENTS =
       Set.of("Africa", "Asia", "Europe", "North America", "South America", "Australia");
 
+  // The hand-picked rivers that the continent quotas keep (not the Yenisei).
   private static final List<String> ORIGINAL_RIVERS =
       List.of(
           "Amazon",
@@ -41,7 +42,6 @@ class RiverLoaderServiceTest {
           "Volga",
           "Yangtze",
           "Yellow River",
-          "Yenisei",
           "Yukon River",
           "Zambezi");
 
@@ -52,7 +52,7 @@ class RiverLoaderServiceTest {
         new RiverLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()))
             .loadRivers();
 
-    assertThat(rivers).hasSizeGreaterThanOrEqualTo(100);
+    assertThat(rivers).hasSize(50);
     assertThat(rivers.stream().map(River::id).toList()).doesNotHaveDuplicates();
     assertThat(rivers.stream().map(River::name).toList()).containsAll(ORIGINAL_RIVERS);
     for (River river : rivers) {

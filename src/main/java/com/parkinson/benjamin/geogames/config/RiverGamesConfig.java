@@ -39,7 +39,7 @@ public class RiverGamesConfig {
         river -> List.of());
   }
 
-  /** Only rivers through two or more countries: one outline alone is unguessable. */
+  /** Only rivers through three or more countries: one or two outlines are too easy or unguessable. */
   @Bean
   RoundGenerator riversByCountries(
       RiverLoaderService rivers, CountryLoaderService countries, Random random) {
@@ -47,7 +47,7 @@ public class RiverGamesConfig {
         GameType.RIVERS_BY_COUNTRIES,
         rivers,
         random,
-        river -> river.countries() != null && river.countries().size() >= 2,
+        river -> river.countries() != null && river.countries().size() >= 3,
         river -> river.countries().stream().map(countries::loadCountryByName).toList());
   }
 }

@@ -60,29 +60,34 @@ class RiverSelectionTest {
   }
 
   @Test
-  void theTopNIsTakenBySitelinks() {
+  void eachContinentTakesItsTopRiversBySitelinks() {
     Map<String, NaturalEarthRiver> groups =
-        Map.of("Q1", group("Q1", "A"), "Q2", group("Q2", "B"), "Q3", group("Q3", "C"));
+        Map.of(
+            "Q1", group("Q1", "A"),
+            "Q2", group("Q2", "B"),
+            "Q3", group("Q3", "C"),
+            "Q4", group("Q4", "D"),
+            "Q5", group("Q5", "E"));
     Map<String, WikidataEntry> wikidata =
         Map.of(
-            "Q1",
-            entry("A", 10, "Asia"),
-            "Q2",
-            entry("B", 30, "Asia"),
-            "Q3",
-            entry("C", 20, "Asia"));
+            "Q1", entry("A", 10, "Asia"),
+            "Q2", entry("B", 30, "Asia"),
+            "Q3", entry("C", 20, "Asia"),
+            "Q4", entry("D", 5, "Africa"),
+            "Q5", entry("E", 1, "Europe"));
 
     Selection selection =
-        RiverSelector.select(assemble(groups, wikidata, Map.of()).candidates(), 2);
+        RiverSelector.select(
+            assemble(groups, wikidata, Map.of()).candidates(), Map.of("Asia", 2, "Africa", 1));
 
     assertThat(selection.selected())
         .extracting(RiverCandidate::name)
-        .containsExactlyInAnyOrder("B", "C");
-    assertThat(selection.beyondLimit()).isEqualTo(1);
+        .containsExactlyInAnyOrder("B", "C", "D");
+    assertThat(selection.beyondLimit()).isEqualTo(2);
   }
 
   @Test
-  void overrideRiversAreAlwaysIncludedAndExcludedOnesNever() {
+  void overrideRiversCompeteOnSitelinksAndExcludedOnesNeverAppear() {
     Map<String, NaturalEarthRiver> groups =
         Map.of(
             "Q1", group("Q1", "Famous"), "Q2", group("Q2", "Banned"), "Q3", group("Q3", "Obscure"));
@@ -92,14 +97,13 @@ class RiverSelectionTest {
             "Q2", entry("Banned", 500, "Asia"),
             "Q3", entry("Obscure", 1, "Asia"));
     Map<String, RiverOverride> overrides =
-        Map.of("Q2", override(true, null, null), "Q3", override(false, null, null));
+        Map.of("Q2", override(true, null, null), "Q3", override(false, "Renamed", null));
 
     Selection selection =
-        RiverSelector.select(assemble(groups, wikidata, overrides).candidates(), 2);
+        RiverSelector.select(assemble(groups, wikidata, overrides).candidates(), Map.of("Asia", 1));
 
-    assertThat(selection.selected())
-        .extracting(RiverCandidate::name)
-        .containsExactlyInAnyOrder("Famous", "Obscure");
+    assertThat(selection.selected()).extracting(RiverCandidate::name).containsExactly("Famous");
+    assertThat(selection.beyondLimit()).isEqualTo(1);
   }
 
   @Test
@@ -145,7 +149,7 @@ class RiverSelectionTest {
             new WikidataEntry("Lost", 50, List.of(), List.of("Europe", "Asia"), List.of()));
 
     Assembly assembly = assemble(groups, wikidata, Map.of());
-    Selection selection = RiverSelector.select(assembly.candidates(), 10);
+    Selection selection = RiverSelector.select(assembly.candidates(), Map.of("Asia", 10));
 
     assertThat(assembly.dropped()).containsEntry("shorter than 200 km", 1);
     assertThat(selection.selected()).isEmpty();
