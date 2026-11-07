@@ -12,14 +12,17 @@ Backend (repo root; use `./mvnw` or `mvnw.cmd` if `mvn` isn't installed):
 - Full build (also builds the frontend and bundles it into the jar): `mvn clean install` (add `-DskipTests` to skip tests)
 - Run the packaged app: `java -jar target/geogames-0.0.1-SNAPSHOT.jar`. It serves on port 8080.
 - Run the backend in dev: run the main method of `GeogamesApplication` (for example from IntelliJ), or use `mvn spring-boot:run`
-- Tests: `mvn test`. Run a single test with `mvn test -Dtest=TripointFinderTest` or `-Dtest=TripointFinderTest#methodName`
+- Tests: `mvn test`. Run a single test with `mvn test -Dtest=TripointFinderTest` or `-Dtest=TripointFinderTest#methodName`. `mvn test` and `mvn install` also run the frontend Vitest suite (a `frontend-maven-plugin` execution in the `test` phase), and `-DskipTests` skips both. To run only the Java tests quickly, add `-Dskip.npm -Dskip.installnodenpm` (this skips all the plugin's npm steps, including the frontend build and tests, and needs `client/out` to exist from an earlier build).
+- Backend test conventions: JUnit 5, AssertJ and Mockito. Boot 4 moved the test slices out of `spring-boot-test-autoconfigure`, so `@WebMvcTest` / `@AutoConfigureMockMvc` come from `spring-boot-starter-webmvc-test` (package `org.springframework.boot.webmvc.test.autoconfigure`) and `@DataJpaTest` from `spring-boot-starter-data-jpa-test`. Use `@MockitoBean` (`org.springframework.test.context.bean.override.mockito`), not `@MockBean`. No test may hit the network. `TripointComputer` is tested against the hand-written HTML in `src/test/resources/fixtures/`.
 - Format Java (google-java-format via Spotless): `mvn spotless:apply`. Check formatting with `mvn spotless:check`.
 
 Frontend (`client/`):
 - Dev server with hot reload on port 3000: `npm run dev`. It calls the backend at `http://localhost:8080`.
 - Lint: `npm run lint`
 - Production static export: `npm run build`. This runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `client/out/`.
-- The frontend has no tests. Ignore `client/README.md`; it is leftover Create React App boilerplate.
+- Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; the Leaflet-rendering map components are excluded). Tests are colocated with their source as `*.test.ts(x)` under `client/src`, and shared helpers (fixtures, a `fetch` router, a query-client wrapper) live in `client/src/test/`. Never put test files under `client/pages/`, because Next would treat them as routes. Test files are type-checked by `next build`, so import `describe`/`it`/`expect`/`vi` from `vitest` explicitly. Never render real Leaflet maps: mock the `*MapWrapper` modules. Testing Library only detects Jest's fake timers, so with `vi.useFakeTimers()` use `fireEvent` instead of `userEvent`. `GameRoundPage` invalidates through the shared `client` from `api/gateway.ts`, so its tests must render with that client.
+- Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports. Don't run `npm ci` or Maven builds while the VS Code Java extension is importing the project: it runs the same `npm ci` in `client/` after a `pom.xml` change, and two at once fail with `ENOTEMPTY`. Wait for its `target/node ... npm ci` / `npm run build` processes to finish first.
+- Ignore `client/README.md`; it is leftover Create React App boilerplate.
 
 ## Architecture
 
