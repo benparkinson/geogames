@@ -24,4 +24,14 @@ public class RiverGamesConfig {
     return new RiverRoundGenerator(
         GameType.RIVERS_ON_MAP, rivers, random, river -> true, river -> List.of());
   }
+
+  @Bean
+  RoundGenerator riversByEnds(RiverLoaderService rivers, Random random) {
+    return new RiverRoundGenerator(
+        GameType.RIVERS_BY_ENDS,
+        rivers,
+        random,
+        river -> river.source() != null && river.mouth() != null,
+        river -> List.of());
+  }
 }

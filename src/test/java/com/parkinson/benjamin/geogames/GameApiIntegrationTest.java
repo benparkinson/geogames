@@ -136,6 +136,21 @@ class GameApiIntegrationTest {
   }
 
   @Test
+  void createsARiverByEndsGame() throws Exception {
+    int id = createGame("RIVERS_BY_ENDS", 3);
+
+    for (int i = 0; i < 3; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("RIVERS_BY_ENDS");
+      assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      assertThat((Double) JsonPath.read(blob, "$.river.source.latitude")).isBetween(-90.0, 90.0);
+      assertThat((Double) JsonPath.read(blob, "$.river.mouth.longitude")).isBetween(-180.0, 180.0);
+    }
+  }
+
+  @Test
   void createsARandomGame() throws Exception {
     int id = createGame("RANDOM", 10);
     Set<String> subjects = new HashSet<>();

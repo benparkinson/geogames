@@ -1,4 +1,5 @@
-import { GeoJSON, TileLayer } from "react-leaflet";
+import { GeoJSON, Marker, TileLayer, Tooltip } from "react-leaflet";
+import { endFlagIcon, startFlagIcon } from "../../map/flagIcons";
 import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
 import type { River } from "./model";
 
@@ -10,4 +11,18 @@ export function RiverLine({ river, gaveUp }: { river: River; gaveUp: boolean }):
 /** Satellite imagery, shown once the round is over. Its tiles carry no labels. */
 export function RevealTiles({ show }: { show: boolean }): React.JSX.Element | null {
   return show ? <TileLayer url={SATELLITE_TILE_URL} /> : null;
+}
+
+/** A green flag where the river starts and a red one where it ends. */
+export function EndFlags({ river }: { river: River }): React.JSX.Element {
+  return (
+    <>
+      <Marker icon={startFlagIcon} position={[river.source.latitude, river.source.longitude]}>
+        <Tooltip>Start</Tooltip>
+      </Marker>
+      <Marker icon={endFlagIcon} position={[river.mouth.latitude, river.mouth.longitude]}>
+        <Tooltip>End</Tooltip>
+      </Marker>
+    </>
+  );
 }
