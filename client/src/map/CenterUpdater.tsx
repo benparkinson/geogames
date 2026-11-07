@@ -13,7 +13,7 @@ export function CenterUpdater({ center, zoom = 4 }: CenterUpdaterProps): null {
   return null;
 }
 
-export class CenterUpdaterProps {
+interface CenterUpdaterProps {
   center: LatLngTuple;
   zoom?: number;
 }

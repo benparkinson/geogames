@@ -1,7 +1,8 @@
 import { GuessBox } from "../../components/GuessBox";
 import { Round } from "./Model";
 import RoundResult from "./RoundResult";
-import { AnswerModel, GuessResult, HintConfig } from "./MapGame";
+import { HintConfig } from "./MapGame";
+import { Guess, GuessResult } from "./guessReducer";
 import { Button } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import { EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
@@ -16,11 +17,12 @@ function MapGameInput({
   round,
   wrongGuesses,
   submitGuess,
-  useHint,
+  onHint,
   hintsUsed,
   hints,
   giveUp,
   inputPlaceholder,
+  answerNoun,
   suggestions
 }: MapGameInputProps): React.JSX.Element {
   const [guess, setGuess] = useState("");
@@ -49,7 +51,7 @@ function MapGameInput({
         setFeedback(`You've already guessed ${result.guess}.`);
         break;
       case "unknown":
-        setFeedback(`We don't recognise "${result.guess}" as a country. Check the spelling.`);
+        setFeedback(`We don't recognise "${result.guess}" as a ${answerNoun}. Check the spelling.`);
         setShakeCount(shakeCount + 1);
         break;
       case "wrong":
@@ -98,6 +100,7 @@ function MapGameInput({
               name={inputPlaceholder}
               onChange={e => setGuess(e.currentTarget.value)}
               disabled={gameOver}
+              suggestions={suggestions}
             />
           </div>
           <Button type="submit" variant="primary" disabled={gameOver}>Guess</Button>
@@ -106,7 +109,7 @@ function MapGameInput({
         <div className="d-flex flex-wrap gap-2 mb-2">
           {hints && (
             <span title={hintTitle}>
-              <Button variant="outline-warning" onClick={useHint} disabled={gameOver || hintsLeft <= 0}>
+              <Button variant="outline-warning" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
                 <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
               </Button>
             </span>
@@ -122,11 +125,11 @@ function MapGameInput({
 
       {wrongGuesses.length > 0 && (
         <div>
-          <div className="text-muted" style={{ fontSize: "0.7rem" }}>Wrong guesses</div>
+          <div className="text-muted wrong-guesses-label">Wrong guesses</div>
           <div className="d-flex flex-wrap gap-1">
             {wrongGuesses.map((a, i) => (
               <span key={i} className="badge bg-body-secondary text-body-secondary fw-normal text-decoration-line-through border">
-                <XLg aria-hidden="true" /> {a.answer}
+                <XLg aria-hidden="true" /> {a.text}
               </span>
             ))}
           </div>
@@ -136,17 +139,18 @@ function MapGameInput({
   );
 }
 
-export class MapGameInputProps {
+interface MapGameInputProps {
   gameOver: boolean;
   gaveUp: boolean;
   round: Round;
-  wrongGuesses: AnswerModel[];
+  wrongGuesses: Guess[];
   submitGuess: (guess: string) => GuessResult;
-  useHint: () => void;
+  onHint: () => void;
   hintsUsed: number;
   hints?: HintConfig;
   giveUp: () => void;
   inputPlaceholder: string;
+  answerNoun: string;
   suggestions?: string[];
 }
 

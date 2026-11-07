@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { makeRiverData, makeRoundProps } from "../test/fixtures";
-import RiverShapes from "./RiverShapes";
+import { makeRiverData, makeRoundProps } from "../../test/fixtures";
+import RiverShapesGame from "./RiverShapesGame";
 
-vi.mock("../map/RiverShapesMapWrapper", () => ({
+vi.mock("./RiverShapesMapWrapper", () => ({
   default: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)} />
   ),
@@ -12,13 +12,13 @@ vi.mock("../map/RiverShapesMapWrapper", () => ({
 
 function renderRiver() {
   const submitAnswer = vi.fn();
-  render(<RiverShapes river={makeRiverData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
+  render(<RiverShapesGame data={makeRiverData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 
 const input = () => screen.getByRole("textbox", { name: "River name…" });
 
-describe("RiverShapes", () => {
+describe("RiverShapesGame", () => {
   it("asks for the river's name", () => {
     renderRiver();
 

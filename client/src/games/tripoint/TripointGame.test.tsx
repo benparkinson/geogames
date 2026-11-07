@@ -1,21 +1,31 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { countryNames, makeRoundProps, makeTripointData } from "../test/fixtures";
-import { mockFetch } from "../test/fetchMock";
-import { renderWithClient } from "../test/render";
-import Tripoint, { TripointModel } from "./Tripoint";
+import { countryNames, makeRoundProps, makeTripointData } from "../../test/fixtures";
+import { mockFetch } from "../../test/fetchMock";
+import { renderWithClient } from "../../test/render";
+import TripointGame from "./TripointGame";
+import type { TripointRoundData } from "./model";
 
-vi.mock("../map/TripointMapWrapper", () => ({
-  default: ({ data, gameOver, gaveUp }: { data: TripointModel; gameOver: boolean; gaveUp: boolean }) => (
+vi.mock("./TripointMapWrapper", () => ({
+  default: ({
+    data,
+    gameOver,
+    gaveUp,
+    hintsUsed,
+  }: {
+    data: TripointRoundData;
+    gameOver: boolean;
+    gaveUp: boolean;
+    hintsUsed: number;
+  }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)}>
-      {data.countries
-        .filter((c) => c.showAsHint)
-        .map((c) => (
-          <span key={c.name} data-testid="hint-border">
-            {c.name}
-          </span>
-        ))}
+      {data.hintOrder.slice(0, hintsUsed).map((name) => (
+        <span key={name} data-testid="hint-border">
+          {name}
+        </span>
+      ))}
     </div>
   ),
 }));
@@ -27,12 +37,13 @@ afterEach(() => {
 function renderTripoint(tripoint = makeTripointData()) {
   const submitAnswer = vi.fn();
   const view = renderWithClient(
-    <Tripoint tripoint={tripoint} round={makeRoundProps()} answerCount={3} submitAnswer={submitAnswer} />,
+    <TripointGame data={tripoint} round={makeRoundProps()} answerCount={3} submitAnswer={submitAnswer} />,
   );
   return { ...view, tripoint, submitAnswer };
 }
 
-const input = () => screen.getByRole("textbox", { name: "Country name…" });
+// Once the country list loads the input has a datalist, which makes its role "combobox".
+const input = () => screen.getByLabelText("Country name…");
 
 async function guess(user: ReturnType<typeof userEvent.setup>, text: string) {
   await user.type(input(), text + "{Enter}");
@@ -94,6 +105,32 @@ describe("Tripoint guessing", () => {
   });
 });
 
+describe("Tripoint aliases", () => {
+  it("counts a country once when it is guessed by alias and then by name", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    const user = userEvent.setup();
+    renderTripoint();
+
+    await guess(user, "Deutschland");
+    expect(screen.getByRole("group", { name: "Answers: 1 of 3 found" })).toBeInTheDocument();
+    await guess(user, "Germany");
+
+    expect(screen.getByText("You've already guessed Germany.")).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Answers: 1 of 3 found" })).toBeInTheDocument();
+  });
+
+  it("shows a country found by alias under its own name", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    renderTripoint();
+
+    await guess(userEvent.setup(), "holland");
+
+    const slots = screen.getByRole("group", { name: "Answers: 1 of 3 found" });
+    expect(slots).toHaveTextContent("Netherlands");
+    expect(slots).not.toHaveTextContent("holland");
+  });
+});
+
 describe("Tripoint hints", () => {
   it("shows one more country border per hint until none are left", async () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
@@ -130,16 +167,30 @@ describe("Tripoint hints", () => {
     expect(new Set(shown).size).toBe(2);
   });
 
-  it("modifies the tripoint object it was given", async () => {
-    // TODO: showRandomCountryBorder sets showAsHint on the country objects of the
-    // `tripoint` prop itself instead of copying them first.
+  it("does not modify the tripoint object it was given", async () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
     vi.spyOn(Math, "random").mockReturnValue(0);
     const { tripoint } = renderTripoint();
-    expect(tripoint.countries[0].showAsHint).toBe(false);
+    const before = structuredClone(tripoint);
 
     await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
 
-    expect(tripoint.countries[0].showAsHint).toBe(true);
+    expect(tripoint).toEqual(before);
+  });
+
+  it("keeps the same hint order when the round data is refetched", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const user = userEvent.setup();
+    const { rerender, client } = renderTripoint();
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+
+    rerender(
+      <QueryClientProvider client={client}>
+        <TripointGame data={makeTripointData()} round={makeRoundProps()} answerCount={3} submitAnswer={vi.fn()} />
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getAllByTestId("hint-border").map((e) => e.textContent)).toEqual(["Belgium"]);
   });
 });

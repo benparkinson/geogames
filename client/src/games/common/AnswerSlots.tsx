@@ -18,6 +18,8 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
             </span>
           );
         }
+        // TODO: unreachable in practice. After "Reveal answer" the reducer marks every answer as found,
+        // so `found` already fills all the slots and the grey "revealed" style never shows.
         if (gaveUp && allAnswers[i]) {
           return (
             <span key={i} className="slot--filled badge rounded-pill bg-secondary fs-6 fw-normal" title="Revealed">

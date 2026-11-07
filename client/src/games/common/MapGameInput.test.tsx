@@ -2,7 +2,8 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
-import { AnswerModel, GuessResult, HintConfig } from "./MapGame";
+import { HintConfig } from "./MapGame";
+import { GuessResult } from "./guessReducer";
 import MapGameInput from "./MapGameInput";
 
 function renderInput(overrides: Partial<React.ComponentProps<typeof MapGameInput>> = {}) {
@@ -12,10 +13,11 @@ function renderInput(overrides: Partial<React.ComponentProps<typeof MapGameInput
     round: makeRoundProps(),
     wrongGuesses: [],
     submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "over" })),
-    useHint: vi.fn(),
+    onHint: vi.fn(),
     hintsUsed: 0,
     giveUp: vi.fn(),
     inputPlaceholder: "Country…",
+    answerNoun: "country",
     ...overrides,
   };
   const view = render(<MapGameInput {...props} />);
@@ -147,14 +149,14 @@ describe("MapGameInput reveal", () => {
 });
 
 describe("MapGameInput hints", () => {
-  const hints: HintConfig = { total: 2, description: "Shows a clue", use: vi.fn() };
+  const hints: HintConfig = { total: 2, description: "Shows a clue" };
 
   it("shows how many hints are left and uses one on click", async () => {
     const { props } = renderInput({ hints, hintsUsed: 0 });
 
     await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
 
-    expect(props.useHint).toHaveBeenCalledTimes(1);
+    expect(props.onHint).toHaveBeenCalledTimes(1);
   });
 
   it("disables the hint button when none are left", () => {
@@ -186,7 +188,7 @@ describe("MapGameInput states", () => {
   });
 
   it("lists each wrong guess", () => {
-    renderInput({ wrongGuesses: [new AnswerModel("Italy", false), new AnswerModel("Peru", false)] });
+    renderInput({ wrongGuesses: [{ text: "Italy", answer: null }, { text: "Peru", answer: null }] });
 
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
@@ -199,10 +201,17 @@ describe("MapGameInput states", () => {
     expect(screen.queryByText("Wrong guesses")).not.toBeInTheDocument();
   });
 
-  it("does not render a suggestions list even when suggestions are given", () => {
-    // TODO: `suggestions` is accepted as a prop but never passed to GuessBox, so the
-    // country autocomplete datalist that Tripoint builds is never rendered.
+  it("passes suggestions to the guess box as a datalist", () => {
     const { container } = renderInput({ suggestions: ["France", "Spain"] });
+
+    const options = Array.from(container.querySelectorAll("datalist option")).map((o) => o.getAttribute("value"));
+    expect(options).toEqual(["France", "Spain"]);
+    // An input with a list attribute is exposed as a combobox rather than a textbox.
+    expect(screen.getByRole("combobox", { name: "Country…" })).toHaveAttribute("list");
+  });
+
+  it("renders no suggestions list when none are given", () => {
+    const { container } = renderInput();
 
     expect(container.querySelector("datalist")).toBeNull();
     expect(input()).not.toHaveAttribute("list");

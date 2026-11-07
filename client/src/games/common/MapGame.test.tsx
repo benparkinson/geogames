@@ -1,11 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { normaliseString } from "../../helper/stringHelper";
 import { makeRoundProps } from "../../test/fixtures";
 import MapGame, { HintConfig } from "./MapGame";
 
-const ANSWERS = ["France", "Spain"];
+const ANSWERS = [
+  { name: "France", additionalNames: [] },
+  { name: "Spain", additionalNames: [] },
+];
 
 function MapStub({ gameOver, gaveUp }: { data: unknown; gameOver: boolean; gaveUp: boolean }) {
   return <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)} />;
@@ -17,13 +19,12 @@ function renderGame(overrides: Partial<React.ComponentProps<typeof MapGame<objec
     data: {},
     answerCount: 2,
     MapComponent: MapStub,
-    correctAnswersFunction: () => ANSWERS,
+    answers: ANSWERS,
     round: makeRoundProps(),
     prompt: "Name them",
     inputPlaceholder: "Country…",
+    answerNoun: "country",
     submitAnswer,
-    answerState: "UNANSWERED",
-    isAnswerCorrect: (guess) => ANSWERS.map(normaliseString).includes(normaliseString(guess)),
     ...overrides,
   };
   render(<MapGame {...props} />);
@@ -129,7 +130,7 @@ describe("MapGame guessing", () => {
   });
 
   it("ignores guesses after the round is over", async () => {
-    renderGame({ answerState: "CORRECT" });
+    renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
@@ -154,7 +155,7 @@ describe("MapGame giving up", () => {
 
 describe("MapGame resuming a finished round", () => {
   it("starts solved with every answer filled in when the round was answered correctly", () => {
-    const { submitAnswer } = renderGame({ answerState: "CORRECT" });
+    const { submitAnswer } = renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
@@ -164,7 +165,7 @@ describe("MapGame resuming a finished round", () => {
   });
 
   it("starts revealed when the round was given up", () => {
-    const { submitAnswer } = renderGame({ answerState: "GAVE_UP" });
+    const { submitAnswer } = renderGame({ round: makeRoundProps({ answerState: "GAVE_UP" }) });
 
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
@@ -174,37 +175,61 @@ describe("MapGame resuming a finished round", () => {
 });
 
 describe("MapGame hints", () => {
-  function hintConfig(): HintConfig {
-    return {
-      total: 2,
-      description: "A clue",
-      use: vi.fn().mockReturnValueOnce("Continent: Europe").mockReturnValueOnce(null),
-    };
+  function hintConfig() {
+    const text = vi.fn<(hintIndex: number) => string | null>().mockReturnValueOnce("Continent: Europe").mockReturnValueOnce(null);
+    const hints: HintConfig = { total: 2, description: "A clue", text };
+    return { hints, text };
   }
 
   it("calls the hint with an increasing index and shows the text it returns", async () => {
     const user = userEvent.setup();
-    const hints = hintConfig();
+    const { hints, text } = hintConfig();
     renderGame({ hints });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(hints.use).toHaveBeenLastCalledWith(0);
+    expect(text).toHaveBeenLastCalledWith(0);
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(hints.use).toHaveBeenLastCalledWith(1);
+    expect(text).toHaveBeenLastCalledWith(1);
   });
 
   it("uses up a hint even when it has no text, and stops when none are left", async () => {
     const user = userEvent.setup();
-    const hints = hintConfig();
+    const { hints, text } = hintConfig();
     renderGame({ hints });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
 
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
-    expect(hints.use).toHaveBeenCalledTimes(2);
+    expect(text).toHaveBeenCalledTimes(2);
     expect(screen.getAllByText(/Continent/)).toHaveLength(1);
+  });
+
+  it("takes a hint that has no text function without showing anything", async () => {
+    const user = userEvent.setup();
+    renderGame({ hints: { total: 1, description: "Changes the map" } });
+
+    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+
+    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+  });
+
+  it("tells the map how many hints have been taken", async () => {
+    const user = userEvent.setup();
+    const seen: number[] = [];
+    renderGame({
+      hints: { total: 2, description: "A clue" },
+      MapComponent: ({ hintsUsed }) => {
+        seen.push(hintsUsed);
+        return <div data-testid="map" />;
+      },
+    });
+
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+
+    expect(seen[0]).toBe(0);
+    expect(seen[seen.length - 1]).toBe(1);
   });
 });

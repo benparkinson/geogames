@@ -1,10 +1,11 @@
 import { vi } from "vitest";
-import { GameRoundModel, Round } from "../games/common/Model";
-import type { River } from "../games/RiverShapes";
-import type { TripointModel } from "../games/Tripoint";
+import type { GameRoundResponse } from "../api/types";
+import type { Round } from "../games/common/Model";
+import type { River } from "../games/rivers/model";
+import type { TripointModel } from "../games/tripoint/model";
 
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
-  return new Round({
+  return {
     nextRound: vi.fn(),
     goToRound: vi.fn(),
     showSummary: vi.fn(),
@@ -16,7 +17,7 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     gameCompleted: false,
     roundAnswerStates: ["UNANSWERED", "UNANSWERED", "UNANSWERED"],
     ...overrides,
-  });
+  };
 }
 
 function square(offset: number) {
@@ -35,9 +36,9 @@ export function makeTripointData(): TripointModel {
   return {
     coordinate: { latitude: 50.75, longitude: 6.02 },
     countries: [
-      { name: "Belgium", additionalNames: [], geoData: square(0), showAsHint: false },
-      { name: "Netherlands", additionalNames: ["Holland"], geoData: square(1), showAsHint: false },
-      { name: "Germany", additionalNames: ["Deutschland"], geoData: square(2), showAsHint: false },
+      { name: "Belgium", additionalNames: [], geoData: square(0) },
+      { name: "Netherlands", additionalNames: ["Holland"], geoData: square(1) },
+      { name: "Germany", additionalNames: ["Deutschland"], geoData: square(2) },
     ],
   } as unknown as TripointModel;
 }
@@ -55,7 +56,7 @@ export function makeRiverData(): River {
   } as unknown as River;
 }
 
-export function makeRound(overrides: Partial<GameRoundModel> = {}): GameRoundModel {
+export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return {
     jsonBlob: JSON.stringify(makeTripointData()),
     totalRoundCount: 3,
@@ -71,7 +72,7 @@ export function makeRound(overrides: Partial<GameRoundModel> = {}): GameRoundMod
   };
 }
 
-export function makeRiverRound(overrides: Partial<GameRoundModel> = {}): GameRoundModel {
+export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeRiverData()),
     gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1 },
