@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import java.time.Duration;
 import java.util.List;
@@ -18,11 +19,15 @@ public class PlaceNameController {
 
   private final CountryLoaderService countryLoaderService;
   private final RiverLoaderService riverLoaderService;
+  private final LakeLoaderService lakeLoaderService;
 
   public PlaceNameController(
-      CountryLoaderService countryLoaderService, RiverLoaderService riverLoaderService) {
+      CountryLoaderService countryLoaderService,
+      RiverLoaderService riverLoaderService,
+      LakeLoaderService lakeLoaderService) {
     this.countryLoaderService = countryLoaderService;
     this.riverLoaderService = riverLoaderService;
+    this.lakeLoaderService = lakeLoaderService;
   }
 
   @GetMapping("/countries")
@@ -33,6 +38,11 @@ public class PlaceNameController {
   @GetMapping("/rivers")
   public ResponseEntity<List<PlaceName>> rivers() {
     return cached(riverLoaderService.loadRiverNames());
+  }
+
+  @GetMapping("/lakes")
+  public ResponseEntity<List<PlaceName>> lakes() {
+    return cached(lakeLoaderService.loadLakeNames());
   }
 
   private static ResponseEntity<List<PlaceName>> cached(List<PlaceName> names) {

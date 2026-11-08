@@ -29,6 +29,12 @@ describe("FitBounds", () => {
     expect(options).toEqual({ padding: [24, 24], maxZoom: 7 });
   });
 
+  it("allows a higher maximum zoom when asked", () => {
+    render(<FitBounds data={line(10)} id="baikal" maxZoom={11} />);
+
+    expect(fakeMap.fitBounds.mock.calls[0][1]).toEqual({ padding: [24, 24], maxZoom: 11 });
+  });
+
   it("fits again when the id changes", () => {
     const { rerender } = render(<FitBounds data={line(10)} id="danube" />);
 

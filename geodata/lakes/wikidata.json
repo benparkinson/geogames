@@ -1,0 +1,4188 @@
+{
+  "Q1010056" : {
+    "label" : "Lake Bunyonyi",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q10269944" : {
+    "label" : "Zhalauly",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q10315644" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q10315670" : {
+    "label" : "Itaipu Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ "Itaipu Lake", "Represa de Itaip" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1032254" : {
+    "label" : "Pangong Tso",
+    "sitelinks" : 47,
+    "aliases" : [ "Bangong Co", "Bangong Lake", "Pangong Lake", "Bangong Hu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1032768" : {
+    "label" : "Canandaigua Lake",
+    "sitelinks" : 10,
+    "aliases" : [ "Lake Canandaigua" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1033302" : {
+    "label" : "Caniapiscau Reservoir",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1047206" : {
+    "label" : "Lake Kariba",
+    "sitelinks" : 43,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1051621" : {
+    "label" : "Lake Upemba",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1052532" : {
+    "label" : "Cedar Lake",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1060962" : {
+    "label" : "Lake Chamo",
+    "sitelinks" : 25,
+    "aliases" : [ "Chamo Hayk" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1062" : {
+    "label" : "Lake Ontario",
+    "sitelinks" : 108,
+    "aliases" : [ "Lake America" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1062495" : {
+    "label" : "Chao Lake",
+    "sitelinks" : 24,
+    "aliases" : [ "Chaohu Lake", "the Chaohu Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1066" : {
+    "label" : "Lake Superior",
+    "sitelinks" : 112,
+    "aliases" : [ "Superior" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1066779" : {
+    "label" : "Koka Reservoir",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1074063" : {
+    "label" : "Lake Mackay",
+    "sitelinks" : 28,
+    "aliases" : [ "Wilkinkarra", "Wilkin Karra" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1089891" : {
+    "label" : "Churchill Lake",
+    "sitelinks" : 12,
+    "aliases" : [ "Churchill" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q10902731" : {
+    "label" : "Beidagang Reservoir",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q10906051" : {
+    "label" : "Huiten Nur",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q10995968" : {
+    "label" : "Kaptai Lake",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1101640" : {
+    "label" : "Clinton-Colden Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1108073" : {
+    "label" : "Ilirgytgkin",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1108335" : {
+    "label" : "Chukochye Lake",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q11087306" : {
+    "label" : "Ngangzê Co",
+    "sitelinks" : 3,
+    "aliases" : [ "Angzecuo", "Ngangtse Tso", "Ngangzem", "Ngangzi Co", "Nyangtse tso" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1109799" : {
+    "label" : "Dyupkun",
+    "sitelinks" : 9,
+    "aliases" : [ "Lake Dyupkun" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1110298" : {
+    "label" : "Arakhley",
+    "sitelinks" : 10,
+    "aliases" : [ "Lake Arakhley" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1112158" : {
+    "label" : "Kapchagay Reservoir",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1112333" : {
+    "label" : "Kungasalakh",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q11124334" : {
+    "label" : "Lake Wuchang",
+    "sitelinks" : 2,
+    "aliases" : [ "Wuchang Hu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1112986" : {
+    "label" : "Colville Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1115201" : {
+    "label" : "Lake Chelan",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1115650" : {
+    "label" : "Ubinskoye",
+    "sitelinks" : 15,
+    "aliases" : [ "Ubinskoe Lake", "Ubinskoye Ozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1115810" : {
+    "label" : "Kronotskoye Lake",
+    "sitelinks" : 25,
+    "aliases" : [ "Kronotskoe Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1120394" : {
+    "label" : "Kokora",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1125601" : {
+    "label" : "Khyargas Nuur",
+    "sitelinks" : 27,
+    "aliases" : [ "Hirgis Nuur" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1132211" : {
+    "label" : "Nettilling Lake",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1134446" : {
+    "label" : "Reindeer Lake",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1140471" : {
+    "label" : "Lake Te Anau",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1143935" : {
+    "label" : "Lake Rukwa",
+    "sitelinks" : 45,
+    "aliases" : [ "Lake Rukwa", "Rukwa Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1144905" : {
+    "label" : "Lake Pihkva",
+    "sitelinks" : 26,
+    "aliases" : [ "Lake Pskov", "Pihkva", "Pskovskoe Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1158664" : {
+    "label" : "Dąbie Lake",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q116685" : {
+    "label" : "Lake Tana",
+    "sitelinks" : 77,
+    "aliases" : [ "Lake Dembea", "T’ana Hāyk", "Ṭana Ḥäyq", "Tsana" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q11681443" : {
+    "label" : "embalse de Orellana",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1169" : {
+    "label" : "Lake Michigan",
+    "sitelinks" : 107,
+    "aliases" : [ "Michigan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q11878874" : {
+    "label" : "Upper Lough Erne",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1192384" : {
+    "label" : "Lake Manapouri",
+    "sitelinks" : 23,
+    "aliases" : [ "Manapōuri", "Moturau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1192621" : {
+    "label" : "Lake Rotorua / Te Rotorua nui ā Kahumatamomoe",
+    "sitelinks" : 25,
+    "aliases" : [ "Lake Rotorua", "Lake Rotorua/Te Rotorua nui ā Kahumatamomoe" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1192728" : {
+    "label" : "Lake Wānaka",
+    "sitelinks" : 27,
+    "aliases" : [ "Lake Wanaka", "Oanaka" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1194022" : {
+    "label" : "Lake Tekapo",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q12018576" : {
+    "label" : "Geren Cuo",
+    "sitelinks" : 7,
+    "aliases" : [ "Kyaring Tso", "Jiarencuo", "Kering tso", "Zhalin Hu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q122184" : {
+    "label" : "Lake Nipigon",
+    "sitelinks" : 41,
+    "aliases" : [ "Lac Nipigon" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1233362" : {
+    "label" : "Point Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q12341531" : {
+    "label" : "Whitefish Bay",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1247231" : {
+    "label" : "Oneida Lake",
+    "sitelinks" : 18,
+    "aliases" : [ "Oneida Lake, New York", "Oneida Lake, USA" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q124978" : {
+    "label" : "Lake Kyoga",
+    "sitelinks" : 51,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q125211" : {
+    "label" : "Lake Edward",
+    "sitelinks" : 75,
+    "aliases" : [ "Rweru", "Rwitanzigye", "Edward Nyanza", "Rutanzige", "Rwicanzige" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q125309" : {
+    "label" : "Lake Chad",
+    "sitelinks" : 105,
+    "aliases" : [ "Chad Lake", "Lac Tchad", "Lake_Chad", "Tchad Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q12547114" : {
+    "label" : "Imantau",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q125888" : {
+    "label" : "Lake Albert",
+    "sitelinks" : 89,
+    "aliases" : [ "Albert Nyanza", "Lake Mobutu Sese Seko", "Lake Mwitanzige" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q125912" : {
+    "label" : "Lake Kivu",
+    "sitelinks" : 82,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1262967" : {
+    "label" : "Dubawnt Lake",
+    "sitelinks" : 19,
+    "aliases" : [ "Kamilikuak" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q126307" : {
+    "label" : "Lake Van",
+    "sitelinks" : 90,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1267413" : {
+    "label" : "Georgian Bay",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q126982" : {
+    "label" : "Sea of Galilee",
+    "sitelinks" : 97,
+    "aliases" : [ "Lake of Tiberias", "Kinneret", "Kinnereth", "Lake Kinneret", "Lake of Gennesaret", "Lake Tiberias" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1270436" : {
+    "label" : "Lake Débo",
+    "sitelinks" : 21,
+    "aliases" : [ "Lake Debo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1271947" : {
+    "label" : "Lake Monowai",
+    "sitelinks" : 9,
+    "aliases" : [ "Manokīwai", "Monowai Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q127469" : {
+    "label" : "Lake Wakatipu",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1275436" : {
+    "label" : "Grand Lake",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1291135" : {
+    "label" : "Lake Eyasi",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1299817" : {
+    "label" : "Lake Marqaköl",
+    "sitelinks" : 25,
+    "aliases" : [ "Lake Markakol" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1303872" : {
+    "label" : "Lake Dunstan",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1309664" : {
+    "label" : "Goose Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1315765" : {
+    "label" : "Vygozero",
+    "sitelinks" : 32,
+    "aliases" : [ "Lake Vygozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1320568" : {
+    "label" : "Red Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1323267" : {
+    "label" : "Khar-Us Lake",
+    "sitelinks" : 28,
+    "aliases" : [ "Har Us Nuur" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1324212" : {
+    "label" : "Lake Tumba",
+    "sitelinks" : 33,
+    "aliases" : [ "Lac Ntomba" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q1324437" : {
+    "label" : "Femund",
+    "sitelinks" : 30,
+    "aliases" : [ "Femunden" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1328159" : {
+    "label" : "Lac Payne",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1328351" : {
+    "label" : "Tehek Lake",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1328483" : {
+    "label" : "Keller Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1328792" : {
+    "label" : "Cabonga Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1329423" : {
+    "label" : "Baskatong Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1330203" : {
+    "label" : "Dozois Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1333432" : {
+    "label" : "Skaneateles Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1334148" : {
+    "label" : "Lake Eğirdir",
+    "sitelinks" : 35,
+    "aliases" : [ "Lake Hoyran" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1335725" : {
+    "label" : "Keuka Lake",
+    "sitelinks" : 9,
+    "aliases" : [ "Crooked Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1339170" : {
+    "label" : "Owasco Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1342950" : {
+    "label" : "Engozero",
+    "sitelinks" : 14,
+    "aliases" : [ "Lake Engozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1343275" : {
+    "label" : "Lake Louise",
+    "sitelinks" : 25,
+    "aliases" : [ "Sasnuu’ Bene'" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q134485" : {
+    "label" : "Lake Balkhash",
+    "sitelinks" : 89,
+    "aliases" : [ "Balkash", "Balkash Lake", "Balkhash", "Balkhash Lake", "Lake Balkash" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q1345130" : {
+    "label" : "Koitere",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1347588" : {
+    "label" : "Lake Pukaki",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1349516" : {
+    "label" : "Lake Ōhau",
+    "sitelinks" : 20,
+    "aliases" : [ "Lake Ohau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1352298" : {
+    "label" : "Røssvatnet",
+    "sitelinks" : 27,
+    "aliases" : [ "Reevhtse" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1356838" : {
+    "label" : "Lake Nipissing",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1366974" : {
+    "label" : "Lough Allen",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1383" : {
+    "label" : "Lake Huron",
+    "sitelinks" : 100,
+    "aliases" : [ "Huron" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q138637" : {
+    "label" : "Lake Izabal",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1391737" : {
+    "label" : "Baker Lake",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1404973" : {
+    "label" : "Siling Lake",
+    "sitelinks" : 17,
+    "aliases" : [ "Qilin Hu", "Selincuo", "Tso Ziling", "Sêrling Co", "Serling tso", "Siling Co" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q140712" : {
+    "label" : "Lake Tai",
+    "sitelinks" : 51,
+    "aliases" : [ "Tai Lake", "Tai Hu", "Taihu", "Lake T'ai", "Lake T'ai-hu", "Lake Tae", "Lake Tai-hu", "Lake Taihu", "T'ai Hu", "T'ai-hu Lake", "Tae Lake", "Tai-hu Lake", "Taihu Lake", "the Grand Lake", "the Great Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1416209" : {
+    "label" : "Segozero",
+    "sitelinks" : 25,
+    "aliases" : [ "Lake Segozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1425346" : {
+    "label" : "Nizhnekamsk Reservoir",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1425651" : {
+    "label" : "Kyiv Reservoir",
+    "sitelinks" : 30,
+    "aliases" : [ "Kyiv Sea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1427364" : {
+    "label" : "Flathead Lake",
+    "sitelinks" : 19,
+    "aliases" : [ "Pend D'Oreille Lake", "Selish Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1431500" : {
+    "label" : "Kremenchuk Reservoir",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1431535" : {
+    "label" : "Saratov Reservoir",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1440634" : {
+    "label" : "Lake Hāwea",
+    "sitelinks" : 16,
+    "aliases" : [ "Lake Hawea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1445991" : {
+    "label" : "Khar Lake",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1457581" : {
+    "label" : "Três Marias Dam",
+    "sitelinks" : 7,
+    "aliases" : [ "Tres Marias Dam" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1458051" : {
+    "label" : "Lake Mistassini",
+    "sitelinks" : 19,
+    "aliases" : [ "Lac Mistassini" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1458409" : {
+    "label" : "Pyaozero",
+    "sitelinks" : 28,
+    "aliases" : [ "Pääjärvi", "Lake Pyaozero", "Ozero Pjaozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1460034" : {
+    "label" : "Lama",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1460079" : {
+    "label" : "Umbozero",
+    "sitelinks" : 23,
+    "aliases" : [ "Lake Umb", "Lake Umba" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1463552" : {
+    "label" : "Kubenskoe",
+    "sitelinks" : 30,
+    "aliases" : [ "Lake Kubenskoye" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q14638138" : {
+    "label" : "Ogoki Reservoir",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q14638483" : {
+    "label" : "Long Lake",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1464758" : {
+    "label" : "Lake Enriquillo",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1465138" : {
+    "label" : "Lake Barlee",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q14683954" : {
+    "label" : "Shasta Lake",
+    "sitelinks" : 8,
+    "aliases" : [ "Shasta Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1469728" : {
+    "label" : "Lake  Valencia",
+    "sitelinks" : 23,
+    "aliases" : [ "Lake Tacarigua" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1471254" : {
+    "label" : "Réservoir Pipmuacan",
+    "sitelinks" : 7,
+    "aliases" : [ "Pipmuacan Reservoir", "Reservoir Pipmuacan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1476428" : {
+    "label" : "Lake Clark",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1477854" : {
+    "label" : "Xinfengjiang Reservoir",
+    "sitelinks" : 9,
+    "aliases" : [ "Wanlü Lake", "Xinfengjiang Shuiku" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1479284" : {
+    "label" : "Uglich Reservoir",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1493200" : {
+    "label" : "Lake Traverse",
+    "sitelinks" : 5,
+    "aliases" : [ "Traverse Lake", "Ga-edawaii-mamiwung Sagaiigun", "Pamitchi Gumaug" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1494524" : {
+    "label" : "Garry Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1496993" : {
+    "label" : "Lac Bienville",
+    "sitelinks" : 13,
+    "aliases" : [ "Lake Bienville" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1500709" : {
+    "label" : "Volgograd Reservoir",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1514307" : {
+    "label" : "Nueltin Lake",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1516443" : {
+    "label" : "Lac La Martre",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1520895" : {
+    "label" : "Lake Chany",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q15288" : {
+    "label" : "Lake Ladoga",
+    "sitelinks" : 98,
+    "aliases" : [ "Ladoga" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1533897" : {
+    "label" : "Gods Lake",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1534419" : {
+    "label" : "Lake Claire",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1535541" : {
+    "label" : "Pyasino",
+    "sitelinks" : 25,
+    "aliases" : [ "Lake Pyasino", "Pyasino Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1539726" : {
+    "label" : "Smallwood Reservoir",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1540136" : {
+    "label" : "Gouin Reservoir",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1540436" : {
+    "label" : "Kakhovka Reservoir",
+    "sitelinks" : 40,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1542594" : {
+    "label" : "Novosibirsk Reservoir",
+    "sitelinks" : 21,
+    "aliases" : [ "Ob Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q15436784" : {
+    "label" : "",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1546823" : {
+    "label" : "Napaktulik Lake",
+    "sitelinks" : 12,
+    "aliases" : [ "Napaktulik", "Takijuq Lake", "Takiyuak Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q15523" : {
+    "label" : "Lake Como",
+    "sitelinks" : 87,
+    "aliases" : [ "Lago di Como", "Lago Lario" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1552706" : {
+    "label" : "Seneca Lake",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q15824957" : {
+    "label" : "Lac Chavigny",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1589175" : {
+    "label" : "Jackson Lake",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1600016" : {
+    "label" : "Mille Lacs Lake",
+    "sitelinks" : 14,
+    "aliases" : [ "Lake Mille Lacs" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1606564" : {
+    "label" : "Wholdaia Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1630256" : {
+    "label" : "Tathlina Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1631233" : {
+    "label" : "Hottah Lake",
+    "sitelinks" : 11,
+    "aliases" : [ "Hottah" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1632195" : {
+    "label" : "Lake Pend Oreille",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1634424" : {
+    "label" : "Amistad Reservoir",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1634873" : {
+    "label" : "Ondozero",
+    "sitelinks" : 8,
+    "aliases" : [ "Lake Ondozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1635229" : {
+    "label" : "Lake Murray",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1635550" : {
+    "label" : "Pyhäjärvi",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1638191" : {
+    "label" : "Kumpupintil Lake",
+    "sitelinks" : 25,
+    "aliases" : [ "Lake Disappointment" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1638242" : {
+    "label" : "Trout Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q163855" : {
+    "label" : "Lake Torrens",
+    "sitelinks" : 32,
+    "aliases" : [ "Ngarndamukia" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1640500" : {
+    "label" : "Wollaston Lake",
+    "sitelinks" : 22,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1640519" : {
+    "label" : "Lake Tharthar",
+    "sitelinks" : 27,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q16508570" : {
+    "label" : "Toktogul Reservoir",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q166162" : {
+    "label" : "Lake Onega",
+    "sitelinks" : 84,
+    "aliases" : [ "Onego", "Lake Onego", "Onega Lake", "Onezhskoye Ozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1676050" : {
+    "label" : "Ivankovo Reservoir",
+    "sitelinks" : 20,
+    "aliases" : [ "Ivankovskoye Reservoir", "Moscow Sea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q16936775" : {
+    "label" : "Aqqikkol Hu",
+    "sitelinks" : 7,
+    "aliases" : [ "Lake Aqqikkol" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q169962" : {
+    "label" : "Lake Tahoe",
+    "sitelinks" : 60,
+    "aliases" : [ "Bigler Lake", "Bonpland Lake", "Daow aga", "Lago Beergler", "Lake Bigler", "Lake Bompland", "Lake Bonplan", "Lake Bonpland", "Lake Teho", "Lake Tehoe", "Taa-oo", "Tah-oo", "Tula Tulia", "Mountain Lake", "Tahoe" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1699973" : {
+    "label" : "Wiyâshâkimî Lake",
+    "sitelinks" : 14,
+    "aliases" : [ "Clearwater Lake", "Clearwater Lakes", "Clearwater Lakes (Québec : jezero)", "lac à l’Eau Claire", "lac Wiyashakimi", "lac Wiyâshâkimî", "Lac Wiyâshâkimî", "Wiyashakimi Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1700320" : {
+    "label" : "Kerr Lake",
+    "sitelinks" : 7,
+    "aliases" : [ "Bugg's Island Lake", "Buggs Island Lake", "John H. Kerr Reservoir", "Kerr Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q17347103" : {
+    "label" : "Lake Cowan",
+    "sitelinks" : 4,
+    "aliases" : [ "Cowan Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q173596" : {
+    "label" : "Vänern",
+    "sitelinks" : 79,
+    "aliases" : [ "Lake Wener", "Wener" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1737137" : {
+    "label" : "Kaunas Reservoir",
+    "sitelinks" : 18,
+    "aliases" : [ "Kaunas Sea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1738491" : {
+    "label" : "Kemijärvi",
+    "sitelinks" : 15,
+    "aliases" : [ "Kemi träsk", "Lake Kemijärvi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q173862" : {
+    "label" : "Lake Nicaragua",
+    "sitelinks" : 78,
+    "aliases" : [ "Lake Cocibolca" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1739872" : {
+    "label" : "Lake Keta",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1757739" : {
+    "label" : "Lake Argyle",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1760356" : {
+    "label" : "Stora Lulevatten",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q176598" : {
+    "label" : "Flaming Gorge Reservoir",
+    "sitelinks" : 6,
+    "aliases" : [ "Ashley Lake", "Lake Kennedy", "O'Mahoney Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1774474" : {
+    "label" : "Lake Bolshoye Morskoye",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1774501" : {
+    "label" : "Nerpichye",
+    "sitelinks" : 14,
+    "aliases" : [ "Lake Nerpichye", "Lake Nerpichye (Sakha Republic)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1776556" : {
+    "label" : "Kluane Lake",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1777782" : {
+    "label" : "Snåsavatnet",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1781818" : {
+    "label" : "Sebago Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1786498" : {
+    "label" : "Lake Vivi",
+    "sitelinks" : 27,
+    "aliases" : [ "Ozero Vivi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1786720" : {
+    "label" : "Krasnoyarsk Reservoir",
+    "sitelinks" : 22,
+    "aliases" : [ "Krasnoyarskoye Vodokhranilishche" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q1786723" : {
+    "label" : "Krasnoye Lake",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q178741" : {
+    "label" : "Great Salt Lake",
+    "sitelinks" : 71,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1793276" : {
+    "label" : "Lake Istokpoga",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q179505" : {
+    "label" : "Island Lake",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1799381" : {
+    "label" : "Lake Labaz",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q1799611" : {
+    "label" : "Lac Sakami",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1800398" : {
+    "label" : "Ranco Lake",
+    "sitelinks" : 27,
+    "aliases" : [ "Lake Ranco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1800404" : {
+    "label" : "Rupanco Lake",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q1800933" : {
+    "label" : "Lake George",
+    "sitelinks" : 4,
+    "aliases" : [ "Lake Welaka" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1800945" : {
+    "label" : "Lake Hartwell",
+    "sitelinks" : 6,
+    "aliases" : [ "Hartwell Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1800949" : {
+    "label" : "Lake Hauroko",
+    "sitelinks" : 22,
+    "aliases" : [ "Lake Hauroto" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1801005" : {
+    "label" : "Lake Meredith",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1801012" : {
+    "label" : "Lake Mohave",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1801067" : {
+    "label" : "Lake Rotoiti",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q1801077" : {
+    "label" : "Lake Sakakawea",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1801110" : {
+    "label" : "Lake Winnebago",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q180509" : {
+    "label" : "Petenwell Lake",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1812063" : {
+    "label" : "Leech Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q181932" : {
+    "label" : "Lake Sevan",
+    "sitelinks" : 76,
+    "aliases" : [ "Sevan", "Goycha", "Lake Goycha", "Gokcha" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q182719" : {
+    "label" : "Lake Turkana",
+    "sitelinks" : 85,
+    "aliases" : [ "Jade Sea", "Rudolf Lake", "Rudolph Lake", "Aman Lake", "Anam Lake", "Bas Lake", "Baso Lake", "Basso Narok", "Basso Norok", "Fuchich", "Galanaboy", "Gallop Lake", "Gulanabol", "Gullopp", "Lago Rodolfo", "Lake Rudolf", "Rudolf Bahir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q182796" : {
+    "label" : "Lake Nasser",
+    "sitelinks" : 61,
+    "aliases" : [ "Lake Nubia" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q183360" : {
+    "label" : "Lake Toba",
+    "sitelinks" : 78,
+    "aliases" : [ "Danau Toba", "Tao Toba" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q184492" : {
+    "label" : "Mälaren",
+    "sitelinks" : 64,
+    "aliases" : [ "Lake Malar", "Lake Mälaren", "Mälar Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1859076" : {
+    "label" : "Mingachevir reservoir",
+    "sitelinks" : 30,
+    "aliases" : [ "Mingechevir reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q1868580" : {
+    "label" : "Lokka Reservoir",
+    "sitelinks" : 16,
+    "aliases" : [ "Lokka" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q188195" : {
+    "label" : "Vättern",
+    "sitelinks" : 65,
+    "aliases" : [ "Wetter", "Lake Wetter" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1888211" : {
+    "label" : "Southern Indian Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1888261" : {
+    "label" : "Yathkyed Lake",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1888921" : {
+    "label" : "Sandy Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q192215" : {
+    "label" : "Khövsgöl Lake",
+    "sitelinks" : 61,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q19253" : {
+    "label" : "Lake Peipus",
+    "sitelinks" : 67,
+    "aliases" : [ "Lake Peipsi-Pihkva", "Lake Peipus", "Lake Peipus-Pskov", "Peipus" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q192770" : {
+    "label" : "Saimaa",
+    "sitelinks" : 77,
+    "aliases" : [ "Lake Saimaa", "Saimen", "Suur-Saimaa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1969324" : {
+    "label" : "Virihaure",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q1972978" : {
+    "label" : "Upper Klamath Lake",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q1973182" : {
+    "label" : "Ust-Ilimsk Reservoir",
+    "sitelinks" : 13,
+    "aliases" : [ "Ust'-Ilimskoye Vodokhranilishche" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q19819696" : {
+    "label" : "Isinga",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q199551" : {
+    "label" : "Urmia Lake",
+    "sitelinks" : 82,
+    "aliases" : [ "Lake of Urimiyeh", "Lake Oromeeh", "Lake Urmia" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q19972176" : {
+    "label" : "Mbakaou Reservoir",
+    "sitelinks" : 10,
+    "aliases" : [ "Lake Mbakaou", "Mbakaou reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q199903" : {
+    "label" : "Lake Taupō",
+    "sitelinks" : 57,
+    "aliases" : [ "Lake Taupo", "Lake Taupō / Taupōmoana" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q199938" : {
+    "label" : "Tonle Sap",
+    "sitelinks" : 63,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2000567" : {
+    "label" : "North Channel",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q200239" : {
+    "label" : "Lake Biwa",
+    "sitelinks" : 66,
+    "aliases" : [ "Biwa", "Biwako", "Biva L.", "Biva Lake", "Biwa Ko", "Biwa L.", "Biwa Lake", "Biwa-ko", "L. Biva", "L. Biwa", "Lake Biva" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2005708" : {
+    "label" : "O'Higgins/San Martín Lake",
+    "sitelinks" : 30,
+    "aliases" : [ "Lago O'Higgins" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2007652" : {
+    "label" : "Lake Milh",
+    "sitelinks" : 16,
+    "aliases" : [ "Buḩayrat ar Razāzah", "Lake Razazah", "Lake Razzaza", "Razzaza Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q201294" : {
+    "label" : "Qinghai Lake",
+    "sitelinks" : 72,
+    "aliases" : [ "Qinghai Hu", "Qinghai", "Ching-hai Lake", "Lake Ching-hai", "Lake Qinghai", "Ch'ing-hai L.", "Ch'ing-hai Lake", "Ch'ing-hai Sea", "Ching-hai L.", "Chinghai Lake", "Koko Nor", "Kokonor L.", "Kokonor Lake", "Kokonor Sea", "L. Ch'ing-hai", "L. Ching-hai", "L. Kokonor", "L. Qinghai", "L. Tsongön", "Lake Ch'ing-hai", "Lake Kokonor", "Lake Tsongön", "Qinghai L.", "Qinghai Sea", "Tsongön", "Tsongön L.", "Tsongön Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q201679" : {
+    "label" : "Lake Volta",
+    "sitelinks" : 58,
+    "aliases" : [ "Volta Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q201843" : {
+    "label" : "Khanka",
+    "sitelinks" : 58,
+    "aliases" : [ "Khanka L.", "Khanka Lake", "L. Khanka", "L. Xingkai", "Lake Khanka", "Lake Xingkai", "Xingkai Hu", "Xingkai L.", "Xingkai Lake", "Xingkaihu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q202019" : {
+    "label" : "Rainy Lake",
+    "sitelinks" : 27,
+    "aliases" : [ "Lac à la Pluie", "Lac la Pluie" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q202905" : {
+    "label" : "Lake Okeechobee",
+    "sitelinks" : 40,
+    "aliases" : [ "Florida's Inland Sea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q203137" : {
+    "label" : "Lake Inari",
+    "sitelinks" : 61,
+    "aliases" : [ "Inari", "Aanaarjävri", "Aanarjäuʹrr", "Anarjavri", "Anárjávri", "Inarijärvi", "Inarinjärvi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q203462" : {
+    "label" : "Ilmen",
+    "sitelinks" : 52,
+    "aliases" : [ "Lake Ilmen" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q203536" : {
+    "label" : "Tsimlyansk Reservoir",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q203811" : {
+    "label" : "Lake Skadar",
+    "sitelinks" : 55,
+    "aliases" : [ "AL03", "Labeatis", "Liqeni i Shkodres" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2039551" : {
+    "label" : "Lake Sasykkol",
+    "sitelinks" : 27,
+    "aliases" : [ "Sasykkol Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q204987" : {
+    "label" : "Storavan",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2065167" : {
+    "label" : "Vilyuy Reservoir",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q206942" : {
+    "label" : "Lough Neagh",
+    "sitelinks" : 52,
+    "aliases" : [ "Loch Neagh" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q207690" : {
+    "label" : "Poyang Lake",
+    "sitelinks" : 66,
+    "aliases" : [ "Lake Poyang", "Lake P'o-yang", "Lake Po-yang", "P'o-yang Lake", "Po-yang Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q21052208" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q2105296" : {
+    "label" : "Porttipahta Reservoir",
+    "sitelinks" : 9,
+    "aliases" : [ "Porttipahta" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q211425" : {
+    "label" : "Hjälmaren",
+    "sitelinks" : 43,
+    "aliases" : [ "Lake Hjalmaren", "Lake Hjälmaren" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q211516" : {
+    "label" : "Võrtsjärv",
+    "sitelinks" : 50,
+    "aliases" : [ "Lake Võrtsjärv" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q211823" : {
+    "label" : "Lake Tuz",
+    "sitelinks" : 49,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q212209" : {
+    "label" : "Mjøsa",
+    "sitelinks" : 45,
+    "aliases" : [ "Mjøsen" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q213769" : {
+    "label" : "Päijänne",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q215818" : {
+    "label" : "Torneträsk",
+    "sitelinks" : 34,
+    "aliases" : [ "Duortnosjavri", "Duortnosjávri", "Torne Träsk", "Torniojärvi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q216083" : {
+    "label" : "Dongting Lake",
+    "sitelinks" : 53,
+    "aliases" : [ "Dongting Hu", "Dòngtíng Hú", "Lake Dongting", "Tung-t'ing Hu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q216621" : {
+    "label" : "Lake Zaysan",
+    "sitelinks" : 47,
+    "aliases" : [ "Zaisan", "Zhaisang", "Zaysan", "Lake Zaisan", "Lake Zaissan", "Lake Zajsan", "Lake Zhaisang", "Zaisan Lake", "Zaissan", "Zaissan Lake", "Zajsan", "Zajsan Lake", "Zaysan Lake", "Zhaisang Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q217109" : {
+    "label" : "Teletskoye",
+    "sitelinks" : 46,
+    "aliases" : [ "Lake Teletskoe", "Lake Teletskoye", "Teletskoye Ozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q217430" : {
+    "label" : "Siljan",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2179011" : {
+    "label" : "Réservoir La Grande 3",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q21801008" : {
+    "label" : "Laguna Huatunas",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21828387" : {
+    "label" : "Laguna Iberá",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21837060" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q21842470" : {
+    "label" : "Embalse Ezequiel Ramos Mexía",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21842912" : {
+    "label" : "Lake Colhué Huapi",
+    "sitelinks" : 2,
+    "aliases" : [ "Colhué Huapi Lake", "Lago Colhué Huapi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q21882542" : {
+    "label" : "Lake Wells",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21886613" : {
+    "label" : "Lake Moore",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21890550" : {
+    "label" : "Lake Everard",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21890573" : {
+    "label" : "Lake Eyre North",
+    "sitelinks" : 2,
+    "aliases" : [ "Eyre North" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21890578" : {
+    "label" : "Lake Eyre South",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21891300" : {
+    "label" : "Lake Goongarrie",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q21960566" : {
+    "label" : "Lake Hume",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q22024948" : {
+    "label" : "Lagoa do Erepecur",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q22029420" : {
+    "label" : "Lago Grande",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q22048562" : {
+    "label" : "Lagoa dos Bois",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q22072124" : {
+    "label" : "Água Vermelha Reservoir",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q22072127" : {
+    "label" : "Barra Bonita Reservoir",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q22072128" : {
+    "label" : "Bariri Reservoir",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2211837" : {
+    "label" : "Saginaw Bay",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q224872" : {
+    "label" : "Lake Winnipesaukee",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22610852" : {
+    "label" : "Whitefish Lake",
+    "sitelinks" : 2,
+    "aliases" : [ "Łúh Chogh Tué" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q22617464" : {
+    "label" : "Lac Awapakamich",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q23014768" : {
+    "label" : "Kerey",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q233071" : {
+    "label" : "Khantayskoye Lake",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q233627" : {
+    "label" : "Lake Manasarovar",
+    "sitelinks" : 62,
+    "aliases" : [ "Lake Manas", "Lake Manosarovar", "Lake Mansarovar", "Manasa Sarovar", "Manosarovar Lake", "Mansarovar Lake", "Mapam Yum Co", "mapang yongcuo", "Mapham Yu Tso", "Mapham Yumtso" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q23883" : {
+    "label" : "Dead Sea",
+    "sitelinks" : 163,
+    "aliases" : [ "The Dead Sea", "Asphaltic Lake", "Asphaltic Pool", "Death sea", "Lake Asphaltites", "Lake Asphaltitis", "Palus Asphaltites", "Salt Sea", "Sea of Arava", "Sea of Lot", "Sea of the Arabah", "Sea of the Dead", "Sea of Zoar" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q240398" : {
+    "label" : "Kovdozero",
+    "sitelinks" : 20,
+    "aliases" : [ "Lake Kovdozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2426550" : {
+    "label" : "Airag Lake",
+    "sitelinks" : 22,
+    "aliases" : [ "Ayrag Nuur" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2439795" : {
+    "label" : "Cardiel Lake",
+    "sitelinks" : 11,
+    "aliases" : [ "Lake Cardiel" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q2453582" : {
+    "label" : "Trinity Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2454806" : {
+    "label" : "Kushmurun",
+    "sitelinks" : 17,
+    "aliases" : [ "Ozero Kushmurun" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q24611627" : {
+    "label" : "Lac Onangué",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q2476728" : {
+    "label" : "Ozhogino Lake",
+    "sitelinks" : 19,
+    "aliases" : [ "Lake Ozhogino" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q250257" : {
+    "label" : "Lac la Ronge",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q2539972" : {
+    "label" : "Lake Habbaniyah",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2570858" : {
+    "label" : "Telmen Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q257416" : {
+    "label" : "Sarygamysh Lake",
+    "sitelinks" : 46,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2576979" : {
+    "label" : "Zeya Reservoir",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2587598" : {
+    "label" : "Teke",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q2639916" : {
+    "label" : "Mogotoyevo Lake",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2640299" : {
+    "label" : "Lake Sartlan",
+    "sitelinks" : 17,
+    "aliases" : [ "Ozero Sartlan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2642276" : {
+    "label" : "Lake Kuchuk",
+    "sitelinks" : 14,
+    "aliases" : [ "Kuchukskoe", "Kuchukskoye Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2659831" : {
+    "label" : "Ayke",
+    "sitelinks" : 14,
+    "aliases" : [ "Aike", "Ayke", "Äyke" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q265997" : {
+    "label" : "Imandra",
+    "sitelinks" : 37,
+    "aliases" : [ "Lake Imandra" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q2668029" : {
+    "label" : "Lake Hammar",
+    "sitelinks" : 21,
+    "aliases" : [ "Lake Hammer" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q267679" : {
+    "label" : "Lake Kossou",
+    "sitelinks" : 22,
+    "aliases" : [ "Lac de Kossou" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q271286" : {
+    "label" : "Åsnen",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q2721959" : {
+    "label" : "Dood Tsagaan Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2721984" : {
+    "label" : "Sangiin Dalai Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2722327" : {
+    "label" : "Étang Saumâtre",
+    "sitelinks" : 21,
+    "aliases" : [ "etang Saumatre", "Etang Saumâtre", "Lake Azuei", "Lake Azuéi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q272463" : {
+    "label" : "Lake Athabasca",
+    "sitelinks" : 57,
+    "aliases" : [ "Athabasca" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q276776" : {
+    "label" : "South Aral Sea",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q2781219" : {
+    "label" : "Kentucky Lake",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q280135" : {
+    "label" : "Arrow Lakes",
+    "sitelinks" : 7,
+    "aliases" : [ "Upper Arrow Lake", "Lower Arrow Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q280771" : {
+    "label" : "Aydar Lake",
+    "sitelinks" : 36,
+    "aliases" : [ "Aydar Kŭl" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q283793" : {
+    "label" : "Teslin Lake",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q28750379" : {
+    "label" : "Barsakelmes Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "North America", "Eurasia" ]
+  },
+  "Q28794395" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q28798322" : {
+    "label" : "Danjiangkou Reservoir",
+    "sitelinks" : 8,
+    "aliases" : [ "Danjiangkou Shuiku" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q2982888" : {
+    "label" : "Sarykopa",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q2996806" : {
+    "label" : "Bustakh",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3042661" : {
+    "label" : "Franklin D. Roosevelt Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q304933" : {
+    "label" : "Lake Abaya",
+    "sitelinks" : 36,
+    "aliases" : [ "Abaya Hayek", "Lago Abaya", "Lago Margherita" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q306194" : {
+    "label" : "Lake Abbe",
+    "sitelinks" : 42,
+    "aliases" : [ "Abbe Lake", "Lake abbe", "Lake Abhe", "Lake Abhe Bad", "Lake Abhe Bid" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q310547" : {
+    "label" : "Lake Alakol",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q311217" : {
+    "label" : "Schweriner See",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q3113637" : {
+    "label" : "Big Rideau Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q313637" : {
+    "label" : "Gatun Lake",
+    "sitelinks" : 40,
+    "aliases" : [ "Lago Gatun", "Lago Gatún", "Lake Gatun" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q317277" : {
+    "label" : "Øyeren",
+    "sitelinks" : 17,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q317407" : {
+    "label" : "Kinbasket Lake",
+    "sitelinks" : 11,
+    "aliases" : [ "Kinbasket Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q318350" : {
+    "label" : "Lake Chapala",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q31845278" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q31845317" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q31845950" : {
+    "label" : "",
+    "sitelinks" : 0,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ ]
+  },
+  "Q319492" : {
+    "label" : "Aberdeen Lake",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3214697" : {
+    "label" : "Aishihik Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3214793" : {
+    "label" : "Lake Carnegie",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q3214801" : {
+    "label" : "Chesuncook Lake",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3214886" : {
+    "label" : "Lac Fontana",
+    "sitelinks" : 6,
+    "aliases" : [ "Fontana Lake", "Lago Fontana" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3214923" : {
+    "label" : "Hebgen Lake",
+    "sitelinks" : 6,
+    "aliases" : [ "Hebgen Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3214981" : {
+    "label" : "Lake Kissimmee",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215037" : {
+    "label" : "Malheur Lake",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215071" : {
+    "label" : "Lake Mulwala",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q3215078" : {
+    "label" : "Lake Musters",
+    "sitelinks" : 10,
+    "aliases" : [ "Lago Musters", "Musters Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3215083" : {
+    "label" : "Lac Naococane",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215139" : {
+    "label" : "Lac Plétipi",
+    "sitelinks" : 6,
+    "aliases" : [ "Lake Pletipi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215164" : {
+    "label" : "Lake Rossignol",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215207" : {
+    "label" : "Sobach'ye Ozero",
+    "sitelinks" : 6,
+    "aliases" : [ "Sobachye Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3215219" : {
+    "label" : "Lake Seminole",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215230" : {
+    "label" : "Lake Texoma",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q321534" : {
+    "label" : "Lake Abitibi",
+    "sitelinks" : 20,
+    "aliases" : [ "Lac Abitibi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215567" : {
+    "label" : "Lago Tucuruí",
+    "sitelinks" : 4,
+    "aliases" : [ "Represa de Tucuruí" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3215670" : {
+    "label" : "Lac des Mille Lacs",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3215749" : {
+    "label" : "Lago La Plata",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3215856" : {
+    "label" : "Chiputneticook Lakes",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3234165" : {
+    "label" : "Sobradinho Reservoir",
+    "sitelinks" : 14,
+    "aliases" : [ "Represa de Sobradinho" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3272" : {
+    "label" : "Lake Winnipeg",
+    "sitelinks" : 75,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3276492" : {
+    "label" : "Rincón del Bonete Lake",
+    "sitelinks" : 5,
+    "aliases" : [ "Rincón del Bonete Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3295796" : {
+    "label" : "Lake Lanier",
+    "sitelinks" : 13,
+    "aliases" : [ "Lake Sidney Lanier" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3309948" : {
+    "label" : "Kajbagar",
+    "sitelinks" : 12,
+    "aliases" : [ "Ozero Koybagar" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3358037" : {
+    "label" : "North Aral Sea",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q3369" : {
+    "label" : "Müritz",
+    "sitelinks" : 44,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q3502754" : {
+    "label" : "Lake Gummare",
+    "sitelinks" : 12,
+    "aliases" : [ "Gamari", "Gemari" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q3511603" : {
+    "label" : "Serebryansk Reservoir",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3518981" : {
+    "label" : "Teshekpuk Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q35342" : {
+    "label" : "Titicaca",
+    "sitelinks" : 132,
+    "aliases" : [ "Lake Titicaca", "Lake Titiqaqa", "Titiqaqa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q3536528" : {
+    "label" : "Krishna Raja Sagara",
+    "sitelinks" : 12,
+    "aliases" : [ "Krishnarājāsāgara Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q3561541" : {
+    "label" : "Wheeler Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q3561592" : {
+    "label" : "Busani",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3565914" : {
+    "label" : "Gorkoye (Chernokurynskoye)",
+    "sitelinks" : 6,
+    "aliases" : [ "Chernokurynskoye", "Gorkoye Bolshoye" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3565995" : {
+    "label" : "Tandovo",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q3566268" : {
+    "label" : "Leushinsky Tuman",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q366813" : {
+    "label" : "Lake Gordon",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q366985" : {
+    "label" : "Lake Simcoe",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q369923" : {
+    "label" : "Lake Beyşehir",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q375029" : {
+    "label" : "Rybinsk Reservoir",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q399604" : {
+    "label" : "Lake Diefenbaker",
+    "sitelinks" : 14,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4092295" : {
+    "label" : "Bolshoe Eravnoe",
+    "sitelinks" : 7,
+    "aliases" : [ "Bolshoy Yeravna" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4092460" : {
+    "label" : "Bolshoye Topolnoye",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4092898" : {
+    "label" : "Bolshoy Uvat",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q412045" : {
+    "label" : "Ayan",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4121" : {
+    "label" : "IJsselmeer",
+    "sitelinks" : 55,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q4127" : {
+    "label" : "Lake Constance",
+    "sitelinks" : 100,
+    "aliases" : [ "Bodensee", "Lac de Constance", "Lake Boden" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q4128895" : {
+    "label" : "Gyaring Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q4151226" : {
+    "label" : "Guanting Shuiku",
+    "sitelinks" : 8,
+    "aliases" : [ "Guanting Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q41566866" : {
+    "label" : "Ubol Ratana Reservoir",
+    "sitelinks" : 0,
+    "aliases" : [ "Ang Kep Nam Khuean Ubonrat" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q419614" : {
+    "label" : "Akkajaure",
+    "sitelinks" : 19,
+    "aliases" : [ "Áhkájávrre" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q4198953" : {
+    "label" : "Ik",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q42191" : {
+    "label" : "Issyk-Kul",
+    "sitelinks" : 88,
+    "aliases" : [ "Issigh Kul", "Issyk-Kol", "Ysyk Köl", "Issik-köl", "Ri Hai", "Rihai", "Temu'ertu Nuo'er", "Temurtu Lake", "Temurtu Nor" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q4228232" : {
+    "label" : "Kolozero",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4235571" : {
+    "label" : "Kostroma Reservoir",
+    "sitelinks" : 1,
+    "aliases" : [ "Kostroma Sea" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4244492" : {
+    "label" : "Siletiteniz",
+    "sitelinks" : 18,
+    "aliases" : [ "Lake Seletyteniz", "Selety-tengiz", "Seletytengiz", "Seletyteniz" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q4262256" : {
+    "label" : "Lynx Lake",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4269" : {
+    "label" : "Lake Poteriteri",
+    "sitelinks" : 7,
+    "aliases" : [ "Poteriteri Lake", "Potiritiri" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q4272" : {
+    "label" : "Lake Waikaremoana",
+    "sitelinks" : 15,
+    "aliases" : [ "Waikaremoana", "Waikaremoana Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q4309904" : {
+    "label" : "Lake Marion",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4373293" : {
+    "label" : "Portnyagino Lake",
+    "sitelinks" : 9,
+    "aliases" : [ "Portnyagino Ozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4406902" : {
+    "label" : "Samotlor Lake",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q4428523" : {
+    "label" : "Soluntakh",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q4461133" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q4492006" : {
+    "label" : "Fort Peck Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q451522" : {
+    "label" : "Lake Havasu",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q452088" : {
+    "label" : "Amadjuak Lake",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4529522" : {
+    "label" : "Ebeyty",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q4538999" : {
+    "label" : "Yarroto Pervoe",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q4539001" : {
+    "label" : "Yarroto Vtoroe",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Eurasia", "Asia" ]
+  },
+  "Q4539674" : {
+    "label" : "Yakhtur",
+    "sitelinks" : 2,
+    "aliases" : [ "Ozero Yakh-Tur" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q455153" : {
+    "label" : "Lake Apopka",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4634" : {
+    "label" : "Lake Coleridge",
+    "sitelinks" : 10,
+    "aliases" : [ "Coleridge Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q464945" : {
+    "label" : "Poopó Lake",
+    "sitelinks" : 53,
+    "aliases" : [ "Poopo", "Poopo Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q465037" : {
+    "label" : "Storuman Lake",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q4701734" : {
+    "label" : "Aksai Chin Lake",
+    "sitelinks" : 10,
+    "aliases" : [ "Aksayqin Hu", "Amtogar", "Amtogor Tso" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q47136" : {
+    "label" : "Laguna de Bay",
+    "sitelinks" : 38,
+    "aliases" : [ "Laguna Lake", "Lake Laguna", "Lake of Laguna", "Lake of Bay" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q474408" : {
+    "label" : "Lake Oahe",
+    "sitelinks" : 12,
+    "aliases" : [ "Oahe Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q4761833" : {
+    "label" : "Ang Laren Lake",
+    "sitelinks" : 5,
+    "aliases" : [ "Ngangla Co", "Ngangla Ringco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q4809051" : {
+    "label" : "Lake Buyo",
+    "sitelinks" : 11,
+    "aliases" : [ "Lac de Buyo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q487953" : {
+    "label" : "Lake Kwania",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q4957685" : {
+    "label" : "Brantley Lake",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q49650" : {
+    "label" : "Loch Ness",
+    "sitelinks" : 80,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q4967120" : {
+    "label" : "Falcon International Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q498371" : {
+    "label" : "Nahuel Huapi Lake",
+    "sitelinks" : 39,
+    "aliases" : [ "Lago Nahuel Huapí" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q5015210" : {
+    "label" : "Caballo Lake",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q503301" : {
+    "label" : "Salton Sea",
+    "sitelinks" : 48,
+    "aliases" : [ "Miracle in the Desert" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5034204" : {
+    "label" : "Canyon Ferry Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q503842" : {
+    "label" : "Lake General Carrera/Buenos Aires",
+    "sitelinks" : 41,
+    "aliases" : [ "Buenos Aires Lake", "Chelenko Lake", "General Carrera Lake", "Lake Buenos Aires", "Lake General Carrera" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q504433" : {
+    "label" : "Lake Mweru",
+    "sitelinks" : 68,
+    "aliases" : [ "Lake mweru" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5049166" : {
+    "label" : "Cass Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5158618" : {
+    "label" : "Conchas Lake",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q518319" : {
+    "label" : "Glubokoe",
+    "sitelinks" : 15,
+    "aliases" : [ "Lake Glubokoye" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q525364" : {
+    "label" : "Lauwersmeer",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q526440" : {
+    "label" : "Great Bitter Lake",
+    "sitelinks" : 37,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5295998" : {
+    "label" : "Dongping Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5359306" : {
+    "label" : "Elephant Butte Reservoir",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q537374" : {
+    "label" : "Hulun Lake",
+    "sitelinks" : 42,
+    "aliases" : [ "Hulunhu National Natural Reserve" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q537695" : {
+    "label" : "Taal Lake",
+    "sitelinks" : 30,
+    "aliases" : [ "Lake Taal", "Bombón Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q545559" : {
+    "label" : "Pyhäjärvi",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q546661" : {
+    "label" : "Lac Minto",
+    "sitelinks" : 13,
+    "aliases" : [ "Lake Minto" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5492" : {
+    "label" : "Lake Erie",
+    "sitelinks" : 102,
+    "aliases" : [ "Erie" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5505" : {
+    "label" : "Lake Victoria",
+    "sitelinks" : 162,
+    "aliases" : [ "Lake Nyanza", "Victoria Nyanza" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5511" : {
+    "label" : "Lake Tanganyika",
+    "sitelinks" : 151,
+    "aliases" : [ "Tanganyika" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5513" : {
+    "label" : "Lake Baikal",
+    "sitelinks" : 183,
+    "aliases" : [ "Baykal", "Baikal", "Bajkal", "Baikal Sea", "Ozero Bajkal" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q5525" : {
+    "label" : "Great Bear Lake",
+    "sitelinks" : 74,
+    "aliases" : [ "Sahtú" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5529425" : {
+    "label" : "Ge Lake",
+    "sitelinks" : 6,
+    "aliases" : [ "Gehu Lake", "Lake Gehu" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5532" : {
+    "label" : "Lake Malawi",
+    "sitelinks" : 107,
+    "aliases" : [ "Lago Niassa", "Lake Nyasa", "Lake Nyassa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q5539" : {
+    "label" : "Great Slave Lake",
+    "sitelinks" : 75,
+    "aliases" : [ "Tucho", "Tinde’e", "Tıdeè", "Tu Nedhé" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q5575508" : {
+    "label" : "Gobind Sagar",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5605" : {
+    "label" : "Vistula Lagoon",
+    "sitelinks" : 43,
+    "aliases" : [ "Kaliningradskiy Zaliv, Gulf of Kaliningrad, Frisches Haff", "Aīstinmari", "Aistmarės" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q5619693" : {
+    "label" : "Guozha Lake",
+    "sitelinks" : 7,
+    "aliases" : [ "Lake Lighten, Kotra Tso" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q5623127" : {
+    "label" : "Ing. Generoso Campilongo Reservoir",
+    "sitelinks" : 3,
+    "aliases" : [ "Guárico", "Embalse Ing. Generoso Campilongo", "Ing. Generoso Campilongo Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q5659764" : {
+    "label" : "Harney Lake",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q571123" : {
+    "label" : "Cheboksary Reservoir",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q575679" : {
+    "label" : "Lake Alaotra",
+    "sitelinks" : 41,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q577148" : {
+    "label" : "Lake Manyara",
+    "sitelinks" : 33,
+    "aliases" : [ "Lake Moya" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q580019" : {
+    "label" : "Oulujärvi",
+    "sitelinks" : 38,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q5830417" : {
+    "label" : "",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q5830486" : {
+    "label" : "Guri Reservoir",
+    "sitelinks" : 9,
+    "aliases" : [ "Guri Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q584201" : {
+    "label" : "Lake Amadeus",
+    "sitelinks" : 29,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q5895614" : {
+    "label" : "Hong Lake",
+    "sitelinks" : 6,
+    "aliases" : [ "Honghu Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q590903" : {
+    "label" : "Lake Wairarapa",
+    "sitelinks" : 14,
+    "aliases" : [ "Wairarapa Moana" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q608133" : {
+    "label" : "Lough Ree",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q611206" : {
+    "label" : "Bosten Lake",
+    "sitelinks" : 41,
+    "aliases" : [ "Lake Bosten" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6132621" : {
+    "label" : "Nam Ngum Dam",
+    "sitelinks" : 12,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q626907" : {
+    "label" : "Lake Frome",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q628327" : {
+    "label" : "Lake Rakshastal",
+    "sitelinks" : 36,
+    "aliases" : [ "La’angcuo", "La’nga Co", "Langacuo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q629354" : {
+    "label" : "Storsjön",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q630331" : {
+    "label" : "Gaoyou Lake",
+    "sitelinks" : 17,
+    "aliases" : [ "Gaoyou", "Kao-yu", "Kao-yu Lake", "Lake Gaoyou", "Lake Kao-yu", "Lake Peixe", "Peixe Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q631189" : {
+    "label" : "Kama Reservoir",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q631714" : {
+    "label" : "Ayakum Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6383" : {
+    "label" : "Lake Balaton",
+    "sitelinks" : 97,
+    "aliases" : [ "Balaton", "Platten-See" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q6403" : {
+    "label" : "Lake Geneva",
+    "sitelinks" : 101,
+    "aliases" : [ "Léman", "Lake of Geneva", "Geneva Lake", "Lake Leman", "Lake Léman" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q6414" : {
+    "label" : "Lake Garda",
+    "sitelinks" : 88,
+    "aliases" : [ "Benacus", "(Lago) Benaco", "Lach de Garda", "Lago di Garda" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q645901" : {
+    "label" : "Lake Manitoba",
+    "sitelinks" : 42,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6468085" : {
+    "label" : "Lac Île-à-la-Crosse",
+    "sitelinks" : 6,
+    "aliases" : [ "Lac Ile-a-la-Crosse" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6474916" : {
+    "label" : "Lake Barkley",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6474964" : {
+    "label" : "Lac Bermen",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6475111" : {
+    "label" : "Lake Burrendong",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q6475174" : {
+    "label" : "Lake Carey",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q6475894" : {
+    "label" : "Lake Francis Case",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6476029" : {
+    "label" : "Lake Granby",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6476463" : {
+    "label" : "Lac Kipawa",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6476851" : {
+    "label" : "Lake McConaughy",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6476999" : {
+    "label" : "Lake Moultrie",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6477034" : {
+    "label" : "Lake Murray",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6477152" : {
+    "label" : "Lake Novillo",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6477226" : {
+    "label" : "Lake Oroville",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6477446" : {
+    "label" : "Lake Puma Yumco",
+    "sitelinks" : 9,
+    "aliases" : [ "Phuma Yumtso", "Phuma Yutso", "Pomo Tso", "Pomocuo", "Pumoyongcuo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6477455" : {
+    "label" : "Lac Péribonka",
+    "sitelinks" : 5,
+    "aliases" : [ "Lake Peribonca", "Lake Péribonka" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6477865" : {
+    "label" : "Lake Strom Thurmond",
+    "sitelinks" : 4,
+    "aliases" : [ "Clark Hill Lake", "Clark Hill Reservoir", "Clarks Hill Lake", "Clarks Hill Reservoir", "J. Strom Thurmond Dam and Lake at Clarks Hill", "J. Strom Thurmond Reservoir", "Thurmond Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6478379" : {
+    "label" : "Lake Walcott",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6478519" : {
+    "label" : "Lake Winnibigoshish",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q651162" : {
+    "label" : "Lake Mweru Wantipa",
+    "sitelinks" : 23,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q651294" : {
+    "label" : "Namtso",
+    "sitelinks" : 49,
+    "aliases" : [ "Nam Co Lake", "Namucuo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q653152" : {
+    "label" : "Lake Pedder",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q654515" : {
+    "label" : "Lake Mead",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q659225" : {
+    "label" : "Lake St. Joseph",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q659377" : {
+    "label" : "Tangra Yumco",
+    "sitelinks" : 12,
+    "aliases" : [ "Tangra Yum Tso", "Dangrayum", "Dangreyongcuo", "Tang Yumco", "Tanggula Hu", "Tanggulayoumucuo", "Tangra tso", "Tangra Yum" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q662811" : {
+    "label" : "Lake Chew Bahir",
+    "sitelinks" : 20,
+    "aliases" : [ "Stefanie", "Basso Naebor", "Chuwaha", "Lake Istifanos" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q6667090" : {
+    "label" : "Logan Martin Lake",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6673852" : {
+    "label" : "Longgan Lake",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q667507" : {
+    "label" : "Lake Powell",
+    "sitelinks" : 31,
+    "aliases" : [ "Escalante Lake", "Glen Canyon Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q668883" : {
+    "label" : "Kayrakkum Reservoir",
+    "sitelinks" : 22,
+    "aliases" : [ "Kayrakum Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6692903" : {
+    "label" : "Lac Low",
+    "sitelinks" : 3,
+    "aliases" : [ "Low Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6703023" : {
+    "label" : "Lumaqangdong Co",
+    "sitelinks" : 7,
+    "aliases" : [ "Lumajangdong Co", "Lumajangdong Lake", "Lumajangtong tso", "Lumajiangdongcuo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6704603" : {
+    "label" : "Luoma Lake",
+    "sitelinks" : 8,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q671712" : {
+    "label" : "Selwyn Lake",
+    "sitelinks" : 10,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q671989" : {
+    "label" : "Gusinoye Lake",
+    "sitelinks" : 23,
+    "aliases" : [ "Gusinoe Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q673169" : {
+    "label" : "Lake Bangweulu",
+    "sitelinks" : 46,
+    "aliases" : [ "Bemba", "Bangweolo" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q675467" : {
+    "label" : "Dalai Nur",
+    "sitelinks" : 11,
+    "aliases" : [ "Dalinuoer National Natural Reserve", "Lake Dali", "Dalai nuur" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q6772137" : {
+    "label" : "Marmion Lake",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q683100" : {
+    "label" : "Lake Mai-Ndombe",
+    "sitelinks" : 41,
+    "aliases" : [ "Lac Mai-Ndombe" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q6844402" : {
+    "label" : "Miguel Alemán Lake",
+    "sitelinks" : 4,
+    "aliases" : [ "Miguel Aleman Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q68467" : {
+    "label" : "Lake Champlain",
+    "sitelinks" : 47,
+    "aliases" : [ "Champlain" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6859416" : {
+    "label" : "Millerton Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q6868864" : {
+    "label" : "Minnitaki Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q696445" : {
+    "label" : "Tyrifjorden",
+    "sitelinks" : 31,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q7054368" : {
+    "label" : "North Caribou Lake",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q709323" : {
+    "label" : "Topozero",
+    "sitelinks" : 31,
+    "aliases" : [ "Lake Topozero" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q7107531" : {
+    "label" : "Ossokmanuan Reservoir",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7144767" : {
+    "label" : "Pathfinder Reservoir",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q715788" : {
+    "label" : "Buir Lake",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q719538" : {
+    "label" : "Kasba Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q729974" : {
+    "label" : "Utah Lake",
+    "sitelinks" : 28,
+    "aliases" : [ "Lake Timpanogos", "Little Uta Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7303773" : {
+    "label" : "Red Bluff Reservoir",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q731175" : {
+    "label" : "Cayuga Lake",
+    "sitelinks" : 13,
+    "aliases" : [ "Lake Cayuga" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q731761" : {
+    "label" : "Lake Kulunda",
+    "sitelinks" : 26,
+    "aliases" : [ "Kulundinskoe", "Lake Kulundinskoye" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q732199" : {
+    "label" : "Lake Gaston",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7330278" : {
+    "label" : "Toledo Bend Reservoir",
+    "sitelinks" : 8,
+    "aliases" : [ "Lake Toledo Bend" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q733206" : {
+    "label" : "Nonacho Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7332083" : {
+    "label" : "Smith Mountain Lake",
+    "sitelinks" : 3,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7332268" : {
+    "label" : "Stanley Reservoir",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7333077" : {
+    "label" : "Walter F. George Lake",
+    "sitelinks" : 5,
+    "aliases" : [ "Lake Eufaula" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7334058" : {
+    "label" : "Rikkavesi",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q7348501" : {
+    "label" : "Sturgeon Lake",
+    "sitelinks" : 4,
+    "aliases" : [ "Sturgeon Lake (Northwestern Ontario)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7358147" : {
+    "label" : "Lake Ballard",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q7359166" : {
+    "label" : "Scott Lake",
+    "sitelinks" : 1,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7359179" : {
+    "label" : "Tobin Lake",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7359539" : {
+    "label" : "Umfreville Lake",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q736707" : {
+    "label" : "Lake Saint Clair",
+    "sitelinks" : 43,
+    "aliases" : [ "Lake St Clair", "Lake St. Clair", "Lac Sainte-Claire" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7374197" : {
+    "label" : "Liangzi Lake",
+    "sitelinks" : 7,
+    "aliases" : [ "Lake Liangzi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7374641" : {
+    "label" : "Ulansuhai Nur",
+    "sitelinks" : 8,
+    "aliases" : [ "Lake Ulansuhai" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7374652" : {
+    "label" : "Shijiu Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q7375301" : {
+    "label" : "Split Lake",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q7384983" : {
+    "label" : "Rye Patch Reservoir",
+    "sitelinks" : 2,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q745937" : {
+    "label" : "Kuybyshev Reservoir",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q753898" : {
+    "label" : "Argentino Lake",
+    "sitelinks" : 44,
+    "aliases" : [ "Lake Argentino" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q755015" : {
+    "label" : "Cahora Bassa Reservoir",
+    "sitelinks" : 26,
+    "aliases" : [ "Cahora Bassa lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q756106" : {
+    "label" : "Manicouagan Reservoir",
+    "sitelinks" : 28,
+    "aliases" : [ "Eye of Quebec", "Lake Manicouagan" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q761535" : {
+    "label" : "Pyramid Lake",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q770141" : {
+    "label" : "Kainji Lake",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q777416" : {
+    "label" : "Aursund",
+    "sitelinks" : 16,
+    "aliases" : [ "Aursunden" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q779468" : {
+    "label" : "Votkinsk Reservoir",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q793085" : {
+    "label" : "Aylmer Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q81150" : {
+    "label" : "Uvs Lake",
+    "sitelinks" : 55,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q811672" : {
+    "label" : "Baunt",
+    "sitelinks" : 16,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q81239" : {
+    "label" : "Lake Assal",
+    "sitelinks" : 53,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q812997" : {
+    "label" : "Bear Lake",
+    "sitelinks" : 16,
+    "aliases" : [ "Bear River Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q826464" : {
+    "label" : "Llanquihue Lake",
+    "sitelinks" : 37,
+    "aliases" : [ "Lago Llanquihue" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q835789" : {
+    "label" : "Chagan Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q837876" : {
+    "label" : "Songhua Lake",
+    "sitelinks" : 7,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q838080" : {
+    "label" : "Lake Natron",
+    "sitelinks" : 58,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q839287" : {
+    "label" : "Nansi Lake",
+    "sitelinks" : 10,
+    "aliases" : [ "South Four Lake", "LakeNansi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q845868" : {
+    "label" : "Taymyr",
+    "sitelinks" : 47,
+    "aliases" : [ "Lake Taymyr" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q845876" : {
+    "label" : "Lake of the Woods",
+    "sitelinks" : 40,
+    "aliases" : [ "Lac des Bois", "Big Traverse Bay", "Lake of the Wood", "Lake Des Isles", "Lake du Bois" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q845880" : {
+    "label" : "Hornavan",
+    "sitelinks" : 32,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q845891" : {
+    "label" : "Pielinen",
+    "sitelinks" : 33,
+    "aliases" : [ "Pielisjärvi" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q847864" : {
+    "label" : "Ngoring Lake",
+    "sitelinks" : 14,
+    "aliases" : [ "Eling Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q859461" : {
+    "label" : "Big Trout Lake",
+    "sitelinks" : 13,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q868663" : {
+    "label" : "Concepción Lake",
+    "sitelinks" : 11,
+    "aliases" : [ "Concepcion Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q876280" : {
+    "label" : "Lagoa Mirim",
+    "sitelinks" : 34,
+    "aliases" : [ "Lake Merin", "Logoon Mirim" ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q8775297" : {
+    "label" : "Buendía Reservoir",
+    "sitelinks" : 7,
+    "aliases" : [ "Buendia Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q8775340" : {
+    "label" : "García Sola Reservoir",
+    "sitelinks" : 5,
+    "aliases" : [ "Garcia Sola Reservoir" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q880358" : {
+    "label" : "Black Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q886010" : {
+    "label" : "Bluenose Lake",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q8878462" : {
+    "label" : "Lake Neale",
+    "sitelinks" : 6,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q891521" : {
+    "label" : "Bolmen",
+    "sitelinks" : 28,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q896063" : {
+    "label" : "Boysen Reservoir",
+    "sitelinks" : 4,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q896551" : {
+    "label" : "Lake Bracciano",
+    "sitelinks" : 34,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q899803" : {
+    "label" : "Bratsk Reservoir",
+    "sitelinks" : 33,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q917094" : {
+    "label" : "Contwoyto Lake",
+    "sitelinks" : 11,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q917385" : {
+    "label" : "Lake Benmore",
+    "sitelinks" : 9,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q918349" : {
+    "label" : "Lough Derg",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q918713" : {
+    "label" : "Viedma Lake",
+    "sitelinks" : 38,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q923693" : {
+    "label" : "Yellowstone Lake",
+    "sitelinks" : 29,
+    "aliases" : [ "Lake Eustis" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q926100" : {
+    "label" : "Brokopondo Reservoir",
+    "sitelinks" : 20,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "South America" ]
+  },
+  "Q930182" : {
+    "label" : "Kieng-Kyuel",
+    "sitelinks" : 5,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q931708" : {
+    "label" : "Lake Tengiz",
+    "sitelinks" : 35,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia" ]
+  },
+  "Q934638" : {
+    "label" : "Lake Winnipegosis",
+    "sitelinks" : 36,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q934857" : {
+    "label" : "Elgygytgyn Lake",
+    "sitelinks" : 34,
+    "aliases" : [ "Lake El'gygytgyn" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q9383203" : {
+    "label" : "Xau",
+    "sitelinks" : 12,
+    "aliases" : [ "Lake Xau" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Africa" ]
+  },
+  "Q939604" : {
+    "label" : "Yamdrok Lake",
+    "sitelinks" : 34,
+    "aliases" : [ "Yamzho Yumco" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q940488" : {
+    "label" : "St. Marys River",
+    "sitelinks" : 28,
+    "aliases" : [ "The Narrows", "Saint Marys River", "St. Marys River (Michigan-Ontario)", "St. Marys River (Michigan–Ontario)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q945023" : {
+    "label" : "Cree Lake",
+    "sitelinks" : 15,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q952975" : {
+    "label" : "Gorky Reservoir",
+    "sitelinks" : 21,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q953140" : {
+    "label" : "Beloye Lake",
+    "sitelinks" : 38,
+    "aliases" : [ "Beloye Ozero", "Lake Beloye", "White Lake" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe", "Asia", "Eurasia" ]
+  },
+  "Q953206" : {
+    "label" : "Uddjaure",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Europe" ]
+  },
+  "Q956201" : {
+    "label" : "Lesser Slave Lake",
+    "sitelinks" : 30,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q958928" : {
+    "label" : "Lac Seul",
+    "sitelinks" : 18,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q965436" : {
+    "label" : "Iliamna Lake",
+    "sitelinks" : 33,
+    "aliases" : [ "Lake Iliamna" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q965973" : {
+    "label" : "Lake Gairdner",
+    "sitelinks" : 24,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Oceania" ]
+  },
+  "Q967775" : {
+    "label" : "Williston Lake",
+    "sitelinks" : 20,
+    "aliases" : [ "Williston Lake (Britská Kolumbie : jezero)" ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  },
+  "Q968728" : {
+    "label" : "Achit Lake",
+    "sitelinks" : 26,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q978800" : {
+    "label" : "Üüreg Lake",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q979315" : {
+    "label" : "Euphrates Lake",
+    "sitelinks" : 30,
+    "aliases" : [ "Lake Assad", "Lake of Tabqa" ],
+    "continents" : [ ],
+    "countryContinents" : [ "Asia" ]
+  },
+  "Q979922" : {
+    "label" : "Lake St. John",
+    "sitelinks" : 19,
+    "aliases" : [ ],
+    "continents" : [ ],
+    "countryContinents" : [ "North America" ]
+  }
+}

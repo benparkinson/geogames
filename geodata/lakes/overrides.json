@@ -1,0 +1,29 @@
+{
+  "Q5513": { "continent": "Asia" },
+  "Q15288": { "continent": "Europe" },
+  "Q126307": { "continent": "Asia" },
+  "Q134485": { "continent": "Asia" },
+  "Q166162": { "continent": "Europe" },
+  "Q753898": { "name": "Lake Argentino", "aliases": ["Argentino", "Lago Argentino", "Argentino Lake"] },
+  "Q503842": {
+    "name": "Lake General Carrera",
+    "aliases": ["General Carrera", "Lake Buenos Aires", "Lago Buenos Aires", "Lago General Carrera", "Chelenko Lake"]
+  },
+  "Q464945": { "name": "Lake Poopó", "aliases": ["Poopó", "Poopo", "Lake Poopo", "Lago Poopó", "Poopó Lake"] },
+  "Q498371": { "name": "Lake Nahuel Huapi", "aliases": ["Nahuel Huapi", "Nahuel Huapi Lake", "Lago Nahuel Huapi"] },
+  "Q23883": { "aliases": ["The Dead Sea", "Salt Sea"] },
+  "Q126982": {
+    "aliases": ["Lake Tiberias", "Lake Kinneret", "Kinneret", "Sea of Tiberias", "Lake of Tiberias", "Lake of Gennesaret"]
+  },
+  "Q182719": { "aliases": ["Turkana", "Rudolf Lake", "Lake Rudolf", "Jade Sea"] },
+  "Q201294": { "aliases": ["Qinghai", "Lake Qinghai", "Qinghai Hu", "Koko Nor", "Kokonor"] },
+  "Q200239": { "aliases": ["Biwa", "Biwa Lake", "Biwako", "Lake Biva"] },
+  "Q42191": { "aliases": ["Lake Issyk-Kul", "Issyk-Kol", "Ysyk-Köl"] },
+  "Q5539": { "aliases": ["Great Slave", "Slave Lake"] },
+  "Q5525": { "aliases": ["Great Bear", "Sahtu"] },
+  "Q203137": { "aliases": ["Inari", "Inarijärvi", "Anarjavri"] },
+  "Q199903": { "aliases": ["Taupo", "Taupōmoana"] },
+  "Q116685": { "aliases": ["Tana", "Lake Dembea", "Tsana"] },
+  "Q1062": { "removeAliases": ["Lake America"] },
+  "Q199551": { "removeAliases": ["Lake Oromeeh"] }
+}

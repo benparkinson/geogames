@@ -3,6 +3,7 @@ import type { GameRoundResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
 import type { CountryShape, CountryShapeRound } from "../games/countries/model";
+import type { Lake, LakeRound } from "../games/lakes/model";
 import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
 
@@ -72,6 +73,27 @@ export function makeRiverData(): River {
 /** The data of a round of any river game. */
 export function makeRiverRoundData(overrides: Partial<RiverRound> = {}): RiverRound {
   return { river: makeRiverData(), countries: [], ...overrides };
+}
+
+/** A square lake in Russia. */
+export function makeLakeData(): Lake {
+  return {
+    id: "Q5513",
+    name: "Lake Baikal",
+    additionalNames: ["Baikal"],
+    continent: "Asia",
+    countries: ["Russia"],
+    geoData: {
+      type: "Feature",
+      properties: {},
+      geometry: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]] },
+    },
+  } as unknown as Lake;
+}
+
+/** The data of a round of the lake game. */
+export function makeLakeRoundData(overrides: Partial<LakeRound> = {}): LakeRound {
+  return { lake: makeLakeData(), ...overrides };
 }
 
 function lines(offset: number) {
@@ -145,6 +167,15 @@ export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): Game
   });
 }
 
+/** The server's response for a Lake Shapes round. */
+export function makeLakeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeLakeRoundData()),
+    gameType: { name: "LAKES_BY_SHAPE", answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
+
 export interface RoundSpec {
   /** A River Shapes round (3 hints) instead of a Tripoint round (3 hints). */
   river?: boolean;
@@ -193,6 +224,12 @@ export const countryNames = [
 export const riverNames = [
   { name: "Danube", additionalNames: ["Donau"] },
   { name: "Thames", additionalNames: [] as string[] },
+];
+
+/** What GET /api/lakes returns; matches makeLakeData() plus one other lake. */
+export const lakeNames = [
+  { name: "Lake Baikal", additionalNames: ["Baikal"] },
+  { name: "Lake Victoria", additionalNames: [] as string[] },
 ];
 
 /** The server's response for a round of a country-shape game. */
