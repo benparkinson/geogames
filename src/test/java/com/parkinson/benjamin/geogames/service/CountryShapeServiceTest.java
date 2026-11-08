@@ -42,8 +42,32 @@ class CountryShapeServiceTest {
   }
 
   @Test
+  void loadShapeReturnsTheInstanceInLoadShapes() {
+    CountryShape one = service.loadShapes().get(10);
+
+    assertThat(service.loadShape(one.name())).isSameAs(one);
+  }
+
+  @Test
+  void readsTheFilesOnlyOnce() {
+    JsonResourceReader reader =
+        org.mockito.Mockito.spy(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
+    CountryShapeService once = new CountryShapeService(reader);
+
+    once.loadShape("Switzerland");
+    once.loadShapes();
+    once.loadShape("France");
+
+    org.mockito.Mockito.verify(reader, org.mockito.Mockito.times(1))
+        .readAll(
+            org.mockito.ArgumentMatchers.anyString(),
+            org.mockito.ArgumentMatchers.eq(CountryShape.class));
+  }
+
+  @Test
   void anUnknownCountryIsAPackagingError() {
     assertThatThrownBy(() -> service.loadShape("Atlantis"))
-        .isInstanceOf(UncheckedIOException.class);
+        .isInstanceOf(UncheckedIOException.class)
+        .hasMessageContaining("Atlantis");
   }
 }

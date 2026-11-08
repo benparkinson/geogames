@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.zalando.logbook.Strategy;
 import org.zalando.logbook.core.WithoutBodyStrategy;
 
@@ -24,6 +25,12 @@ class WiringConfigTest {
   @Test
   void cachingStaysEnabledOrTheLoadersWouldReadTheFilesOnEveryRequest() {
     assertThat(new CachingConfig().getClass().isAnnotationPresent(EnableCaching.class)).isTrue();
+  }
+
+  @Test
+  void schedulingStaysEnabledOrOldGamesWouldNeverBeDeleted() {
+    assertThat(new SchedulingConfig().getClass().isAnnotationPresent(EnableScheduling.class))
+        .isTrue();
   }
 
   @Test
