@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import java.io.UncheckedIOException;
 import java.util.List;
@@ -25,6 +26,17 @@ class CountryShapeServiceTest {
     assertThat(shape.coast().geometry().type()).isEqualTo("MultiLineString");
     assertThat(shape.coast().geometry().coordinates()).isEmpty();
     assertThat(shape.landBorders().geometry().coordinates()).isNotEmpty();
+  }
+
+  @Test
+  void loadsADisplayCountryFromTheShape() {
+    CountryShape shape = service.loadShape("Switzerland");
+
+    Country country = service.loadDisplayCountry("Switzerland");
+
+    assertThat(country.name()).isEqualTo("Switzerland");
+    assertThat(country.additionalNames()).isEqualTo(shape.additionalNames());
+    assertThat(country.geoData()).isEqualTo(shape.outline());
   }
 
   @Test

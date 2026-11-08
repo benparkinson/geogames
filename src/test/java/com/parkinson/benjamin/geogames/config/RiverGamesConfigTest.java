@@ -11,7 +11,7 @@ import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
-import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
 import java.util.List;
@@ -25,7 +25,7 @@ class RiverGamesConfigTest {
   private static final Coordinate POINT = new Coordinate(1, 1);
 
   private final RiverLoaderService rivers = mock(RiverLoaderService.class);
-  private final CountryLoaderService countries = mock(CountryLoaderService.class);
+  private final CountryShapeService countries = mock(CountryShapeService.class);
   private final Random random = new Random(7);
   private final RiverGamesConfig config = new RiverGamesConfig();
 
@@ -43,7 +43,7 @@ class RiverGamesConfigTest {
                 river("C", null, null, List.of("X", "Y", "Z")),
                 river("D", POINT, POINT, null),
                 river("E", POINT, null, List.of("X", "Y"))));
-    when(countries.loadCountryByName(anyString()))
+    when(countries.loadDisplayCountry(anyString()))
         .thenAnswer(call -> new Country(call.getArgument(0), List.of(), null));
   }
 

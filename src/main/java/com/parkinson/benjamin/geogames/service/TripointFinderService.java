@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
 public class TripointFinderService implements RoundGenerator {
 
   private final TripointLoaderService tripointLoaderService;
-  private final CountryLoaderService countryLoaderService;
+  private final CountryShapeService countryShapeService;
   private final Random random;
 
   public TripointFinderService(
       TripointLoaderService tripointLoaderService,
-      CountryLoaderService countryLoaderService,
+      CountryShapeService countryShapeService,
       Random random) {
     this.tripointLoaderService = tripointLoaderService;
-    this.countryLoaderService = countryLoaderService;
+    this.countryShapeService = countryShapeService;
     this.random = random;
   }
 
@@ -49,7 +49,7 @@ public class TripointFinderService implements RoundGenerator {
     for (TripointDefinition definition : chosen) {
       Set<Country> countries = new HashSet<>();
       for (String countryName : definition.countryNames()) {
-        countries.add(countryLoaderService.loadCountryByName(countryName));
+        countries.add(countryShapeService.loadDisplayCountry(countryName));
       }
       tripoints.add(new Tripoint(definition.coordinate(), countries));
     }

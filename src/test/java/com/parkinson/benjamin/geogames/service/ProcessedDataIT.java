@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
@@ -39,6 +40,7 @@ public class ProcessedDataIT {
       new JsonResourceReader(new PathMatchingResourcePatternResolver());
   private final TripointLoaderService tripointLoaderService = new TripointLoaderService(reader);
   private final CountryLoaderService countryLoaderService = new CountryLoaderService(reader);
+  private final CountryShapeService shapeService = new CountryShapeService(reader);
 
   @Test
   public void tripointsAreWellFormed() throws IOException {
@@ -59,8 +61,56 @@ public class ProcessedDataIT {
         Country country = countryLoaderService.loadCountryByName(name);
         assertEquals(name, country.name());
         assertNotNull(country.geoData().geometry(), "no geometry for " + name);
+        assertDisplayCountryLoads(name);
       }
     }
+  }
+
+  private void assertDisplayCountryLoads(String name) {
+    Country display = shapeService.loadDisplayCountry(name);
+    assertEquals(name, display.name());
+    assertNotNull(display.geoData().geometry(), "no outline for " + name);
+  }
+
+  @Test
+  public void everyTripointIsAVertexOfEachOfItsCountriesOutlines() {
+    StringBuilder failures = new StringBuilder();
+    for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
+      double[] point = {definition.coordinate().longitude(), definition.coordinate().latitude()};
+      for (String name : definition.countryNames()) {
+        double km = nearestVertexKm(shapeService.loadDisplayCountry(name), point);
+        if (km > 1.0) {
+          failures.append(
+              String.format("%s: %.1f km from %s%n", definition.countryNames(), km, name));
+        }
+      }
+    }
+    assertEquals("", failures.toString(), "tripoints too far from a simplified outline vertex");
+  }
+
+  private static double nearestVertexKm(Country country, double[] point) {
+    double best = Double.MAX_VALUE;
+    for (double[] vertex : vertices(country.geoData().geometry().coordinates())) {
+      best = Math.min(best, Geo.haversineKm(point, vertex));
+    }
+    return best;
+  }
+
+  /** Every [lon, lat] position in nested GeoJSON coordinates. */
+  private static List<double[]> vertices(Object node) {
+    List<double[]> out = new java.util.ArrayList<>();
+    List<?> list = (List<?>) node;
+    if (!list.isEmpty() && list.get(0) instanceof Number) {
+      out.add(
+          new double[] {
+            ((Number) list.get(0)).doubleValue(), ((Number) list.get(1)).doubleValue()
+          });
+    } else {
+      for (Object child : list) {
+        out.addAll(vertices(child));
+      }
+    }
+    return out;
   }
 
   @Test
@@ -75,6 +125,7 @@ public class ProcessedDataIT {
       assertNotNull(river.countries(), "no countries for " + river.name());
       for (String name : river.countries()) {
         assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+        assertDisplayCountryLoads(name);
       }
     }
   }
