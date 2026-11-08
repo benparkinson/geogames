@@ -4,29 +4,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
+import com.parkinson.benjamin.geogames.model.CountryShapeRound;
+import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.LakeRound;
+import com.parkinson.benjamin.geogames.model.RiverRound;
+import com.parkinson.benjamin.geogames.model.Tripoint;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
 /** Exercises the whole stack against the real processed data, with nothing mocked. */
 @SpringBootTest
 @AutoConfigureMockMvc
-class GameApiIntegrationTest {
+class GameApiIT {
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+
+  @Value("${geogames.cors.allowed-origins}")
+  private String[] allowedOrigins;
 
   private int createGame(String gameType, int rounds) throws Exception {
     String body =
@@ -408,5 +425,161 @@ class GameApiIntegrationTest {
                 .header("Origin", "https://evil.example")
                 .header("Access-Control-Request-Method", "GET"))
         .andExpect(status().isForbidden());
+  }
+
+  /** The record a round of this type is stored as. No default, so a new type fails to compile. */
+  private static Class<? extends GameData> dataClass(GameType type) {
+    return switch (type) {
+      case TRIPOINT -> Tripoint.class;
+      case RIVERS_BY_SHAPE, RIVERS_ON_MAP, RIVERS_BY_ENDS, RIVERS_BY_COUNTRIES -> RiverRound.class;
+      case COUNTRIES_BY_NEIGHBOURS, COUNTRIES_BY_COASTLINE, COUNTRIES_BY_LAND_BORDERS ->
+          CountryShapeRound.class;
+      case LAKES_BY_SHAPE -> LakeRound.class;
+    };
+  }
+
+  @ParameterizedTest
+  @EnumSource(GameType.class)
+  void everyGameTypeProducesRoundsThatDeserialiseIntoItsGameData(GameType type) throws Exception {
+    int id = createGame(type.name(), 10);
+    Set<String> subjects = new HashSet<>();
+
+    for (int i = 0; i < 10; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo(type.name());
+
+      GameData data =
+          objectMapper.readValue((String) JsonPath.read(round, "$.jsonBlob"), dataClass(type));
+      assertThat(data.gameType()).isEqualTo(type);
+      subjects.add(data.subjectId());
+    }
+    assertThat(subjects).hasSize(10);
+  }
+
+  @Test
+  void answeringTheSameWayTwiceChangesNothingButAConflictingAnswerIsRejected() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 2);
+
+    String first = answer(id, 0, "CORRECT", 1);
+    String again = answer(id, 0, "CORRECT", 1);
+
+    assertThat((int) JsonPath.read(again, "$.gameResult.score"))
+        .isEqualTo(JsonPath.<Integer>read(first, "$.gameResult.score"));
+    assertThat((int) JsonPath.read(again, "$.points")).isEqualTo(83);
+
+    mockMvc
+        .perform(
+            post("/api/games/%d/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}"))
+        .andExpect(status().isConflict())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(409))
+        .andExpect(jsonPath("$.title").isString())
+        .andExpect(jsonPath("$.detail").isString());
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("CORRECT");
+  }
+
+  @Test
+  void badRequestsGetProblemDetailBodies() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":0}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.detail").isString());
+  }
+
+  @Test
+  void malformedJsonIsABadRequest() throws Exception {
+    mockMvc
+        .perform(post("/api/games").contentType(MediaType.APPLICATION_JSON).content("{not json"))
+        // Current behaviour: a 400 with an empty body, not a ProblemDetail like the other 400s,
+        // because ApiExceptionHandler does not handle HttpMessageNotReadableException.
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(""));
+  }
+
+  @Test
+  void aPlainTextBodyIsUnsupportedMediaType() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.TEXT_PLAIN)
+                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":1}"))
+        .andExpect(status().isUnsupportedMediaType());
+  }
+
+  @Test
+  void answeringAnUnknownGameIsNotFound() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/games/999999/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"GAVE_UP\"}"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void listsEveryLakeAndCoversTheLakesInAGame() throws Exception {
+    String body =
+        mockMvc
+            .perform(get("/api/lakes"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    List<String> names = JsonPath.read(body, "$[*].name");
+    assertThat(names).hasSize(lakeFileCount()).isSorted();
+
+    int id = createGame("LAKES_BY_SHAPE", 5);
+    for (int i = 0; i < 5; i++) {
+      String blob = JsonPath.read(getRound(id, i), "$.jsonBlob");
+      assertThat(names).contains(JsonPath.<String>read(blob, "$.lake.name"));
+    }
+  }
+
+  private static int lakeFileCount() throws IOException {
+    return new PathMatchingResourcePatternResolver()
+        .getResources("classpath:processed/lakes/*.json")
+        .length;
+  }
+
+  @Test
+  void everyConfiguredOriginMayPreflightTheGameAndPlaceNameEndpoints() throws Exception {
+    assertThat(allowedOrigins).isNotEmpty();
+    for (String origin : allowedOrigins) {
+      mockMvc
+          .perform(
+              options("/api/games")
+                  .header("Origin", origin)
+                  .header("Access-Control-Request-Method", "POST"))
+          .andExpect(status().isOk())
+          .andExpect(header().string("Access-Control-Allow-Origin", origin));
+      mockMvc
+          .perform(
+              options("/api/countries")
+                  .header("Origin", origin)
+                  .header("Access-Control-Request-Method", "GET"))
+          .andExpect(status().isOk())
+          .andExpect(header().string("Access-Control-Allow-Origin", origin));
+    }
+  }
+
+  @Test
+  void theProductionFrontendOriginIsAllowed() throws Exception {
+    // https://geogauntlet.onrender.com is the production frontend. Removing it from
+    // geogames.cors.allowed-origins breaks production while every other test still passes.
+    String production = "https://geogauntlet.onrender.com";
+    mockMvc
+        .perform(
+            options("/api/games")
+                .header("Origin", production)
+                .header("Access-Control-Request-Method", "POST"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Access-Control-Allow-Origin", production));
   }
 }

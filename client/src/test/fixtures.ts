@@ -64,7 +64,7 @@ export function makeRiverData(): River {
     countries: ["Romania", "Germany", "Austria"],
     geoData: {
       type: "Feature",
-      properties: {},
+      properties: { name: "Danube" },
       geometry: { type: "MultiLineString", coordinates: [[[0, 0], [1, 1]]] },
     },
   } as unknown as River;
@@ -85,7 +85,7 @@ export function makeLakeData(): Lake {
     countries: ["Russia"],
     geoData: {
       type: "Feature",
-      properties: {},
+      properties: { name: "Lake Baikal" },
       geometry: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]] },
     },
   } as unknown as Lake;

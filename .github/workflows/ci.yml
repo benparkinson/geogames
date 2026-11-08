@@ -1,5 +1,8 @@
 name: CI
 
+# One job per kind of failure, so a red check says what broke. The last job, `test`, is the aggregate
+# that branch protection requires: keep its id and name.
+
 on:
   pull_request:
   push:
@@ -8,10 +11,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  test:
-    name: test
+  lint-backend:
+    name: lint-backend
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -23,6 +31,357 @@ jobs:
           java-version: 25
           cache: maven
 
-      # Also installs Node, builds the frontend and runs both the JUnit and Vitest suites.
-      - name: Build and test
-        run: ./mvnw -B verify
+      # Fails when Java is not formatted by google-java-format. Fix with `mvn spotless:apply`.
+      - name: Check Java formatting
+        run: ./mvnw -B spotless:check
+
+  lint-frontend:
+    name: lint-frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: client/.nvmrc
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      # Maven installs Node itself from <nodeVersion> in pom.xml; setup-node reads client/.nvmrc.
+      # They must be the same version.
+      - name: Check client/.nvmrc matches the Node version in pom.xml
+        run: |
+          pom_version=$(sed -n 's|.*<nodeVersion>v\{0,1\}\([^<]*\)</nodeVersion>.*|\1|p' pom.xml | tr -d '[:space:]')
+          nvmrc_version=$(tr -d '[:space:]' < client/.nvmrc | sed 's/^v//')
+          echo "pom.xml: '${pom_version}', client/.nvmrc: '${nvmrc_version}'"
+          if [ -z "${pom_version}" ] || [ "${pom_version}" != "${nvmrc_version}" ]; then
+            echo "::error file=client/.nvmrc::client/.nvmrc (${nvmrc_version}) and <nodeVersion> in pom.xml (${pom_version}) must be the same"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Lint
+        working-directory: client
+        run: npm run lint
+
+      - name: Type-check
+        working-directory: client
+        run: npm run typecheck
+
+  unit-backend:
+    name: unit-backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      # No Node here: the Java unit tests do not need the frontend. Includes the JaCoCo coverage gate.
+      - name: Java unit tests and coverage gate
+        run: ./mvnw -B verify -Dskip.frontend -DskipITs -Dspotless.check.skip=true
+
+      - name: Upload test and coverage reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-backend-reports
+          path: |
+            target/surefire-reports
+            target/site/jacoco
+          if-no-files-found: ignore
+
+  unit-frontend:
+    name: unit-frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: client/.nvmrc
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Vitest with coverage thresholds
+        working-directory: client
+        run: npm run coverage -- --reporter=default --reporter=github-actions
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-frontend-coverage
+          path: client/coverage
+          if-no-files-found: ignore
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      # Maven installs Node itself (see <nodeVersion> in pom.xml), so no setup-node here.
+      # NEXT_PUBLIC_API_URL makes the bundled site call the local backend instead of production. This
+      # jar only feeds the integration and e2e jobs: production is built by Render, which the docker
+      # job covers.
+      - name: Build the frontend and the jar
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8080
+        run: ./mvnw -B package -DskipTests -Dskip.lint -Dspotless.check.skip=true -Djacoco.skip=true
+
+      - name: Upload the jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: jar
+          path: target/geogames-0.0.1-SNAPSHOT.jar
+          if-no-files-found: error
+
+      - name: Upload the built frontend
+        uses: actions/upload-artifact@v7
+        with:
+          name: client-out
+          path: client/out
+          if-no-files-found: error
+
+  integration:
+    name: integration
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      # HttpServerIT serves the static site from the classpath, so it needs the frontend build.
+      - name: Download the built frontend
+        uses: actions/download-artifact@v8
+        with:
+          name: client-out
+          path: client/out
+
+      - name: Backend integration tests (including the contract and data checks)
+        run: ./mvnw -B verify -Dskip.frontend -DskipUnitTests -Dspotless.check.skip=true -Djacoco.skip=true
+
+      - name: Upload integration test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failsafe-reports
+          path: target/failsafe-reports
+          if-no-files-found: ignore
+
+  # Duplicates one file of unit-frontend on purpose, so a contract break shows under its own name.
+  contract-frontend:
+    name: contract-frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: client/.nvmrc
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+      # Fails when the frontend fixtures no longer match the backend shapes in contract/api-shapes.json.
+      - name: Frontend contract test
+        working-directory: client
+        run: npx vitest run src/api/contract.test.ts
+
+  e2e:
+    name: e2e
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-package: jre
+          java-version: 25
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: client/.nvmrc
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - name: Download the jar
+        uses: actions/download-artifact@v8
+        with:
+          name: jar
+          path: target
+
+      - name: Install dependencies
+        working-directory: e2e
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        working-directory: e2e
+        run: npx playwright test
+
+      - name: Upload the Playwright report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          if-no-files-found: ignore
+
+  docker:
+    name: docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # The image Render builds from the Dockerfile.
+      - name: Build the production image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: geogames:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
+
+      # 512 MB is the memory of the Render instance; the Dockerfile runs the app with -Xmx400M.
+      - name: Start the container
+        run: docker run -d --name geogames --memory=512m -p 8080:8080 geogames:ci
+
+      - name: Wait for /health
+        run: |
+          for i in $(seq 1 90); do
+            if curl -sf http://localhost:8080/health > /dev/null; then
+              echo "Up after about $((i * 2)) seconds"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::The container did not answer /health within 180 seconds"
+          exit 1
+
+      - name: Check the API
+        run: |
+          countries=$(curl -sf http://localhost:8080/api/countries | jq 'length')
+          echo "countries: ${countries}"
+          test "${countries}" -gt 200
+
+          game=$(curl -sf -X POST -H 'Content-Type: application/json' \
+            -d '{"gameType":"RANDOM","numberOfRounds":1}' http://localhost:8080/api/games)
+          id=$(echo "${game}" | jq -e '.id')
+          echo "game: ${id}"
+
+          curl -sf "http://localhost:8080/api/games/${id}/rounds/0" \
+            | jq -e '.totalRoundCount == 1 and (.jsonBlob | length) > 0'
+
+      - name: Container logs
+        if: failure()
+        run: docker logs geogames
+
+  data:
+    name: data
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      # Regenerates the country, country shape, river and lake data from geodata/ and compares it with
+      # src/main/resources/processed/. Fails when geodata/ or a loader changed and the data was not
+      # regenerated. Run the same script locally.
+      - name: Check the committed data is current
+        run: bash scripts/check-processed-data.sh
+
+  test:
+    name: test
+    # The required status check on main: it passes only if every job above did.
+    needs:
+      - lint-backend
+      - lint-frontend
+      - unit-backend
+      - unit-frontend
+      - build
+      - integration
+      - contract-frontend
+      - e2e
+      - docker
+      - data
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail if any job failed, was cancelled or was skipped
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: |
+          echo "One or more jobs did not succeed:"
+          echo '${{ toJSON(needs) }}'
+          exit 1
+
+      - name: All jobs passed
+        run: echo "All jobs passed"
