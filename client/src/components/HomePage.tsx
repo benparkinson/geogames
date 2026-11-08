@@ -66,7 +66,7 @@ function HomePage(): React.JSX.Element {
     return (
         <div className="min-vh-100 py-4 page-bg">
             <div className="container" style={{ maxWidth: 720 }}>
-                <h1 className="text-center mt-3">Geogames</h1>
+                <h1 className="text-center mt-3">GeoGauntlet</h1>
                 <p className="lead text-center mb-4">Quick but challenging geography puzzles.</p>
 
                 <h2 className="h5">Choose a game</h2>
