@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.loaders.rivers;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -6,8 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Function;
 
-/** Works out the accepted alternative names of a river. */
+/** Works out the accepted alternative names of a named feature. */
 public final class AliasBuilder {
 
   private static final int MAX_ALIAS_LENGTH = 40;
@@ -22,18 +23,40 @@ public final class AliasBuilder {
         .replaceAll("[^a-z0-9]", "");
   }
 
+  /** The hand-written correction of a feature; the fields the alias rules read. */
+  public interface NamedOverride {
+    Boolean exclude();
+
+    String name();
+
+    String continent();
+
+    List<String> aliases();
+
+    List<String> addAliases();
+
+    List<String> removeAliases();
+
+    default boolean isExcluded() {
+      return Boolean.TRUE.equals(exclude());
+    }
+  }
+
   /**
    * @param wikidataAliases English aliases from Wikidata
    * @param neName Natural Earth {@code name}, may be null
    * @param neNameEn Natural Earth {@code name_en}, may be null
    * @param override the override entry, may be null
+   * @param variants the name variants that are also accepted ("Lake X" for "X"); candidates are
+   *     added in the order returned
    */
   public static List<String> build(
       String name,
       List<String> wikidataAliases,
       String neName,
       String neNameEn,
-      RiverOverride override) {
+      NamedOverride override,
+      Function<String, List<String>> variants) {
     if (override != null && override.aliases() != null) {
       return List.copyOf(override.aliases());
     }
@@ -41,7 +64,7 @@ public final class AliasBuilder {
     List<String> candidates = new ArrayList<>(wikidataAliases);
     addIfPresent(candidates, neName);
     addIfPresent(candidates, neNameEn);
-    candidates.add(riverVariant(name));
+    candidates.addAll(variants.apply(name));
 
     if (override != null && override.addAliases() != null) {
       candidates.addAll(override.addAliases());
@@ -66,13 +89,6 @@ public final class AliasBuilder {
       result.add(alias);
     }
     return result;
-  }
-
-  private static String riverVariant(String name) {
-    if (name.endsWith(" River")) {
-      return name.substring(0, name.length() - " River".length());
-    }
-    return name.contains("River") ? name : name + " River";
   }
 
   private static void addIfPresent(List<String> list, String value) {

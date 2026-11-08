@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,14 +39,14 @@ public final class RiverEnds {
       Arrays.fill(row, Double.POSITIVE_INFINITY);
     }
     for (int i = 0; i < lines.size(); i++) {
-      double km = RiverGeometry.lineKm(lines.get(i));
+      double km = Geo.lineKm(lines.get(i));
       weight[2 * i][2 * i + 1] = km;
       weight[2 * i + 1][2 * i] = km;
     }
     for (int a = 0; a < n; a++) {
       for (int b = a + 1; b < n; b++) {
         if (a / 2 != b / 2) {
-          double km = RiverGeometry.haversineKm(points[a], points[b]);
+          double km = Geo.haversineKm(points[a], points[b]);
           if (km <= GAP_KM) {
             weight[a][b] = km;
             weight[b][a] = km;

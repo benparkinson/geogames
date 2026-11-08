@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,8 @@ class RiverFactsTest {
 
   private static final List<List<double[]>> LINES =
       List.of(List.of(new double[] {0, 1}, new double[] {5, 1}));
-  private static final RiverCountryLocator.Result LOCATED =
-      new RiverCountryLocator.Result(List.of("A", "B"), 0);
+  private static final CountryLocator.Result LOCATED =
+      new CountryLocator.Result(List.of("A", "B"), 0);
 
   private static RiverOverride override(Boolean reverse, Coordinate source, Coordinate mouth) {
     return new RiverOverride(null, null, null, null, null, null, null, reverse, source, mouth);

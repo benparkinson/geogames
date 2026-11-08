@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.loaders.rivers;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import com.parkinson.benjamin.geogames.model.Country;
 import java.util.ArrayList;
@@ -8,19 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Works out which countries a river flows through by sampling points along its lines every couple
+ * Works out which countries a feature (a river, or a lake shoreline) lies in by sampling points along its lines every couple
  * of kilometres and testing them against the country polygons.
  */
-public class RiverCountryLocator {
+public class CountryLocator {
 
   static final double SAMPLE_KM = 2;
-  static final double MIN_KM = 10;
   private static final String SKIPPED = "Antarctica";
 
   /**
    * @param countries names sorted by km inside the country (longest first, ties by name), keeping
-   *     only the countries with at least {@link #MIN_KM}
-   * @param unlocatedKm the km of river that fell in no country at all
+   *     only the countries with at least the minimum km
+   * @param unlocatedKm the km of line that fell in no country at all
    */
   public record Result(List<String> countries, double unlocatedKm) {}
 
@@ -52,8 +51,11 @@ public class RiverCountryLocator {
   private record Shape(String name, List<Part> parts) {}
 
   private final List<Shape> shapes = new ArrayList<>();
+  private final double minKm;
 
-  public RiverCountryLocator(List<Country> countries) {
+  /** @param minKm the km a country needs to be listed (10 for rivers, 5 for lakes) */
+  public CountryLocator(List<Country> countries, double minKm) {
+    this.minKm = minKm;
     for (Country country : countries) {
       if (SKIPPED.equals(country.name())) {
         continue;
@@ -79,7 +81,7 @@ public class RiverCountryLocator {
       for (int i = 1; i < line.size(); i++) {
         double[] a = line.get(i - 1);
         double[] b = line.get(i);
-        double km = RiverGeometry.haversineKm(a, b);
+        double km = Geo.haversineKm(a, b);
         int samples = Math.max(1, (int) Math.ceil(km / SAMPLE_KM));
         double each = km / samples;
         for (int s = 0; s < samples; s++) {
@@ -96,12 +98,20 @@ public class RiverCountryLocator {
 
     List<Map.Entry<String, Double>> kept =
         new ArrayList<>(
-            kmByCountry.entrySet().stream().filter(e -> e.getValue() >= MIN_KM).toList());
+            kmByCountry.entrySet().stream().filter(e -> e.getValue() >= minKm).toList());
     kept.sort(
         Comparator.<Map.Entry<String, Double>>comparingDouble(Map.Entry::getValue)
             .reversed()
             .thenComparing(Map.Entry::getKey));
     return new Result(kept.stream().map(Map.Entry::getKey).toList(), unlocated);
+  }
+
+  /**
+   * Locates the outer ring of each polygon, treated as a closed line. Holes (islands in a lake) are
+   * ignored.
+   */
+  public Result locateRings(List<List<List<double[]>>> polygons) {
+    return locate(polygons.stream().map(polygon -> polygon.get(0)).toList());
   }
 
   private String countryAt(double lon, double lat) {

@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.loaders.rivers;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import java.io.IOException;
@@ -9,33 +9,39 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import tools.jackson.databind.JsonNode;
 
-/** Reads the Natural Earth river file and groups its features by Wikidata ID. */
+/** Reads a Natural Earth file (lines or polygons) and groups its features by Wikidata ID. */
 public class NaturalEarthReader {
 
-  public Map<String, NaturalEarthRiver> read(Path file) throws IOException {
+  public Map<String, NaturalEarthFeature> read(Path file, Set<String> skippedClasses)
+      throws IOException {
     try (InputStream in = Files.newInputStream(file)) {
-      return group(GeoJson.lenientReader().readTree(in));
+      return group(GeoJson.lenientReader().readTree(in), skippedClasses);
     }
   }
 
   /**
-   * Groups line features by {@code wikidataid}. Features without one are skipped, and so are
-   * canals. Lake centerlines are kept, because they keep a river continuous through a lake.
+   * Groups features by {@code wikidataid}. Features without one are skipped, and so are those
+   * whose {@code featurecla} is in {@code skippedClasses}. Rivers keep lake centerlines, because
+   * they keep a river continuous through a lake.
    */
-  public Map<String, NaturalEarthRiver> group(JsonNode featureCollection) {
+  public Map<String, NaturalEarthFeature> group(
+      JsonNode featureCollection, Set<String> skippedClasses) {
     Map<String, String> names = new LinkedHashMap<>();
     Map<String, String> namesEn = new LinkedHashMap<>();
     Map<String, List<List<double[]>>> lines = new LinkedHashMap<>();
+    Map<String, List<List<List<double[]>>>> polygons = new LinkedHashMap<>();
 
     for (JsonNode feature : featureCollection.path("features")) {
       JsonNode props = feature.path("properties");
       String qid = text(props.path("wikidataid"));
-      if (qid.isEmpty() || "Canal".equals(text(props.path("featurecla")))) {
+      if (qid.isEmpty() || skippedClasses.contains(text(props.path("featurecla")))) {
         continue;
       }
       List<List<double[]>> parts = lines.computeIfAbsent(qid, k -> new ArrayList<>());
+      List<List<List<double[]>>> shapes = polygons.computeIfAbsent(qid, k -> new ArrayList<>());
       JsonNode geometry = feature.path("geometry");
       String type = text(geometry.path("type"));
       if (type.equals("LineString")) {
@@ -44,15 +50,32 @@ public class NaturalEarthReader {
         for (JsonNode part : geometry.path("coordinates")) {
           parts.add(line(part));
         }
+      } else if (type.equals("Polygon")) {
+        shapes.add(polygon(geometry.path("coordinates")));
+      } else if (type.equals("MultiPolygon")) {
+        for (JsonNode shape : geometry.path("coordinates")) {
+          shapes.add(polygon(shape));
+        }
       }
       names.merge(qid, text(props.path("name")), (old, neu) -> old.isEmpty() ? neu : old);
       namesEn.merge(qid, text(props.path("name_en")), (old, neu) -> old.isEmpty() ? neu : old);
     }
 
-    Map<String, NaturalEarthRiver> result = new LinkedHashMap<>();
+    Map<String, NaturalEarthFeature> result = new LinkedHashMap<>();
     lines.forEach(
         (qid, parts) ->
-            result.put(qid, new NaturalEarthRiver(qid, names.get(qid), namesEn.get(qid), parts)));
+            result.put(
+                qid,
+                new NaturalEarthFeature(
+                    qid, names.get(qid), namesEn.get(qid), parts, polygons.get(qid))));
+    return result;
+  }
+
+  private static List<List<double[]>> polygon(JsonNode rings) {
+    List<List<double[]>> result = new ArrayList<>();
+    for (JsonNode ring : rings) {
+      result.add(line(ring));
+    }
     return result;
   }
 

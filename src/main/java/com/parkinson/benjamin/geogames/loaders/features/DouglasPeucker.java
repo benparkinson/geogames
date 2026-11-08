@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.loaders.rivers;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

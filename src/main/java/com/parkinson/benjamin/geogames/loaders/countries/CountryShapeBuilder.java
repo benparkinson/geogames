@@ -1,7 +1,7 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
-import com.parkinson.benjamin.geogames.loaders.rivers.DouglasPeucker;
-import com.parkinson.benjamin.geogames.loaders.rivers.RiverGeometry;
+import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
@@ -253,7 +253,7 @@ public final class CountryShapeBuilder {
           if (labels[i].equals(SEAM)) {
             continue;
           }
-          double km = RiverGeometry.haversineKm(ring.points().get(i), end(ring, i));
+          double km = Geo.haversineKm(ring.points().get(i), end(ring, i));
           if (labels[i].equals(COAST)) {
             coastKm += km;
           } else {
@@ -355,7 +355,7 @@ public final class CountryShapeBuilder {
   private static double perimeterKm(Ring ring) {
     double km = 0;
     for (int i = 0; i < ring.size(); i++) {
-      km += RiverGeometry.haversineKm(ring.points().get(i), end(ring, i));
+      km += Geo.haversineKm(ring.points().get(i), end(ring, i));
     }
     return km;
   }

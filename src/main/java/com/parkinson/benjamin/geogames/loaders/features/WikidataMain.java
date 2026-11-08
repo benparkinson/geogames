@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.loaders.rivers;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import java.io.IOException;
@@ -13,31 +13,34 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 import tools.jackson.databind.JsonNode;
 
 /**
- * Usage: RiverWikidataMain &lt;naturalEarth.geojson&gt; &lt;outFile wikidata.json&gt;
+ * Usage: WikidataMain &lt;naturalEarth.geojson&gt; &lt;outFile wikidata.json&gt;
  *
- * <p>The only river program that uses the network. Run it once and commit the output; everything
- * else reads {@code wikidata.json}.
+ * <p>Serves any Natural Earth file with {@code wikidataid} properties (rivers, lakes). The only
+ * feature program that uses the network. Run it once and commit the output; everything else reads
+ * {@code wikidata.json}.
  */
-public class RiverWikidataMain {
+public class WikidataMain {
 
   private static final URI ENDPOINT = URI.create("https://query.wikidata.org/sparql");
   private static final String USER_AGENT =
-      "geogames-river-loader/0.1 (https://github.com/benparkinson/geogames)";
+      "geogames-data-loader/0.1 (https://github.com/benparkinson/geogames)";
   private static final int BATCH_SIZE = 200;
   private static final int MAX_RETRIES = 3;
   private static final Pattern QID = Pattern.compile("Q\\d+");
 
   public static void main(String[] args) throws IOException, InterruptedException {
     TreeSet<String> qids = new TreeSet<>();
-    for (NaturalEarthRiver river : new NaturalEarthReader().read(Path.of(args[0])).values()) {
-      if (QID.matcher(river.qid()).matches()) {
-        qids.add(river.qid());
+    for (NaturalEarthFeature feature :
+        new NaturalEarthReader().read(Path.of(args[0]), Set.of()).values()) {
+      if (QID.matcher(feature.qid()).matches()) {
+        qids.add(feature.qid());
       }
     }
     System.out.println("Looking up " + qids.size() + " Wikidata items");

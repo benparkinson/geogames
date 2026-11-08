@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.FeatureSelector;
 import java.util.List;
 
 /**
@@ -14,4 +15,5 @@ public record RiverCandidate(
     int sitelinks,
     boolean fromOverride,
     List<List<double[]>> lines,
-    double km) {}
+    double km)
+    implements FeatureSelector.RankedFeature {}
