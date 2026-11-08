@@ -37,9 +37,15 @@ public final class CountryShapeEligibility {
         shape.coastKm() >= COASTLINE_MIN_COAST_KM && shape.landBorderKm() >= COASTLINE_MIN_LAND_KM;
   }
 
+  /**
+   * The game draws the mainland neighbours' outlines around the borders, so a country whose only
+   * neighbours touch an outlying part (the United Kingdom, bordering Ireland only in Northern
+   * Ireland) would show no context at all.
+   */
   public static Predicate<CountryShape> landBorders() {
     return shape ->
         shape.landBorderKm() >= LAND_BORDERS_MIN_LAND_KM
-            && shape.coastKm() >= LAND_BORDERS_MIN_COAST_KM;
+            && shape.coastKm() >= LAND_BORDERS_MIN_COAST_KM
+            && shape.neighbours().stream().anyMatch(CountryShape.Neighbour::mainland);
   }
 }

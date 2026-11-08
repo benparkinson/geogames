@@ -224,4 +224,16 @@ public class ProcessedDataIntegrityTest {
     assertTrue(all.stream().filter(CountryShapeEligibility.coastline()).count() >= 20);
     assertTrue(all.stream().filter(CountryShapeEligibility.landBorders()).count() >= 20);
   }
+
+  @Test
+  public void everyCountryShapeGameWithNeighboursHasSomeToShow() {
+    List<CountryShape> all = new CountryShapeService(reader).loadShapes();
+    all.stream()
+        .filter(CountryShapeEligibility.neighbours().or(CountryShapeEligibility.landBorders()))
+        .forEach(
+            shape ->
+                assertTrue(
+                    shape.neighbours().stream().anyMatch(CountryShape.Neighbour::mainland),
+                    shape.name() + " has no mainland neighbours to show"));
+  }
 }
