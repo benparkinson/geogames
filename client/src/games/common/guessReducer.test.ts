@@ -8,7 +8,7 @@ const answers = [
 ];
 
 const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2 };
-const fresh = () => initialGuessState("UNANSWERED", answers);
+const fresh = () => initialGuessState("UNANSWERED", answers, 0);
 
 /** Applies guesses in order and returns the last outcome. */
 function guessAll(texts: string[], cfg: GuessConfig = config, start: GuessState = fresh()) {
@@ -21,13 +21,33 @@ function guessAll(texts: string[], cfg: GuessConfig = config, start: GuessState 
   return outcome;
 }
 
+describe("initialGuessState hints", () => {
+  it("restores the hints the server recorded for an answered round", () => {
+    expect(initialGuessState("CORRECT", answers, 2).hintsUsed).toBe(2);
+    expect(initialGuessState("GAVE_UP", answers, 1).hintsUsed).toBe(1);
+  });
+
+  it("starts an unanswered round with no hints", () => {
+    expect(initialGuessState("UNANSWERED", answers, 0).hintsUsed).toBe(0);
+  });
+
+  it("caps the hint action at hintsTotal", () => {
+    let state = fresh();
+    for (let i = 0; i < 5; i++) {
+      state = guessReducer(state, { type: "hint" }, config).state;
+    }
+
+    expect(state.hintsUsed).toBe(config.hintsTotal);
+  });
+});
+
 describe("initialGuessState", () => {
   it("starts empty for an unanswered round", () => {
     expect(fresh()).toEqual({ guesses: [], gaveUp: false, over: false, hintsUsed: 0 });
   });
 
   it("starts solved, with every answer found, for a correct round", () => {
-    const state = initialGuessState("CORRECT", answers);
+    const state = initialGuessState("CORRECT", answers, 0);
 
     expect(state.over).toBe(true);
     expect(state.gaveUp).toBe(false);
@@ -35,7 +55,7 @@ describe("initialGuessState", () => {
   });
 
   it("starts revealed for a round that was given up", () => {
-    const state = initialGuessState("GAVE_UP", answers);
+    const state = initialGuessState("GAVE_UP", answers, 0);
 
     expect(state.over).toBe(true);
     expect(state.gaveUp).toBe(true);
@@ -112,7 +132,7 @@ describe("guessReducer guesses", () => {
   });
 
   it("ignores guesses once the round is over", () => {
-    const over = initialGuessState("CORRECT", answers);
+    const over = initialGuessState("CORRECT", answers, 0);
     const outcome = guessReducer(over, { type: "guess", text: "Belgium" }, config);
 
     expect(outcome.result).toEqual({ kind: "over" });
@@ -132,7 +152,7 @@ describe("guessReducer giving up", () => {
   });
 
   it("does nothing when the round is already over", () => {
-    const over = initialGuessState("CORRECT", answers);
+    const over = initialGuessState("CORRECT", answers, 0);
     const outcome = guessReducer(over, { type: "giveUp" }, config);
 
     expect(outcome.state).toBe(over);
@@ -151,7 +171,7 @@ describe("guessReducer hints", () => {
   });
 
   it("gives no hints once the round is over", () => {
-    const over = initialGuessState("GAVE_UP", answers);
+    const over = initialGuessState("GAVE_UP", answers, 0);
 
     expect(guessReducer(over, { type: "hint" }, config).state.hintsUsed).toBe(0);
   });

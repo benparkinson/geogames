@@ -26,10 +26,18 @@ describe("riverHints", () => {
     expect(firstLetterHint({ ...river, name: " " })).toBeNull();
   });
 
+  it("describes as many clues as there are builders", () => {
+    expect(textHints(river, continentHint).description).toBe("Shows a clue");
+    expect(textHints(river, continentHint, firstLetterHint).description).toBe("Shows 2 clues, one at a time");
+    expect(textHints(river, continentHint, flowsThroughHint, firstLetterHint).description).toBe(
+      "Shows 3 clues, one at a time",
+    );
+  });
+
   it("makes one hint per builder, in order", () => {
     const hints = textHints(river, continentHint, firstLetterHint);
 
-    expect(hints.total).toBe(2);
+    expect(hints.description).toContain("2 clues");
     expect(hints.text?.(0)).toBe("Continent: Europe");
     expect(hints.text?.(1)).toBe("Starts with “D”");
     expect(hints.text?.(2)).toBeNull();

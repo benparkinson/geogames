@@ -13,7 +13,7 @@ vi.mock("./RiverCountriesMapWrapper", () => ({
 function renderGame() {
   const submitAnswer = vi.fn();
   const Component = countries.Component;
-  render(<Component data={makeRiverRoundData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
+  render(<Component data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 2 })} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 

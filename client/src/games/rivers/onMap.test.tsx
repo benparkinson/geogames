@@ -11,7 +11,7 @@ vi.mock("./RiverOnMapMapWrapper", () => ({
 function renderGame() {
   const submitAnswer = vi.fn();
   const Component = onMap.Component;
-  render(<Component data={makeRiverRoundData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
+  render(<Component data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 2 })} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 
@@ -52,6 +52,6 @@ describe("Rivers on the Map", () => {
 
     await userEvent.setup().type(input(), "Donau{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith("CORRECT");
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
   });
 });

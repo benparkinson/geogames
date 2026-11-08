@@ -1,18 +1,23 @@
 import type { ComponentType } from "react";
 import type { Icon } from "react-bootstrap-icons";
-import type { AnswerState, Round } from "./common/Model";
+import type { Round, RoundAnswer } from "./common/Model";
 
 export interface GameComponentProps<T> {
   /** This round's data: the parsed jsonBlob of the server's round. */
   data: T;
   round: Round;
   answerCount: number;
-  submitAnswer: (answerState: AnswerState) => void;
+  submitAnswer: (answer: RoundAnswer) => void;
 }
 
 /** Everything the app needs to know about one type of game. Register it in games/registry.ts. */
 export interface GameModule<T> {
-  /** Must equal the backend GameType name, for example "TRIPOINT". */
+  /**
+   * Must equal the backend GameType name, for example "TRIPOINT".
+   *
+   * The number of hints comes from the backend GameType.hintCount (`round.hintCount`). The
+   * component supplies the hints' content and must offer exactly that many.
+   */
   type: string;
   /** Plural name: the home page card and the browser tab title. */
   title: string;

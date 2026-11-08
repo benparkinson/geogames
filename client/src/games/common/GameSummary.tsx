@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Button, Spinner } from "react-bootstrap";
-import { CheckLg, EyeFill } from "react-bootstrap-icons";
+import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import HomeLink from "../../components/HomeLink";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
-import { CORRECT_ANSWER, UNANSWERED } from "./Model";
+import { CORRECT_ANSWER, GAVE_UP } from "./Model";
+import { isPerfect } from "./scoring";
 
 function roundLabel(round: GameRoundView): string {
   return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
@@ -39,8 +40,16 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
     return <LoadingSpinner fullPage className="page-bg" />;
   }
 
-  const correct = all.filter(r => r.answerState === CORRECT_ANSWER).length;
-  const revealed = all.filter(r => r.answerState !== CORRECT_ANSWER && r.answerState !== UNANSWERED).length;
+  // Every round carries the whole game's result.
+  const { score, maxScore, perfectRounds, roundsCorrect, roundAnswerStates } = all[0].gameResult;
+  const withHints = roundsCorrect - perfectRounds;
+  const revealed = roundAnswerStates.filter(s => s === GAVE_UP).length;
+  const perfectGame = perfectRounds === totalRoundCount;
+  const breakdown = [
+    perfectRounds > 0 && `${perfectRounds} perfect`,
+    withHints > 0 && `${withHints} with hints`,
+    revealed > 0 && `${revealed} revealed`,
+  ].filter(Boolean);
   const gameType = playAgainType(all);
 
   return (
@@ -49,12 +58,17 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
         <HomeLink />
       </div>
       <div className="card mx-auto my-4 p-3" style={{ maxWidth: 560 }}>
-        <h1 className="h3 mb-1">You scored {correct} / {totalRoundCount}</h1>
-        <p className="text-muted mb-3">{correct} correct · {revealed} revealed</p>
+        <h1 className="h3 mb-1">
+          {perfectGame
+            ? <><StarFill aria-hidden="true" className="text-warning" /> Perfect game! {score} / {maxScore}</>
+            : `You scored ${score} / ${maxScore}`}
+        </h1>
+        <p className="text-muted mb-3">{breakdown.length > 0 ? breakdown.join(" · ") : "0 perfect"}</p>
 
         <div className="list-group mb-3">
           {all.map((r, i) => {
             const isCorrect = r.answerState === CORRECT_ANSWER;
+            const perfect = isPerfect(r.answerState, r.hintsUsed);
             return (
               <button
                 key={i}
@@ -66,11 +80,17 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
                   <span className="text-muted">{i + 1}. {roundLabel(r)}</span>
                   <br />
                   {roundAnswers(r).join(", ")}
+                  {r.hintsUsed > 0 && (
+                    <>
+                      <br />
+                      <span className="small text-muted">{r.hintsUsed === 1 ? "1 hint" : `${r.hintsUsed} hints`}</span>
+                    </>
+                  )}
                 </span>
                 <span className={"text-nowrap " + (isCorrect ? "text-success" : "text-secondary")}>
-                  {isCorrect
-                    ? <><CheckLg aria-hidden="true" /> Correct</>
-                    : <><EyeFill aria-hidden="true" /> Revealed</>}
+                  {perfect ? <StarFill aria-hidden="true" />
+                    : isCorrect ? <CheckLg aria-hidden="true" />
+                    : <EyeFill aria-hidden="true" />} +{r.points}
                 </span>
               </button>
             );

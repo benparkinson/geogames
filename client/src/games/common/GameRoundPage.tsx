@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRound, useSubmitAnswer } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import GameSummary from "./GameSummary";
-import { AnswerState, FINISHED, Round } from "./Model";
+import { FINISHED, Round, RoundAnswer } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
@@ -22,8 +22,8 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
         setShowSummary(false)
     }
 
-    function submitAnswer(answerState: AnswerState): void {
-        submitAnswerMutation.mutate(answerState);
+    function submitAnswer(answer: RoundAnswer): void {
+        submitAnswerMutation.mutate(answer);
     }
 
     function renderGame(data: GameRoundView) {
@@ -38,9 +38,15 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             currentRound,
             totalRoundCount: data.totalRoundCount,
             answerState: data.answerState,
+            hintCount: data.gameType.hintCount,
+            hintsUsed: data.hintsUsed,
+            points: data.points,
             score: data.gameResult.score,
+            maxScore: data.gameResult.maxScore,
+            perfectRounds: data.gameResult.perfectRounds,
             gameCompleted,
             roundAnswerStates: data.gameResult.roundAnswerStates,
+            roundPoints: data.gameResult.roundPoints,
         };
 
         const gameModule = findGameModule(data.gameType.name);

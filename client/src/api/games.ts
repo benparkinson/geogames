@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnswerState, UNANSWERED } from "../games/common/Model";
+import { AnswerState, CORRECT_ANSWER, RoundAnswer, UNANSWERED } from "../games/common/Model";
+import { isPerfect, MAX_ROUND_POINTS, roundPoints } from "../games/common/scoring";
 import { fetchJson, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
 import { GameRoundResponse, GameRoundView } from "./types";
@@ -10,15 +11,29 @@ function roundUrl(gameId: string, round: number): string {
 }
 
 export function toRoundView(response: GameRoundResponse, round: number): GameRoundView {
+  const result = response.gameResult;
+  const states = roundAnswerStates(response, round);
+  const serverPoints = result.roundPoints;
+  // Older backends send none of the points fields, and their score counted correct rounds.
+  const points = Array.isArray(serverPoints) ? serverPoints : states.map(state => roundPoints(state, 0, 0));
+  const hintsUsed = Array.isArray(result.roundHintsUsed) ? result.roundHintsUsed : states.map(() => 0);
   return {
-    gameType: response.gameType,
+    gameType: { ...response.gameType, hintCount: response.gameType.hintCount ?? 0 },
     data: JSON.parse(response.jsonBlob),
     totalRoundCount: response.totalRoundCount,
     answerState: response.answerState,
+    hintsUsed: response.hintsUsed ?? 0,
+    points: response.points ?? roundPoints(response.answerState, 0, 0),
     gameResult: {
-      gameState: response.gameResult.gameState,
-      score: response.gameResult.score,
-      roundAnswerStates: roundAnswerStates(response, round),
+      gameState: result.gameState,
+      score: Array.isArray(serverPoints) ? result.score : points.reduce((sum, p) => sum + p, 0),
+      maxScore: result.maxScore ?? MAX_ROUND_POINTS * response.totalRoundCount,
+      roundsCorrect: result.roundsCorrect ?? states.filter(s => s === CORRECT_ANSWER).length,
+      perfectRounds:
+        result.perfectRounds ?? states.filter((s, i) => isPerfect(s, hintsUsed[i] ?? 0)).length,
+      roundAnswerStates: states,
+      roundPoints: points,
+      roundHintsUsed: hintsUsed,
     },
   };
 }
@@ -52,8 +67,8 @@ export function useRound(gameId: string, round: number) {
 export function useSubmitAnswer(gameId: string, round: number) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (answerState: AnswerState) =>
-      postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", { answerState }),
+    mutationFn: (answer: RoundAnswer) =>
+      postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
     // Refetch on failure too: if the server refused the answer (a round's answer is final), show what it holds.
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.round(gameId, round) });

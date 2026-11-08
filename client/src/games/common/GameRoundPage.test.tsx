@@ -3,8 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../../test/fetchMock";
-import { countryNames, makeRiverRound, makeRound } from "../../test/fixtures";
-import { GameRoundResponse } from "../../api/types";
+import { countryNames, makeGameRounds, makeRound } from "../../test/fixtures";
 import { AnswerState } from "./Model";
 import GameRoundPage from "./GameRoundPage";
 
@@ -28,24 +27,14 @@ afterEach(() => {
 
 type Kind = "TRIPOINT" | "RIVERS_BY_SHAPE";
 
-/** A tiny in-memory game server that keeps round states and recomputes the game result. */
+/** A tiny in-memory game server that keeps round states and hints and recomputes the game result. */
 function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): AnswerState => "UNANSWERED")) {
   const states = [...initialStates];
-  const build = (i: number): GameRoundResponse => {
-    const base = kinds[i] === "TRIPOINT" ? makeRound() : makeRiverRound();
-    const unanswered = states.filter((s) => s === "UNANSWERED").length;
-    return {
-      ...base,
-      totalRoundCount: kinds.length,
-      answerState: states[i],
-      gameResult: {
-        gameState: unanswered === 0 ? "FINISHED" : unanswered === kinds.length ? "CREATED" : "IN_PROGRESS",
-        roundsUnanswered: unanswered,
-        score: states.filter((s) => s === "CORRECT").length,
-        roundAnswerStates: [...states],
-      },
-    };
-  };
+  const hints = kinds.map(() => 0);
+  const build = (i: number) =>
+    makeGameRounds(
+      kinds.map((kind, n) => ({ river: kind === "RIVERS_BY_SHAPE", answerState: states[n], hintsUsed: hints[n] })),
+    )[i];
   return mockFetch([
     { url: /\/api\/games\/g1\/rounds\/\d+$/, body: ({ url }) => build(Number(url.split("/").pop())) },
     {
@@ -53,7 +42,9 @@ function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): 
       url: /\/api\/games\/g1\/rounds\/\d+\/answers$/,
       body: ({ url, init }) => {
         const index = Number(url.match(/rounds\/(\d+)\/answers/)![1]);
-        states[index] = JSON.parse(init!.body as string).answerState;
+        const answer = JSON.parse(init!.body as string);
+        states[index] = answer.answerState;
+        hints[index] = answer.hintsUsed;
         return build(index);
       },
     },
@@ -143,7 +134,7 @@ describe("GameRoundPage playing", () => {
       const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
       expect(posts).toHaveLength(1);
       expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/answers");
-      expect(posts[0].body).toEqual({ answerState: "CORRECT" });
+      expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0 });
     });
     await waitFor(() => expect(roundGets(fetchMock, 0).length).toBeGreaterThanOrEqual(2));
   });
@@ -185,7 +176,7 @@ describe("GameRoundPage results", () => {
     await screen.findByText(RIVER_PROMPT);
     await user.click(screen.getByRole("button", { name: "See results" }));
 
-    expect(await screen.findByText("You scored 1 / 2")).toBeInTheDocument();
+    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
 
@@ -208,7 +199,9 @@ describe("GameRoundPage results", () => {
     await screen.findByText(TRIPOINT_PROMPT);
 
     expect(screen.getAllByRole("button", { name: /^Round \d/ })).toHaveLength(3);
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--correct");
+    // An older backend sends no points: the round counts as perfect, and the score as its points.
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--perfect");
+    expect(screen.getByText("Score 100")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 2: not played" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Round 3: not played" })).toBeDisabled();
   });

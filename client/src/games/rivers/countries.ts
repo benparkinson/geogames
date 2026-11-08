@@ -16,7 +16,6 @@ export default defineGame({
     blankMap: true,
     // Built by hand rather than with textHints: the first hint changes the map, not the text.
     hints: (river) => ({
-      total: 2,
       description: "Shows where the river starts and ends, then its first letter",
       text: (index) => (index === 0 ? "Start and end flags are on the map" : firstLetterHint(river)),
     }),
