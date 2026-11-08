@@ -31,7 +31,7 @@ class GameTypeTest {
   @ParameterizedTest
   @CsvSource({
     "TRIPOINT, 3",
-    "RIVERS_BY_SHAPE, 1",
+    "RIVERS_BY_SHAPE, 3",
     "RIVERS_ON_MAP, 2",
     "RIVERS_BY_ENDS, 2",
     "RIVERS_BY_COUNTRIES, 2"

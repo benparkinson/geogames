@@ -21,7 +21,7 @@ describe("fetchRound", () => {
     expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/games/g1/rounds/3");
     expect(view.data).toEqual(makeRiverRoundData());
     expect(view.totalRoundCount).toBe(5);
-    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1 });
+    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 3 });
   });
 
   it("rejects with the round and status when the response is not ok", async () => {

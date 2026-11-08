@@ -6,7 +6,7 @@ package com.parkinson.benjamin.geogames.model;
  */
 public enum GameType {
   TRIPOINT(3, 3, 5),
-  RIVERS_BY_SHAPE(1, 1, 5),
+  RIVERS_BY_SHAPE(1, 3, 5),
   RIVERS_ON_MAP(1, 2, 5),
   RIVERS_BY_ENDS(1, 2, 5),
   RIVERS_BY_COUNTRIES(1, 2, 5);

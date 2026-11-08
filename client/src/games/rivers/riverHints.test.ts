@@ -13,6 +13,20 @@ describe("riverHints", () => {
     expect(flowsThroughHint(river)).toBe("Flows through: Romania, Germany, Austria");
   });
 
+  it("names all of up to three countries without saying there are more", () => {
+    expect(flowsThroughHint({ ...river, countries: ["A", "B", "C"] })).toBe("Flows through: A, B, C");
+    expect(flowsThroughHint({ ...river, countries: ["A"] })).toBe("Flows through: A");
+  });
+
+  it("names only the first three countries of a longer river and counts the rest", () => {
+    const danube = ["Germany", "Austria", "Slovakia", "Hungary", "Croatia", "Serbia", "Romania", "Bulgaria", "Ukraine"];
+
+    expect(flowsThroughHint({ ...river, countries: danube })).toBe("Flows through: Germany, Austria, Slovakia and 6 more");
+    expect(flowsThroughHint({ ...river, countries: danube.slice(0, 4) })).toBe(
+      "Flows through: Germany, Austria, Slovakia and 1 more",
+    );
+  });
+
   it("has nothing to say about countries when there are none", () => {
     expect(flowsThroughHint({ ...river, countries: [] })).toBeNull();
   });

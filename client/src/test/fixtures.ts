@@ -98,13 +98,13 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeRiverRoundData()),
-    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1 },
+    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 3 },
     ...overrides,
   });
 }
 
 export interface RoundSpec {
-  /** A River Shapes round (1 hint) instead of a Tripoint round (3 hints). */
+  /** A River Shapes round (3 hints) instead of a Tripoint round (3 hints). */
   river?: boolean;
   answerState: AnswerState;
   hintsUsed?: number;
@@ -112,7 +112,7 @@ export interface RoundSpec {
 
 /** The server's responses for a whole game, each carrying the same complete result. */
 export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
-  const hintCounts = specs.map(spec => (spec.river ? 1 : 3));
+  const hintCounts = specs.map(spec => (3));
   const hintsUsed = specs.map(spec => spec.hintsUsed ?? 0);
   const points = specs.map((spec, i) => roundPoints(spec.answerState, hintsUsed[i], hintCounts[i]));
   const unanswered = specs.filter(spec => spec.answerState === "UNANSWERED").length;
