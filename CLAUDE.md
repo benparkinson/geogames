@@ -18,7 +18,7 @@ Backend (repo root; use `./mvnw` or `mvnw.cmd` if `mvn` isn't installed):
 
 Frontend (`client/`):
 - Dev server with hot reload on port 3000: `npm run dev`. It calls the backend at `http://localhost:8080`.
-- Lint: `npm run lint`
+- Lint: `npm run lint` (zero warnings allowed). `mvn verify` runs it, and also `spotless:check`, so a PR fails the required `test` check if either fails. TypeScript is pinned to 6.0 (`~6.0.3`) because typescript-eslint doesn't support TS 7 yet (typescript-eslint#10940); Dependabot ignores major TypeScript bumps. Drop the pin and the `ignore` entry once it does.
 - Production static export: `npm run build`. This runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `client/out/`.
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; the Leaflet-rendering map components are excluded). Tests are colocated with their source as `*.test.ts(x)` under `client/src`, and shared helpers (fixtures, a `fetch` router, a query-client wrapper) live in `client/src/test/`. Never put test files under `client/pages/`, because Next would treat them as routes. Test files are type-checked by `next build`, so import `describe`/`it`/`expect`/`vi` from `vitest` explicitly. Never render real Leaflet maps: mock the `*MapWrapper` modules. Testing Library only detects Jest's fake timers, so with `vi.useFakeTimers()` use `fireEvent` instead of `userEvent`. Components use TanStack Query through the provider in `pages/_app.tsx`, so tests wrap them in a `QueryClientProvider` (`renderWithClient` in `client/src/test/render.tsx`).
 - Use the Node that Maven installed (`target/node`, v24) for npm commands. The system Node may be older than Next 16 supports.
