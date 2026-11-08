@@ -154,7 +154,7 @@ export interface RoundSpec {
 
 /** The server's responses for a whole game, each carrying the same complete result. */
 export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
-  const hintCounts = specs.map(spec => (3));
+  const hintCounts = specs.map(() => 3);
   const hintsUsed = specs.map(spec => spec.hintsUsed ?? 0);
   const points = specs.map((spec, i) => roundPoints(spec.answerState, hintsUsed[i], hintCounts[i]));
   const unanswered = specs.filter(spec => spec.answerState === "UNANSWERED").length;

@@ -2,7 +2,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
-import { makeGameRounds, makeRiverRound } from "../../test/fixtures";
+import { makeGameRounds } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
 import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";

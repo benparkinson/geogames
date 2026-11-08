@@ -241,7 +241,7 @@ describe("MapGame hints", () => {
 
   it("uses up a hint even when it has no text, and stops when none are left", async () => {
     const user = userEvent.setup();
-    const { hints, text } = hintConfig();
+    const { hints } = hintConfig();
     renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
