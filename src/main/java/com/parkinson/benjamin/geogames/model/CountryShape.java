@@ -23,11 +23,6 @@ public record CountryShape(
     GeoData coast,
     GeoData landBorders) {
 
-  /** The shape as a {@link Country}, with the simplified outline as its geometry. */
-  public Country toCountry() {
-    return new Country(name, additionalNames, outline);
-  }
-
   /** @param mainland whether it touches the country's largest polygon part */
   public record Neighbour(String name, double km, boolean mainland) {}
 }

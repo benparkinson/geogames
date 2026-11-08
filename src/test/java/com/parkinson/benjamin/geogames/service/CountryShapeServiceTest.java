@@ -2,7 +2,12 @@ package com.parkinson.benjamin.geogames.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import java.io.UncheckedIOException;
 import java.util.List;
@@ -25,6 +30,28 @@ class CountryShapeServiceTest {
     assertThat(shape.coast().geometry().type()).isEqualTo("MultiLineString");
     assertThat(shape.coast().geometry().coordinates()).isEmpty();
     assertThat(shape.landBorders().geometry().coordinates()).isNotEmpty();
+  }
+
+  @Test
+  void loadsADisplayCountryFromTheShape() {
+    CountryShape shape = service.loadShape("Switzerland");
+
+    Country country = service.loadDisplayCountry("Switzerland");
+
+    assertThat(country.name()).isEqualTo("Switzerland");
+    assertThat(country.additionalNames()).isEqualTo(shape.additionalNames());
+    assertThat(country.geoData()).isEqualTo(shape.outline());
+  }
+
+  @Test
+  void aDisplayCountryWithoutAliasesHasAnEmptyList() {
+    JsonResourceReader reader = mock(JsonResourceReader.class);
+    CountryShape shape = new CountryShape("Nowhere", null, 0, 0, List.of(), null, null, null, null);
+    when(reader.readAll(anyString(), eq(CountryShape.class))).thenReturn(List.of(shape));
+
+    Country country = new CountryShapeService(reader).loadDisplayCountry("Nowhere");
+
+    assertThat(country.additionalNames()).isEmpty();
   }
 
   @Test

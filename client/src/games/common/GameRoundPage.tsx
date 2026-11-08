@@ -1,9 +1,10 @@
 import Head from "next/head";
-import { useState } from "react";
-import { useRound, useSubmitAnswer } from "../../api/games";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { roundQuery, useRound, useSubmitAnswer } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import GameSummary from "./GameSummary";
-import { FINISHED, Round, RoundAnswer } from "./Model";
+import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
@@ -11,7 +12,17 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     const [currentRound, setRound] = useState(0)
     const [showSummary, setShowSummary] = useState(false)
     const { error, data, isLoading } = useRound(gameId, currentRound);
-    const submitAnswerMutation = useSubmitAnswer(gameId, currentRound);
+    const submitAnswerMutation = useSubmitAnswer(gameId, currentRound, data?.totalRoundCount);
+    const queryClient = useQueryClient();
+
+    // A round answered before this page loaded: its next round is the likely next click. Does nothing when cached.
+    const answered = data !== undefined && data.answerState !== UNANSWERED;
+    const totalRoundCount = data?.totalRoundCount ?? 0;
+    useEffect(() => {
+        if (answered && currentRound + 1 < totalRoundCount) {
+            void queryClient.prefetchQuery(roundQuery(gameId, currentRound + 1));
+        }
+    }, [answered, currentRound, totalRoundCount, gameId, queryClient]);
 
     function nextRound(): void {
         setRound(currentRound + 1)

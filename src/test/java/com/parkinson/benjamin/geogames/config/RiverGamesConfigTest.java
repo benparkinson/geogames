@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
@@ -26,7 +25,7 @@ class RiverGamesConfigTest {
   private static final Coordinate POINT = new Coordinate(1, 1);
 
   private final RiverLoaderService rivers = mock(RiverLoaderService.class);
-  private final CountryShapeService shapes = mock(CountryShapeService.class);
+  private final CountryShapeService countries = mock(CountryShapeService.class);
   private final Random random = new Random(7);
   private final RiverGamesConfig config = new RiverGamesConfig();
 
@@ -44,11 +43,8 @@ class RiverGamesConfigTest {
                 river("C", null, null, List.of("X", "Y", "Z")),
                 river("D", POINT, POINT, null),
                 river("E", POINT, null, List.of("X", "Y"))));
-    when(shapes.loadShape(anyString()))
-        .thenAnswer(
-            call ->
-                new CountryShape(
-                    call.getArgument(0), List.of(), 0, 0, List.of(), null, null, null, null));
+    when(countries.loadDisplayCountry(anyString()))
+        .thenAnswer(call -> new Country(call.getArgument(0), List.of(), null));
   }
 
   private static List<String> eligibleIds(RoundGenerator generator, int expected) {
@@ -88,7 +84,7 @@ class RiverGamesConfigTest {
 
   @Test
   void riversByCountriesNeedsThreeOrMoreCountriesAndAttachesThem() {
-    RoundGenerator generator = config.riversByCountries(rivers, shapes, random);
+    RoundGenerator generator = config.riversByCountries(rivers, countries, random);
 
     assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_COUNTRIES);
     assertThat(eligibleIds(generator, 2)).containsExactlyInAnyOrder("B", "C");

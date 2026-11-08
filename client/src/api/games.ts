@@ -62,6 +62,8 @@ export function roundQuery(gameId: string, round: number) {
   return {
     queryKey: queryKeys.round(gameId, round),
     queryFn: () => fetchRound(gameId, round),
+    // Round data only changes when this client answers, and every answer invalidates the whole game.
+    staleTime: Infinity,
   };
 }
 
@@ -69,14 +71,21 @@ export function useRound(gameId: string, round: number) {
   return useQuery(roundQuery(gameId, round));
 }
 
-export function useSubmitAnswer(gameId: string, round: number) {
+/** `totalRoundCount` is known once the round has loaded; it decides whether there is a next round to prefetch. */
+export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?: number) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (answer: RoundAnswer) =>
       postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
     // Refetch on failure too: if the server refused the answer (a round's answer is final), show what it holds.
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.round(gameId, round) });
+    // Every round's response carries the whole game's result, so all of the game's rounds are out of date.
+    // Returning the promise keeps the mutation pending until the refetch is done.
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) });
+      // Only now, so the next round's score isn't already out of date.
+      if (totalRoundCount !== undefined && round + 1 < totalRoundCount) {
+        await queryClient.prefetchQuery(roundQuery(gameId, round + 1));
+      }
     },
   });
 }

@@ -48,7 +48,6 @@ public class RiverGamesConfig {
         rivers,
         random,
         river -> river.countries() != null && river.countries().size() >= 3,
-        river ->
-            river.countries().stream().map(name -> shapes.loadShape(name).toCountry()).toList());
+        river -> river.countries().stream().map(shapes::loadDisplayCountry).toList());
   }
 }

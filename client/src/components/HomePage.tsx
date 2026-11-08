@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
+import KofiBadge from "./KofiBadge";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 function HomePage(): React.JSX.Element {
@@ -66,6 +67,9 @@ function HomePage(): React.JSX.Element {
     return (
         <div className="min-vh-100 py-4 page-bg">
             <div className="container" style={{ maxWidth: 720 }}>
+                <div className="text-end">
+                    <KofiBadge />
+                </div>
                 <h1 className="text-center mt-3">Geogames</h1>
                 <p className="lead text-center mb-4">Quick geography puzzles on a real map.</p>
 

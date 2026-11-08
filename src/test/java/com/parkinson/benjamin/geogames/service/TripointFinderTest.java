@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Tripoint;
@@ -47,11 +46,11 @@ public class TripointFinderTest {
                         new Coordinate(i, i * 2), List.of("A" + i, "B" + i, "C" + i)))
             .toList();
     when(loader.loadTripointDefinitions()).thenReturn(definitions);
-    when(countryLoader.loadShape(anyString()))
+    when(countryLoader.loadDisplayCountry(anyString()))
         .thenAnswer(
             invocation -> {
               String name = invocation.getArgument(0);
-              return new CountryShape(name, List.of(), 0, 0, List.of(), null, null, null, null);
+              return new Country(name, List.of(), null);
             });
   }
 
@@ -87,7 +86,7 @@ public class TripointFinderTest {
       assertThat(tripoint.countries().stream().map(Country::name).toList())
           .containsExactlyInAnyOrderElementsOf(definition.countryNames());
       for (String name : definition.countryNames()) {
-        verify(countryLoader).loadShape(name);
+        verify(countryLoader).loadDisplayCountry(name);
       }
     }
   }
@@ -109,7 +108,7 @@ public class TripointFinderTest {
 
   @Test
   void propagatesCountryLoadingFailures() {
-    when(countryLoader.loadShape(anyString()))
+    when(countryLoader.loadDisplayCountry(anyString()))
         .thenThrow(new UncheckedIOException(new IOException("boom")));
 
     assertThatThrownBy(() -> service.generate(1, Set.of()))
@@ -124,8 +123,8 @@ public class TripointFinderTest {
     List<GameData> result = service.generate(3, excluded);
 
     assertThat(result).extracting(GameData::subjectId).doesNotContainAnyElementsOf(excluded);
-    verify(countryLoader, never()).loadShape("A0");
-    verify(countryLoader, never()).loadShape("A1");
+    verify(countryLoader, never()).loadDisplayCountry("A0");
+    verify(countryLoader, never()).loadDisplayCountry("A1");
     assertThatThrownBy(() -> service.generate(4, excluded))
         .isInstanceOf(IllegalArgumentException.class);
   }
