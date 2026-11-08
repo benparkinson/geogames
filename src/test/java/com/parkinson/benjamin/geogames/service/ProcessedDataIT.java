@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
-import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.PlaceName;
@@ -39,6 +39,7 @@ public class ProcessedDataIT {
       new JsonResourceReader(new PathMatchingResourcePatternResolver());
   private final TripointLoaderService tripointLoaderService = new TripointLoaderService(reader);
   private final CountryLoaderService countryLoaderService = new CountryLoaderService(reader);
+  private final CountryShapeService countryShapeService = new CountryShapeService(reader);
 
   @Test
   public void tripointsAreWellFormed() throws IOException {
@@ -56,11 +57,46 @@ public class ProcessedDataIT {
   public void everyTripointCountryLoads() throws IOException {
     for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
       for (String name : definition.countryNames()) {
-        Country country = countryLoaderService.loadCountryByName(name);
-        assertEquals(name, country.name());
-        assertNotNull(country.geoData().geometry(), "no geometry for " + name);
+        CountryShape shape = countryShapeService.loadShape(name);
+        assertEquals(name, shape.name());
+        assertNotNull(shape.outline().geometry(), "no outline for " + name);
       }
     }
+  }
+
+  @Test
+  public void everyTripointSurvivesInTheSimplifiedOutlines() {
+    List<String> failures = new java.util.ArrayList<>();
+    for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
+      Coordinate at = definition.coordinate();
+      for (String name : definition.countryNames()) {
+        double nearest = Double.MAX_VALUE;
+        for (List<Number> point :
+            countryShapeService.loadShape(name).outline().geometry().flattenedCoordinates()) {
+          nearest =
+              Math.min(
+                  nearest,
+                  kmBetween(
+                      at.latitude(),
+                      at.longitude(),
+                      point.get(1).doubleValue(),
+                      point.get(0).doubleValue()));
+        }
+        if (nearest > 2.0) {
+          failures.add(
+              String.format(
+                  "%s at %s is %.2f km from the %s outline", definition, at, nearest, name));
+        }
+      }
+    }
+    assertTrue(failures.isEmpty(), String.join(System.lineSeparator(), failures));
+  }
+
+  private static double kmBetween(double lat1, double lon1, double lat2, double lon2) {
+    double meanLat = Math.toRadians((lat1 + lat2) / 2);
+    double dx = Math.toRadians(lon2 - lon1) * Math.cos(meanLat);
+    double dy = Math.toRadians(lat2 - lat1);
+    return 6371.0 * Math.hypot(dx, dy);
   }
 
   @Test
@@ -74,7 +110,7 @@ public class ProcessedDataIT {
       assertNotEquals(river.source(), river.mouth(), "source is mouth for " + river.name());
       assertNotNull(river.countries(), "no countries for " + river.name());
       for (String name : river.countries()) {
-        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+        assertEquals(name, countryShapeService.loadShape(name).name());
       }
     }
   }
@@ -121,6 +157,10 @@ public class ProcessedDataIT {
   @Test
   public void lakesHaveContinentsCountriesAndClosedRings() {
     List<Lake> lakes = loadLakes();
+    Set<String> countryNames =
+        countryLoaderService.loadCountryNames().stream()
+            .map(PlaceName::name)
+            .collect(java.util.stream.Collectors.toSet());
 
     assertTrue(lakes.size() >= 20, "only " + lakes.size() + " lakes");
     assertEquals(lakes.size(), lakes.stream().map(Lake::id).distinct().count());
@@ -128,7 +168,7 @@ public class ProcessedDataIT {
       assertNotNull(lake.continent(), "no continent for " + lake.name());
       assertFalse(lake.countries().isEmpty(), "no countries for " + lake.name());
       for (String name : lake.countries()) {
-        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+        assertTrue(countryNames.contains(name), "unknown country " + name + " for " + lake.name());
       }
 
       String type = lake.geoData().geometry().type();
