@@ -3,6 +3,21 @@ import { useId } from "react";
 export function GuessBox({ value, name, onChange, disabled, className, autoFocus, suggestions }: GuessBoxProps): React.JSX.Element {
   const listId = useId();
 
+  // On mobile, choosing an option from a native datalist blurs the input and
+  // dismisses the keyboard. Detect that change and put the focus back.
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.currentTarget;
+    const inputType = (e.nativeEvent as InputEvent).inputType;
+    const pickedSuggestion =
+      !!suggestions &&
+      (inputType === "insertReplacementText" || inputType === undefined) &&
+      suggestions.includes(input.value);
+    onChange(e);
+    if (pickedSuggestion) {
+      setTimeout(() => input.focus(), 0);
+    }
+  }
+
   return (
     <>
       <input
@@ -13,7 +28,7 @@ export function GuessBox({ value, name, onChange, disabled, className, autoFocus
         aria-label={name}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         disabled={disabled}
         autoFocus={autoFocus}
         list={suggestions ? listId : undefined}
