@@ -1,9 +1,10 @@
 import L from "leaflet";
 import { MapContainer } from "react-leaflet";
 import { LockedView } from "../../map/LockedView";
+import { RevealTiles } from "../../map/RevealTiles";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { RevealTiles, RiverLine } from "./RiverLayers";
+import { RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 /** The river on satellite imagery from the start, with limited zoom and no panning until the round ends. */

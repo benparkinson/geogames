@@ -2,6 +2,7 @@ import { vi } from "vitest";
 import type { GameRoundResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
+import type { CountryShape, CountryShapeRound } from "../games/countries/model";
 import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
 
@@ -71,6 +72,46 @@ export function makeRiverData(): River {
 /** The data of a round of any river game. */
 export function makeRiverRoundData(overrides: Partial<RiverRound> = {}): RiverRound {
   return { river: makeRiverData(), countries: [], ...overrides };
+}
+
+function lines(offset: number) {
+  return {
+    type: "Feature",
+    properties: { name: "lines" },
+    geometry: { type: "MultiLineString", coordinates: [[[offset, offset], [offset + 1, offset + 1]]] },
+  };
+}
+
+/** The Netherlands (also Holland): borders Germany and Belgium, and France through Saint Martin. */
+export function makeCountryShapeData(overrides: Partial<CountryShape> = {}): CountryShape {
+  return {
+    name: "Netherlands",
+    additionalNames: ["Holland"],
+    coastKm: 451,
+    landBorderKm: 1027,
+    neighbours: [
+      { name: "Germany", km: 577, mainland: true },
+      { name: "Belgium", km: 450, mainland: true },
+      { name: "France", km: 10, mainland: false },
+    ],
+    focus: { west: 3.3, south: 50.7, east: 7.2, north: 53.6 },
+    outline: square(1),
+    coast: lines(2),
+    landBorders: lines(3),
+    ...overrides,
+  } as unknown as CountryShape;
+}
+
+/** The data of a round of any country-shape game. */
+export function makeCountryShapeRoundData(overrides: Partial<CountryShapeRound> = {}): CountryShapeRound {
+  return {
+    country: makeCountryShapeData(),
+    neighbours: [
+      { name: "Germany", outline: square(4) },
+      { name: "Belgium", outline: square(5) },
+    ],
+    ...overrides,
+  } as unknown as CountryShapeRound;
 }
 
 export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
@@ -153,3 +194,15 @@ export const riverNames = [
   { name: "Danube", additionalNames: ["Donau"] },
   { name: "Thames", additionalNames: [] as string[] },
 ];
+
+/** The server's response for a round of a country-shape game. */
+export function makeCountryShapeRound(
+  type = "COUNTRIES_BY_NEIGHBOURS",
+  overrides: Partial<GameRoundResponse> = {},
+): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryShapeRoundData()),
+    gameType: { name: type, answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}

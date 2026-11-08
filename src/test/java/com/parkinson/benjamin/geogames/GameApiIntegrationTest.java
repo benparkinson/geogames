@@ -212,6 +212,8 @@ class GameApiIntegrationTest {
       if (type.equals("TRIPOINT")) {
         List<String> names = JsonPath.read(blob, "$.countries[*].name");
         subjects.add("tripoint:" + names.stream().sorted().collect(Collectors.joining("|")));
+      } else if (type.startsWith("COUNTRIES_")) {
+        subjects.add("country:" + JsonPath.read(blob, "$.country.name"));
       } else {
         subjects.add("river:" + JsonPath.read(blob, "$.river.id"));
       }
