@@ -1,7 +1,40 @@
-/** The text of a hint that gives the first letter of a name, or null for a blank name. */
+/**
+ * Words that say what kind of place a name is rather than which one, so a first-letter hint
+ * skips them: "Lake Victoria" starts with "V", not "L". Includes other languages ("Rio Grande")
+ * and the linking words that follow them ("Sea of Galilee").
+ */
+const GENERIC_WORDS = new Set([
+  "lake",
+  "lago",
+  "lac",
+  "loch",
+  "lough",
+  "river",
+  "rio",
+  "río",
+  "sea",
+  "of",
+  "the",
+  "de",
+  "del",
+]);
+
+/**
+ * The text of a hint that gives the first letter of a name, or null for a blank name. Leading
+ * generic words ("Lake", "Rio") are skipped and mentioned, so the letter narrows the answer down.
+ */
 export function firstLetterHint(name: string): string | null {
-  const letter = name.trim().charAt(0).toUpperCase();
-  return letter ? `Starts with “${letter}”` : null;
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  let skipped = 0;
+  while (skipped < words.length - 1 && GENERIC_WORDS.has(words[skipped].toLowerCase())) {
+    skipped++;
+  }
+  const letter = (words[skipped] ?? "").charAt(0).toUpperCase();
+  if (!letter) {
+    return null;
+  }
+  const prefix = words.slice(0, skipped).join(" ");
+  return prefix ? `Starts with “${letter}” (after “${prefix}”)` : `Starts with “${letter}”`;
 }
 
 /**

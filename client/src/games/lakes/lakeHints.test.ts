@@ -26,13 +26,13 @@ describe("lakeHints", () => {
   });
 
   it("gives the first letter", () => {
-    expect(firstLetterHint(lake)).toBe("Starts with “L”");
+    expect(firstLetterHint(lake)).toBe("Starts with “B” (after “Lake”)");
   });
 
   it("offers the three hints in order, each with text", () => {
     const { text } = lakeHints(lake);
 
-    expect([0, 1, 2].map((i) => text?.(i))).toEqual(["Continent: Asia", "Lies in: Russia", "Starts with “L”"]);
+    expect([0, 1, 2].map((i) => text?.(i))).toEqual(["Continent: Asia", "Lies in: Russia", "Starts with “B” (after “Lake”)"]);
     expect(text?.(3)).toBeNull();
   });
 });

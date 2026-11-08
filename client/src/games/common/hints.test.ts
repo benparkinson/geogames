@@ -7,6 +7,17 @@ describe("firstLetterHint", () => {
     expect(firstLetterHint("  rhine")).toBe("Starts with “R”");
   });
 
+  it("skips generic leading words and says so", () => {
+    expect(firstLetterHint("Lake Victoria")).toBe("Starts with “V” (after “Lake”)");
+    expect(firstLetterHint("Rio Grande")).toBe("Starts with “G” (after “Rio”)");
+    expect(firstLetterHint("Sea of Galilee")).toBe("Starts with “G” (after “Sea of”)");
+  });
+
+  it("keeps a generic word when it is all there is, or part of a distinctive name", () => {
+    expect(firstLetterHint("Lake")).toBe("Starts with “L”");
+    expect(firstLetterHint("Great Salt Lake")).toBe("Starts with “G”");
+  });
+
   it("gives nothing for a blank name", () => {
     expect(firstLetterHint(" ")).toBeNull();
   });
