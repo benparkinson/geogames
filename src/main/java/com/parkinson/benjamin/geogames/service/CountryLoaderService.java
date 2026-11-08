@@ -1,8 +1,5 @@
 package com.parkinson.benjamin.geogames.service;
 
-import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
-
-import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.Comparator;
 import java.util.List;
@@ -16,12 +13,6 @@ public class CountryLoaderService {
 
   public CountryLoaderService(JsonResourceReader reader) {
     this.reader = reader;
-  }
-
-  @Cacheable("country")
-  public Country loadCountryByName(String name) {
-    String fileName = convertCountryNameToFileName(name);
-    return reader.read("processed/countries/" + fileName, Country.class);
   }
 
   @Cacheable("countryNames")

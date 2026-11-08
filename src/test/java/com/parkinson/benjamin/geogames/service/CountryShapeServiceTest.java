@@ -47,7 +47,7 @@ class CountryShapeServiceTest {
   void aDisplayCountryWithoutAliasesHasAnEmptyList() {
     JsonResourceReader reader = mock(JsonResourceReader.class);
     CountryShape shape = new CountryShape("Nowhere", null, 0, 0, List.of(), null, null, null, null);
-    when(reader.read(anyString(), eq(CountryShape.class))).thenReturn(shape);
+    when(reader.readAll(anyString(), eq(CountryShape.class))).thenReturn(List.of(shape));
 
     Country country = new CountryShapeService(reader).loadDisplayCountry("Nowhere");
 
@@ -69,8 +69,32 @@ class CountryShapeServiceTest {
   }
 
   @Test
+  void loadShapeReturnsTheInstanceInLoadShapes() {
+    CountryShape one = service.loadShapes().get(10);
+
+    assertThat(service.loadShape(one.name())).isSameAs(one);
+  }
+
+  @Test
+  void readsTheFilesOnlyOnce() {
+    JsonResourceReader reader =
+        org.mockito.Mockito.spy(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
+    CountryShapeService once = new CountryShapeService(reader);
+
+    once.loadShape("Switzerland");
+    once.loadShapes();
+    once.loadShape("France");
+
+    org.mockito.Mockito.verify(reader, org.mockito.Mockito.times(1))
+        .readAll(
+            org.mockito.ArgumentMatchers.anyString(),
+            org.mockito.ArgumentMatchers.eq(CountryShape.class));
+  }
+
+  @Test
   void anUnknownCountryIsAPackagingError() {
     assertThatThrownBy(() -> service.loadShape("Atlantis"))
-        .isInstanceOf(UncheckedIOException.class);
+        .isInstanceOf(UncheckedIOException.class)
+        .hasMessageContaining("Atlantis");
   }
 }

@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameType;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,6 +41,37 @@ class GameRepositoryTest {
     return game.getRounds().stream()
         .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
         .toList();
+  }
+
+  private long roundCount() {
+    return entityManager
+        .getEntityManager()
+        .createQuery("select count(r) from GameRoundEntity r", Long.class)
+        .getSingleResult();
+  }
+
+  @Test
+  void aNewGameHasACreationTime() {
+    assertThat(gameWithRounds("{}").getCreatedAt()).isNotNull();
+  }
+
+  @Test
+  void deletingOldGamesRemovesTheirRoundsToo() {
+    Instant now = Instant.now();
+    GameEntity old = gameWithRounds("{\"old\":true}");
+    old.setCreatedAt(now.minus(Duration.ofDays(2)));
+    GameEntity recent = gameWithRounds("{\"new\":true}");
+    long recentId = repository.save(recent).getId();
+    repository.save(old);
+    entityManager.flush();
+
+    long deleted = repository.deleteByCreatedAtBefore(now.minus(Duration.ofDays(1)));
+    entityManager.flush();
+    entityManager.clear();
+
+    assertThat(deleted).isEqualTo(1);
+    assertThat(repository.findAll()).extracting(GameEntity::getId).containsExactly(recentId);
+    assertThat(roundCount()).isEqualTo(3);
   }
 
   @Test

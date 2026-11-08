@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -21,6 +22,8 @@ public class GameEntity {
   @OrderBy("roundNumber")
   private List<GameRoundEntity> rounds;
 
+  private Instant createdAt;
+
   public GameEntity() {}
 
   /** A game always has at least one round, so its result is never "finished" with nothing played. */
@@ -29,6 +32,7 @@ public class GameEntity {
       throw new IllegalArgumentException("A game needs at least one round");
     }
     this.rounds = rounds;
+    this.createdAt = Instant.now();
   }
 
   public long getId() {
@@ -41,6 +45,14 @@ public class GameEntity {
 
   public List<GameRoundEntity> getRounds() {
     return rounds;
+  }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Instant createdAt) {
+    this.createdAt = createdAt;
   }
 
   @Override

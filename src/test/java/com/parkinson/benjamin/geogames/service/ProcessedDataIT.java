@@ -58,9 +58,6 @@ public class ProcessedDataIT {
   public void everyTripointCountryLoads() throws IOException {
     for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
       for (String name : definition.countryNames()) {
-        Country country = countryLoaderService.loadCountryByName(name);
-        assertEquals(name, country.name());
-        assertNotNull(country.geoData().geometry(), "no geometry for " + name);
         assertDisplayCountryLoads(name);
       }
     }
@@ -124,7 +121,6 @@ public class ProcessedDataIT {
       assertNotEquals(river.source(), river.mouth(), "source is mouth for " + river.name());
       assertNotNull(river.countries(), "no countries for " + river.name());
       for (String name : river.countries()) {
-        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
         assertDisplayCountryLoads(name);
       }
     }
@@ -172,6 +168,10 @@ public class ProcessedDataIT {
   @Test
   public void lakesHaveContinentsCountriesAndClosedRings() {
     List<Lake> lakes = loadLakes();
+    Set<String> countryNames =
+        countryLoaderService.loadCountryNames().stream()
+            .map(PlaceName::name)
+            .collect(java.util.stream.Collectors.toSet());
 
     assertTrue(lakes.size() >= 20, "only " + lakes.size() + " lakes");
     assertEquals(lakes.size(), lakes.stream().map(Lake::id).distinct().count());
@@ -179,7 +179,7 @@ public class ProcessedDataIT {
       assertNotNull(lake.continent(), "no continent for " + lake.name());
       assertFalse(lake.countries().isEmpty(), "no countries for " + lake.name());
       for (String name : lake.countries()) {
-        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+        assertTrue(countryNames.contains(name), "unknown country " + name + " for " + lake.name());
       }
 
       String type = lake.geoData().geometry().type();
