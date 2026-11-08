@@ -89,6 +89,9 @@ describe("HomePage choosing a game", () => {
     expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowRight}");
+    expect(card(/Land Borders/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowRight}");
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowRight}");
@@ -97,6 +100,9 @@ describe("HomePage choosing a game", () => {
 
     await user.keyboard("{ArrowLeft}");
     expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
+
+    await user.keyboard("{ArrowUp}");
+    expect(card(/Land Borders/)).toHaveAttribute("aria-checked", "true");
 
     await user.keyboard("{ArrowUp}");
     expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
