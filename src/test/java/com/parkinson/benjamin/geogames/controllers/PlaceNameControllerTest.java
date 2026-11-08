@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -26,6 +27,7 @@ class PlaceNameControllerTest {
 
   @MockitoBean private CountryLoaderService countryLoaderService;
   @MockitoBean private RiverLoaderService riverLoaderService;
+  @MockitoBean private LakeLoaderService lakeLoaderService;
 
   @Test
   void returnsCountryNamesWithADayOfCaching() throws Exception {
@@ -88,5 +90,26 @@ class PlaceNameControllerTest {
     assertThatThrownBy(() -> mockMvc.perform(get("/api/rivers")))
         .hasRootCauseInstanceOf(IOException.class)
         .hasRootCauseMessage("disk");
+  }
+
+  @Test
+  void returnsLakeNamesWithADayOfCaching() throws Exception {
+    when(lakeLoaderService.loadLakeNames())
+        .thenReturn(
+            List.of(
+                new PlaceName("Lake Baikal", List.of("Baikal")),
+                new PlaceName("Titicaca", List.of())));
+
+    var result =
+        mockMvc
+            .perform(get("/api/lakes"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].name").value("Lake Baikal"))
+            .andExpect(jsonPath("$[0].additionalNames[0]").value("Baikal"))
+            .andExpect(jsonPath("$[1].additionalNames.length()").value(0))
+            .andReturn();
+
+    assertThat(result.getResponse().getHeader("Cache-Control")).contains("max-age=86400");
   }
 }

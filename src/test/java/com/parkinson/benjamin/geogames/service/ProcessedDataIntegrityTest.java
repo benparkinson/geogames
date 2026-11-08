@@ -101,6 +101,19 @@ public class ProcessedDataIntegrityTest {
     }
   }
 
+  @Test
+  public void noTwoLakesShareANormalisedNameOrAlias() {
+    Set<String> seen = new HashSet<>();
+    for (Lake lake : loadLakes()) {
+      Set<String> mine = new HashSet<>();
+      mine.add(AliasBuilder.normalise(lake.name()));
+      lake.additionalNames().forEach(alias -> mine.add(AliasBuilder.normalise(alias)));
+      for (String normalised : mine) {
+        assertTrue(seen.add(normalised), "'" + normalised + "' is shared, one is " + lake.name());
+      }
+    }
+  }
+
   private List<Lake> loadLakes() {
     return reader.readAll("classpath*:/processed/lakes/*.json", Lake.class);
   }
