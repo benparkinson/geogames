@@ -214,6 +214,22 @@ class GameApiIntegrationTest {
   }
 
   @Test
+  void createsACountriesByLandBordersGameWithNeighbours() throws Exception {
+    int id = createGame("COUNTRIES_BY_LAND_BORDERS", 10);
+
+    for (int i = 0; i < 10; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name"))
+          .isEqualTo("COUNTRIES_BY_LAND_BORDERS");
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      assertThat((List<?>) JsonPath.read(blob, "$.country.landBorders.geometry.coordinates"))
+          .isNotEmpty();
+      assertThat((List<?>) JsonPath.read(blob, "$.neighbours")).isNotEmpty();
+    }
+  }
+
+  @Test
   void createsARandomGame() throws Exception {
     int id = createGame("RANDOM", 10);
     Set<String> subjects = new HashSet<>();
