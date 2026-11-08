@@ -28,14 +28,14 @@ import org.junit.jupiter.api.Test;
 public class TripointFinderTest {
 
   private TripointLoaderService loader;
-  private CountryLoaderService countryLoader;
+  private CountryShapeService countryLoader;
   private TripointFinderService service;
   private List<TripointDefinition> definitions;
 
   @BeforeEach
   void setUp() {
     loader = mock(TripointLoaderService.class);
-    countryLoader = mock(CountryLoaderService.class);
+    countryLoader = mock(CountryShapeService.class);
     service = new TripointFinderService(loader, countryLoader, new Random(5));
 
     definitions =
@@ -46,7 +46,7 @@ public class TripointFinderTest {
                         new Coordinate(i, i * 2), List.of("A" + i, "B" + i, "C" + i)))
             .toList();
     when(loader.loadTripointDefinitions()).thenReturn(definitions);
-    when(countryLoader.loadCountryByName(anyString()))
+    when(countryLoader.loadDisplayCountry(anyString()))
         .thenAnswer(
             invocation -> {
               String name = invocation.getArgument(0);
@@ -59,7 +59,7 @@ public class TripointFinderTest {
     TripointLoaderService emptyLoader = mock(TripointLoaderService.class);
     when(emptyLoader.loadTripointDefinitions()).thenReturn(List.of());
     TripointFinderService emptyService =
-        new TripointFinderService(emptyLoader, mock(CountryLoaderService.class), new Random(5));
+        new TripointFinderService(emptyLoader, mock(CountryShapeService.class), new Random(5));
 
     assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1, Set.of()));
   }
@@ -86,7 +86,7 @@ public class TripointFinderTest {
       assertThat(tripoint.countries().stream().map(Country::name).toList())
           .containsExactlyInAnyOrderElementsOf(definition.countryNames());
       for (String name : definition.countryNames()) {
-        verify(countryLoader).loadCountryByName(name);
+        verify(countryLoader).loadDisplayCountry(name);
       }
     }
   }
@@ -108,7 +108,7 @@ public class TripointFinderTest {
 
   @Test
   void propagatesCountryLoadingFailures() {
-    when(countryLoader.loadCountryByName(anyString()))
+    when(countryLoader.loadDisplayCountry(anyString()))
         .thenThrow(new UncheckedIOException(new IOException("boom")));
 
     assertThatThrownBy(() -> service.generate(1, Set.of()))
@@ -123,8 +123,8 @@ public class TripointFinderTest {
     List<GameData> result = service.generate(3, excluded);
 
     assertThat(result).extracting(GameData::subjectId).doesNotContainAnyElementsOf(excluded);
-    verify(countryLoader, never()).loadCountryByName("A0");
-    verify(countryLoader, never()).loadCountryByName("A1");
+    verify(countryLoader, never()).loadDisplayCountry("A0");
+    verify(countryLoader, never()).loadDisplayCountry("A1");
     assertThatThrownBy(() -> service.generate(4, excluded))
         .isInstanceOf(IllegalArgumentException.class);
   }
