@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { makeCountryShapeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
+import { makeCountryShapeRoundData, makeLakeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS", "LAKES_BY_SHAPE"]);
   });
 
   it("has a unique type per module", () => {
@@ -34,6 +34,12 @@ describe("GAME_MODULES", () => {
   });
 });
 
+describe("lake shapes", () => {
+  it("lists the name of a lake", () => {
+    expect(findGameModule("LAKES_BY_SHAPE")?.answerNames(makeLakeRoundData())).toEqual(["Lake Baikal"]);
+  });
+});
+
 describe("findGameModule", () => {
   it("finds a module by its type", () => {
     expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River shape");
@@ -47,7 +53,7 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers every game followed by a mix of them", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS", "RANDOM"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS", "LAKES_BY_SHAPE", "RANDOM"]);
     expect(MENU_OPTIONS[MENU_OPTIONS.length - 1]).toBe(RANDOM_OPTION);
   });
 

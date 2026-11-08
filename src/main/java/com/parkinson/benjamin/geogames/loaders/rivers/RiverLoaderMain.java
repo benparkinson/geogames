@@ -2,6 +2,11 @@ package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
+import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
+import com.parkinson.benjamin.geogames.loaders.features.FeatureSelector;
+import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
+import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthReader;
+import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +17,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import tools.jackson.core.type.TypeReference;
 
@@ -19,13 +25,23 @@ import tools.jackson.core.type.TypeReference;
  * Usage: RiverLoaderMain &lt;naturalEarth.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
  * &lt;osmDir&gt; &lt;countriesDir&gt; &lt;outDir&gt;
  *
- * <p>Picks the most famous rivers of each continent, up to {@link RiverSelector#CONTINENT_QUOTAS}.
+ * <p>Picks the most famous rivers of each continent, up to {@link #RIVER_QUOTAS}.
  *
  * <p>Also works out each river's source, mouth and countries (see {@link RiverEnds} and {@link
- * RiverCountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
+ * CountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
  * writing.
  */
 public class RiverLoaderMain {
+
+  /** How many rivers each continent gets, so the game isn't all Europe and Asia. */
+  public static final Map<String, Integer> RIVER_QUOTAS =
+      Map.of(
+          "Europe", 13,
+          "Asia", 11,
+          "Africa", 9,
+          "North America", 6,
+          "South America", 8,
+          "Australia", 3);
 
   private static final double LOW_CONFIDENCE = 0.6;
 
@@ -34,25 +50,26 @@ public class RiverLoaderMain {
     Path countriesDir = Path.of(args[4]);
     Path outDir = Path.of(args[5]);
 
-    Map<String, NaturalEarthRiver> groups = new NaturalEarthReader().read(Path.of(args[0]));
+    Map<String, NaturalEarthFeature> groups =
+        new NaturalEarthReader().read(Path.of(args[0]), Set.of("Canal"));
     Map<String, WikidataEntry> wikidata = readJson(Path.of(args[1]), new TypeReference<>() {});
     Map<String, RiverOverride> overrides = readJson(Path.of(args[2]), new TypeReference<>() {});
 
     RiverAssembler.Assembly assembly =
         new RiverAssembler(file -> readOsmLines(osmDir.resolve(file)))
             .assemble(groups, wikidata, overrides);
-    RiverSelector.Selection selection =
-        RiverSelector.select(assembly.candidates(), RiverSelector.CONTINENT_QUOTAS);
+    FeatureSelector.Selection<RiverCandidate> selection =
+        FeatureSelector.select(assembly.candidates(), RIVER_QUOTAS);
 
     List<RiverCandidate> rivers = new ArrayList<>(selection.selected());
     rivers.sort(Comparator.comparing(RiverCandidate::name).thenComparing(RiverCandidate::qid));
 
-    RiverCountryLocator locator =
-        new RiverCountryLocator(new ProcessedCountryReader().readCountries(countriesDir));
+    CountryLocator locator =
+        new CountryLocator(new ProcessedCountryReader().readCountries(countriesDir), 10);
     Map<String, RiverFacts> facts = new LinkedHashMap<>();
     Map<String, Double> unlocatedKm = new LinkedHashMap<>();
     for (RiverCandidate river : rivers) {
-      RiverCountryLocator.Result located = locator.locate(river.lines());
+      CountryLocator.Result located = locator.locate(river.lines());
       facts.put(
           river.qid(), RiverFacts.compute(river.lines(), overrides.get(river.qid()), located));
       unlocatedKm.put(river.qid(), located.unlocatedKm());
@@ -100,7 +117,7 @@ public class RiverLoaderMain {
       List<RiverCandidate> rivers,
       List<Path> files,
       RiverAssembler.Assembly assembly,
-      RiverSelector.Selection selection)
+      FeatureSelector.Selection<RiverCandidate> selection)
       throws IOException {
     System.out.println("Written: " + rivers.size());
     Map<String, Integer> perContinent = new TreeMap<>();

@@ -1,5 +1,9 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
+import com.parkinson.benjamin.geogames.loaders.features.ContinentResolver;
+import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
+import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -24,7 +28,7 @@ public class RiverAssembler {
   }
 
   public Assembly assemble(
-      Map<String, NaturalEarthRiver> groups,
+      Map<String, NaturalEarthFeature> groups,
       Map<String, WikidataEntry> wikidata,
       Map<String, RiverOverride> overrides) {
     Map<String, Integer> dropped = new LinkedHashMap<>();
@@ -53,7 +57,7 @@ public class RiverAssembler {
     for (String qid : qids) {
       RiverOverride override = overrides.get(qid);
       WikidataEntry entry = wikidata.get(qid);
-      NaturalEarthRiver group = groups.get(qid);
+      NaturalEarthFeature group = groups.get(qid);
       boolean fromOverride = override != null;
 
       List<List<double[]>> raw =
@@ -94,7 +98,8 @@ public class RiverAssembler {
               entry == null ? List.of() : entry.aliases(),
               group == null ? null : group.name(),
               group == null ? null : group.nameEn(),
-              override);
+              override,
+              RiverAssembler::riverVariants);
       candidates.add(
           new RiverCandidate(
               qid,
@@ -109,7 +114,16 @@ public class RiverAssembler {
     return new Assembly(candidates, dropped);
   }
 
-  private static String name(RiverOverride override, WikidataEntry entry, NaturalEarthRiver group) {
+  /** "Murray River" is also accepted as "Murray", and "Danube" as "Danube River". */
+  public static List<String> riverVariants(String name) {
+    if (name.endsWith(" River")) {
+      return List.of(name.substring(0, name.length() - " River".length()));
+    }
+    return List.of(name.contains("River") ? name : name + " River");
+  }
+
+  private static String name(
+      RiverOverride override, WikidataEntry entry, NaturalEarthFeature group) {
     String[] options = {
       override == null ? null : override.name(),
       entry == null ? null : entry.label(),

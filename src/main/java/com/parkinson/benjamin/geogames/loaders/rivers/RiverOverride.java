@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import java.util.List;
 
@@ -19,9 +20,5 @@ public record RiverOverride(
     String osmFile,
     Boolean reverseFlow,
     Coordinate source,
-    Coordinate mouth) {
-
-  public boolean isExcluded() {
-    return Boolean.TRUE.equals(exclude);
-  }
-}
+    Coordinate mouth)
+    implements AliasBuilder.NamedOverride {}

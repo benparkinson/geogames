@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public record RiverFacts(
 
   /** Computes the facts, letting the river's override win over what was computed. */
   public static RiverFacts compute(
-      List<List<double[]>> lines, RiverOverride override, RiverCountryLocator.Result located) {
+      List<List<double[]>> lines, RiverOverride override, CountryLocator.Result located) {
     RiverEnds.Ends ends = RiverEnds.find(lines);
     double[] source = ends.source();
     double[] mouth = ends.mouth();

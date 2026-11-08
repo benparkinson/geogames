@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.loaders.rivers;
 
+import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +13,6 @@ public final class RiverGeometry {
   static final double MAX_TOLERANCE = 0.16;
   static final int MAX_POINTS = 600;
   static final double MIN_LINE_KM = 5;
-  private static final double EARTH_RADIUS_KM = 6371.0088;
 
   private RiverGeometry() {}
 
@@ -27,8 +28,7 @@ public final class RiverGeometry {
 
     // Safety net so the point cap always holds: drop the shortest lines until it does.
     while (pointCount(result) > MAX_POINTS && result.size() > 1) {
-      List<double[]> shortest =
-          result.stream().min(Comparator.comparingDouble(RiverGeometry::lineKm)).get();
+      List<double[]> shortest = result.stream().min(Comparator.comparingDouble(Geo::lineKm)).get();
       result = new ArrayList<>(result);
       result.remove(shortest);
     }
@@ -36,30 +36,11 @@ public final class RiverGeometry {
   }
 
   public static double lengthKm(List<List<double[]>> lines) {
-    return lines.stream().mapToDouble(RiverGeometry::lineKm).sum();
+    return lines.stream().mapToDouble(Geo::lineKm).sum();
   }
 
   public static int pointCount(List<List<double[]>> lines) {
     return lines.stream().mapToInt(List::size).sum();
-  }
-
-  static double lineKm(List<double[]> line) {
-    double km = 0;
-    for (int i = 1; i < line.size(); i++) {
-      km += haversineKm(line.get(i - 1), line.get(i));
-    }
-    return km;
-  }
-
-  public static double haversineKm(double[] a, double[] b) {
-    double lat1 = Math.toRadians(a[1]);
-    double lat2 = Math.toRadians(b[1]);
-    double dLat = lat2 - lat1;
-    double dLon = Math.toRadians(b[0] - a[0]);
-    double h =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2)
-            + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
   }
 
   private static List<List<double[]>> simplifyAll(List<List<double[]>> lines, double tolerance) {
@@ -76,11 +57,10 @@ public final class RiverGeometry {
     if (lines.isEmpty()) {
       return lines;
     }
-    List<double[]> longest =
-        lines.stream().max(Comparator.comparingDouble(RiverGeometry::lineKm)).get();
+    List<double[]> longest = lines.stream().max(Comparator.comparingDouble(Geo::lineKm)).get();
     List<List<double[]>> result = new ArrayList<>();
     for (List<double[]> line : lines) {
-      if (line == longest || lineKm(line) >= MIN_LINE_KM) {
+      if (line == longest || Geo.lineKm(line) >= MIN_LINE_KM) {
         result.add(line);
       }
     }

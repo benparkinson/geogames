@@ -2,6 +2,7 @@ import { Shuffle } from "react-bootstrap-icons";
 import type { Icon } from "react-bootstrap-icons";
 import coastline from "./countries/coastline";
 import landBorders from "./countries/landBorders";
+import lakeShapes from "./lakes";
 import countriesByNeighbours from "./countries/neighbours";
 import riverCountries from "./rivers/countries";
 import riverEnds from "./rivers/ends";
@@ -11,7 +12,7 @@ import tripoint from "./tripoint";
 import type { AnyGameModule } from "./types";
 
 /** Every type of game. To add a game, build its module and add it here. */
-export const GAME_MODULES: AnyGameModule[] = [tripoint, riverShapes, riverOnMap, riverEnds, riverCountries, countriesByNeighbours, coastline, landBorders];
+export const GAME_MODULES: AnyGameModule[] = [tripoint, riverShapes, riverOnMap, riverEnds, riverCountries, countriesByNeighbours, coastline, landBorders, lakeShapes];
 
 export function findGameModule(type: string): AnyGameModule | undefined {
   return GAME_MODULES.find((module) => module.type === type);
