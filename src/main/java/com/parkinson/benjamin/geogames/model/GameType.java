@@ -10,7 +10,9 @@ public enum GameType {
   RIVERS_ON_MAP(1, 2, 5),
   RIVERS_BY_ENDS(1, 2, 5),
   RIVERS_BY_COUNTRIES(1, 2, 5),
-  COUNTRIES_BY_NEIGHBOURS(1, 3, 5);
+  COUNTRIES_BY_NEIGHBOURS(1, 3, 5),
+  COUNTRIES_BY_COASTLINE(1, 3, 5),
+  COUNTRIES_BY_LAND_BORDERS(1, 3, 5);
 
   private final int answerCount;
   private final int hintCount;
