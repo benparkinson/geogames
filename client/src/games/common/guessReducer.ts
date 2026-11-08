@@ -48,15 +48,16 @@ function allFound(answers: AnswerCandidate[]): Guess[] {
   return answers.map(a => ({ text: a.name, answer: a.name }));
 }
 
-export function initialGuessState(answerState: AnswerState, answers: AnswerCandidate[]): GuessState {
+/** `hintsUsed` is what the server recorded for the round, which only matters once it is answered. */
+export function initialGuessState(answerState: AnswerState, answers: AnswerCandidate[], hintsUsed: number): GuessState {
   if (answerState === UNANSWERED) {
     return { guesses: [], gaveUp: false, over: false, hintsUsed: 0 };
   }
   if (answerState === GAVE_UP) {
     // The server doesn't keep the guesses, so every answer shows as revealed rather than found.
-    return { guesses: [], gaveUp: true, over: true, hintsUsed: 0 };
+    return { guesses: [], gaveUp: true, over: true, hintsUsed };
   }
-  return { guesses: allFound(answers), gaveUp: false, over: true, hintsUsed: 0 };
+  return { guesses: allFound(answers), gaveUp: false, over: true, hintsUsed };
 }
 
 export function guessReducer(state: GuessState, action: GuessAction, config: GuessConfig): GuessOutcome {

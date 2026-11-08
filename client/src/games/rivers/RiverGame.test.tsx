@@ -19,7 +19,7 @@ const RiverGame = makeRiverGame({
 
 function renderRiver() {
   const submitAnswer = vi.fn();
-  render(<RiverGame data={makeRiverRoundData()} round={makeRoundProps()} answerCount={1} submitAnswer={submitAnswer} />);
+  render(<RiverGame data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 1 })} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 
@@ -37,7 +37,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), text + "{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith("CORRECT");
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
   });
 
   it("accepts an alias", async () => {
@@ -45,7 +45,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Donau{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith("CORRECT");
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
   });
 
   it("rejects another river", async () => {

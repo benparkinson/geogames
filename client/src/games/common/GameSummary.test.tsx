@@ -2,7 +2,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
-import { makeRiverRound, makeRound } from "../../test/fixtures";
+import { makeGameRounds, makeRiverRound } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
 import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";
@@ -16,11 +16,12 @@ function roundsRoute(rounds: GameRoundResponse[]): Route {
   return { url: roundsUrl, body: ({ url }) => rounds[Number(url.match(roundsUrl)![1])] };
 }
 
-const mixed = [
-  makeRound({ answerState: "CORRECT" }),
-  makeRiverRound({ answerState: "GAVE_UP" }),
-  makeRound({ answerState: "CORRECT" }),
-];
+// A perfect tripoint, a revealed river and a tripoint answered with one of its three hints.
+const mixed = makeGameRounds([
+  { answerState: "CORRECT" },
+  { river: true, answerState: "GAVE_UP" },
+  { answerState: "CORRECT", hintsUsed: 1 },
+]);
 
 function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
   const view = renderWithClient(
@@ -42,23 +43,43 @@ describe("GameSummary", () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
 
-    expect(await screen.findByText("You scored 2 / 3")).toBeInTheDocument();
-    expect(screen.getByText("2 correct · 1 revealed")).toBeInTheDocument();
+    expect(await screen.findByText("You scored 183 / 300")).toBeInTheDocument();
+    expect(screen.getByText("1 perfect · 1 with hints · 1 revealed")).toBeInTheDocument();
 
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows).toHaveLength(3);
     expect(within(rows[0]).getByText("1. Tripoint")).toBeInTheDocument();
     expect(rows[0]).toHaveTextContent("Belgium, Netherlands, Germany");
-    expect(rows[0]).toHaveTextContent("Correct");
+    expect(rows[0]).toHaveTextContent("+100");
+    expect(rows[0]).not.toHaveTextContent("hint");
     expect(within(rows[1]).getByText("2. River shape")).toBeInTheDocument();
     expect(rows[1]).toHaveTextContent("Danube");
-    expect(rows[1]).toHaveTextContent("Revealed");
+    expect(rows[1]).toHaveTextContent("+0");
+    expect(rows[2]).toHaveTextContent("+83");
+    expect(rows[2]).toHaveTextContent("1 hint");
+  });
+
+  it("celebrates a perfect game", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "CORRECT" }]))]);
+    renderSummary(vi.fn(), 2);
+
+    expect(await screen.findByText("Perfect game! 200 / 200")).toBeInTheDocument();
+    expect(screen.getByText("2 perfect")).toBeInTheDocument();
+  });
+
+  it("leaves out the parts of the breakdown that are zero", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT", hintsUsed: 3 }, { answerState: "GAVE_UP" }]))]);
+    renderSummary(vi.fn(), 2);
+
+    expect(await screen.findByText("You scored 50 / 200")).toBeInTheDocument();
+    expect(screen.getByText("1 with hints · 1 revealed")).toBeInTheDocument();
+    expect(screen.getByText(/3 hints/)).toBeInTheDocument();
   });
 
   it("opens the round that was clicked", async () => {
     mockFetch([roundsRoute(mixed)]);
     const { onOpenRound } = renderSummary();
-    await screen.findByText("You scored 2 / 3");
+    await screen.findByText("You scored 183 / 300");
 
     await userEvent.setup().click(screen.getByRole("button", { name: /2\. River/ }));
 
@@ -68,7 +89,7 @@ describe("GameSummary", () => {
   it("links home from the header and from the button", async () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
-    await screen.findByText("You scored 2 / 3");
+    await screen.findByText("You scored 183 / 300");
 
     const links = screen.getAllByRole("link", { name: "Home" });
     expect(links).toHaveLength(2);
@@ -81,7 +102,7 @@ describe("GameSummary", () => {
       { method: "POST", url: /\/api\/games$/, body: { id: 12 } },
     ]);
     renderSummary();
-    await screen.findByText("You scored 2 / 3");
+    await screen.findByText("You scored 183 / 300");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
 
@@ -91,13 +112,13 @@ describe("GameSummary", () => {
   });
 
   it("plays again with the same type when every round shared it", async () => {
-    const rivers = [makeRiverRound({ answerState: "CORRECT" }), makeRiverRound({ answerState: "CORRECT" })];
+    const rivers = makeGameRounds([{ river: true, answerState: "CORRECT" }, { river: true, answerState: "CORRECT" }]);
     const fetchMock = mockFetch([
       roundsRoute(rivers),
       { method: "POST", url: /\/api\/games$/, body: { id: 5 } },
     ]);
     renderSummary(vi.fn(), 2);
-    await screen.findByText("You scored 2 / 2");
+    await screen.findByText("Perfect game! 200 / 200");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
 
@@ -111,7 +132,7 @@ describe("GameSummary", () => {
   it("tells the player when a new game could not be started", async () => {
     mockFetch([roundsRoute(mixed), { method: "POST", url: /\/api\/games$/, status: 500, body: {} }]);
     renderSummary();
-    await screen.findByText("You scored 2 / 3");
+    await screen.findByText("You scored 183 / 300");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
 

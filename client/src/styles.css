@@ -92,6 +92,7 @@ code {
   line-height: 1;
 }
 .round-dot--correct { background: var(--bs-success, #198754); border-color: var(--bs-success, #198754); color: #fff; }
+.round-dot--perfect { background: var(--bs-warning, #ffc107); border-color: var(--bs-warning, #ffc107); color: #3d2e00; }
 .round-dot--revealed { background: var(--bs-secondary, #6c757d); border-color: var(--bs-secondary, #6c757d); color: #fff; }
 .round-dot--current { box-shadow: 0 0 0 2px var(--bs-primary, #0d6efd); }
 .round-dot:disabled { opacity: 0.5; }

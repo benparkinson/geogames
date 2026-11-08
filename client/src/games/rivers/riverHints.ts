@@ -18,7 +18,6 @@ export const firstLetterHint: HintBuilder = (river) => {
 /** One hint per builder, revealed in order. */
 export function textHints(river: River, ...builders: HintBuilder[]): HintConfig {
   return {
-    total: builders.length,
     description: "Shows " + (builders.length === 1 ? "a clue" : `${builders.length} clues, one at a time`),
     text: (index) => builders[index]?.(river) ?? null,
   };

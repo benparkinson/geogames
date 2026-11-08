@@ -15,6 +15,7 @@ function renderInput(overrides: Partial<React.ComponentProps<typeof MapGameInput
     submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "over" })),
     onHint: vi.fn(),
     hintsUsed: 0,
+    hintCount: 0,
     giveUp: vi.fn(),
     inputPlaceholder: "Country…",
     answerNoun: "country",
@@ -149,10 +150,10 @@ describe("MapGameInput reveal", () => {
 });
 
 describe("MapGameInput hints", () => {
-  const hints: HintConfig = { total: 2, description: "Shows a clue" };
+  const hints: HintConfig = { description: "Shows a clue" };
 
   it("shows how many hints are left and uses one on click", async () => {
-    const { props } = renderInput({ hints, hintsUsed: 0 });
+    const { props } = renderInput({ hints, hintsUsed: 0, hintCount: 2 });
 
     await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
 
@@ -160,9 +161,41 @@ describe("MapGameInput hints", () => {
   });
 
   it("disables the hint button when none are left", () => {
-    renderInput({ hints, hintsUsed: 2 });
+    renderInput({ hints, hintsUsed: 2, hintCount: 2 });
 
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+  });
+
+  it("shows what the round is worth, dropping with each hint", () => {
+    const { rerender, props } = renderInput({ hints, hintsUsed: 0, hintCount: 3 });
+    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+
+    rerender(<MapGameInput {...props} hintsUsed={1} />);
+    expect(screen.getByText("Worth 83 pts")).toBeInTheDocument();
+    rerender(<MapGameInput {...props} hintsUsed={2} />);
+    expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
+    rerender(<MapGameInput {...props} hintsUsed={3} />);
+    expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
+  });
+
+  it("puts the cost of the next hint in the button's title", () => {
+    const { rerender, props } = renderInput({ hints, hintsUsed: 0, hintCount: 3 });
+    // 100 -> 83 -> 67 -> 50: the drops are 17, 16 and 17, not 50 / 3.
+    expect(screen.getByTitle("Shows a clue (−17 pts)")).toBeInTheDocument();
+
+    rerender(<MapGameInput {...props} hintsUsed={1} />);
+    expect(screen.getByTitle("Shows a clue (−16 pts)")).toBeInTheDocument();
+    rerender(<MapGameInput {...props} hintsUsed={2} />);
+    expect(screen.getByTitle("Shows a clue (−17 pts)")).toBeInTheDocument();
+    rerender(<MapGameInput {...props} hintsUsed={3} />);
+    expect(screen.getByTitle("No hints left")).toBeInTheDocument();
+  });
+
+  it("shows only the worth when there are no hints", () => {
+    renderInput({ hints: undefined, hintCount: 0 });
+
+    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
   });
 
   it("has no hint button without hints", () => {
@@ -176,7 +209,7 @@ describe("MapGameInput states", () => {
   it("shows the round result instead of the form when the round is over", () => {
     renderInput({ gameOver: true, gaveUp: false });
 
-    expect(screen.getByText("Correct!")).toBeInTheDocument();
+    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
   });
@@ -184,7 +217,7 @@ describe("MapGameInput states", () => {
   it("shows that the answer was revealed", () => {
     renderInput({ gameOver: true, gaveUp: true });
 
-    expect(screen.getByText("Answer revealed")).toBeInTheDocument();
+    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
   });
 
   it("lists each wrong guess", () => {

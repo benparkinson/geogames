@@ -21,7 +21,7 @@ describe("fetchRound", () => {
     expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/games/g1/rounds/3");
     expect(view.data).toEqual(makeRiverRoundData());
     expect(view.totalRoundCount).toBe(5);
-    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1 });
+    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1 });
   });
 
   it("rejects with the round and status when the response is not ok", async () => {
@@ -45,7 +45,76 @@ describe("toRoundView", () => {
       0,
     );
 
-    expect(view.gameResult).toEqual({ gameState: "IN_PROGRESS", score: 1, roundAnswerStates: ["CORRECT", "UNANSWERED"] });
+    expect(view.gameResult.roundAnswerStates).toEqual(["CORRECT", "UNANSWERED"]);
+  });
+
+  it("passes the server's points and hints through", () => {
+    const view = toRoundView(
+      makeRound({
+        answerState: "CORRECT",
+        hintsUsed: 1,
+        points: 83,
+        gameResult: {
+          gameState: "IN_PROGRESS",
+          roundsUnanswered: 1,
+          score: 183,
+          roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
+          maxScore: 300,
+          roundsCorrect: 2,
+          perfectRounds: 1,
+          roundPoints: [100, 83, 0],
+          roundHintsUsed: [0, 1, 0],
+        },
+      }),
+      1,
+    );
+
+    expect(view.hintsUsed).toBe(1);
+    expect(view.points).toBe(83);
+    expect(view.gameType.hintCount).toBe(3);
+    expect(view.gameResult).toEqual({
+      gameState: "IN_PROGRESS",
+      score: 183,
+      maxScore: 300,
+      roundsCorrect: 2,
+      perfectRounds: 1,
+      roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
+      roundPoints: [100, 83, 0],
+      roundHintsUsed: [0, 1, 0],
+    });
+  });
+
+  it("works out the points itself when an older backend sends none", () => {
+    const response = makeRound({
+      totalRoundCount: 3,
+      answerState: "CORRECT",
+      hintsUsed: undefined,
+      points: undefined,
+      gameType: { name: "TRIPOINT", answerCount: 3 },
+      gameResult: {
+        gameState: "IN_PROGRESS",
+        roundsUnanswered: 1,
+        // The old score counted correct rounds, so it must not be used as points.
+        score: 2,
+        roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
+      },
+    });
+
+    const view = toRoundView(response, 1);
+
+    expect(view.gameType.hintCount).toBe(0);
+    expect(view.hintsUsed).toBe(0);
+    expect(view.points).toBe(100);
+    expect(view.gameResult).toEqual({
+      gameState: "IN_PROGRESS",
+      score: 200,
+      maxScore: 300,
+      roundsCorrect: 2,
+      perfectRounds: 2,
+      roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
+      roundPoints: [100, 100, 0],
+      roundHintsUsed: [0, 0, 0],
+    });
   });
 
   it("falls back to this round's state when an older backend sends no roundAnswerStates", () => {
@@ -86,12 +155,12 @@ describe("useSubmitAnswer", () => {
     });
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("UNANSWERED"));
 
-    act(() => result.current.submit.mutate("GAVE_UP"));
+    act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2 }));
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("GAVE_UP"));
     const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
-    expect(posts[0].body).toEqual({ answerState: "GAVE_UP" });
+    expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2 });
   });
 });
 

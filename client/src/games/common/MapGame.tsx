@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MapGameInput from "./MapGameInput";
-import { AnswerState, Round } from "./Model";
+import { Round, RoundAnswer } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
@@ -25,20 +25,33 @@ function MapGame<Type>({
   hints,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
-  const [guessState, setGuessState] = useState<GuessState>(() => initialGuessState(round.answerState, answers));
-  const [hintTexts, setHintTexts] = useState<string[]>([]);
+  const [guessState, setGuessState] = useState<GuessState>(() =>
+    initialGuessState(round.answerState, answers, round.hintsUsed));
   const { guesses, gaveUp, over: gameOver, hintsUsed } = guessState;
+  // The backend decides how many hints there are; the game only supplies what they say.
+  const hintCount = round.hintCount;
+  const hintConfig = hintCount > 0 ? hints : undefined;
+
+  useEffect(() => {
+    if (hintCount > 0 && !hints && process.env.NODE_ENV === "development") {
+      console.error(`This game type has ${hintCount} hints but its component supplies no hints.`);
+    }
+  }, [hintCount, hints]);
+
+  // Derived, so a reopened round shows the hints that were used.
+  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hintConfig?.text?.(i))
+    .filter((text): text is string => !!text);
 
   function dispatch(action: GuessAction) {
     const outcome = guessReducer(guessState, action, {
       answers,
       answerCount,
       isKnownGuess,
-      hintsTotal: hints?.total ?? 0,
+      hintsTotal: hintConfig ? hintCount : 0,
     });
     setGuessState(outcome.state);
     if (outcome.finished) {
-      submitAnswer(outcome.finished);
+      submitAnswer({ answerState: outcome.finished, hintsUsed: outcome.state.hintsUsed });
     }
     return outcome;
   }
@@ -52,13 +65,8 @@ function MapGame<Type>({
   }
 
   function takeHint() {
-    if (gameOver || !hints || hintsUsed >= hints.total) {
+    if (gameOver || !hintConfig || hintsUsed >= hintCount) {
       return;
-    }
-
-    const text = hints.text?.(hintsUsed);
-    if (text) {
-      setHintTexts([...hintTexts, text]);
     }
     dispatch({ type: "hint" });
   }
@@ -96,7 +104,8 @@ function MapGame<Type>({
         submitGuess={submitGuess}
         onHint={takeHint}
         hintsUsed={hintsUsed}
-        hints={hints}
+        hintCount={hintConfig ? hintCount : 0}
+        hints={hintConfig}
         giveUp={giveUp}
         inputPlaceholder={inputPlaceholder}
         answerNoun={answerNoun}
@@ -107,7 +116,7 @@ function MapGame<Type>({
 
   return (
     <GameLayout
-      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} />}
+      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} />}
       map={map}
       panel={panel}
       mapClassName={showBlankMap ? "game-map--blank" : undefined}
@@ -115,8 +124,8 @@ function MapGame<Type>({
   );
 }
 
+/** What a game's hints say. How many there are comes from the backend: `round.hintCount`. */
 export interface HintConfig {
-  total: number;
   description: string;
   /** Text to show for the hint at this index. Leave it out for hints that only change the map. */
   text?: (hintIndex: number) => string | null;
@@ -140,7 +149,7 @@ export interface MapGameProps<Type> {
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;
-  submitAnswer: (answerState: AnswerState) => void;
+  submitAnswer: (answer: RoundAnswer) => void;
 }
 
 export default MapGame;

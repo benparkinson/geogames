@@ -1,5 +1,6 @@
 import { GuessBox } from "../../components/GuessBox";
-import { Round } from "./Model";
+import { CORRECT_ANSWER, Round } from "./Model";
+import { roundPoints } from "./scoring";
 import RoundResult from "./RoundResult";
 import { HintConfig } from "./MapGame";
 import { Guess, GuessResult } from "./guessReducer";
@@ -19,6 +20,7 @@ function MapGameInput({
   submitGuess,
   onHint,
   hintsUsed,
+  hintCount,
   hints,
   giveUp,
   inputPlaceholder,
@@ -81,13 +83,16 @@ function MapGameInput({
     giveUp();
   }
 
-  const hintsLeft = hints ? hints.total - hintsUsed : 0;
-  const hintTitle = hints ? (hintsLeft > 0 ? hints.description : "No hints left") : "";
+  const hintsLeft = hints ? hintCount - hintsUsed : 0;
+  // The drop the next hint causes, as a difference so it rounds the same way as the score.
+  const nextHintCost =
+    roundPoints(CORRECT_ANSWER, hintsUsed, hintCount) - roundPoints(CORRECT_ANSWER, hintsUsed + 1, hintCount);
+  const hintTitle = hints ? (hintsLeft > 0 ? `${hints.description} (−${nextHintCost} pts)` : "No hints left") : "";
 
   return (
     <div>
       {gameOver ? (
-        <RoundResult gaveUp={gaveUp} round={round} />
+        <RoundResult gaveUp={gaveUp} round={round} hintsUsed={hintsUsed} hintCount={hintCount} />
       ) : (
         <>
         <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
@@ -117,6 +122,9 @@ function MapGameInput({
           <Button variant="outline-danger" onClick={handleRevealClick} disabled={gameOver}>
             <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
           </Button>
+          <span className="small text-muted align-self-center">
+            {`Worth ${roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)} pts`}
+          </span>
         </div>
         </>
       )}
@@ -147,6 +155,7 @@ interface MapGameInputProps {
   submitGuess: (guess: string) => GuessResult;
   onHint: () => void;
   hintsUsed: number;
+  hintCount: number;
   hints?: HintConfig;
   giveUp: () => void;
   inputPlaceholder: string;

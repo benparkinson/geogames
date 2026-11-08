@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 import type { GameRoundResponse } from "../api/types";
-import type { Round } from "../games/common/Model";
+import type { AnswerState, Round } from "../games/common/Model";
+import { roundPoints } from "../games/common/scoring";
 import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
 
@@ -13,9 +14,15 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     currentRound: 0,
     totalRoundCount: 3,
     answerState: "UNANSWERED",
+    hintCount: 3,
+    hintsUsed: 0,
+    points: 0,
     score: 0,
+    maxScore: 300,
+    perfectRounds: 0,
     gameCompleted: false,
     roundAnswerStates: ["UNANSWERED", "UNANSWERED", "UNANSWERED"],
+    roundPoints: [0, 0, 0],
     ...overrides,
   };
 }
@@ -69,13 +76,20 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
   return {
     jsonBlob: JSON.stringify(makeTripointData()),
     totalRoundCount: 3,
-    gameType: { name: "TRIPOINT", answerCount: 3 },
+    gameType: { name: "TRIPOINT", answerCount: 3, hintCount: 3 },
     answerState: "UNANSWERED",
+    hintsUsed: 0,
+    points: 0,
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,
       score: 0,
       roundAnswerStates: ["UNANSWERED", "UNANSWERED", "UNANSWERED"],
+      maxScore: 300,
+      roundsCorrect: 0,
+      perfectRounds: 0,
+      roundPoints: [0, 0, 0],
+      roundHintsUsed: [0, 0, 0],
     },
     ...overrides,
   };
@@ -84,8 +98,44 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeRiverRoundData()),
-    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1 },
+    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1 },
     ...overrides,
+  });
+}
+
+export interface RoundSpec {
+  /** A River Shapes round (1 hint) instead of a Tripoint round (3 hints). */
+  river?: boolean;
+  answerState: AnswerState;
+  hintsUsed?: number;
+}
+
+/** The server's responses for a whole game, each carrying the same complete result. */
+export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
+  const hintCounts = specs.map(spec => (spec.river ? 1 : 3));
+  const hintsUsed = specs.map(spec => spec.hintsUsed ?? 0);
+  const points = specs.map((spec, i) => roundPoints(spec.answerState, hintsUsed[i], hintCounts[i]));
+  const unanswered = specs.filter(spec => spec.answerState === "UNANSWERED").length;
+  const gameResult = {
+    gameState: unanswered === 0 ? "FINISHED" : unanswered === specs.length ? "CREATED" : "IN_PROGRESS",
+    roundsUnanswered: unanswered,
+    score: points.reduce((sum, p) => sum + p, 0),
+    roundAnswerStates: specs.map(spec => spec.answerState),
+    maxScore: 100 * specs.length,
+    roundsCorrect: specs.filter(spec => spec.answerState === "CORRECT").length,
+    perfectRounds: specs.filter((spec, i) => spec.answerState === "CORRECT" && hintsUsed[i] === 0).length,
+    roundPoints: points,
+    roundHintsUsed: hintsUsed,
+  } as GameRoundResponse["gameResult"];
+  return specs.map((spec, i) => {
+    const make = spec.river ? makeRiverRound : makeRound;
+    return make({
+      totalRoundCount: specs.length,
+      answerState: spec.answerState,
+      hintsUsed: hintsUsed[i],
+      points: points[i],
+      gameResult,
+    });
   });
 }
 

@@ -135,7 +135,7 @@ describe("MapGame guessing", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith("CORRECT");
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("button", { name: /Next round/ })).toBeInTheDocument();
@@ -157,8 +157,8 @@ describe("MapGame giving up", () => {
     await reveal(userEvent.setup());
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith("GAVE_UP");
-    expect(screen.getByText("Answer revealed")).toBeInTheDocument();
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0 });
+    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByRole("group", { name: "Answers: 0 of 2 found" })).toBeInTheDocument();
@@ -189,7 +189,22 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText("Correct!")).toBeInTheDocument();
+    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(submitAnswer).not.toHaveBeenCalled();
+  });
+
+  it("shows the points and hints of an answered round, and its hint texts", () => {
+    const { submitAnswer } = renderGame({
+      round: makeRoundProps({ answerState: "CORRECT", hintCount: 3, hintsUsed: 2 }),
+      hints: { description: "A clue", text: (index) => `Hint number ${index}` },
+    });
+
+    expect(screen.getByText("Correct! +67")).toBeInTheDocument();
+    expect(screen.getByText("2 hints used")).toBeInTheDocument();
+    expect(screen.getByText("Hint number 0")).toBeInTheDocument();
+    expect(screen.getByText("Hint number 1")).toBeInTheDocument();
+    expect(screen.queryByText("Hint number 2")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -198,7 +213,7 @@ describe("MapGame resuming a finished round", () => {
 
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
-    expect(screen.getByText("Answer revealed")).toBeInTheDocument();
+    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
     expect(screen.getAllByText("(revealed)")).toHaveLength(2);
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -206,15 +221,15 @@ describe("MapGame resuming a finished round", () => {
 
 describe("MapGame hints", () => {
   function hintConfig() {
-    const text = vi.fn<(hintIndex: number) => string | null>().mockReturnValueOnce("Continent: Europe").mockReturnValueOnce(null);
-    const hints: HintConfig = { total: 2, description: "A clue", text };
+    const text = vi.fn<(hintIndex: number) => string | null>((index) => (index === 0 ? "Continent: Europe" : null));
+    const hints: HintConfig = { description: "A clue", text };
     return { hints, text };
   }
 
   it("calls the hint with an increasing index and shows the text it returns", async () => {
     const user = userEvent.setup();
     const { hints, text } = hintConfig();
-    renderGame({ hints });
+    renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(text).toHaveBeenLastCalledWith(0);
@@ -227,19 +242,18 @@ describe("MapGame hints", () => {
   it("uses up a hint even when it has no text, and stops when none are left", async () => {
     const user = userEvent.setup();
     const { hints, text } = hintConfig();
-    renderGame({ hints });
+    renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
 
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
-    expect(text).toHaveBeenCalledTimes(2);
     expect(screen.getAllByText(/Continent/)).toHaveLength(1);
   });
 
   it("takes a hint that has no text function without showing anything", async () => {
     const user = userEvent.setup();
-    renderGame({ hints: { total: 1, description: "Changes the map" } });
+    renderGame({ hints: { description: "Changes the map" }, round: makeRoundProps({ hintCount: 1 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
 
@@ -250,7 +264,8 @@ describe("MapGame hints", () => {
     const user = userEvent.setup();
     const seen: number[] = [];
     renderGame({
-      hints: { total: 2, description: "A clue" },
+      hints: { description: "A clue" },
+      round: makeRoundProps({ hintCount: 2 }),
       MapComponent: ({ hintsUsed }) => {
         seen.push(hintsUsed);
         return <div data-testid="map" />;
@@ -261,5 +276,70 @@ describe("MapGame hints", () => {
 
     expect(seen[0]).toBe(0);
     expect(seen[seen.length - 1]).toBe(1);
+  });
+
+  it("reports the hints used with the answer", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = renderGame({
+      hints: { description: "A clue" },
+      round: makeRoundProps({ hintCount: 3 }),
+    });
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await guess(user, "France");
+    await guess(user, "Spain");
+
+    expect(submitAnswer).toHaveBeenCalledTimes(1);
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 1 });
+  });
+
+  it("reports the hints used when the player gives up", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = renderGame({
+      hints: { description: "A clue" },
+      round: makeRoundProps({ hintCount: 3 }),
+    });
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await reveal(user);
+
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 2 });
+  });
+
+  it("shows what the round is worth, 100 then 83, 67 and 50 for three hints", async () => {
+    const user = userEvent.setup();
+    renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 3 }) });
+    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    expect(screen.getByText("Worth 83 pts")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
+  });
+
+  it("shows what the round is worth, 100 then 50, for one hint", async () => {
+    const user = userEvent.setup();
+    renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 1 }) });
+    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+
+    expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
+  });
+
+  it("offers no hints when the backend says there are none", () => {
+    renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 0 }) });
+
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
+    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+  });
+
+  it("offers no hint button when a game forgets to supply its hints", () => {
+    renderGame({ hints: undefined, round: makeRoundProps({ hintCount: 2 }) });
+
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
   });
 });

@@ -1,12 +1,19 @@
-import { CheckLg, EyeFill } from "react-bootstrap-icons";
+import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import { CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./Model";
+import { MAX_ROUND_POINTS } from "./scoring";
 
-export default function RoundProgress({ states, currentRound, goToRound }: {
+export default function RoundProgress({ states, points, currentRound, goToRound }: {
   states: string[];
+  /** The points of each round, in the same order as `states`. */
+  points: number[];
   currentRound: number;
   goToRound: (round: number) => void;
 }): React.JSX.Element {
   const firstUnanswered = states.findIndex(s => s === UNANSWERED);
+
+  function isPerfectRound(i: number): boolean {
+    return states[i] === CORRECT_ANSWER && points[i] === MAX_ROUND_POINTS;
+  }
 
   function canVisit(i: number): boolean {
     return i === currentRound || states[i] !== UNANSWERED || i === firstUnanswered;
@@ -15,7 +22,8 @@ export default function RoundProgress({ states, currentRound, goToRound }: {
   function describe(i: number): string {
     const n = i + 1;
     if (i === currentRound) return `Round ${n}: current`;
-    if (states[i] === CORRECT_ANSWER) return `Round ${n}: correct`;
+    if (isPerfectRound(i)) return `Round ${n}: perfect`;
+    if (states[i] === CORRECT_ANSWER) return `Round ${n}: correct, ${points[i]} points`;
     if (states[i] === GAVE_UP) return `Round ${n}: revealed`;
     return `Round ${n}: not played`;
   }
@@ -23,7 +31,8 @@ export default function RoundProgress({ states, currentRound, goToRound }: {
   function dotClass(i: number): string {
     const state = states[i];
     let cls = "round-dot";
-    if (state === CORRECT_ANSWER) cls += " round-dot--correct";
+    if (isPerfectRound(i)) cls += " round-dot--perfect";
+    else if (state === CORRECT_ANSWER) cls += " round-dot--correct";
     else if (state === GAVE_UP) cls += " round-dot--revealed";
     if (i === currentRound) cls += " round-dot--current";
     return cls;
@@ -45,7 +54,8 @@ export default function RoundProgress({ states, currentRound, goToRound }: {
               disabled={!visitable}
               onClick={() => goToRound(i)}
             >
-              {state === CORRECT_ANSWER ? <CheckLg aria-hidden="true" />
+              {isPerfectRound(i) ? <StarFill aria-hidden="true" />
+                : state === CORRECT_ANSWER ? <CheckLg aria-hidden="true" />
                 : state === GAVE_UP ? <EyeFill aria-hidden="true" />
                 : i + 1}
             </button>
