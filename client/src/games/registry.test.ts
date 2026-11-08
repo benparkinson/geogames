@@ -4,7 +4,7 @@ import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTION
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE"]);
   });
 
   it("has a unique type per module", () => {
@@ -47,7 +47,7 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers every game followed by a mix of them", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "RANDOM"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "RANDOM"]);
     expect(MENU_OPTIONS[MENU_OPTIONS.length - 1]).toBe(RANDOM_OPTION);
   });
 

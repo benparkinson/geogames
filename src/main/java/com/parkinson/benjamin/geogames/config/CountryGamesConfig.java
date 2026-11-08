@@ -27,4 +27,15 @@ public class CountryGamesConfig {
         CountryShapeEligibility.neighbours(),
         true);
   }
+
+  /** The coastline alone: countries with a long coast and some land border to hide. */
+  @Bean
+  RoundGenerator countriesByCoastline(CountryShapeService shapes, Random random) {
+    return new CountryShapeRoundGenerator(
+        GameType.COUNTRIES_BY_COASTLINE,
+        shapes,
+        random,
+        CountryShapeEligibility.coastline(),
+        false);
+  }
 }
