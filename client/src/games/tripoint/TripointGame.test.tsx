@@ -94,7 +94,7 @@ describe("Tripoint guessing", () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
     const user = userEvent.setup();
     const { client } = renderTripoint();
-    await waitFor(() => expect(client.getQueryData(["countries"])).toBeDefined());
+    await waitFor(() => expect(client.getQueryData(["placeNames", "countries"])).toBeDefined());
 
     await guess(user, "Atlantis");
     expect(screen.getByText(/We don't recognise "Atlantis"/)).toBeInTheDocument();

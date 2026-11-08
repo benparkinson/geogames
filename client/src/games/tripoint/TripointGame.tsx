@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
-import { useCountryNames } from "../../api/countries";
-import { normaliseString } from "../../helper/stringHelper";
+import { useState } from "react";
 import { shuffle } from "../../helper/shuffle";
 import MapGame from "../common/MapGame";
+import { useGuessList } from "../common/useGuessList";
 import type { GameComponentProps } from "../types";
 import TripointMapWrapper from "./TripointMapWrapper";
 import type { TripointModel, TripointRoundData } from "./model";
@@ -13,20 +12,7 @@ export default function TripointGame({ data: tripoint, round, answerCount, submi
     ...tripoint,
     hintOrder: shuffle(tripoint.countries.map(country => country.name)),
   }));
-  const { data: countryList } = useCountryNames();
-
-  const suggestions = useMemo(() => countryList?.map(c => c.name), [countryList]);
-  const knownNames = useMemo(() => {
-    if (!countryList) {
-      return null;
-    }
-    const names = new Set<string>();
-    countryList.forEach(c => {
-      names.add(normaliseString(c.name));
-      c.additionalNames.forEach(alias => names.add(normaliseString(alias)));
-    });
-    return names;
-  }, [countryList]);
+  const { suggestions, isKnownGuess } = useGuessList("countries");
 
   return (
     <MapGame
@@ -36,7 +22,7 @@ export default function TripointGame({ data: tripoint, round, answerCount, submi
       answers={tripoint.countries}
       round={round}
       suggestions={suggestions}
-      isKnownGuess={knownNames ? (guess: string) => knownNames.has(normaliseString(guess)) : undefined}
+      isKnownGuess={isKnownGuess}
       prompt={`Name the ${answerCount} countries that meet at the flag.`}
       inputPlaceholder="Country name…"
       answerNoun="country"
