@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -19,12 +19,12 @@ class CountryLoaderServiceTest {
 
   @Test
   void loadsEveryCountryNameSorted() throws IOException {
-    List<CountryName> names = service.loadCountryNames();
+    List<PlaceName> names = service.loadCountryNames();
 
     assertEquals(EXPECTED_COUNTRY_COUNT, names.size());
     assertTrue(names.stream().noneMatch(c -> "Siachen Glacier".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
-    assertEquals(names.stream().sorted(Comparator.comparing(CountryName::name)).toList(), names);
+    assertEquals(names.stream().sorted(Comparator.comparing(PlaceName::name)).toList(), names);
     assertTrue(names.stream().anyMatch(c -> "France".equals(c.name())));
     names.forEach(c -> assertNotNull(c.additionalNames(), c.name()));
   }

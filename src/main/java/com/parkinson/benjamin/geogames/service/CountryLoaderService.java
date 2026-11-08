@@ -3,7 +3,7 @@ package com.parkinson.benjamin.geogames.service;
 import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
 
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,14 +25,14 @@ public class CountryLoaderService {
   }
 
   @Cacheable("countryNames")
-  public List<CountryName> loadCountryNames() {
-    return reader.readAll("classpath*:/processed/countries/*.json", CountryName.class).stream()
+  public List<PlaceName> loadCountryNames() {
+    return reader.readAll("classpath*:/processed/countries/*.json", PlaceName.class).stream()
         .map(
             country ->
-                new CountryName(
+                new PlaceName(
                     country.name(),
                     country.additionalNames() == null ? List.of() : country.additionalNames()))
-        .sorted(Comparator.comparing(CountryName::name))
+        .sorted(Comparator.comparing(PlaceName::name))
         .toList();
   }
 }
