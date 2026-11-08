@@ -1,0 +1,79 @@
+name: Smoke test production
+
+# THE ONLY WORKFLOW ALLOWED TO USE THE NETWORK. It calls the deployed services on onrender.com.
+# CI (ci.yml) never does, so a pull request can never fail because Render or the internet is down.
+# It runs on demand and once a day, never on a pull request. It needs no secrets and changes nothing
+# except one throwaway game in the backend's in-memory database.
+#
+# To also run it after each deploy, add a `deployment_status` trigger and gate the job with
+# `if: github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success'`.
+# That only fires if Render's GitHub app posts deployment statuses for this repository.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke-production
+  cancel-in-progress: false
+
+env:
+  API: https://geogames-web-service.onrender.com
+  FRONTEND: https://geogauntlet.onrender.com
+
+jobs:
+  smoke:
+    name: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # The free tier sleeps when idle, and waking it takes a minute or so.
+      - name: Wait for the backend to wake up
+        run: |
+          for i in $(seq 1 36); do
+            if curl -sf --max-time 20 "${API}/health" > /dev/null; then
+              echo "Backend up after about $((i * 5)) seconds"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::${API}/health did not answer within 3 minutes"
+          exit 1
+
+      - name: Check the countries list
+        run: |
+          countries=$(curl -sf --max-time 30 "${API}/api/countries" | jq 'length')
+          echo "countries: ${countries}"
+          test "${countries}" -gt 200
+
+      - name: Create and read a game
+        run: |
+          game=$(curl -sf --max-time 30 -X POST -H 'Content-Type: application/json' \
+            -d '{"gameType":"RANDOM","numberOfRounds":1}' "${API}/api/games")
+          id=$(echo "${game}" | jq -e '.id')
+          echo "game: ${id}"
+          curl -sf --max-time 30 "${API}/api/games/${id}/rounds/0" \
+            | jq -e '.totalRoundCount == 1 and (.jsonBlob | length) > 0'
+
+      - name: Check the frontend is up
+        run: |
+          status=$(curl -s --max-time 30 -o /dev/null -w '%{http_code}' "${FRONTEND}/")
+          echo "${FRONTEND}/ -> ${status}"
+          test "${status}" = "200"
+
+      # What the browser does before the frontend's first POST. If the frontend's origin is missing from
+      # geogames.cors.allowed-origins, the site loads but no game can start.
+      - name: Check the backend allows the frontend's origin
+        run: |
+          headers=$(curl -s --max-time 30 -o /dev/null -D - -X OPTIONS \
+            -H "Origin: ${FRONTEND}" \
+            -H 'Access-Control-Request-Method: POST' \
+            -H 'Access-Control-Request-Headers: content-type' \
+            "${API}/api/games")
+          echo "${headers}"
+          echo "${headers}" | head -1 | grep -q ' 200'
+          echo "${headers}" | grep -iq "^access-control-allow-origin: ${FRONTEND}"

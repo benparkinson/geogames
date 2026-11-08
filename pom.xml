@@ -16,6 +16,28 @@
   <description>Geography games and quizzes</description>
   <properties>
     <java.version>25</java.version>
+
+    <!--
+      Switches so each CI job runs exactly one thing. All default to "run everything", so a plain
+      `mvn verify` still builds, lints and tests all of it.
+        -DskipTests      skips every test, Java and frontend (the usual Maven switch)
+        -DskipUnitTests  skips Surefire and the frontend `npm test` only
+        -DskipITs        skips Failsafe (the *IT classes) only
+        -Dskip.lint      skips `npm run lint` only
+        -Dskip.frontend  skips Node, npm ci, lint, the Next build and the Vitest run (see the
+                         `skip-frontend` profile below); needs client/out for a bundled jar
+    -->
+    <skipTests>false</skipTests>
+    <skipUnitTests>${skipTests}</skipUnitTests>
+    <skipITs>${skipTests}</skipITs>
+    <skip.lint>false</skip.lint>
+    <skip.frontend.tests>${skipUnitTests}</skip.frontend.tests>
+    <!--
+      JaCoCo's agent argument line goes to Surefire only (see the surefire configuration), so the
+      coverage gate measures the unit tests alone. Empty by default so -Djacoco.skip=true leaves
+      Surefire with no agent.
+    -->
+    <jacoco.surefire.argLine></jacoco.surefire.argLine>
   </properties>
   <dependencies>
     <dependency>
@@ -68,6 +90,25 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>${skipUnitTests}</skipTests>
+          <argLine>@{jacoco.surefire.argLine}</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- Runs the *IT classes (Spring Boot context and real-port tests). Version from the Boot parent. -->
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <version>2.0.2</version>
@@ -82,6 +123,7 @@
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
+              <!-- Keep in step with client/.nvmrc (CI's setup-node reads it); CI checks they match. -->
               <nodeVersion>v24.22.2</nodeVersion>
             </configuration>
           </execution>
@@ -100,6 +142,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
+              <skip>${skip.lint}</skip>
               <arguments>run lint</arguments>
             </configuration>
           </execution>
@@ -119,6 +162,7 @@
             </goals>
             <phase>test</phase>
             <configuration>
+              <skip>${skip.frontend.tests}</skip>
               <arguments>run test</arguments>
             </configuration>
           </execution>
@@ -132,7 +176,7 @@
             <configuration>
               <target>
                 <copy todir="${project.build.directory}/classes/public">
-                  <fileset dir="${project.basedir}/client/out"/>
+                  <fileset dir="${project.basedir}/client/out" erroronmissingdir="false"/>
                 </copy>
               </target>
             </configuration>
@@ -153,7 +197,14 @@
         </configuration>
         <executions>
           <execution>
+            <!--
+              The coverage gate counts the unit tests only: the agent is attached to Surefire
+              (via jacoco.surefire.argLine) and not to Failsafe, so the *IT classes add nothing.
+            -->
             <id>jacoco-prepare-agent</id>
+            <configuration>
+              <propertyName>jacoco.surefire.argLine</propertyName>
+            </configuration>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
@@ -252,5 +303,116 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <!--
+        -Dskip.frontend=true: a backend-only build. One profile sets every switch of the
+        frontend plugin together (the plugin's own skip.installnodenpm / skip.npm, plus our lint and
+        Vitest switches, which are set per execution and so ignore skip.npm).
+      -->
+      <id>skip-frontend</id>
+      <activation>
+        <property>
+          <name>skip.frontend</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <properties>
+        <skip.installnodenpm>true</skip.installnodenpm>
+        <skip.npm>true</skip.npm>
+        <skip.lint>true</skip.lint>
+        <skip.frontend.tests>true</skip.frontend.tests>
+      </properties>
+    </profile>
+    <profile>
+      <!--
+        Regenerates the offline-built data into target/regen/ so scripts/check-processed-data.sh can
+        compare it with src/main/resources/processed/. Runs the loaders in order at process-classes
+        (after compile). TripointLoaderMain and WikidataMain are left out because they use the network.
+        Use: ./mvnw -B -Pregenerate-data -Dskip.frontend -DskipTests -Djacoco.skip=true process-classes
+      -->
+      <id>regenerate-data</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.6.4</version>
+            <configuration>
+              <cleanupDaemonThreads>false</cleanupDaemonThreads>
+            </configuration>
+            <executions>
+              <execution>
+                <id>regen-countries</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.countries.CountryLoaderMain</mainClass>
+                  <arguments>
+                    <argument>geodata/countries/countries.geo.json</argument>
+                    <argument>geodata/countries/additionalNames.json</argument>
+                    <argument>geodata/countries/excludedNames.json</argument>
+                    <argument>target/regen/countries</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>regen-country-shapes</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.countries.CountryShapeMain</mainClass>
+                  <arguments>
+                    <argument>target/regen/countries</argument>
+                    <argument>target/regen/country-shapes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>regen-rivers</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.rivers.RiverLoaderMain</mainClass>
+                  <arguments>
+                    <argument>geodata/rivers/naturalearth/ne_10m_rivers_lake_centerlines_scale_rank.geojson</argument>
+                    <argument>geodata/rivers/wikidata.json</argument>
+                    <argument>geodata/rivers/overrides.json</argument>
+                    <argument>geodata/rivers/osm</argument>
+                    <argument>target/regen/countries</argument>
+                    <argument>target/regen/rivers</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>regen-lakes</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.lakes.LakeLoaderMain</mainClass>
+                  <arguments>
+                    <argument>geodata/lakes/naturalearth/ne_10m_lakes.geojson</argument>
+                    <argument>geodata/lakes/wikidata.json</argument>
+                    <argument>geodata/lakes/overrides.json</argument>
+                    <argument>target/regen/countries</argument>
+                    <argument>target/regen/lakes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
