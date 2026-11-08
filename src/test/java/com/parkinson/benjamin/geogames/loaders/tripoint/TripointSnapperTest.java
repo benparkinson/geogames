@@ -55,6 +55,46 @@ public class TripointSnapperTest {
     assertTrue(snapper.snap(new Coordinate(20.0, 10.0), countries).isEmpty());
   }
 
+  @Test
+  public void snapsAJunctionJustInsideThirtyKilometres() {
+    // junction at lat 20.25, about 27.6 km from the original coordinate
+    List<Country> countries =
+        List.of(
+            square("A", 10.0, 20.25, 1, 1),
+            square("B", 10.0, 20.25, -1, 1),
+            square("C", 10.0, 20.25, 1, -1));
+
+    Optional<Coordinate> snapped = snapper.snap(new Coordinate(20.0, 10.0), countries);
+
+    assertTrue(snapped.isPresent());
+    assertEquals(20.25, snapped.get().latitude(), 1e-9);
+  }
+
+  @Test
+  public void needsExactlyThreeCountries() {
+    List<Country> two = List.of(square("A", 10.0, 20.0, 1, 1), square("B", 10.0, 20.0, -1, 1));
+    List<Country> four =
+        List.of(
+            square("A", 10.0, 20.0, 1, 1),
+            square("B", 10.0, 20.0, -1, 1),
+            square("C", 10.0, 20.0, 1, -1),
+            square("D", 10.0, 20.0, -1, -1));
+
+    assertTrue(snapper.snap(new Coordinate(20.0, 10.0), two).isEmpty());
+    assertTrue(snapper.snap(new Coordinate(20.0, 10.0), four).isEmpty());
+  }
+
+  @Test
+  public void returnsEmptyWhenACountryHasNoVertexInTheSearchWindow() {
+    List<Country> countries =
+        List.of(
+            square("A", 10.0, 20.0, 1, 1),
+            square("B", 10.0, 20.0, -1, 1),
+            square("Far", 50.0, 50.0, 1, 1));
+
+    assertTrue(snapper.snap(new Coordinate(20.0, 10.0), countries).isEmpty());
+  }
+
   /** A square with one corner at (lon, lat) extending by dLon/dLat degrees. */
   private Country square(String name, double lon, double lat, int dLon, int dLat) {
     List<List<List<Double>>> ring =

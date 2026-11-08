@@ -1,0 +1,9 @@
+{
+  "name": "Beta",
+  "additionalNames": [],
+  "geoData": {
+    "type": "Feature",
+    "properties": {"name": "Beta"},
+    "geometry": {"type": "Polygon", "coordinates": [[[10, 0], [20, 0], [20, 10], [10, 10], [10, 0]]]}
+  }
+}

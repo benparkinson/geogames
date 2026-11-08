@@ -20,11 +20,25 @@ import java.util.function.Predicate;
  */
 public class CountryShapeMain {
 
-  public static void main(String[] args) throws IOException {
-    List<CountryShape> shapes =
-        CountryShapeBuilder.build(new ProcessedCountryReader().readCountries(Path.of(args[0])));
+  /**
+   * What a run produced, for the summary.
+   *
+   * @param shapes the shapes written
+   * @param bytes the total size of the files written
+   */
+  public record Report(List<CountryShape> shapes, long bytes) {}
 
-    Path outDir = Path.of(args[1]);
+  public static void main(String[] args) throws IOException {
+    Report report = run(Path.of(args[0]), Path.of(args[1]));
+    printSummary(report.shapes(), report.bytes());
+  }
+
+  /** Does everything {@code main} does except print. */
+  static Report run(Path processedCountriesDir, Path outDir) throws IOException {
+    List<CountryShape> shapes =
+        CountryShapeBuilder.build(
+            new ProcessedCountryReader().readCountries(processedCountriesDir));
+
     Files.createDirectories(outDir);
     new CountryWriter().clearOutput(outDir);
     long bytes = 0;
@@ -34,7 +48,10 @@ public class CountryShapeMain {
       Files.writeString(file, json);
       bytes += Files.size(file);
     }
+    return new Report(shapes, bytes);
+  }
 
+  private static void printSummary(List<CountryShape> shapes, long bytes) {
     System.out.println("Written: " + shapes.size());
     System.out.println("No coast: " + count(shapes, s -> s.coastKm() == 0));
     System.out.println("No land border: " + count(shapes, s -> s.landBorderKm() == 0));

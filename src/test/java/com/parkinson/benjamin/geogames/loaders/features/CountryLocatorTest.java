@@ -117,6 +117,34 @@ class CountryLocatorTest {
   }
 
   @Test
+  void aLineOutsideACountrysBoundingBoxOnAnySideIsNotInIt() {
+    CountryLocator locator = new CountryLocator(List.of(square("A", 0, 0, 1, 1)), 10);
+
+    assertThat(locator.locate(eastWest(5, 0, 1)).countries()).isEmpty(); // north
+    assertThat(locator.locate(eastWest(-5, 0, 1)).countries()).isEmpty(); // south
+    assertThat(locator.locate(eastWest(0.5, -3, -2)).countries()).isEmpty(); // west
+    assertThat(locator.locate(eastWest(0.5, 2, 3)).countries()).isEmpty(); // east
+  }
+
+  @Test
+  void aPointInsideTheBoundingBoxButOutsideTheShapeIsNotInTheCountry() {
+    // An L: the top-right quarter of the box is missing.
+    List<List<Double>> l =
+        List.of(
+            List.of(0.0, 0.0),
+            List.of(2.0, 0.0),
+            List.of(2.0, 1.0),
+            List.of(1.0, 1.0),
+            List.of(1.0, 2.0),
+            List.of(0.0, 2.0),
+            List.of(0.0, 0.0));
+    CountryLocator locator = new CountryLocator(List.of(country("L", "Polygon", List.of(l))), 10);
+
+    assertThat(locator.locate(eastWest(1.5, 1.2, 1.8)).countries()).isEmpty();
+    assertThat(locator.locate(eastWest(0.5, 0.2, 1.8)).countries()).containsExactly("L");
+  }
+
+  @Test
   void ignoresAntarctica() {
     CountryLocator locator = new CountryLocator(List.of(square("Antarctica", 0, -1, 3, 1)), 10);
 

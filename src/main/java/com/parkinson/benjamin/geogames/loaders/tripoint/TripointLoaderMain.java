@@ -17,14 +17,36 @@ import java.util.Optional;
  */
 public class TripointLoaderMain {
 
+  /**
+   * What the offline part produced.
+   *
+   * @param definitions the tripoints written, snapped to a border junction
+   * @param dropped the tripoints with no border junction near them
+   */
+  public record Report(List<TripointDefinition> definitions, List<Tripoint> dropped) {}
+
   public static void main(String[] args) throws IOException {
     List<Country> countries = new ProcessedCountryReader().readCountries(Path.of(args[0]));
 
+    // The only network step: scrapes Wikipedia's list of tripoints.
     TripointComputer tripointComputer = new TripointComputer();
     List<Tripoint> tripoints = tripointComputer.computeTripoints(countries);
 
+    Report report = snapAndWrite(tripoints, Path.of(args[1]));
+    for (Tripoint tripoint : report.dropped()) {
+      System.out.println(
+          "Dropping "
+              + tripoint.countries().stream().map(Country::name).toList()
+              + ": no border junction near "
+              + tripoint.coordinate());
+    }
+  }
+
+  /** The offline part: snaps each tripoint to the country geometry and writes the file. */
+  static Report snapAndWrite(List<Tripoint> tripoints, Path outFile) throws IOException {
     TripointSnapper snapper = new TripointSnapper();
     List<TripointDefinition> definitions = new ArrayList<>();
+    List<Tripoint> dropped = new ArrayList<>();
     for (Tripoint tripoint : tripoints) {
       List<Country> tripointCountries = new ArrayList<>(tripoint.countries());
       List<String> names = tripointCountries.stream().map(Country::name).toList();
@@ -33,11 +55,11 @@ public class TripointLoaderMain {
       if (snapped.isPresent()) {
         definitions.add(new TripointDefinition(snapped.get(), names));
       } else {
-        System.out.println(
-            "Dropping " + names + ": no border junction near " + tripoint.coordinate());
+        dropped.add(tripoint);
       }
     }
 
-    new TripointWriter().writeTripoints(definitions, Path.of(args[1]));
+    new TripointWriter().writeTripoints(definitions, outFile);
+    return new Report(definitions, dropped);
   }
 }

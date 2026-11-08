@@ -45,15 +45,52 @@ public class RiverLoaderMain {
 
   private static final double LOW_CONFIDENCE = 0.6;
 
-  public static void main(String[] args) throws IOException {
-    Path osmDir = Path.of(args[3]);
-    Path countriesDir = Path.of(args[4]);
-    Path outDir = Path.of(args[5]);
+  /**
+   * What a run produced, for the summary.
+   *
+   * @param rivers the rivers written, sorted by name then QID
+   * @param files the files written, in the same order
+   * @param assembly the candidates and why the others were dropped
+   * @param selection what the continent quotas kept and skipped
+   * @param overrides the overrides that were read, by QID
+   * @param facts source, mouth and countries of each written river, by QID
+   * @param unlocatedKm the km of each written river that is in no country, by QID
+   */
+  public record Report(
+      List<RiverCandidate> rivers,
+      List<Path> files,
+      RiverAssembler.Assembly assembly,
+      FeatureSelector.Selection<RiverCandidate> selection,
+      Map<String, RiverOverride> overrides,
+      Map<String, RiverFacts> facts,
+      Map<String, Double> unlocatedKm) {}
 
+  public static void main(String[] args) throws IOException {
+    Report report =
+        run(
+            Path.of(args[0]),
+            Path.of(args[1]),
+            Path.of(args[2]),
+            Path.of(args[3]),
+            Path.of(args[4]),
+            Path.of(args[5]));
+    printSummary(report.rivers(), report.files(), report.assembly(), report.selection());
+    printFactsSummary(report.rivers(), report.overrides(), report.facts(), report.unlocatedKm());
+  }
+
+  /** Does everything {@code main} does except print. */
+  static Report run(
+      Path naturalEarth,
+      Path wikidataFile,
+      Path overridesFile,
+      Path osmDir,
+      Path countriesDir,
+      Path outDir)
+      throws IOException {
     Map<String, NaturalEarthFeature> groups =
-        new NaturalEarthReader().read(Path.of(args[0]), Set.of("Canal"));
-    Map<String, WikidataEntry> wikidata = readJson(Path.of(args[1]), new TypeReference<>() {});
-    Map<String, RiverOverride> overrides = readJson(Path.of(args[2]), new TypeReference<>() {});
+        new NaturalEarthReader().read(naturalEarth, Set.of("Canal"));
+    Map<String, WikidataEntry> wikidata = readJson(wikidataFile, new TypeReference<>() {});
+    Map<String, RiverOverride> overrides = readJson(overridesFile, new TypeReference<>() {});
 
     RiverAssembler.Assembly assembly =
         new RiverAssembler(file -> readOsmLines(osmDir.resolve(file)))
@@ -76,8 +113,7 @@ public class RiverLoaderMain {
     }
     List<Path> files = new RiverWriter().write(rivers, facts, outDir);
 
-    printSummary(rivers, files, assembly, selection);
-    printFactsSummary(rivers, overrides, facts, unlocatedKm);
+    return new Report(rivers, files, assembly, selection, overrides, facts, unlocatedKm);
   }
 
   private static void printFactsSummary(

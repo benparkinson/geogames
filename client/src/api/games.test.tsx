@@ -118,6 +118,19 @@ describe("toRoundView", () => {
     });
   });
 
+  it("counts a correct round with no recorded hints as perfect when the backend sends no perfectRounds", () => {
+    const response = makeRound({ totalRoundCount: 3 });
+    response.gameResult = {
+      ...response.gameResult,
+      roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
+      roundHintsUsed: [1],
+    };
+    delete response.gameResult.perfectRounds;
+
+    // Round 0 used a hint; round 1 has no hint entry at all.
+    expect(toRoundView(response, 0).gameResult.perfectRounds).toBe(1);
+  });
+
   it("falls back to this round's state when an older backend sends no roundAnswerStates", () => {
     const response = makeRound({ totalRoundCount: 3, answerState: "GAVE_UP" });
     delete response.gameResult.roundAnswerStates;

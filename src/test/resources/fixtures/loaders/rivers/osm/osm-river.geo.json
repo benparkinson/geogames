@@ -1,0 +1,5 @@
+{
+  "type": "Feature",
+  "properties": {"name": "Osm River"},
+  "geometry": {"type": "MultiLineString", "coordinates": [[[11, 5], [19, 5]]]}
+}

@@ -110,6 +110,129 @@ class LakeAssemblerTest {
   }
 
   @Test
+  void anOverrideWithNoNaturalEarthFeatureHasNoGeometryAndIsDropped() {
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler()
+            .assemble(Map.of(), Map.of(), Map.of("Q9", override(null, "Ghost", "Asia")));
+
+    assertThat(assembly.candidates()).isEmpty();
+    assertThat(assembly.dropped()).containsEntry("no geometry", 1);
+  }
+
+  @Test
+  void anExcludedOverrideWithNoFeatureIsNotCounted() {
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler()
+            .assemble(Map.of(), Map.of(), Map.of("Q9", override(true, "Ghost", "Asia")));
+
+    assertThat(assembly.candidates()).isEmpty();
+    assertThat(assembly.dropped()).isEmpty();
+  }
+
+  @Test
+  void anOverrideKeepsALakeWithNoWikidataEntryAndGivesItNoSitelinks() {
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler()
+            .assemble(
+                Map.of("Q1", group("Q1", "Odd", 0.02)),
+                Map.of(),
+                Map.of("Q1", override(null, null, "Oceania")));
+
+    assertThat(assembly.candidates())
+        .singleElement()
+        .satisfies(
+            lake -> {
+              assertThat(lake.sitelinks()).isZero();
+              assertThat(lake.continent()).isEqualTo("Oceania");
+            });
+  }
+
+  @Test
+  void aLakeWithNoNameAnywhereIsDropped() {
+    Map<String, NaturalEarthFeature> groups =
+        Map.of("Q1", new NaturalEarthFeature("Q1", " ", null, List.of(), square(2)));
+
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler().assemble(groups, Map.of("Q1", entry("", 5, "Asia")), Map.of());
+
+    assertThat(assembly.candidates()).isEmpty();
+    assertThat(assembly.dropped()).containsEntry("no name", 1);
+  }
+
+  @Test
+  void theNameComesFromTheOverrideThenWikidataThenNaturalEarthEnglishThenNaturalEarth() {
+    NaturalEarthFeature feature =
+        new NaturalEarthFeature("Q1", "Lago Local", "English Lake", List.of(), square(2));
+    NaturalEarthFeature noEnglish =
+        new NaturalEarthFeature("Q1", "Lago Local", null, List.of(), square(2));
+    LakeAssembler assembler = new LakeAssembler();
+
+    assertThat(
+            assembler
+                .assemble(
+                    Map.of("Q1", feature),
+                    Map.of("Q1", entry("Wiki Lake", 1, "Asia")),
+                    Map.of("Q1", override(null, "Override Lake", null)))
+                .candidates()
+                .get(0)
+                .name())
+        .isEqualTo("Override Lake");
+    assertThat(
+            assembler
+                .assemble(
+                    Map.of("Q1", feature), Map.of("Q1", entry("Wiki Lake", 1, "Asia")), Map.of())
+                .candidates()
+                .get(0)
+                .name())
+        .isEqualTo("Wiki Lake");
+    assertThat(
+            assembler
+                .assemble(Map.of("Q1", feature), Map.of("Q1", entry(" ", 1, "Asia")), Map.of())
+                .candidates()
+                .get(0)
+                .name())
+        .isEqualTo("English Lake");
+    assertThat(
+            assembler
+                .assemble(Map.of("Q1", noEnglish), Map.of("Q1", entry(null, 1, "Asia")), Map.of())
+                .candidates()
+                .get(0)
+                .name())
+        .isEqualTo("Lago Local");
+  }
+
+  @Test
+  void anOverrideLakeWithNoContinentIsDropped() {
+    WikidataEntry lost = new WikidataEntry("Lost", 5, List.of(), List.of(), List.of());
+
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler()
+            .assemble(
+                Map.of("Q1", group("Q1", "Lost", 2)),
+                Map.of("Q1", lost),
+                Map.of("Q1", override(null, null, null)));
+
+    assertThat(assembly.candidates()).isEmpty();
+    assertThat(assembly.dropped()).containsEntry("override lake with no continent", 1);
+  }
+
+  @Test
+  void aLakeWithNoPolygonsIsDropped() {
+    Map<String, NaturalEarthFeature> groups =
+        Map.of("Q1", new NaturalEarthFeature("Q1", "Flat", "Flat", List.of(), List.of()));
+
+    LakeAssembler.Assembly assembly =
+        new LakeAssembler().assemble(groups, Map.of("Q1", entry("Flat", 5, "Asia")), Map.of());
+
+    assertThat(assembly.dropped()).containsEntry("no geometry", 1);
+  }
+
+  @Test
+  void variantsOfABlankRemainderAreSkipped() {
+    assertThat(LakeAssembler.lakeVariants("Lake ")).isEmpty();
+  }
+
+  @Test
   void theOverrideNameAndAliasesWin() {
     Map<String, NaturalEarthFeature> groups = Map.of("Q1", group("Q1", "Argentino Lake", 2));
     Map<String, WikidataEntry> wikidata = Map.of("Q1", entry("Argentino Lake", 5, "South America"));
