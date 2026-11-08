@@ -9,14 +9,15 @@ export default defineConfig({
     include: ["src/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "v8",
-      include: ["src/**"],
+      reporter: ["text", "html", "lcov"],
+      thresholds: { statements: 99, branches: 98, functions: 99, lines: 99 },
+      include: ["src/**", "pages/**"],
       exclude: [
+        "pages/_document.tsx",
         "src/**/*.test.{ts,tsx}",
         "src/test/**",
-        "src/games/tripoint/TripointMap.tsx",
-        "src/games/rivers/RiverShapesMap.tsx",
-        "src/games/tripoint/TripointMapWrapper.tsx",
-        "src/games/rivers/RiverShapesMapWrapper.tsx",
+        // Each is only a dynamic() import of the real map, which has its own test.
+        "src/**/*MapWrapper.tsx",
       ],
     },
   },

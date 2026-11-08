@@ -59,6 +59,20 @@ describe("GameSummary", () => {
     expect(rows[2]).toHaveTextContent("1 hint");
   });
 
+  it("falls back to the raw game type name, with no answers, for a type it has no module for", async () => {
+    const unknown = makeGameRounds([{ answerState: "CORRECT" }]).map((round) => ({
+      ...round,
+      gameType: { ...round.gameType, name: "MYSTERY_GAME" },
+    }));
+    mockFetch([roundsRoute(unknown)]);
+    renderSummary(vi.fn(), 1);
+
+    const row = (await screen.findAllByRole("button")).find((b) => /^1\./.test(b.textContent ?? ""))!;
+
+    expect(row).toHaveTextContent("1. MYSTERY_GAME");
+    expect(row).not.toHaveTextContent("Belgium");
+  });
+
   it("counts a round that ran out of guesses as revealed and says so", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "OUT_OF_GUESSES" }]))]);
     renderSummary(vi.fn(), 2);

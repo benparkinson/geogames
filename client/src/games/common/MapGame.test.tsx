@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
 import MapGame, { HintConfig } from "./MapGame";
 
@@ -216,6 +216,47 @@ describe("MapGame resuming a finished round", () => {
     expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
     expect(screen.getAllByText("(revealed)")).toHaveLength(2);
     expect(submitAnswer).not.toHaveBeenCalled();
+  });
+});
+
+describe("MapGame without hints configured", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("logs an error in development when the game type has hints but the component supplies none", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    renderGame({ round: makeRoundProps({ hintCount: 2 }) });
+
+    expect(error).toHaveBeenCalledWith("This game type has 2 hints but its component supplies no hints.");
+  });
+
+  it("stays quiet outside development", () => {
+    vi.stubEnv("NODE_ENV", "test");
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    renderGame({ round: makeRoundProps({ hintCount: 2 }) });
+
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  it("stays quiet in development when the game type has no hints", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    renderGame({ round: makeRoundProps({ hintCount: 0 }) });
+
+    expect(error).not.toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
+  });
+
+  it("offers no hint button once the round is over", async () => {
+    renderGame({
+      hints: { description: "A clue" },
+      round: makeRoundProps({ hintCount: 2, answerState: "GAVE_UP" }),
+    });
+
+    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
   });
 });
 

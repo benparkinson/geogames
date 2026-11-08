@@ -1,0 +1,10 @@
+{
+  "Q201": {"label": "Big Lake", "sitelinks": 50, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q202": {"label": "Border Lake", "sitelinks": 40, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q203": {"label": "Diamond Lake", "sitelinks": 30, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q204": {"label": "Puddle", "sitelinks": 20, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q205": {"label": "Pond", "sitelinks": 10, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q206": {"label": "Override Land", "sitelinks": 25, "aliases": [], "continents": ["Asia"], "countryContinents": ["Asia"]},
+  "Q207": {"label": "No Continent", "sitelinks": 1000, "aliases": [], "continents": [], "countryContinents": []},
+  "Q208": {"label": "Excluded Lake", "sitelinks": 100, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]}
+}

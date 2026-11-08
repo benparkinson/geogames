@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Big Lake", "name_en": "Big Lake", "wikidataid": "Q201"},
+     "geometry": {"type": "Polygon", "coordinates": [[[4, 4], [6, 4], [6, 6], [4, 6], [4, 4]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Border Lake", "name_en": "Border Lake", "wikidataid": "Q202"},
+     "geometry": {"type": "Polygon", "coordinates": [[[8, 2], [11, 2], [11, 4], [8, 4], [8, 2]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Diamond Lake", "name_en": "Diamond Lake", "wikidataid": "Q203"},
+     "geometry": {"type": "Polygon", "coordinates": [[[8, 5], [9, 6], [10.01, 5], [9, 4], [8, 5]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Puddle", "name_en": "Puddle", "wikidataid": "Q204"},
+     "geometry": {"type": "Polygon", "coordinates": [[[1, 1], [1.05, 1], [1.05, 1.05], [1, 1.05], [1, 1]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Pond", "name_en": "Pond", "wikidataid": "Q205"},
+     "geometry": {"type": "Polygon", "coordinates": [[[2, 1], [2.05, 1], [2.05, 1.05], [2, 1.05], [2, 1]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Override Land", "name_en": "Override Land", "wikidataid": "Q206"},
+     "geometry": {"type": "Polygon", "coordinates": [[[12, 6], [14, 6], [14, 8], [12, 8], [12, 6]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "No Continent", "name_en": "No Continent", "wikidataid": "Q207"},
+     "geometry": {"type": "Polygon", "coordinates": [[[15, 5], [17, 5], [17, 7], [15, 7], [15, 5]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Excluded Lake", "name_en": "Excluded Lake", "wikidataid": "Q208"},
+     "geometry": {"type": "Polygon", "coordinates": [[[1, 7], [3, 7], [3, 9], [1, 9], [1, 7]]]}},
+    {"type": "Feature", "properties": {"featurecla": "Lake", "name": "Unknown Lake", "name_en": "Unknown Lake", "wikidataid": "Q209"},
+     "geometry": {"type": "Polygon", "coordinates": [[[5, 7], [7, 7], [7, 9], [5, 9], [5, 7]]]}}
+  ]
+}

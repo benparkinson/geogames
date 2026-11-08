@@ -1,0 +1,6 @@
+{
+  "Q103": {"exclude": true},
+  "Q104": {"name": "New Name"},
+  "Q105": {"reverseFlow": true},
+  "Q107": {"osmFile": "osm-river.geo.json"}
+}

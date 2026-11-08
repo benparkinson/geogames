@@ -1,0 +1,8 @@
+[
+  { "type": "Feature", "properties": { "name": "Alpha Land" },
+    "geometry": { "type": "Polygon", "coordinates": [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]] } },
+  { "type": "Feature", "properties": { "name": "Beta" },
+    "geometry": { "type": "MultiPolygon", "coordinates": [[[[10, 0], [20, 0], [20, 10], [10, 10], [10, 0]]], [[[30, 0], [31, 0], [31, 1], [30, 1], [30, 0]]]] } },
+  { "type": "Feature", "properties": { "name": "Disputed Reef" },
+    "geometry": { "type": "Polygon", "coordinates": [[[40, 0], [41, 0], [41, 1], [40, 1], [40, 0]]] } }
+]

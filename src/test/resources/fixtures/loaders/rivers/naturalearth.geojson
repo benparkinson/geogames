@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Alpha River", "name_en": "Alpha River", "wikidataid": "Q101"},
+     "geometry": {"type": "LineString", "coordinates": [[1, 5], [9, 5]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Cross River", "name_en": "Cross River", "wikidataid": "Q102"},
+     "geometry": {"type": "MultiLineString", "coordinates": [[[4, 2], [9, 2]], [[9, 2], [15, 2]]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Excluded River", "name_en": "Excluded River", "wikidataid": "Q103"},
+     "geometry": {"type": "LineString", "coordinates": [[2, 3], [8, 3]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Old Name", "name_en": "Old Name", "wikidataid": "Q104"},
+     "geometry": {"type": "LineString", "coordinates": [[12, 8], [18, 8]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Backwards", "name_en": "Backwards", "wikidataid": "Q105"},
+     "geometry": {"type": "LineString", "coordinates": [[1, 9], [9, 9]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "No Continent", "name_en": "No Continent", "wikidataid": "Q106"},
+     "geometry": {"type": "LineString", "coordinates": [[11, 1], [19, 1]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Osm River", "name_en": "Osm River", "wikidataid": "Q107"},
+     "geometry": {"type": "LineString", "coordinates": [[0, 0], [1, 0]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Unknown River", "name_en": "Unknown River", "wikidataid": "Q108"},
+     "geometry": {"type": "LineString", "coordinates": [[1, 7], [9, 7]]}},
+    {"type": "Feature", "properties": {"featurecla": "River", "name": "Brook", "name_en": "Brook", "wikidataid": "Q109"},
+     "geometry": {"type": "LineString", "coordinates": [[1, 6], [2, 6]]}},
+    {"type": "Feature", "properties": {"featurecla": "Canal", "name": "A Canal", "name_en": "A Canal", "wikidataid": "Q110"},
+     "geometry": {"type": "LineString", "coordinates": [[1, 8], [9, 8]]}}
+  ]
+}

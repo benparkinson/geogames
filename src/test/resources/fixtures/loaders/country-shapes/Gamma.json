@@ -1,0 +1,9 @@
+{
+  "name": "Gamma Island",
+  "additionalNames": ["Gamma"],
+  "geoData": {
+    "type": "Feature",
+    "properties": {"name": "Gamma Island"},
+    "geometry": {"type": "Polygon", "coordinates": [[[30, 0], [32, 0], [32, 2], [30, 2], [30, 0]]]}
+  }
+}

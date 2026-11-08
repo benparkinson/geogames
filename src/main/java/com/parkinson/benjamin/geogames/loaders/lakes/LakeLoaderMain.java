@@ -43,14 +43,41 @@ public class LakeLoaderMain {
   /** Lakes are smaller than rivers, so a country needs less shore to count. */
   static final double MIN_SHORE_KM = 5;
 
-  public static void main(String[] args) throws IOException {
-    Path countriesDir = Path.of(args[3]);
-    Path outDir = Path.of(args[4]);
+  /**
+   * What a run produced, for the summary.
+   *
+   * @param lakes the lakes written, sorted by name then QID
+   * @param countries the countries on the shore of each written lake, by QID
+   * @param files the files written, in the same order as {@code lakes}
+   * @param assembly the candidates and why the others were dropped
+   * @param selection what the continent quotas kept and skipped
+   */
+  public record Report(
+      List<LakeCandidate> lakes,
+      Map<String, List<String>> countries,
+      List<Path> files,
+      LakeAssembler.Assembly assembly,
+      FeatureSelector.Selection<LakeCandidate> selection) {}
 
-    Map<String, NaturalEarthFeature> groups =
-        new NaturalEarthReader().read(Path.of(args[0]), Set.of());
-    Map<String, WikidataEntry> wikidata = readJson(Path.of(args[1]), new TypeReference<>() {});
-    Map<String, LakeOverride> overrides = readJson(Path.of(args[2]), new TypeReference<>() {});
+  public static void main(String[] args) throws IOException {
+    Report report =
+        run(
+            Path.of(args[0]),
+            Path.of(args[1]),
+            Path.of(args[2]),
+            Path.of(args[3]),
+            Path.of(args[4]));
+    printSummary(
+        report.lakes(), report.countries(), report.files(), report.assembly(), report.selection());
+  }
+
+  /** Does everything {@code main} does except print. */
+  static Report run(
+      Path naturalEarth, Path wikidataFile, Path overridesFile, Path countriesDir, Path outDir)
+      throws IOException {
+    Map<String, NaturalEarthFeature> groups = new NaturalEarthReader().read(naturalEarth, Set.of());
+    Map<String, WikidataEntry> wikidata = readJson(wikidataFile, new TypeReference<>() {});
+    Map<String, LakeOverride> overrides = readJson(overridesFile, new TypeReference<>() {});
 
     LakeAssembler.Assembly assembly = new LakeAssembler().assemble(groups, wikidata, overrides);
     FeatureSelector.Selection<LakeCandidate> selection =
@@ -72,7 +99,7 @@ public class LakeLoaderMain {
     }
     List<Path> files = new LakeWriter().write(lakes, countries, outDir);
 
-    printSummary(lakes, countries, files, assembly, selection);
+    return new Report(lakes, countries, files, assembly, selection);
   }
 
   private static void printSummary(
