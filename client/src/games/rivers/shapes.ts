@@ -10,6 +10,7 @@ export default defineGame({
   singular: "River shape",
   description: "Name a river from its shape alone.",
   Icon: Water,
+  extraDifficult: true,
   Component: makeRiverGame({
     MapComponent: RiverShapesMapWrapper,
     prompt: "Name this river from its shape.",

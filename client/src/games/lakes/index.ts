@@ -9,6 +9,7 @@ export default defineGame<LakeRound>({
   singular: "Lake shape",
   description: "Name a lake from its shape alone.",
   Icon: DropletFill,
+  extraDifficult: true,
   Component: LakeGame,
   answerNames: (round) => [round.lake.name],
 });

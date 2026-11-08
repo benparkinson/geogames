@@ -64,66 +64,45 @@ describe("HomePage choosing a game", () => {
     expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "false");
   });
 
-  it("moves the selection and focus with the arrow keys, wrapping around", async () => {
+  it("moves the selection and focus with the arrow keys across both sections, wrapping around", async () => {
     const user = userEvent.setup();
     renderHome();
     card(/Tripoints/).focus();
 
-    await user.keyboard("{ArrowRight}");
-    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/River Shapes/)).toHaveFocus();
+    const order = [/Country Gaps/, /Land Borders/, /Rivers on the Map/, /River Ends/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Tripoints/];
+    for (const [i, name] of order.entries()) {
+      await user.keyboard(i % 2 === 0 ? "{ArrowRight}" : "{ArrowDown}");
+      expect(card(name)).toHaveAttribute("aria-checked", "true");
+      expect(card(name)).toHaveFocus();
+    }
 
-    await user.keyboard("{ArrowDown}");
-    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/River Ends/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/River Countries/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Country Gaps/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Land Borders/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Lake Shapes/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowRight}");
-    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/Tripoints/)).toHaveFocus();
-
-    await user.keyboard("{ArrowLeft}");
-    expect(card(/Mixed/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowUp}");
-    expect(card(/Lake Shapes/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowUp}");
-    expect(card(/Land Borders/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowUp}");
-    expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
-
-    await user.keyboard("{ArrowUp}");
-    expect(card(/Country Gaps/)).toHaveAttribute("aria-checked", "true");
+    for (const name of [/Lake Shapes/, /River Shapes/, /Mixed/, /Coastlines/]) {
+      await user.keyboard("{ArrowLeft}");
+      expect(card(name)).toHaveAttribute("aria-checked", "true");
+      expect(card(name)).toHaveFocus();
+    }
 
     await user.keyboard("{ArrowUp}");
     expect(card(/River Countries/)).toHaveAttribute("aria-checked", "true");
+  });
 
-    await user.keyboard("{ArrowUp}");
-    expect(card(/River Ends/)).toHaveAttribute("aria-checked", "true");
+  it("puts the shape games in an extra difficult section", () => {
+    renderHome();
 
-    await user.keyboard("{ArrowUp}");
-    expect(card(/Rivers on the Map/)).toHaveAttribute("aria-checked", "true");
+    const extra = within(screen.getByRole("group", { name: "Extra difficult" }));
+    expect(extra.getAllByRole("radio").map((radio) => radio.textContent)).toEqual([
+      expect.stringContaining("River Shapes"),
+      expect.stringContaining("Lake Shapes"),
+    ]);
+  });
+
+  it("can select an extra difficult game", async () => {
+    renderHome();
+
+    await userEvent.setup().click(card(/Lake Shapes/));
+
+    expect(card(/Lake Shapes/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "false");
   });
 
   it("ignores other keys", async () => {

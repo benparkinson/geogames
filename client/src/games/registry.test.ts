@@ -4,7 +4,7 @@ import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTION
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS", "LAKES_BY_SHAPE"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE"]);
   });
 
   it("has a unique type per module", () => {
@@ -52,9 +52,13 @@ describe("findGameModule", () => {
 });
 
 describe("MENU_OPTIONS", () => {
-  it("offers every game followed by a mix of them", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_COASTLINE", "COUNTRIES_BY_LAND_BORDERS", "LAKES_BY_SHAPE", "RANDOM"]);
-    expect(MENU_OPTIONS[MENU_OPTIONS.length - 1]).toBe(RANDOM_OPTION);
+  it("offers the standard games, then a mix of every game, then the extra difficult games", () => {
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RANDOM", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE"]);
+    expect(MENU_OPTIONS).toContain(RANDOM_OPTION);
+  });
+
+  it("marks only the shape games on a blank map as extra difficult", () => {
+    expect(MENU_OPTIONS.filter((o) => o.extraDifficult).map((o) => o.type)).toEqual(["RIVERS_BY_SHAPE", "LAKES_BY_SHAPE"]);
   });
 
   it("gives every option a title, description and icon", () => {

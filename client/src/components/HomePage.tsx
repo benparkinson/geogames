@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
+import { Fire } from "react-bootstrap-icons";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
+
+const STANDARD_OPTIONS = MENU_OPTIONS.filter(option => !option.extraDifficult);
+const EXTRA_DIFFICULT_OPTIONS = MENU_OPTIONS.filter(option => option.extraDifficult);
 
 function HomePage(): React.JSX.Element {
     const { createGame, isLoading, error } = useCreateGame();
@@ -41,7 +45,9 @@ function HomePage(): React.JSX.Element {
         cardRefs.current[next]?.focus();
     }
 
-    function renderCard(option: MenuOption, index: number): React.JSX.Element {
+    function renderCard(option: MenuOption): React.JSX.Element {
+        // The position in the full list, which the arrow keys and focus refs use.
+        const index = MENU_OPTIONS.indexOf(option);
         const isSelected = option.type === selected;
         return (
             <div className="col-12 col-sm-4" key={option.type}>
@@ -70,8 +76,20 @@ function HomePage(): React.JSX.Element {
                 <p className="lead text-center mb-4">Quick geography puzzles on a real map.</p>
 
                 <h2 className="h5">Choose a game</h2>
-                <div role="radiogroup" aria-label="Choose a game" className="row g-3 mb-4">
-                    {MENU_OPTIONS.map(renderCard)}
+                {/* One radio group across both sections, so the arrow keys move through every card. */}
+                <div role="radiogroup" aria-label="Choose a game" className="mb-4">
+                    <div className="row g-3">
+                        {STANDARD_OPTIONS.map(renderCard)}
+                    </div>
+                    <div role="group" aria-labelledby="extra-difficult-label" className="mt-4">
+                        <h3 id="extra-difficult-label" className="h6 d-flex align-items-center gap-2 mb-1">
+                            <Fire className="text-danger" aria-hidden="true" /> Extra difficult
+                        </h3>
+                        <p className="small text-muted mb-2">Just a shape on a blank map, with nothing around it.</p>
+                        <div className="row g-3">
+                            {EXTRA_DIFFICULT_OPTIONS.map(renderCard)}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="d-flex align-items-center gap-3 mb-4">
