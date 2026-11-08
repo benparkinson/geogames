@@ -2,6 +2,10 @@ package com.parkinson.benjamin.geogames.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
@@ -37,6 +41,17 @@ class CountryShapeServiceTest {
     assertThat(country.name()).isEqualTo("Switzerland");
     assertThat(country.additionalNames()).isEqualTo(shape.additionalNames());
     assertThat(country.geoData()).isEqualTo(shape.outline());
+  }
+
+  @Test
+  void aDisplayCountryWithoutAliasesHasAnEmptyList() {
+    JsonResourceReader reader = mock(JsonResourceReader.class);
+    CountryShape shape = new CountryShape("Nowhere", null, 0, 0, List.of(), null, null, null, null);
+    when(reader.read(anyString(), eq(CountryShape.class))).thenReturn(shape);
+
+    Country country = new CountryShapeService(reader).loadDisplayCountry("Nowhere");
+
+    assertThat(country.additionalNames()).isEmpty();
   }
 
   @Test
