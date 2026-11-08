@@ -7,4 +7,6 @@ public record GameRound(
     String jsonBlob,
     int totalRoundCount,
     AnswerState answerState,
+    int hintsUsed,
+    int points,
     GameResult gameResult) {}
