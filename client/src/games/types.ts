@@ -26,6 +26,8 @@ export interface GameModule<T> {
   /** The home page card text. */
   description: string;
   Icon: Icon;
+  /** Shown in the home page's "Extra difficult" section, after the other games. */
+  extraDifficult?: boolean;
   Component: ComponentType<GameComponentProps<T>>;
   /** The answers of a round, for the summary page. */
   answerNames: (data: T) => string[];
