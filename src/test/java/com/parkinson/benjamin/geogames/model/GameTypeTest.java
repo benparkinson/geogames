@@ -48,6 +48,13 @@ class GameTypeTest {
   }
 
   @Test
+  void everyTypeAllowsAtLeastOneWrongGuess() {
+    for (GameType type : GameType.values()) {
+      assertThat(type.guessLimit()).isGreaterThanOrEqualTo(1);
+    }
+  }
+
+  @Test
   void namesAreTheStableWireAndDatabaseNames() {
     assertThat(GameType.TRIPOINT.name()).isEqualTo("TRIPOINT");
     assertThat(GameType.RIVERS_BY_SHAPE.name()).isEqualTo("RIVERS_BY_SHAPE");

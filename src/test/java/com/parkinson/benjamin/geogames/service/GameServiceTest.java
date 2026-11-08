@@ -628,6 +628,46 @@ class GameServiceTest {
   }
 
   @Test
+  void outOfGuessesIsStoredScoresNothingAndIsNotCorrect() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+
+    GameRound result = service.submitAnswer(1L, 0, AnswerState.OUT_OF_GUESSES, 1).orElseThrow();
+
+    assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
+    assertThat(result.answerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
+    assertThat(result.points()).isZero();
+    assertThat(result.gameResult().score()).isZero();
+    assertThat(result.gameResult().roundsCorrect()).isZero();
+    assertThat(result.gameResult().perfectRounds()).isZero();
+    assertThat(result.gameResult().gameState()).isEqualTo(GameState.FINISHED);
+  }
+
+  @Test
+  void submittingOutOfGuessesAgainChangesNothing() {
+    GameEntity game = game(round(0, AnswerState.OUT_OF_GUESSES));
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+
+    GameRound again = service.submitAnswer(1L, 0, AnswerState.OUT_OF_GUESSES, 0).orElseThrow();
+
+    assertThat(again.answerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
+    verify(gameRepository, never()).save(any());
+  }
+
+  @Test
+  void correctAfterOutOfGuessesIsRefused() {
+    GameEntity game = game(round(0, AnswerState.OUT_OF_GUESSES));
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+
+    assertThatThrownBy(() -> service.submitAnswer(1L, 0, AnswerState.CORRECT, 0))
+        .isInstanceOf(RoundAlreadyAnsweredException.class)
+        .hasMessageContaining("OUT_OF_GUESSES");
+
+    assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
+    verify(gameRepository, never()).save(any());
+  }
+
+  @Test
   void aGameCannotBeMadeWithoutRounds() {
     assertThatThrownBy(() -> game())
         .isInstanceOf(IllegalArgumentException.class)

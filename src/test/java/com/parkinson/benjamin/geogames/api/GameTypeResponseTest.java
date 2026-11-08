@@ -17,6 +17,7 @@ class GameTypeResponseTest {
       assertThat(response.name()).isEqualTo(type.name());
       assertThat(response.answerCount()).isEqualTo(type.answerCount());
       assertThat(response.hintCount()).isEqualTo(type.hintCount());
+      assertThat(response.guessLimit()).isEqualTo(type.guessLimit());
     }
   }
 
@@ -25,8 +26,9 @@ class GameTypeResponseTest {
     ObjectMapper objectMapper = JsonMapper.builder().build();
 
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.TRIPOINT)))
-        .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3,\"hintCount\":3}");
+        .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3,\"hintCount\":3,\"guessLimit\":5}");
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE)))
-        .isEqualTo("{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":1}");
+        .isEqualTo(
+            "{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":1,\"guessLimit\":5}");
   }
 }

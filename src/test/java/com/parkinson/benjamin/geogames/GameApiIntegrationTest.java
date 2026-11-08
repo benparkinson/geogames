@@ -77,6 +77,7 @@ class GameApiIntegrationTest {
       assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("TRIPOINT");
       assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(3);
       assertThat((int) JsonPath.read(round, "$.gameType.hintCount")).isEqualTo(3);
+      assertThat((int) JsonPath.read(round, "$.gameType.guessLimit")).isEqualTo(5);
       assertThat((int) JsonPath.read(round, "$.totalRoundCount")).isEqualTo(3);
       assertThat((String) JsonPath.read(round, "$.gameResult.gameState")).isEqualTo("CREATED");
 
@@ -115,6 +116,16 @@ class GameApiIntegrationTest {
         .containsExactly(0, 0, 1);
     List<String> states = JsonPath.read(finished, "$.gameResult.roundAnswerStates");
     assertThat(states).containsExactly("CORRECT", "GAVE_UP", "CORRECT");
+  }
+
+  @Test
+  void acceptsOutOfGuesses() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    String result = answer(id, 0, "OUT_OF_GUESSES");
+
+    assertThat((String) JsonPath.read(result, "$.answerState")).isEqualTo("OUT_OF_GUESSES");
+    assertThat((int) JsonPath.read(result, "$.points")).isZero();
   }
 
   @Test
