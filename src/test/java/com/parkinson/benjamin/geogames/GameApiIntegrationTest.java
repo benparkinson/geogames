@@ -53,11 +53,15 @@ class GameApiIntegrationTest {
   }
 
   private String answer(int gameId, int round, String state) throws Exception {
+    return answer(gameId, round, state, 0);
+  }
+
+  private String answer(int gameId, int round, String state, int hintsUsed) throws Exception {
     return mockMvc
         .perform(
             post("/api/games/%d/rounds/%d/answers".formatted(gameId, round))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"answerState\":\"%s\"}".formatted(state)))
+                .content("{\"answerState\":\"%s\",\"hintsUsed\":%d}".formatted(state, hintsUsed)))
         .andExpect(status().isOk())
         .andReturn()
         .getResponse()
@@ -72,6 +76,7 @@ class GameApiIntegrationTest {
       String round = getRound(id, i);
       assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("TRIPOINT");
       assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(3);
+      assertThat((int) JsonPath.read(round, "$.gameType.hintCount")).isEqualTo(3);
       assertThat((int) JsonPath.read(round, "$.totalRoundCount")).isEqualTo(3);
       assertThat((String) JsonPath.read(round, "$.gameResult.gameState")).isEqualTo("CREATED");
 
@@ -91,12 +96,23 @@ class GameApiIntegrationTest {
     String afterFirst = answer(id, 0, "CORRECT");
     assertThat((String) JsonPath.read(afterFirst, "$.gameResult.gameState"))
         .isEqualTo("IN_PROGRESS");
-    assertThat((int) JsonPath.read(afterFirst, "$.gameResult.score")).isEqualTo(1);
+    assertThat((int) JsonPath.read(afterFirst, "$.gameResult.score")).isEqualTo(100);
+    assertThat((int) JsonPath.read(afterFirst, "$.points")).isEqualTo(100);
 
     answer(id, 1, "GAVE_UP");
-    String finished = answer(id, 2, "CORRECT");
+    String finished = answer(id, 2, "CORRECT", 1);
     assertThat((String) JsonPath.read(finished, "$.gameResult.gameState")).isEqualTo("FINISHED");
-    assertThat((int) JsonPath.read(finished, "$.gameResult.score")).isEqualTo(2);
+    // a tripoint round answered with 1 of 3 hints is worth 83
+    assertThat((int) JsonPath.read(finished, "$.hintsUsed")).isEqualTo(1);
+    assertThat((int) JsonPath.read(finished, "$.points")).isEqualTo(83);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.score")).isEqualTo(183);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.maxScore")).isEqualTo(300);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.roundsCorrect")).isEqualTo(2);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.perfectRounds")).isEqualTo(1);
+    assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundPoints"))
+        .containsExactly(100, 0, 83);
+    assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundHintsUsed"))
+        .containsExactly(0, 0, 1);
     List<String> states = JsonPath.read(finished, "$.gameResult.roundAnswerStates");
     assertThat(states).containsExactly("CORRECT", "GAVE_UP", "CORRECT");
   }
@@ -231,6 +247,38 @@ class GameApiIntegrationTest {
         .andExpect(status().isBadRequest());
 
     assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("UNANSWERED");
+  }
+
+  @Test
+  void rejectsMoreHintsThanTheTypeHas() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    mockMvc
+        .perform(
+            post("/api/games/%d/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":9}"))
+        .andExpect(status().isBadRequest());
+
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("UNANSWERED");
+  }
+
+  @Test
+  void anAnswerWithoutHintsUsedCountsAsNoHints() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    String body =
+        mockMvc
+            .perform(
+                post("/api/games/%d/rounds/0/answers".formatted(id))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"answerState\":\"CORRECT\"}"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(100);
   }
 
   @Test

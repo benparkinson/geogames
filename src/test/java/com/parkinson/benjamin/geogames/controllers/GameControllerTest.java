@@ -42,11 +42,18 @@ class GameControllerTest {
         "{\"countries\":[]}",
         3,
         AnswerState.UNANSWERED,
+        0,
+        0,
         new GameResult(
             GameState.CREATED,
             3,
             0,
-            List.of(AnswerState.UNANSWERED, AnswerState.UNANSWERED, AnswerState.UNANSWERED)));
+            List.of(AnswerState.UNANSWERED, AnswerState.UNANSWERED, AnswerState.UNANSWERED),
+            300,
+            0,
+            0,
+            List.of(0, 0, 0),
+            List.of(0, 0, 0)));
   }
 
   // ------------------------------------------------------------ create game
@@ -99,7 +106,15 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameResult.score").value(0))
         .andExpect(jsonPath("$.gameResult.roundsUnanswered").value(3))
         .andExpect(jsonPath("$.gameResult.roundAnswerStates.length()").value(3))
-        .andExpect(jsonPath("$.gameResult.roundAnswerStates[0]").value("UNANSWERED"));
+        .andExpect(jsonPath("$.gameResult.roundAnswerStates[0]").value("UNANSWERED"))
+        .andExpect(jsonPath("$.gameType.hintCount").value(3))
+        .andExpect(jsonPath("$.hintsUsed").value(0))
+        .andExpect(jsonPath("$.points").value(0))
+        .andExpect(jsonPath("$.gameResult.maxScore").value(300))
+        .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
+        .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
+        .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
+        .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3));
   }
 
   @Test
@@ -118,7 +133,7 @@ class GameControllerTest {
 
   @Test
   void submitsAnAnswer() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT)).thenReturn(Optional.of(round()));
+    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 0)).thenReturn(Optional.of(round()));
 
     mockMvc
         .perform(
@@ -128,12 +143,44 @@ class GameControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.gameType.name").value("TRIPOINT"));
 
-    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT);
+    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 0);
+  }
+
+  @Test
+  void anAnswerWithHintsUsedPassesThemOn() throws Exception {
+    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 2)).thenReturn(Optional.of(round()));
+
+    mockMvc
+        .perform(
+            post("/api/games/1/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":2}"))
+        .andExpect(status().isOk());
+
+    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 2);
+  }
+
+  @Test
+  void anAnswerWithTooManyHintsIsABadRequestWithAProblemBody() throws Exception {
+    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 9))
+        .thenThrow(
+            new IllegalArgumentException(
+                "A round of TRIPOINT has 3 hints, so 9 can't have been used"));
+
+    mockMvc
+        .perform(
+            post("/api/games/1/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":9}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.detail")
+                .value("A round of TRIPOINT has 3 hints, so 9 can't have been used"));
   }
 
   @Test
   void answeringAnUnknownRoundIsNotFound() throws Exception {
-    when(gameService.submitAnswer(1L, 9, AnswerState.GAVE_UP)).thenReturn(Optional.empty());
+    when(gameService.submitAnswer(1L, 9, AnswerState.GAVE_UP, 0)).thenReturn(Optional.empty());
 
     mockMvc
         .perform(
@@ -145,7 +192,7 @@ class GameControllerTest {
 
   @Test
   void anAnswerTheServiceRejectsIsABadRequest() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.UNANSWERED))
+    when(gameService.submitAnswer(1L, 0, AnswerState.UNANSWERED, 0))
         .thenThrow(new IllegalArgumentException("A round can't be answered with UNANSWERED"));
 
     mockMvc
@@ -159,8 +206,9 @@ class GameControllerTest {
 
   @Test
   void changingAnAnsweredRoundIsAConflict() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.GAVE_UP))
-        .thenThrow(new RoundAlreadyAnsweredException(0, AnswerState.CORRECT, AnswerState.GAVE_UP));
+    when(gameService.submitAnswer(1L, 0, AnswerState.GAVE_UP, 0))
+        .thenThrow(
+            new RoundAlreadyAnsweredException(0, AnswerState.CORRECT, 0, AnswerState.GAVE_UP, 0));
 
     mockMvc
         .perform(
@@ -170,7 +218,9 @@ class GameControllerTest {
         .andExpect(status().isConflict())
         .andExpect(
             jsonPath("$.detail")
-                .value("Round 0 was already answered CORRECT and can't be changed to GAVE_UP"));
+                .value(
+                    "Round 0 was already answered CORRECT with 0 hints and can't be changed to"
+                        + " GAVE_UP with 0 hints"));
   }
 
   @Test

@@ -16,16 +16,17 @@ class GameTypeResponseTest {
 
       assertThat(response.name()).isEqualTo(type.name());
       assertThat(response.answerCount()).isEqualTo(type.answerCount());
+      assertThat(response.hintCount()).isEqualTo(type.hintCount());
     }
   }
 
   @Test
-  void serialisesToTheNameAndAnswerCountObjectTheFrontendReads() {
+  void serialisesToTheNameAndCountsObjectTheFrontendReads() {
     ObjectMapper objectMapper = JsonMapper.builder().build();
 
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.TRIPOINT)))
-        .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3}");
+        .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3,\"hintCount\":3}");
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE)))
-        .isEqualTo("{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1}");
+        .isEqualTo("{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":1}");
   }
 }

@@ -11,6 +11,7 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.Scoring;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -119,7 +120,8 @@ public class GameService {
   }
 
   @Transactional
-  public Optional<GameRound> submitAnswer(long gameId, int round, AnswerState answerState) {
+  public Optional<GameRound> submitAnswer(
+      long gameId, int round, AnswerState answerState, int hintsUsed) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
@@ -131,28 +133,41 @@ public class GameService {
                 findRound(game, round)
                     .map(
                         r -> {
-                          if (recordAnswer(r, answerState)) {
+                          validateHintsUsed(r, hintsUsed);
+                          if (recordAnswer(r, answerState, hintsUsed)) {
                             gameRepository.save(game);
                           }
                           return toResponse(game, r);
                         }));
   }
 
+  private static void validateHintsUsed(GameRoundEntity round, int hintsUsed) {
+    int hintCount = round.getGameType().hintCount();
+    if (hintsUsed < 0 || hintsUsed > hintCount) {
+      throw new IllegalArgumentException(
+          "A round of %s has %d hints, so %d can't have been used"
+              .formatted(round.getGameType(), hintCount, hintsUsed));
+    }
+  }
+
   /**
-   * A round's answer is final. Sending the same answer again does nothing, so a retried request is
-   * harmless, but changing an answered round is a conflict.
+   * A round's answer is final. Sending the same answer (and hints) again does nothing, so a retried
+   * request is harmless, but changing an answered round is a conflict.
    *
    * @return whether the round changed
    */
-  private static boolean recordAnswer(GameRoundEntity round, AnswerState answerState) {
+  private static boolean recordAnswer(
+      GameRoundEntity round, AnswerState answerState, int hintsUsed) {
     AnswerState current = round.getAnswerState();
-    if (current == answerState) {
-      return false;
-    }
     if (current != AnswerState.UNANSWERED) {
-      throw new RoundAlreadyAnsweredException(round.getRoundNumber(), current, answerState);
+      if (current == answerState && round.getHintsUsed() == hintsUsed) {
+        return false;
+      }
+      throw new RoundAlreadyAnsweredException(
+          round.getRoundNumber(), current, round.getHintsUsed(), answerState, hintsUsed);
     }
     round.setAnswerState(answerState);
+    round.setHintsUsed(hintsUsed);
     return true;
   }
 
@@ -166,13 +181,44 @@ public class GameService {
         round.getJsonBlob(),
         game.getRounds().size(),
         round.getAnswerState(),
+        round.getHintsUsed(),
+        pointsFor(round),
         calculateGameResult(game));
   }
 
+  private static int pointsFor(GameRoundEntity round) {
+    return Scoring.roundPoints(
+        round.getAnswerState(), round.getHintsUsed(), round.getGameType().hintCount());
+  }
+
   static GameResult calculateGameResult(GameEntity game) {
-    List<GameRoundEntity> rounds = game.getRounds();
-    int roundsUnanswered = (int) countInState(rounds, AnswerState.UNANSWERED);
-    int roundsCorrect = (int) countInState(rounds, AnswerState.CORRECT);
+    List<GameRoundEntity> rounds =
+        game.getRounds().stream()
+            .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
+            .toList();
+    List<AnswerState> roundAnswerStates = new ArrayList<>(rounds.size());
+    List<Integer> roundPoints = new ArrayList<>(rounds.size());
+    List<Integer> roundHintsUsed = new ArrayList<>(rounds.size());
+    int roundsUnanswered = 0;
+    int roundsCorrect = 0;
+    int perfectRounds = 0;
+    int score = 0;
+    for (GameRoundEntity round : rounds) {
+      AnswerState state = round.getAnswerState();
+      int points = pointsFor(round);
+      roundAnswerStates.add(state);
+      roundPoints.add(points);
+      roundHintsUsed.add(round.getHintsUsed());
+      score += points;
+      if (state == AnswerState.UNANSWERED) {
+        roundsUnanswered++;
+      } else if (state == AnswerState.CORRECT) {
+        roundsCorrect++;
+        if (round.getHintsUsed() == 0) {
+          perfectRounds++;
+        }
+      }
+    }
     GameState gameState;
     if (roundsUnanswered == 0) {
       gameState = GameState.FINISHED;
@@ -181,15 +227,15 @@ public class GameService {
     } else {
       gameState = GameState.IN_PROGRESS;
     }
-    List<AnswerState> roundAnswerStates =
-        rounds.stream()
-            .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
-            .map(GameRoundEntity::getAnswerState)
-            .toList();
-    return new GameResult(gameState, roundsUnanswered, roundsCorrect, roundAnswerStates);
-  }
-
-  private static long countInState(List<GameRoundEntity> rounds, AnswerState state) {
-    return rounds.stream().filter(r -> r.getAnswerState() == state).count();
+    return new GameResult(
+        gameState,
+        roundsUnanswered,
+        score,
+        roundAnswerStates,
+        Scoring.MAX_ROUND_POINTS * rounds.size(),
+        roundsCorrect,
+        perfectRounds,
+        roundPoints,
+        roundHintsUsed);
   }
 }

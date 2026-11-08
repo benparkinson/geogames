@@ -3,6 +3,8 @@ package com.parkinson.benjamin.geogames.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GameTypeTest {
 
@@ -24,6 +26,25 @@ class GameTypeTest {
     assertThat(GameType.RIVERS_ON_MAP.answerCount()).isEqualTo(1);
     assertThat(GameType.RIVERS_BY_ENDS.answerCount()).isEqualTo(1);
     assertThat(GameType.RIVERS_BY_COUNTRIES.answerCount()).isEqualTo(1);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "TRIPOINT, 3",
+    "RIVERS_BY_SHAPE, 1",
+    "RIVERS_ON_MAP, 2",
+    "RIVERS_BY_ENDS, 2",
+    "RIVERS_BY_COUNTRIES, 2"
+  })
+  void hintCounts(GameType type, int hintCount) {
+    assertThat(type.hintCount()).isEqualTo(hintCount);
+  }
+
+  @Test
+  void everyTypeHasANonNegativeHintCount() {
+    for (GameType type : GameType.values()) {
+      assertThat(type.hintCount()).isGreaterThanOrEqualTo(0);
+    }
   }
 
   @Test

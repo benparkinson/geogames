@@ -28,6 +28,9 @@ public class GameRoundEntity {
 
   private AnswerState answerState;
 
+  /** How many hints the player used before answering. */
+  private int hintsUsed;
+
   public GameRoundEntity() {}
 
   public GameRoundEntity(int roundNumber, GameType gameType, String jsonBlob) {
@@ -35,6 +38,7 @@ public class GameRoundEntity {
     this.gameType = gameType;
     this.jsonBlob = jsonBlob;
     this.answerState = AnswerState.UNANSWERED;
+    this.hintsUsed = 0;
   }
 
   public long getId() {
@@ -75,5 +79,13 @@ public class GameRoundEntity {
 
   public void setAnswerState(AnswerState answerState) {
     this.answerState = answerState;
+  }
+
+  public int getHintsUsed() {
+    return hintsUsed;
+  }
+
+  public void setHintsUsed(int hintsUsed) {
+    this.hintsUsed = hintsUsed;
   }
 }

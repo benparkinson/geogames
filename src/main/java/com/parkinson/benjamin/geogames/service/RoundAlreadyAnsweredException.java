@@ -6,9 +6,13 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 public class RoundAlreadyAnsweredException extends RuntimeException {
 
   public RoundAlreadyAnsweredException(
-      int roundNumber, AnswerState current, AnswerState requested) {
+      int roundNumber,
+      AnswerState current,
+      int currentHintsUsed,
+      AnswerState requested,
+      int requestedHintsUsed) {
     super(
-        "Round %d was already answered %s and can't be changed to %s"
-            .formatted(roundNumber, current, requested));
+        "Round %d was already answered %s with %d hints and can't be changed to %s with %d hints"
+            .formatted(roundNumber, current, currentHintsUsed, requested, requestedHintsUsed));
   }
 }
