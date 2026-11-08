@@ -19,7 +19,8 @@ class GameTypeTest {
             GameType.RIVERS_BY_COUNTRIES,
             GameType.COUNTRIES_BY_NEIGHBOURS,
             GameType.COUNTRIES_BY_COASTLINE,
-            GameType.COUNTRIES_BY_LAND_BORDERS);
+            GameType.COUNTRIES_BY_LAND_BORDERS,
+            GameType.LAKES_BY_SHAPE);
   }
 
   @Test
@@ -32,6 +33,7 @@ class GameTypeTest {
     assertThat(GameType.COUNTRIES_BY_NEIGHBOURS.answerCount()).isEqualTo(1);
     assertThat(GameType.COUNTRIES_BY_COASTLINE.answerCount()).isEqualTo(1);
     assertThat(GameType.COUNTRIES_BY_LAND_BORDERS.answerCount()).isEqualTo(1);
+    assertThat(GameType.LAKES_BY_SHAPE.answerCount()).isEqualTo(1);
   }
 
   @ParameterizedTest
@@ -43,7 +45,8 @@ class GameTypeTest {
     "RIVERS_BY_COUNTRIES, 2",
     "COUNTRIES_BY_NEIGHBOURS, 3",
     "COUNTRIES_BY_COASTLINE, 3",
-    "COUNTRIES_BY_LAND_BORDERS, 3"
+    "COUNTRIES_BY_LAND_BORDERS, 3",
+    "LAKES_BY_SHAPE, 3"
   })
   void hintCounts(GameType type, int hintCount) {
     assertThat(type.hintCount()).isEqualTo(hintCount);
@@ -73,6 +76,7 @@ class GameTypeTest {
     assertThat(GameType.COUNTRIES_BY_NEIGHBOURS.name()).isEqualTo("COUNTRIES_BY_NEIGHBOURS");
     assertThat(GameType.COUNTRIES_BY_COASTLINE.name()).isEqualTo("COUNTRIES_BY_COASTLINE");
     assertThat(GameType.COUNTRIES_BY_LAND_BORDERS.name()).isEqualTo("COUNTRIES_BY_LAND_BORDERS");
+    assertThat(GameType.LAKES_BY_SHAPE.name()).isEqualTo("LAKES_BY_SHAPE");
   }
 
   @Test

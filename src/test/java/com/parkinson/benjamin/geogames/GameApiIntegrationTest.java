@@ -197,6 +197,25 @@ class GameApiIntegrationTest {
   }
 
   @Test
+  void createsALakeShapesGame() throws Exception {
+    int id = createGame("LAKES_BY_SHAPE", 10);
+
+    for (int i = 0; i < 10; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("LAKES_BY_SHAPE");
+      assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
+      assertThat((int) JsonPath.read(round, "$.gameType.hintCount")).isEqualTo(3);
+      assertThat((int) JsonPath.read(round, "$.gameType.guessLimit")).isEqualTo(5);
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      assertThat((String) JsonPath.read(blob, "$.lake.name")).isNotBlank();
+      assertThat((String) JsonPath.read(blob, "$.lake.geoData.geometry.type"))
+          .isIn("Polygon", "MultiPolygon");
+      assertThat((List<?>) JsonPath.read(blob, "$.lake.countries")).isNotEmpty();
+    }
+  }
+
+  @Test
   void createsACountriesByNeighboursGame() throws Exception {
     int id = createGame("COUNTRIES_BY_NEIGHBOURS", 10);
 
@@ -264,6 +283,8 @@ class GameApiIntegrationTest {
         subjects.add("tripoint:" + names.stream().sorted().collect(Collectors.joining("|")));
       } else if (type.startsWith("COUNTRIES_")) {
         subjects.add("country:" + JsonPath.read(blob, "$.country.name"));
+      } else if (type.startsWith("LAKES_")) {
+        subjects.add("lake:" + JsonPath.read(blob, "$.lake.id"));
       } else {
         subjects.add("river:" + JsonPath.read(blob, "$.river.id"));
       }
