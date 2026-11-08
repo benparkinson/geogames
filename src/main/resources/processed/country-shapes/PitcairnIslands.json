@@ -1,0 +1,43 @@
+{
+  "name" : "Pitcairn Islands",
+  "additionalNames" : [ ],
+  "coastKm" : 41.0,
+  "landBorderKm" : 0.0,
+  "neighbours" : [ ],
+  "focus" : {
+    "west" : -128.35024980399987,
+    "south" : -24.41366952899986,
+    "east" : -128.29015051999988,
+    "north" : -24.324314059999935
+  },
+  "outline" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Pitcairn Islands"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ -128.2902, -24.3984 ], [ -128.3001, -24.4137 ], [ -128.3207, -24.4006 ], [ -128.3422, -24.3718 ], [ -128.3502, -24.3412 ], [ -128.3302, -24.3243 ], [ -128.3037, -24.3346 ], [ -128.2908, -24.3657 ], [ -128.2902, -24.3984 ] ] ] ]
+    }
+  },
+  "coast" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Pitcairn Islands"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ -128.2902, -24.3984 ], [ -128.3001, -24.4137 ], [ -128.3207, -24.4006 ], [ -128.3422, -24.3718 ], [ -128.3502, -24.3412 ], [ -128.3302, -24.3243 ], [ -128.3037, -24.3346 ], [ -128.2908, -24.3657 ], [ -128.2902, -24.3984 ] ] ]
+    }
+  },
+  "landBorders" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Pitcairn Islands"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
+    }
+  }
+}

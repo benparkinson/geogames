@@ -51,7 +51,7 @@ public final class RiverGeometry {
     return km;
   }
 
-  static double haversineKm(double[] a, double[] b) {
+  public static double haversineKm(double[] a, double[] b) {
     double lat1 = Math.toRadians(a[1]);
     double lat2 = Math.toRadians(b[1]);
     double dLat = lat2 - lat1;

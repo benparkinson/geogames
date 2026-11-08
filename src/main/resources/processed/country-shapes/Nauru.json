@@ -1,0 +1,43 @@
+{
+  "name" : "Nauru",
+  "additionalNames" : [ ],
+  "coastKm" : 20.0,
+  "landBorderKm" : 0.0,
+  "neighbours" : [ ],
+  "focus" : {
+    "west" : 166.90699303500008,
+    "south" : -0.551853122999901,
+    "east" : 166.9582625660001,
+    "north" : -0.490411065999922
+  },
+  "outline" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Nauru"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ 166.907, -0.5248 ], [ 166.9134, -0.5002 ], [ 166.9388, -0.4904 ], [ 166.9556, -0.498 ], [ 166.9583, -0.5177 ], [ 166.9513, -0.5392 ], [ 166.9388, -0.5519 ], [ 166.9164, -0.5475 ], [ 166.907, -0.5248 ] ] ] ]
+    }
+  },
+  "coast" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Nauru"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 166.907, -0.5248 ], [ 166.9134, -0.5002 ], [ 166.9388, -0.4904 ], [ 166.9556, -0.498 ], [ 166.9583, -0.5177 ], [ 166.9513, -0.5392 ], [ 166.9388, -0.5519 ], [ 166.9164, -0.5475 ], [ 166.907, -0.5248 ] ] ]
+    }
+  },
+  "landBorders" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Nauru"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
+    }
+  }
+}
