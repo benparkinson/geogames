@@ -11,6 +11,7 @@ import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
+import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
@@ -97,6 +98,48 @@ public class ProcessedDataIntegrityTest {
       for (String normalised : mine) {
         assertTrue(seen.add(normalised), "'" + normalised + "' is shared, one is " + river.name());
       }
+    }
+  }
+
+  private List<Lake> loadLakes() {
+    return reader.readAll("classpath*:/processed/lakes/*.json", Lake.class);
+  }
+
+  @Test
+  public void lakesHaveContinentsCountriesAndClosedRings() {
+    List<Lake> lakes = loadLakes();
+
+    assertTrue(lakes.size() >= 20, "only " + lakes.size() + " lakes");
+    assertEquals(lakes.size(), lakes.stream().map(Lake::id).distinct().count());
+    for (Lake lake : lakes) {
+      assertNotNull(lake.continent(), "no continent for " + lake.name());
+      assertFalse(lake.countries().isEmpty(), "no countries for " + lake.name());
+      for (String name : lake.countries()) {
+        assertEquals(name, countryLoaderService.loadCountryByName(name).name());
+      }
+
+      String type = lake.geoData().geometry().type();
+      List<?> coordinates = lake.geoData().geometry().coordinates();
+      List<List<?>> polygons = new java.util.ArrayList<>();
+      if (type.equals("Polygon")) {
+        polygons.add(coordinates);
+      } else {
+        assertEquals("MultiPolygon", type, lake.name());
+        coordinates.forEach(polygon -> polygons.add((List<?>) polygon));
+      }
+      int points = 0;
+      for (List<?> polygon : polygons) {
+        for (Object ring : polygon) {
+          List<?> ringPoints = (List<?>) ring;
+          assertTrue(ringPoints.size() >= 4, "short ring in " + lake.name());
+          assertEquals(
+              ringPoints.get(0),
+              ringPoints.get(ringPoints.size() - 1),
+              "open ring in " + lake.name());
+          points += ringPoints.size();
+        }
+      }
+      assertTrue(points <= 800, lake.name() + " has " + points + " points");
     }
   }
 
