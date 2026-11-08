@@ -226,7 +226,7 @@ jobs:
         working-directory: client
         run: npm ci
 
-      # Fails when the frontend fixtures no longer match the backend shapes in contract/api-shapes.json.
+      # Fails when the frontend fixtures no longer match the backend shapes in client/src/test/api-shapes.json.
       - name: Frontend contract test
         working-directory: client
         run: npx vitest run src/api/contract.test.ts

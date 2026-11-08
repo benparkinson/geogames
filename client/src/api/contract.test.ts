@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import contract from "../../../contract/api-shapes.json";
+import contract from "../test/api-shapes.json";
 import {
   countryNames,
   lakeNames,
@@ -15,7 +15,7 @@ import { shapeOf, type Shape } from "../test/shape";
 import type { GameRoundResponse } from "./types";
 
 /**
- * The frontend's fixtures against the JSON shapes the backend really sends (`contract/api-shapes.json`,
+ * The frontend's fixtures against the JSON shapes the backend really sends (`client/src/test/api-shapes.json`,
  * written by the backend's ApiContractIT). If the backend changes a response, ApiContractIT fails first;
  * regenerating the file then fails this test until the fixtures (and the code that reads them) are updated.
  *
@@ -120,7 +120,7 @@ function unexpectedlyMissing(fixture: Shape, backend: Shape): string[] {
   return missing.filter(path => !(path in IGNORED_BACKEND_FIELDS));
 }
 
-describe("the backend contract (contract/api-shapes.json)", () => {
+describe("the backend contract (client/src/test/api-shapes.json)", () => {
   const fixtures = roundFixtures();
 
   it("has a fixture for every game type the backend has, and no others", () => {

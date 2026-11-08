@@ -27,7 +27,7 @@ import tools.jackson.databind.ObjectMapper;
 
 /**
  * The shape of every JSON response the frontend reads, compared with the committed {@code
- * contract/api-shapes.json}. The frontend's {@code client/src/api/contract.test.ts} checks its
+ * client/src/test/api-shapes.json}. The frontend's {@code client/src/api/contract.test.ts} checks its
  * fixtures against the same file, so a change to a response fails here until the file is
  * regenerated, and then fails there until the frontend is updated.
  *
@@ -38,7 +38,7 @@ import tools.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class ApiContractIT {
 
-  private static final Path CONTRACT = Path.of("contract", "api-shapes.json");
+  private static final Path CONTRACT = Path.of("client", "src", "test", "api-shapes.json");
   private static final int ROUNDS = 10;
 
   /** Games merged per type, so rarely-present fields (such as aliases) show up. */
