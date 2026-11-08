@@ -3,6 +3,7 @@ import { Alert, Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-b
 import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
 import { Fire } from "react-bootstrap-icons";
+import KofiBadge from "./KofiBadge";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 const STANDARD_OPTIONS = MENU_OPTIONS.filter(option => !option.extraDifficult);
@@ -72,6 +73,9 @@ function HomePage(): React.JSX.Element {
     return (
         <div className="min-vh-100 py-4 page-bg">
             <div className="container" style={{ maxWidth: 720 }}>
+                <div className="text-end">
+                    <KofiBadge />
+                </div>
                 <h1 className="text-center mt-3">Geogames</h1>
                 <p className="lead text-center mb-4">Quick geography puzzles on a real map.</p>
 
