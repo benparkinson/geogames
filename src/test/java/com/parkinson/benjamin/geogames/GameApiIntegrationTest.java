@@ -197,6 +197,23 @@ class GameApiIntegrationTest {
   }
 
   @Test
+  void createsACountriesByNeighboursGame() throws Exception {
+    int id = createGame("COUNTRIES_BY_NEIGHBOURS", 10);
+
+    for (int i = 0; i < 10; i++) {
+      String round = getRound(id, i);
+      assertThat((String) JsonPath.read(round, "$.gameType.name"))
+          .isEqualTo("COUNTRIES_BY_NEIGHBOURS");
+      assertThat((int) JsonPath.read(round, "$.gameType.hintCount")).isEqualTo(3);
+
+      String blob = JsonPath.read(round, "$.jsonBlob");
+      assertThat((String) JsonPath.read(blob, "$.country.name")).isNotBlank();
+      assertThat((Object) JsonPath.read(blob, "$.country.outline")).isNotNull();
+      assertThat((List<?>) JsonPath.read(blob, "$.neighbours")).isNotEmpty();
+    }
+  }
+
+  @Test
   void createsACountriesByCoastlineGameWithoutNeighbours() throws Exception {
     int id = createGame("COUNTRIES_BY_COASTLINE", 10);
 
