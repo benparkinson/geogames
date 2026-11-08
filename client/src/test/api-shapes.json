@@ -1,0 +1,692 @@
+{
+  "endpoints" : {
+    "GET /api/countries" : {
+      "array" : {
+        "additionalNames" : {
+          "array" : "string"
+        },
+        "name" : "string"
+      }
+    },
+    "GET /api/lakes" : {
+      "array" : {
+        "additionalNames" : {
+          "array" : "string"
+        },
+        "name" : "string"
+      }
+    },
+    "GET /api/rivers" : {
+      "array" : {
+        "additionalNames" : {
+          "array" : "string"
+        },
+        "name" : "string"
+      }
+    },
+    "POST /api/games" : {
+      "id" : "number"
+    }
+  },
+  "rounds" : {
+    "COUNTRIES_BY_COASTLINE" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "country" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "coast" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "coastKm" : "number",
+          "focus" : {
+            "east" : "number",
+            "north" : "number",
+            "south" : "number",
+            "west" : "number"
+          },
+          "landBorderKm" : "number",
+          "landBorders" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "name" : "string",
+          "neighbours" : {
+            "array" : {
+              "km" : "number",
+              "mainland" : "boolean",
+              "name" : "string"
+            }
+          },
+          "outline" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          }
+        },
+        "gameType" : "string",
+        "neighbours" : {
+          "array" : "empty"
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "COUNTRIES_BY_LAND_BORDERS" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "country" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "coast" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "coastKm" : "number",
+          "focus" : {
+            "east" : "number",
+            "north" : "number",
+            "south" : "number",
+            "west" : "number"
+          },
+          "landBorderKm" : "number",
+          "landBorders" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "name" : "string",
+          "neighbours" : {
+            "array" : {
+              "km" : "number",
+              "mainland" : "boolean",
+              "name" : "string"
+            }
+          },
+          "outline" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          }
+        },
+        "gameType" : "string",
+        "neighbours" : {
+          "array" : {
+            "name" : "string",
+            "outline" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "COUNTRIES_BY_NEIGHBOURS" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "country" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "coast" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "coastKm" : "number",
+          "focus" : {
+            "east" : "number",
+            "north" : "number",
+            "south" : "number",
+            "west" : "number"
+          },
+          "landBorderKm" : "number",
+          "landBorders" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "name" : "string",
+          "neighbours" : {
+            "array" : {
+              "km" : "number",
+              "mainland" : "boolean",
+              "name" : "string"
+            }
+          },
+          "outline" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          }
+        },
+        "gameType" : "string",
+        "neighbours" : {
+          "array" : {
+            "name" : "string",
+            "outline" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "LAKES_BY_SHAPE" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "gameType" : "string",
+        "lake" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "continent" : "string",
+          "countries" : {
+            "array" : "string"
+          },
+          "geoData" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "id" : "string",
+          "name" : "string"
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "RIVERS_BY_COUNTRIES" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "countries" : {
+          "array" : {
+            "additionalNames" : {
+              "array" : "string"
+            },
+            "geoData" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "name" : "string"
+          }
+        },
+        "gameType" : "string",
+        "river" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "continent" : "string",
+          "countries" : {
+            "array" : "string"
+          },
+          "geoData" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "id" : "string",
+          "mouth" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          },
+          "name" : "string",
+          "source" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "RIVERS_BY_ENDS" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "countries" : {
+          "array" : "empty"
+        },
+        "gameType" : "string",
+        "river" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "continent" : "string",
+          "countries" : {
+            "array" : "string"
+          },
+          "geoData" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "id" : "string",
+          "mouth" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          },
+          "name" : "string",
+          "source" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "RIVERS_BY_SHAPE" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "countries" : {
+          "array" : "empty"
+        },
+        "gameType" : "string",
+        "river" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "continent" : "string",
+          "countries" : {
+            "array" : "string"
+          },
+          "geoData" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "id" : "string",
+          "mouth" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          },
+          "name" : "string",
+          "source" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "RIVERS_ON_MAP" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "countries" : {
+          "array" : "empty"
+        },
+        "gameType" : "string",
+        "river" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "continent" : "string",
+          "countries" : {
+            "array" : "string"
+          },
+          "geoData" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "id" : "string",
+          "mouth" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          },
+          "name" : "string",
+          "source" : {
+            "latitude" : "number",
+            "longitude" : "number"
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "TRIPOINT" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "coordinate" : {
+          "latitude" : "number",
+          "longitude" : "number"
+        },
+        "countries" : {
+          "array" : {
+            "additionalNames" : {
+              "array" : "string"
+            },
+            "geoData" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "name" : "string"
+          }
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    }
+  }
+}

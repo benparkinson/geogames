@@ -19,6 +19,7 @@
     "start": "next start",
     "build": "next build",
     "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage"

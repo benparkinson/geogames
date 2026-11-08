@@ -23,7 +23,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-public class ProcessedDataIntegrityTest {
+public class ProcessedDataIT {
 
   // Tripoints with no border junction nearby, removed during the country file migration.
   private static final List<Set<String>> DROPPED =

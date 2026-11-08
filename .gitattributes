@@ -1,0 +1,2 @@
+# The loaders write LF, and scripts/check-processed-data.sh compares byte for byte, so check these out as LF on every OS.
+src/main/resources/processed/**/*.json text eol=lf
