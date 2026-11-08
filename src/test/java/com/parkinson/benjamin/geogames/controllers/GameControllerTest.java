@@ -108,6 +108,7 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameResult.roundAnswerStates.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundAnswerStates[0]").value("UNANSWERED"))
         .andExpect(jsonPath("$.gameType.hintCount").value(3))
+        .andExpect(jsonPath("$.gameType.guessLimit").value(5))
         .andExpect(jsonPath("$.hintsUsed").value(0))
         .andExpect(jsonPath("$.points").value(0))
         .andExpect(jsonPath("$.gameResult.maxScore").value(300))

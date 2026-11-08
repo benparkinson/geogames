@@ -28,6 +28,11 @@ class ScoringTest {
   }
 
   @Test
+  void outOfGuessesScoresNothing() {
+    assertThat(Scoring.roundPoints(AnswerState.OUT_OF_GUESSES, 1, 2)).isZero();
+  }
+
+  @Test
   void negativeHintsUsedIsRejected() {
     assertThatThrownBy(() -> Scoring.roundPoints(AnswerState.CORRECT, -1, 2))
         .isInstanceOf(IllegalArgumentException.class);
