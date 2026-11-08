@@ -5,7 +5,7 @@ function MenuPage(): React.JSX.Element {
   return (
     <>
       <Head>
-        <title>Geogames</title>
+        <title>GeoGauntlet</title>
       </Head>
       <div id="root">
         <HomePage />
