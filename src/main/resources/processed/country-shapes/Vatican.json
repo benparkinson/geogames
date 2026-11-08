@@ -1,0 +1,47 @@
+{
+  "name" : "Vatican",
+  "additionalNames" : [ ],
+  "coastKm" : 0.0,
+  "landBorderKm" : 0.0,
+  "neighbours" : [ {
+    "name" : "Italy",
+    "km" : 0.0,
+    "mainland" : true
+  } ],
+  "focus" : {
+    "west" : 12.452714082000085,
+    "south" : 41.902751941000105,
+    "east" : 12.454035442000077,
+    "north" : 41.90391473800014
+  },
+  "outline" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Vatican"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ 12.4527, 41.903 ], [ 12.4528, 41.9034 ], [ 12.453, 41.9039 ], [ 12.454, 41.9039 ], [ 12.454, 41.9028 ], [ 12.4531, 41.9028 ], [ 12.4527, 41.903 ] ] ] ]
+    }
+  },
+  "coast" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Vatican"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
+    }
+  },
+  "landBorders" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Vatican"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 12.4527, 41.903 ], [ 12.4528, 41.9034 ], [ 12.453, 41.9039 ], [ 12.454, 41.9039 ], [ 12.454, 41.9028 ], [ 12.4531, 41.9028 ], [ 12.4527, 41.903 ] ] ]
+    }
+  }
+}

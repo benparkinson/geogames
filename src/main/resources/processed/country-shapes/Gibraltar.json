@@ -1,0 +1,47 @@
+{
+  "name" : "Gibraltar",
+  "additionalNames" : [ ],
+  "coastKm" : 7.0,
+  "landBorderKm" : 2.0,
+  "neighbours" : [ {
+    "name" : "Spain",
+    "km" : 2.0,
+    "mainland" : true
+  } ],
+  "focus" : {
+    "west" : -5.358386758763487,
+    "south" : 36.11050039300005,
+    "east" : -5.338773483119979,
+    "north" : 36.14111967201225
+  },
+  "outline" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Gibraltar"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ -5.3584, 36.1411 ], [ -5.3388, 36.1411 ], [ -5.342, 36.1105 ], [ -5.3502, 36.1193 ], [ -5.3584, 36.1411 ] ] ] ]
+    }
+  },
+  "coast" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Gibraltar"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ -5.3388, 36.1411 ], [ -5.342, 36.1105 ], [ -5.3502, 36.1193 ], [ -5.3584, 36.1411 ] ] ]
+    }
+  },
+  "landBorders" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Gibraltar"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ -5.3584, 36.1411 ], [ -5.3388, 36.1411 ] ] ]
+    }
+  }
+}

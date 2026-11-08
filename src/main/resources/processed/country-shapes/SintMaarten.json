@@ -1,0 +1,47 @@
+{
+  "name" : "Sint Maarten",
+  "additionalNames" : [ ],
+  "coastKm" : 14.0,
+  "landBorderKm" : 10.0,
+  "neighbours" : [ {
+    "name" : "Saint Martin",
+    "km" : 10.0,
+    "mainland" : true
+  } ],
+  "focus" : {
+    "west" : -63.11888587099989,
+    "south" : 18.019110419000043,
+    "east" : -63.0175685850526,
+    "north" : 18.0621092720001
+  },
+  "outline" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Sint Maarten"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ [ [ [ -63.0176, 18.0334 ], [ -63.0306, 18.0191 ], [ -63.0976, 18.036 ], [ -63.1122, 18.043 ], [ -63.1189, 18.0515 ], [ -63.107, 18.0621 ], [ -63.0859, 18.0585 ], [ -63.0176, 18.0334 ] ] ] ]
+    }
+  },
+  "coast" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Sint Maarten"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ -63.0176, 18.0334 ], [ -63.0306, 18.0191 ], [ -63.0976, 18.036 ], [ -63.1122, 18.043 ], [ -63.1189, 18.0515 ], [ -63.107, 18.0621 ] ] ]
+    }
+  },
+  "landBorders" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Sint Maarten"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ -63.107, 18.0621 ], [ -63.0859, 18.0585 ], [ -63.0176, 18.0334 ] ] ]
+    }
+  }
+}
