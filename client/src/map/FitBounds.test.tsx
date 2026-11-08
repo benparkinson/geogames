@@ -48,3 +48,19 @@ describe("FitBounds", () => {
     expect(fakeMap.fitBounds).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("FitBounds with bounds", () => {
+  it("uses the bounds rather than the data when both are given", () => {
+    render(<FitBounds data={line(10)} bounds={[[1, 2], [3, 4]]} id="france" />);
+
+    const [bounds, options] = fakeMap.fitBounds.mock.calls[0];
+    expect(bounds).toEqual([[1, 2], [3, 4]]);
+    expect(options).toEqual({ padding: [24, 24], maxZoom: 7 });
+  });
+
+  it("does nothing without bounds or data", () => {
+    render(<FitBounds id="nothing" />);
+
+    expect(fakeMap.fitBounds).not.toHaveBeenCalled();
+  });
+});
