@@ -40,7 +40,7 @@ describe("LakeGame", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(screen.getByText("Lies in: Russia")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(screen.getByText("Starts with “L”")).toBeInTheDocument();
+    expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
