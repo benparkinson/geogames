@@ -1,8 +1,9 @@
 import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
+import { RevealTiles } from "../../map/RevealTiles";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { RevealTiles, RiverLine } from "./RiverLayers";
+import { RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 function RiverShapesMap({ data: { river }, gaveUp, gameOver }: MapProps<RiverRound>): React.JSX.Element {

@@ -1,8 +1,9 @@
 import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
+import { RevealTiles } from "../../map/RevealTiles";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { CountryOutlines, EndFlags, RevealTiles, RiverLine } from "./RiverLayers";
+import { CountryOutlines, EndFlags, RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 /** The outlines of the river's countries on a blank map. The satellite map and the river come at the end. */

@@ -1,4 +1,4 @@
-import type { BBox, GeoJsonObject, GeoJsonProperties, MultiPolygon, Polygon } from "geojson";
+import type { BBox, GeoJsonObject, GeoJsonProperties, MultiLineString, MultiPolygon, Polygon } from "geojson";
 
 /** A country as the server sends it: its names and outline. */
 export interface Country {
@@ -17,4 +17,12 @@ export interface CountryGeoData extends GeoJsonObject {
 export interface Coordinate {
   latitude: number;
   longitude: number;
+}
+
+/** Lines on a map (a river, a coastline, a border): a MultiLineString feature. */
+export interface LineGeoData extends GeoJsonObject {
+  type: "MultiLineString";
+  bbox?: BBox;
+  properties: GeoJsonProperties;
+  geometry: MultiLineString;
 }

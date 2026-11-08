@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { makeRiverRoundData, makeTripointData } from "../test/fixtures";
+import { makeCountryShapeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS"]);
   });
 
   it("has a unique type per module", () => {
@@ -25,6 +25,10 @@ describe("GAME_MODULES", () => {
     expect(findGameModule("TRIPOINT")?.answerNames(makeTripointData())).toEqual(["Belgium", "Netherlands", "Germany"]);
   });
 
+  it("lists the name of a country", () => {
+    expect(findGameModule("COUNTRIES_BY_NEIGHBOURS")?.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+  });
+
   it("lists the name of a river", () => {
     expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
   });
@@ -43,7 +47,7 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers every game followed by a mix of them", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "RANDOM"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "RIVERS_BY_SHAPE", "RIVERS_ON_MAP", "RIVERS_BY_ENDS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_NEIGHBOURS", "RANDOM"]);
     expect(MENU_OPTIONS[MENU_OPTIONS.length - 1]).toBe(RANDOM_OPTION);
   });
 

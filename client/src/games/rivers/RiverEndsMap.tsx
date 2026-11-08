@@ -1,9 +1,10 @@
 import L from "leaflet";
 import { MapContainer } from "react-leaflet";
 import { LockedView } from "../../map/LockedView";
+import { RevealTiles } from "../../map/RevealTiles";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { EndFlags, RevealTiles, RiverLine } from "./RiverLayers";
+import { EndFlags, RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 /** Satellite imagery with a flag at each end of the river and no line until the round ends. */
