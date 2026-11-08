@@ -27,6 +27,6 @@ class GameTypeResponseTest {
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.TRIPOINT)))
         .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3,\"hintCount\":3}");
     assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE)))
-        .isEqualTo("{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":1}");
+        .isEqualTo("{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":3}");
   }
 }
