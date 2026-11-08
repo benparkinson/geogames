@@ -2,7 +2,7 @@ package com.parkinson.benjamin.geogames.helper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.JsonResourceReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ class CountryHelperTest {
     CountryLoaderService service =
         new CountryLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
 
-    for (CountryName country : service.loadCountryNames()) {
+    for (PlaceName country : service.loadCountryNames()) {
       String path =
           "processed/countries/" + CountryHelper.convertCountryNameToFileName(country.name());
       assertThat(new ClassPathResource(path).exists()).as(path).isTrue();

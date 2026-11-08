@@ -233,6 +233,26 @@ class GameApiIntegrationTest {
     assertThat(names).hasSize(TestFixtures.EXPECTED_COUNTRY_COUNT).isSorted();
   }
 
+  @Test
+  void listsEveryRiverAndCoversTheRiversInAGame() throws Exception {
+    String body =
+        mockMvc
+            .perform(get("/api/rivers"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    List<String> names = JsonPath.read(body, "$[*].name");
+    assertThat(names).hasSize(50).isSorted();
+
+    int id = createGame("RIVERS_BY_SHAPE", 5);
+    for (int i = 0; i < 5; i++) {
+      String blob = JsonPath.read(getRound(id, i), "$.jsonBlob");
+      String riverName = JsonPath.read(blob, "$.river.name");
+      assertThat(names).contains(riverName);
+    }
+  }
+
   private void postGame(String body, int expectedStatus) throws Exception {
     mockMvc
         .perform(post("/api/games").contentType(MediaType.APPLICATION_JSON).content(body))

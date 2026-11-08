@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.parkinson.benjamin.geogames.loaders.rivers.AliasBuilder;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
@@ -79,5 +80,18 @@ public class ProcessedDataIntegrityTest {
             .loadRivers().stream().filter(river -> river.countries().size() >= 3).count();
 
     assertTrue(eligible >= 10, "only " + eligible + " rivers cross three or more countries");
+  }
+
+  @Test
+  public void noTwoRiversShareANormalisedNameOrAlias() {
+    Set<String> seen = new HashSet<>();
+    for (River river : new RiverLoaderService(reader).loadRivers()) {
+      Set<String> mine = new HashSet<>();
+      mine.add(AliasBuilder.normalise(river.name()));
+      river.additionalNames().forEach(alias -> mine.add(AliasBuilder.normalise(alias)));
+      for (String normalised : mine) {
+        assertTrue(seen.add(normalised), "'" + normalised + "' is shared, one is " + river.name());
+      }
+    }
   }
 }
