@@ -59,6 +59,15 @@ describe("GameSummary", () => {
     expect(rows[2]).toHaveTextContent("1 hint");
   });
 
+  it("counts a round that ran out of guesses as revealed and says so", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "OUT_OF_GUESSES" }]))]);
+    renderSummary(vi.fn(), 2);
+
+    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+    expect(screen.getByText("1 perfect · 1 revealed")).toBeInTheDocument();
+    expect(screen.getByText("Out of guesses")).toBeInTheDocument();
+  });
+
   it("celebrates a perfect game", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "CORRECT" }]))]);
     renderSummary(vi.fn(), 2);

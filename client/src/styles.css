@@ -124,6 +124,7 @@ code {
 
 .page-bg { background: var(--gg-bg); }
 .wrong-guesses-label { font-size: 0.7rem; }
+.guesses-left-dots { display: inline-flex; gap: 0.25rem; font-size: 0.7rem; }
 
 /* Flag markers drawn with an inline SVG (see map/flagIcons.ts). */
 .map-flag {

@@ -10,6 +10,8 @@ function renderInput(overrides: Partial<React.ComponentProps<typeof MapGameInput
   const props: React.ComponentProps<typeof MapGameInput> = {
     gameOver: false,
     gaveUp: false,
+    outOfGuesses: false,
+    guessesLeft: 5,
     round: makeRoundProps(),
     wrongGuesses: [],
     submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "over" })),
@@ -60,9 +62,28 @@ describe("MapGameInput feedback", () => {
   });
 
   it("says when a guess is wrong and clears the text", async () => {
-    await submitting({ kind: "wrong", guess: "Spain" });
+    await submitting({ kind: "wrong", guess: "Spain", guessesLeft: 2 });
+
+    expect(screen.getByText('"Spain" isn\'t right. 2 guesses left.')).toBeInTheDocument();
+    expect(input()).toHaveValue("");
+  });
+
+  it("says when it was the next to last guess", async () => {
+    await submitting({ kind: "wrong", guess: "Spain", guessesLeft: 1 });
+
+    expect(screen.getByText('"Spain" isn\'t right. Last guess!')).toBeInTheDocument();
+  });
+
+  it("leaves out the count when there is no limit", async () => {
+    await submitting({ kind: "wrong", guess: "Spain", guessesLeft: Infinity });
 
     expect(screen.getByText('"Spain" isn\'t right. Try again.')).toBeInTheDocument();
+  });
+
+  it("says when the guesses have run out and clears the text", async () => {
+    await submitting({ kind: "outOfGuesses", guess: "Spain" });
+
+    expect(screen.getByText('"Spain" isn\'t right. You\'re out of guesses.')).toBeInTheDocument();
     expect(input()).toHaveValue("");
   });
 
@@ -218,6 +239,26 @@ describe("MapGameInput states", () => {
     renderInput({ gameOver: true, gaveUp: true });
 
     expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
+  });
+
+  it("shows out of guesses instead of the form", () => {
+    renderInput({ gameOver: true, gaveUp: true, outOfGuesses: true });
+
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(screen.queryByText("Answer revealed · 0 pts")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("shows the guesses left before any guess", () => {
+    renderInput({ guessesLeft: 5 });
+
+    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+  });
+
+  it("shows nothing about guesses when there is no limit", () => {
+    renderInput({ guessesLeft: Infinity, round: makeRoundProps({ guessLimit: Infinity }) });
+
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
   it("lists each wrong guess", () => {

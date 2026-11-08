@@ -36,6 +36,13 @@ describe("RoundResult", () => {
     expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
   });
 
+  it("says the guesses ran out, for no points", () => {
+    render(<RoundResult gaveUp outOfGuesses round={makeRoundProps()} hintsUsed={2} hintCount={3} />);
+
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(screen.queryByText(/Answer revealed/)).not.toBeInTheDocument();
+  });
+
   it("offers the next round when there is one", async () => {
     const round = makeRoundProps({ hasNextRound: true });
     render(<RoundResult gaveUp={false} round={round} hintsUsed={0} hintCount={3} />);

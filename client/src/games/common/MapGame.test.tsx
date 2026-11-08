@@ -81,7 +81,7 @@ describe("MapGame guessing", () => {
 
     await guess(userEvent.setup(), "Italy");
 
-    expect(screen.getByText('"Italy" isn\'t right. Try again.')).toBeInTheDocument();
+    expect(screen.getByText('"Italy" isn\'t right. 4 guesses left.')).toBeInTheDocument();
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -341,5 +341,48 @@ describe("MapGame hints", () => {
     renderGame({ hints: undefined, round: makeRoundProps({ hintCount: 2 }) });
 
     expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
+  });
+});
+
+describe("MapGame guess limit", () => {
+  const limited = () => renderGame({ round: makeRoundProps({ guessLimit: 2 }) });
+
+  it("ends the round on the last wrong guess and reveals what wasn't found", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = limited();
+
+    await guess(user, "Spain");
+    await guess(user, "Italy");
+    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(submitAnswer).not.toHaveBeenCalled();
+    await guess(user, "Peru");
+
+    expect(submitAnswer).toHaveBeenCalledTimes(1);
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0 });
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(map()).toHaveAttribute("data-game-over", "true");
+    expect(map()).toHaveAttribute("data-gave-up", "true");
+    expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
+    expect(screen.getAllByText("(revealed)")).toHaveLength(1);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("doesn't count a correct guess between wrong ones", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = limited();
+
+    await guess(user, "Italy");
+    await guess(user, "Spain");
+
+    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(submitAnswer).not.toHaveBeenCalled();
+  });
+
+  it("starts a reopened OUT_OF_GUESSES round as revealed", () => {
+    const { submitAnswer } = renderGame({ round: makeRoundProps({ answerState: "OUT_OF_GUESSES" }) });
+
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(map()).toHaveAttribute("data-gave-up", "true");
+    expect(submitAnswer).not.toHaveBeenCalled();
   });
 });

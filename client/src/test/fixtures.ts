@@ -15,6 +15,7 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     totalRoundCount: 3,
     answerState: "UNANSWERED",
     hintCount: 3,
+    guessLimit: 5,
     hintsUsed: 0,
     points: 0,
     score: 0,
@@ -76,7 +77,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
   return {
     jsonBlob: JSON.stringify(makeTripointData()),
     totalRoundCount: 3,
-    gameType: { name: "TRIPOINT", answerCount: 3, hintCount: 3 },
+    gameType: { name: "TRIPOINT", answerCount: 3, hintCount: 3, guessLimit: 5 },
     answerState: "UNANSWERED",
     hintsUsed: 0,
     points: 0,
@@ -98,7 +99,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeRiverRoundData()),
-    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1 },
+    gameType: { name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 1, guessLimit: 5 },
     ...overrides,
   });
 }

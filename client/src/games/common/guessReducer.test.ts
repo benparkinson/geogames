@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GuessConfig, GuessState, guessReducer, initialGuessState } from "./guessReducer";
+import { GuessConfig, GuessState, guessesLeft, guessReducer, initialGuessState, wrongGuessCount } from "./guessReducer";
 
 const answers = [
   { name: "Belgium", additionalNames: [] },
@@ -7,7 +7,7 @@ const answers = [
   { name: "Netherlands", additionalNames: ["Holland"] },
 ];
 
-const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2 };
+const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2, guessLimit: Infinity };
 const fresh = () => initialGuessState("UNANSWERED", answers, 0);
 
 /** Applies guesses in order and returns the last outcome. */
@@ -43,7 +43,7 @@ describe("initialGuessState hints", () => {
 
 describe("initialGuessState", () => {
   it("starts empty for an unanswered round", () => {
-    expect(fresh()).toEqual({ guesses: [], gaveUp: false, over: false, hintsUsed: 0 });
+    expect(fresh()).toEqual({ guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0 });
   });
 
   it("starts solved, with every answer found, for a correct round", () => {
@@ -79,7 +79,7 @@ describe("guessReducer guesses", () => {
   it("records a wrong guess without an answer", () => {
     const { state, result } = guessAll(["Peru"]);
 
-    expect(result).toEqual({ kind: "wrong", guess: "Peru" });
+    expect(result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: Infinity });
     expect(state.guesses).toEqual([{ text: "Peru", answer: null }]);
   });
 
@@ -121,7 +121,7 @@ describe("guessReducer guesses", () => {
 
     expect(guessAll(["Atlantis"], cfg).result).toEqual({ kind: "unknown", guess: "Atlantis" });
     expect(guessAll(["Atlantis"], cfg).state.guesses).toEqual([]);
-    expect(guessAll(["Peru"], cfg).result).toEqual({ kind: "wrong", guess: "Peru" });
+    expect(guessAll(["Peru"], cfg).result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: Infinity });
   });
 
   it("checks duplicates before unknown", () => {
@@ -174,5 +174,68 @@ describe("guessReducer hints", () => {
     const over = initialGuessState("GAVE_UP", answers, 0);
 
     expect(guessReducer(over, { type: "hint" }, config).state.hintsUsed).toBe(0);
+  });
+});
+
+describe("guessReducer guess limit", () => {
+  const limited: GuessConfig = { ...config, guessLimit: 3 };
+
+  it("counts down the wrong guesses and carries on", () => {
+    const first = guessAll(["Peru"], limited);
+    expect(first.result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: 2 });
+    expect(first.finished).toBeUndefined();
+
+    const second = guessAll(["Peru", "Chile"], limited);
+    expect(second.result).toEqual({ kind: "wrong", guess: "Chile", guessesLeft: 1 });
+    expect(second.state.over).toBe(false);
+    expect(guessesLeft(second.state, 3)).toBe(1);
+    expect(wrongGuessCount(second.state)).toBe(2);
+  });
+
+  it("ends the round on the last wrong guess and keeps the correct guesses", () => {
+    const { state, result, finished } = guessAll(["Belgium", "Peru", "Chile", "Cuba"], limited);
+
+    expect(result).toEqual({ kind: "outOfGuesses", guess: "Cuba" });
+    expect(finished).toBe("OUT_OF_GUESSES");
+    expect(state).toMatchObject({ over: true, gaveUp: true, outOfGuesses: true });
+    expect(state.guesses.filter(g => g.answer !== null)).toEqual([{ text: "Belgium", answer: "Belgium" }]);
+    expect(guessesLeft(state, 3)).toBe(0);
+  });
+
+  it("doesn't count correct, duplicate, unknown or empty guesses", () => {
+    const cfg: GuessConfig = { ...limited, guessLimit: 2, isKnownGuess: g => g !== "Atlantis" };
+    const { state, result } = guessAll(["Belgium", "Belgium", "Atlantis", "  ", "Peru"], cfg);
+
+    expect(result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: 1 });
+    expect(wrongGuessCount(state)).toBe(1);
+    expect(state.over).toBe(false);
+  });
+
+  it("never ends the round when there is no limit", () => {
+    const texts = Array.from({ length: 50 }, (_, i) => "Nowhere" + i);
+    const { state, finished } = guessAll(texts);
+
+    expect(state.over).toBe(false);
+    expect(finished).toBeUndefined();
+    expect(guessesLeft(state, Infinity)).toBe(Infinity);
+  });
+
+  it("ignores guesses after the round ran out", () => {
+    const over = guessAll(["Peru", "Chile", "Cuba"], limited).state;
+
+    expect(guessReducer(over, { type: "guess", text: "Belgium" }, limited).result).toEqual({ kind: "over" });
+  });
+
+  it("restores an OUT_OF_GUESSES round as revealed", () => {
+    const state = initialGuessState("OUT_OF_GUESSES", answers, 1);
+
+    expect(state).toEqual({ guesses: [], gaveUp: true, outOfGuesses: true, over: true, hintsUsed: 1 });
+  });
+
+  it("giving up is not running out of guesses", () => {
+    const { state, finished } = guessReducer(fresh(), { type: "giveUp" }, limited);
+
+    expect(finished).toBe("GAVE_UP");
+    expect(state.outOfGuesses).toBe(false);
   });
 });

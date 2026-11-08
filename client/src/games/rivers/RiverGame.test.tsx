@@ -53,7 +53,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Rhine{Enter}");
 
-    expect(screen.getByText('"Rhine" isn\'t right. Try again.')).toBeInTheDocument();
+    expect(screen.getByText('"Rhine" isn\'t right. 4 guesses left.')).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 

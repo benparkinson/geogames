@@ -92,6 +92,14 @@ describe("RoundProgress", () => {
     expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
   });
 
+  it("treats a round that ran out of guesses as revealed", () => {
+    render(<RoundProgress states={["OUT_OF_GUESSES", "UNANSWERED"]} points={[0, 0]} currentRound={1} goToRound={vi.fn()} />);
+
+    const dot = screen.getByRole("button", { name: "Round 1: out of guesses" });
+    expect(dot).toHaveClass("round-dot--revealed");
+    expect(dot.querySelector("svg")).not.toBeNull();
+  });
+
   it("styles correct and revealed rounds", () => {
     renderProgress(vi.fn(), 3);
 

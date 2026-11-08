@@ -1,6 +1,6 @@
 import { normaliseString } from "../../helper/stringHelper";
 import { AnswerCandidate, matchAnswer } from "./answers";
-import { AnswerState, CORRECT_ANSWER, GAVE_UP, UNANSWERED } from "./Model";
+import { AnswerState, CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 
 /** One thing the player typed. `answer` is the canonical answer it matched, or null if it was wrong. */
 export interface Guess {
@@ -10,7 +10,10 @@ export interface Guess {
 
 export interface GuessState {
   guesses: Guess[];
+  /** The answers are shown as revealed: true when the player gave up and when they ran out of guesses. */
   gaveUp: boolean;
+  /** The round ended because the wrong guesses ran out (`gaveUp` is true too). */
+  outOfGuesses: boolean;
   over: boolean;
   hintsUsed: number;
 }
@@ -24,7 +27,8 @@ export type GuessResult =
   | { kind: "empty" }
   | { kind: "duplicate"; guess: string }
   | { kind: "unknown"; guess: string }
-  | { kind: "wrong"; guess: string }
+  | { kind: "wrong"; guess: string; guessesLeft: number }
+  | { kind: "outOfGuesses"; guess: string }
   | { kind: "correct"; remaining: number }
   | { kind: "over" };
 
@@ -34,6 +38,8 @@ export interface GuessConfig {
   /** When set, a guess it rejects is reported as "unknown" instead of wrong. */
   isKnownGuess?: (guess: string) => boolean;
   hintsTotal: number;
+  /** How many wrong guesses the round allows. Infinity means no limit. */
+  guessLimit: number;
 }
 
 export interface GuessOutcome {
@@ -41,23 +47,32 @@ export interface GuessOutcome {
   /** The feedback for a "guess" action. */
   result?: GuessResult;
   /** Set when this action ended the round, so the caller can report it to the server. */
-  finished?: typeof CORRECT_ANSWER | typeof GAVE_UP;
+  finished?: typeof CORRECT_ANSWER | typeof GAVE_UP | typeof OUT_OF_GUESSES;
 }
 
 function allFound(answers: AnswerCandidate[]): Guess[] {
   return answers.map(a => ({ text: a.name, answer: a.name }));
 }
 
+/** How many wrong guesses have been used. Duplicates, unknown and empty guesses aren't recorded, so they don't count. */
+export function wrongGuessCount(state: GuessState): number {
+  return state.guesses.filter(g => g.answer === null).length;
+}
+
+export function guessesLeft(state: GuessState, guessLimit: number): number {
+  return Math.max(0, guessLimit - wrongGuessCount(state));
+}
+
 /** `hintsUsed` is what the server recorded for the round, which only matters once it is answered. */
 export function initialGuessState(answerState: AnswerState, answers: AnswerCandidate[], hintsUsed: number): GuessState {
   if (answerState === UNANSWERED) {
-    return { guesses: [], gaveUp: false, over: false, hintsUsed: 0 };
+    return { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0 };
   }
-  if (answerState === GAVE_UP) {
+  if (answerState === GAVE_UP || answerState === OUT_OF_GUESSES) {
     // The server doesn't keep the guesses, so every answer shows as revealed rather than found.
-    return { guesses: [], gaveUp: true, over: true, hintsUsed };
+    return { guesses: [], gaveUp: true, outOfGuesses: answerState === OUT_OF_GUESSES, over: true, hintsUsed };
   }
-  return { guesses: allFound(answers), gaveUp: false, over: true, hintsUsed };
+  return { guesses: allFound(answers), gaveUp: false, outOfGuesses: false, over: true, hintsUsed };
 }
 
 export function guessReducer(state: GuessState, action: GuessAction, config: GuessConfig): GuessOutcome {
@@ -70,7 +85,7 @@ export function guessReducer(state: GuessState, action: GuessAction, config: Gue
       }
       // Keep the guesses as they are: the answers not found yet are shown as revealed, not found.
       return {
-        state: { ...state, gaveUp: true, over: true },
+        state: { ...state, gaveUp: true, outOfGuesses: false, over: true },
         finished: GAVE_UP,
       };
     case "hint":
@@ -108,7 +123,16 @@ function applyGuess(state: GuessState, text: string, config: GuessConfig): Guess
 
   const guesses = [...state.guesses, { text: trimmed, answer: matched }];
   if (matched === null) {
-    return { state: { ...state, guesses }, result: { kind: "wrong", guess: trimmed } };
+    const left = config.guessLimit - wrongGuessCount({ ...state, guesses });
+    if (left <= 0) {
+      // Keep the correct guesses found so far: the other answers are shown as revealed.
+      return {
+        state: { ...state, guesses, gaveUp: true, outOfGuesses: true, over: true },
+        result: { kind: "outOfGuesses", guess: trimmed },
+        finished: OUT_OF_GUESSES,
+      };
+    }
+    return { state: { ...state, guesses }, result: { kind: "wrong", guess: trimmed, guessesLeft: left } };
   }
 
   const remaining = config.answerCount - guesses.filter(g => g.answer !== null).length;
