@@ -154,6 +154,30 @@ describe("GameRoundPage playing", () => {
     expect(screen.getByRole("button", { name: "Round 2: current" })).toBeInTheDocument();
   });
 
+  it("prefetches the next round after the answer, so Next round needs no further fetch", async () => {
+    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"]);
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+    expect(roundGets(fetchMock, 1)).toHaveLength(0);
+
+    await solveTripoint(user);
+    const next = await screen.findByRole("button", { name: /Next round/ });
+    await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
+    await user.click(next);
+
+    expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
+    expect(roundGets(fetchMock, 1)).toHaveLength(1);
+  });
+
+  it("prefetches the next round of a round that was already answered", async () => {
+    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "UNANSWERED"]);
+    renderPage();
+    await screen.findByText(/Next round/);
+
+    await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
+  });
+
   it("jumps to a round with the progress dots", async () => {
     const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "UNANSWERED", "UNANSWERED"]);
     renderPage();

@@ -183,7 +183,7 @@ describe("HomePage starting a game", () => {
   it("disables the button and says it is starting while waiting", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn((url: string) => (url === HEALTH ? Promise.resolve({}) : new Promise(() => {}))),
+      vi.fn((url: string) => (url === HEALTH ? Promise.resolve({}) : new Promise(() => { }))),
     );
     renderHome();
 
@@ -194,7 +194,7 @@ describe("HomePage starting a game", () => {
 
   it("explains a slow server after three seconds, and stops once the request ends", async () => {
     vi.useFakeTimers();
-    let finish: (value: unknown) => void = () => {};
+    let finish: (value: unknown) => void = () => { };
     vi.stubGlobal(
       "fetch",
       vi.fn((url: string) =>
