@@ -1,7 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { makeRiverRoundData, makeRoundProps } from "../../test/fixtures";
+import { mockFetch } from "../../test/fetchMock";
+import { makeRiverRoundData, makeRoundProps, riverNames } from "../../test/fixtures";
+import { renderWithClient } from "../../test/render";
 import countries from "./countries";
 
 vi.mock("./RiverCountriesMapWrapper", () => ({
@@ -13,11 +15,12 @@ vi.mock("./RiverCountriesMapWrapper", () => ({
 function renderGame() {
   const submitAnswer = vi.fn();
   const Component = countries.Component;
-  render(<Component data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 2 })} answerCount={1} submitAnswer={submitAnswer} />);
+  mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
+  renderWithClient(<Component data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 2 })} answerCount={1} submitAnswer={submitAnswer} />);
   return { submitAnswer };
 }
 
-const input = () => screen.getByRole("textbox", { name: "River name…" });
+const input = () => screen.getByLabelText("River name…");
 
 describe("River Countries", () => {
   it("is the RIVERS_BY_COUNTRIES game", () => {

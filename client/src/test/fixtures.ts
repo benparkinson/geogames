@@ -147,3 +147,9 @@ export const countryNames = [
   { name: "Germany", additionalNames: ["Deutschland"] },
   { name: "Netherlands", additionalNames: ["Holland"] },
 ];
+
+/** What GET /api/rivers returns; matches makeRiverData() plus one other river. */
+export const riverNames = [
+  { name: "Danube", additionalNames: ["Donau"] },
+  { name: "Thames", additionalNames: [] as string[] },
+];

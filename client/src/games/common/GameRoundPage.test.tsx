@@ -3,7 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../../test/fetchMock";
-import { countryNames, makeGameRounds, makeRound } from "../../test/fixtures";
+import { countryNames, riverNames, makeGameRounds, makeRound } from "../../test/fixtures";
 import { AnswerState } from "./Model";
 import GameRoundPage from "./GameRoundPage";
 
@@ -49,6 +49,7 @@ function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): 
       },
     },
     { url: /\/api\/countries$/, body: countryNames },
+    { url: /\/api\/rivers$/, body: riverNames },
   ]);
 }
 

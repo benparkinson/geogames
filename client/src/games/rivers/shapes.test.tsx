@@ -1,7 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { makeRiverRoundData, makeRoundProps } from "../../test/fixtures";
+import { mockFetch } from "../../test/fetchMock";
+import { makeRiverRoundData, makeRoundProps, riverNames } from "../../test/fixtures";
+import { renderWithClient } from "../../test/render";
 import shapes from "./shapes";
 
 vi.mock("./RiverShapesMapWrapper", () => ({
@@ -17,7 +19,8 @@ describe("River Shapes", () => {
   it("offers three hints, weakest first: continent, countries, then the first letter", async () => {
     const user = userEvent.setup();
     const Component = shapes.Component;
-    render(
+    mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
+    renderWithClient(
       <Component
         data={makeRiverRoundData()}
         round={makeRoundProps({ hintCount: 3 })}
