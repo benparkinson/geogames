@@ -7,7 +7,7 @@ import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
-import { CORRECT_ANSWER, GAVE_UP } from "./Model";
+import { CORRECT_ANSWER, isRevealed, OUT_OF_GUESSES } from "./Model";
 import { isPerfect } from "./scoring";
 
 function roundLabel(round: GameRoundView): string {
@@ -43,7 +43,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   // Every round carries the whole game's result.
   const { score, maxScore, perfectRounds, roundsCorrect, roundAnswerStates } = all[0].gameResult;
   const withHints = roundsCorrect - perfectRounds;
-  const revealed = roundAnswerStates.filter(s => s === GAVE_UP).length;
+  const revealed = roundAnswerStates.filter(isRevealed).length;
   const perfectGame = perfectRounds === totalRoundCount;
   const breakdown = [
     perfectRounds > 0 && `${perfectRounds} perfect`,
@@ -80,6 +80,12 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
                   <span className="text-muted">{i + 1}. {roundLabel(r)}</span>
                   <br />
                   {roundAnswers(r).join(", ")}
+                  {r.answerState === OUT_OF_GUESSES && (
+                    <>
+                      <br />
+                      <span className="small text-muted">Out of guesses</span>
+                    </>
+                  )}
                   {r.hintsUsed > 0 && (
                     <>
                       <br />

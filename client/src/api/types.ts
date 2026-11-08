@@ -33,6 +33,8 @@ export interface GameTypeModel {
   answerCount: number;
   /** Missing when talking to an older backend. */
   hintCount?: number;
+  /** Wrong guesses allowed per round. Missing when talking to an older backend. */
+  guessLimit?: number;
 }
 
 /** A round as the rest of the app uses it: the blob is parsed and the result is complete. */

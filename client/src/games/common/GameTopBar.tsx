@@ -1,13 +1,15 @@
 import { Button } from "react-bootstrap";
 import HomeLink from "../../components/HomeLink";
-import { CORRECT_ANSWER, GAVE_UP, Round, UNANSWERED } from "./Model";
+import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round, UNANSWERED } from "./Model";
 import RoundProgress from "./RoundProgress";
 import { roundPoints } from "./scoring";
 
-export default function GameTopBar({ round, gameOver, gaveUp, hintsUsed }: {
+export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = false, hintsUsed }: {
   round: Round;
   gameOver: boolean;
   gaveUp: boolean;
+  /** The round ended because the guesses ran out (`gaveUp` is true too). */
+  outOfGuesses?: boolean;
   hintsUsed: number;
 }): React.JSX.Element {
   // Reflect the local state of the current round straight away, without waiting for the refetch.
@@ -15,7 +17,7 @@ export default function GameTopBar({ round, gameOver, gaveUp, hintsUsed }: {
   const points = round.roundPoints.slice();
   let score = round.score;
   if (gameOver) {
-    const answerState = gaveUp ? GAVE_UP : CORRECT_ANSWER;
+    const answerState = outOfGuesses ? OUT_OF_GUESSES : gaveUp ? GAVE_UP : CORRECT_ANSWER;
     const localPoints = roundPoints(answerState, hintsUsed, round.hintCount);
     states[round.currentRound] = answerState;
     points[round.currentRound] = localPoints;

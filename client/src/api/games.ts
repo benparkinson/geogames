@@ -18,7 +18,12 @@ export function toRoundView(response: GameRoundResponse, round: number): GameRou
   const points = Array.isArray(serverPoints) ? serverPoints : states.map(state => roundPoints(state, 0, 0));
   const hintsUsed = Array.isArray(result.roundHintsUsed) ? result.roundHintsUsed : states.map(() => 0);
   return {
-    gameType: { ...response.gameType, hintCount: response.gameType.hintCount ?? 0 },
+    gameType: {
+      ...response.gameType,
+      hintCount: response.gameType.hintCount ?? 0,
+      // An older backend has no limit.
+      guessLimit: response.gameType.guessLimit ?? Infinity,
+    },
     data: JSON.parse(response.jsonBlob),
     totalRoundCount: response.totalRoundCount,
     answerState: response.answerState,

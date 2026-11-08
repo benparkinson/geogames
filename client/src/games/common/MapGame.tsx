@@ -7,7 +7,7 @@ import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import { GuessAction, guessReducer, GuessState, initialGuessState } from "./guessReducer";
+import { GuessAction, guessesLeft, guessReducer, GuessState, initialGuessState } from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -27,7 +27,7 @@ function MapGame<Type>({
 }: MapGameProps<Type>): React.JSX.Element {
   const [guessState, setGuessState] = useState<GuessState>(() =>
     initialGuessState(round.answerState, answers, round.hintsUsed));
-  const { guesses, gaveUp, over: gameOver, hintsUsed } = guessState;
+  const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
   // The backend decides how many hints there are; the game only supplies what they say.
   const hintCount = round.hintCount;
   const hintConfig = hintCount > 0 ? hints : undefined;
@@ -48,6 +48,7 @@ function MapGame<Type>({
       answerCount,
       isKnownGuess,
       hintsTotal: hintConfig ? hintCount : 0,
+      guessLimit: round.guessLimit,
     });
     setGuessState(outcome.state);
     if (outcome.finished) {
@@ -99,6 +100,8 @@ function MapGame<Type>({
       <MapGameInput
         gameOver={gameOver}
         gaveUp={gaveUp}
+        outOfGuesses={outOfGuesses}
+        guessesLeft={guessesLeft(guessState, round.guessLimit)}
         round={round}
         wrongGuesses={guesses.filter(g => g.answer === null)}
         submitGuess={submitGuess}
@@ -116,7 +119,7 @@ function MapGame<Type>({
 
   return (
     <GameLayout
-      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} />}
+      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} outOfGuesses={outOfGuesses} hintsUsed={hintsUsed} />}
       map={map}
       panel={panel}
       mapClassName={showBlankMap ? "game-map--blank" : undefined}

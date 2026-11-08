@@ -2,6 +2,7 @@ import { GuessBox } from "../../components/GuessBox";
 import { CORRECT_ANSWER, Round } from "./Model";
 import { roundPoints } from "./scoring";
 import RoundResult from "./RoundResult";
+import GuessesLeft from "./GuessesLeft";
 import { HintConfig } from "./MapGame";
 import { Guess, GuessResult } from "./guessReducer";
 import { Button } from "react-bootstrap";
@@ -15,6 +16,8 @@ function prefersPreciseInput(): boolean {
 function MapGameInput({
   gameOver,
   gaveUp,
+  outOfGuesses,
+  guessesLeft,
   round,
   wrongGuesses,
   submitGuess,
@@ -57,7 +60,18 @@ function MapGameInput({
         setShakeCount(shakeCount + 1);
         break;
       case "wrong":
-        setFeedback(`"${result.guess}" isn't right. Try again.`);
+        setFeedback(
+          result.guessesLeft === 1
+            ? `"${result.guess}" isn't right. Last guess!`
+            : Number.isFinite(result.guessesLeft)
+              ? `"${result.guess}" isn't right. ${result.guessesLeft} guesses left.`
+              : `"${result.guess}" isn't right. Try again.`,
+        );
+        setGuess("");
+        setShakeCount(shakeCount + 1);
+        break;
+      case "outOfGuesses":
+        setFeedback(`"${result.guess}" isn't right. You're out of guesses.`);
         setGuess("");
         setShakeCount(shakeCount + 1);
         break;
@@ -92,7 +106,7 @@ function MapGameInput({
   return (
     <div>
       {gameOver ? (
-        <RoundResult gaveUp={gaveUp} round={round} hintsUsed={hintsUsed} hintCount={hintCount} />
+        <RoundResult gaveUp={gaveUp} outOfGuesses={outOfGuesses} round={round} hintsUsed={hintsUsed} hintCount={hintCount} />
       ) : (
         <>
         <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
@@ -131,6 +145,8 @@ function MapGameInput({
 
       <div className="guess-feedback small" aria-live="polite">{feedback}</div>
 
+      {!gameOver && <GuessesLeft left={guessesLeft} limit={round.guessLimit} />}
+
       {wrongGuesses.length > 0 && (
         <div>
           <div className="text-muted wrong-guesses-label">Wrong guesses</div>
@@ -150,6 +166,10 @@ function MapGameInput({
 interface MapGameInputProps {
   gameOver: boolean;
   gaveUp: boolean;
+  /** The round ended because the guesses ran out (`gaveUp` is true too). */
+  outOfGuesses: boolean;
+  /** Wrong guesses left; Infinity when the round has no limit. */
+  guessesLeft: number;
   round: Round;
   wrongGuesses: Guess[];
   submitGuess: (guess: string) => GuessResult;

@@ -39,6 +39,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             totalRoundCount: data.totalRoundCount,
             answerState: data.answerState,
             hintCount: data.gameType.hintCount,
+            guessLimit: data.gameType.guessLimit,
             hintsUsed: data.hintsUsed,
             points: data.points,
             score: data.gameResult.score,

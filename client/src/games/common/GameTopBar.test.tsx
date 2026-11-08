@@ -40,6 +40,13 @@ describe("GameTopBar", () => {
     expect(screen.getByText("Score 100")).toBeInTheDocument();
   });
 
+  it("marks a round that ran out of guesses here, for no points", () => {
+    render(<GameTopBar round={makeRoundProps({ score: 100 })} gameOver={true} gaveUp={true} outOfGuesses={true} hintsUsed={1} />);
+
+    expect(screen.getByText("Score 100")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
+  });
+
   it("does not count an already answered round twice", () => {
     const round = makeRoundProps({ score: 183, answerState: "CORRECT", hintsUsed: 1, points: 83 });
     render(<GameTopBar round={round} gameOver={true} gaveUp={false} hintsUsed={1} />);

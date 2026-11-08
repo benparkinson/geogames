@@ -78,7 +78,7 @@ describe("Tripoint guessing", () => {
 
     await guess(userEvent.setup(), "France");
 
-    expect(screen.getByText('"France" isn\'t right. Try again.')).toBeInTheDocument();
+    expect(screen.getByText('"France" isn\'t right. 4 guesses left.')).toBeInTheDocument();
   });
 
   it("does not check names against the country list until it has loaded", async () => {
@@ -87,7 +87,7 @@ describe("Tripoint guessing", () => {
 
     await guess(userEvent.setup(), "Atlantis");
 
-    expect(screen.getByText('"Atlantis" isn\'t right. Try again.')).toBeInTheDocument();
+    expect(screen.getByText('"Atlantis" isn\'t right. 4 guesses left.')).toBeInTheDocument();
   });
 
   it("rejects a name that is not a country once the list has loaded, and accepts aliases", async () => {
