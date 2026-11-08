@@ -18,7 +18,7 @@ const GAME_TITLES = [
 test("the home page offers every game and the round counts", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Geogames" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "GeoGauntlet" })).toBeVisible();
   const games = page.getByRole("radiogroup", { name: "Choose a game" }).getByRole("radio");
   await expect(games).toHaveCount(GAME_TITLES.length);
   for (const title of GAME_TITLES) {

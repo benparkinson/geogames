@@ -38,7 +38,7 @@ describe("HomePage on load", () => {
     mockFetch([{ url: HEALTH, networkError: true }]);
     renderHome();
 
-    expect(screen.getByRole("heading", { name: "Geogames", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "GeoGauntlet", level: 1 })).toBeInTheDocument();
   });
 });
 
