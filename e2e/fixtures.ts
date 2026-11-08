@@ -83,7 +83,9 @@ export const test = base.extend<{ api: Api; guard: void }>({
 
       await use();
 
-      const production = blockedHosts.filter(host => host.endsWith("onrender.com"));
+      const production = blockedHosts.filter(
+        host => host === "onrender.com" || host.endsWith(".onrender.com"),
+      );
       expect(
         production,
         "The page called onrender.com. The bundled site must be built with NEXT_PUBLIC_API_URL=http://localhost:8080 " +
