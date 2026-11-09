@@ -102,7 +102,54 @@ code {
 
 .game-card { transition: box-shadow 0.15s; }
 .game-card:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.15); }
-@media (min-width: 576px) { .w-sm-auto { width: auto !important; } }
+
+/* Home page: the cards column, and the start panel (bottom bar when narrow, right gutter when wide). */
+.home-header, .home-layout { max-width: 720px; margin: 0 auto; padding: 0 0.75rem; }
+
+.home-start {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1030;
+  background: var(--gg-panel-bg);
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0 -2px 12px rgb(0 0 0 / 0.15);
+}
+/* Room under the footer so the bar never covers the last card, Ko-fi or the credits,
+   and keyboard focus scrolling stops above the bar. */
+.home--selected { padding-bottom: 10rem !important; scroll-padding-bottom: 10rem; }
+
+@media (min-width: 1200px) {
+  .home-layout {
+    max-width: none;
+    display: grid;
+    /* The cards stay centred in the middle column; the start panel uses the right gutter. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+  .home-main  { grid-column: 2; grid-row: 1; }
+  .home-after { grid-column: 2; grid-row: 2; }
+  .home-start {
+    grid-column: 3; grid-row: 1 / span 2;   /* spans both rows so sticky lasts the whole page */
+    position: sticky; top: 1.5rem;
+    left: auto; right: auto; bottom: auto;
+    width: 100%; max-width: 260px;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  }
+  .home-start-button { width: 100%; flex-basis: 100%; }
+  .home--selected { padding-bottom: 1.5rem !important; scroll-padding-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes home-start-up   { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes home-start-side { from { transform: translateX(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .home-start { animation: home-start-up 200ms ease-out; }
+  @media (min-width: 1200px) { .home-start { animation-name: home-start-side; } }
+}
 @media (prefers-reduced-motion: reduce) { .game-card { transition: none; } }
 
 [data-bs-theme="dark"] {

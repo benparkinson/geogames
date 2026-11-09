@@ -11,7 +11,8 @@ const EXTRA_DIFFICULT_OPTIONS = MENU_OPTIONS.filter(option => option.extraDiffic
 
 function HomePage(): React.JSX.Element {
     const { createGame, isLoading, error } = useCreateGame();
-    const [selected, setSelected] = useState<string>(MENU_OPTIONS[0].type);
+    const [selected, setSelected] = useState<string | null>(null);
+    const selectedOption = MENU_OPTIONS.find(o => o.type === selected);
     const [rounds, setRounds] = useState(5);
     const [slow, setSlow] = useState(false);
     const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -56,7 +57,7 @@ function HomePage(): React.JSX.Element {
                     type="button"
                     role="radio"
                     aria-checked={isSelected}
-                    tabIndex={isSelected ? 0 : -1}
+                    tabIndex={(selected === null ? index === 0 : isSelected) ? 0 : -1}
                     ref={el => { cardRefs.current[index] = el; }}
                     className={"game-card w-100 h-100 text-start rounded-3 p-3 " + (isSelected ? "border border-2 border-primary bg-primary-subtle" : "border bg-body")}
                     onClick={() => setSelected(option.type)}
@@ -71,11 +72,13 @@ function HomePage(): React.JSX.Element {
     }
 
     return (
-        <div className="min-vh-100 py-4 page-bg">
-            <div className="container" style={{ maxWidth: 720 }}>
+        <div className={"min-vh-100 py-4 page-bg" + (selectedOption ? " home--selected" : "")}>
+            <header className="home-header">
                 <h1 className="text-center mt-3">GeoGauntlet</h1>
                 <p className="lead text-center mb-4">Quick but challenging geography puzzles.</p>
-
+            </header>
+            <div className="home-layout">
+                <section className="home-main">
                 <h2 className="h5">Choose a game</h2>
                 {/* One radio group across both sections, so the arrow keys move through every card. */}
                 <div role="radiogroup" aria-label="Choose a game" className="mb-4">
@@ -92,37 +95,45 @@ function HomePage(): React.JSX.Element {
                         </div>
                     </div>
                 </div>
+                </section>
 
-                <div className="d-flex align-items-center gap-3 mb-4">
-                    <span id="rounds-label" className="h5 mb-0">Rounds</span>
-                    <ToggleButtonGroup type="radio" name="rounds" value={rounds} onChange={(v: number) => setRounds(v)} aria-labelledby="rounds-label">
-                        {ROUND_OPTIONS.map(n => (
-                            <ToggleButton key={n} id={"rounds-" + n} value={n} variant="outline-primary">{n}</ToggleButton>
-                        ))}
-                    </ToggleButtonGroup>
-                </div>
+                {selectedOption && (
+                    <aside className="home-start" aria-label="Start a game">
+                        <div className="d-flex flex-wrap align-items-center gap-2">
+                            <div className="d-flex align-items-center gap-2 w-100">
+                                <selectedOption.Icon size={20} aria-hidden="true" />
+                                <span className="fw-bold">{selectedOption.title}</span>
+                            </div>
+                            <div className="d-flex align-items-center gap-2">
+                                <span id="rounds-label" className="fw-semibold">Rounds</span>
+                                <ToggleButtonGroup size="sm" type="radio" name="rounds" value={rounds} onChange={(v: number) => setRounds(v)} aria-labelledby="rounds-label">
+                                    {ROUND_OPTIONS.map(n => (
+                                        <ToggleButton key={n} id={"rounds-" + n} value={n} variant="outline-primary">{n}</ToggleButton>
+                                    ))}
+                                </ToggleButtonGroup>
+                            </div>
+                            <Button
+                                variant="primary"
+                                className="home-start-button flex-grow-1"
+                                onClick={() => createGame(selectedOption.type, rounds)}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? <><Spinner animation="border" size="sm" /> Starting…</> : "Start game"}
+                            </Button>
+                        </div>
+                        <div aria-live="polite" className="mt-2">
+                            {isLoading && slow && (
+                                <p className="text-muted mb-0">Waking up the server. The first game can take up to a minute.</p>
+                            )}
+                            {!!error && !isLoading && (
+                                <Alert variant="danger" className="mb-0">Couldn&apos;t start a game. The server may be down. Try again.</Alert>
+                            )}
+                        </div>
+                    </aside>
+                )}
 
-                <div className="text-center">
-                    <Button
-                        variant="primary"
-                        size="lg"
-                        className="w-100 w-sm-auto px-sm-5"
-                        onClick={() => createGame(selected, rounds)}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? <><Spinner animation="border" size="sm" /> Starting…</> : "Start game"}
-                    </Button>
-                    <div aria-live="polite" className="mt-3">
-                        {isLoading && slow && (
-                            <p className="text-muted">Waking up the server. The first game can take up to a minute.</p>
-                        )}
-                        {!!error && !isLoading && (
-                            <Alert variant="danger">Couldn&apos;t start a game. The server may be down. Try again.</Alert>
-                        )}
-                    </div>
-                </div>
-
-                <div className="text-center mt-5">
+                <div className="home-after">
+                <div className="text-center mt-4">
                     <KofiBadge />
                 </div>
 
@@ -136,6 +147,7 @@ function HomePage(): React.JSX.Element {
                     <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
                     <a href="/third-party-licenses.txt">Software licences</a>
                 </footer>
+                </div>
             </div>
         </div>
     );
