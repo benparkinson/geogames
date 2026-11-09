@@ -338,7 +338,8 @@ jobs:
 
           game=$(curl -sf -X POST -H 'Content-Type: application/json' \
             -d '{"gameType":"RANDOM","numberOfRounds":1}' http://localhost:8080/api/games)
-          id=$(echo "${game}" | jq -e '.id')
+          # -r prints the UUID without its JSON quotes.
+          id=$(echo "${game}" | jq -er '.id')
           echo "game: ${id}"
 
           curl -sf "http://localhost:8080/api/games/${id}/rounds/0" \
