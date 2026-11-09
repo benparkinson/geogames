@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, buttonClass, Spinner } from "../../ui";
 import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -112,9 +112,9 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
         {!!createError && <div className="text-danger small mb-2" role="alert">Couldn&apos;t start a new game. Try again.</div>}
         <div className="d-flex gap-2">
           <Button variant="primary" onClick={() => createGame(gameType, totalRoundCount)} disabled={creating}>
-            {creating ? <Spinner animation="border" size="sm" /> : "Play again"}
+            {creating ? <Spinner size="sm" /> : "Play again"}
           </Button>
-          <Link href="/" className="btn btn-outline-secondary">Home</Link>
+          <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
         </div>
       </div>
     </div>

@@ -122,7 +122,7 @@ describe("HomePage choosing a game", () => {
     renderHome();
 
     const kofi = screen.getByRole("link", { name: /Buy me a coffee/ });
-    expect(kofi).toHaveClass("btn-outline-secondary");
+    expect(kofi).toHaveClass("gg-btn--quiet");
     expect(kofi).not.toHaveClass("text-white");
     expect(kofi).toHaveAttribute("href", "https://ko-fi.com/O3J02ABGOW");
     expect(kofi).toHaveAttribute("target", "_blank");

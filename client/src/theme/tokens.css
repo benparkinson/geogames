@@ -54,11 +54,15 @@
   --gg-color-on-correct: var(--gg-white);
   --gg-color-perfect: var(--gg-yellow-500);
   --gg-color-on-perfect: var(--gg-brown-900);
-  --gg-color-revealed: var(--gg-gray-600);
+  --gg-color-neutral: var(--gg-gray-600);
+  --gg-color-on-neutral: var(--gg-white);
+  --gg-color-revealed: var(--gg-color-neutral);
   --gg-color-on-revealed: var(--gg-white);
   --gg-color-hint: var(--gg-yellow-500);
+  --gg-color-on-hint: var(--gg-black);
   --gg-color-warning-text: var(--gg-yellow-900);
   --gg-color-danger: var(--gg-red-600);
+  --gg-color-on-danger: var(--gg-white);
   --gg-color-danger-text: var(--gg-red-900);
   --gg-color-danger-subtle: var(--gg-red-100);
   --gg-color-danger-border: var(--gg-red-300);

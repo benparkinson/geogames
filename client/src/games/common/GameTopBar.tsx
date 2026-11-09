@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button } from "../../ui";
 import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round, UNANSWERED } from "./Model";
@@ -45,7 +45,7 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
       <div className="d-flex align-items-center gap-2 small text-muted text-nowrap">
         {scoreText}
         {round.gameCompleted && (
-          <Button size="sm" variant="outline-primary" onClick={round.showSummary}>Results</Button>
+          <Button size="sm" variant="secondary" onClick={round.showSummary}>Results</Button>
         )}
       </div>
     </div>

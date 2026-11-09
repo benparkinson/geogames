@@ -5,7 +5,7 @@ import RoundResult from "./RoundResult";
 import GuessesLeft from "./GuessesLeft";
 import { HintConfig } from "./MapGame";
 import { Guess, GuessResult } from "./guessReducer";
-import { Button } from "react-bootstrap";
+import { Button } from "../../ui";
 import { useEffect, useRef, useState } from "react";
 import { EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
 
@@ -128,12 +128,12 @@ function MapGameInput({
         <div className="d-flex flex-wrap gap-2 mb-2">
           {hints && (
             <span title={hintTitle}>
-              <Button variant="outline-warning" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
+              <Button variant="hint" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
                 <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
               </Button>
             </span>
           )}
-          <Button variant="outline-danger" onClick={handleRevealClick} disabled={gameOver}>
+          <Button variant="danger" onClick={handleRevealClick} disabled={gameOver}>
             <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
           </Button>
           <span className="small text-muted align-self-center">

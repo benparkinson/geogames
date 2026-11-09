@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { Button, Notice, Spinner, ToggleGroup } from "../ui";
 import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
 import { Fire } from "react-bootstrap-icons";
@@ -108,11 +108,14 @@ function HomePage(): React.JSX.Element {
                             </div>
                             <div className="d-flex align-items-center gap-2">
                                 <span id="rounds-label" className="fw-semibold">Rounds</span>
-                                <ToggleButtonGroup size="sm" type="radio" name="rounds" value={rounds} onChange={(v: number) => setRounds(v)} aria-labelledby="rounds-label">
-                                    {ROUND_OPTIONS.map(n => (
-                                        <ToggleButton key={n} id={"rounds-" + n} value={n} variant="outline-primary">{n}</ToggleButton>
-                                    ))}
-                                </ToggleButtonGroup>
+                                <ToggleGroup
+                                    size="sm"
+                                    name="rounds"
+                                    value={rounds}
+                                    onChange={setRounds}
+                                    aria-labelledby="rounds-label"
+                                    options={ROUND_OPTIONS.map(n => ({ value: n, label: n }))}
+                                />
                             </div>
                             <Button
                                 variant="primary"
@@ -120,7 +123,7 @@ function HomePage(): React.JSX.Element {
                                 onClick={() => createGame(selectedOption.type, rounds)}
                                 disabled={isLoading}
                             >
-                                {isLoading ? <><Spinner animation="border" size="sm" /> Starting…</> : "Start game"}
+                                {isLoading ? <><Spinner size="sm" decorative /> Starting…</> : "Start game"}
                             </Button>
                         </div>
                         <div aria-live="polite" className="mt-2">
@@ -128,7 +131,7 @@ function HomePage(): React.JSX.Element {
                                 <p className="text-muted mb-0">Waking up the server. The first game can take up to a minute.</p>
                             )}
                             {!!error && !isLoading && (
-                                <Alert variant="danger" className="mb-0">Couldn&apos;t start a game. The server may be down. Try again.</Alert>
+                                <Notice className="mb-0">Couldn&apos;t start a game. The server may be down. Try again.</Notice>
                             )}
                         </div>
                     </aside>
