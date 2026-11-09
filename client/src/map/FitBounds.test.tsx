@@ -26,13 +26,13 @@ describe("FitBounds", () => {
     expect(bounds.getNorth()).toBe(10);
     expect(bounds.getEast()).toBe(10);
     expect(bounds.getSouth()).toBe(0);
-    expect(options).toEqual({ padding: [24, 24], maxZoom: 7 });
+    expect(options).toEqual({ padding: [24, 24], maxZoom: 7, animate: false });
   });
 
   it("allows a higher maximum zoom when asked", () => {
     render(<FitBounds data={line(10)} id="baikal" maxZoom={11} />);
 
-    expect(fakeMap.fitBounds.mock.calls[0][1]).toEqual({ padding: [24, 24], maxZoom: 11 });
+    expect(fakeMap.fitBounds.mock.calls[0][1]).toEqual({ padding: [24, 24], maxZoom: 11, animate: false });
   });
 
   it("fits again when the id changes", () => {
@@ -61,7 +61,7 @@ describe("FitBounds with bounds", () => {
 
     const [bounds, options] = fakeMap.fitBounds.mock.calls[0];
     expect(bounds).toEqual([[1, 2], [3, 4]]);
-    expect(options).toEqual({ padding: [24, 24], maxZoom: 7 });
+    expect(options).toEqual({ padding: [24, 24], maxZoom: 7, animate: false });
   });
 
   it("does nothing without bounds or data", () => {
