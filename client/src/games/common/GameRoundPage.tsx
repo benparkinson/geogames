@@ -71,13 +71,13 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
 
     function renderTitle() {
         if (!data) {
-            return <title>Loading... | Geogames</title>
+            return <title>Loading... | GeoGauntlet</title>
         }
         const gameModule = findGameModule(data.gameType.name);
         if (!gameModule) {
-            return <title>Unknown game! | Geogames</title>
+            return <title>Unknown game! | GeoGauntlet</title>
         }
-        return <title>{`${gameModule.title} | Geogames`}</title>
+        return <title>{`${gameModule.title} | GeoGauntlet`}</title>
     }
 
     return (
@@ -87,8 +87,8 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             </Head>
             {error ? <div className="p-4 text-danger" role="alert">Couldn&apos;t load this round. Please refresh.</div>
                 : isLoading || !data ? <LoadingSpinner fullPage variant="success" />
-                : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} />
-                : renderGame(data)}
+                    : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} />
+                        : renderGame(data)}
         </>
     );
 }
