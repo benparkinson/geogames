@@ -27,7 +27,9 @@ class ProdProfileTest {
         .containsEntry("spring.datasource.url", "${DATABASE_URL}")
         .containsEntry("spring.datasource.username", "${DATABASE_USERNAME}")
         .containsEntry("spring.datasource.password", "${DATABASE_PASSWORD}")
-        .containsEntry("spring.datasource.driver-class-name", "org.postgresql.Driver");
+        .containsEntry("spring.datasource.driver-class-name", "org.postgresql.Driver")
+        // Logbook logs each client's address, so it must stay quiet in production.
+        .containsEntry("logging.level.org.zalando.logbook", "INFO");
   }
 
   @Test
