@@ -46,8 +46,8 @@ export function MapContainer({ children }: Children) {
   return <div data-testid="MapContainer">{children}</div>;
 }
 
-export function TileLayer({ url }: { url: string }) {
-  return <div data-testid="TileLayer" data-url={url} />;
+export function TileLayer({ url, attribution }: { url: string; attribution?: string }) {
+  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} />;
 }
 
 export function GeoJSON({
@@ -112,6 +112,11 @@ export function drawnLayers(): DrawnLayer[] {
 /** The `url` of each tile layer currently rendered. */
 export function drawnTileUrls(): string[] {
   return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map((el) => el.dataset.url ?? "");
+}
+
+/** The `attribution` of each tile layer currently rendered ("" when it has none). */
+export function drawnTileAttributions(): string[] {
+  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map((el) => el.dataset.attribution ?? "");
 }
 
 /** The position of each marker currently rendered, as [lat, lng]. */

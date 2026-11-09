@@ -35,7 +35,7 @@ class FeatureSelectorTest {
       Map<String, NaturalEarthFeature> groups,
       Map<String, WikidataEntry> wikidata,
       Map<String, RiverOverride> overrides) {
-    return new RiverAssembler(file -> LONG_LINES).assemble(groups, wikidata, overrides);
+    return new RiverAssembler().assemble(groups, wikidata, overrides);
   }
 
   @Test
@@ -112,7 +112,7 @@ class FeatureSelectorTest {
   }
 
   @Test
-  void anOverrideWithOnlyAnOsmFileNeedsNothingElse() {
+  void anOverrideSuppliesWhatWikidataLacks() {
     Map<String, RiverOverride> overrides =
         Map.of(
             "Q7",
@@ -123,12 +123,12 @@ class FeatureSelectorTest {
                 List.of("Murray"),
                 null,
                 null,
-                "m.json",
+                null,
                 null,
                 null,
                 null));
 
-    Assembly assembly = assemble(Map.of(), Map.of(), overrides);
+    Assembly assembly = assemble(Map.of("Q7", group("Q7", "")), Map.of(), overrides);
 
     assertThat(assembly.candidates())
         .singleElement()

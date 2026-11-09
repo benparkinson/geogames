@@ -7,7 +7,6 @@ import com.parkinson.benjamin.geogames.loaders.features.FeatureSelector;
 import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
 import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthReader;
 import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -23,7 +22,9 @@ import tools.jackson.core.type.TypeReference;
 
 /**
  * Usage: RiverLoaderMain &lt;naturalEarth.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
- * &lt;osmDir&gt; &lt;countriesDir&gt; &lt;outDir&gt;
+ * &lt;countriesDir&gt; &lt;outDir&gt;
+ *
+ * <p>Every river's geometry comes from Natural Earth (public domain).
  *
  * <p>Picks the most famous rivers of each continent, up to {@link #RIVER_QUOTAS}.
  *
@@ -72,29 +73,21 @@ public class RiverLoaderMain {
             Path.of(args[1]),
             Path.of(args[2]),
             Path.of(args[3]),
-            Path.of(args[4]),
-            Path.of(args[5]));
+            Path.of(args[4]));
     printSummary(report.rivers(), report.files(), report.assembly(), report.selection());
     printFactsSummary(report.rivers(), report.overrides(), report.facts(), report.unlocatedKm());
   }
 
   /** Does everything {@code main} does except print. */
   static Report run(
-      Path naturalEarth,
-      Path wikidataFile,
-      Path overridesFile,
-      Path osmDir,
-      Path countriesDir,
-      Path outDir)
+      Path naturalEarth, Path wikidataFile, Path overridesFile, Path countriesDir, Path outDir)
       throws IOException {
     Map<String, NaturalEarthFeature> groups =
         new NaturalEarthReader().read(naturalEarth, Set.of("Canal"));
     Map<String, WikidataEntry> wikidata = readJson(wikidataFile, new TypeReference<>() {});
     Map<String, RiverOverride> overrides = readJson(overridesFile, new TypeReference<>() {});
 
-    RiverAssembler.Assembly assembly =
-        new RiverAssembler(file -> readOsmLines(osmDir.resolve(file)))
-            .assemble(groups, wikidata, overrides);
+    RiverAssembler.Assembly assembly = new RiverAssembler().assemble(groups, wikidata, overrides);
     FeatureSelector.Selection<RiverCandidate> selection =
         FeatureSelector.select(assembly.candidates(), RIVER_QUOTAS);
 
@@ -195,23 +188,6 @@ public class RiverLoaderMain {
           RiverGeometry.pointCount(c.lines()),
           c.aliases(),
           c.fromOverride() ? " [override]" : "");
-    }
-  }
-
-  private static List<List<double[]>> readOsmLines(Path file) {
-    try (InputStream in = Files.newInputStream(file)) {
-      GeoData data = GeoJson.lenientReader().readValue(in, GeoData.class);
-      List<List<double[]>> lines = new ArrayList<>();
-      for (List<List<Number>> line : (List<List<List<Number>>>) data.geometry().coordinates()) {
-        List<double[]> points = new ArrayList<>();
-        for (List<Number> p : line) {
-          points.add(new double[] {p.get(0).doubleValue(), p.get(1).doubleValue()});
-        }
-        lines.add(points);
-      }
-      return lines;
-    } catch (IOException e) {
-      throw new java.io.UncheckedIOException("Couldn't read " + file, e);
     }
   }
 

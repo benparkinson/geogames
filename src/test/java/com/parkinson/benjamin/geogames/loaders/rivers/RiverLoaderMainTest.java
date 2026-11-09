@@ -34,7 +34,6 @@ class RiverLoaderMainTest {
         fixtures.resolve("naturalearth.geojson"),
         fixtures.resolve("wikidata.json"),
         fixtures.resolve("overrides.json"),
-        fixtures.resolve("osm"),
         countries,
         outDir);
   }
@@ -55,14 +54,14 @@ class RiverLoaderMainTest {
 
     assertThat(report.rivers())
         .extracting(RiverCandidate::name)
-        .containsExactly("Alpha River", "Backwards", "Cross River", "New Name", "Osm River");
+        .containsExactly("Alpha River", "Backwards", "Cross River", "New Name", "Piecewise River");
     assertThat(fileNames(out))
         .containsExactly(
             "alpha-river-Q101.json",
             "backwards-Q105.json",
             "cross-river-Q102.json",
             "new-name-Q104.json",
-            "osm-river-Q107.json");
+            "piecewise-river-Q107.json");
     assertThat(report.files()).hasSize(5).allSatisfy(file -> assertThat(file).exists());
   }
 
@@ -128,10 +127,10 @@ class RiverLoaderMainTest {
   }
 
   @Test
-  void anOverrideCanTakeItsLineFromAnOsmFile() throws IOException {
+  void mainPieceOnlyDropsTheDetachedLine() throws IOException {
     run(out);
 
-    River river = read("osm-river-Q107.json");
+    River river = read("piecewise-river-Q107.json");
 
     assertThat(river.geoData().geometry().coordinates())
         .isEqualTo(List.of(List.of(List.of(11.0, 5.0), List.of(19.0, 5.0))));
@@ -180,7 +179,6 @@ class RiverLoaderMainTest {
                       fixtures.resolve("naturalearth.geojson").toString(),
                       fixtures.resolve("wikidata.json").toString(),
                       fixtures.resolve("overrides.json").toString(),
-                      fixtures.resolve("osm").toString(),
                       countries.toString(),
                       out.toString()
                     }));
@@ -233,7 +231,6 @@ class RiverLoaderMainTest {
                       dir.resolve("ne.geojson").toString(),
                       dir.resolve("wikidata.json").toString(),
                       dir.resolve("overrides.json").toString(),
-                      dir.toString(),
                       countries.toString(),
                       dir.resolve("out").toString()
                     }));

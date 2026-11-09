@@ -7,8 +7,10 @@ import java.util.List;
 /**
  * One hand-written entry of {@code overrides.json}, keyed by Wikidata QID. All fields optional.
  *
- * <p>{@code reverseFlow} swaps the computed source and mouth, for rivers digitised upstream.
- * {@code source} and {@code mouth} replace the computed ends outright.
+ * <p>{@code mainPieceOnly} keeps only the river's main connected piece and drops lines that are
+ * detached from it (see {@link RiverGeometry#mainPiece}), for rivers where Natural Earth tags a
+ * far-off stretch with the same QID. {@code reverseFlow} swaps the computed source and mouth, for
+ * rivers digitised upstream. {@code source} and {@code mouth} replace the computed ends outright.
  */
 public record RiverOverride(
     Boolean exclude,
@@ -17,7 +19,7 @@ public record RiverOverride(
     List<String> aliases,
     List<String> addAliases,
     List<String> removeAliases,
-    String osmFile,
+    Boolean mainPieceOnly,
     Boolean reverseFlow,
     Coordinate source,
     Coordinate mouth)

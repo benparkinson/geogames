@@ -127,9 +127,14 @@ function HomePage(): React.JSX.Element {
                 </div>
 
                 <footer className="small text-muted text-center mt-4">
+                    Map data: <a href="https://www.naturalearthdata.com/">Natural Earth</a> ·{" "}
+                    Names: <a href="https://www.wikidata.org/">Wikidata</a> ·{" "}
+                    Tripoints: <a href="https://en.wikipedia.org/wiki/List_of_tripoints">Wikipedia</a>{" "}
+                    (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>) ·{" "}
+                    Satellite imagery: <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics ·{" "}
                     Icons: <a href="https://www.flaticon.com/free-icons/location-marker" title="location-marker icons">Earthz Stocker</a>,{" "}
                     <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
-                    River data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL) · River lines and lakes: <a href="https://www.naturalearthdata.com/">Natural Earth</a>
+                    <a href="/third-party-licenses.txt">Software licences</a>
                 </footer>
             </div>
         </div>

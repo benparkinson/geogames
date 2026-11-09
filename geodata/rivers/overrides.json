@@ -2,22 +2,19 @@
   "Q584": {
     "name": "Rhine",
     "aliases": [],
-    "continent": "Europe",
-    "osmFile": "rhine.geo.json"
+    "continent": "Europe"
   },
   "Q602": {
     "name": "Rhone",
     "aliases": [
       "Rhône"
     ],
-    "continent": "Europe",
-    "osmFile": "rhone.geo.json"
+    "continent": "Europe"
   },
   "Q626": {
     "name": "Volga",
     "aliases": [],
-    "continent": "Europe",
-    "osmFile": "volga.geo.json"
+    "continent": "Europe"
   },
   "Q973": {
     "continent": "Asia",
@@ -36,21 +33,22 @@
       "Mississippi River"
     ],
     "continent": "North America",
-    "osmFile": "mississippi.geo.json"
+    "mouth": {
+      "latitude": 28.9283,
+      "longitude": -89.4136
+    }
   },
   "Q1653": {
     "name": "Danube",
     "aliases": [],
-    "continent": "Europe",
-    "osmFile": "danube.geo.json"
+    "continent": "Europe"
   },
   "Q3392": {
     "name": "Nile",
     "aliases": [
       "River Nile"
     ],
-    "continent": "Africa",
-    "osmFile": "nile.geo.json"
+    "continent": "Africa"
   },
   "Q3503": {
     "name": "Congo",
@@ -58,16 +56,14 @@
       "Congo River"
     ],
     "continent": "Africa",
-    "osmFile": "congo.geo.json"
+    "mainPieceOnly": true
   },
   "Q3542": {
     "name": "Niger",
     "aliases": [
       "Niger River"
     ],
-    "continent": "Africa",
-    "osmFile": "niger.geo.json",
-    "reverseFlow": true
+    "continent": "Africa"
   },
   "Q3783": {
     "name": "Amazon",
@@ -75,7 +71,7 @@
       "Rio Amazonas"
     ],
     "continent": "South America",
-    "osmFile": "amazon.geo.json"
+    "reverseFlow": true
   },
   "Q5089": {
     "name": "Ganges",
@@ -83,17 +79,14 @@
       "Ganga",
       "Padma"
     ],
-    "continent": "Asia",
-    "osmFile": "ganges.geo.json"
+    "continent": "Asia"
   },
   "Q5413": {
     "name": "Yangtze",
     "aliases": [
       "Yangzi"
     ],
-    "continent": "Asia",
-    "osmFile": "yangtze.geo.json",
-    "reverseFlow": true
+    "continent": "Asia"
   },
   "Q6862": {
     "continent": "Asia",
@@ -104,8 +97,7 @@
     "aliases": [
       "Sindhu"
     ],
-    "continent": "Asia",
-    "osmFile": "indus.geo.json"
+    "continent": "Asia"
   },
   "Q7355": {
     "name": "Yellow River",
@@ -113,8 +105,7 @@
       "Huang He",
       "Yellow"
     ],
-    "continent": "Asia",
-    "osmFile": "yellow.geo.json"
+    "continent": "Asia"
   },
   "Q8168": {
     "continent": "Europe",
@@ -173,16 +164,14 @@
     "aliases": [
       "Dnipro"
     ],
-    "continent": "Europe",
-    "osmFile": "dnieper.geo.json"
+    "continent": "Europe"
   },
   "Q41179": {
     "name": "Mekong",
     "aliases": [
       "Mekong River"
     ],
-    "continent": "Asia",
-    "osmFile": "mekong.geo.json"
+    "continent": "Asia"
   },
   "Q43106": {
     "name": "Zambezi",
@@ -190,8 +179,7 @@
       "Zambeze",
       "Zambesi"
     ],
-    "continent": "Africa",
-    "osmFile": "zambezi.geo.json"
+    "continent": "Africa"
   },
   "Q45403": {
     "removeAliases": [
@@ -218,8 +206,7 @@
       "Enisei",
       "Jenisej"
     ],
-    "continent": "Asia",
-    "osmFile": "yenisei.geo.json"
+    "continent": "Asia"
   },
   "Q78861": {
     "continent": "Asia"
@@ -243,8 +230,7 @@
     "aliases": [
       "Yukon"
     ],
-    "continent": "North America",
-    "osmFile": "yukon.geo.json"
+    "continent": "North America"
   },
   "Q115456": {
     "continent": "Asia"
@@ -265,8 +251,7 @@
       "Río Bravo",
       "Río Bravo del Norte"
     ],
-    "continent": "North America",
-    "osmFile": "riogrande.geo.json"
+    "continent": "North America"
   },
   "Q162737": {
     "continent": "Asia"
@@ -282,8 +267,7 @@
     "aliases": [
       "Murray"
     ],
-    "continent": "Australia",
-    "osmFile": "murray.geo.json"
+    "continent": "Australia"
   },
   "Q191238": {
     "continent": "Europe"

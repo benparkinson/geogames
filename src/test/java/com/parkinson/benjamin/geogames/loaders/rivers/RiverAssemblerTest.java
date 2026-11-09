@@ -6,7 +6,6 @@ import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
 import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class RiverAssemblerTest {
@@ -19,8 +18,6 @@ class RiverAssemblerTest {
   private static final List<List<double[]>> SHORT_LINE =
       List.of(List.of(new double[] {0, 0}, new double[] {1, 0}));
 
-  private static final Function<String, List<List<double[]>>> NO_OSM = file -> List.of();
-
   private static NaturalEarthFeature group(
       String qid, String name, String nameEn, List<List<double[]>> lines) {
     return new NaturalEarthFeature(qid, name, nameEn, lines, List.of());
@@ -31,15 +28,16 @@ class RiverAssemblerTest {
   }
 
   private static RiverOverride override(
-      Boolean exclude, String name, String continent, String osmFile) {
-    return new RiverOverride(exclude, name, continent, null, null, null, osmFile, null, null, null);
+      Boolean exclude, String name, String continent, Boolean mainPieceOnly) {
+    return new RiverOverride(
+        exclude, name, continent, null, null, null, mainPieceOnly, null, null, null);
   }
 
   private static RiverAssembler.Assembly assemble(
       Map<String, NaturalEarthFeature> groups,
       Map<String, WikidataEntry> wikidata,
       Map<String, RiverOverride> overrides) {
-    return new RiverAssembler(NO_OSM).assemble(groups, wikidata, overrides);
+    return new RiverAssembler().assemble(groups, wikidata, overrides);
   }
 
   @Test
@@ -103,34 +101,33 @@ class RiverAssemblerTest {
   }
 
   @Test
-  void anOverrideCanTakeItsLinesFromAnOsmFile() {
-    var assembler =
-        new RiverAssembler(file -> file.equals("nile.geo.json") ? LONG_LINE : List.of());
+  void mainPieceOnlyDropsLinesDetachedFromTheLongestPiece() {
+    // Two joined lines along the equator (about 666 km) and a short one far to the north.
+    List<List<double[]>> lines =
+        List.of(
+            List.of(new double[] {0, 0}, new double[] {3, 0}),
+            List.of(new double[] {0, 10}, new double[] {1, 10}),
+            List.of(new double[] {3, 0}, new double[] {6, 0}));
 
-    var assembly =
-        assembler.assemble(
-            Map.of("Q1", group("Q1", "Nile", "Nile", SHORT_LINE)),
-            Map.of("Q1", entry("Nile", 5, "Africa")),
-            Map.of("Q1", override(null, null, null, "nile.geo.json")));
+    var kept =
+        assemble(
+            Map.of("Q1", group("Q1", "Congo", "Congo", lines)),
+            Map.of("Q1", entry("Congo", 5, "Africa")),
+            Map.of("Q1", override(null, null, null, true)));
+    var all =
+        assemble(
+            Map.of("Q1", group("Q1", "Congo", "Congo", lines)),
+            Map.of("Q1", entry("Congo", 5, "Africa")),
+            Map.of("Q1", override(null, null, null, null)));
 
-    assertThat(assembly.candidates())
+    assertThat(kept.candidates())
         .singleElement()
-        .satisfies(river -> assertThat(river.km()).isGreaterThan(300));
-  }
-
-  @Test
-  void anOverrideOnlyRiverIsBuiltFromItsOsmFileEvenWithNoNaturalEarthFeature() {
-    var assembler = new RiverAssembler(file -> LONG_LINE);
-
-    var assembly =
-        assembler.assemble(
-            Map.of(),
-            Map.of(),
-            Map.of("Q9", override(null, "Hand Made", "Europe", "hand.geo.json")));
-
-    assertThat(assembly.candidates())
-        .singleElement()
-        .satisfies(river -> assertThat(river.name()).isEqualTo("Hand Made"));
+        .satisfies(
+            river -> {
+              assertThat(river.lines()).hasSize(2);
+              assertThat(river.lines()).noneMatch(line -> line.get(0)[1] == 10);
+            });
+    assertThat(all.candidates().get(0).lines()).hasSize(3);
   }
 
   @Test
@@ -144,12 +141,10 @@ class RiverAssemblerTest {
 
   @Test
   void anExcludedOverrideOnlyRiverIsNotAdded() {
-    var assembler = new RiverAssembler(file -> LONG_LINE);
-
-    var assembly =
-        assembler.assemble(Map.of(), Map.of(), Map.of("Q9", override(true, null, null, "x")));
+    var assembly = assemble(Map.of(), Map.of(), Map.of("Q9", override(true, null, null, null)));
 
     assertThat(assembly.candidates()).isEmpty();
+    assertThat(assembly.dropped()).isEmpty();
   }
 
   @Test

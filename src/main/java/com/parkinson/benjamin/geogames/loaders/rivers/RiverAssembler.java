@@ -10,22 +10,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
-/** Combines Natural Earth, Wikidata and the overrides into candidate rivers. Reads no files. */
+/**
+ * Combines Natural Earth, Wikidata and the overrides into candidate rivers. Reads no files. All
+ * geometry comes from Natural Earth: an override corrects a river but can't supply its lines.
+ */
 public class RiverAssembler {
 
   static final double MIN_RIVER_KM = 200;
 
   /** The candidates, plus how many rivers were dropped for each reason. */
   public record Assembly(List<RiverCandidate> candidates, Map<String, Integer> dropped) {}
-
-  private final Function<String, List<List<double[]>>> osmLines;
-
-  /** @param osmLines gives the lines of an OSM file by file name */
-  public RiverAssembler(Function<String, List<List<double[]>>> osmLines) {
-    this.osmLines = osmLines;
-  }
 
   public Assembly assemble(
       Map<String, NaturalEarthFeature> groups,
@@ -60,10 +55,15 @@ public class RiverAssembler {
       NaturalEarthFeature group = groups.get(qid);
       boolean fromOverride = override != null;
 
-      List<List<double[]>> raw =
-          fromOverride && override.osmFile() != null
-              ? osmLines.apply(override.osmFile())
-              : group == null ? List.of() : group.lines();
+      if (group == null) {
+        // An override for a river Natural Earth doesn't have: there is nothing to draw.
+        drop(dropped, "no geometry");
+        continue;
+      }
+      List<List<double[]>> raw = group.lines();
+      if (fromOverride && Boolean.TRUE.equals(override.mainPieceOnly())) {
+        raw = RiverGeometry.mainPiece(raw);
+      }
       List<List<double[]>> lines = RiverGeometry.simplify(raw);
       if (lines.isEmpty()) {
         drop(dropped, "no geometry");
@@ -96,8 +96,8 @@ public class RiverAssembler {
           AliasBuilder.build(
               name,
               entry == null ? List.of() : entry.aliases(),
-              group == null ? null : group.name(),
-              group == null ? null : group.nameEn(),
+              group.name(),
+              group.nameEn(),
               override,
               RiverAssembler::riverVariants);
       candidates.add(
@@ -127,8 +127,8 @@ public class RiverAssembler {
     String[] options = {
       override == null ? null : override.name(),
       entry == null ? null : entry.label(),
-      group == null ? null : group.nameEn(),
-      group == null ? null : group.name()
+      group.nameEn(),
+      group.name()
     };
     for (String option : options) {
       if (option != null && !option.isBlank()) {
