@@ -177,39 +177,6 @@ class GameApiIT {
   }
 
   @Test
-  void createsARiverOnMapGame() throws Exception {
-    String id = createGame("RIVERS_ON_MAP", 2);
-
-    for (int i = 0; i < 2; i++) {
-      String round = getRound(id, i);
-      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("RIVERS_ON_MAP");
-      assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
-
-      String blob = JsonPath.read(round, "$.jsonBlob");
-      assertThat((String) JsonPath.read(blob, "$.river.name")).isNotBlank();
-      assertThat((Object) JsonPath.read(blob, "$.river.geoData")).isNotNull();
-      assertThat((Object) JsonPath.read(blob, "$.river.source")).isNotNull();
-      assertThat((Object) JsonPath.read(blob, "$.river.mouth")).isNotNull();
-      assertThat((List<?>) JsonPath.read(blob, "$.river.countries")).isNotNull();
-    }
-  }
-
-  @Test
-  void createsARiverByEndsGame() throws Exception {
-    String id = createGame("RIVERS_BY_ENDS", 3);
-
-    for (int i = 0; i < 3; i++) {
-      String round = getRound(id, i);
-      assertThat((String) JsonPath.read(round, "$.gameType.name")).isEqualTo("RIVERS_BY_ENDS");
-      assertThat((int) JsonPath.read(round, "$.gameType.answerCount")).isEqualTo(1);
-
-      String blob = JsonPath.read(round, "$.jsonBlob");
-      assertThat((Double) JsonPath.read(blob, "$.river.source.latitude")).isBetween(-90.0, 90.0);
-      assertThat((Double) JsonPath.read(blob, "$.river.mouth.longitude")).isBetween(-180.0, 180.0);
-    }
-  }
-
-  @Test
   void createsARiverByCountriesGameWithTheCountriesOfEachRiver() throws Exception {
     String id = createGame("RIVERS_BY_COUNTRIES", 10);
 
@@ -485,7 +452,7 @@ class GameApiIT {
   private static Class<? extends GameData> dataClass(GameType type) {
     return switch (type) {
       case TRIPOINT -> Tripoint.class;
-      case RIVERS_BY_SHAPE, RIVERS_ON_MAP, RIVERS_BY_ENDS, RIVERS_BY_COUNTRIES -> RiverRound.class;
+      case RIVERS_BY_SHAPE, RIVERS_BY_COUNTRIES -> RiverRound.class;
       case COUNTRIES_BY_NEIGHBOURS, COUNTRIES_BY_COASTLINE, COUNTRIES_BY_LAND_BORDERS ->
           CountryShapeRound.class;
       case LAKES_BY_SHAPE -> LakeRound.class;

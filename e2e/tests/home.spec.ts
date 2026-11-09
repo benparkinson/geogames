@@ -5,8 +5,6 @@ import { expect, test } from "../fixtures";
 const GAME_TITLES = [
   "Tripoints",
   "River Shapes",
-  "Rivers on the Map",
-  "River Ends",
   "River Countries",
   "Country Gaps",
   "Coastlines",

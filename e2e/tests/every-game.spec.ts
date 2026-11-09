@@ -5,8 +5,6 @@ import { answerBox, expect, guess, startGame, test } from "../fixtures";
 const GAMES = [
   { type: "TRIPOINT", title: "Tripoints" },
   { type: "RIVERS_BY_SHAPE", title: "River Shapes" },
-  { type: "RIVERS_ON_MAP", title: "Rivers on the Map" },
-  { type: "RIVERS_BY_ENDS", title: "River Ends" },
   { type: "RIVERS_BY_COUNTRIES", title: "River Countries" },
   { type: "COUNTRIES_BY_NEIGHBOURS", title: "Country Gaps" },
   { type: "COUNTRIES_BY_COASTLINE", title: "Coastlines" },

@@ -67,22 +67,6 @@ class RiverGamesConfigTest {
   }
 
   @Test
-  void riversOnMapAcceptsEveryRiver() {
-    RoundGenerator generator = config.riversOnMap(rivers, random);
-
-    assertThat(generator.gameType()).isSameAs(GameType.RIVERS_ON_MAP);
-    assertThat(eligibleIds(generator, 5)).containsExactlyInAnyOrder("A", "B", "C", "D", "E");
-  }
-
-  @Test
-  void riversByEndsNeedsBothASourceAndAMouth() {
-    RoundGenerator generator = config.riversByEnds(rivers, random);
-
-    assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_ENDS);
-    assertThat(eligibleIds(generator, 3)).containsExactlyInAnyOrder("A", "B", "D");
-  }
-
-  @Test
   void riversByCountriesNeedsThreeOrMoreCountriesAndAttachesThem() {
     RoundGenerator generator = config.riversByCountries(rivers, countries, random);
 
@@ -97,10 +81,8 @@ class RiverGamesConfigTest {
   }
 
   @Test
-  void theOtherRiverGamesAttachNoCountries() {
+  void riversByShapeAttachesNoCountries() {
     assertThat(config.riversByShape(rivers, random).generate(5, Set.of()))
-        .allSatisfy(round -> assertThat(((RiverRound) round).countries()).isEmpty());
-    assertThat(config.riversByEnds(rivers, random).generate(3, Set.of()))
         .allSatisfy(round -> assertThat(((RiverRound) round).countries()).isEmpty());
   }
 }

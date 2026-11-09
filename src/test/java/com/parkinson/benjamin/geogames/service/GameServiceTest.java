@@ -832,7 +832,7 @@ class GameServiceTest {
     GameEntity game =
         game(
             hintedRound(3, GameType.TRIPOINT, AnswerState.GAVE_UP, 2),
-            hintedRound(1, GameType.RIVERS_ON_MAP, AnswerState.CORRECT, 1),
+            hintedRound(1, GameType.RIVERS_BY_COUNTRIES, AnswerState.CORRECT, 1),
             hintedRound(0, GameType.TRIPOINT, AnswerState.CORRECT, 0),
             hintedRound(2, GameType.TRIPOINT, AnswerState.CORRECT, 1),
             hintedRound(4, GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED, 0));

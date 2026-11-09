@@ -30,7 +30,7 @@ The home page footer credits Natural Earth (all geometry), Wikidata (names), Wik
 - `games/common/` is the game-agnostic shell: round page, summary, `MapGame`, answer matching and the guess reducer.
 - Each `games/<name>/` folder holds one game: its module, component, model types and maps.
 - `games/registry.ts` is the only list of games.
-- `map/` holds the shared Leaflet helpers. `map/LockedView` fits a map to some bounds, limits the zoom and turns off panning until the round ends.
+- `map/` holds the shared Leaflet helpers.
 - `useGuessList(kind)` (in `games/common/`) gives the autocomplete and spell check for countries, rivers and lakes; a game whose answers come from a fixed list should use it.
 - The `QueryClientProvider` lives in `pages/_app.tsx`.
 
@@ -53,7 +53,7 @@ Then add the module to `GAME_MODULES` in `games/registry.ts`, whose order is the
 
 ## Game families
 
-- **Rivers** (`games/rivers/`): `RiverGame.tsx`'s `makeRiverGame(config)` builds each variant's component from a map, a prompt, a caption and hints, with shared layers in `RiverLayers.tsx` and hint builders in `riverHints.ts`. `RIVERS_ON_MAP` uses `map/LockedView`.
+- **Rivers** (`games/rivers/`): `RiverGame.tsx`'s `makeRiverGame(config)` builds each variant's component from a map, a prompt, a caption and hints, with shared layers in `RiverLayers.tsx` and hint builders in `riverHints.ts`.
 - **Lakes** (`games/lakes/`): the module (`index.ts`), `LakeGame.tsx`, the `LakeShapesMap` pair (the polygon on a blank map with a scale bar, and the satellite map once the round ends: solved, given up or out of guesses), `lakeHints.ts` (continent, countries on the shore, first letter) and `useGuessList("lakes")`.
 - **Country shapes** (`games/countries/`): `CountryShapeGame.tsx`'s `makeCountryShapeGame(variant)` builds each component from a map, a prompt, a caption and hints, with shared layers in `CountryLayers.tsx` (`FocusFit` fits the largest part, so Russia, Fiji and overseas territories don't zoom out to the world) and hint builders in `countryHints.ts` plus the generic `games/common/hints.ts`. The games use `useGuessList("countries")` and `isKnownGuess`.
 - Removing a variant: delete its module, registry entry and map pair, and the backend constant and bean.
