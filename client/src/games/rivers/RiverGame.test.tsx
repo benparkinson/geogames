@@ -44,7 +44,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), text + "{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 
   it("accepts an alias", async () => {
@@ -52,7 +52,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Donau{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 
   it("rejects another river", async () => {

@@ -7,7 +7,7 @@ import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import { GuessAction, guessesLeft, guessReducer, GuessState, initialGuessState } from "./guessReducer";
+import { GuessAction, guessesLeft, guessReducer, GuessState, initialGuessState, wrongGuessCount } from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -52,7 +52,11 @@ function MapGame<Type>({
     });
     setGuessState(outcome.state);
     if (outcome.finished) {
-      submitAnswer({ answerState: outcome.finished, hintsUsed: outcome.state.hintsUsed });
+      submitAnswer({
+        answerState: outcome.finished,
+        hintsUsed: outcome.state.hintsUsed,
+        wrongGuesses: wrongGuessCount(outcome.state),
+      });
     }
     return outcome;
   }

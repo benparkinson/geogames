@@ -54,6 +54,6 @@ describe("River Ends", () => {
 
     await userEvent.setup().type(input(), "Donau{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 });

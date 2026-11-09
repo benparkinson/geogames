@@ -74,11 +74,25 @@ class GameApiIT {
   }
 
   private String answer(int gameId, int round, String state, int hintsUsed) throws Exception {
+    return answer(gameId, round, state, hintsUsed, validWrongGuesses(state));
+  }
+
+  /** A wrong-guess count that is valid for the state: every game type has a guess limit of 5. */
+  private static int validWrongGuesses(String state) {
+    return state.equals("OUT_OF_GUESSES") ? 5 : 0;
+  }
+
+  /** Posts an answer; a null {@code wrongGuesses} is left out of the JSON, like an old client. */
+  private String answer(int gameId, int round, String state, int hintsUsed, Integer wrongGuesses)
+      throws Exception {
+    String wrong = wrongGuesses == null ? "" : ",\"wrongGuesses\":" + wrongGuesses;
     return mockMvc
         .perform(
             post("/api/games/%d/rounds/%d/answers".formatted(gameId, round))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"answerState\":\"%s\",\"hintsUsed\":%d}".formatted(state, hintsUsed)))
+                .content(
+                    "{\"answerState\":\"%s\",\"hintsUsed\":%d%s}"
+                        .formatted(state, hintsUsed, wrong)))
         .andExpect(status().isOk())
         .andReturn()
         .getResponse()
@@ -382,6 +396,45 @@ class GameApiIT {
         .andExpect(status().isBadRequest());
 
     assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("UNANSWERED");
+  }
+
+  @Test
+  void rejectsOutOfGuessesWithFewerWrongGuessesThanTheLimit() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    mockMvc
+        .perform(
+            post("/api/games/%d/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"OUT_OF_GUESSES\",\"wrongGuesses\":4}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.detail").isString());
+
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.answerState")).isEqualTo("UNANSWERED");
+  }
+
+  @Test
+  void anAnswerWithoutWrongGuessesIsStillAccepted() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    String body = answer(id, 0, "CORRECT", 0, null);
+
+    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(100);
+  }
+
+  @Test
+  void aRepeatThatDiffersOnlyInWrongGuessesIsAConflict() throws Exception {
+    int id = createGame("RIVERS_BY_SHAPE", 1);
+
+    answer(id, 0, "CORRECT", 0, 2);
+    answer(id, 0, "CORRECT", 0, 2);
+
+    mockMvc
+        .perform(
+            post("/api/games/%d/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":0,\"wrongGuesses\":3}"))
+        .andExpect(status().isConflict());
   }
 
   @Test

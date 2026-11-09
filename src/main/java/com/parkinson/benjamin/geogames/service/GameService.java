@@ -19,6 +19,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -121,7 +122,7 @@ public class GameService {
 
   @Transactional
   public Optional<GameRound> submitAnswer(
-      long gameId, int round, AnswerState answerState, int hintsUsed) {
+      long gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
@@ -134,7 +135,8 @@ public class GameService {
                     .map(
                         r -> {
                           validateHintsUsed(r, hintsUsed);
-                          if (recordAnswer(r, answerState, hintsUsed)) {
+                          validateWrongGuesses(r, answerState, wrongGuesses);
+                          if (recordAnswer(r, answerState, hintsUsed, wrongGuesses)) {
                             gameRepository.save(game);
                           }
                           return toResponse(game, r);
@@ -151,23 +153,61 @@ public class GameService {
   }
 
   /**
-   * A round's answer is final. Sending the same answer (and hints) again does nothing, so a retried
-   * request is harmless, but changing an answered round is a conflict.
+   * Checks the reported wrong guesses against the guess limit: running out of guesses means exactly
+   * {@code guessLimit} wrong guesses, and any other answer means fewer. A null (not reported) is
+   * always accepted.
+   */
+  private static void validateWrongGuesses(
+      GameRoundEntity round, AnswerState answerState, Integer wrongGuesses) {
+    if (wrongGuesses == null) {
+      return;
+    }
+    GameType type = round.getGameType();
+    int limit = type.guessLimit();
+    if (wrongGuesses < 0 || wrongGuesses > limit) {
+      throw new IllegalArgumentException(
+          "A round of %s allows %d wrong guesses, so %d is not possible"
+              .formatted(type, limit, wrongGuesses));
+    }
+    if (answerState == AnswerState.OUT_OF_GUESSES && wrongGuesses != limit) {
+      throw new IllegalArgumentException(
+          "A round of %s that ran out of guesses had %d wrong guesses, not %d"
+              .formatted(type, limit, wrongGuesses));
+    }
+    if (answerState != AnswerState.OUT_OF_GUESSES && wrongGuesses == limit) {
+      throw new IllegalArgumentException(
+          "A round of %s with %d wrong guesses ran out of guesses, so it can't be %s"
+              .formatted(type, wrongGuesses, answerState));
+    }
+  }
+
+  /**
+   * A round's answer is final. Sending the same answer (and hints and wrong guesses) again does
+   * nothing, so a retried request is harmless, but changing an answered round is a conflict.
    *
    * @return whether the round changed
    */
   private static boolean recordAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed) {
+      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
     AnswerState current = round.getAnswerState();
     if (current != AnswerState.UNANSWERED) {
-      if (current == answerState && round.getHintsUsed() == hintsUsed) {
+      if (current == answerState
+          && round.getHintsUsed() == hintsUsed
+          && Objects.equals(round.getWrongGuesses(), wrongGuesses)) {
         return false;
       }
       throw new RoundAlreadyAnsweredException(
-          round.getRoundNumber(), current, round.getHintsUsed(), answerState, hintsUsed);
+          round.getRoundNumber(),
+          current,
+          round.getHintsUsed(),
+          round.getWrongGuesses(),
+          answerState,
+          hintsUsed,
+          wrongGuesses);
     }
     round.setAnswerState(answerState);
     round.setHintsUsed(hintsUsed);
+    round.setWrongGuesses(wrongGuesses);
     return true;
   }
 

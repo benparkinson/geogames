@@ -65,7 +65,7 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "Holland{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 
   it("rejects an unknown name once the country list loads, without using a guess", async () => {
