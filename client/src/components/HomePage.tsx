@@ -73,9 +73,6 @@ function HomePage(): React.JSX.Element {
     return (
         <div className="min-vh-100 py-4 page-bg">
             <div className="container" style={{ maxWidth: 720 }}>
-                <div className="text-end">
-                    <KofiBadge />
-                </div>
                 <h1 className="text-center mt-3">GeoGauntlet</h1>
                 <p className="lead text-center mb-4">Quick but challenging geography puzzles.</p>
 
@@ -125,7 +122,11 @@ function HomePage(): React.JSX.Element {
                     </div>
                 </div>
 
-                <footer className="small text-muted text-center mt-5">
+                <div className="text-center mt-5">
+                    <KofiBadge />
+                </div>
+
+                <footer className="small text-muted text-center mt-4">
                     Icons: <a href="https://www.flaticon.com/free-icons/location-marker" title="location-marker icons">Earthz Stocker</a>,{" "}
                     <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
                     River data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL) · River lines and lakes: <a href="https://www.naturalearthdata.com/">Natural Earth</a>
