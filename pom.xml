@@ -68,6 +68,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.zalando</groupId>
       <artifactId>logbook-spring-boot-starter</artifactId>
       <version>4.2.0</version>
