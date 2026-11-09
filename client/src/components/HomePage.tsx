@@ -60,13 +60,13 @@ function HomePage(): React.JSX.Element {
                     aria-checked={isSelected}
                     tabIndex={(selected === null ? index === 0 : isSelected) ? 0 : -1}
                     ref={el => { cardRefs.current[index] = el; }}
-                    className={"game-card w-100 h-100 text-start rounded-3 p-3 " + (isSelected ? "border border-2 border-primary bg-primary-subtle" : "border bg-body")}
+                    className={"game-card w-100 h-100 text-start p-3" + (isSelected ? " game-card--selected" : "")}
                     onClick={() => setSelected(option.type)}
                     onKeyDown={e => handleKeyDown(e, index)}
                 >
                     <option.Icon size={28} aria-hidden="true" />
                     <div className="fw-bold mt-2">{option.title}</div>
-                    <div className="small text-muted">{option.description}</div>
+                    <div className="small gg-text-muted">{option.description}</div>
                 </button>
             </div>
         );
@@ -89,9 +89,9 @@ function HomePage(): React.JSX.Element {
                     </div>
                     <div role="group" aria-labelledby="extra-difficult-label" className="mt-4">
                         <h3 id="extra-difficult-label" className="h6 d-flex align-items-center gap-2 mb-1">
-                            <Fire className="text-danger" aria-hidden="true" /> Extra difficult
+                            <Fire className="gg-text-danger" aria-hidden="true" /> Extra difficult
                         </h3>
-                        <p className="small text-muted mb-2">Just a shape on a blank map, with nothing around it.</p>
+                        <p className="small gg-text-muted mb-2">Just a shape on a blank map, with nothing around it.</p>
                         <div className="row g-3">
                             {EXTRA_DIFFICULT_OPTIONS.map(renderCard)}
                         </div>
@@ -128,7 +128,7 @@ function HomePage(): React.JSX.Element {
                         </div>
                         <div aria-live="polite" className="mt-2">
                             {isLoading && slow && (
-                                <p className="text-muted mb-0">Waking up the server. The first game can take up to a minute.</p>
+                                <p className="gg-text-muted mb-0">Waking up the server. The first game can take up to a minute.</p>
                             )}
                             {!!error && !isLoading && (
                                 <Notice className="mb-0">Couldn&apos;t start a game. The server may be down. Try again.</Notice>
@@ -142,7 +142,7 @@ function HomePage(): React.JSX.Element {
                     <KofiBadge />
                 </div>
 
-                <footer className="small text-muted text-center mt-4">
+                <footer className="small gg-text-muted text-center mt-4">
                     Map data: <a href="https://www.naturalearthdata.com/">Natural Earth</a> ·{" "}
                     Names: <a href="https://www.wikidata.org/">Wikidata</a> ·{" "}
                     Tripoints: <a href="https://en.wikipedia.org/wiki/List_of_tripoints">Wikipedia</a>{" "}

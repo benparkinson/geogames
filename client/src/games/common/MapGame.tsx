@@ -91,7 +91,7 @@ function MapGame<Type>({
     <>
       <div className="mb-2">{prompt}</div>
       {hintTexts.map((text, index) => (
-        <div key={index} className="small text-muted mb-1">
+        <div key={index} className="small gg-text-muted mb-1">
           <Lightbulb aria-hidden="true" /> {text}
         </div>
       ))}

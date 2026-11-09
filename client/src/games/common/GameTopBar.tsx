@@ -38,11 +38,11 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
         <HomeLink hideTextOnMobile />
         <ThemeToggle />
       </div>
-      <div className="d-flex align-items-center gap-2 small text-muted overflow-hidden">
+      <div className="d-flex align-items-center gap-2 small gg-text-muted overflow-hidden">
         <span className="d-none d-sm-inline text-nowrap">Round {round.currentRound + 1} of {round.totalRoundCount}</span>
         <RoundProgress states={states} points={points} currentRound={round.currentRound} goToRound={round.goToRound} />
       </div>
-      <div className="d-flex align-items-center gap-2 small text-muted text-nowrap">
+      <div className="d-flex align-items-center gap-2 small gg-text-muted text-nowrap">
         {scoreText}
         {round.gameCompleted && (
           <Button size="sm" variant="secondary" onClick={round.showSummary}>Results</Button>

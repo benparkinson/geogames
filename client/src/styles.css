@@ -50,7 +50,6 @@ code {
   border-radius: var(--gg-radius-xl);
   font-size: 0.8rem;
 }
-.answer-slot-empty { border: 2px dashed var(--gg-color-border); }
 
 @media (min-width: 992px) {
   .game-screen {
@@ -92,7 +91,13 @@ code {
   .round-dot { width: 28px; height: 28px; font-size: 0.8rem; }
 }
 
-.game-card { transition: box-shadow var(--gg-duration); }
+.game-card {
+  border: 1px solid var(--gg-color-border);
+  border-radius: var(--gg-radius-lg);
+  background: var(--gg-color-surface);
+  transition: box-shadow var(--gg-duration);
+}
+.game-card--selected { border: 2px solid var(--gg-color-accent); background: var(--gg-color-accent-subtle); }
 .game-card:hover { box-shadow: var(--gg-shadow-hover); }
 
 /* Home page: the cards column, and the start panel (bottom bar when narrow, right gutter when wide). */

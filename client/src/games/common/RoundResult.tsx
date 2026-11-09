@@ -17,7 +17,7 @@ export default function RoundResult({ gaveUp, outOfGuesses = false, round, hints
 
   return (
     <div className="round-result mb-3">
-      <div className={"mb-2 fw-semibold " + (gaveUp ? "text-secondary" : "text-success")} aria-live="polite">
+      <div className={"mb-2 fw-semibold " + (gaveUp ? "gg-text-revealed" : "gg-text-correct")} aria-live="polite">
         {outOfGuesses ? (
           <><XCircleFill aria-hidden="true" /> Out of guesses · 0 pts</>
         ) : gaveUp ? (
@@ -28,7 +28,7 @@ export default function RoundResult({ gaveUp, outOfGuesses = false, round, hints
           <><CheckCircleFill aria-hidden="true" /> Correct! +{points}</>
         )}
         {!gaveUp && !perfect && (
-          <div className="small fw-normal text-muted">{hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}</div>
+          <div className="small fw-normal gg-text-muted">{hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}</div>
         )}
       </div>
       {round.hasNextRound ? (

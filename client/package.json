@@ -18,7 +18,7 @@
     "start": "next start",
     "build": "node scripts/third-party-licenses.mjs && next build",
     "licenses": "node scripts/third-party-licenses.mjs",
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 0 && node scripts/check-theme.mjs",
     "lint:rules": "node scripts/check-lint-rules.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

@@ -27,6 +27,7 @@
   --gg-red-900: #58151c;
   --gg-red-100: #f8d7da;
   --gg-red-300: #f1aeb5;
+  --gg-gray-50: #f8f9fa;
   --gg-gray-100: #e9ecef;
   --gg-gray-300: #dee2e6;
   --gg-gray-600: #6c757d;
@@ -43,6 +44,9 @@
   --gg-color-text: var(--gg-gray-900);
   --gg-color-text-muted: rgb(33 37 41 / 0.75);
   --gg-color-border: var(--gg-gray-300);
+  --gg-color-border-translucent: rgb(0 0 0 / 0.175);
+  --gg-color-surface-hover: var(--gg-gray-50);
+  --gg-color-surface-active: var(--gg-gray-100);
   --gg-color-link: var(--gg-blue-600);
   --gg-color-link-hover: var(--gg-blue-700);
 
@@ -111,6 +115,7 @@
   --gg-red-400: #ea868f;
   --gg-red-1000: #2c0b0e;
   --gg-red-800: #842029;
+  --gg-gray-850: #2b3035;
   --gg-gray-800: #343a40;
   --gg-gray-700: #495057;
   --gg-gray-200: #dee2e6;
@@ -124,6 +129,9 @@
   --gg-color-text: var(--gg-gray-200);
   --gg-color-text-muted: rgb(222 226 230 / 0.75);
   --gg-color-border: var(--gg-gray-700);
+  --gg-color-border-translucent: rgb(255 255 255 / 0.15);
+  --gg-color-surface-hover: var(--gg-gray-850);
+  --gg-color-surface-active: var(--gg-gray-800);
   --gg-color-link: var(--gg-blue-300);
   --gg-color-link-hover: var(--gg-blue-200);
   --gg-color-accent-subtle: var(--gg-blue-1000);

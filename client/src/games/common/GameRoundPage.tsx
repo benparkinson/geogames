@@ -93,7 +93,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             <Head>
                 {renderTitle()}
             </Head>
-            {error ? <div className="p-4 text-danger" role="alert">Couldn&apos;t load this round. Please refresh.</div>
+            {error ? <div className="p-4 gg-text-danger" role="alert">Couldn&apos;t load this round. Please refresh.</div>
                 : isLoading || !data ? <LoadingSpinner fullPage className="gg-text-correct" />
                     : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} />
                         : renderGame(data)}
