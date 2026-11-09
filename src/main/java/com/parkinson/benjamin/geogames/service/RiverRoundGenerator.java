@@ -19,6 +19,8 @@ import java.util.function.Predicate;
  */
 public class RiverRoundGenerator implements RoundGenerator {
 
+  private static final String PREFIX = "river:";
+
   private final GameType gameType;
   private final RiverLoaderService riverLoaderService;
   private final Random random;
@@ -51,7 +53,25 @@ public class RiverRoundGenerator implements RoundGenerator {
             .filter(river -> !excludedSubjects.contains("river:" + river.id()))
             .toList();
     return RandomPicker.pickDistinct(candidates, count, random, "rivers").stream()
-        .<GameData>map(river -> new RiverRound(gameType, river, countries.apply(river)))
+        .<GameData>map(this::toRound)
         .toList();
+  }
+
+  /** Doesn't check {@code eligible}: the round was eligible when the game was created. */
+  @Override
+  public GameData rebuild(String roundKey) {
+    if (!roundKey.startsWith(PREFIX)) {
+      throw new RoundDataMissingException(gameType, roundKey);
+    }
+    String id = roundKey.substring(PREFIX.length());
+    return riverLoaderService.loadRivers().stream()
+        .filter(river -> river.id().equals(id))
+        .findFirst()
+        .map(this::toRound)
+        .orElseThrow(() -> new RoundDataMissingException(gameType, roundKey));
+  }
+
+  private RiverRound toRound(River river) {
+    return new RiverRound(gameType, river, countries.apply(river));
   }
 }

@@ -20,4 +20,13 @@ public interface RoundGenerator {
    * @throws IllegalArgumentException if there isn't enough data for that many
    */
   List<GameData> generate(int count, Set<String> excludedSubjects);
+
+  /**
+   * Rebuilds the round that generate() returned with this roundKey(), from the same data. Share one
+   * method with generate() so the two can't drift apart.
+   *
+   * @throws RoundDataMissingException if the data no longer has that subject (it changed in a
+   *     deploy after the game was created)
+   */
+  GameData rebuild(String roundKey);
 }

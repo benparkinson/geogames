@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 class CountryShapeRoundGeneratorTest {
 
@@ -126,5 +128,37 @@ class CountryShapeRoundGeneratorTest {
     assertThatThrownBy(() -> generator(s -> s.coastKm() == 0, false).generate(2, Set.of()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("countries");
+  }
+
+  @Test
+  void rebuildGivesBackEveryGeneratedRoundWithAndWithoutNeighbours() {
+    ObjectMapper mapper = JsonMapper.builder().build();
+    for (boolean withNeighbours : new boolean[] {true, false}) {
+      CountryShapeRoundGenerator generator = generator(s -> true, withNeighbours);
+
+      for (GameData round : generator.generate(4, Set.of())) {
+        GameData rebuilt = generator.rebuild(round.roundKey());
+
+        assertThat(rebuilt).isEqualTo(round);
+        assertThat(mapper.writeValueAsString(rebuilt)).isEqualTo(mapper.writeValueAsString(round));
+      }
+    }
+  }
+
+  @Test
+  void rebuildRejectsUnknownKeysAndWrongPrefixes() {
+    CountryShapeRoundGenerator generator = generator(s -> true, true);
+
+    assertThatThrownBy(() -> generator.rebuild("country:Nowhere"))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> generator.rebuild("river:A"))
+        .isInstanceOf(RoundDataMissingException.class);
+  }
+
+  @Test
+  void rebuildIgnoresTheEligibilityFilter() {
+    CountryShapeRoundGenerator none = generator(s -> false, false);
+
+    assertThat(none.rebuild("country:C").subjectId()).isEqualTo("country:C");
   }
 }

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LakeRoundGenerator implements RoundGenerator {
 
+  private static final String PREFIX = "lake:";
+
   private final LakeLoaderService lakeLoaderService;
   private final Random random;
 
@@ -37,7 +39,24 @@ public class LakeRoundGenerator implements RoundGenerator {
             .filter(lake -> !excludedSubjects.contains("lake:" + lake.id()))
             .toList();
     return RandomPicker.pickDistinct(candidates, count, random, "lakes").stream()
-        .<GameData>map(lake -> new LakeRound(GameType.LAKES_BY_SHAPE, lake))
+        .<GameData>map(this::toRound)
         .toList();
+  }
+
+  @Override
+  public GameData rebuild(String roundKey) {
+    if (!roundKey.startsWith(PREFIX)) {
+      throw new RoundDataMissingException(gameType(), roundKey);
+    }
+    String id = roundKey.substring(PREFIX.length());
+    return lakeLoaderService.loadLakes().stream()
+        .filter(lake -> lake.id().equals(id))
+        .findFirst()
+        .map(this::toRound)
+        .orElseThrow(() -> new RoundDataMissingException(gameType(), roundKey));
+  }
+
+  private LakeRound toRound(Lake lake) {
+    return new LakeRound(GameType.LAKES_BY_SHAPE, lake);
   }
 }

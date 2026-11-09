@@ -7,7 +7,7 @@ import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -47,12 +47,26 @@ public class TripointFinderService implements RoundGenerator {
 
     List<GameData> tripoints = new ArrayList<>(count);
     for (TripointDefinition definition : chosen) {
-      Set<Country> countries = new HashSet<>();
-      for (String countryName : definition.countryNames()) {
-        countries.add(countryShapeService.loadDisplayCountry(countryName));
-      }
-      tripoints.add(new Tripoint(definition.coordinate(), countries));
+      tripoints.add(toRound(definition));
     }
     return tripoints;
+  }
+
+  @Override
+  public GameData rebuild(String roundKey) {
+    return tripointLoaderService.loadTripointDefinitions().stream()
+        .filter(d -> Tripoint.roundKey(d).equals(roundKey))
+        .findFirst()
+        .map(this::toRound)
+        .orElseThrow(() -> new RoundDataMissingException(GameType.TRIPOINT, roundKey));
+  }
+
+  /** In the definition's order, so a rebuilt round is the same JSON as the generated one. */
+  private Tripoint toRound(TripointDefinition definition) {
+    Set<Country> countries = new LinkedHashSet<>();
+    for (String countryName : definition.countryNames()) {
+      countries.add(countryShapeService.loadDisplayCountry(countryName));
+    }
+    return new Tripoint(definition.coordinate(), countries);
   }
 }

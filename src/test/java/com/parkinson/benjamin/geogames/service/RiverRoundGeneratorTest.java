@@ -18,6 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 class RiverRoundGeneratorTest {
 
@@ -117,5 +119,36 @@ class RiverRoundGeneratorTest {
     RiverRound round = (RiverRound) withCountries.generate(1, Set.of()).get(0);
 
     assertThat(round.countries()).containsExactly(spain, france);
+  }
+
+  @Test
+  void rebuildGivesBackEveryGeneratedRound() {
+    Country spain = new Country("Spain", List.of(), null);
+    RiverRoundGenerator generator = generator(river -> true, river -> List.of(spain));
+    ObjectMapper mapper = JsonMapper.builder().build();
+
+    for (GameData round : generator.generate(rivers.size(), Set.of())) {
+      GameData rebuilt = generator.rebuild(round.roundKey());
+
+      assertThat(rebuilt).isEqualTo(round);
+      assertThat(mapper.writeValueAsString(rebuilt)).isEqualTo(mapper.writeValueAsString(round));
+    }
+  }
+
+  @Test
+  void rebuildRejectsUnknownKeysAndWrongPrefixes() {
+    assertThatThrownBy(() -> generator().rebuild("river:Q99"))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> generator().rebuild("lake:Q1"))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> generator().rebuild("Q1"))
+        .isInstanceOf(RoundDataMissingException.class);
+  }
+
+  @Test
+  void rebuildIgnoresTheEligibilityFilter() {
+    RiverRoundGenerator none = generator(river -> false, river -> List.of());
+
+    assertThat(none.rebuild("river:Q3").subjectId()).isEqualTo("river:Q3");
   }
 }

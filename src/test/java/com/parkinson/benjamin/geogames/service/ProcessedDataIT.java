@@ -15,6 +15,7 @@ import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
+import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
 import java.io.IOException;
 import java.util.Comparator;
@@ -51,6 +52,26 @@ public class ProcessedDataIT {
       Set<String> names = new HashSet<>(definition.countryNames());
       assertEquals(3, names.size(), "expected 3 distinct countries in " + definition);
       assertFalse(DROPPED.contains(names), "dropped tripoint is back: " + names);
+    }
+  }
+
+  @Test
+  public void roundKeysAreUniqueWithinEachGameTypeAndFitTheColumn() {
+    List<String> tripointKeys =
+        tripointLoaderService.loadTripointDefinitions().stream().map(Tripoint::roundKey).toList();
+    assertUniqueAndShort("tripoint", tripointKeys);
+    assertUniqueAndShort(
+        "river",
+        new RiverLoaderService(reader).loadRivers().stream().map(r -> "river:" + r.id()).toList());
+    assertUniqueAndShort("lake", loadLakes().stream().map(l -> "lake:" + l.id()).toList());
+    assertUniqueAndShort(
+        "country", shapeService.loadShapes().stream().map(s -> "country:" + s.name()).toList());
+  }
+
+  private static void assertUniqueAndShort(String type, List<String> keys) {
+    assertEquals(keys.size(), new HashSet<>(keys).size(), "duplicate " + type + " round key");
+    for (String key : keys) {
+      assertTrue(key.length() <= 255, type + " key too long for the column: " + key);
     }
   }
 

@@ -107,8 +107,7 @@ public class GameService {
     List<GameRoundEntity> gameRoundEntities = new ArrayList<>(gameData.size());
     for (int i = 0; i < gameData.size(); i++) {
       GameData gameDatum = gameData.get(i);
-      gameRoundEntities.add(
-          new GameRoundEntity(i, gameDatum.gameType(), objectMapper.writeValueAsString(gameDatum)));
+      gameRoundEntities.add(new GameRoundEntity(i, gameDatum.gameType(), gameDatum.roundKey()));
     }
     return gameRoundEntities;
   }
@@ -215,10 +214,11 @@ public class GameService {
     return game.getRounds().stream().filter(r -> r.getRoundNumber() == roundNumber).findFirst();
   }
 
-  private static GameRound toResponse(GameEntity game, GameRoundEntity round) {
+  private GameRound toResponse(GameEntity game, GameRoundEntity round) {
+    GameData data = generators.get(round.getGameType()).rebuild(round.getRoundKey());
     return new GameRound(
         GameTypeResponse.from(round.getGameType()),
-        round.getJsonBlob(),
+        objectMapper.writeValueAsString(data),
         game.getRounds().size(),
         round.getAnswerState(),
         round.getHintsUsed(),
