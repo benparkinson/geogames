@@ -23,22 +23,6 @@ public class RiverGamesConfig {
         GameType.RIVERS_BY_SHAPE, rivers, random, river -> true, river -> List.of());
   }
 
-  @Bean
-  RoundGenerator riversOnMap(RiverLoaderService rivers, Random random) {
-    return new RiverRoundGenerator(
-        GameType.RIVERS_ON_MAP, rivers, random, river -> true, river -> List.of());
-  }
-
-  @Bean
-  RoundGenerator riversByEnds(RiverLoaderService rivers, Random random) {
-    return new RiverRoundGenerator(
-        GameType.RIVERS_BY_ENDS,
-        rivers,
-        random,
-        river -> river.source() != null && river.mouth() != null,
-        river -> List.of());
-  }
-
   /** Only rivers through three or more countries: one or two outlines are too easy or unguessable. */
   @Bean
   RoundGenerator riversByCountries(

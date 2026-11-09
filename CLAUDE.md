@@ -60,7 +60,7 @@ Full builds:
 
 **The client checks answers, not the server.** The frontend compares guesses with the data in `jsonBlob` and reports only the final `AnswerState`, `hintsUsed` and the wrong-guess count (see `client/CLAUDE.md`).
 
-**Game types.** `model/GameType` is a Java enum with `answerCount` (TRIPOINT=3, 1 for the rest), `hintCount` and `guessLimit` (wrong guesses allowed, at least 1); the client reads all three from the API. The types are `TRIPOINT`, the river family (`RIVERS_BY_SHAPE`, `RIVERS_ON_MAP`, `RIVERS_BY_ENDS`, `RIVERS_BY_COUNTRIES`), the country-shape family (`COUNTRIES_BY_NEIGHBOURS`, `COUNTRIES_BY_COASTLINE`, `COUNTRIES_BY_LAND_BORDERS`) and `LAKES_BY_SHAPE`. Adding one takes:
+**Game types.** `model/GameType` is a Java enum with `answerCount` (TRIPOINT=3, 1 for the rest), `hintCount` and `guessLimit` (wrong guesses allowed, at least 1); the client reads all three from the API. The types are `TRIPOINT`, the river family (`RIVERS_BY_SHAPE`, `RIVERS_BY_COUNTRIES`), the country-shape family (`COUNTRIES_BY_NEIGHBOURS`, `COUNTRIES_BY_COASTLINE`, `COUNTRIES_BY_LAND_BORDERS`) and `LAKES_BY_SHAPE`. Adding one takes:
 1. A constant in `GameType`.
 2. A `GameData` record in `model/` and its loader services, unless an existing record fits.
 3. A `RoundGenerator` bean. `GameService` picks it up with no edits, and `RANDOM` mixes it in.

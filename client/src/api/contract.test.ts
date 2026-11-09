@@ -45,8 +45,6 @@ function roundFixtures(): Record<string, GameRoundResponse> {
   return {
     TRIPOINT: makeRound(),
     RIVERS_BY_SHAPE: riverOf("RIVERS_BY_SHAPE"),
-    RIVERS_ON_MAP: riverOf("RIVERS_ON_MAP"),
-    RIVERS_BY_ENDS: riverOf("RIVERS_BY_ENDS"),
     RIVERS_BY_COUNTRIES: countriesRiver,
     COUNTRIES_BY_NEIGHBOURS: makeCountryShapeRound("COUNTRIES_BY_NEIGHBOURS"),
     COUNTRIES_BY_COASTLINE: makeCountryShapeRound("COUNTRIES_BY_COASTLINE"),

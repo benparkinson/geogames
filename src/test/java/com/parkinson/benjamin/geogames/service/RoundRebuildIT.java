@@ -53,8 +53,7 @@ class RoundRebuildIT {
         switch (generator.gameType()) {
           case TRIPOINT -> tripoints.loadTripointDefinitions().size();
           case LAKES_BY_SHAPE -> lakes.loadLakes().size();
-          case RIVERS_BY_SHAPE, RIVERS_ON_MAP, RIVERS_BY_ENDS, RIVERS_BY_COUNTRIES ->
-              rivers.loadRivers().size();
+          case RIVERS_BY_SHAPE, RIVERS_BY_COUNTRIES -> rivers.loadRivers().size();
           case COUNTRIES_BY_NEIGHBOURS, COUNTRIES_BY_COASTLINE, COUNTRIES_BY_LAND_BORDERS ->
               shapes.loadShapes().size();
         };
