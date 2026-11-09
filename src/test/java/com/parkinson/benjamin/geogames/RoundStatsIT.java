@@ -81,6 +81,18 @@ class RoundStatsIT {
     answer(id, 0, "{\"answerState\":\"CORRECT\",\"hintsUsed\":1,\"wrongGuesses\":2}");
     await().atMost(Duration.ofSeconds(10)).until(() -> rowsOf(id).size() == 1);
 
+    UUID playId = (UUID) rowsOf(id).get(0).get("play_id");
+    List<Map<String, Object>> gameRows =
+        jdbc.sql(
+                "select * from stat_game g join stat_game_mode m on m.id = g.game_mode_id"
+                    + " where g.play_id = :p")
+            .param("p", playId)
+            .query()
+            .listOfRows();
+    assertThat(gameRows).hasSize(1);
+    assertThat(gameRows.get(0)).containsEntry("name", "RIVERS_BY_SHAPE");
+    assertThat(((Number) gameRows.get(0).get("rounds_in_game")).intValue()).isEqualTo(2);
+
     Map<String, Object> row = rowsOf(id).get(0);
     assertThat(row)
         .containsEntry("game_type", "RIVERS_BY_SHAPE")
@@ -109,6 +121,8 @@ class RoundStatsIT {
     List<Map<String, Object>> all = jdbc.sql("select * from round_result").query().listOfRows();
     assertThat(all).isNotEmpty();
     assertThat(all.toString()).doesNotContain(id).doesNotContain(other);
+    List<Map<String, Object>> games = jdbc.sql("select * from stat_game").query().listOfRows();
+    assertThat(games.toString()).doesNotContain(id).doesNotContain(other);
     assertThat(rowsOf(id).get(0).get("play_id")).isNotEqualTo(UUID.fromString(id));
   }
 }
