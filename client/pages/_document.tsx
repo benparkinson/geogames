@@ -1,10 +1,14 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
+// A theme the visitor chose with the toggle (kept in localStorage) wins; otherwise follow the system setting.
 const themeScript = `
 (function () {
   var query = window.matchMedia("(prefers-color-scheme: dark)");
   function apply() {
-    document.documentElement.setAttribute("data-bs-theme", query.matches ? "dark" : "light");
+    var stored = null;
+    try { stored = localStorage.getItem("gg-theme"); } catch (e) {}
+    var theme = stored === "dark" || stored === "light" ? stored : query.matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-bs-theme", theme);
   }
   apply();
   query.addEventListener("change", apply);

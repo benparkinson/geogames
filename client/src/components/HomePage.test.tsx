@@ -56,6 +56,7 @@ describe("HomePage on load", () => {
     expect(href("Freepik")).toContain("flaticon.com");
     expect(href("Software licences")).toBe("/third-party-licenses.txt");
     expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
+    expect(footer.getByText(/your light or dark mode choice/)).toBeInTheDocument();
   });
 });
 
