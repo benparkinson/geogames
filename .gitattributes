@@ -1,2 +1,14 @@
-# The loaders write LF, and scripts/check-processed-data.sh compares byte for byte, so check these out as LF on every OS.
-src/main/resources/processed/**/*.json text eol=lf
+# Every text file is LF in the repository and in the working tree, on every OS, whatever core.autocrlf
+# says. This matches .editorconfig, keeps edits from mixing line endings, and lets
+# scripts/check-processed-data.sh compare the processed data byte for byte.
+* text=auto eol=lf
+
+# Windows batch files need CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files: never converted or diffed as text.
+*.png binary
+*.ico binary
+*.jpg binary
+*.jar binary

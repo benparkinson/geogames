@@ -34,6 +34,6 @@ done
 
 if [ "$status" -ne 0 ]; then
   echo
-  echo "If the change to geodata/ was intended, regenerate the data (see 'Geo data pipeline' in CLAUDE.md) and commit it."
+  echo "If the change to geodata/ was intended, regenerate the data (see src/main/java/com/parkinson/benjamin/geogames/loaders/CLAUDE.md) and commit it."
 fi
 exit $status
