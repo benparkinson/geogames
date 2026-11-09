@@ -7,6 +7,7 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -56,6 +57,17 @@ class GameRepositoryTest {
   @Test
   void aNewGameHasACreationTime() {
     assertThat(gameWithRounds("tripoint:x").getCreatedAt()).isNotNull();
+  }
+
+  @Test
+  void aNewGamesCreationTimeIsRoundedDownToTheHour() {
+    Instant before = Instant.now();
+
+    Instant created = gameWithRounds("tripoint:x").getCreatedAt();
+
+    assertThat(created).isEqualTo(created.truncatedTo(ChronoUnit.HOURS));
+    assertThat(created).isBeforeOrEqualTo(before);
+    assertThat(created).isAfter(before.minus(Duration.ofHours(1)).minusSeconds(1));
   }
 
   @Test

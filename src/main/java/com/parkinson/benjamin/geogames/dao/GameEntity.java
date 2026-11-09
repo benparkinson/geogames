@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +37,11 @@ public class GameEntity {
   @Column(nullable = false, unique = true, updatable = false)
   private UUID publicId;
 
+  /**
+   * When the game was created, rounded down to the hour. It is only used to expire old games, so
+   * it doesn't need to be exact, and an exact time could be matched against a request log to tie a
+   * game to a client. A game is therefore deleted up to an hour before its maximum age.
+   */
   @Column(nullable = false)
   private Instant createdAt;
 
@@ -47,7 +53,7 @@ public class GameEntity {
       throw new IllegalArgumentException("A game needs at least one round");
     }
     this.rounds = rounds;
-    this.createdAt = Instant.now();
+    this.createdAt = Instant.now().truncatedTo(ChronoUnit.HOURS);
     // UUID.randomUUID() uses SecureRandom: 122 random bits, so it can't be guessed.
     this.publicId = UUID.randomUUID();
   }
