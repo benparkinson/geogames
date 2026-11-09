@@ -4,6 +4,7 @@ import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
 import { Fire } from "react-bootstrap-icons";
 import KofiBadge from "./KofiBadge";
+import ThemeToggle from "./ThemeToggle";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 const STANDARD_OPTIONS = MENU_OPTIONS.filter(option => !option.extraDifficult);
@@ -74,6 +75,7 @@ function HomePage(): React.JSX.Element {
     return (
         <div className={"min-vh-100 py-4 page-bg" + (selectedOption ? " home--selected" : "")}>
             <header className="home-header">
+                <div className="d-flex justify-content-end"><ThemeToggle /></div>
                 <h1 className="text-center mt-3">GeoGauntlet</h1>
                 <p className="lead text-center mb-4">Quick but challenging geography puzzles.</p>
             </header>

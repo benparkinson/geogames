@@ -171,10 +171,6 @@ code {
 
 .page-bg { background: var(--gg-bg); }
 .theme-toggle {
-  position: fixed;
-  top: max(0.5rem, env(safe-area-inset-top));
-  right: max(0.5rem, env(safe-area-inset-right));
-  z-index: 1100; /* above Leaflet's panes and controls */
   line-height: 1;
   padding: 0.25rem 0.4rem;
   background: var(--bs-body-bg);
