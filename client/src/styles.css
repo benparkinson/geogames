@@ -179,3 +179,6 @@ code {
   border: 0;
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.6));
 }
+
+/* Clicking a map shape focuses its SVG path, which draws a square outline. Hover labels are all we want. */
+.leaflet-interactive:focus { outline: none; }

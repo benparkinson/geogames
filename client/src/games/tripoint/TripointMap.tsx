@@ -19,7 +19,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed }: MapProps<T
 
   const answerBorders = tripoint.countries.map((country) => (
     <GeoJSON key={country.name} data={country.geoData} pathOptions={color}>
-      <Tooltip>{country.name}</Tooltip>
+      <Tooltip sticky>{country.name}</Tooltip>
     </GeoJSON>
   ));
 
