@@ -11,8 +11,10 @@ import { findGameModule } from "../registry";
 function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     // Until the player acts, resume at the first unanswered round, which the first round's game result tells us.
     const [chosenRound, setRound] = useState<number | null>(null)
-    const [showSummary, setShowSummary] = useState(false)
+    const [summaryChoice, setSummaryChoice] = useState<boolean | null>(null)
     const firstRound = useRound(gameId, 0).data;
+    // Until the player acts, a finished game opens on its results rather than on the first round.
+    const showSummary = summaryChoice ?? (chosenRound === null && firstRound?.gameResult.gameState === FINISHED);
     const resumeRound = Math.max(0, firstRound?.gameResult.roundAnswerStates.indexOf(UNANSWERED) ?? 0);
     const currentRound = chosenRound ?? resumeRound;
     const { error, data, isLoading } = useRound(gameId, currentRound);
@@ -34,7 +36,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
 
     function goToRound(round: number): void {
         setRound(round)
-        setShowSummary(false)
+        setSummaryChoice(false)
     }
 
     function submitAnswer(answer: RoundAnswer): void {
@@ -50,7 +52,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
         const round: Round = {
             nextRound,
             goToRound,
-            showSummary: () => setShowSummary(true),
+            showSummary: () => setSummaryChoice(true),
             hasNextRound,
             currentRound,
             totalRoundCount: data.totalRoundCount,
