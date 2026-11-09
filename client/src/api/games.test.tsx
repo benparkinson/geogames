@@ -239,13 +239,13 @@ describe("useCreateGame", () => {
   it("posts the request and navigates to the new game", async () => {
     router.push.mockClear();
     const fetchMock = mockFetch([
-      { method: "POST", url: "http://localhost:8080/api/games", body: { id: 7 } },
+      { method: "POST", url: "http://localhost:8080/api/games", body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     const { result } = renderHook(() => useCreateGame(), { wrapper: clientWrapper() });
 
     act(() => result.current.createGame("TRIPOINT", 5));
 
-    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/7"));
+    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const [call] = callsTo(fetchMock);
     expect(call.method).toBe("POST");
     expect(call.body).toEqual({ gameType: "TRIPOINT", numberOfRounds: 5 });
@@ -264,7 +264,7 @@ describe("useCreateGame", () => {
     act(() => result.current.createGame("RANDOM", 3));
     await waitFor(() => expect(result.current.isLoading).toBe(true));
 
-    await act(async () => finish({ ok: true, status: 200, json: async () => ({ id: 1 }) }));
+    await act(async () => finish({ ok: true, status: 200, json: async () => ({ id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }) }));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
   });
 

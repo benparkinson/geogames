@@ -21,7 +21,7 @@ export class Api {
    * Reads a round and works out its answers the way the frontend does (each game module's
    * `answerNames`): the three countries of a tripoint, the river, lake or country otherwise.
    */
-  async round(gameId: string | number, round: number): Promise<RoundInfo> {
+  async round(gameId: string, round: number): Promise<RoundInfo> {
     const response = await this.request.get(`/api/games/${gameId}/rounds/${round}`);
     expect(response.ok(), `GET round ${round} of game ${gameId}`).toBe(true);
     const body = await response.json();
@@ -112,7 +112,7 @@ export async function startGame(page: Page, title: string, rounds = 3): Promise<
   // Click the visible label (the radio itself is hidden); Playwright waits for the start panel's slide-in to finish.
   await page.locator(`label[for="rounds-${rounds}"]`).click();
   await page.getByRole("button", { name: "Start game" }).click();
-  await expect(page).toHaveURL(/\/games\/\d+$/);
+  await expect(page).toHaveURL(/\/games\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   return page.url().split("/").pop()!;
 }
 

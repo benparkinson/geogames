@@ -196,7 +196,7 @@ describe("HomePage starting a game", () => {
   it("creates the chosen game with the chosen rounds and opens it", async () => {
     const fetchMock = mockFetch([
       { url: HEALTH, body: "ok" },
-      { method: "POST", url: "http://localhost:8080/api/games", body: { id: 9 } },
+      { method: "POST", url: "http://localhost:8080/api/games", body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     const user = userEvent.setup();
     renderHome();
@@ -205,7 +205,7 @@ describe("HomePage starting a game", () => {
     await user.click(screen.getByRole("radio", { name: "10" }));
     await user.click(startButton());
 
-    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/9"));
+    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RANDOM",
       numberOfRounds: 10,
@@ -215,7 +215,7 @@ describe("HomePage starting a game", () => {
   it("starts the chosen game with five rounds by default", async () => {
     const fetchMock = mockFetch([
       { url: HEALTH, body: "ok" },
-      { method: "POST", url: /\/api\/games$/, body: { id: 1 } },
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     const user = userEvent.setup();
     renderHome();
@@ -276,7 +276,7 @@ describe("HomePage starting a game", () => {
     expect(screen.getByText(message)).toBeInTheDocument();
 
     await act(async () => {
-      finish({ ok: true, status: 200, json: async () => ({ id: 4 }) });
+      finish({ ok: true, status: 200, json: async () => ({ id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }) });
     });
     await vi.waitFor(() => expect(screen.queryByText(message)).not.toBeInTheDocument());
   });

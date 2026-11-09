@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 /**
@@ -15,12 +16,15 @@ import jakarta.persistence.Id;
  */
 @Entity
 public class GameRoundEntity {
-  @Id @GeneratedValue private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   /** Where this round comes in its game, counting from 0. */
   private int roundNumber;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 64)
   private GameType gameType;
 
   /**
@@ -30,6 +34,8 @@ public class GameRoundEntity {
   @Column(nullable = false, length = 255)
   private String roundKey;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 32)
   private AnswerState answerState;
 
   /** How many hints the player used before answering. */

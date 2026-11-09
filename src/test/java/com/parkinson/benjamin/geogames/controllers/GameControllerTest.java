@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
@@ -23,7 +24,10 @@ import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -34,6 +38,8 @@ import org.springframework.test.web.servlet.MockMvc;
 class GameControllerTest {
 
   @Autowired private MockMvc mockMvc;
+
+  private static final UUID GAME_ID = UUID.fromString("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d");
 
   @MockitoBean private GameService gameService;
 
@@ -61,7 +67,7 @@ class GameControllerTest {
 
   @Test
   void createsAGame() throws Exception {
-    when(gameService.createGame("TRIPOINT", 3)).thenReturn(new GameCreationResponse(42));
+    when(gameService.createGame("TRIPOINT", 3)).thenReturn(new GameCreationResponse(GAME_ID));
 
     mockMvc
         .perform(
@@ -69,7 +75,7 @@ class GameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(42));
+        .andExpect(jsonPath("$.id").value(GAME_ID.toString()));
 
     verify(gameService).createGame("TRIPOINT", 3);
   }
@@ -93,10 +99,10 @@ class GameControllerTest {
 
   @Test
   void returnsTheRoundContractTheFrontendRelieson() throws Exception {
-    when(gameService.getGameRound(1L, 0)).thenReturn(Optional.of(round()));
+    when(gameService.getGameRound(GAME_ID, 0)).thenReturn(Optional.of(round()));
 
     mockMvc
-        .perform(get("/api/games/1/rounds/0"))
+        .perform(get("/api/games/" + GAME_ID + "/rounds/0"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.gameType.name").value("TRIPOINT"))
         .andExpect(jsonPath("$.gameType.answerCount").value(3))
@@ -121,11 +127,11 @@ class GameControllerTest {
 
   @Test
   void roundWhoseMapDataHasGoneIs410WithAProblemBody() throws Exception {
-    when(gameService.getGameRound(1L, 0))
+    when(gameService.getGameRound(GAME_ID, 0))
         .thenThrow(new RoundDataMissingException(GameType.TRIPOINT, "tripoint:gone"));
 
     mockMvc
-        .perform(get("/api/games/1/rounds/0"))
+        .perform(get("/api/games/" + GAME_ID + "/rounds/0"))
         .andExpect(status().isGone())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
         .andExpect(jsonPath("$.status").value(410))
@@ -134,61 +140,77 @@ class GameControllerTest {
                 .value(org.hamcrest.Matchers.containsString("no longer available")));
   }
 
-  @Test
-  void unknownRoundIsNotFound() throws Exception {
-    when(gameService.getGameRound(1L, 7)).thenReturn(Optional.empty());
+  @ParameterizedTest
+  @ValueSource(strings = {"abc", "42", "0b7c2a8e-4f1d-4c3a-9e5b"})
+  void aMalformedOrNumericGameIdIsNotFoundForTheRoundAndTheAnswer(String id) throws Exception {
+    mockMvc.perform(get("/api/games/" + id + "/rounds/0")).andExpect(status().isNotFound());
+    mockMvc
+        .perform(
+            post("/api/games/" + id + "/rounds/0/answers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"answerState\":\"GAVE_UP\"}"))
+        .andExpect(status().isNotFound());
 
-    mockMvc.perform(get("/api/games/1/rounds/7")).andExpect(status().isNotFound());
+    verifyNoInteractions(gameService);
   }
 
   @Test
-  void nonNumericGameIdIsABadRequest() throws Exception {
-    mockMvc.perform(get("/api/games/abc/rounds/0")).andExpect(status().isBadRequest());
+  void unknownRoundIsNotFound() throws Exception {
+    when(gameService.getGameRound(GAME_ID, 7)).thenReturn(Optional.empty());
+
+    mockMvc.perform(get("/api/games/" + GAME_ID + "/rounds/7")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void nonNumericRoundIsABadRequest() throws Exception {
+    mockMvc
+        .perform(get("/api/games/" + GAME_ID + "/rounds/abc"))
+        .andExpect(status().isBadRequest());
   }
 
   // ----------------------------------------------------------- submit answer
 
   @Test
   void submitsAnAnswer() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 0, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null))
         .thenReturn(Optional.of(round()));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.gameType.name").value("TRIPOINT"));
 
-    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 0, null);
+    verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
   }
 
   @Test
   void anAnswerWithHintsUsedPassesThemOn() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 2, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null))
         .thenReturn(Optional.of(round()));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":2}"))
         .andExpect(status().isOk());
 
-    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 2, null);
+    verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null);
   }
 
   @Test
   void anAnswerWithTooManyHintsIsABadRequestWithAProblemBody() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 9, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 9, null))
         .thenThrow(
             new IllegalArgumentException(
                 "A round of TRIPOINT has 3 hints, so 9 can't have been used"));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":9}"))
         .andExpect(status().isBadRequest())
@@ -199,12 +221,12 @@ class GameControllerTest {
 
   @Test
   void answeringAnUnknownRoundIsNotFound() throws Exception {
-    when(gameService.submitAnswer(1L, 9, AnswerState.GAVE_UP, 0, null))
+    when(gameService.submitAnswer(GAME_ID, 9, AnswerState.GAVE_UP, 0, null))
         .thenReturn(Optional.empty());
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/9/answers")
+            post("/api/games/" + GAME_ID + "/rounds/9/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"GAVE_UP\"}"))
         .andExpect(status().isNotFound());
@@ -212,12 +234,12 @@ class GameControllerTest {
 
   @Test
   void anAnswerTheServiceRejectsIsABadRequest() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.UNANSWERED, 0, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.UNANSWERED, 0, null))
         .thenThrow(new IllegalArgumentException("A round can't be answered with UNANSWERED"));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"UNANSWERED\"}"))
         .andExpect(status().isBadRequest())
@@ -226,14 +248,14 @@ class GameControllerTest {
 
   @Test
   void changingAnAnsweredRoundIsAConflict() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.GAVE_UP, 0, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
         .thenThrow(
             new RoundAlreadyAnsweredException(
                 0, AnswerState.CORRECT, 0, 2, AnswerState.GAVE_UP, 0, null));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"GAVE_UP\"}"))
         .andExpect(status().isConflict())
@@ -247,44 +269,44 @@ class GameControllerTest {
 
   @Test
   void anAnswerWithWrongGuessesPassesThemOn() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 1, 3))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, 3))
         .thenReturn(Optional.of(round()));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":1,\"wrongGuesses\":3}"))
         .andExpect(status().isOk());
 
-    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 1, 3);
+    verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, 3);
   }
 
   @Test
   void anAnswerWithoutWrongGuessesPassesNull() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.CORRECT, 1, null))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null))
         .thenReturn(Optional.of(round()));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":1}"))
         .andExpect(status().isOk());
 
-    verify(gameService).submitAnswer(1L, 0, AnswerState.CORRECT, 1, null);
+    verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null);
   }
 
   @Test
   void anAnswerWithImpossibleWrongGuessesIsABadRequest() throws Exception {
-    when(gameService.submitAnswer(1L, 0, AnswerState.OUT_OF_GUESSES, 0, 3))
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, 3))
         .thenThrow(
             new IllegalArgumentException(
                 "A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3"));
 
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"OUT_OF_GUESSES\",\"wrongGuesses\":3}"))
         .andExpect(status().isBadRequest())
@@ -297,7 +319,7 @@ class GameControllerTest {
   void invalidAnswerStateIsABadRequest() throws Exception {
     mockMvc
         .perform(
-            post("/api/games/1/rounds/0/answers")
+            post("/api/games/" + GAME_ID + "/rounds/0/answers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"WRONG\"}"))
         .andExpect(status().isBadRequest());
@@ -307,10 +329,11 @@ class GameControllerTest {
 
   @Test
   void allowsTheLocalFrontendOrigin() throws Exception {
-    when(gameService.getGameRound(1L, 0)).thenReturn(Optional.of(round()));
+    when(gameService.getGameRound(GAME_ID, 0)).thenReturn(Optional.of(round()));
 
     mockMvc
-        .perform(get("/api/games/1/rounds/0").header("Origin", "http://localhost:3000"))
+        .perform(
+            get("/api/games/" + GAME_ID + "/rounds/0").header("Origin", "http://localhost:3000"))
         .andExpect(status().isOk())
         .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"));
   }
@@ -330,11 +353,12 @@ class GameControllerTest {
 
   @Test
   void rejectsOtherOrigins() throws Exception {
-    when(gameService.getGameRound(1L, 0)).thenReturn(Optional.of(round()));
+    when(gameService.getGameRound(GAME_ID, 0)).thenReturn(Optional.of(round()));
 
     var actual =
         mockMvc
-            .perform(get("/api/games/1/rounds/0").header("Origin", "https://evil.example"))
+            .perform(
+                get("/api/games/" + GAME_ID + "/rounds/0").header("Origin", "https://evil.example"))
             .andExpect(status().isForbidden())
             .andReturn();
     assertThat(actual.getResponse().getHeader("Access-Control-Allow-Origin")).isNull();

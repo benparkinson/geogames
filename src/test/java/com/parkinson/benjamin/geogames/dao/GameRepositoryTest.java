@@ -10,12 +10,15 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 
-@DataJpaTest
+// Use the configured H2 (PostgreSQL mode, schema from the Flyway migrations), not a fresh embedded
+// one.
+@DataJpaTest(properties = "spring.test.database.replace=none")
 class GameRepositoryTest {
 
   @Autowired private GameRepository repository;
@@ -75,6 +78,45 @@ class GameRepositoryTest {
   }
 
   @Test
+  void deletingAGameRemovesItsRoundRows() {
+    GameEntity old = gameWithRounds("tripoint:old");
+    old.setCreatedAt(Instant.now().minus(Duration.ofDays(2)));
+    repository.save(old);
+    entityManager.flush();
+    assertThat(rowsIn("game_round_entity")).isEqualTo(3);
+
+    repository.deleteByCreatedAtBefore(Instant.now().minus(Duration.ofDays(1)));
+    entityManager.flush();
+
+    assertThat(rowsIn("game_entity")).isZero();
+    assertThat(rowsIn("game_round_entity")).isZero();
+  }
+
+  @Test
+  void answerStatesAreStoredByNameNotByNumber() {
+    GameEntity game = repository.save(gameWithRounds("tripoint:x"));
+    game.getRounds().get(1).setAnswerState(AnswerState.OUT_OF_GUESSES);
+    entityManager.flush();
+
+    Object stored =
+        entityManager
+            .getEntityManager()
+            .createNativeQuery("select answer_state from game_round_entity where round_number = 1")
+            .getSingleResult();
+
+    assertThat(stored).isEqualTo("OUT_OF_GUESSES");
+  }
+
+  private long rowsIn(String table) {
+    return ((Number)
+            entityManager
+                .getEntityManager()
+                .createNativeQuery("select count(*) from " + table)
+                .getSingleResult())
+        .longValue();
+  }
+
+  @Test
   void persistsRoundsWithAllTheirFields() {
     GameEntity reloaded = saveAndReload(gameWithRounds("tripoint:first"));
 
@@ -108,6 +150,28 @@ class GameRepositoryTest {
 
     assertThat(sorted(again).stream().map(GameRoundEntity::getAnswerState).toList())
         .containsExactly(AnswerState.UNANSWERED, AnswerState.GAVE_UP, AnswerState.CORRECT);
+  }
+
+  @Test
+  void aSavedGameHasAPublicIdThatFindsIt() {
+    GameEntity saved = repository.save(gameWithRounds("tripoint:x"));
+    entityManager.flush();
+    entityManager.clear();
+
+    assertThat(saved.getPublicId()).isNotNull();
+    assertThat(repository.findByPublicId(saved.getPublicId()))
+        .get()
+        .extracting(GameEntity::getId)
+        .isEqualTo(saved.getId());
+    assertThat(repository.findByPublicId(UUID.randomUUID())).isEmpty();
+  }
+
+  @Test
+  void twoGamesGetDifferentPublicIds() {
+    GameEntity first = repository.save(gameWithRounds("tripoint:x"));
+    GameEntity second = repository.save(gameWithRounds("tripoint:x"));
+
+    assertThat(first.getPublicId()).isNotEqualTo(second.getPublicId());
   }
 
   @Test

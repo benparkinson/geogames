@@ -122,14 +122,14 @@ describe("GameSummary", () => {
   it("plays again with a random mix when the game had different types", async () => {
     const fetchMock = mockFetch([
       roundsRoute(mixed),
-      { method: "POST", url: /\/api\/games$/, body: { id: 12 } },
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     renderSummary();
     await screen.findByText("You scored 183 / 300");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
 
-    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/12"));
+    await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const post = callsTo(fetchMock).find((c) => c.method === "POST")!;
     expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3 });
   });
@@ -138,7 +138,7 @@ describe("GameSummary", () => {
     const rivers = makeGameRounds([{ river: true, answerState: "CORRECT" }, { river: true, answerState: "CORRECT" }]);
     const fetchMock = mockFetch([
       roundsRoute(rivers),
-      { method: "POST", url: /\/api\/games$/, body: { id: 5 } },
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     renderSummary(vi.fn(), 2);
     await screen.findByText("Perfect game! 200 / 200");

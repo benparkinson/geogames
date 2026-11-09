@@ -154,7 +154,7 @@ describe("the backend contract (client/src/test/api-shapes.json)", () => {
     ["GET /api/countries", countryNames],
     ["GET /api/rivers", riverNames],
     ["GET /api/lakes", lakeNames],
-    ["POST /api/games", { id: 1 }],
+    ["POST /api/games", { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }],
   ])("%s", (endpoint, fixture) => {
     it("matches the backend response exactly", () => {
       const backend = endpoints[endpoint];
