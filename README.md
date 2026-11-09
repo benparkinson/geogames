@@ -42,5 +42,4 @@ cookies and no client-side identifier, so no consent banner is needed.
 
 The rows go to the `round_result` table in the same database as the games (created by a Flyway
 migration), so production needs no extra configuration. Nothing deletes them when a game expires.
-Set `GEOGAMES_STATS_ENABLED=false` on the Render web service to turn recording off.See
-`docs/plans/game-stats.md`.
+Set `GEOGAMES_STATS_ENABLED=false` on the Render web service to turn recording off.
