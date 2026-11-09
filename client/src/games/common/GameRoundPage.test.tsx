@@ -75,11 +75,11 @@ async function solveTripoint(user: ReturnType<typeof userEvent.setup>) {
 
 describe("GameRoundPage loading and errors", () => {
   it("shows a spinner and a loading title while the round loads", () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => { })));
     const { container } = renderPage();
 
     expect(container.querySelector(".spinner-border")).not.toBeNull();
-    expect(title()).toBe("Loading... | Geogames");
+    expect(title()).toBe("Loading... | GeoGauntlet");
   });
 
   it("shows an error when the round cannot be loaded", async () => {
@@ -96,7 +96,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(TRIPOINT_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("Tripoints | Geogames");
+    expect(title()).toBe("Tripoints | GeoGauntlet");
   });
 
   it("renders the river game and title", async () => {
@@ -104,7 +104,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("River Shapes | Geogames");
+    expect(title()).toBe("River Shapes | GeoGauntlet");
   });
 
   it("copes with a game type it does not know", async () => {
@@ -117,7 +117,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText("Unknown game type...")).toBeInTheDocument();
-    expect(title()).toBe("Unknown game! | Geogames");
+    expect(title()).toBe("Unknown game! | GeoGauntlet");
   });
 });
 
