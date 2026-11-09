@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class TripointFinderTest {
 
@@ -114,6 +116,76 @@ public class TripointFinderTest {
     assertThatThrownBy(() -> service.generate(1, Set.of()))
         .isInstanceOf(UncheckedIOException.class)
         .hasRootCauseMessage("boom");
+  }
+
+  @Test
+  void rebuildGivesBackEveryGeneratedRound() {
+    ObjectMapper mapper = JsonMapper.builder().build();
+
+    for (GameData round : service.generate(definitions.size(), Set.of())) {
+      GameData rebuilt = service.rebuild(round.roundKey());
+
+      assertThat(rebuilt).isEqualTo(round);
+      assertThat(mapper.writeValueAsString(rebuilt)).isEqualTo(mapper.writeValueAsString(round));
+    }
+  }
+
+  @Test
+  void countriesKeepTheDefinitionsOrder() {
+    Tripoint tripoint = (Tripoint) service.rebuild(Tripoint.roundKey(definitions.get(2)));
+
+    assertThat(tripoint.countries()).extracting(Country::name).containsExactly("A2", "B2", "C2");
+  }
+
+  @Test
+  void rebuildTellsTwoTripointsOfTheSameCountriesApart() {
+    List<String> names = List.of("A", "B", "C");
+    TripointDefinition first = new TripointDefinition(new Coordinate(1, 2), names);
+    TripointDefinition second = new TripointDefinition(new Coordinate(3, 4), names);
+    when(loader.loadTripointDefinitions()).thenReturn(List.of(first, second));
+
+    assertThat(((Tripoint) service.rebuild(Tripoint.roundKey(second))).coordinate())
+        .isEqualTo(second.coordinate());
+    assertThat(((Tripoint) service.rebuild(Tripoint.roundKey(first))).coordinate())
+        .isEqualTo(first.coordinate());
+  }
+
+  @Test
+  void rebuildRejectsUnknownKeysAndWrongPrefixes() {
+    assertThatThrownBy(() -> service.rebuild("tripoint:A0|B0|C0@9.0,9.0"))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> service.rebuild("river:Q1"))
+        .isInstanceOf(RoundDataMissingException.class);
+  }
+
+  @Test
+  void roundKeyIncludesTheCoordinate() {
+    Tripoint tripoint = (Tripoint) service.generate(1, Set.of()).get(0);
+
+    assertThat(tripoint.roundKey())
+        .isEqualTo(
+            tripoint.subjectId()
+                + "@"
+                + tripoint.coordinate().latitude()
+                + ","
+                + tripoint.coordinate().longitude());
+    assertThat(tripoint.roundKey())
+        .isEqualTo(
+            Tripoint.roundKey(
+                new TripointDefinition(
+                    tripoint.coordinate(),
+                    tripoint.countries().stream().map(Country::name).toList())));
+  }
+
+  @Test
+  void sameCountriesAtDifferentCoordinatesGetDifferentKeys() {
+    List<String> names = List.of("A", "B", "C");
+    TripointDefinition first = new TripointDefinition(new Coordinate(1, 2), names);
+    TripointDefinition second = new TripointDefinition(new Coordinate(1, 2.5), names);
+
+    assertThat(Tripoint.roundKey(first)).isNotEqualTo(Tripoint.roundKey(second));
+    assertThat(Tripoint.subjectId(first.countryNames()))
+        .isEqualTo(Tripoint.subjectId(second.countryNames()));
   }
 
   @Test

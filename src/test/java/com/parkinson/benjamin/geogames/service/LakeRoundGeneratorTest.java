@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 class LakeRoundGeneratorTest {
 
@@ -65,5 +67,25 @@ class LakeRoundGeneratorTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("7")
         .hasMessageContaining("6");
+  }
+
+  @Test
+  void rebuildGivesBackEveryGeneratedRound() {
+    ObjectMapper mapper = JsonMapper.builder().build();
+
+    for (GameData round : generator.generate(lakes.size(), Set.of())) {
+      GameData rebuilt = generator.rebuild(round.roundKey());
+
+      assertThat(rebuilt).isEqualTo(round);
+      assertThat(mapper.writeValueAsString(rebuilt)).isEqualTo(mapper.writeValueAsString(round));
+    }
+  }
+
+  @Test
+  void rebuildRejectsUnknownKeysAndWrongPrefixes() {
+    assertThatThrownBy(() -> generator.rebuild("lake:Q99"))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> generator.rebuild("river:Q1"))
+        .isInstanceOf(RoundDataMissingException.class);
   }
 }

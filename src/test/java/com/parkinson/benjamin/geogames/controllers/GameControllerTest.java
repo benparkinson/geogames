@@ -20,6 +20,7 @@ import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
+import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -116,6 +117,21 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3));
+  }
+
+  @Test
+  void roundWhoseMapDataHasGoneIs410WithAProblemBody() throws Exception {
+    when(gameService.getGameRound(1L, 0))
+        .thenThrow(new RoundDataMissingException(GameType.TRIPOINT, "tripoint:gone"));
+
+    mockMvc
+        .perform(get("/api/games/1/rounds/0"))
+        .andExpect(status().isGone())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(410))
+        .andExpect(
+            jsonPath("$.detail")
+                .value(org.hamcrest.Matchers.containsString("no longer available")));
   }
 
   @Test

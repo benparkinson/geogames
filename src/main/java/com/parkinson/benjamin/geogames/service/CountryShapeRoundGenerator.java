@@ -18,6 +18,8 @@ import java.util.function.Predicate;
  */
 public class CountryShapeRoundGenerator implements RoundGenerator {
 
+  private static final String PREFIX = "country:";
+
   private final GameType gameType;
   private final CountryShapeService shapes;
   private final Random random;
@@ -50,11 +52,26 @@ public class CountryShapeRoundGenerator implements RoundGenerator {
             .filter(shape -> !excludedSubjects.contains("country:" + shape.name()))
             .toList();
     return RandomPicker.pickDistinct(candidates, count, random, "countries").stream()
-        .<GameData>map(
-            shape ->
-                new CountryShapeRound(
-                    gameType, shape, withNeighbours ? neighboursOf(shape) : List.of()))
+        .<GameData>map(this::toRound)
         .toList();
+  }
+
+  /** Doesn't check {@code eligible}: the round was eligible when the game was created. */
+  @Override
+  public GameData rebuild(String roundKey) {
+    if (!roundKey.startsWith(PREFIX)) {
+      throw new RoundDataMissingException(gameType, roundKey);
+    }
+    String name = roundKey.substring(PREFIX.length());
+    return shapes.loadShapes().stream()
+        .filter(shape -> shape.name().equals(name))
+        .findFirst()
+        .map(this::toRound)
+        .orElseThrow(() -> new RoundDataMissingException(gameType, roundKey));
+  }
+
+  private CountryShapeRound toRound(CountryShape shape) {
+    return new CountryShapeRound(gameType, shape, withNeighbours ? neighboursOf(shape) : List.of());
   }
 
   /** The mainland neighbours' outlines, longest border first. */

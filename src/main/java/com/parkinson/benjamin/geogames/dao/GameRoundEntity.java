@@ -8,7 +8,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 
 /**
  * One round of a game. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
@@ -24,7 +23,12 @@ public class GameRoundEntity {
   @Enumerated(EnumType.STRING)
   private GameType gameType;
 
-  @Lob @Column private String jsonBlob;
+  /**
+   * Names this round's data (see {@code GameData.roundKey()}). The server rebuilds the JSON from
+   * its cached map data on every read, so the geometry isn't stored a second time.
+   */
+  @Column(nullable = false, length = 255)
+  private String roundKey;
 
   private AnswerState answerState;
 
@@ -39,10 +43,10 @@ public class GameRoundEntity {
 
   public GameRoundEntity() {}
 
-  public GameRoundEntity(int roundNumber, GameType gameType, String jsonBlob) {
+  public GameRoundEntity(int roundNumber, GameType gameType, String roundKey) {
     this.roundNumber = roundNumber;
     this.gameType = gameType;
-    this.jsonBlob = jsonBlob;
+    this.roundKey = roundKey;
     this.answerState = AnswerState.UNANSWERED;
     this.hintsUsed = 0;
     this.wrongGuesses = null;
@@ -72,12 +76,12 @@ public class GameRoundEntity {
     this.gameType = gameType;
   }
 
-  public String getJsonBlob() {
-    return jsonBlob;
+  public String getRoundKey() {
+    return roundKey;
   }
 
-  public void setJsonBlob(String jsonBlob) {
-    this.jsonBlob = jsonBlob;
+  public void setRoundKey(String roundKey) {
+    this.roundKey = roundKey;
   }
 
   public AnswerState getAnswerState() {

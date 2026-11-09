@@ -228,10 +228,49 @@ class GameServiceTest {
       assertThat(round.getRoundNumber()).isEqualTo(i);
       assertThat(round.getGameType()).isSameAs(GameType.TRIPOINT);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
-      JsonNode blob = parse(round.getJsonBlob());
-      assertThat(blob.get("countries").size()).isEqualTo(3);
-      assertThat(blob.has("coordinate")).isTrue();
+      assertThat(round.getRoundKey()).isEqualTo(tripoint(i).roundKey());
     }
+  }
+
+  @Test
+  void getGameRoundRebuildsTheJsonFromTheStoredKey() {
+    Tripoint tripoint = tripoint(1);
+    when(tripointGenerator.rebuild(tripoint.roundKey())).thenReturn(tripoint);
+    GameRoundEntity entity = new GameRoundEntity(0, GameType.TRIPOINT, tripoint.roundKey());
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game(entity)));
+
+    GameRound result = service.getGameRound(1L, 0).orElseThrow();
+
+    assertThat(result.jsonBlob()).isEqualTo(objectMapper.writeValueAsString(tripoint));
+    JsonNode blob = parse(result.jsonBlob());
+    assertThat(blob.get("countries").size()).isEqualTo(3);
+    assertThat(blob.has("coordinate")).isTrue();
+    assertThat(entity.getRoundKey()).isEqualTo(tripoint.roundKey());
+  }
+
+  @Test
+  void submitAnswerAlsoRebuildsTheJson() {
+    RiverRound river = (RiverRound) rivers(1).get(0);
+    when(riverGenerator.rebuild(river.roundKey())).thenReturn(river);
+    GameRoundEntity entity = new GameRoundEntity(0, GameType.RIVERS_BY_SHAPE, river.roundKey());
+    when(gameRepository.findById(1L)).thenReturn(Optional.of(game(entity)));
+
+    GameRound result = service.submitAnswer(1L, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
+
+    assertThat(parse(result.jsonBlob()).get("gameType").asString()).isEqualTo("RIVERS_BY_SHAPE");
+  }
+
+  @Test
+  void missingRoundDataReachesTheCaller() {
+    when(tripointGenerator.rebuild("tripoint:gone"))
+        .thenThrow(new RoundDataMissingException(GameType.TRIPOINT, "tripoint:gone"));
+    when(gameRepository.findById(1L))
+        .thenReturn(Optional.of(game(new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:gone"))));
+
+    assertThatThrownBy(() -> service.getGameRound(1L, 0))
+        .isInstanceOf(RoundDataMissingException.class);
+    assertThatThrownBy(() -> service.submitAnswer(1L, 0, AnswerState.GAVE_UP, 0, null))
+        .isInstanceOf(RoundDataMissingException.class);
   }
 
   @Test
@@ -250,13 +289,7 @@ class GameServiceTest {
       assertThat(round.getRoundNumber()).isEqualTo(i);
       assertThat(round.getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
       assertThat(round.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
-      JsonNode blob = parse(round.getJsonBlob());
-      assertThat(blob.get("river").has("name")).isTrue();
-      assertThat(blob.get("gameType").asString()).isEqualTo("RIVERS_BY_SHAPE");
-      assertThat(blob.get("river").has("additionalNames")).isTrue();
-      assertThat(blob.get("river").has("continent")).isTrue();
-      assertThat(blob.get("river").has("geoData")).isTrue();
-      assertThat(blob.get("countries").size()).isZero();
+      assertThat(round.getRoundKey()).isEqualTo(rivers(2).get(i).roundKey());
     }
   }
 
@@ -376,15 +409,16 @@ class GameServiceTest {
 
   @Test
   void getGameRoundReturnsTheRequestedRound() {
-    GameRoundEntity first = new GameRoundEntity(0, GameType.TRIPOINT, "{\"first\":true}");
-    GameRoundEntity second = new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "{\"second\":true}");
+    GameRoundEntity first = new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:first");
+    GameRoundEntity second = new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:second");
     second.setAnswerState(AnswerState.GAVE_UP);
+    when(riverGenerator.rebuild("river:second")).thenReturn(rivers(1).get(0));
     when(gameRepository.findById(1L)).thenReturn(Optional.of(game(first, second)));
 
     GameRound result = service.getGameRound(1L, 1).orElseThrow();
 
     assertThat(result.gameType()).isEqualTo(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE));
-    assertThat(result.jsonBlob()).isEqualTo("{\"second\":true}");
+    assertThat(result.jsonBlob()).isEqualTo(objectMapper.writeValueAsString(rivers(1).get(0)));
     assertThat(result.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(result.totalRoundCount()).isEqualTo(2);
     assertThat(result.gameResult())

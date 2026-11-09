@@ -22,11 +22,11 @@ class GameRepositoryTest {
 
   @Autowired private TestEntityManager entityManager;
 
-  private GameEntity gameWithRounds(String blob) {
+  private GameEntity gameWithRounds(String key) {
     List<GameRoundEntity> rounds = new ArrayList<>();
-    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, blob));
-    rounds.add(new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "{\"river\":true}"));
-    rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "{\"third\":true}"));
+    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
+    rounds.add(new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:Q1"));
+    rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "tripoint:third"));
     return new GameEntity(rounds);
   }
 
@@ -52,7 +52,7 @@ class GameRepositoryTest {
 
   @Test
   void aNewGameHasACreationTime() {
-    assertThat(gameWithRounds("{}").getCreatedAt()).isNotNull();
+    assertThat(gameWithRounds("tripoint:x").getCreatedAt()).isNotNull();
   }
 
   @Test
@@ -76,31 +76,31 @@ class GameRepositoryTest {
 
   @Test
   void persistsRoundsWithAllTheirFields() {
-    GameEntity reloaded = saveAndReload(gameWithRounds("{\"first\":true}"));
+    GameEntity reloaded = saveAndReload(gameWithRounds("tripoint:first"));
 
     List<GameRoundEntity> rounds = sorted(reloaded);
     assertThat(rounds).hasSize(3);
     assertThat(rounds.get(0).getRoundNumber()).isZero();
     assertThat(rounds.get(0).getGameType()).isSameAs(GameType.TRIPOINT);
-    assertThat(rounds.get(0).getJsonBlob()).isEqualTo("{\"first\":true}");
+    assertThat(rounds.get(0).getRoundKey()).isEqualTo("tripoint:first");
     assertThat(rounds.get(0).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
     assertThat(rounds.get(1).getGameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
-    assertThat(rounds.get(1).getJsonBlob()).isEqualTo("{\"river\":true}");
+    assertThat(rounds.get(1).getRoundKey()).isEqualTo("river:Q1");
     assertThat(rounds.get(2).getRoundNumber()).isEqualTo(2);
   }
 
   @Test
-  void persistsALargeJsonBlob() {
-    String blob = "x".repeat(2_000_000);
+  void persistsARoundKeyAtTheColumnLimit() {
+    String key = "x".repeat(255);
 
-    GameEntity reloaded = saveAndReload(gameWithRounds(blob));
+    GameEntity reloaded = saveAndReload(gameWithRounds(key));
 
-    assertThat(sorted(reloaded).get(0).getJsonBlob()).hasSize(2_000_000).isEqualTo(blob);
+    assertThat(sorted(reloaded).get(0).getRoundKey()).hasSize(255).isEqualTo(key);
   }
 
   @Test
   void updatingARoundAnswerThroughTheParentIsPersisted() {
-    GameEntity reloaded = saveAndReload(gameWithRounds("{}"));
+    GameEntity reloaded = saveAndReload(gameWithRounds("tripoint:x"));
     sorted(reloaded).get(1).setAnswerState(AnswerState.GAVE_UP);
     sorted(reloaded).get(2).setAnswerState(AnswerState.CORRECT);
 
@@ -119,7 +119,7 @@ class GameRepositoryTest {
   void everyGameTypeIsStoredAndReadBackAsTheSameConstant() {
     List<GameRoundEntity> rounds = new ArrayList<>();
     for (GameType type : GameType.values()) {
-      rounds.add(new GameRoundEntity(rounds.size(), type, "{}"));
+      rounds.add(new GameRoundEntity(rounds.size(), type, "tripoint:x"));
     }
 
     GameEntity reloaded = saveAndReload(new GameEntity(rounds));
@@ -130,7 +130,7 @@ class GameRepositoryTest {
 
   @Test
   void gameTypesAreStoredByName() {
-    GameEntity saved = repository.save(gameWithRounds("{}"));
+    GameEntity saved = repository.save(gameWithRounds("tripoint:x"));
     entityManager.flush();
 
     Object stored =
@@ -145,7 +145,7 @@ class GameRepositoryTest {
 
   @Test
   void anUnknownStoredGameTypeFailsInsteadOfBecomingAnotherType() {
-    GameEntity saved = repository.save(gameWithRounds("{}"));
+    GameEntity saved = repository.save(gameWithRounds("tripoint:x"));
     entityManager.flush();
     entityManager.clear();
 
@@ -166,9 +166,9 @@ class GameRepositoryTest {
   @Test
   void roundsComeBackInRoundNumberOrderWhateverOrderTheyWereSavedIn() {
     List<GameRoundEntity> rounds = new ArrayList<>();
-    rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "{\"n\":2}"));
-    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "{\"n\":0}"));
-    rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "{\"n\":1}"));
+    rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "tripoint:2"));
+    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:0"));
+    rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "tripoint:1"));
 
     GameEntity reloaded = saveAndReload(new GameEntity(rounds));
 
