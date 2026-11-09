@@ -12,7 +12,7 @@ function currentTheme(): Theme {
   return document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
 }
 
-/** Small fixed button, top right, that switches between light and dark. The choice is remembered in localStorage. */
+/** Small button that switches between light and dark. The choice is remembered in localStorage. */
 export default function ThemeToggle(): React.JSX.Element {
   // The inline script in _document sets the real theme before React runs; the server snapshot is only the static export's.
   const theme = useSyncExternalStore(subscribe, currentTheme, () => "light" as Theme);

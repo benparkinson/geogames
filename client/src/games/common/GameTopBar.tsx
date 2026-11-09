@@ -1,5 +1,6 @@
 import { Button } from "react-bootstrap";
 import HomeLink from "../../components/HomeLink";
+import ThemeToggle from "../../components/ThemeToggle";
 import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round, UNANSWERED } from "./Model";
 import RoundProgress from "./RoundProgress";
 import { roundPoints } from "./scoring";
@@ -33,7 +34,10 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
 
   return (
     <div className="d-flex align-items-center justify-content-between px-3 py-2 gap-2">
-      <HomeLink hideTextOnMobile />
+      <div className="d-flex align-items-center gap-2">
+        <HomeLink hideTextOnMobile />
+        <ThemeToggle />
+      </div>
       <div className="d-flex align-items-center gap-2 small text-muted overflow-hidden">
         <span className="d-none d-sm-inline text-nowrap">Round {round.currentRound + 1} of {round.totalRoundCount}</span>
         <RoundProgress states={states} points={points} currentRound={round.currentRound} goToRound={round.goToRound} />

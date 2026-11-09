@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button, Spinner } from "react-bootstrap";
 import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import HomeLink from "../../components/HomeLink";
+import ThemeToggle from "../../components/ThemeToggle";
 import KofiBadge from "../../components/KofiBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
@@ -56,7 +57,10 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   return (
     <div className="min-vh-100 page-bg">
       <div className="px-3 py-2 d-flex justify-content-between align-items-center">
-        <HomeLink />
+        <div className="d-flex align-items-center gap-2">
+          <HomeLink />
+          <ThemeToggle />
+        </div>
         <KofiBadge />
       </div>
       <div className="card mx-auto my-4 p-3" style={{ maxWidth: 560 }}>
