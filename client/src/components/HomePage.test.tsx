@@ -114,14 +114,14 @@ describe("HomePage choosing a game", () => {
     renderHome();
     await userEvent.setup().click(card(/Tripoints/));
 
-    const kofi = screen.getByRole("link", { name: /Support me on Ko-fi/ });
+    const kofi = screen.getByRole("link", { name: /Buy me a coffee/ });
     expect(startButton().compareDocumentPosition(kofi) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("styles the Ko-fi link quietly and opens it safely in a new tab", () => {
     renderHome();
 
-    const kofi = screen.getByRole("link", { name: /Support me on Ko-fi/ });
+    const kofi = screen.getByRole("link", { name: /Buy me a coffee/ });
     expect(kofi).toHaveClass("btn-outline-secondary");
     expect(kofi).not.toHaveClass("text-white");
     expect(kofi).toHaveAttribute("href", "https://ko-fi.com/O3J02ABGOW");
