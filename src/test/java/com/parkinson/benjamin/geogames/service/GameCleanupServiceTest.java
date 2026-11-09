@@ -9,6 +9,7 @@ import com.parkinson.benjamin.geogames.dao.GameRepository;
 import java.time.Duration;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
+import org.springframework.scheduling.annotation.Scheduled;
 
 class GameCleanupServiceTest {
 
@@ -31,6 +32,20 @@ class GameCleanupServiceTest {
     service.deleteOldGames();
 
     verify(repository).deleteByCreatedAtBefore(org.mockito.ArgumentMatchers.any());
+  }
+
+  /**
+   * The free Render service rarely stays up for a whole interval, so the job must not wait one
+   * before its first run.
+   */
+  @Test
+  void theScheduledRunStartsAtStartUpThenRepeatsEveryInterval() throws NoSuchMethodException {
+    Scheduled scheduled =
+        GameCleanupService.class.getDeclaredMethod("deleteOldGames").getAnnotation(Scheduled.class);
+
+    assertThat(scheduled.initialDelay()).isZero();
+    assertThat(scheduled.initialDelayString()).isEmpty();
+    assertThat(scheduled.fixedDelayString()).isEqualTo("${geogames.games.cleanup-interval:PT1H}");
   }
 
   @Test
