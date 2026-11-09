@@ -64,12 +64,60 @@ describe("HomePage choosing a game", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
   });
 
-  it("selects tripoints by default, and only one card at a time", () => {
+  it("selects no game on load, and shows no start button", () => {
     renderHome();
 
-    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "false");
-    expect(card(/Mixed/)).toHaveAttribute("aria-checked", "false");
+    for (const radio of cards().getAllByRole("radio")) {
+      expect(radio).toHaveAttribute("aria-checked", "false");
+    }
+    expect(screen.queryByRole("button", { name: /Start game/ })).toBeNull();
+    expect(card(/Tripoints/)).toHaveAttribute("tabindex", "0");
+    expect(card(/River Shapes/)).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("shows the start panel with the chosen game once one is selected", async () => {
+    const user = userEvent.setup();
+    renderHome();
+
+    await user.click(card(/River Shapes/));
+    const panel = screen.getByRole("complementary", { name: "Start a game" });
+    expect(within(panel).getByText("River Shapes")).toBeInTheDocument();
+    expect(within(panel).getAllByRole("radio")).toHaveLength(3);
+    expect(within(panel).getByRole("button", { name: "Start game" })).toBeInTheDocument();
+
+    await user.click(card(/Lake Shapes/));
+    expect(within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Lake Shapes")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Start game" })).toHaveLength(1);
+  });
+
+  it("selecting with the arrow keys also shows the start panel", async () => {
+    const user = userEvent.setup();
+    renderHome();
+    card(/Tripoints/).focus();
+
+    await user.keyboard("{ArrowRight}");
+
+    expect(within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Gaps")).toBeInTheDocument();
+    expect(card(/Country Gaps/)).toHaveFocus();
+  });
+
+  it("keeps the start panel before the Ko-fi link in the tab order", async () => {
+    renderHome();
+    await userEvent.setup().click(card(/Tripoints/));
+
+    const kofi = screen.getByRole("link", { name: /Support me on Ko-fi/ });
+    expect(startButton().compareDocumentPosition(kofi) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("styles the Ko-fi link quietly and opens it safely in a new tab", () => {
+    renderHome();
+
+    const kofi = screen.getByRole("link", { name: /Support me on Ko-fi/ });
+    expect(kofi).toHaveClass("btn-outline-secondary");
+    expect(kofi).not.toHaveClass("text-white");
+    expect(kofi).toHaveAttribute("href", "https://ko-fi.com/O3J02ABGOW");
+    expect(kofi).toHaveAttribute("target", "_blank");
+    expect(kofi.getAttribute("rel")).toContain("noopener");
   });
 
   it("selects a card when it is clicked", async () => {
@@ -129,14 +177,18 @@ describe("HomePage choosing a game", () => {
 
     await user.keyboard("a");
 
-    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "true");
+    for (const radio of cards().getAllByRole("radio")) {
+      expect(radio).toHaveAttribute("aria-checked", "false");
+    }
+    expect(screen.queryByRole("button", { name: /Start game/ })).toBeNull();
   });
 });
 
 describe("HomePage starting a game", () => {
-  it("defaults to five rounds", () => {
+  it("defaults to five rounds", async () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     renderHome();
+    await userEvent.setup().click(card(/Tripoints/));
 
     expect(screen.getByRole("radio", { name: "5" })).toBeChecked();
   });
@@ -160,14 +212,16 @@ describe("HomePage starting a game", () => {
     });
   });
 
-  it("starts tripoints with five rounds by default", async () => {
+  it("starts the chosen game with five rounds by default", async () => {
     const fetchMock = mockFetch([
       { url: HEALTH, body: "ok" },
       { method: "POST", url: /\/api\/games$/, body: { id: 1 } },
     ]);
+    const user = userEvent.setup();
     renderHome();
 
-    await userEvent.setup().click(startButton());
+    await user.click(card(/Tripoints/));
+    await user.click(startButton());
 
     await waitFor(() => expect(router.push).toHaveBeenCalled());
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
@@ -183,7 +237,9 @@ describe("HomePage starting a game", () => {
     );
     renderHome();
 
-    await userEvent.setup().click(startButton());
+    const user = userEvent.setup();
+    await user.click(card(/Tripoints/));
+    await user.click(startButton());
 
     expect(await screen.findByRole("button", { name: /Starting/ })).toBeDisabled();
   });
@@ -199,6 +255,7 @@ describe("HomePage starting a game", () => {
     );
     renderHome();
     // Testing Library only detects Jest's fake timers, so user-event would hang here: use fireEvent.
+    fireEvent.click(card(/Tripoints/));
     fireEvent.click(startButton());
     const message = /Waking up the server/;
 
@@ -231,7 +288,9 @@ describe("HomePage starting a game", () => {
     ]);
     renderHome();
 
-    await userEvent.setup().click(startButton());
+    const user = userEvent.setup();
+    await user.click(card(/Tripoints/));
+    await user.click(startButton());
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Couldn't start a game. The server may be down. Try again.",
