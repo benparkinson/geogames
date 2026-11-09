@@ -48,19 +48,15 @@ jobs:
         with:
           node-version-file: client/.nvmrc
           cache: npm
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: |
+            client/package-lock.json
+            e2e/package-lock.json
 
-      # Maven installs Node itself from <nodeVersion> in pom.xml; setup-node reads client/.nvmrc.
-      # They must be the same version.
-      - name: Check client/.nvmrc matches the Node version in pom.xml
-        run: |
-          pom_version=$(sed -n 's|.*<nodeVersion>v\{0,1\}\([^<]*\)</nodeVersion>.*|\1|p' pom.xml | tr -d '[:space:]')
-          nvmrc_version=$(tr -d '[:space:]' < client/.nvmrc | sed 's/^v//')
-          echo "pom.xml: '${pom_version}', client/.nvmrc: '${nvmrc_version}'"
-          if [ -z "${pom_version}" ] || [ "${pom_version}" != "${nvmrc_version}" ]; then
-            echo "::error file=client/.nvmrc::client/.nvmrc (${nvmrc_version}) and <nodeVersion> in pom.xml (${pom_version}) must be the same"
-            exit 1
-          fi
+      # Java: pom.xml, every setup-java and the Dockerfile's temurin images. Node: pom.xml
+      # <nodeVersion> (Maven's Node), client/.nvmrc (setup-node's) and the @types/node majors.
+      # A Dependabot bump that moves only one of them (a Docker tag, @types/node) fails here.
+      - name: Check Java and Node versions agree
+        run: bash scripts/check-versions.sh
 
       - name: Install dependencies
         working-directory: client
@@ -70,8 +66,23 @@ jobs:
         working-directory: client
         run: npm run lint
 
+      # A plugin outside its ESLint peer range can stop reporting without crashing, and lint
+      # still passes on clean code. This fails unless a rule from each plugin still fires.
+      - name: Check every ESLint plugin still reports
+        working-directory: client
+        run: npm run lint:rules
+
       - name: Type-check
         working-directory: client
+        run: npm run typecheck
+
+      - name: Install browser-test dependencies
+        working-directory: e2e
+        run: npm ci
+
+      # Playwright strips types without checking them, so the e2e job alone misses type errors.
+      - name: Type-check the browser tests
+        working-directory: e2e
         run: npm run typecheck
 
   unit-backend:
