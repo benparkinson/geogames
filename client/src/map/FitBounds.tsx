@@ -13,7 +13,7 @@ export function FitBounds({ data, bounds, id, maxZoom = 7 }: { data?: GeoJsonObj
   useEffect(() => {
     const target = bounds ?? (data ? L.geoJSON(data).getBounds() : undefined);
     if (target) {
-      map.fitBounds(target, { padding: [24, 24], maxZoom });
+      map.fitBounds(target, { padding: [24, 24], maxZoom, animate: false });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, id]);
