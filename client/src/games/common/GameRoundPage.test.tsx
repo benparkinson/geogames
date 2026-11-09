@@ -171,9 +171,9 @@ describe("GameRoundPage playing", () => {
   });
 
   it("prefetches the next round of a round that was already answered", async () => {
-    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
+    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "UNANSWERED", "UNANSWERED"]);
     renderPage();
-    await screen.findByText(/Next round/);
+    await screen.findByText(RIVER_PROMPT);
 
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
   });
@@ -182,6 +182,14 @@ describe("GameRoundPage playing", () => {
     fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "UNANSWERED", "UNANSWERED"]);
     renderPage();
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
+  });
+
+  it("opens a finished game on its results after a reload", async () => {
+    fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
+    renderPage();
+
+    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+    expect(screen.queryByText(TRIPOINT_PROMPT)).not.toBeInTheDocument();
   });
 
   it("jumps to a round with the progress dots", async () => {
@@ -201,18 +209,27 @@ describe("GameRoundPage results", () => {
     fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
     const user = userEvent.setup();
     renderPage();
-    await screen.findByText(TRIPOINT_PROMPT);
-
-    await user.click(screen.getByRole("button", { name: "Round 2: revealed" }));
-    await screen.findByText(RIVER_PROMPT);
-    await user.click(screen.getByRole("button", { name: "See results" }));
-
     expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
 
     expect(await screen.findByText(TRIPOINT_PROMPT)).toBeInTheDocument();
     expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
+  });
+
+  it("returns to the results from a round with See results", async () => {
+    fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText("You scored 100 / 200");
+
+    await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
+    await screen.findByText(TRIPOINT_PROMPT);
+    await user.click(screen.getByRole("button", { name: "Round 2: revealed" }));
+    await screen.findByText(RIVER_PROMPT);
+    await user.click(screen.getByRole("button", { name: "See results" }));
+
+    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
   });
 
   it("falls back to the current round's state when the backend sends no round states", async () => {
