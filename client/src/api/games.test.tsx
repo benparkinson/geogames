@@ -169,12 +169,12 @@ describe("useSubmitAnswer", () => {
     });
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("UNANSWERED"));
 
-    act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2 }));
+    act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 }));
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("GAVE_UP"));
     const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
-    expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2 });
+    expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
   });
 });
 
@@ -200,7 +200,7 @@ describe("useSubmitAnswer across rounds", () => {
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
     expect(roundGets(fetchMock, 1)).toHaveLength(1);
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
     expect(roundGets(fetchMock, 0)).toHaveLength(2);
@@ -216,7 +216,7 @@ describe("useSubmitAnswer across rounds", () => {
     await waitFor(() => expect(result.current.r0.data).toBeDefined());
     expect(roundGets(fetchMock, 1)).toHaveLength(0);
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
 
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
   });
@@ -228,7 +228,7 @@ describe("useSubmitAnswer across rounds", () => {
     });
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
     expect(roundGets(fetchMock, 2)).toHaveLength(0);

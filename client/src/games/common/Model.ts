@@ -16,6 +16,8 @@ export function isRevealed(state: AnswerState): boolean {
 export interface RoundAnswer {
   answerState: AnswerState;
   hintsUsed: number;
+  /** Wrong guesses that counted against the guess limit, as `wrongGuessCount` in `guessReducer` counts them. */
+  wrongGuesses: number;
 }
 
 export interface Round {

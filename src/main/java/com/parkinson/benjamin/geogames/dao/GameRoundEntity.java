@@ -31,6 +31,12 @@ public class GameRoundEntity {
   /** How many hints the player used before answering. */
   private int hintsUsed;
 
+  /**
+   * Wrong guesses the client reported, as counted against the guess limit. Null if the client
+   * didn't report it.
+   */
+  private Integer wrongGuesses;
+
   public GameRoundEntity() {}
 
   public GameRoundEntity(int roundNumber, GameType gameType, String jsonBlob) {
@@ -39,6 +45,7 @@ public class GameRoundEntity {
     this.jsonBlob = jsonBlob;
     this.answerState = AnswerState.UNANSWERED;
     this.hintsUsed = 0;
+    this.wrongGuesses = null;
   }
 
   public long getId() {
@@ -87,5 +94,13 @@ public class GameRoundEntity {
 
   public void setHintsUsed(int hintsUsed) {
     this.hintsUsed = hintsUsed;
+  }
+
+  public Integer getWrongGuesses() {
+    return wrongGuesses;
+  }
+
+  public void setWrongGuesses(Integer wrongGuesses) {
+    this.wrongGuesses = wrongGuesses;
   }
 }

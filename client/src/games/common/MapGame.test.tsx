@@ -135,12 +135,30 @@ describe("MapGame guessing", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("button", { name: /Next round/ })).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByText("Shape only.")).not.toBeInTheDocument();
+  });
+
+  it("reports only the guesses that count against the limit as wrong guesses", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = renderGame({ isKnownGuess: (text) => text !== "Atlantis" });
+
+    await guess(user, "Italy"); // wrong: counts
+    await user.clear(input());
+    await guess(user, "Italy"); // duplicate: doesn't count
+    await user.clear(input());
+    await guess(user, "Atlantis"); // unknown: doesn't count
+    await user.clear(input());
+    await guess(user, "France"); // right: doesn't count
+    await user.clear(input());
+    await guess(user, "Spain");
+
+    expect(submitAnswer).toHaveBeenCalledTimes(1);
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 1 });
   });
 
   it("ignores guesses after the round is over", async () => {
@@ -151,13 +169,25 @@ describe("MapGame guessing", () => {
 });
 
 describe("MapGame giving up", () => {
+  it("reports the wrong guesses made before giving up", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = renderGame();
+
+    await guess(user, "Italy");
+    await user.clear(input());
+    await guess(user, "Peru");
+    await reveal(user);
+
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0, wrongGuesses: 2 });
+  });
+
   it("reports GAVE_UP once and reveals the answers that weren't found", async () => {
     const { submitAnswer } = renderGame();
 
     await reveal(userEvent.setup());
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0, wrongGuesses: 0 });
     expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
@@ -331,7 +361,7 @@ describe("MapGame hints", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 1 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 1, wrongGuesses: 0 });
   });
 
   it("reports the hints used when the player gives up", async () => {
@@ -345,7 +375,7 @@ describe("MapGame hints", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     await reveal(user);
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 2 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
   });
 
   it("shows what the round is worth, 100 then 83, 67 and 50 for three hints", async () => {
@@ -399,7 +429,7 @@ describe("MapGame guess limit", () => {
     await guess(user, "Peru");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0, wrongGuesses: 2 });
     expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");

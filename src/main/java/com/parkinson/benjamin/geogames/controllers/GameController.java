@@ -44,7 +44,8 @@ public class GameController {
       @PathVariable int round,
       @RequestBody GameRoundAnswerRequest answer) {
     return gameService
-        .submitAnswer(gameId, round, answer.answerState(), answer.hintsUsedOrZero())
+        .submitAnswer(
+            gameId, round, answer.answerState(), answer.hintsUsedOrZero(), answer.wrongGuesses())
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

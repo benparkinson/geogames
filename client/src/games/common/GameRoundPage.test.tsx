@@ -135,7 +135,7 @@ describe("GameRoundPage playing", () => {
       const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
       expect(posts).toHaveLength(1);
       expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/answers");
-      expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0 });
+      expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
     });
     await waitFor(() => expect(roundGets(fetchMock, 0).length).toBeGreaterThanOrEqual(2));
   });

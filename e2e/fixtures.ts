@@ -8,6 +8,8 @@ export interface Answer {
 
 export interface RoundInfo {
   gameType: string;
+  /** How many wrong guesses end the round (the type's `guessLimit`). */
+  guessLimit: number;
   answers: Answer[];
 }
 
@@ -28,6 +30,7 @@ export class Api {
     const places: Answer[] = gameType === "TRIPOINT" ? blob.countries : [blob.river ?? blob.lake ?? blob.country];
     return {
       gameType,
+      guessLimit: body.gameType.guessLimit,
       answers: places.map(place => ({ name: place.name, additionalNames: place.additionalNames ?? [] })),
     };
   }

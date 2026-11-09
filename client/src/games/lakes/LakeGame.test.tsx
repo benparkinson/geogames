@@ -59,7 +59,7 @@ describe("LakeGame", () => {
 
     await userEvent.setup().type(input(), text + "{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 
   it("rejects another lake and charges a guess", async () => {
