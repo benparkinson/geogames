@@ -1,0 +1,12 @@
+# Hidden from ripgrep (and so from Claude Code's Grep and Glob tools) to keep searches small.
+# The files are still tracked; search them with an explicit path when you need to.
+# Claude Code's worktrees: whole copies of the repo, which would repeat every search result.
+.claude/worktrees/
+# Generated data: 580+ JSON files, some a single line of megabytes.
+src/main/resources/processed/
+# Raw geo sources (tens of megabytes of GeoJSON).
+geodata/**/*.geojson
+geodata/countries/countries.geo.json
+geodata/**/wikidata.json
+# Lock files.
+**/package-lock.json

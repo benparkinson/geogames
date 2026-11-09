@@ -65,3 +65,6 @@ client/next-env.d.ts
 
 # stray root-level npm install; the real node_modules is client/node_modules
 /node_modules/
+
+# Claude Code worktrees (whole checkouts of other branches)
+.claude/worktrees/
