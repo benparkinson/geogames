@@ -217,6 +217,21 @@ describe("GameRoundPage results", () => {
     expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
   });
 
+  it("returns to the results from a round with See results", async () => {
+    fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText("You scored 100 / 200");
+
+    await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
+    await screen.findByText(TRIPOINT_PROMPT);
+    await user.click(screen.getByRole("button", { name: "Round 2: revealed" }));
+    await screen.findByText(RIVER_PROMPT);
+    await user.click(screen.getByRole("button", { name: "See results" }));
+
+    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+  });
+
   it("falls back to the current round's state when the backend sends no round states", async () => {
     // The older backend can't say which rounds are answered, so the page opens the first round and reads its state.
     mockFetch([
