@@ -9,8 +9,12 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
 function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
-    const [currentRound, setRound] = useState(0)
+    // Until the player acts, resume at the first unanswered round, which the first round's game result tells us.
+    const [chosenRound, setRound] = useState<number | null>(null)
     const [showSummary, setShowSummary] = useState(false)
+    const firstRound = useRound(gameId, 0).data;
+    const resumeRound = Math.max(0, firstRound?.gameResult.roundAnswerStates.indexOf(UNANSWERED) ?? 0);
+    const currentRound = chosenRound ?? resumeRound;
     const { error, data, isLoading } = useRound(gameId, currentRound);
     const submitAnswerMutation = useSubmitAnswer(gameId, currentRound, data?.totalRoundCount);
     const queryClient = useQueryClient();
@@ -34,6 +38,8 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     }
 
     function submitAnswer(answer: RoundAnswer): void {
+        // Pin the round, or the refreshed game result would move the resume point on by itself.
+        setRound(currentRound)
         submitAnswerMutation.mutate(answer);
     }
 

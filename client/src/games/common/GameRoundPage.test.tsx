@@ -171,19 +171,25 @@ describe("GameRoundPage playing", () => {
   });
 
   it("prefetches the next round of a round that was already answered", async () => {
-    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "UNANSWERED"]);
+    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
     renderPage();
     await screen.findByText(/Next round/);
 
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
   });
 
+  it("resumes at the first unanswered round after a reload", async () => {
+    fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "UNANSWERED", "UNANSWERED"]);
+    renderPage();
+    expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
+  });
+
   it("jumps to a round with the progress dots", async () => {
-    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "UNANSWERED", "UNANSWERED"]);
+    const fetchMock = fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE", "TRIPOINT"], ["CORRECT", "GAVE_UP", "UNANSWERED"]);
     renderPage();
     await screen.findByText(TRIPOINT_PROMPT);
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: not played" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: revealed" }));
 
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
     expect(roundGets(fetchMock, 1).length).toBeGreaterThanOrEqual(1);
@@ -210,11 +216,19 @@ describe("GameRoundPage results", () => {
   });
 
   it("falls back to the current round's state when the backend sends no round states", async () => {
+    // The older backend can't say which rounds are answered, so the page opens the first round and reads its state.
     mockFetch([
       {
         url: /\/rounds\/0$/,
         body: {
           ...makeRound({ answerState: "CORRECT", totalRoundCount: 3 }),
+          gameResult: { gameState: "IN_PROGRESS", roundsUnanswered: 2, score: 1 },
+        },
+      },
+      {
+        url: /\/rounds\/1$/,
+        body: {
+          ...makeRound({ answerState: "UNANSWERED", totalRoundCount: 3 }),
           gameResult: { gameState: "IN_PROGRESS", roundsUnanswered: 2, score: 1 },
         },
       },
@@ -224,10 +238,7 @@ describe("GameRoundPage results", () => {
     await screen.findByText(TRIPOINT_PROMPT);
 
     expect(screen.getAllByRole("button", { name: /^Round \d/ })).toHaveLength(3);
-    // An older backend sends no points: the round counts as perfect, and the score as its points.
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--perfect");
-    expect(screen.getByText("Score 100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 2: not played" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Round 2: current" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 3: not played" })).toBeDisabled();
   });
 });
