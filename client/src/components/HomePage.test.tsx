@@ -57,6 +57,14 @@ describe("HomePage on load", () => {
     expect(href("Software licences")).toBe("/third-party-licenses.txt");
     expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
   });
+
+  it("tells players that anonymous round results are recorded", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    const footer = within(screen.getByRole("contentinfo"));
+    expect(footer.getByText(/We record anonymous round results \(no cookies, no personal data\)/)).toBeInTheDocument();
+  });
 });
 
 describe("HomePage choosing a game", () => {

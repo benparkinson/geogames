@@ -45,10 +45,26 @@ public class GameEntity {
   @Column(nullable = false)
   private Instant createdAt;
 
+  /**
+   * Random per game, shared by the rows the usage statistics record for its rounds. It is not the
+   * public id, which is in URLs and request logs, and it is never sent to a client or logged. Null
+   * for a game created before the statistics existed.
+   */
+  @Column(updatable = false)
+  private UUID playId;
+
+  /** What the player asked for: a {@code GameType} name, or {@code RANDOM}. Null for old games. */
+  @Column(updatable = false)
+  private String gameMode;
+
   public GameEntity() {}
 
-  /** A game always has at least one round, so its result is never "finished" with nothing played. */
-  public GameEntity(List<GameRoundEntity> rounds) {
+  /**
+   * A game always has at least one round, so its result is never "finished" with nothing played.
+   *
+   * @param gameMode what was requested: a {@code GameType} name, or {@code RANDOM}
+   */
+  public GameEntity(List<GameRoundEntity> rounds, String gameMode) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -56,6 +72,8 @@ public class GameEntity {
     this.createdAt = Instant.now().truncatedTo(ChronoUnit.HOURS);
     // UUID.randomUUID() uses SecureRandom: 122 random bits, so it can't be guessed.
     this.publicId = UUID.randomUUID();
+    this.playId = UUID.randomUUID();
+    this.gameMode = gameMode;
   }
 
   public long getId() {
@@ -70,6 +88,14 @@ public class GameEntity {
     return publicId;
   }
 
+  public UUID getPlayId() {
+    return playId;
+  }
+
+  public String getGameMode() {
+    return gameMode;
+  }
+
   public List<GameRoundEntity> getRounds() {
     return rounds;
   }
@@ -82,6 +108,7 @@ public class GameEntity {
     this.createdAt = createdAt;
   }
 
+  /** Deliberately leaves out the play id. */
   @Override
   public String toString() {
     return "GameEntity[" + "id=" + id + "]";

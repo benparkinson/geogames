@@ -30,6 +30,9 @@ import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
+import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -46,6 +49,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
@@ -63,6 +68,7 @@ class GameServiceTest {
   private RoundGenerator riverGenerator;
   private final Map<GameType, RoundGenerator> generators = new EnumMap<>(GameType.class);
   private GameService service;
+  private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
 
   @BeforeEach
   void setUp() {
@@ -95,7 +101,8 @@ class GameServiceTest {
   }
 
   private GameService allGeneratorsService(Random random) {
-    return new GameService(gameRepository, List.copyOf(generators.values()), objectMapper, random);
+    return new GameService(
+        gameRepository, List.copyOf(generators.values()), objectMapper, random, events);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -103,7 +110,7 @@ class GameServiceTest {
   }
 
   private GameService serviceWith(Random random, RoundGenerator... generators) {
-    return new GameService(gameRepository, List.of(generators), objectMapper, random);
+    return new GameService(gameRepository, List.of(generators), objectMapper, random, events);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -121,7 +128,7 @@ class GameServiceTest {
   }
 
   private static GameEntity game(GameRoundEntity... rounds) {
-    return new GameEntity(new ArrayList<>(List.of(rounds)));
+    return new GameEntity(new ArrayList<>(List.of(rounds)), "TRIPOINT");
   }
 
   private static Country square(String name) {
@@ -296,6 +303,20 @@ class GameServiceTest {
     }
   }
 
+  @Test
+  void aSingleTypeGameRecordsItsTypeAsTheMode() {
+    service.createGame("RIVERS_BY_SHAPE", 1);
+
+    assertThat(savedGame().getGameMode()).isEqualTo("RIVERS_BY_SHAPE");
+  }
+
+  @Test
+  void aMixedGameRecordsRandomAsTheMode() {
+    service.createGame("RANDOM", 3);
+
+    assertThat(savedGame().getGameMode()).isEqualTo("RANDOM");
+  }
+
   @RepeatedTest(20)
   void createsRandomRoundsSplitAcrossEveryType() {
     int total = 6;
@@ -359,7 +380,8 @@ class GameServiceTest {
     for (int run = 0; run < 2; run++) {
       GameRepository repository = mock(GameRepository.class);
       when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
-      new GameService(repository, List.copyOf(generators.values()), objectMapper, new Random(7))
+      new GameService(
+              repository, List.copyOf(generators.values()), objectMapper, new Random(7), events)
           .createGame("RANDOM", 10);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
@@ -485,6 +507,66 @@ class GameServiceTest {
     assertThat(afterSecond.gameResult().roundAnswerStates())
         .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP);
     verify(gameRepository, times(2)).save(game);
+  }
+
+  @Test
+  void theFirstAnswerPublishesOneEventWithPlainValues() {
+    GameEntity game =
+        game(
+            round(0, AnswerState.UNANSWERED),
+            hintedRound(1, GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED, 0));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    service.submitAnswer(GAME_ID, 1, AnswerState.CORRECT, 1, 2);
+
+    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    verify(events).publishEvent(captor.capture());
+    assertThat(captor.getValue())
+        .isEqualTo(
+            new RoundAnswered(
+                game.getPlayId(),
+                "TRIPOINT",
+                2,
+                1,
+                GameType.RIVERS_BY_SHAPE,
+                "{}",
+                AnswerState.CORRECT,
+                1,
+                2,
+                LocalDate.now(ZoneOffset.UTC)));
+  }
+
+  @Test
+  void anIdenticalRepeatPublishesNothing() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+
+    verify(events, times(1)).publishEvent(any(Object.class));
+  }
+
+  @Test
+  void aConflictingAnswerPublishesNothing() {
+    GameEntity game = game(round(0, AnswerState.CORRECT));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+        .isInstanceOf(RoundAlreadyAnsweredException.class);
+
+    verify(events, never()).publishEvent(any(Object.class));
+  }
+
+  @Test
+  void aGameWithoutAPlayIdPublishesNothing() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    ReflectionTestUtils.setField(game, "playId", null);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+
+    verify(events, never()).publishEvent(any(Object.class));
   }
 
   @Test
@@ -835,6 +917,7 @@ class GameServiceTest {
     assertThatThrownBy(() -> game())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("at least one round");
-    assertThatThrownBy(() -> new GameEntity(null)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> new GameEntity(null, "TRIPOINT"))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }
