@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueOutlineOptions, SATELLITE_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
@@ -83,5 +83,21 @@ describe("NeighboursMap", () => {
       ],
       expect.anything(),
     );
+  });
+});
+
+describe("NeighboursMap hover names", () => {
+  it("names no country while playing, so the answer isn't leaked", () => {
+    renderMap();
+
+    expect(screen.queryAllByTestId("Tooltip")).toHaveLength(0);
+  });
+
+  it("names the answer and every neighbour on hover once the round is over", () => {
+    const data = makeCountryShapeRoundData();
+    renderMap({ data, gameOver: true });
+
+    const names = screen.getAllByTestId("Tooltip").map((el) => el.textContent);
+    expect(names).toEqual(expect.arrayContaining([data.country.name, ...data.neighbours.map((n) => n.name)]));
   });
 });

@@ -1,4 +1,4 @@
-import { GeoJSON } from "react-leaflet";
+import { GeoJSON, Tooltip } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions } from "../../map/constants";
 import type { LineGeoData } from "../common/country";
@@ -19,11 +19,22 @@ export function FocusFit({ country }: { country: CountryShape }): React.JSX.Elem
 }
 
 /** The filled outline of each neighbour. */
-export function NeighbourOutlines({ neighbours, id }: { neighbours: CountryOutline[]; id: string }): React.JSX.Element {
+export function NeighbourOutlines({
+  neighbours,
+  id,
+  labelled = false,
+}: {
+  neighbours: CountryOutline[];
+  id: string;
+  /** Show each neighbour's name on hover (once the round is over). */
+  labelled?: boolean;
+}): React.JSX.Element {
   return (
     <>
       {neighbours.map((neighbour) => (
-        <GeoJSON key={`${id}/${neighbour.name}`} data={neighbour.outline} pathOptions={clueOutlineOptions()} />
+        <GeoJSON key={`${id}/${neighbour.name}`} data={neighbour.outline} pathOptions={clueOutlineOptions()}>
+          {labelled && <Tooltip sticky>{neighbour.name}</Tooltip>}
+        </GeoJSON>
       ))}
     </>
   );
@@ -46,6 +57,8 @@ export function AnswerOutline({ country, gaveUp }: { country: CountryShape; gave
       pathOptions={answerPathOptions(gaveUp)}
       data={country.outline}
       key={`${country.name}/outline${gaveUp ? "/gaveUp" : ""}`}
-    />
+    >
+      <Tooltip sticky>{country.name}</Tooltip>
+    </GeoJSON>
   );
 }

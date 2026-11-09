@@ -24,11 +24,13 @@ export function EndFlags({ river }: { river: River }): React.JSX.Element {
 }
 
 /** The outline of each country the river flows through. */
-export function CountryOutlines({ countries }: { countries: Country[] }): React.JSX.Element {
+export function CountryOutlines({ countries, labelled = false }: { countries: Country[]; labelled?: boolean }): React.JSX.Element {
   return (
     <>
       {countries.map((country) => (
-        <GeoJSON key={country.name} data={country.geoData} pathOptions={clueOutlineOptions()} />
+        <GeoJSON key={country.name} data={country.geoData} pathOptions={clueOutlineOptions()}>
+          {labelled && <Tooltip sticky>{country.name}</Tooltip>}
+        </GeoJSON>
       ))}
     </>
   );

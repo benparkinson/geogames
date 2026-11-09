@@ -10,7 +10,7 @@ function LandBordersMap({ data: { country, neighbours }, gameOver, gaveUp, hints
   return (
     <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>
       <RevealTiles show={gameOver} />
-      {(gameOver || hintsUsed >= 1) && <NeighbourOutlines neighbours={neighbours} id={country.name} />}
+      {(gameOver || hintsUsed >= 1) && <NeighbourOutlines neighbours={neighbours} id={country.name} labelled={gameOver} />}
       {!gameOver && <ClueLines data={country.landBorders} id={`${country.name}/borders`} />}
       {!gameOver && hintsUsed >= 2 && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}

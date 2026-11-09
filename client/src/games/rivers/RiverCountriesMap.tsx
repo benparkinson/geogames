@@ -11,7 +11,7 @@ function RiverCountriesMap({ data: { river, countries }, gaveUp, gameOver, hints
   return (
     <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>
       <RevealTiles show={gameOver} />
-      <CountryOutlines countries={countries} />
+      <CountryOutlines countries={countries} labelled={gameOver} />
       {gameOver && <RiverLine river={river} gaveUp={gaveUp} />}
       {(hintsUsed >= 1 || gameOver) && <EndFlags river={river} />}
       {/* Fit the river, not the countries: Russia crosses the antimeridian and would fit the whole world. */}

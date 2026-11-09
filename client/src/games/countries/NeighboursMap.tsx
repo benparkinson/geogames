@@ -10,7 +10,7 @@ function NeighboursMap({ data: { country, neighbours }, gameOver, gaveUp, hintsU
   return (
     <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>
       <RevealTiles show={gameOver} />
-      <NeighbourOutlines neighbours={neighbours} id={country.name} />
+      <NeighbourOutlines neighbours={neighbours} id={country.name} labelled={gameOver} />
       {!gameOver && hintsUsed >= 1 && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}
       <FocusFit country={country} />
