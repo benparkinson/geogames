@@ -40,6 +40,7 @@ Never recorded: IP addresses, user agents, headers, either game id (the id in th
 matched against request logs), the time of day, or anything stored in the browser. There are no
 cookies and no client-side identifier, so no consent banner is needed.
 
-The rows go to the `round_result` table in the same database as the games (created by a Flyway
-migration), so production needs no extra configuration. Nothing deletes them when a game expires.
+The rows go to the `stat_*` tables in the same database as the games (created by a Flyway
+migration): one row per answered round in `stat_round`, one per game in `stat_game`, and the repeated
+names in small lookup tables. The `round_result` view shows them in the flat shape, so production needs no extra configuration. Nothing deletes them when a game expires.
 Set `GEOGAMES_STATS_ENABLED=false` on the Render web service to turn recording off.
