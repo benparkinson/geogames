@@ -1,0 +1,17 @@
+/* Temporary: points Bootstrap's variables at our tokens until Bootstrap is removed (docs/plans/theme.md, phase 4). */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-body-bg: var(--gg-color-surface);
+  --bs-body-color: var(--gg-color-text);
+  --bs-body-font-family: var(--gg-font-sans);
+  --bs-secondary-color: var(--gg-color-text-muted);
+  --bs-border-color: var(--gg-color-border);
+  --bs-border-radius: var(--gg-radius);
+  --bs-border-radius-sm: var(--gg-radius-sm);
+  --bs-border-radius-lg: var(--gg-radius-lg);
+  --bs-border-radius-xl: var(--gg-radius-xl);
+  --bs-border-radius-pill: var(--gg-radius-pill);
+}
+a:not(.btn) { color: var(--gg-color-link); }
+a:not(.btn):hover { color: var(--gg-color-link-hover); }

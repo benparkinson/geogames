@@ -1,25 +1,17 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--gg-font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: var(--gg-font-mono);
 }
 
 @keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
 .shake { animation: shake 0.3s; }
 @media (prefers-reduced-motion: reduce) { .shake { animation: none; } }
-
-:root {
-  --gg-bg: #c8cfe8;
-  --gg-panel-bg: #ffffff;
-  --gg-panel-width: 360px;
-  --gg-map-blank: #2f3b52;
-}
 
 .game-screen {
   display: grid;
@@ -27,22 +19,22 @@ code {
   height: 100dvh;
   grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas: "top" "map" "panel";
-  background: var(--gg-bg);
+  background: var(--gg-color-page-bg);
 }
 .game-top   { grid-area: top; }
 .game-map   { grid-area: map; position: relative; min-height: 0; }
 .game-panel {
   grid-area: panel;
-  background: var(--gg-panel-bg);
+  background: var(--gg-color-panel-bg);
   max-height: 50dvh;
   overflow-y: auto;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  box-shadow: 0 -2px 12px rgb(0 0 0 / 0.12);
+  border-top-left-radius: var(--gg-radius-xl);
+  border-top-right-radius: var(--gg-radius-xl);
+  box-shadow: var(--gg-shadow-panel);
 }
 .game-map .leaflet-container { position: absolute; inset: 0; height: 100%; width: 100%; }
-.game-map--blank .leaflet-container { background: var(--gg-map-blank); }
+.game-map--blank .leaflet-container { background: var(--gg-color-map-blank); }
 .map-caption {
   position: absolute;
   top: 0.75rem;
@@ -52,13 +44,13 @@ code {
   pointer-events: none;
   max-width: calc(100% - 1.5rem);
   text-align: center;
-  background: rgb(0 0 0 / 0.65);
-  color: #fff;
+  background: var(--gg-color-map-caption-bg);
+  color: var(--gg-color-map-caption-text);
   padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
+  border-radius: var(--gg-radius-xl);
   font-size: 0.8rem;
 }
-.answer-slot-empty { border: 2px dashed var(--bs-border-color); }
+.answer-slot-empty { border: 2px dashed var(--gg-color-border); }
 
 @media (min-width: 992px) {
   .game-screen {
@@ -66,7 +58,7 @@ code {
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas: "top top" "map panel";
   }
-  .game-panel { max-height: none; border-radius: 0; box-shadow: -2px 0 12px rgb(0 0 0 / 0.08); }
+  .game-panel { max-height: none; border-radius: 0; box-shadow: var(--gg-shadow-panel-side); }
 }
 
 .round-progress {
@@ -85,23 +77,23 @@ code {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid var(--bs-secondary-color);
+  border: 1px solid var(--gg-color-text-muted);
   background: transparent;
-  color: var(--bs-body-color);
+  color: var(--gg-color-text);
   font-size: 0.65rem;
   line-height: 1;
 }
-.round-dot--correct { background: var(--bs-success, #198754); border-color: var(--bs-success, #198754); color: #fff; }
-.round-dot--perfect { background: var(--bs-warning, #ffc107); border-color: var(--bs-warning, #ffc107); color: #3d2e00; }
-.round-dot--revealed { background: var(--bs-secondary, #6c757d); border-color: var(--bs-secondary, #6c757d); color: #fff; }
-.round-dot--current { box-shadow: 0 0 0 2px var(--bs-primary, #0d6efd); }
+.round-dot--correct { background: var(--gg-color-correct); border-color: var(--gg-color-correct); color: var(--gg-color-on-correct); }
+.round-dot--perfect { background: var(--gg-color-perfect); border-color: var(--gg-color-perfect); color: var(--gg-color-on-perfect); }
+.round-dot--revealed { background: var(--gg-color-revealed); border-color: var(--gg-color-revealed); color: var(--gg-color-on-revealed); }
+.round-dot--current { box-shadow: 0 0 0 2px var(--gg-color-accent); }
 .round-dot:disabled { opacity: 0.5; }
 @media (min-width: 576px) {
   .round-dot { width: 28px; height: 28px; font-size: 0.8rem; }
 }
 
-.game-card { transition: box-shadow 0.15s; }
-.game-card:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.15); }
+.game-card { transition: box-shadow var(--gg-duration); }
+.game-card:hover { box-shadow: var(--gg-shadow-hover); }
 
 /* Home page: the cards column, and the start panel (bottom bar when narrow, right gutter when wide). */
 .home-header, .home-layout { max-width: 720px; margin: 0 auto; padding: 0 0.75rem; }
@@ -110,11 +102,11 @@ code {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 1030;
-  background: var(--gg-panel-bg);
+  background: var(--gg-color-panel-bg);
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  box-shadow: 0 -2px 12px rgb(0 0 0 / 0.15);
+  border-top-left-radius: var(--gg-radius-xl);
+  border-top-right-radius: var(--gg-radius-xl);
+  box-shadow: var(--gg-shadow-floating);
 }
 /* Room under the footer so the bar never covers the last card, Ko-fi or the credits,
    and keyboard focus scrolling stops above the bar. */
@@ -136,9 +128,9 @@ code {
     position: sticky; top: 1.5rem;
     left: auto; right: auto; bottom: auto;
     width: 100%; max-width: 260px;
-    border-radius: 1rem;
+    border-radius: var(--gg-radius-xl);
     padding: 1rem;
-    box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+    box-shadow: var(--gg-shadow-floating-side);
   }
   .home-start-button { width: 100%; flex-basis: 100%; }
   .home--selected { padding-bottom: 1.5rem !important; scroll-padding-bottom: 0; }
@@ -147,33 +139,28 @@ code {
 @media (prefers-reduced-motion: no-preference) {
   @keyframes home-start-up   { from { transform: translateY(100%); } to { transform: translateY(0); } }
   @keyframes home-start-side { from { transform: translateX(12px); opacity: 0; } to { transform: none; opacity: 1; } }
-  .home-start { animation: home-start-up 200ms ease-out; }
+  .home-start { animation: home-start-up var(--gg-duration-slow) ease-out; }
   @media (min-width: 1200px) { .home-start { animation-name: home-start-side; } }
 }
 @media (prefers-reduced-motion: reduce) { .game-card { transition: none; } }
 
-[data-bs-theme="dark"] {
-  --gg-bg: #161a23;
-  --gg-panel-bg: #222838;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   @keyframes slot-in { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .slot--filled { animation: slot-in 150ms ease-out; }
+  .slot--filled { animation: slot-in var(--gg-duration) ease-out; }
 
   @keyframes result-in { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .round-result { animation: result-in 200ms ease-out; }
+  .round-result { animation: result-in var(--gg-duration-slow) ease-out; }
 
   .game-card, .round-dot {
-    transition: box-shadow 120ms, border-color 120ms, background-color 120ms;
+    transition: box-shadow var(--gg-duration-fast), border-color var(--gg-duration-fast), background-color var(--gg-duration-fast);
   }
 }
 
-.page-bg { background: var(--gg-bg); }
+.page-bg { background: var(--gg-color-page-bg); }
 .theme-toggle {
   line-height: 1;
   padding: 0.25rem 0.4rem;
-  background: var(--bs-body-bg);
+  background: var(--gg-color-surface);
 }
 .wrong-guesses-label { font-size: 0.7rem; }
 .guesses-left-dots { display: inline-flex; gap: 0.25rem; font-size: 0.7rem; }
@@ -182,7 +169,7 @@ code {
 .map-flag {
   background: none;
   border: 0;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.6));
+  filter: var(--gg-shadow-flag);
 }
 
 /* Clicking a map shape focuses its SVG path, which draws a square outline. Hover labels are all we want. */
