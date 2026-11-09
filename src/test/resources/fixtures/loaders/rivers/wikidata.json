@@ -5,6 +5,6 @@
   "Q104": {"label": "Old Name", "sitelinks": 30, "aliases": [], "continents": ["Asia"], "countryContinents": ["Asia"]},
   "Q105": {"label": "Backwards", "sitelinks": 20, "aliases": [], "continents": ["Asia"], "countryContinents": ["Asia"]},
   "Q106": {"label": "No Continent", "sitelinks": 1000, "aliases": [], "continents": [], "countryContinents": []},
-  "Q107": {"label": "Osm River", "sitelinks": 10, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
+  "Q107": {"label": "Piecewise River", "sitelinks": 10, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]},
   "Q109": {"label": "Brook", "sitelinks": 5, "aliases": [], "continents": ["Europe"], "countryContinents": ["Europe"]}
 }

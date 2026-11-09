@@ -1,9 +1,10 @@
-import { MapContainer, TileLayer, Marker, GeoJSON, Tooltip } from "react-leaflet";
+import { MapContainer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { CenterUpdater } from "../../map/CenterUpdater";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { SatelliteTiles } from "../../map/SatelliteTiles";
+import { answerPathOptions } from "../../map/constants";
 import { TripointRoundData } from "./model";
 
 const markerIcon = L.icon({
@@ -37,7 +38,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed }: MapProps<T
       maxZoom={10}
       minZoom={4}
     >
-      <TileLayer url={SATELLITE_TILE_URL} />
+      <SatelliteTiles />
       <Marker icon={markerIcon} position={position} />
       {gameOver && answerBorders}
       {!gameOver && clueBorders}

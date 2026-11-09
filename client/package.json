@@ -15,9 +15,10 @@
     "react-leaflet": "^5.0.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/third-party-licenses.mjs && next dev",
     "start": "next start",
-    "build": "next build",
+    "build": "node scripts/third-party-licenses.mjs && next build",
+    "licenses": "node scripts/third-party-licenses.mjs",
     "lint": "eslint . --max-warnings 0",
     "lint:rules": "node scripts/check-lint-rules.mjs",
     "typecheck": "tsc --noEmit",

@@ -385,7 +385,6 @@
                     <argument>geodata/rivers/naturalearth/ne_10m_rivers_lake_centerlines_scale_rank.geojson</argument>
                     <argument>geodata/rivers/wikidata.json</argument>
                     <argument>geodata/rivers/overrides.json</argument>
-                    <argument>geodata/rivers/osm</argument>
                     <argument>target/regen/countries</argument>
                     <argument>target/regen/rivers</argument>
                   </arguments>

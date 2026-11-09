@@ -40,6 +40,23 @@ describe("HomePage on load", () => {
 
     expect(screen.getByRole("heading", { name: "GeoGauntlet", level: 1 })).toBeInTheDocument();
   });
+
+  it("credits the data, imagery and icons, and links to the software licences", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    const footer = within(screen.getByRole("contentinfo"));
+    const href = (name: string) => footer.getByRole("link", { name }).getAttribute("href");
+    expect(href("Natural Earth")).toBe("https://www.naturalearthdata.com/");
+    expect(href("Wikidata")).toBe("https://www.wikidata.org/");
+    expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
+    expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
+    expect(href("Esri")).toBe("https://www.esri.com/");
+    expect(href("Earthz Stocker")).toContain("flaticon.com");
+    expect(href("Freepik")).toContain("flaticon.com");
+    expect(href("Software licences")).toBe("/third-party-licenses.txt");
+    expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
+  });
 });
 
 describe("HomePage choosing a game", () => {

@@ -120,4 +120,45 @@ class RiverGeometryTest {
   void pointCountAddsUpAllLines() {
     assertThat(RiverGeometry.pointCount(List.of(straight(1), zigzag(4, 1, 0)))).isEqualTo(7);
   }
+
+  private static List<double[]> line(double lon1, double lat1, double lon2, double lat2) {
+    return List.of(new double[] {lon1, lat1}, new double[] {lon2, lat2});
+  }
+
+  @Test
+  void mainPieceOfNoLinesOrOneLineIsTheLinesThemselves() {
+    assertThat(RiverGeometry.mainPiece(List.of())).isEmpty();
+    List<double[]> only = line(0, 0, 1, 0);
+    assertThat(RiverGeometry.mainPiece(List.of(only))).containsExactly(only);
+  }
+
+  @Test
+  void mainPieceIgnoresLinesWithFewerThanTwoPoints() {
+    List<double[]> only = line(0, 0, 1, 0);
+
+    assertThat(RiverGeometry.mainPiece(List.of(List.of(new double[] {5, 5}), only)))
+        .containsExactly(only);
+  }
+
+  @Test
+  void mainPieceJoinsLinesAtEitherEndAcrossSmallGapsAndKeepsTheLongestPiece() {
+    // a and b touch end to start, c starts about 11 km from b's end, d starts where a starts.
+    List<double[]> a = line(0, 0, 1, 0);
+    List<double[]> b = line(1, 0, 2, 0);
+    List<double[]> c = line(2.1, 0, 3, 0);
+    List<double[]> d = line(0, 0, 0, -1);
+    // A longer line than any one of them, but far away and alone.
+    List<double[]> far = line(0, 20, 2.5, 20);
+
+    assertThat(RiverGeometry.mainPiece(List.of(a, far, b, c, d))).containsExactly(a, b, c, d);
+  }
+
+  @Test
+  void mainPieceKeepsTheFarPieceWhenItIsTheLongest() {
+    List<double[]> a = line(0, 0, 1, 0);
+    List<double[]> b = line(1, 0, 2, 0);
+    List<double[]> far = line(0, 20, 5, 20);
+
+    assertThat(RiverGeometry.mainPiece(List.of(a, b, far))).containsExactly(far);
+  }
 }

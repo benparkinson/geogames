@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueLineOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueLineOptions, SATELLITE_ATTRIBUTION, SATELLITE_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnTileUrls } from "../../test/leafletMock";
+import { drawnLayers, drawnTileAttributions, drawnTileUrls } from "../../test/leafletMock";
 import { makeCountryShapeRoundData } from "../../test/fixtures";
 import CoastlineMap from "./CoastlineMap";
 import type { CountryShapeRound } from "./model";
@@ -56,6 +56,7 @@ describe("CoastlineMap", () => {
     expect(drawnLayers()).toHaveLength(1);
     expect(drawnLayers()[0]).toMatchObject({ point: OUTLINE, color: answerPathOptions(false).color });
     expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileAttributions()).toEqual([SATELLITE_ATTRIBUTION]);
   });
 
   it("colours the outline differently when the player gave up", () => {

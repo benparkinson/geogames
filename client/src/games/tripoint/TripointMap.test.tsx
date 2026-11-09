@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, SATELLITE_ATTRIBUTION, SATELLITE_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnMarkers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import { drawnLayers, drawnMarkers, drawnTileAttributions, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeTripointData } from "../../test/fixtures";
 import TripointMap from "./TripointMap";
 import type { TripointRoundData } from "./model";
@@ -27,6 +27,7 @@ describe("TripointMap", () => {
     renderMap();
 
     expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileAttributions()).toEqual([SATELLITE_ATTRIBUTION]);
     expect(drawnMarkers()).toEqual([[50.75, 6.02]]);
     expect(drawnLayers()).toEqual([]);
   });

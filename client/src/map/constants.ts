@@ -3,6 +3,10 @@ import type { PathOptions } from "leaflet";
 export const SATELLITE_TILE_URL =
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 
+/** Esri's required credit for World Imagery (HTML, shown by Leaflet's attribution control). */
+export const SATELLITE_ATTRIBUTION =
+  'Powered by <a href="https://www.esri.com/">Esri</a> | Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+
 const ANSWER_COLOR = "LightGoldenRodYellow";
 const REVEALED_COLOR = "darkred";
 
