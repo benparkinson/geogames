@@ -10,7 +10,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Games live in memory, so old ones are deleted to keep the heap from growing for ever. */
+/**
+ * Deletes old games to keep the database small (and, on the default in-memory H2, the heap).
+ *
+ * <p>On Neon, each hourly run wakes the database for at least 5 minutes, about 15 compute-hours a
+ * month at most out of the free 100. That is acceptable, and the job doesn't run while the free web
+ * service is asleep anyway.
+ */
 @Service
 public class GameCleanupService {
 

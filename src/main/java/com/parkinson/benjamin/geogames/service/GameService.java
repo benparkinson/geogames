@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
@@ -80,7 +81,7 @@ public class GameService {
 
     GameEntity saved = gameRepository.save(new GameEntity(createGameRounds(gameData)));
 
-    return new GameCreationResponse(saved.getId());
+    return new GameCreationResponse(saved.getPublicId());
   }
 
   /** Gives each round a random game type, then shuffles so the types come in a random order. */
@@ -113,21 +114,21 @@ public class GameService {
   }
 
   @Transactional(readOnly = true)
-  public Optional<GameRound> getGameRound(long gameId, int round) {
+  public Optional<GameRound> getGameRound(UUID gameId, int round) {
     return gameRepository
-        .findById(gameId)
+        .findByPublicId(gameId)
         .flatMap(game -> findRound(game, round).map(r -> toResponse(game, r)));
   }
 
   @Transactional
   public Optional<GameRound> submitAnswer(
-      long gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      UUID gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
 
     return gameRepository
-        .findById(gameId)
+        .findByPublicId(gameId)
         .flatMap(
             game ->
                 findRound(game, round)

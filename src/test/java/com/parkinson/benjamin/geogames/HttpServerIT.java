@@ -67,7 +67,7 @@ class HttpServerIT {
             .expectBody()
             .returnResult()
             .getResponseBody();
-    int id = JsonPath.read(new String(created), "$.id");
+    String id = JsonPath.read(new String(created), "$.id");
 
     client
         .get()

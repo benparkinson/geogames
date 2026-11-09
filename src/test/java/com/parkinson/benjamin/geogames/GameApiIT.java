@@ -45,7 +45,7 @@ class GameApiIT {
   @Value("${geogames.cors.allowed-origins}")
   private String[] allowedOrigins;
 
-  private int createGame(String gameType, int rounds) throws Exception {
+  private String createGame(String gameType, int rounds) throws Exception {
     String body =
         mockMvc
             .perform(
@@ -60,20 +60,20 @@ class GameApiIT {
     return JsonPath.read(body, "$.id");
   }
 
-  private String getRound(int gameId, int round) throws Exception {
+  private String getRound(String gameId, int round) throws Exception {
     return mockMvc
-        .perform(get("/api/games/%d/rounds/%d".formatted(gameId, round)))
+        .perform(get("/api/games/%s/rounds/%d".formatted(gameId, round)))
         .andExpect(status().isOk())
         .andReturn()
         .getResponse()
         .getContentAsString();
   }
 
-  private String answer(int gameId, int round, String state) throws Exception {
+  private String answer(String gameId, int round, String state) throws Exception {
     return answer(gameId, round, state, 0);
   }
 
-  private String answer(int gameId, int round, String state, int hintsUsed) throws Exception {
+  private String answer(String gameId, int round, String state, int hintsUsed) throws Exception {
     return answer(gameId, round, state, hintsUsed, validWrongGuesses(state));
   }
 
@@ -83,12 +83,12 @@ class GameApiIT {
   }
 
   /** Posts an answer; a null {@code wrongGuesses} is left out of the JSON, like an old client. */
-  private String answer(int gameId, int round, String state, int hintsUsed, Integer wrongGuesses)
+  private String answer(String gameId, int round, String state, int hintsUsed, Integer wrongGuesses)
       throws Exception {
     String wrong = wrongGuesses == null ? "" : ",\"wrongGuesses\":" + wrongGuesses;
     return mockMvc
         .perform(
-            post("/api/games/%d/rounds/%d/answers".formatted(gameId, round))
+            post("/api/games/%s/rounds/%d/answers".formatted(gameId, round))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "{\"answerState\":\"%s\",\"hintsUsed\":%d%s}"
@@ -101,7 +101,8 @@ class GameApiIT {
 
   @Test
   void playsAFullTripointGame() throws Exception {
-    int id = createGame("TRIPOINT", 3);
+    String id = createGame("TRIPOINT", 3);
+    assertThat(id).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
 
     for (int i = 0; i < 3; i++) {
       String round = getRound(id, i);
@@ -151,7 +152,7 @@ class GameApiIT {
 
   @Test
   void acceptsOutOfGuesses() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     String result = answer(id, 0, "OUT_OF_GUESSES");
 
@@ -161,7 +162,7 @@ class GameApiIT {
 
   @Test
   void createsARiverGame() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 2);
+    String id = createGame("RIVERS_BY_SHAPE", 2);
 
     for (int i = 0; i < 2; i++) {
       String round = getRound(id, i);
@@ -177,7 +178,7 @@ class GameApiIT {
 
   @Test
   void createsARiverOnMapGame() throws Exception {
-    int id = createGame("RIVERS_ON_MAP", 2);
+    String id = createGame("RIVERS_ON_MAP", 2);
 
     for (int i = 0; i < 2; i++) {
       String round = getRound(id, i);
@@ -195,7 +196,7 @@ class GameApiIT {
 
   @Test
   void createsARiverByEndsGame() throws Exception {
-    int id = createGame("RIVERS_BY_ENDS", 3);
+    String id = createGame("RIVERS_BY_ENDS", 3);
 
     for (int i = 0; i < 3; i++) {
       String round = getRound(id, i);
@@ -210,7 +211,7 @@ class GameApiIT {
 
   @Test
   void createsARiverByCountriesGameWithTheCountriesOfEachRiver() throws Exception {
-    int id = createGame("RIVERS_BY_COUNTRIES", 10);
+    String id = createGame("RIVERS_BY_COUNTRIES", 10);
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
@@ -229,7 +230,7 @@ class GameApiIT {
 
   @Test
   void createsALakeShapesGame() throws Exception {
-    int id = createGame("LAKES_BY_SHAPE", 10);
+    String id = createGame("LAKES_BY_SHAPE", 10);
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
@@ -248,7 +249,7 @@ class GameApiIT {
 
   @Test
   void createsACountriesByNeighboursGame() throws Exception {
-    int id = createGame("COUNTRIES_BY_NEIGHBOURS", 10);
+    String id = createGame("COUNTRIES_BY_NEIGHBOURS", 10);
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
@@ -265,7 +266,7 @@ class GameApiIT {
 
   @Test
   void createsACountriesByCoastlineGameWithoutNeighbours() throws Exception {
-    int id = createGame("COUNTRIES_BY_COASTLINE", 10);
+    String id = createGame("COUNTRIES_BY_COASTLINE", 10);
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
@@ -282,7 +283,7 @@ class GameApiIT {
 
   @Test
   void createsACountriesByLandBordersGameWithNeighbours() throws Exception {
-    int id = createGame("COUNTRIES_BY_LAND_BORDERS", 10);
+    String id = createGame("COUNTRIES_BY_LAND_BORDERS", 10);
 
     for (int i = 0; i < 10; i++) {
       String round = getRound(id, i);
@@ -298,7 +299,7 @@ class GameApiIT {
 
   @Test
   void createsARandomGame() throws Exception {
-    int id = createGame("RANDOM", 10);
+    String id = createGame("RANDOM", 10);
     Set<String> subjects = new HashSet<>();
 
     for (int i = 0; i < 10; i++) {
@@ -349,7 +350,7 @@ class GameApiIT {
     List<String> names = JsonPath.read(body, "$[*].name");
     assertThat(names).hasSize(50).isSorted();
 
-    int id = createGame("RIVERS_BY_SHAPE", 5);
+    String id = createGame("RIVERS_BY_SHAPE", 5);
     for (int i = 0; i < 5; i++) {
       String blob = JsonPath.read(getRound(id, i), "$.jsonBlob");
       String riverName = JsonPath.read(blob, "$.river.name");
@@ -372,11 +373,11 @@ class GameApiIT {
 
   @Test
   void rejectsAnUnansweredAnswerAndLeavesTheRoundAlone() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     mockMvc
         .perform(
-            post("/api/games/%d/rounds/0/answers".formatted(id))
+            post("/api/games/%s/rounds/0/answers".formatted(id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"UNANSWERED\"}"))
         .andExpect(status().isBadRequest());
@@ -386,11 +387,11 @@ class GameApiIT {
 
   @Test
   void rejectsMoreHintsThanTheTypeHas() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     mockMvc
         .perform(
-            post("/api/games/%d/rounds/0/answers".formatted(id))
+            post("/api/games/%s/rounds/0/answers".formatted(id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":9}"))
         .andExpect(status().isBadRequest());
@@ -400,11 +401,11 @@ class GameApiIT {
 
   @Test
   void rejectsOutOfGuessesWithFewerWrongGuessesThanTheLimit() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     mockMvc
         .perform(
-            post("/api/games/%d/rounds/0/answers".formatted(id))
+            post("/api/games/%s/rounds/0/answers".formatted(id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"OUT_OF_GUESSES\",\"wrongGuesses\":4}"))
         .andExpect(status().isBadRequest())
@@ -415,7 +416,7 @@ class GameApiIT {
 
   @Test
   void anAnswerWithoutWrongGuessesIsStillAccepted() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     String body = answer(id, 0, "CORRECT", 0, null);
 
@@ -424,14 +425,14 @@ class GameApiIT {
 
   @Test
   void aRepeatThatDiffersOnlyInWrongGuessesIsAConflict() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     answer(id, 0, "CORRECT", 0, 2);
     answer(id, 0, "CORRECT", 0, 2);
 
     mockMvc
         .perform(
-            post("/api/games/%d/rounds/0/answers".formatted(id))
+            post("/api/games/%s/rounds/0/answers".formatted(id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":0,\"wrongGuesses\":3}"))
         .andExpect(status().isConflict());
@@ -439,12 +440,12 @@ class GameApiIT {
 
   @Test
   void anAnswerWithoutHintsUsedCountsAsNoHints() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     String body =
         mockMvc
             .perform(
-                post("/api/games/%d/rounds/0/answers".formatted(id))
+                post("/api/games/%s/rounds/0/answers".formatted(id))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"answerState\":\"CORRECT\"}"))
             .andExpect(status().isOk())
@@ -457,10 +458,10 @@ class GameApiIT {
 
   @Test
   void unknownGamesAndRoundsAreNotFound() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 1);
+    String id = createGame("RIVERS_BY_SHAPE", 1);
 
     mockMvc.perform(get("/api/games/999999/rounds/0")).andExpect(status().isNotFound());
-    mockMvc.perform(get("/api/games/%d/rounds/99".formatted(id))).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/games/%s/rounds/99".formatted(id))).andExpect(status().isNotFound());
   }
 
   @Test
@@ -494,7 +495,7 @@ class GameApiIT {
   @ParameterizedTest
   @EnumSource(GameType.class)
   void everyGameTypeProducesRoundsThatDeserialiseIntoItsGameData(GameType type) throws Exception {
-    int id = createGame(type.name(), 10);
+    String id = createGame(type.name(), 10);
     Set<String> subjects = new HashSet<>();
 
     for (int i = 0; i < 10; i++) {
@@ -511,7 +512,7 @@ class GameApiIT {
 
   @Test
   void answeringTheSameWayTwiceChangesNothingButAConflictingAnswerIsRejected() throws Exception {
-    int id = createGame("RIVERS_BY_SHAPE", 2);
+    String id = createGame("RIVERS_BY_SHAPE", 2);
 
     String first = answer(id, 0, "CORRECT", 1);
     String again = answer(id, 0, "CORRECT", 1);
@@ -522,7 +523,7 @@ class GameApiIT {
 
     mockMvc
         .perform(
-            post("/api/games/%d/rounds/0/answers".formatted(id))
+            post("/api/games/%s/rounds/0/answers".formatted(id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}"))
         .andExpect(status().isConflict())
@@ -588,7 +589,7 @@ class GameApiIT {
     List<String> names = JsonPath.read(body, "$[*].name");
     assertThat(names).hasSize(lakeFileCount()).isSorted();
 
-    int id = createGame("LAKES_BY_SHAPE", 5);
+    String id = createGame("LAKES_BY_SHAPE", 5);
     for (int i = 0; i < 5; i++) {
       String blob = JsonPath.read(getRound(id, i), "$.jsonBlob");
       assertThat(names).contains(JsonPath.<String>read(blob, "$.lake.name"));

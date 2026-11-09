@@ -75,10 +75,10 @@ class ApiContractIT {
   }
 
   private Object oneGameShape(GameType type) throws Exception {
-    long id = createGame(type).get("id").asLong();
+    String id = createGame(type).get("id").asString();
     Object merged = "empty";
     for (int i = 0; i < ROUNDS; i++) {
-      JsonNode round = objectMapper.readTree(body(get("/api/games/%d/rounds/%d".formatted(id, i))));
+      JsonNode round = objectMapper.readTree(body(get("/api/games/%s/rounds/%d".formatted(id, i))));
       Map<String, Object> shape = new TreeMap<>();
       round
           .properties()

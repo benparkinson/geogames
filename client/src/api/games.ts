@@ -98,7 +98,7 @@ export function useCreateGame(): {
   const router = useRouter();
   const { mutate, isPending, error } = useMutation({
     mutationFn: (request: { gameType: string; numberOfRounds: number }) =>
-      postJson<{ id: number }>("/api/games", "create game", request),
+      postJson<{ id: string }>("/api/games", "create game", request),
     onSuccess: (data) => {
       router.push("/games/" + data.id);
     },
