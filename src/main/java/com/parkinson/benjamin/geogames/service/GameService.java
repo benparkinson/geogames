@@ -12,6 +12,9 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Scoring;
+import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +27,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
@@ -37,16 +41,19 @@ public class GameService {
   private final Map<GameType, RoundGenerator> generators;
   private final ObjectMapper objectMapper;
   private final Random random;
+  private final ApplicationEventPublisher events;
 
   public GameService(
       GameRepository gameRepository,
       List<RoundGenerator> roundGenerators,
       ObjectMapper objectMapper,
-      Random random) {
+      Random random,
+      ApplicationEventPublisher events) {
     this.gameRepository = gameRepository;
     this.generators = generatorsByType(roundGenerators);
     this.objectMapper = objectMapper;
     this.random = random;
+    this.events = events;
   }
 
   private static Map<GameType, RoundGenerator> generatorsByType(List<RoundGenerator> generators) {
@@ -79,7 +86,11 @@ public class GameService {
             ? generateMixedRounds(numberOfRounds)
             : generators.get(selection.type()).generate(numberOfRounds, Set.of());
 
-    GameEntity saved = gameRepository.save(new GameEntity(createGameRounds(gameData)));
+    GameEntity saved =
+        gameRepository.save(
+            new GameEntity(
+                createGameRounds(gameData),
+                selection.isRandom() ? "RANDOM" : selection.type().name()));
 
     return new GameCreationResponse(saved.getPublicId());
   }
@@ -138,9 +149,32 @@ public class GameService {
                           validateWrongGuesses(r, answerState, wrongGuesses);
                           if (recordAnswer(r, answerState, hintsUsed, wrongGuesses)) {
                             gameRepository.save(game);
+                            publishRoundAnswered(game, r);
                           }
                           return toResponse(game, r);
                         }));
+  }
+
+  /**
+   * Tells the usage statistics a round was answered. The event is handled after this transaction
+   * commits. A game made before the statistics existed has no play id and is skipped.
+   */
+  private void publishRoundAnswered(GameEntity game, GameRoundEntity round) {
+    if (game.getPlayId() == null) {
+      return;
+    }
+    events.publishEvent(
+        new RoundAnswered(
+            game.getPlayId(),
+            game.getGameMode(),
+            game.getRounds().size(),
+            round.getRoundNumber(),
+            round.getGameType(),
+            round.getRoundKey(),
+            round.getAnswerState(),
+            round.getHintsUsed(),
+            round.getWrongGuesses(),
+            LocalDate.now(ZoneOffset.UTC)));
   }
 
   private static void validateHintsUsed(GameRoundEntity round, int hintsUsed) {

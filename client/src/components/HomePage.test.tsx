@@ -58,6 +58,14 @@ describe("HomePage on load", () => {
     expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
     expect(footer.getByText(/your light or dark mode choice/)).toBeInTheDocument();
   });
+
+  it("tells players that anonymous round results are recorded", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    const footer = within(screen.getByRole("contentinfo"));
+    expect(footer.getByText(/We record anonymous round results \(no cookies, no personal data\)/)).toBeInTheDocument();
+  });
 });
 
 describe("HomePage choosing a game", () => {

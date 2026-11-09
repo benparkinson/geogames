@@ -31,7 +31,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
     rounds.add(new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:Q1"));
     rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "tripoint:third"));
-    return new GameEntity(rounds);
+    return new GameEntity(rounds, "TRIPOINT");
   }
 
   private GameEntity saveAndReload(GameEntity game) {
@@ -52,6 +52,29 @@ class GameRepositoryTest {
         .getEntityManager()
         .createQuery("select count(r) from GameRoundEntity r", Long.class)
         .getSingleResult();
+  }
+
+  @Test
+  void aGameHasAPlayIdThatIsNotItsPublicId() {
+    GameEntity first = saveAndReload(gameWithRounds("tripoint:a"));
+    GameEntity second = saveAndReload(gameWithRounds("tripoint:b"));
+
+    assertThat(first.getPlayId()).isNotNull().isNotEqualTo(first.getPublicId());
+    assertThat(second.getPlayId()).isNotEqualTo(first.getPlayId());
+  }
+
+  @Test
+  void theGameModeIsReadBack() {
+    assertThat(saveAndReload(gameWithRounds("tripoint:a")).getGameMode()).isEqualTo("TRIPOINT");
+  }
+
+  @Test
+  void toStringLeavesOutThePlayId() {
+    GameEntity game = gameWithRounds("tripoint:a");
+
+    assertThat(game.toString())
+        .doesNotContain(game.getPlayId().toString())
+        .doesNotContain(game.getPublicId().toString());
   }
 
   @Test
@@ -198,7 +221,7 @@ class GameRepositoryTest {
       rounds.add(new GameRoundEntity(rounds.size(), type, "tripoint:x"));
     }
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds));
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT"));
 
     assertThat(sorted(reloaded).stream().map(GameRoundEntity::getGameType).toList())
         .containsExactly(GameType.values());
@@ -246,7 +269,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:0"));
     rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "tripoint:1"));
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds));
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT"));
 
     assertThat(reloaded.getRounds().stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2);

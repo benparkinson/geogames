@@ -26,3 +26,20 @@ hot reload mode.
 After these steps, you have the server running on 8080 and the frontend on 3000 pointing to your
 server. Updating and saving a file in the frontend reloads the frontend in milliseconds rather than
 minutes.
+
+
+## Usage statistics
+
+The server records one anonymous row for every round a player answers, so the owner can see which
+game types and which questions (rivers, countries, lakes, tripoints) are hardest. A row holds the
+UTC date, the game type, what was asked (for example `river:Q3392`), how the round ended, the hints
+and wrong guesses used and the points scored. Rounds of one game share a random `play_id`, so
+abandoned games can be spotted.
+
+Never recorded: IP addresses, user agents, headers, either game id (the id in the URLs could be
+matched against request logs), the time of day, or anything stored in the browser. There are no
+cookies and no client-side identifier, so no consent banner is needed.
+
+The rows go to the `round_result` table in the same database as the games (created by a Flyway
+migration), so production needs no extra configuration. Nothing deletes them when a game expires.
+Set `GEOGAMES_STATS_ENABLED=false` on the Render web service to turn recording off.

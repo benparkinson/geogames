@@ -147,6 +147,8 @@ function HomePage(): React.JSX.Element {
                     <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">Freepik</a> (Flaticon) ·{" "}
                     <a href="/third-party-licenses.txt">Software licences</a>
                     <br />
+                    We record anonymous round results (no cookies, no personal data) to see which questions are hardest.
+                    <br />
                     Your browser stores one thing on your device: your light or dark mode choice, if you use the toggle. Nothing else is saved.
                 </footer>
                 </div>
