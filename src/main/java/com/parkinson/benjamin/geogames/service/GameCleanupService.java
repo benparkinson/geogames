@@ -13,9 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Deletes old games to keep the database small (and, on the default in-memory H2, the heap).
  *
+ * <p>It runs as soon as the app has started, then every {@code geogames.games.cleanup-interval}.
+ * The free Render web service sleeps after 15 minutes without traffic, so it rarely stays up for a
+ * whole interval: without the run at start-up, old games would only be deleted when the service
+ * happened to stay awake for an hour.
+ *
  * <p>On Neon, each hourly run wakes the database for at least 5 minutes, about 15 compute-hours a
  * month at most out of the free 100. That is acceptable, and the job doesn't run while the free web
- * service is asleep anyway.
+ * service is asleep anyway. The run at start-up costs nothing extra: the service only starts
+ * because a request came in, and that request uses the database too.
  */
 @Service
 public class GameCleanupService {
@@ -40,9 +46,8 @@ public class GameCleanupService {
     return deleted;
   }
 
-  @Scheduled(
-      fixedDelayString = "${geogames.games.cleanup-interval:PT1H}",
-      initialDelayString = "${geogames.games.cleanup-interval:PT1H}")
+  /** Runs at start-up (no initial delay), then an interval after each run finishes. */
+  @Scheduled(fixedDelayString = "${geogames.games.cleanup-interval:PT1H}", initialDelay = 0)
   void deleteOldGames() {
     deleteGamesOlderThanMaxAge(Instant.now());
   }
