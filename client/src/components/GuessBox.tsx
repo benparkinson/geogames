@@ -21,7 +21,7 @@ export function GuessBox({ value, name, onChange, disabled, className, autoFocus
   return (
     <>
       <input
-        className={"answer-attempt form-control" + (className ? " " + className : "")}
+        className={"answer-attempt gg-input" + (className ? " " + className : "")}
         type="text"
         autoComplete="off"
         placeholder={name}

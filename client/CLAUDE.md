@@ -1,12 +1,12 @@
 # Frontend (`client/`)
 
-Next.js 16, React 19, TypeScript, TanStack Query, react-bootstrap, react-leaflet. Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
+Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (Bootstrap CSS for layout utilities only; see Theme in the root `CLAUDE.md`). Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
 
 ## Commands
 
 - Dev server with hot reload on port 3000: `npm run dev`. It calls the backend at `http://localhost:8080`.
 - Type-check: `npm run typecheck` (`tsc --noEmit`; CI runs it with lint).
-- Lint: `npm run lint` (zero warnings allowed). TypeScript is pinned to 6.0 (`~6.0.3`) because typescript-eslint doesn't support TS 7 yet (typescript-eslint#10940); Dependabot ignores major TypeScript bumps. Drop the pin and the `ignore` entry once it does.
+- Lint: `npm run lint` (zero warnings allowed, then `scripts/check-theme.mjs`, which keeps colours in `src/theme/tokens.css`). TypeScript is pinned to 6.0 (`~6.0.3`) because typescript-eslint doesn't support TS 7 yet (typescript-eslint#10940); Dependabot ignores major TypeScript bumps. Drop the pin and the `ignore` entry once it does.
 - Lint rules check: `npm run lint:rules` lints `lint-probe/probe.tsx`, which breaks one rule from each ESLint plugin, and fails unless every rule in `scripts/check-lint-rules.mjs` fires. This catches a plugin that silently stops reporting after an ESLint upgrade (several declare peer `eslint` ≤ 9). `npm run lint` and `tsc` ignore the probe folder. When adding a plugin, add a violation and its rule id to both files.
 - Production static export: `npm run build` runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `out/`. Before that (and before `npm run dev`) `scripts/third-party-licenses.mjs` writes the licence text of every production npm package to `public/third-party-licenses.txt` (git-ignored), which the home page footer links to: the minified bundle keeps no licence comments, and MIT/BSD/Hippocratic (react-leaflet) licences need the notice to ship with the code.
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; only the `*MapWrapper.tsx` files are excluded).

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { buttonClass } from "../ui";
 
 type Theme = "light" | "dark";
 
@@ -31,7 +32,7 @@ export default function ThemeToggle(): React.JSX.Element {
   return (
     <button
       type="button"
-      className="btn btn-sm btn-outline-secondary theme-toggle"
+      className={buttonClass({ variant: "quiet", size: "sm", className: "theme-toggle" })}
       onClick={toggle}
       aria-label={label}
       title={label}

@@ -5,7 +5,7 @@ import RoundResult from "./RoundResult";
 import GuessesLeft from "./GuessesLeft";
 import { HintConfig } from "./MapGame";
 import { Guess, GuessResult } from "./guessReducer";
-import { Button } from "react-bootstrap";
+import { Button, Chip } from "../../ui";
 import { useEffect, useRef, useState } from "react";
 import { EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
 
@@ -128,15 +128,15 @@ function MapGameInput({
         <div className="d-flex flex-wrap gap-2 mb-2">
           {hints && (
             <span title={hintTitle}>
-              <Button variant="outline-warning" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
+              <Button variant="hint" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
                 <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
               </Button>
             </span>
           )}
-          <Button variant="outline-danger" onClick={handleRevealClick} disabled={gameOver}>
+          <Button variant="danger" onClick={handleRevealClick} disabled={gameOver}>
             <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
           </Button>
-          <span className="small text-muted align-self-center">
+          <span className="small gg-text-muted align-self-center">
             {`Worth ${roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)} pts`}
           </span>
         </div>
@@ -149,12 +149,12 @@ function MapGameInput({
 
       {wrongGuesses.length > 0 && (
         <div>
-          <div className="text-muted wrong-guesses-label">Wrong guesses</div>
+          <div className="gg-text-muted wrong-guesses-label">Wrong guesses</div>
           <div className="d-flex flex-wrap gap-1">
             {wrongGuesses.map((a, i) => (
-              <span key={i} className="badge bg-body-secondary text-body-secondary fw-normal text-decoration-line-through border">
+              <Chip key={i} tone="neutral" size="sm" strike>
                 <XLg aria-hidden="true" /> {a.text}
-              </span>
+              </Chip>
             ))}
           </div>
         </div>

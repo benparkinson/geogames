@@ -1,0 +1,224 @@
+/* Component styles. Colours, radii, shadows and durations come from tokens.css only. */
+
+/* ---- Button ---- */
+.gg-btn {
+  --gg-btn-color: var(--gg-color-neutral);
+  --gg-btn-fg-hover: var(--gg-color-on-neutral);
+  --gg-btn-bg: transparent;
+  --gg-btn-fg: var(--gg-btn-color);
+  --gg-btn-border: var(--gg-btn-color);
+  --gg-btn-ring: color-mix(in srgb, var(--gg-btn-color) 50%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid var(--gg-btn-border);
+  border-radius: var(--gg-radius);
+  background: var(--gg-btn-bg);
+  color: var(--gg-btn-fg);
+  transition: background-color var(--gg-duration-fast), border-color var(--gg-duration-fast), color var(--gg-duration-fast);
+}
+/* Outline variants fill with their colour on hover and press. */
+.gg-btn:hover,
+.gg-btn:active {
+  --gg-btn-bg: var(--gg-btn-color);
+  --gg-btn-fg: var(--gg-btn-fg-hover);
+  --gg-btn-border: var(--gg-btn-color);
+}
+.gg-btn:focus-visible { outline: 0; box-shadow: 0 0 0 0.25rem var(--gg-btn-ring); }
+.gg-btn:disabled,
+.gg-btn[aria-disabled="true"] { opacity: 0.65; pointer-events: none; }
+
+.gg-btn--primary { --gg-btn-color: var(--gg-color-accent); --gg-btn-fg-hover: var(--gg-color-on-accent); }
+.gg-btn--secondary { --gg-btn-color: var(--gg-color-accent); --gg-btn-fg-hover: var(--gg-color-on-accent); }
+.gg-btn--hint { --gg-btn-color: var(--gg-color-hint); --gg-btn-fg-hover: var(--gg-color-on-hint); }
+.gg-btn--danger { --gg-btn-color: var(--gg-color-danger); --gg-btn-fg-hover: var(--gg-color-on-danger); }
+.gg-btn--quiet { --gg-btn-color: var(--gg-color-neutral); --gg-btn-fg-hover: var(--gg-color-on-neutral); }
+
+/* Primary is solid: darker on hover and press. These come after the generic hover rule and win by specificity. */
+.gg-btn.gg-btn--primary { --gg-btn-bg: var(--gg-btn-color); --gg-btn-fg: var(--gg-btn-fg-hover); }
+.gg-btn.gg-btn--primary:hover {
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 85%, black);
+  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 80%, black);
+}
+.gg-btn.gg-btn--primary:active {
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 80%, black);
+  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 75%, black);
+}
+
+.gg-btn--sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; border-radius: var(--gg-radius-sm); }
+.gg-btn--lg { padding: 0.5rem 1rem; font-size: 1.25rem; border-radius: var(--gg-radius-lg); }
+.gg-btn--block { display: flex; width: 100%; }
+.gg-btn--pill { border-radius: var(--gg-radius-pill); }
+
+/* ---- ToggleGroup: radio inputs drawn as joined buttons ---- */
+.gg-toggle { display: inline-flex; vertical-align: middle; }
+.gg-toggle__input {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+.gg-toggle > .gg-btn { position: relative; flex: 1 1 auto; }
+.gg-toggle > .gg-btn:not(:first-of-type) { margin-left: -1px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.gg-toggle > .gg-btn:not(:last-of-type) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.gg-toggle__input:checked + .gg-btn {
+  --gg-btn-bg: var(--gg-btn-color);
+  --gg-btn-fg: var(--gg-btn-fg-hover);
+  --gg-btn-border: var(--gg-btn-color);
+}
+.gg-toggle__input:focus-visible + .gg-btn { z-index: 1; box-shadow: 0 0 0 0.25rem var(--gg-btn-ring); }
+.gg-toggle__input:disabled + .gg-btn { opacity: 0.65; pointer-events: none; }
+
+/* ---- Spinner ---- */
+.gg-spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: -0.125em;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: gg-spin 0.75s linear infinite;
+}
+.gg-spinner--sm { width: 1rem; height: 1rem; border-width: 0.2em; }
+@keyframes gg-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .gg-spinner { animation-duration: 1.5s; } }
+
+/* ---- Notice ---- */
+.gg-notice {
+  --gg-notice-fg: var(--gg-color-text);
+  --gg-notice-bg: var(--gg-color-surface-muted);
+  --gg-notice-border: var(--gg-color-border);
+  padding: 1rem;
+  color: var(--gg-notice-fg);
+  background: var(--gg-notice-bg);
+  border: 1px solid var(--gg-notice-border);
+  border-radius: var(--gg-radius);
+}
+.gg-notice--danger {
+  --gg-notice-fg: var(--gg-color-danger-text);
+  --gg-notice-bg: var(--gg-color-danger-subtle);
+  --gg-notice-border: var(--gg-color-danger-border);
+}
+
+.gg-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kofi-icon { color: var(--gg-color-coffee); }
+
+
+/* ---- Text tones ---- */
+.gg-text-muted { color: var(--gg-color-text-muted); }
+.gg-text-correct { color: var(--gg-color-correct); }
+.gg-text-revealed { color: var(--gg-color-revealed); }
+.gg-text-perfect { color: var(--gg-color-perfect); }
+.gg-text-hint { color: var(--gg-color-hint); }
+.gg-text-warning { color: var(--gg-color-warning-text); }
+.gg-text-danger { color: var(--gg-color-danger); }
+/* The hover rule keeps links this colour; plain `a:hover` would otherwise win. */
+.gg-text-default,
+.gg-text-default:hover { color: var(--gg-color-text); }
+
+/* ---- Chip ---- */
+.gg-chip {
+  --gg-chip-bg: var(--gg-color-surface-muted);
+  --gg-chip-fg: var(--gg-color-text-muted);
+  --gg-chip-border: transparent;
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  color: var(--gg-chip-fg);
+  background: var(--gg-chip-bg);
+  border: 1px solid var(--gg-chip-border);
+  border-radius: var(--gg-radius-pill);
+}
+.gg-chip--sm { font-size: 0.75em; }
+.gg-chip--correct { --gg-chip-bg: var(--gg-color-correct); --gg-chip-fg: var(--gg-color-on-correct); }
+.gg-chip--revealed { --gg-chip-bg: var(--gg-color-revealed); --gg-chip-fg: var(--gg-color-on-revealed); }
+.gg-chip--neutral { --gg-chip-border: var(--gg-color-border); }
+.gg-chip--strike { text-decoration: line-through; }
+.answer-slot-empty { border: 2px dashed var(--gg-color-border); border-radius: var(--gg-radius-pill); }
+
+/* ---- Card ---- */
+.gg-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 560px;
+  color: var(--gg-color-text);
+  background: var(--gg-color-surface);
+  border: 1px solid var(--gg-color-border-translucent);
+  border-radius: var(--gg-radius);
+}
+
+/* ---- List of buttons or links with borders between them ---- */
+.gg-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: var(--gg-radius);
+}
+.gg-list__item {
+  position: relative;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  text-align: inherit;
+  color: var(--gg-color-text-muted);
+  background: var(--gg-color-surface);
+  border: 1px solid var(--gg-color-border);
+}
+.gg-list__item:not(:first-child) { border-top-width: 0; }
+.gg-list__item:first-child { border-top-left-radius: inherit; border-top-right-radius: inherit; }
+.gg-list__item:last-child { border-bottom-left-radius: inherit; border-bottom-right-radius: inherit; }
+.gg-list__item:hover,
+.gg-list__item:focus { z-index: 1; background: var(--gg-color-surface-hover); }
+.gg-list__item:active { color: var(--gg-color-text); background: var(--gg-color-surface-active); }
+
+/* ---- Text input ---- */
+.gg-input {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--gg-color-text);
+  background: var(--gg-color-surface);
+  background-clip: padding-box;
+  border: 1px solid var(--gg-color-border);
+  border-radius: var(--gg-radius);
+  appearance: none;
+  transition: border-color var(--gg-duration), box-shadow var(--gg-duration);
+}
+.gg-input:focus {
+  outline: 0;
+  border-color: color-mix(in srgb, var(--gg-color-accent) 50%, white);
+  box-shadow: var(--gg-focus-ring);
+}
+.gg-input:disabled { background: var(--gg-color-surface-muted); }
+.gg-input::placeholder { color: var(--gg-color-text-muted); opacity: 1; }

@@ -7,7 +7,7 @@ describe("GuessesLeft", () => {
     const { container } = render(<GuessesLeft left={3} limit={5} />);
 
     expect(screen.getByRole("status", { name: "3 guesses left" })).toBeInTheDocument();
-    expect(screen.getByText("3 guesses left")).toHaveClass("text-muted");
+    expect(screen.getByText("3 guesses left")).toHaveClass("gg-text-muted");
     expect(container.querySelectorAll("svg")).toHaveLength(5);
   });
 
@@ -15,7 +15,7 @@ describe("GuessesLeft", () => {
     render(<GuessesLeft left={1} limit={5} />);
 
     expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
-    expect(screen.getByText("1 guess left")).toHaveClass("text-warning-emphasis");
+    expect(screen.getByText("1 guess left")).toHaveClass("gg-text-warning");
   });
 
   it("says 0 guesses left", () => {

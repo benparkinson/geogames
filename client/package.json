@@ -9,7 +9,6 @@
     "leaflet": "^1.9.4",
     "next": "^16.4.5",
     "react": "^19.3.1",
-    "react-bootstrap": "^2.10.10",
     "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.3.1",
     "react-leaflet": "^5.0.0"
@@ -19,7 +18,7 @@
     "start": "next start",
     "build": "node scripts/third-party-licenses.mjs && next build",
     "licenses": "node scripts/third-party-licenses.mjs",
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 0 && node scripts/check-theme.mjs",
     "lint:rules": "node scripts/check-lint-rules.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

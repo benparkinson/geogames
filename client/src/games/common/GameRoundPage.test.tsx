@@ -76,9 +76,9 @@ async function solveTripoint(user: ReturnType<typeof userEvent.setup>) {
 describe("GameRoundPage loading and errors", () => {
   it("shows a spinner and a loading title while the round loads", () => {
     vi.stubGlobal("fetch", vi.fn(() => new Promise(() => { })));
-    const { container } = renderPage();
+    renderPage();
 
-    expect(container.querySelector(".spinner-border")).not.toBeNull();
+    expect(screen.getByRole("status")).toBeTruthy();
     expect(title()).toBe("Loading... | GeoGauntlet");
   });
 

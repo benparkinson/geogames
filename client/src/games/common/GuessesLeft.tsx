@@ -14,11 +14,11 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
   return (
     <div role="status" aria-label={text} className="guesses-left d-flex flex-wrap align-items-center gap-2 mb-1">
       {limit <= MAX_DOTS && (
-        <span className={"guesses-left-dots" + (last ? " text-warning" : "")} aria-hidden="true">
+        <span className={"guesses-left-dots" + (last ? " gg-text-hint" : "")} aria-hidden="true">
           {Array.from({ length: limit }, (_, i) => (i < left ? <CircleFill key={i} /> : <Circle key={i} />))}
         </span>
       )}
-      <span className={"small " + (last ? "text-warning-emphasis" : "text-muted")}>{text}</span>
+      <span className={"small " + (last ? "gg-text-warning" : "gg-text-muted")}>{text}</span>
     </div>
   );
 }

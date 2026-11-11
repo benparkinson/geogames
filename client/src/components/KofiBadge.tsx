@@ -1,4 +1,5 @@
 import { CupHotFill } from "react-bootstrap-icons";
+import { buttonClass } from "../ui";
 
 /**
  * A small "Buy me a coffee" link, styled as a quiet outline button so it doesn't compete with
@@ -12,9 +13,9 @@ export default function KofiBadge(): React.JSX.Element {
             href="https://ko-fi.com/O3J02ABGOW"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-sm btn-outline-secondary rounded-pill d-inline-flex align-items-center gap-1"
+            className={buttonClass({ variant: "quiet", size: "sm", pill: true })}
         >
-            <CupHotFill aria-hidden="true" style={{ color: "#72a4f2" }} /> Buy me a coffee
+            <CupHotFill aria-hidden="true" className="kofi-icon" /> Buy me a coffee
         </a>
     );
 }
