@@ -103,7 +103,7 @@ class GameRepositoryTest {
     repository.save(old);
     entityManager.flush();
 
-    long deleted = repository.deleteByCreatedAtBefore(now.minus(Duration.ofDays(1)));
+    long deleted = repository.deleteCreatedBefore(now.minus(Duration.ofDays(1)));
     entityManager.flush();
     entityManager.clear();
 
@@ -120,11 +120,44 @@ class GameRepositoryTest {
     entityManager.flush();
     assertThat(rowsIn("game_round_entity")).isEqualTo(3);
 
-    repository.deleteByCreatedAtBefore(Instant.now().minus(Duration.ofDays(1)));
+    repository.deleteCreatedBefore(Instant.now().minus(Duration.ofDays(1)));
     entityManager.flush();
+    entityManager.clear();
 
     assertThat(rowsIn("game_entity")).isZero();
     assertThat(rowsIn("game_round_entity")).isZero();
+  }
+
+  @Test
+  void deletingWhenNothingIsOldDeletesNothing() {
+    long id = repository.save(gameWithRounds("tripoint:recent")).getId();
+    entityManager.flush();
+
+    int deleted = repository.deleteCreatedBefore(Instant.now().minus(Duration.ofDays(1)));
+    entityManager.clear();
+
+    assertThat(deleted).isZero();
+    assertThat(repository.findById(id)).isPresent();
+  }
+
+  @Test
+  void aRoundChangedElsewhereCannotBeOverwritten() {
+    GameEntity reloaded = saveAndReload(gameWithRounds("tripoint:x"));
+    // Touch the rounds so they are loaded, with version 0.
+    GameRoundEntity round = sorted(reloaded).get(0);
+
+    // Another writer got there first: the row's version moves on behind Hibernate's back.
+    entityManager
+        .getEntityManager()
+        .createNativeQuery("update game_round_entity set version = version + 1 where id = ?1")
+        .setParameter(1, round.getId())
+        .executeUpdate();
+    round.setAnswerState(AnswerState.GAVE_UP);
+
+    assertThatThrownBy(() -> entityManager.flush())
+        .isInstanceOfAny(
+            jakarta.persistence.OptimisticLockException.class,
+            org.springframework.orm.ObjectOptimisticLockingFailureException.class);
   }
 
   @Test

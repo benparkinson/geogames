@@ -4,6 +4,7 @@ import com.parkinson.benjamin.geogames.model.stats.RoundResult;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -21,14 +22,28 @@ import org.springframework.stereotype.Component;
  * is always committed. If the round insert fails, a lookup row or a game row with no rounds may be
  * left behind, which is harmless.
  *
- * <p>Concurrency: this is only called from the one {@code stats-} thread, so a get-or-create cannot
- * race. If it ever did, the {@code unique} constraints would reject the second insert, the recorder
- * would log its WARN and that one row would be dropped: never a duplicate.
+ * <p>Concurrency: there is one {@code stats-} thread per instance, so with several instances a
+ * get-or-create can race. The {@code unique} constraints make the loser's insert fail, and it then
+ * reads the winner's row instead: never a duplicate, and no dropped row. That only works because
+ * the store has no {@code @Transactional}: on Postgres a failed statement aborts the surrounding
+ * transaction, so the re-select needs each statement to commit on its own.
+ *
+ * <p>The {@code stat_round} insert is the exception: a duplicate (same game and round number) must
+ * still fail, and the recorder drops it, so the first recorded answer stays.
  */
 @Component
 public class RoundStatsStore {
 
   private record GameTypeKey(String name, int hintCount, int guessLimit) {}
+
+  static final String ROUND_KEY_SELECT =
+      "select id from stat_round_key where round_key = :roundKey";
+  static final String ROUND_KEY_INSERT =
+      "insert into stat_round_key (round_key) values (:roundKey)";
+  static final String GAME_SELECT = "select id from stat_game where play_id = :playId";
+  static final String GAME_INSERT =
+      "insert into stat_game (played_on, game_mode_id, rounds_in_game, play_id)"
+          + " values (:playedOn, :modeId, :roundsInGame, :playId)";
 
   private final JdbcClient jdbc;
   private final Map<String, Integer> modes = new ConcurrentHashMap<>();
@@ -95,24 +110,13 @@ public class RoundStatsStore {
   }
 
   private int createRoundKey(String roundKey) {
-    return findOrCreate(
-        "select id from stat_round_key where round_key = :roundKey",
-        "insert into stat_round_key (round_key) values (:roundKey)",
-        Map.of("roundKey", roundKey));
+    return findOrCreate(ROUND_KEY_SELECT, ROUND_KEY_INSERT, Map.of("roundKey", roundKey));
   }
 
   private int findOrCreateGame(RoundResult row, int modeId) {
-    Optional<Integer> existing =
-        jdbc.sql("select id from stat_game where play_id = :playId")
-            .param("playId", row.playId())
-            .query(Integer.class)
-            .optional();
-    if (existing.isPresent()) {
-      return existing.get();
-    }
-    return insertReturningId(
-        "insert into stat_game (played_on, game_mode_id, rounds_in_game, play_id)"
-            + " values (:playedOn, :modeId, :roundsInGame, :playId)",
+    return findOrCreate(
+        GAME_SELECT,
+        GAME_INSERT,
         Map.of(
             "playedOn", row.answeredOn(),
             "modeId", modeId,
@@ -121,8 +125,23 @@ public class RoundStatsStore {
   }
 
   private int findOrCreate(String select, String insert, Map<String, Object> params) {
-    Optional<Integer> existing = jdbc.sql(select).params(params).query(Integer.class).optional();
-    return existing.orElseGet(() -> insertReturningId(insert, params));
+    return find(select, params).orElseGet(() -> insertOrFind(select, insert, params));
+  }
+
+  /**
+   * Inserts the row. If another writer (the stats thread of another instance) inserted the same
+   * value first, the unique constraint rejects this insert, and the winner's id is read instead.
+   */
+  int insertOrFind(String select, String insert, Map<String, Object> params) {
+    try {
+      return insertReturningId(insert, params);
+    } catch (DuplicateKeyException e) {
+      return find(select, params).orElseThrow(() -> e);
+    }
+  }
+
+  private Optional<Integer> find(String select, Map<String, Object> params) {
+    return jdbc.sql(select).params(params).query(Integer.class).optional();
   }
 
   private int insertReturningId(String insert, Map<String, Object> params) {

@@ -20,18 +20,18 @@ class GameCleanupServiceTest {
   @Test
   void deletesGamesCreatedBeforeNowMinusMaxAge() {
     Instant now = Instant.parse("2026-11-08T12:00:00Z");
-    when(repository.deleteByCreatedAtBefore(Instant.parse("2026-11-07T12:00:00Z"))).thenReturn(3L);
+    when(repository.deleteCreatedBefore(Instant.parse("2026-11-07T12:00:00Z"))).thenReturn(3);
 
     assertThat(service.deleteGamesOlderThanMaxAge(now)).isEqualTo(3);
 
-    verify(repository).deleteByCreatedAtBefore(Instant.parse("2026-11-07T12:00:00Z"));
+    verify(repository).deleteCreatedBefore(Instant.parse("2026-11-07T12:00:00Z"));
   }
 
   @Test
   void theScheduledRunDeletesGamesOlderThanTheMaxAge() {
     service.deleteOldGames();
 
-    verify(repository).deleteByCreatedAtBefore(org.mockito.ArgumentMatchers.any());
+    verify(repository).deleteCreatedBefore(org.mockito.ArgumentMatchers.any());
   }
 
   /**

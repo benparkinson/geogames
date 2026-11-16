@@ -218,6 +218,8 @@ public class GameService {
   /**
    * A round's answer is final. Sending the same answer (and hints and wrong guesses) again does
    * nothing, so a retried request is harmless, but changing an answered round is a conflict.
+   * Concurrent answers to one round are stopped by the round's version, and the controller retries
+   * once.
    *
    * @return whether the round changed
    */
