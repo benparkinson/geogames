@@ -349,6 +349,24 @@ describe("MapGame hints", () => {
     expect(seen[seen.length - 1]).toBe(1);
   });
 
+  it("tells the map which answers were found when each hint was taken", async () => {
+    const user = userEvent.setup();
+    const seen: (string[][] | undefined)[] = [];
+    renderGame({
+      hints: { description: "A clue" },
+      round: makeRoundProps({ hintCount: 2 }),
+      MapComponent: ({ foundAtHint }) => {
+        seen.push(foundAtHint);
+        return <div data-testid="map" />;
+      },
+    });
+
+    await guess(user, "France");
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+
+    expect(seen[seen.length - 1]).toEqual([["France"]]);
+  });
+
   it("reports the hints used with the answer", async () => {
     const user = userEvent.setup();
     const { submitAnswer } = renderGame({

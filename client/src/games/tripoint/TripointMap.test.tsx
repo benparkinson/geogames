@@ -47,6 +47,12 @@ describe("TripointMap", () => {
     expect(points()).toEqual(["0,0", "2,2"]);
   });
 
+  it("skips a country the player had already named when the hint was taken", () => {
+    renderMap({ hintsUsed: 1, foundAtHint: [["Germany"]] });
+
+    expect(points()).toEqual(["0,0"]);
+  });
+
   it("outlines all three countries, named, once the round is over", () => {
     renderMap({ gameOver: true });
 

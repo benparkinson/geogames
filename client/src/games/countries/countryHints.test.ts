@@ -1,34 +1,52 @@
 import { describe, expect, it } from "vitest";
 import { makeCountryShapeData, makeCountryShapeRoundData } from "../../test/fixtures";
-import { countryHints, firstLetterHint, mapHint, neighbourCountHint, neighbourNamesHint } from "./countryHints";
+import {
+  borderLengthHint,
+  countryHints,
+  firstLetterHint,
+  longestBorderHint,
+  mapHint,
+  neighbourCountHint,
+}  from "./countryHints";
 
 describe("countryHints", () => {
   const round = makeCountryShapeRoundData();
 
-  it("counts every neighbour, overseas ones included", () => {
-    expect(neighbourCountHint(round)).toBe("Borders 3 countries");
+  it("counts only the mainland neighbours, not those of overseas territories", () => {
+    expect(neighbourCountHint(round)).toBe("Its mainland borders 2 countries");
     const one = makeCountryShapeRoundData({
-      country: makeCountryShapeData({ neighbours: [{ name: "Spain", km: 1, mainland: true }] }),
+      country: makeCountryShapeData({
+        neighbours: [
+          { name: "Spain", km: 1, mainland: true },
+          { name: "Brazil", km: 1, mainland: false },
+        ],
+      }),
     });
-    expect(neighbourCountHint(one)).toBe("Borders 1 country");
+    expect(neighbourCountHint(one)).toBe("Its mainland borders 1 country");
   });
 
-  it("names only the mainland neighbours, longest border first", () => {
-    expect(neighbourNamesHint(round)).toBe("Borders: Germany, Belgium");
+  it("names the mainland neighbour with the longest border", () => {
+    expect(longestBorderHint(round)).toBe("Longest border: Germany");
+    const overseasFirst = makeCountryShapeRoundData({
+      country: makeCountryShapeData({
+        neighbours: [
+          { name: "Brazil", km: 9, mainland: false },
+          { name: "Spain", km: 1, mainland: true },
+        ],
+      }),
+    });
+    expect(longestBorderHint(overseasFirst)).toBe("Longest border: Spain");
   });
 
-  it("names at most three and counts the rest", () => {
-    const many = ["A", "B", "C", "D", "E"].map((name) => ({ name, km: 1, mainland: true }));
-    const crowded = makeCountryShapeRoundData({ country: makeCountryShapeData({ neighbours: many }) });
-
-    expect(neighbourNamesHint(crowded)).toBe("Borders: A, B, C and 2 more");
+  it("says how long the borders of a landlocked country are", () => {
+    expect(borderLengthHint(round)).toBe("No coastline. Its borders are 1,027 km long");
   });
 
   it("has nothing to name for an island", () => {
     const island = makeCountryShapeRoundData({ country: makeCountryShapeData({ neighbours: [] }) });
 
-    expect(neighbourNamesHint(island)).toBeNull();
-    expect(neighbourCountHint(island)).toBe("Borders 0 countries");
+    expect(longestBorderHint(island)).toBeNull();
+    expect(neighbourCountHint(island)).toBe("Its mainland borders 0 countries");
   });
 
   it("gives the first letter", () => {

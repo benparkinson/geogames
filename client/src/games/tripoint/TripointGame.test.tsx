@@ -6,7 +6,7 @@ import { countryNames, makeRoundProps, makeTripointData } from "../../test/fixtu
 import { mockFetch } from "../../test/fetchMock";
 import { renderWithClient } from "../../test/render";
 import TripointGame from "./TripointGame";
-import type { TripointRoundData } from "./model";
+import { hintedCountries, type TripointRoundData } from "./model";
 
 vi.mock("./TripointMapWrapper", () => ({
   default: ({
@@ -14,14 +14,16 @@ vi.mock("./TripointMapWrapper", () => ({
     gameOver,
     gaveUp,
     hintsUsed,
+    foundAtHint,
   }: {
     data: TripointRoundData;
     gameOver: boolean;
     gaveUp: boolean;
     hintsUsed: number;
+    foundAtHint?: string[][];
   }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)}>
-      {data.hintOrder.slice(0, hintsUsed).map((name) => (
+      {hintedCountries(data.hintOrder, hintsUsed, foundAtHint).map((name) => (
         <span key={name} data-testid="hint-border">
           {name}
         </span>

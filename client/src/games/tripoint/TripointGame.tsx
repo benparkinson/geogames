@@ -27,7 +27,7 @@ export default function TripointGame({ data: tripoint, round, answerCount, submi
       inputPlaceholder="Country name…"
       answerNoun="country"
       hints={{
-        description: "Shows the outline of one of the countries",
+        description: "Shows the outline of a country you haven't named yet",
       }}
       submitAnswer={submitAnswer}
     />

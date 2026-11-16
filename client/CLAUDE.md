@@ -54,6 +54,6 @@ Then add the module to `GAME_MODULES` in `games/registry.ts`, whose order is the
 ## Game families
 
 - **Rivers** (`games/rivers/`): `RiverGame.tsx`'s `makeRiverGame(config)` builds each variant's component from a map, a prompt, a caption and hints, with shared layers in `RiverLayers.tsx` and hint builders in `riverHints.ts`.
-- **Lakes** (`games/lakes/`): the module (`index.ts`), `LakeGame.tsx`, the `LakeShapesMap` pair (the polygon on a blank map with a scale bar, and the satellite map once the round ends: solved, given up or out of guesses), `lakeHints.ts` (continent, countries on the shore, first letter) and `useGuessList("lakes")`.
+- **Lakes** (`games/lakes/`): the module (`index.ts`), `LakeGame.tsx`, the `LakeShapesMap` pair (the polygon on a blank map with a scale bar, and the satellite map once the round ends: solved, given up or out of guesses), `lakeHints.ts` (continent, number of countries on the shore, first letter) and `useGuessList("lakes")`.
 - **Country shapes** (`games/countries/`): `CountryShapeGame.tsx`'s `makeCountryShapeGame(variant)` builds each component from a map, a prompt, a caption and hints, with shared layers in `CountryLayers.tsx` (`FocusFit` fits the largest part, so Russia, Fiji and overseas territories don't zoom out to the world) and hint builders in `countryHints.ts` plus the generic `games/common/hints.ts`. The games use `useGuessList("countries")` and `isKnownGuess`.
 - Removing a variant: delete its module, registry entry and map pair, and the backend constant and bean.

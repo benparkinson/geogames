@@ -44,7 +44,7 @@ describe("Coastlines", () => {
     renderGame();
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    expect(screen.getByText("Borders 3 countries")).toBeInTheDocument();
+    expect(screen.getByText("Its mainland borders 2 countries")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(screen.getByText("Its land borders are on the map")).toBeInTheDocument();

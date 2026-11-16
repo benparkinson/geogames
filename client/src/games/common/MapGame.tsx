@@ -82,7 +82,7 @@ function MapGame<Type>({
 
   const map = (
     <>
-      <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} />
+      <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} foundAtHint={guessState.foundAtHint} />
       {showCaption && <div className="map-caption">{mapCaption}</div>}
     </>
   );
