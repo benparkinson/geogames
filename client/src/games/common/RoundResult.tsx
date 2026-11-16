@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
@@ -17,7 +17,7 @@ export default function RoundResult({ gaveUp, outOfGuesses = false, round, hints
 
   return (
     <div className="round-result mb-3">
-      <div className={"mb-2 fw-semibold " + (gaveUp ? "text-secondary" : "text-success")} aria-live="polite">
+      <div className={"mb-2 fw-semibold " + (gaveUp ? "gg-text-revealed" : "gg-text-correct")} aria-live="polite">
         {outOfGuesses ? (
           <><XCircleFill aria-hidden="true" /> Out of guesses · 0 pts</>
         ) : gaveUp ? (
@@ -28,15 +28,15 @@ export default function RoundResult({ gaveUp, outOfGuesses = false, round, hints
           <><CheckCircleFill aria-hidden="true" /> Correct! +{points}</>
         )}
         {!gaveUp && !perfect && (
-          <div className="small fw-normal text-muted">{hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}</div>
+          <div className="small fw-normal gg-text-muted">{hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}</div>
         )}
       </div>
       {round.hasNextRound ? (
-        <Button variant="primary" size="lg" className="w-100" autoFocus onClick={round.nextRound}>
+        <Button variant="primary" size="lg" block autoFocus onClick={round.nextRound}>
           Next round <ArrowRight aria-hidden="true" />
         </Button>
       ) : (
-        <Button variant="primary" size="lg" className="w-100" autoFocus onClick={round.showSummary}>
+        <Button variant="primary" size="lg" block autoFocus onClick={round.showSummary}>
           See results
         </Button>
       )}

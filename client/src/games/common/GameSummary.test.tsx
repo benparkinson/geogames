@@ -33,9 +33,9 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
 describe("GameSummary", () => {
   it("shows a spinner while the rounds load", () => {
     vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
-    const { container } = renderSummary();
+    renderSummary();
 
-    expect(container.querySelector(".spinner-border")).not.toBeNull();
+    expect(screen.getByRole("status")).toBeTruthy();
     expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
   });
 

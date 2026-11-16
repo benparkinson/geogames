@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, buttonClass, Spinner } from "../../ui";
 import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -63,15 +63,15 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
         </div>
         <KofiBadge />
       </div>
-      <div className="card mx-auto my-4 p-3" style={{ maxWidth: 560 }}>
+      <div className="gg-card mx-auto my-4 p-3">
         <h1 className="h3 mb-1">
           {perfectGame
-            ? <><StarFill aria-hidden="true" className="text-warning" /> Perfect game! {score} / {maxScore}</>
+            ? <><StarFill aria-hidden="true" className="gg-text-perfect" /> Perfect game! {score} / {maxScore}</>
             : `You scored ${score} / ${maxScore}`}
         </h1>
-        <p className="text-muted mb-3">{breakdown.length > 0 ? breakdown.join(" · ") : "0 perfect"}</p>
+        <p className="gg-text-muted mb-3">{breakdown.length > 0 ? breakdown.join(" · ") : "0 perfect"}</p>
 
-        <div className="list-group mb-3">
+        <div className="gg-list mb-3">
           {all.map((r, i) => {
             const isCorrect = r.answerState === CORRECT_ANSWER;
             const perfect = isPerfect(r.answerState, r.hintsUsed);
@@ -79,27 +79,27 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
               <button
                 key={i}
                 type="button"
-                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2 text-start"
+                className="gg-list__item d-flex justify-content-between align-items-center gap-2 text-start"
                 onClick={() => onOpenRound(i)}
               >
                 <span>
-                  <span className="text-muted">{i + 1}. {roundLabel(r)}</span>
+                  <span className="gg-text-muted">{i + 1}. {roundLabel(r)}</span>
                   <br />
                   {roundAnswers(r).join(", ")}
                   {r.answerState === OUT_OF_GUESSES && (
                     <>
                       <br />
-                      <span className="small text-muted">Out of guesses</span>
+                      <span className="small gg-text-muted">Out of guesses</span>
                     </>
                   )}
                   {r.hintsUsed > 0 && (
                     <>
                       <br />
-                      <span className="small text-muted">{r.hintsUsed === 1 ? "1 hint" : `${r.hintsUsed} hints`}</span>
+                      <span className="small gg-text-muted">{r.hintsUsed === 1 ? "1 hint" : `${r.hintsUsed} hints`}</span>
                     </>
                   )}
                 </span>
-                <span className={"text-nowrap " + (isCorrect ? "text-success" : "text-secondary")}>
+                <span className={"text-nowrap " + (isCorrect ? "gg-text-correct" : "gg-text-revealed")}>
                   {perfect ? <StarFill aria-hidden="true" />
                     : isCorrect ? <CheckLg aria-hidden="true" />
                     : <EyeFill aria-hidden="true" />} +{r.points}
@@ -109,12 +109,12 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
           })}
         </div>
 
-        {!!createError && <div className="text-danger small mb-2" role="alert">Couldn&apos;t start a new game. Try again.</div>}
+        {!!createError && <div className="gg-text-danger small mb-2" role="alert">Couldn&apos;t start a new game. Try again.</div>}
         <div className="d-flex gap-2">
           <Button variant="primary" onClick={() => createGame(gameType, totalRoundCount)} disabled={creating}>
-            {creating ? <Spinner animation="border" size="sm" /> : "Play again"}
+            {creating ? <Spinner size="sm" /> : "Play again"}
           </Button>
-          <Link href="/" className="btn btn-outline-secondary">Home</Link>
+          <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
         </div>
       </div>
     </div>
