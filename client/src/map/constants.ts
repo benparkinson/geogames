@@ -1,11 +1,11 @@
 import type { PathOptions } from "leaflet";
 
 export const SATELLITE_TILE_URL =
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+  "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg";
 
-/** Esri's required credit for World Imagery (HTML, shown by Leaflet's attribution control). */
+/** EOX's required credit for Sentinel-2 cloudless (HTML, shown by Leaflet's attribution control). */
 export const SATELLITE_ATTRIBUTION =
-  'Powered by <a href="https://www.esri.com/">Esri</a> | Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+  '<a href="https://cloudless.eox.at">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)';
 
 const ANSWER_COLOR = "LightGoldenRodYellow";
 const REVEALED_COLOR = "darkred";
