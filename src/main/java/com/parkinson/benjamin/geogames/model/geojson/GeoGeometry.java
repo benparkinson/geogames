@@ -1,8 +1,10 @@
 package com.parkinson.benjamin.geogames.model.geojson;
 
 import java.util.List;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
-public record GeoGeometry(String type, List coordinates) {
+public record GeoGeometry(
+    String type, @JsonDeserialize(using = CoordinatesDeserializer.class) List coordinates) {
 
   private static final String POLYGON = "Polygon";
   private static final String MULTI_POLYGON = "MultiPolygon";

@@ -6,6 +6,7 @@ Spring Boot 4, Java 25. The root `CLAUDE.md` has the commands, the API overview 
 
 - Loader services read classpath JSON through `service/JsonResourceReader`, and the offline `loaders/` programs share the Jackson settings in `helper/GeoJson`. Data that fails to load is an `UncheckedIOException` (a packaging bug), not a checked exception.
 - `GameService` methods are `@Transactional` and `spring.jpa.open-in-view` is off, so the lazy `rounds` collection must be read inside the service.
+- Coordinates read from JSON are `Position`s: an immutable `List<Double>` of two `double` fields (`model/geojson`, read by `CoordinatesDeserializer`, written by `PositionSerializer`), about a third of the heap of an `ArrayList` of two `Double`s, and the app holds hundreds of thousands of points. Only an array of exactly two floats becomes a `Position`; anything else stays a plain list. Code that builds geometry by hand may still use plain lists, and a loader must copy a position (`new ArrayList<>(position)`) before changing it.
 - `config/` holds caching, CORS (`WebConfig`, applied to `/api/**`), `Random`, logging and the stats executor.
 
 ## Tests

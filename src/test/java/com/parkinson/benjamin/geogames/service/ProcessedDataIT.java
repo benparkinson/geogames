@@ -17,6 +17,8 @@ import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
+import com.parkinson.benjamin.geogames.model.geojson.GeoData;
+import com.parkinson.benjamin.geogames.model.geojson.Position;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -179,6 +181,43 @@ public class ProcessedDataIT {
         assertTrue(seen.add(normalised), "'" + normalised + "' is shared, one is " + lake.name());
       }
     }
+  }
+
+  @Test
+  public void everyCoordinateReadFromTheProcessedDataIsAPosition() {
+    int points = 0;
+    for (CountryShape shape : shapeService.loadShapes()) {
+      points += assertPositions(shape.outline(), shape.name());
+      points += assertPositions(shape.coast(), shape.name());
+      points += assertPositions(shape.landBorders(), shape.name());
+    }
+    for (River river : new RiverLoaderService(reader).loadRivers()) {
+      points += assertPositions(river.geoData(), river.name());
+    }
+    for (Lake lake : loadLakes()) {
+      points += assertPositions(lake.geoData(), lake.name());
+    }
+    assertTrue(points > 100_000, "only " + points + " points");
+  }
+
+  /** Checks every innermost list under the geometry is a Position, and returns how many there are. */
+  private static int assertPositions(GeoData data, String name) {
+    return data == null ? 0 : assertPositions(data.geometry().coordinates(), name);
+  }
+
+  private static int assertPositions(List<?> list, String name) {
+    if (list.isEmpty()) {
+      return 0;
+    }
+    if (list.get(0) instanceof Number) {
+      assertTrue(list instanceof Position, "not a Position in " + name + ": " + list);
+      return 1;
+    }
+    int count = 0;
+    for (Object child : list) {
+      count += assertPositions((List<?>) child, name);
+    }
+    return count;
   }
 
   private List<Lake> loadLakes() {
