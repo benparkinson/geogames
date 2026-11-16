@@ -26,6 +26,28 @@
     },
     "POST /api/games" : {
       "id" : "string"
+    },
+    "POST /api/games/{id}/rounds/{round}/answers" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "hintsUsed" : "number",
+      "points" : "number"
     }
   },
   "rounds" : {

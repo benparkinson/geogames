@@ -13,6 +13,14 @@ export interface GameRoundResponse {
   gameResult: GameResultResponse;
 }
 
+/** The JSON of POST /api/games/{id}/rounds/{round}/answers. An older backend sends a whole GameRoundResponse, which has these fields too. */
+export interface RoundAnswerResponse {
+  answerState: AnswerState;
+  hintsUsed?: number;
+  points?: number;
+  gameResult: GameResultResponse;
+}
+
 export interface GameResultResponse {
   gameState: GameState;
   roundsUnanswered: number;

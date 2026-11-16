@@ -94,6 +94,16 @@ class ApiContractIT {
     return merged;
   }
 
+  private Object answerShape() throws Exception {
+    String id = createGame(GameType.TRIPOINT).get("id").asString();
+    return JsonShape.of(
+        objectMapper.readTree(
+            body(
+                post("/api/games/%s/rounds/0/answers".formatted(id))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":0,\"wrongGuesses\":0}"))));
+  }
+
   private Object endpointShape(String path) throws Exception {
     return JsonShape.of(objectMapper.readTree(body(get(path))));
   }
@@ -104,6 +114,7 @@ class ApiContractIT {
     endpoints.put("GET /api/rivers", endpointShape("/api/rivers"));
     endpoints.put("GET /api/lakes", endpointShape("/api/lakes"));
     endpoints.put("POST /api/games", JsonShape.of(createGame(GameType.TRIPOINT)));
+    endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 
     Map<String, Object> rounds = new TreeMap<>();
     for (GameType type : GameType.values()) {

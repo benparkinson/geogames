@@ -122,7 +122,7 @@ describe("GameRoundPage game types", () => {
 });
 
 describe("GameRoundPage playing", () => {
-  it("posts the answer and then reloads the round", async () => {
+  it("posts the answer and patches the round instead of reloading it", async () => {
     const fetchMock = fakeServer(["TRIPOINT", "TRIPOINT"]);
     const user = userEvent.setup();
     renderPage();
@@ -137,7 +137,9 @@ describe("GameRoundPage playing", () => {
       expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/answers");
       expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
     });
-    await waitFor(() => expect(roundGets(fetchMock, 0).length).toBeGreaterThanOrEqual(2));
+    // The next round is prefetched once the answer is patched in; the answered round is not fetched again.
+    await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
+    expect(roundGets(fetchMock, 0)).toHaveLength(1);
   });
 
   it("moves to the next round", async () => {

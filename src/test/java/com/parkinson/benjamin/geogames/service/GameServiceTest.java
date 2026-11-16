@@ -15,6 +15,7 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
@@ -259,15 +260,16 @@ class GameServiceTest {
   }
 
   @Test
-  void submitAnswerAlsoRebuildsTheJson() {
+  void submitAnswerDoesNotRebuildTheRound() {
     RiverRound river = (RiverRound) rivers(1).get(0);
-    when(riverGenerator.rebuild(river.roundKey())).thenReturn(river);
     GameRoundEntity entity = new GameRoundEntity(0, GameType.RIVERS_BY_SHAPE, river.roundKey());
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
 
-    GameRound result = service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
 
-    assertThat(parse(result.jsonBlob()).get("gameType").asString()).isEqualTo("RIVERS_BY_SHAPE");
+    assertThat(result.answerState()).isEqualTo(AnswerState.GAVE_UP);
+    verify(riverGenerator, never()).rebuild(any());
   }
 
   @Test
@@ -279,8 +281,7 @@ class GameServiceTest {
 
     assertThatThrownBy(() -> service.getGameRound(GAME_ID, 0))
         .isInstanceOf(RoundDataMissingException.class);
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
-        .isInstanceOf(RoundDataMissingException.class);
+    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null)).isPresent();
   }
 
   @Test
@@ -490,7 +491,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound afterFirst =
+    RoundAnswerResponse afterFirst =
         service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
 
     assertThat(afterFirst.answerState()).isEqualTo(AnswerState.CORRECT);
@@ -499,7 +500,7 @@ class GameServiceTest {
     assertThat(game.getRounds().get(1).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
     verify(gameRepository, times(1)).save(game);
 
-    GameRound afterSecond =
+    RoundAnswerResponse afterSecond =
         service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null).orElseThrow();
 
     assertThat(afterSecond.gameResult().gameState()).isEqualTo(GameState.FINISHED);
@@ -588,7 +589,8 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.GAVE_UP));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound again = service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
+    RoundAnswerResponse again =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
 
     assertThat(again.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(again.gameResult().gameState()).isEqualTo(GameState.FINISHED);
@@ -613,7 +615,8 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound result = service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null).orElseThrow();
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null).orElseThrow();
 
     assertThat(game.getRounds().get(0).getHintsUsed()).isEqualTo(1);
     assertThat(result.hintsUsed()).isEqualTo(1);
@@ -667,7 +670,8 @@ class GameServiceTest {
     GameEntity game = game(hintedRound(0, GameType.TRIPOINT, AnswerState.CORRECT, 2));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound again = service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null).orElseThrow();
+    RoundAnswerResponse again =
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null).orElseThrow();
 
     assertThat(again.points()).isEqualTo(67);
     verify(gameRepository, never()).save(any());
@@ -863,7 +867,8 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound result = service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 3, null).orElseThrow();
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 3, null).orElseThrow();
 
     assertThat(result.hintsUsed()).isEqualTo(3);
     assertThat(result.points()).isZero();
@@ -875,7 +880,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound result =
+    RoundAnswerResponse result =
         service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 1, null).orElseThrow();
 
     assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
@@ -892,7 +897,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.OUT_OF_GUESSES));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    GameRound again =
+    RoundAnswerResponse again =
         service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, null).orElseThrow();
 
     assertThat(again.answerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);

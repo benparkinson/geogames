@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnswerState, CORRECT_ANSWER, RoundAnswer, UNANSWERED } from "../games/common/Model";
 import { isPerfect, MAX_ROUND_POINTS, roundPoints } from "../games/common/scoring";
 import { fetchJson, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
-import { GameRoundResponse, GameRoundView } from "./types";
+import { GameResultResponse, GameRoundResponse, GameRoundView, RoundAnswerResponse } from "./types";
 
 function roundUrl(gameId: string, round: number): string {
   return "/api/games/" + gameId + "/rounds/" + round;
@@ -62,7 +62,8 @@ export function roundQuery(gameId: string, round: number) {
   return {
     queryKey: queryKeys.round(gameId, round),
     queryFn: () => fetchRound(gameId, round),
-    // Round data only changes when this client answers, and every answer invalidates the whole game.
+    // Round data only changes when this client answers, and an answer patches the cached rounds (see
+    // useSubmitAnswer); only a failed answer refetches them.
     staleTime: Infinity,
   };
 }
@@ -71,23 +72,98 @@ export function useRound(gameId: string, round: number) {
   return useQuery(roundQuery(gameId, round));
 }
 
-/** `totalRoundCount` is known once the round has loaded; it decides whether there is a next round to prefetch. */
+/** The answer response with every field the cache patch needs. A current backend always sends them all. */
+export type CompleteAnswerResponse = RoundAnswerResponse & {
+  hintsUsed: number;
+  points: number;
+  gameResult: GameResultResponse &
+    Required<
+      Pick<
+        GameResultResponse,
+        "maxScore" | "roundsCorrect" | "perfectRounds" | "roundAnswerStates" | "roundPoints" | "roundHintsUsed"
+      >
+    >;
+};
+
+/** Whether an answer response can be patched into the cache; an older backend or `{}` can't, and the game is refetched. */
+export function isCompleteAnswerResponse(response: unknown): response is CompleteAnswerResponse {
+  if (typeof response !== "object" || response === null) return false;
+  const r = response as Record<string, unknown>;
+  const result = r.gameResult;
+  if (typeof result !== "object" || result === null) return false;
+  const g = result as Record<string, unknown>;
+  return (
+    typeof r.answerState === "string" &&
+    typeof r.hintsUsed === "number" &&
+    typeof r.points === "number" &&
+    typeof g.score === "number" &&
+    typeof g.maxScore === "number" &&
+    typeof g.roundsCorrect === "number" &&
+    typeof g.perfectRounds === "number" &&
+    Array.isArray(g.roundAnswerStates) &&
+    Array.isArray(g.roundPoints) &&
+    Array.isArray(g.roundHintsUsed)
+  );
+}
+
+/**
+ * `totalRoundCount` is known once the round has loaded; it decides whether there is a next round to prefetch.
+ *
+ * The answer's response carries the answered round's state and the whole game's result, and no round data. They
+ * are patched into the cached rounds, so nothing is refetched. If the response isn't complete (an older backend),
+ * or the server refused the answer (a round's answer is final), the cache is wrong and the game's rounds are refetched.
+ */
 export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?: number) {
   const queryClient = useQueryClient();
+  const invalidateGame = () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) });
   return useMutation({
     mutationFn: (answer: RoundAnswer) =>
-      postJson<unknown>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
-    // Refetch on failure too: if the server refused the answer (a round's answer is final), show what it holds.
-    // Every round's response carries the whole game's result, so all of the game's rounds are out of date.
-    // Returning the promise keeps the mutation pending until the refetch is done.
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) });
+      postJson<RoundAnswerResponse>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
+    // Returning the promise keeps the mutation pending until the refetch or prefetch is done.
+    onError: invalidateGame,
+    onSuccess: async response => {
+      if (isCompleteAnswerResponse(response)) {
+        patchRounds(queryClient, gameId, round, response);
+      } else {
+        await invalidateGame();
+      }
       // Only now, so the next round's score isn't already out of date.
       if (totalRoundCount !== undefined && round + 1 < totalRoundCount) {
         await queryClient.prefetchQuery(roundQuery(gameId, round + 1));
       }
     },
   });
+}
+
+function patchRounds(
+  queryClient: QueryClient,
+  gameId: string,
+  round: number,
+  response: CompleteAnswerResponse,
+) {
+  const result = response.gameResult;
+  const gameResult: GameRoundView["gameResult"] = {
+    gameState: result.gameState,
+    score: result.score,
+    maxScore: result.maxScore,
+    roundsCorrect: result.roundsCorrect,
+    perfectRounds: result.perfectRounds,
+    roundAnswerStates: result.roundAnswerStates,
+    roundPoints: result.roundPoints,
+    roundHintsUsed: result.roundHintsUsed,
+  };
+  // Every round of the game carries the whole game's result. Only round queries live under the game's key.
+  queryClient.setQueriesData<GameRoundView>({ queryKey: queryKeys.game(gameId) }, old => old && { ...old, gameResult });
+  queryClient.setQueryData<GameRoundView>(
+    queryKeys.round(gameId, round),
+    old =>
+      old && {
+        ...old,
+        answerState: response.answerState,
+        hintsUsed: response.hintsUsed,
+        points: response.points,
+      },
+  );
 }
 
 export function useCreateGame(): {

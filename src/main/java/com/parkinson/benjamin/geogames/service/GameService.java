@@ -4,6 +4,7 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
@@ -132,7 +133,7 @@ public class GameService {
   }
 
   @Transactional
-  public Optional<GameRound> submitAnswer(
+  public Optional<RoundAnswerResponse> submitAnswer(
       UUID gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
@@ -151,7 +152,7 @@ public class GameService {
                             gameRepository.save(game);
                             publishRoundAnswered(game, r);
                           }
-                          return toResponse(game, r);
+                          return toAnswerResponse(game, r);
                         }));
   }
 
@@ -259,6 +260,12 @@ public class GameService {
         round.getHintsUsed(),
         pointsFor(round),
         calculateGameResult(game));
+  }
+
+  /** The answer's response has no round data, so it needs no rebuild and no serialising. */
+  private static RoundAnswerResponse toAnswerResponse(GameEntity game, GameRoundEntity round) {
+    return new RoundAnswerResponse(
+        round.getAnswerState(), round.getHintsUsed(), pointsFor(round), calculateGameResult(game));
   }
 
   private static int pointsFor(GameRoundEntity round) {

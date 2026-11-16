@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { GameRoundResponse } from "../api/types";
+import type { GameRoundResponse, RoundAnswerResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
 import type { CountryShape, CountryShapeRound } from "../games/countries/model";
@@ -157,6 +157,26 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     },
     ...overrides,
   };
+}
+
+/** What POST /api/games/{id}/rounds/{round}/answers returns: no round data. */
+export function makeAnswerResponse(overrides: Partial<RoundAnswerResponse> = {}): RoundAnswerResponse {
+  const { answerState, hintsUsed, points, gameResult } = makeRound({
+    answerState: "CORRECT",
+    points: 100,
+    gameResult: {
+      gameState: "IN_PROGRESS",
+      roundsUnanswered: 2,
+      score: 100,
+      roundAnswerStates: ["CORRECT", "UNANSWERED", "UNANSWERED"],
+      maxScore: 300,
+      roundsCorrect: 1,
+      perfectRounds: 1,
+      roundPoints: [100, 0, 0],
+      roundHintsUsed: [0, 0, 0],
+    },
+  });
+  return { answerState, hintsUsed, points, gameResult, ...overrides };
 }
 
 export function makeRiverRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {

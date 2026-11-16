@@ -4,6 +4,7 @@ import com.parkinson.benjamin.geogames.api.GameCreationRequest;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameRoundAnswerRequest;
+import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class GameController {
   }
 
   @PostMapping("/games/{gameId}/rounds/{round}/answers")
-  public ResponseEntity<GameRound> submitAnswer(
+  public ResponseEntity<RoundAnswerResponse> submitAnswer(
       @PathVariable String gameId,
       @PathVariable int round,
       @RequestBody GameRoundAnswerRequest answer) {
