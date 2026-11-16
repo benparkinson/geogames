@@ -34,7 +34,7 @@ describe("Country Gaps", () => {
     expect(screen.getByText("Only its neighbours are shown. The country is the gap.")).toBeInTheDocument();
   });
 
-  it("offers three hints: the coastline on the map, the neighbours, then the first letter", async () => {
+  it("offers three hints: the coastline on the map, the longest border, then the first letter", async () => {
     const user = userEvent.setup();
     renderGame();
 
@@ -43,20 +43,20 @@ describe("Country Gaps", () => {
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Borders: Germany, Belgium")).toBeInTheDocument();
+    expect(screen.getByText("Longest border: Germany")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
-  it("says so when the country has no coastline", async () => {
+  it("gives the border length instead when the country has no coastline", async () => {
     const user = userEvent.setup();
     renderGame(makeCountryShapeRoundData({ country: makeCountryShapeData({ coastKm: 0 }) }));
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
 
-    expect(screen.getByText("It has no coastline")).toBeInTheDocument();
+    expect(screen.getByText("No coastline. Its borders are 1,027 km long")).toBeInTheDocument();
   });
 
   it("accepts a correct guess by an alias", async () => {

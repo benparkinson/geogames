@@ -16,7 +16,7 @@ export default defineGame({
     mapCaption: "Coastline only. Land borders are hidden.",
     hints: (round) =>
       countryHints(
-        "Shows how many neighbours it has, then its land borders, then its first letter",
+        "Shows how many countries its mainland borders, then its land borders, then its first letter",
         round,
         neighbourCountHint,
         // The second hint changes the map; it only says so.

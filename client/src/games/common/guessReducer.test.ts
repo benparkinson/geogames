@@ -43,7 +43,7 @@ describe("initialGuessState hints", () => {
 
 describe("initialGuessState", () => {
   it("starts empty for an unanswered round", () => {
-    expect(fresh()).toEqual({ guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0 });
+    expect(fresh()).toEqual({ guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] });
   });
 
   it("starts solved, with every answer found, for a correct round", () => {
@@ -177,6 +177,35 @@ describe("guessReducer hints", () => {
   });
 });
 
+describe("guessReducer foundAtHint", () => {
+  it("records nothing found for a hint taken before any guess", () => {
+    const { state } = guessReducer(fresh(), { type: "hint" }, config);
+
+    expect(state.foundAtHint).toEqual([[]]);
+  });
+
+  it("records the answers found when each hint was taken, and not wrong guesses", () => {
+    let state = guessAll(["Peru", "Belgium"]).state;
+    state = guessReducer(state, { type: "hint" }, config).state;
+    state = guessAll(["Holland"], config, state).state;
+    state = guessReducer(state, { type: "hint" }, config).state;
+
+    expect(state.foundAtHint).toEqual([["Belgium"], ["Belgium", "Netherlands"]]);
+  });
+
+  it("does not record a hint that was refused", () => {
+    const over = initialGuessState("GAVE_UP", answers, 0);
+
+    expect(guessReducer(over, { type: "hint" }, config).state.foundAtHint).toEqual([]);
+  });
+
+  it("restores one empty entry per hint for an answered round", () => {
+    expect(initialGuessState("CORRECT", answers, 2).foundAtHint).toEqual([[], []]);
+    expect(initialGuessState("GAVE_UP", answers, 1).foundAtHint).toEqual([[]]);
+    expect(initialGuessState("UNANSWERED", answers, 0).foundAtHint).toEqual([]);
+  });
+});
+
 describe("guessReducer guess limit", () => {
   const limited: GuessConfig = { ...config, guessLimit: 3 };
 
@@ -229,7 +258,7 @@ describe("guessReducer guess limit", () => {
   it("restores an OUT_OF_GUESSES round as revealed", () => {
     const state = initialGuessState("OUT_OF_GUESSES", answers, 1);
 
-    expect(state).toEqual({ guesses: [], gaveUp: true, outOfGuesses: true, over: true, hintsUsed: 1 });
+    expect(state).toEqual({ guesses: [], gaveUp: true, outOfGuesses: true, over: true, hintsUsed: 1, foundAtHint: [[]] });
   });
 
   it("giving up is not running out of guesses", () => {

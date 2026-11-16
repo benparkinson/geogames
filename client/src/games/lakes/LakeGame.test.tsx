@@ -38,20 +38,20 @@ describe("LakeGame", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
     expect(screen.getByText("Continent: Asia")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Lies in: Russia")).toBeInTheDocument();
+    expect(screen.getByText("Lies in 1 country")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
-  it("says a lake shared by several countries has shores in them", async () => {
+  it("says a lake shared by several countries has shores in them, counted", async () => {
     const user = userEvent.setup();
     await renderLake({ lake: { ...makeLakeData(), countries: ["Kenya", "Tanzania", "Uganda"] } });
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
 
-    expect(screen.getByText("Shores in: Kenya, Tanzania, Uganda")).toBeInTheDocument();
+    expect(screen.getByText("Shores in 3 countries")).toBeInTheDocument();
   });
 
   it.each(["Lake Baikal", "baikal", "  BAIKAL "])("accepts %j", async (text) => {

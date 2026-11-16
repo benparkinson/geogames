@@ -33,7 +33,7 @@ describe("River Shapes", () => {
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Flows through: Romania, Germany, Austria")).toBeInTheDocument();
+    expect(screen.getByText("Flows through 3 countries")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
