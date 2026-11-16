@@ -40,7 +40,6 @@ public class ProcessedDataIT {
   private final JsonResourceReader reader =
       new JsonResourceReader(new PathMatchingResourcePatternResolver());
   private final TripointLoaderService tripointLoaderService = new TripointLoaderService(reader);
-  private final CountryLoaderService countryLoaderService = new CountryLoaderService(reader);
   private final CountryShapeService shapeService = new CountryShapeService(reader);
 
   @Test
@@ -186,11 +185,22 @@ public class ProcessedDataIT {
     return reader.readAll("classpath*:/processed/lakes/*.json", Lake.class);
   }
 
+  /** The names in the raw {@code processed/countries} files, which the app itself never reads. */
+  private List<PlaceName> rawCountryNames() {
+    return reader.readAll("classpath*:/processed/countries/*.json", PlaceName.class).stream()
+        .map(
+            c ->
+                new PlaceName(
+                    c.name(), c.additionalNames() == null ? List.of() : c.additionalNames()))
+        .sorted(Comparator.comparing(PlaceName::name))
+        .toList();
+  }
+
   @Test
   public void lakesHaveContinentsCountriesAndClosedRings() {
     List<Lake> lakes = loadLakes();
     Set<String> countryNames =
-        countryLoaderService.loadCountryNames().stream()
+        rawCountryNames().stream()
             .map(PlaceName::name)
             .collect(java.util.stream.Collectors.toSet());
 
@@ -235,9 +245,7 @@ public class ProcessedDataIT {
   public void countryShapesMatchTheProcessedCountries() {
     CountryShapeService shapes = new CountryShapeService(reader);
     List<PlaceName> countries =
-        countryLoaderService.loadCountryNames().stream()
-            .filter(c -> !"Antarctica".equals(c.name()))
-            .toList();
+        rawCountryNames().stream().filter(c -> !"Antarctica".equals(c.name())).toList();
 
     List<PlaceName> shapeNames =
         shapes.loadShapes().stream()
