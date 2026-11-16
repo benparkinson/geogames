@@ -37,7 +37,7 @@ const header = [
   "=====================================",
   "",
   "Geogames is built with the open-source packages below. Each is listed with its licence text.",
-  "Data credits (Natural Earth, Wikidata, Wikipedia, Esri, Flaticon) are on the home page.",
+  "Data credits (Natural Earth, Wikidata, Wikipedia, EOX, Flaticon) are on the home page.",
   "",
   "",
 ].join("\n");

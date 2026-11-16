@@ -51,11 +51,13 @@ describe("HomePage on load", () => {
     expect(href("Wikidata")).toBe("https://www.wikidata.org/");
     expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
     expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
-    expect(href("Esri")).toBe("https://www.esri.com/");
+    expect(href("EOxCloudless")).toBe("https://cloudless.eox.at");
+    expect(href("CC BY 4.0")).toBe("https://creativecommons.org/licenses/by/4.0/");
     expect(href("Earthz Stocker")).toContain("flaticon.com");
     expect(href("Freepik")).toContain("flaticon.com");
     expect(href("Software licences")).toBe("/third-party-licenses.txt");
     expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
+    expect(footer.queryByText(/Esri/)).not.toBeInTheDocument();
     expect(footer.getByText(/your light or dark mode choice/)).toBeInTheDocument();
   });
 
