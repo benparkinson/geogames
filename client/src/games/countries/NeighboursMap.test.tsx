@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueOutlineOptions, SATELLITE_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import { drawnLayers, drawnMarkers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryShapeRoundData } from "../../test/fixtures";
 import NeighboursMap from "./NeighboursMap";
 import type { CountryShapeRound } from "./model";
@@ -83,6 +83,22 @@ describe("NeighboursMap", () => {
       ],
       expect.anything(),
     );
+  });
+});
+
+describe("NeighboursMap flag", () => {
+  it("marks the centre of the country's focus box while playing", () => {
+    renderMap();
+
+    expect(drawnMarkers()).toHaveLength(1);
+    expect(drawnMarkers()[0][0]).toBeCloseTo(52.15);
+    expect(drawnMarkers()[0][1]).toBeCloseTo(5.25);
+  });
+
+  it("is gone once the round is over, when the outline shows the country", () => {
+    renderMap({ gameOver: true });
+
+    expect(drawnMarkers()).toEqual([]);
   });
 });
 

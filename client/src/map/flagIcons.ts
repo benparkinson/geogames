@@ -21,3 +21,6 @@ export const startFlagIcon = flagIcon("#1e9e4a");
 
 /** Red flag: where a river ends. */
 export const endFlagIcon = flagIcon("#d62828");
+
+/** Blue flag: marks the country to find in Country Gaps, inside the gap. */
+export const targetFlagIcon = flagIcon("#1d6fd6");
