@@ -112,7 +112,10 @@ public class CityLoaderMain {
 
     List<CountryCities> result = new ArrayList<>();
     placesByCountry.forEach(
-        (country, places) -> result.add(new CountryCities(country, keep(withCapital(places)))));
+        (country, places) ->
+            result.add(
+                new CountryCities(
+                    country, keep(applyCapitalOverride(country, withCapital(places))))));
 
     if (outFile.getParent() != null) {
       Files.createDirectories(outFile.getParent());
@@ -165,6 +168,36 @@ public class CityLoaderMain {
       cities.add(new City(c.name(), c.lon(), c.lat(), c.population(), capital));
     }
     return cities;
+  }
+
+  /**
+   * Countries where Natural Earth flags the wrong cities, with the cities that really are capitals.
+   * Myanmar moved its capital from Yangon to Naypyidaw in 2006; Ivory Coast's official capital is
+   * Yamoussoukro (Abidjan is the economic centre); South Africa has three capitals (Pretoria
+   * executive, Cape Town legislative, Bloemfontein judicial) and Johannesburg is none of them.
+   * Kazakhstan's capital was renamed Astana in 2022.
+   */
+  static final Map<String, List<String>> CAPITAL_OVERRIDES =
+      Map.of(
+          "Myanmar", List.of("Naypyidaw"),
+          "Ivory Coast", List.of("Yamoussoukro"),
+          "South Africa", List.of("Pretoria", "Cape Town", "Bloemfontein"));
+
+  /** Renames for cities Natural Earth still calls by an old name. */
+  static final Map<String, Map<String, String>> CITY_RENAMES =
+      Map.of("Kazakhstan", Map.of("Nur-Sultan", "Astana"));
+
+  /** Applies {@link #CAPITAL_OVERRIDES} and {@link #CITY_RENAMES} to one country's cities. */
+  static List<City> applyCapitalOverride(String country, List<City> cities) {
+    List<String> capitals = CAPITAL_OVERRIDES.get(country);
+    Map<String, String> renames = CITY_RENAMES.getOrDefault(country, Map.of());
+    List<City> result = new ArrayList<>();
+    for (City c : cities) {
+      boolean capital = capitals == null ? c.capital() : capitals.contains(c.name());
+      String name = renames.getOrDefault(c.name(), c.name());
+      result.add(new City(name, c.lon(), c.lat(), c.population(), capital));
+    }
+    return result;
   }
 
   /** The country at one of the four points just north, south, east and west, in that order. */

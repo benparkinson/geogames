@@ -9929,7 +9929,7 @@
     "lon" : -4.0202,
     "lat" : 5.3231,
     "population" : 3802000,
-    "capital" : true
+    "capital" : false
   }, {
     "name" : "Bouaké",
     "lon" : -5.03,
@@ -10489,7 +10489,7 @@
     "population" : 358153,
     "capital" : false
   }, {
-    "name" : "Nur-Sultan",
+    "name" : "Astana",
     "lon" : 71.4278,
     "lat" : 51.1811,
     "population" : 345604,
@@ -13301,7 +13301,7 @@
     "lon" : 96.1647,
     "lat" : 16.7853,
     "population" : 4088000,
-    "capital" : true
+    "capital" : false
   }, {
     "name" : "Mandalay",
     "lon" : 96.0831,
@@ -17996,7 +17996,7 @@
     "lon" : 28.0281,
     "lat" : -26.1681,
     "population" : 3435000,
-    "capital" : true
+    "capital" : false
   }, {
     "name" : "Cape Town",
     "lon" : 18.433,

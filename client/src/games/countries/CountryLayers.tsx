@@ -51,14 +51,14 @@ export function HintLines({ data, id }: { data: LineGeoData; id: string }): Reac
 }
 
 /** The country's whole outline. Re-created when the round is lost or given up so the colour changes. */
-export function AnswerOutline({ country, gaveUp }: { country: CountryShape; gaveUp: boolean }): React.JSX.Element {
+export function AnswerOutline({ country, gaveUp, labelled = true }: { country: CountryShape; gaveUp: boolean; labelled?: boolean }): React.JSX.Element {
   return (
     <GeoJSON
       pathOptions={answerPathOptions(gaveUp)}
       data={country.outline}
       key={`${country.name}/outline${gaveUp ? "/gaveUp" : ""}`}
     >
-      <Tooltip sticky>{country.name}</Tooltip>
+      {labelled && <Tooltip sticky>{country.name}</Tooltip>}
     </GeoJSON>
   );
 }

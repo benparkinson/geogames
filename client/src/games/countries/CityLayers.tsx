@@ -1,6 +1,7 @@
 import { CircleMarker, Tooltip } from "react-leaflet";
 import { capitalDotOptions, cityDotOptions, cityRadius } from "../../map/constants";
-import type { City } from "./model";
+import { FitBounds } from "../../map/FitBounds";
+import type { City, CountryShape } from "./model";
 
 /** The biggest capital dots are no bigger than a city of their size; the smallest are still easy to see. */
 const CAPITAL_MIN_RADIUS = 6;
@@ -46,5 +47,19 @@ export function CapitalDots({ cities, labelled = false }: { cities: City[]; labe
           </CircleMarker>
         ))}
     </>
+  );
+}
+
+/** Fits the map to the country's main part and every city, so a far-off city is in view from the start. */
+export function CitiesFit({ country, cities }: { country: CountryShape; cities: City[] }): React.JSX.Element {
+  const { south, west, north, east } = country.focus;
+  return (
+    <FitBounds
+      id={country.name}
+      bounds={[
+        [Math.min(south, ...cities.map((city) => city.lat)), Math.min(west, ...cities.map((city) => city.lon))],
+        [Math.max(north, ...cities.map((city) => city.lat)), Math.max(east, ...cities.map((city) => city.lon))],
+      ]}
+    />
   );
 }
