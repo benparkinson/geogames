@@ -1913,13 +1913,13 @@
     "lon" : 2.4044,
     "lat" : 6.363,
     "population" : 762000,
-    "capital" : true
+    "capital" : false
   }, {
     "name" : "Porto-Novo",
     "lon" : 2.6166,
     "lat" : 6.4833,
     "population" : 300000,
-    "capital" : false
+    "capital" : true
   }, {
     "name" : "Djougou",
     "lon" : 1.68,
@@ -19850,7 +19850,7 @@
     "lon" : 39.2664,
     "lat" : -6.7981,
     "population" : 2930000,
-    "capital" : true
+    "capital" : false
   }, {
     "name" : "Moshi",
     "lon" : 37.34,
@@ -19898,7 +19898,7 @@
     "lon" : 35.75,
     "lat" : -6.1833,
     "population" : 218269,
-    "capital" : false
+    "capital" : true
   }, {
     "name" : "Kigoma",
     "lon" : 29.61,
