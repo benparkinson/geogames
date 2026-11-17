@@ -3,38 +3,47 @@
   "additionalNames" : [ "United Republic of Tanzania" ],
   "coastKm" : 1909.0,
   "landBorderKm" : 3757.0,
+  "areaKm2" : 942554,
   "neighbours" : [ {
     "name" : "Kenya",
     "km" : 763.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Mozambique",
     "km" : 725.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Democratic Republic of the Congo",
     "km" : 476.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Malawi",
     "km" : 453.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Burundi",
     "km" : 414.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Uganda",
     "km" : 386.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "Zambia",
     "km" : 321.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Rwanda",
     "km" : 218.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   } ],
   "focus" : {
     "west" : 29.321031535000117,

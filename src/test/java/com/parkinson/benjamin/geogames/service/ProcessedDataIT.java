@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.CountryPairRound;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.PlaceName;
@@ -24,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -67,6 +70,34 @@ public class ProcessedDataIT {
     assertUniqueAndShort("lake", loadLakes().stream().map(l -> "lake:" + l.id()).toList());
     assertUniqueAndShort(
         "country", shapeService.loadShapes().stream().map(s -> "country:" + s.name()).toList());
+    assertUniqueAndShort(
+        "pair",
+        pairs(CountryPairEligibility.borders()).stream()
+            .map(p -> CountryPairRound.subjectId(p[0].name(), p[1].name()))
+            .toList());
+  }
+
+  /** Every pair, the country that comes first by name first, for which the test passes. */
+  private List<CountryShape[]> pairs(BiPredicate<CountryShape, CountryShape> test) {
+    List<CountryShape> all = shapeService.loadShapes();
+    List<CountryShape[]> pairs = new java.util.ArrayList<>();
+    for (CountryShape first : all) {
+      for (CountryShape second : all) {
+        if (first.name().compareTo(second.name()) < 0 && test.test(first, second)) {
+          pairs.add(new CountryShape[] {first, second});
+        }
+      }
+    }
+    return pairs;
+  }
+
+  @Test
+  public void eachPairGameHasEnoughPairs() {
+    int borders = pairs(CountryPairEligibility.borderShapes()).size();
+    int merged = pairs(CountryPairEligibility.mergedCountries()).size();
+
+    assertTrue(borders >= 150, "only " + borders + " pairs for Border Shapes");
+    assertTrue(merged >= 150, "only " + merged + " pairs for Merged Countries");
   }
 
   private static void assertUniqueAndShort(String type, List<String> keys) {
@@ -311,6 +342,102 @@ public class ProcessedDataIT {
         assertEquals(neighbour.km(), back.km(), 1.0, shape.name() + " and " + neighbour.name());
       }
     }
+  }
+
+  @Test
+  public void countryAreasAreRoughlyRight() {
+    CountryShapeService shapes = new CountryShapeService(reader);
+
+    // France's mainland is about 548,000 km2.
+    assertEquals(548_000, shapes.loadShape("France").areaKm2(), 548_000 * 0.02);
+    for (CountryShape shape : shapes.loadShapes()) {
+      // Vatican City is under a square kilometre, so it rounds to 0.
+      assertTrue(shape.areaKm2() >= 0, shape.name() + " has a negative area");
+      if (shape.landBorderKm() >= CountryPairEligibility.MIN_BORDER_KM) {
+        assertTrue(shape.areaKm2() > 100, shape.name() + " has area " + shape.areaKm2());
+      }
+    }
+  }
+
+  @Test
+  public void neighbourLinesPointAtTheirOwnBorderLinesAndNoOther() {
+    CountryShapeService shapes = new CountryShapeService(reader);
+    for (CountryShape shape : shapes.loadShapes()) {
+      int lineCount = shape.landBorders().geometry().coordinates().size();
+      Set<Integer> seen = new HashSet<>();
+      for (CountryShape.Neighbour neighbour : shape.neighbours()) {
+        String who = shape.name() + " and " + neighbour.name();
+        assertFalse(neighbour.lines().isEmpty(), "no lines for " + who);
+        assertEquals(
+            neighbour.lines().stream().sorted().toList(), neighbour.lines(), "unsorted " + who);
+        for (int index : neighbour.lines()) {
+          assertTrue(index >= 0 && index < lineCount, "line " + index + " out of range: " + who);
+          assertTrue(seen.add(index), "line " + index + " belongs to two neighbours: " + who);
+        }
+      }
+    }
+  }
+
+  @Test
+  public void bothCountriesOfABorderDrawTheSamePointsForIt() {
+    CountryShapeService shapes = new CountryShapeService(reader);
+    for (CountryShape shape : shapes.loadShapes()) {
+      for (CountryShape.Neighbour neighbour : shape.neighbours()) {
+        CountryShape other = shapes.loadShape(neighbour.name());
+        CountryShape.Neighbour back =
+            other.neighbours().stream()
+                .filter(n -> n.name().equals(shape.name()))
+                .findFirst()
+                .orElseThrow();
+        String who = shape.name() + " and " + neighbour.name();
+        if (UNMATCHED_BORDERS.contains(who)) {
+          continue;
+        }
+        List<double[]> mine = borderPoints(shape, neighbour);
+        List<double[]> theirs = borderPoints(other, back);
+        // The two countries' vertices on a border differ by up to a metre in the source, so the
+        // ends of a run, which are not simplified away, may round to a different fourth decimal.
+        assertEveryPointHasAMatch(mine, theirs, who);
+        assertEveryPointHasAMatch(theirs, mine, who);
+      }
+    }
+  }
+
+  private static void assertEveryPointHasAMatch(
+      List<double[]> points, List<double[]> others, String who) {
+    for (double[] point : points) {
+      assertTrue(
+          others.stream()
+              .anyMatch(
+                  p ->
+                      Math.abs(p[0] - point[0]) <= SAME_POINT_DEGREES
+                          && Math.abs(p[1] - point[1]) <= SAME_POINT_DEGREES),
+          "no matching border point for " + point[0] + "," + point[1] + " in " + who);
+    }
+  }
+
+  /**
+   * Borders whose two sides don't match, found when this test was written: of the 324 bordering
+   * pairs, only Canada and the United States cut their border into different runs (five lines on
+   * Canada's side, four on the United States'), so the simplified points differ by up to 0.2
+   * degrees. The pair games only draw the first country's lines, so this only means the two copies
+   * of this one border are not identical. Don't add to this list without finding out why.
+   */
+  private static final Set<String> UNMATCHED_BORDERS =
+      Set.of(
+          "Canada and United States of America", "United States of America and Canada");
+
+  /** One unit in the fourth decimal place, about 10 m. */
+  private static final double SAME_POINT_DEGREES = 0.00011;
+
+  private static List<double[]> borderPoints(
+      CountryShape shape, CountryShape.Neighbour neighbour) {
+    List<?> lines = shape.landBorders().geometry().coordinates();
+    List<double[]> points = new java.util.ArrayList<>();
+    for (int index : neighbour.lines()) {
+      points.addAll(vertices(lines.get(index)));
+    }
+    return points;
   }
 
   @Test

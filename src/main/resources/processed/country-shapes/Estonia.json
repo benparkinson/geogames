@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 1486.0,
   "landBorderKm" : 539.0,
+  "areaKm2" : 41403,
   "neighbours" : [ {
     "name" : "Russia",
     "km" : 283.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Latvia",
     "km" : 255.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 23.408376498000052,

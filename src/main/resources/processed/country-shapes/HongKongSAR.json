@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 436.0,
   "landBorderKm" : 18.0,
+  "areaKm2" : 795,
   "neighbours" : [ {
     "name" : "China",
     "km" : 18.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 113.89698326900023,

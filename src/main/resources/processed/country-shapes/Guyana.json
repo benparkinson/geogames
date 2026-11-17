@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 825.0,
   "landBorderKm" : 2363.0,
+  "areaKm2" : 212076,
   "neighbours" : [ {
     "name" : "Brazil",
     "km" : 1082.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Suriname",
     "km" : 658.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Venezuela",
     "km" : 624.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -61.39671280899995,

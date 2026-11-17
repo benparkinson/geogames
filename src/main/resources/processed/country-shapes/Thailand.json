@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 3874.0,
   "landBorderKm" : 4555.0,
+  "areaKm2" : 514337,
   "neighbours" : [ {
     "name" : "Myanmar",
     "km" : 1837.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Laos",
     "km" : 1619.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Cambodia",
     "km" : 665.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Malaysia",
     "km" : 434.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 97.35140100100008,

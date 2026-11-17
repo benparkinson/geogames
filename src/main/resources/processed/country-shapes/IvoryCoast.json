@@ -3,26 +3,32 @@
   "additionalNames" : [ "Cote d'Ivoire", "Côte d'Ivoire" ],
   "coastKm" : 1273.0,
   "landBorderKm" : 2743.0,
+  "areaKm2" : 321974,
   "neighbours" : [ {
     "name" : "Ghana",
     "km" : 605.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "Liberia",
     "km" : 567.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Guinea",
     "km" : 563.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Burkina Faso",
     "km" : 511.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Mali",
     "km" : 497.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   } ],
   "focus" : {
     "west" : -8.618719848999916,

@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 75.0,
   "landBorderKm" : 2914.0,
+  "areaKm2" : 90696,
   "neighbours" : [ {
     "name" : "Mauritania",
     "km" : 1539.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Morocco",
     "km" : 1334.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Algeria",
     "km" : 42.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -17.104644334999875,

@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 2189.0,
   "landBorderKm" : 3861.0,
+  "areaKm2" : 910920,
   "neighbours" : [ {
     "name" : "Cameroon",
     "km" : 1589.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Niger",
     "km" : 1448.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Benin",
     "km" : 738.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Chad",
     "km" : 85.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 2.671081990000118,

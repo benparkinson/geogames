@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions } from "./constants";
+import { answerPathOptions, clueLineOptions, clueOutlineOptions, hiddenBorderOptions, hintLineOptions, mergedShapeOptions } from "./constants";
 
 describe("map styles", () => {
   it("colours an answer differently once the player gave up", () => {
@@ -23,5 +23,18 @@ describe("map styles", () => {
     expect(clueLineOptions().dashArray).toBeUndefined();
     expect(hintLineOptions().dashArray).toBeTruthy();
     expect(hintLineOptions().opacity).toBeLessThan(1);
+  });
+
+  it("fills the merged shape opaquely with a stroke of the same colour, so no seam shows between two countries", () => {
+    const merged = mergedShapeOptions();
+
+    expect(merged.fillOpacity).toBe(1);
+    expect(merged.opacity).toBe(1);
+    expect(merged.color).toBe(merged.fillColor);
+  });
+
+  it("draws the hidden border in a colour that differs from the merged shape and fills nothing", () => {
+    expect(hiddenBorderOptions().color).not.toBe(mergedShapeOptions().color);
+    expect(hiddenBorderOptions().fill).toBe(false);
   });
 });

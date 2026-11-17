@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 2143.0,
   "landBorderKm" : 1239.0,
+  "areaKm2" : 122087,
   "neighbours" : [ {
     "name" : "China",
     "km" : 1004.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "South Korea",
     "km" : 204.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Russia",
     "km" : 31.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 124.32154381600006,

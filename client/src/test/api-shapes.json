@@ -51,6 +51,121 @@
     }
   },
   "rounds" : {
+    "BORDERS_BY_SHAPE" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "borderBounds" : {
+          "east" : "number",
+          "north" : "number",
+          "south" : "number",
+          "west" : "number"
+        },
+        "borderKm" : "number",
+        "countries" : {
+          "array" : {
+            "additionalNames" : {
+              "array" : "string"
+            },
+            "areaKm2" : "number",
+            "coast" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "coastKm" : "number",
+            "focus" : {
+              "east" : "number",
+              "north" : "number",
+              "south" : "number",
+              "west" : "number"
+            },
+            "landBorderKm" : "number",
+            "landBorders" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "name" : "string",
+            "neighbours" : {
+              "array" : {
+                "km" : "number",
+                "lines" : {
+                  "array" : "number"
+                },
+                "mainland" : "boolean",
+                "name" : "string"
+              }
+            },
+            "outline" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            }
+          }
+        },
+        "focus" : {
+          "east" : "number",
+          "north" : "number",
+          "south" : "number",
+          "west" : "number"
+        },
+        "gameType" : "string",
+        "neighbours" : {
+          "array" : "empty"
+        },
+        "sharedBorder" : {
+          "geometry" : {
+            "coordinates" : "coordinates",
+            "type" : "string"
+          },
+          "properties" : {
+            "name" : "string"
+          },
+          "type" : "string"
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
     "COUNTRIES_BY_COASTLINE" : {
       "answerState" : "string",
       "gameResult" : {
@@ -82,6 +197,7 @@
           "additionalNames" : {
             "array" : "string"
           },
+          "areaKm2" : "number",
           "coast" : {
             "geometry" : {
               "coordinates" : "coordinates",
@@ -114,6 +230,9 @@
           "neighbours" : {
             "array" : {
               "km" : "number",
+              "lines" : {
+                "array" : "number"
+              },
               "mainland" : "boolean",
               "name" : "string"
             }
@@ -168,6 +287,7 @@
           "additionalNames" : {
             "array" : "string"
           },
+          "areaKm2" : "number",
           "coast" : {
             "geometry" : {
               "coordinates" : "coordinates",
@@ -200,6 +320,9 @@
           "neighbours" : {
             "array" : {
               "km" : "number",
+              "lines" : {
+                "array" : "number"
+              },
               "mainland" : "boolean",
               "name" : "string"
             }
@@ -266,6 +389,7 @@
           "additionalNames" : {
             "array" : "string"
           },
+          "areaKm2" : "number",
           "coast" : {
             "geometry" : {
               "coordinates" : "coordinates",
@@ -298,6 +422,9 @@
           "neighbours" : {
             "array" : {
               "km" : "number",
+              "lines" : {
+                "array" : "number"
+              },
               "mainland" : "boolean",
               "name" : "string"
             }
@@ -381,6 +508,133 @@
           },
           "id" : "string",
           "name" : "string"
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
+    "MERGED_COUNTRIES" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "borderBounds" : {
+          "east" : "number",
+          "north" : "number",
+          "south" : "number",
+          "west" : "number"
+        },
+        "borderKm" : "number",
+        "countries" : {
+          "array" : {
+            "additionalNames" : {
+              "array" : "string"
+            },
+            "areaKm2" : "number",
+            "coast" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "coastKm" : "number",
+            "focus" : {
+              "east" : "number",
+              "north" : "number",
+              "south" : "number",
+              "west" : "number"
+            },
+            "landBorderKm" : "number",
+            "landBorders" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            },
+            "name" : "string",
+            "neighbours" : {
+              "array" : {
+                "km" : "number",
+                "lines" : {
+                  "array" : "number"
+                },
+                "mainland" : "boolean",
+                "name" : "string"
+              }
+            },
+            "outline" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            }
+          }
+        },
+        "focus" : {
+          "east" : "number",
+          "north" : "number",
+          "south" : "number",
+          "west" : "number"
+        },
+        "gameType" : "string",
+        "neighbours" : {
+          "array" : {
+            "name" : "string",
+            "outline" : {
+              "geometry" : {
+                "coordinates" : "coordinates",
+                "type" : "string"
+              },
+              "properties" : {
+                "name" : "string"
+              },
+              "type" : "string"
+            }
+          }
+        },
+        "sharedBorder" : {
+          "geometry" : {
+            "coordinates" : "coordinates",
+            "type" : "string"
+          },
+          "properties" : {
+            "name" : "string"
+          },
+          "type" : "string"
         }
       },
       "points" : "number",

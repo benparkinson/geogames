@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 27.0,
   "landBorderKm" : 1656.0,
+  "areaKm2" : 88940,
   "neighbours" : [ {
     "name" : "Saudi Arabia",
     "km" : 727.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Syria",
     "km" : 342.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Israel",
     "km" : 294.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1, 3 ]
   }, {
     "name" : "Iraq",
     "km" : 181.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Palestine",
     "km" : 112.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 34.949385116681015,

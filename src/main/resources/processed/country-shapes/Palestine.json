@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 41.0,
   "landBorderKm" : 471.0,
+  "areaKm2" : 5950,
   "neighbours" : [ {
     "name" : "Israel",
     "km" : 347.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1, 3 ]
   }, {
     "name" : "Jordan",
     "km" : 112.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Egypt",
     "km" : 12.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 34.867152954000204,

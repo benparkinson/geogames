@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 50.0,
   "landBorderKm" : 1607.0,
+  "areaKm2" : 57102,
   "neighbours" : [ {
     "name" : "Ghana",
     "km" : 854.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Benin",
     "km" : 624.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Burkina Faso",
     "km" : 129.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -0.16610917099996,

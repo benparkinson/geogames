@@ -3,6 +3,7 @@
   "additionalNames" : [ ],
   "coastKm" : 83.0,
   "landBorderKm" : 0.0,
+  "areaKm2" : 7,
   "neighbours" : [ ],
   "focus" : {
     "west" : -162.10362708199995,

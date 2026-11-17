@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 121.0,
   "landBorderKm" : 1881.0,
+  "areaKm2" : 116590,
   "neighbours" : [ {
     "name" : "Nigeria",
     "km" : 738.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Togo",
     "km" : 624.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Burkina Faso",
     "km" : 285.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Niger",
     "km" : 233.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 0.759880818000113,

@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 2597.0,
+  "areaKm2" : 147324,
   "neighbours" : [ {
     "name" : "India",
     "km" : 1485.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "China",
     "km" : 1112.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 80.03028772000005,

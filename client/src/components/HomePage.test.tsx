@@ -145,21 +145,21 @@ describe("HomePage choosing a game", () => {
     renderHome();
     card(/Tripoints/).focus();
 
-    const order = [/Country Gaps/, /Land Borders/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Tripoints/];
+    const order = [/Country Gaps/, /Land Borders/, /Merged Countries/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Border Shapes/, /Tripoints/];
     for (const [i, name] of order.entries()) {
       await user.keyboard(i % 2 === 0 ? "{ArrowRight}" : "{ArrowDown}");
       expect(card(name)).toHaveAttribute("aria-checked", "true");
       expect(card(name)).toHaveFocus();
     }
 
-    for (const name of [/Lake Shapes/, /River Shapes/, /Mixed/, /Coastlines/]) {
+    for (const name of [/Border Shapes/, /Lake Shapes/, /River Shapes/, /Mixed/]) {
       await user.keyboard("{ArrowLeft}");
       expect(card(name)).toHaveAttribute("aria-checked", "true");
       expect(card(name)).toHaveFocus();
     }
 
     await user.keyboard("{ArrowUp}");
-    expect(card(/River Countries/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
   });
 
   it("puts the shape games in an extra difficult section", () => {
@@ -169,6 +169,7 @@ describe("HomePage choosing a game", () => {
     expect(extra.getAllByRole("radio").map((radio) => radio.textContent)).toEqual([
       expect.stringContaining("River Shapes"),
       expect.stringContaining("Lake Shapes"),
+      expect.stringContaining("Border Shapes"),
     ]);
   });
 

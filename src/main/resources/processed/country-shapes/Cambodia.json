@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 795.0,
   "landBorderKm" : 2066.0,
+  "areaKm2" : 181491,
   "neighbours" : [ {
     "name" : "Vietnam",
     "km" : 969.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Thailand",
     "km" : 665.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Laos",
     "km" : 433.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 102.31342370600012,

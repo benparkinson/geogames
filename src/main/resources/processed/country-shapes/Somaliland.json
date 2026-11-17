@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 754.0,
   "landBorderKm" : 1219.0,
+  "areaKm2" : 168094,
   "neighbours" : [ {
     "name" : "Ethiopia",
     "km" : 761.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Somalia",
     "km" : 393.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Djibouti",
     "km" : 64.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 42.647246541000186,

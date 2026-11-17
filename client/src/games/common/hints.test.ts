@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countHint, firstLetterHint } from "./hints";
+import { countHint, firstLetter, firstLetterHint } from "./hints";
 
 describe("firstLetterHint", () => {
   it("gives the upper-cased first letter", () => {
@@ -31,5 +31,17 @@ describe("countHint", () => {
   it("uses the plural otherwise", () => {
     expect(countHint(0, "country", "countries", "Borders")).toBe("Borders 0 countries");
     expect(countHint(5, "country", "countries", "Borders")).toBe("Borders 5 countries");
+  });
+});
+
+describe("firstLetter", () => {
+  it("gives the letter and the generic words skipped to reach it", () => {
+    expect(firstLetter("Danube")).toEqual({ letter: "D", prefix: "" });
+    expect(firstLetter("Lake Victoria")).toEqual({ letter: "V", prefix: "Lake" });
+    expect(firstLetter("The Bahamas")).toEqual({ letter: "B", prefix: "The" });
+  });
+
+  it("gives nothing for a blank name", () => {
+    expect(firstLetter("")).toBeNull();
   });
 });

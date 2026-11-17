@@ -3,34 +3,42 @@
   "additionalNames" : [ ],
   "coastKm" : 4024.0,
   "landBorderKm" : 4151.0,
+  "areaKm2" : 1925083,
   "neighbours" : [ {
     "name" : "Yemen",
     "km" : 1223.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Iraq",
     "km" : 812.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Jordan",
     "km" : 727.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Oman",
     "km" : 658.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "United Arab Emirates",
     "km" : 457.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Kuwait",
     "km" : 221.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Qatar",
     "km" : 53.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 34.57276451900023,

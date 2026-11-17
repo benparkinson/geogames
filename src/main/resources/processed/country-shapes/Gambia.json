@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 497.0,
   "landBorderKm" : 731.0,
+  "areaKm2" : 10541,
   "neighbours" : [ {
     "name" : "Senegal",
     "km" : 731.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -16.829701300999886,

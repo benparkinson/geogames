@@ -3,18 +3,22 @@
   "additionalNames" : [ "Bosnia" ],
   "coastKm" : 18.0,
   "landBorderKm" : 1295.0,
+  "areaKm2" : 51722,
   "neighbours" : [ {
     "name" : "Croatia",
     "km" : 798.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2, 3 ]
   }, {
     "name" : "Serbia",
     "km" : 290.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Montenegro",
     "km" : 206.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 15.716073852000136,

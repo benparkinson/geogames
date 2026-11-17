@@ -31,3 +31,20 @@ export function clueLineOptions(): PathOptions {
 export function hintLineOptions(): PathOptions {
   return { color: CLUE_COLOR, weight: 3, fill: false, dashArray: "6 6", opacity: 0.7 };
 }
+
+const MERGED_COLOR = "#2f7a6b";
+const HIDDEN_BORDER_COLOR = "#f4f1de";
+
+/**
+ * Style for the merged shape of two countries. The fill is opaque and the stroke is the same colour:
+ * two adjacent polygons filled without a stroke would show a hairline seam where they meet, which
+ * would give the border away.
+ */
+export function mergedShapeOptions(): PathOptions {
+  return { color: MERGED_COLOR, weight: 2, opacity: 1, fillColor: MERGED_COLOR, fillOpacity: 1 };
+}
+
+/** Style for the border a hint draws over the merged shape: light, so it contrasts with the fill. */
+export function hiddenBorderOptions(): PathOptions {
+  return { color: HIDDEN_BORDER_COLOR, weight: 3, fill: false };
+}

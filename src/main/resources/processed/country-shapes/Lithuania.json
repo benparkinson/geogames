@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 212.0,
   "landBorderKm" : 1202.0,
+  "areaKm2" : 64509,
   "neighbours" : [ {
     "name" : "Belarus",
     "km" : 481.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Latvia",
     "km" : 434.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Russia",
     "km" : 200.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 3 ]
   }, {
     "name" : "Poland",
     "km" : 87.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 21.04468834700006,

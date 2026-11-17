@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 29.0,
+  "areaKm2" : 60,
   "neighbours" : [ {
     "name" : "Italy",
     "km" : 29.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 12.385628745000105,

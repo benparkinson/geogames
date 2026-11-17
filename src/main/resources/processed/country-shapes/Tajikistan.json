@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 3529.0,
+  "areaKm2" : 141987,
   "neighbours" : [ {
     "name" : "Afghanistan",
     "km" : 1170.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Uzbekistan",
     "km" : 1119.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1, 5 ]
   }, {
     "name" : "Kyrgyzstan",
     "km" : 837.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "China",
     "km" : 404.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 67.34269006300022,

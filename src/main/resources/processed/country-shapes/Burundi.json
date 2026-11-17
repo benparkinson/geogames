@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 898.0,
+  "areaKm2" : 27161,
   "neighbours" : [ {
     "name" : "Tanzania",
     "km" : 414.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Rwanda",
     "km" : 264.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Democratic Republic of the Congo",
     "km" : 220.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 28.9868917230001,

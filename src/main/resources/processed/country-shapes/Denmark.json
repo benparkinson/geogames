@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 4372.0,
   "landBorderKm" : 56.0,
+  "areaKm2" : 28489,
   "neighbours" : [ {
     "name" : "Germany",
     "km" : 56.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 8.094004754000082,

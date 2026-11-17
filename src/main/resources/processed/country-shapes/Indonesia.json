@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 52476.0,
   "landBorderKm" : 2459.0,
+  "areaKm2" : 532278,
   "neighbours" : [ {
     "name" : "Malaysia",
     "km" : 1497.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3, 4 ]
   }, {
     "name" : "Papua New Guinea",
     "km" : 752.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 2 ]
   }, {
     "name" : "East Timor",
     "km" : 209.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 0, 1 ]
   } ],
   "focus" : {
     "west" : 108.85547936300006,

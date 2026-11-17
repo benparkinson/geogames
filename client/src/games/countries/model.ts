@@ -13,6 +13,8 @@ export interface Neighbour {
   km: number;
   /** Whether it touches the country's largest polygon part (not an overseas territory). */
   mainland: boolean;
+  /** Which lines of `landBorders` (by index, ascending) are the border with this neighbour. */
+  lines: number[];
 }
 
 /** A country as the country-shape games get it: simplified display geometry and border facts. */
@@ -21,6 +23,8 @@ export interface CountryShape {
   additionalNames: string[];
   coastKm: number;
   landBorderKm: number;
+  /** Area of the largest part, in km². */
+  areaKm2: number;
   /** Longest shared border first. */
   neighbours: Neighbour[];
   /** Bounding box of the largest polygon part: what to fit the map to. */

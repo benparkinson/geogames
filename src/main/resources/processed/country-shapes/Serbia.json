@@ -3,38 +3,47 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 1891.0,
+  "areaKm2" : 77416,
   "neighbours" : [ {
     "name" : "Romania",
     "km" : 458.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Bulgaria",
     "km" : 299.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Bosnia and Herzegovina",
     "km" : 290.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Kosovo",
     "km" : 270.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Croatia",
     "km" : 227.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Montenegro",
     "km" : 140.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Hungary",
     "km" : 131.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "North Macedonia",
     "km" : 75.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 18.84497847500006,

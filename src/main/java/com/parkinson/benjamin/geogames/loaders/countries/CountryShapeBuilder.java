@@ -63,7 +63,7 @@ public final class CountryShapeBuilder {
   private record Run(String label, List<double[]> points) {}
 
   /** What is worked out once for each country before any simplifying. */
-  private record Info(int largest, Bounds focus, double tolerance) {}
+  private record Info(int largest, Bounds focus, double tolerance, long areaKm2) {}
 
   public static List<CountryShape> build(List<Country> countries) {
     List<Source> sources =
@@ -196,7 +196,13 @@ public final class CountryShapeBuilder {
     double diagonal = Math.hypot(east - west, north - south);
     double tolerance =
         Math.max(MIN_TOLERANCE, Math.min(MAX_TOLERANCE, diagonal / TOLERANCE_DIVISOR));
-    return new Info(largest, new Bounds(west, south, east, north), tolerance);
+    double areaKm2 = 0;
+    List<Ring> rings = source.parts().get(largest).rings();
+    for (int r = 0; r < rings.size(); r++) {
+      double ringKm2 = Geo.ringAreaKm2(rings.get(r).points());
+      areaKm2 += r == 0 ? ringKm2 : -ringKm2;
+    }
+    return new Info(largest, new Bounds(west, south, east, north), tolerance, Math.round(areaKm2));
   }
 
   /** Shoelace area in degrees: only good for comparing the parts of one country. */
@@ -270,6 +276,8 @@ public final class CountryShapeBuilder {
 
     List<List<List<Double>>> coastLines = new ArrayList<>();
     List<List<List<Double>>> borderLines = new ArrayList<>();
+    // The indexes into borderLines of the lines shared with each neighbour, ascending.
+    Map<String, List<Integer>> neighbourLines = new HashMap<>();
     List<Object> outline = new ArrayList<>();
     for (int p = 0; p < source.parts().size(); p++) {
       Part part = source.parts().get(p);
@@ -295,6 +303,9 @@ public final class CountryShapeBuilder {
           if (run.label().equals(COAST)) {
             coastLines.add(toLine(points));
           } else if (!run.label().equals(SEAM)) {
+            neighbourLines
+                .computeIfAbsent(run.label(), key -> new ArrayList<>())
+                .add(borderLines.size());
             borderLines.add(toLine(points));
           }
           for (int j = simplified.isEmpty() ? 0 : 1; j < points.size(); j++) {
@@ -323,7 +334,10 @@ public final class CountryShapeBuilder {
             .map(
                 e ->
                     new Neighbour(
-                        e.getKey(), Math.round(e.getValue()), mainland.contains(e.getKey())))
+                        e.getKey(),
+                        Math.round(e.getValue()),
+                        mainland.contains(e.getKey()),
+                        neighbourLines.getOrDefault(e.getKey(), List.of())))
             .sorted(
                 Comparator.comparingDouble(Neighbour::km).reversed().thenComparing(Neighbour::name))
             .toList();
@@ -333,6 +347,7 @@ public final class CountryShapeBuilder {
         source.additionalNames(),
         Math.round(coastKm),
         Math.round(landKm),
+        info.areaKm2(),
         neighbours,
         info.focus(),
         feature(source.name(), outlineGeometry),

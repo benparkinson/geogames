@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 59.0,
+  "areaKm2" : 137,
   "neighbours" : [ {
     "name" : "Switzerland",
     "km" : 32.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Austria",
     "km" : 27.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 9.475886271000121,

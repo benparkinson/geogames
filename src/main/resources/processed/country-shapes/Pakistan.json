@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 1513.0,
   "landBorderKm" : 6071.0,
+  "areaKm2" : 873900,
   "neighbours" : [ {
     "name" : "India",
     "km" : 2658.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Afghanistan",
     "km" : 2244.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Iran",
     "km" : 818.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "China",
     "km" : 351.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 60.8443787030001,

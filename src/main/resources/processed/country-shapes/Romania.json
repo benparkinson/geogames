@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 469.0,
   "landBorderKm" : 2341.0,
+  "areaKm2" : 235806,
   "neighbours" : [ {
     "name" : "Bulgaria",
     "km" : 583.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Ukraine",
     "km" : 515.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 4 ]
   }, {
     "name" : "Serbia",
     "km" : 458.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Moldova",
     "km" : 426.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Hungary",
     "km" : 359.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 20.24282596900008,

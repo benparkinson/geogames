@@ -3,14 +3,17 @@
   "additionalNames" : [ "Eq. Guinea" ],
   "coastKm" : 495.0,
   "landBorderKm" : 489.0,
+  "areaKm2" : 24782,
   "neighbours" : [ {
     "name" : "Gabon",
     "km" : 309.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Cameroon",
     "km" : 180.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 9.346690300000148,

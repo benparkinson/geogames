@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 785.0,
+  "areaKm2" : 30143,
   "neighbours" : [ {
     "name" : "South Africa",
     "km" : 785.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 27.002154989000132,

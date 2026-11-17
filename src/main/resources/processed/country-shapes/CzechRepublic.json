@@ -3,22 +3,27 @@
   "additionalNames" : [ "Czechia", "Czech Rep." ],
   "coastKm" : 0.0,
   "landBorderKm" : 1726.0,
+  "areaKm2" : 78497,
   "neighbours" : [ {
     "name" : "Poland",
     "km" : 598.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Germany",
     "km" : 587.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Austria",
     "km" : 335.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Slovakia",
     "km" : 205.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 12.076140991000045,

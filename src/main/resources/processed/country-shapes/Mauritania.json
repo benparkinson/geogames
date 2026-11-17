@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 1012.0,
   "landBorderKm" : 4896.0,
+  "areaKm2" : 1039133,
   "neighbours" : [ {
     "name" : "Mali",
     "km" : 2173.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Western Sahara",
     "km" : 1539.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Senegal",
     "km" : 722.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Algeria",
     "km" : 462.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -17.0811748859999,

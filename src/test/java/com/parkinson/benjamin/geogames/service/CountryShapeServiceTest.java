@@ -46,7 +46,8 @@ class CountryShapeServiceTest {
   @Test
   void aDisplayCountryWithoutAliasesHasAnEmptyList() {
     JsonResourceReader reader = mock(JsonResourceReader.class);
-    CountryShape shape = new CountryShape("Nowhere", null, 0, 0, List.of(), null, null, null, null);
+    CountryShape shape =
+        new CountryShape("Nowhere", null, 0, 0, 0, List.of(), null, null, null, null);
     when(reader.readAll(anyString(), eq(CountryShape.class))).thenReturn(List.of(shape));
 
     Country country = new CountryShapeService(reader).loadDisplayCountry("Nowhere");

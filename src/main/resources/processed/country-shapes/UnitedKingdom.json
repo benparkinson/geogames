@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 11828.0,
   "landBorderKm" : 369.0,
+  "areaKm2" : 217695,
   "neighbours" : [ {
     "name" : "Ireland",
     "km" : 369.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -6.236398891999926,

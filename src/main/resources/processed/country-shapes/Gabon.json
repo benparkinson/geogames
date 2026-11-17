@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 1896.0,
   "landBorderKm" : 2236.0,
+  "areaKm2" : 261007,
   "neighbours" : [ {
     "name" : "Republic of Congo",
     "km" : 1676.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Equatorial Guinea",
     "km" : 309.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Cameroon",
     "km" : 251.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 8.695567254000139,

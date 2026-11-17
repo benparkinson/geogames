@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * Simplified display geometry for one country, from {@code processed/country-shapes}.
  *
+ * @param areaKm2 area of the largest polygon part (outer ring minus holes), at full resolution
  * @param neighbours longest shared border first, ties by name
  * @param focus bounding box of the largest polygon part
  * @param outline simplified Polygon / MultiPolygon
@@ -17,12 +18,17 @@ public record CountryShape(
     List<String> additionalNames,
     double coastKm,
     double landBorderKm,
+    long areaKm2,
     List<Neighbour> neighbours,
     Bounds focus,
     GeoData outline,
     GeoData coast,
     GeoData landBorders) {
 
-  /** @param mainland whether it touches the country's largest polygon part */
-  public record Neighbour(String name, double km, boolean mainland) {}
+  /**
+   * @param mainland whether it touches the country's largest polygon part
+   * @param lines the indexes, ascending, of the lines of {@code landBorders} shared with this
+   *     neighbour
+   */
+  public record Neighbour(String name, double km, boolean mainland, List<Integer> lines) {}
 }

@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 457.0,
   "landBorderKm" : 477.0,
+  "areaKm2" : 20591,
   "neighbours" : [ {
     "name" : "Honduras",
     "km" : 319.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Guatemala",
     "km" : 157.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : -90.11477901199993,

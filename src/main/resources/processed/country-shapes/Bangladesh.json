@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 3146.0,
   "landBorderKm" : 2570.0,
+  "areaKm2" : 134080,
   "neighbours" : [ {
     "name" : "India",
     "km" : 2386.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Myanmar",
     "km" : 184.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 88.02178959200009,

@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 176.0,
   "landBorderKm" : 2097.0,
+  "areaKm2" : 185952,
   "neighbours" : [ {
     "name" : "Turkey",
     "km" : 775.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Iraq",
     "km" : 599.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Jordan",
     "km" : 342.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Lebanon",
     "km" : 292.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Israel",
     "km" : 90.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 35.72339928500017,

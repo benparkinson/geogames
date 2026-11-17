@@ -10,6 +10,8 @@ const GAMES = [
   { type: "COUNTRIES_BY_COASTLINE", title: "Coastlines" },
   { type: "COUNTRIES_BY_LAND_BORDERS", title: "Land Borders" },
   { type: "LAKES_BY_SHAPE", title: "Lake Shapes" },
+  { type: "BORDERS_BY_SHAPE", title: "Border Shapes" },
+  { type: "MERGED_COUNTRIES", title: "Merged Countries" },
   { type: "RANDOM", title: "Mixed" },
 ];
 

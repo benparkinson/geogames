@@ -17,8 +17,8 @@ describe("countryHints", () => {
     const one = makeCountryShapeRoundData({
       country: makeCountryShapeData({
         neighbours: [
-          { name: "Spain", km: 1, mainland: true },
-          { name: "Brazil", km: 1, mainland: false },
+          { name: "Spain", km: 1, mainland: true, lines: [] },
+          { name: "Brazil", km: 1, mainland: false, lines: [] },
         ],
       }),
     });
@@ -30,8 +30,8 @@ describe("countryHints", () => {
     const overseasFirst = makeCountryShapeRoundData({
       country: makeCountryShapeData({
         neighbours: [
-          { name: "Brazil", km: 9, mainland: false },
-          { name: "Spain", km: 1, mainland: true },
+          { name: "Brazil", km: 9, mainland: false, lines: [] },
+          { name: "Spain", km: 1, mainland: true, lines: [] },
         ],
       }),
     });

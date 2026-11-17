@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 4832.0,
+  "areaKm2" : 629530,
   "neighbours" : [ {
     "name" : "Sudan",
     "km" : 1895.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Ethiopia",
     "km" : 884.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Central African Republic",
     "km" : 710.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Democratic Republic of the Congo",
     "km" : 599.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Uganda",
     "km" : 436.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Kenya",
     "km" : 307.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 24.121555623000063,

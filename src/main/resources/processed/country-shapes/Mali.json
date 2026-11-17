@@ -3,34 +3,42 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 7254.0,
+  "areaKm2" : 1256813,
   "neighbours" : [ {
     "name" : "Mauritania",
     "km" : 2173.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Algeria",
     "km" : 1267.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Burkina Faso",
     "km" : 1214.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Guinea",
     "km" : 858.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Niger",
     "km" : 844.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Ivory Coast",
     "km" : 497.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Senegal",
     "km" : 402.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : -12.2641304119999,

@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 5224.0,
+  "areaKm2" : 642392,
   "neighbours" : [ {
     "name" : "Pakistan",
     "km" : 2244.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Tajikistan",
     "km" : 1170.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Iran",
     "km" : 867.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Turkmenistan",
     "km" : 723.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Uzbekistan",
     "km" : 137.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "China",
     "km" : 84.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 60.48677779100012,

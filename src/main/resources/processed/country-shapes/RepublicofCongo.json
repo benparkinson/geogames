@@ -3,26 +3,32 @@
   "additionalNames" : [ "Republic of the Congo", "The Republic of the Congo", "Congo-Brazzaville", "Congo Republic", "Congo" ],
   "coastKm" : 176.0,
   "landBorderKm" : 4222.0,
+  "areaKm2" : 346429,
   "neighbours" : [ {
     "name" : "Gabon",
     "km" : 1676.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Democratic Republic of the Congo",
     "km" : 1473.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Cameroon",
     "km" : 472.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Central African Republic",
     "km" : 427.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Angola",
     "km" : 174.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 11.114016304062915,

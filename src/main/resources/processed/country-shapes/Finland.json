@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 3593.0,
   "landBorderKm" : 2379.0,
+  "areaKm2" : 329278,
   "neighbours" : [ {
     "name" : "Russia",
     "km" : 1222.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Norway",
     "km" : 676.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Sweden",
     "km" : 482.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 20.623164510000038,

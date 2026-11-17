@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 606.0,
   "landBorderKm" : 1281.0,
+  "areaKm2" : 95710,
   "neighbours" : [ {
     "name" : "Ivory Coast",
     "km" : 567.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Guinea",
     "km" : 466.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Sierra Leone",
     "km" : 248.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : -11.476185675999915,

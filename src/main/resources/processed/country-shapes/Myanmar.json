@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 6325.0,
   "landBorderKm" : 5221.0,
+  "areaKm2" : 660148,
   "neighbours" : [ {
     "name" : "Thailand",
     "km" : 1837.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "China",
     "km" : 1702.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "India",
     "km" : 1270.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Laos",
     "km" : 229.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Bangladesh",
     "km" : 184.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 92.17497277900006,

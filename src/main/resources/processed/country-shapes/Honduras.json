@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 1507.0,
   "landBorderKm" : 1309.0,
+  "areaKm2" : 112311,
   "neighbours" : [ {
     "name" : "Nicaragua",
     "km" : 767.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "El Salvador",
     "km" : 319.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Guatemala",
     "km" : 223.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -89.36379125999989,

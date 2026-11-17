@@ -3,46 +3,57 @@
   "additionalNames" : [ ],
   "coastKm" : 6283.0,
   "landBorderKm" : 3310.0,
+  "areaKm2" : 537330,
   "neighbours" : [ {
     "name" : "Spain",
     "km" : 567.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7, 9, 11 ]
   }, {
     "name" : "Brazil",
     "km" : 518.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 0 ]
   }, {
     "name" : "Belgium",
     "km" : 463.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 10 ]
   }, {
     "name" : "Switzerland",
     "km" : 460.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Suriname",
     "km" : 422.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 1 ]
   }, {
     "name" : "Italy",
     "km" : 403.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Germany",
     "km" : 373.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Luxembourg",
     "km" : 51.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Andorra",
     "km" : 46.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Monaco",
     "km" : 10.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   } ],
   "focus" : {
     "west" : -4.784901495999861,

@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 27.0,
   "landBorderKm" : 910.0,
+  "areaKm2" : 20277,
   "neighbours" : [ {
     "name" : "Croatia",
     "km" : 418.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Austria",
     "km" : 242.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Italy",
     "km" : 183.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Hungary",
     "km" : 68.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 13.365261271000094,

@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 14.0,
   "landBorderKm" : 10.0,
+  "areaKm2" : 23,
   "neighbours" : [ {
     "name" : "Saint Martin",
     "km" : 10.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -63.11888587099989,

@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 3067.0,
   "landBorderKm" : 4486.0,
+  "areaKm2" : 1221129,
   "neighbours" : [ {
     "name" : "Botswana",
     "km" : 1617.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Namibia",
     "km" : 942.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Lesotho",
     "km" : 785.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Mozambique",
     "km" : 496.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "Swaziland",
     "km" : 429.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Zimbabwe",
     "km" : 218.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   } ],
   "focus" : {
     "west" : 16.46998131600006,

@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 5478.0,
   "landBorderKm" : 4345.0,
+  "areaKm2" : 912995,
   "neighbours" : [ {
     "name" : "Colombia",
     "km" : 2116.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Brazil",
     "km" : 1605.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Guyana",
     "km" : 624.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -73.39114864099992,

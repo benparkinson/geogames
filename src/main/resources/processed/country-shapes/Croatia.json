@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 2727.0,
   "landBorderKm" : 1719.0,
+  "areaKm2" : 51430,
   "neighbours" : [ {
     "name" : "Bosnia and Herzegovina",
     "km" : 798.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 4 ]
   }, {
     "name" : "Slovenia",
     "km" : 418.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Hungary",
     "km" : 258.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Serbia",
     "km" : 227.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Montenegro",
     "km" : 18.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 13.50147545700014,

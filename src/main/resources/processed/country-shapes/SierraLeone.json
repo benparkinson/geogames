@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 975.0,
   "landBorderKm" : 877.0,
+  "areaKm2" : 71287,
   "neighbours" : [ {
     "name" : "Guinea",
     "km" : 629.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Liberia",
     "km" : 248.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -13.301096157999893,

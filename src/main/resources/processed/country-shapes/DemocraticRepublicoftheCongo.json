@@ -3,42 +3,52 @@
   "additionalNames" : [ "DRC" ],
   "coastKm" : 211.0,
   "landBorderKm" : 9502.0,
+  "areaKm2" : 2335304,
   "neighbours" : [ {
     "name" : "Angola",
     "km" : 2307.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6, 7 ]
   }, {
     "name" : "Zambia",
     "km" : 2039.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Republic of Congo",
     "km" : 1473.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Central African Republic",
     "km" : 1455.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 9 ]
   }, {
     "name" : "Uganda",
     "km" : 730.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "South Sudan",
     "km" : 599.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Tanzania",
     "km" : 476.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Burundi",
     "km" : 220.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Rwanda",
     "km" : 204.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 12.210554869353132,

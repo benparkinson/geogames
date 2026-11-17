@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 9477.0,
   "landBorderKm" : 1020.0,
+  "areaKm2" : 106604,
   "neighbours" : [ {
     "name" : "Bulgaria",
     "km" : 406.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Albania",
     "km" : 221.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "North Macedonia",
     "km" : 213.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Turkey",
     "km" : 180.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 19.999909785591484,

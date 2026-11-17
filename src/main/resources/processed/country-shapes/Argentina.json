@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 5912.0,
   "landBorderKm" : 8684.0,
+  "areaKm2" : 2762953,
   "neighbours" : [ {
     "name" : "Chile",
     "km" : 5033.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 5 ]
   }, {
     "name" : "Paraguay",
     "km" : 1646.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Brazil",
     "km" : 986.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Bolivia",
     "km" : 716.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Uruguay",
     "km" : 303.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : -73.58803584899991,

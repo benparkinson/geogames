@@ -261,4 +261,64 @@ class CountryShapeBuilderTest {
 
     assertThat(shape.neighbours()).extracting("name").containsExactly("B");
   }
+
+  @Test
+  void eachNeighbourListsTheIndexesOfItsOwnBorderLines() {
+    // B is to the east of A and C to the north, so A's border has two separate lines.
+    Country a = polygon("A", square(0, 0, 1, 1));
+    Country b = polygon("B", square(1, 0, 2, 1));
+    Country c = polygon("C", square(0, 1, 1, 2));
+
+    CountryShape shape = find(CountryShapeBuilder.build(List.of(a, b, c)), "A");
+
+    assertThat(lines(shape.landBorders())).hasSize(2);
+    List<Integer> all = new ArrayList<>();
+    for (CountryShape.Neighbour neighbour : shape.neighbours()) {
+      assertThat(neighbour.lines()).hasSize(1);
+      all.addAll(neighbour.lines());
+    }
+    assertThat(all).containsExactlyInAnyOrder(0, 1);
+  }
+
+  @Test
+  void bothSidesOfABorderHaveTheSamePointsInTheirLines() {
+    Country a = polygon("A", ring(p(0, 0), p(1, 0), p(1.1, 0.5), p(1, 1), p(0, 1)));
+    Country b = polygon("B", ring(p(1, 0), p(2, 0), p(2, 1), p(1, 1), p(1.1, 0.5)));
+
+    List<CountryShape> shapes = CountryShapeBuilder.build(List.of(a, b));
+
+    Set<String> fromA = new HashSet<>();
+    CountryShape shapeA = find(shapes, "A");
+    for (int index : shapeA.neighbours().get(0).lines()) {
+      collect(lines(shapeA.landBorders()).get(index), fromA);
+    }
+    Set<String> fromB = new HashSet<>();
+    CountryShape shapeB = find(shapes, "B");
+    for (int index : shapeB.neighbours().get(0).lines()) {
+      collect(lines(shapeB.landBorders()).get(index), fromB);
+    }
+    assertThat(fromA).isNotEmpty().isEqualTo(fromB);
+  }
+
+  @Test
+  void areaIsThatOfTheLargestPartMinusItsHoles() {
+    // Near the equator one degree is about 111 km, so a 4 x 4 degree square is about 197,000 km2
+    // and a 1 x 1 degree hole about 12,300 km2. The 0.5-degree second part doesn't count.
+    Country c =
+        new Country(
+            "C",
+            List.of(),
+            new GeoData(
+                "Feature",
+                new GeoProperties("C"),
+                new GeoGeometry(
+                    "MultiPolygon",
+                    List.of(
+                        List.of(square(0, 0, 4, 4), square(1, 1, 2, 2)),
+                        List.of(square(10, 0, 10.5, 0.5))))));
+
+    CountryShape shape = CountryShapeBuilder.build(List.of(c)).get(0);
+
+    assertThat(shape.areaKm2()).isBetween(184_000L, 186_000L);
+  }
 }
