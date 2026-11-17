@@ -1,6 +1,6 @@
 {
   "name" : "Republic of Congo",
-  "additionalNames" : [ "Republic of the Congo", "The Republic of the Congo", "Congo-Brazzaville", "Congo Republic", "Congo" ],
+  "additionalNames" : [ "Republic of the Congo", "The Republic of the Congo", "Congo-Brazzaville", "Congo Brazzaville", "Congo Republic", "Congo" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

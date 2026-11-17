@@ -1,6 +1,6 @@
 {
   "name" : "Taiwan",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Republic of China", "ROC" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

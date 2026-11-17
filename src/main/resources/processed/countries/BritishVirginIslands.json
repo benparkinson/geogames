@@ -1,6 +1,6 @@
 {
   "name" : "British Virgin Islands",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "BVI" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

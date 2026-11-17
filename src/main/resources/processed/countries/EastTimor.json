@@ -1,6 +1,6 @@
 {
   "name" : "East Timor",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Timor-Leste", "Timor Leste" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

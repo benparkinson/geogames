@@ -1,6 +1,6 @@
 {
   "name" : "Federated States of Micronesia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Micronesia", "FSM" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
   "name" : "South Korea",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Republic of Korea", "Korea, South" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
