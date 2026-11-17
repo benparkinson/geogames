@@ -9,4 +9,4 @@ NEXT_PUBLIC_API_URL=http://localhost:8080 ./mvnw -B -DskipTests package
 cd e2e && npm ci && npx playwright install chromium && npx playwright test
 ```
 
-`deep-link.spec.ts` is marked `test.fail()` for a known bug (reloading `/games/{id}` served by the jar is a 404). When the bug is fixed that test starts failing, so remove the marker.
+`deep-link.spec.ts` is marked `test.fail()` for a known bug (reloading `/games/{id}` served by the jar is a 404). When the bug is fixed that test starts failing, so remove the marker. `test.skip`, `test.fixme` and a second `test.fail()` are rejected by `scripts/check-no-skipped-tests.sh`.

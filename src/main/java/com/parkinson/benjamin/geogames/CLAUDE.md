@@ -11,7 +11,7 @@ Spring Boot 4, Java 25. The root `CLAUDE.md` has the commands, the API overview 
 
 ## Tests
 
-JUnit 5, AssertJ and Mockito. Boot 4 moved the test slices out of `spring-boot-test-autoconfigure`, so `@WebMvcTest` / `@AutoConfigureMockMvc` come from `spring-boot-starter-webmvc-test` (package `org.springframework.boot.webmvc.test.autoconfigure`) and `@DataJpaTest` from `spring-boot-starter-data-jpa-test`. Use `@MockitoBean` (`org.springframework.test.context.bean.override.mockito`), not `@MockBean`. No test may hit the network. `TripointComputer` is tested against the hand-written HTML in `src/test/resources/fixtures/`. Run them with `bash scripts/check-java.sh` (unit) and `bash scripts/check-it.sh` (`*IT`).
+JUnit 5, AssertJ and Mockito. Boot 4 moved the test slices out of `spring-boot-test-autoconfigure`, so `@WebMvcTest` / `@AutoConfigureMockMvc` come from `spring-boot-starter-webmvc-test` (package `org.springframework.boot.webmvc.test.autoconfigure`) and `@DataJpaTest` from `spring-boot-starter-data-jpa-test`. Use `@MockitoBean` (`org.springframework.test.context.bean.override.mockito`), not `@MockBean`. No test may hit the network. `TripointComputer` is tested against the hand-written HTML in `src/test/resources/fixtures/`. Run them with `bash scripts/check-java.sh` (unit) and `bash scripts/check-it.sh` (`*IT`). Code that runs off the request thread (`@Scheduled`, the statistics writer) needs an `*IT` without a test transaction (see `GameCleanupIT`), because a unit test's or `@DataJpaTest`'s transaction hides a missing one.
 
 ## API rules
 
