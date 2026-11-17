@@ -1,6 +1,6 @@
 {
   "name" : "United Kingdom",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "UK", "Great Britain", "Britain", "The United Kingdom", "England" ],
   "coastKm" : 11828.0,
   "landBorderKm" : 369.0,
   "areaKm2" : 217695,

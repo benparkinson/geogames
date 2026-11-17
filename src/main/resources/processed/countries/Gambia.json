@@ -1,6 +1,6 @@
 {
   "name" : "Gambia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "The Gambia" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

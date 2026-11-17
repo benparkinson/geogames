@@ -1,6 +1,6 @@
 {
   "name" : "Myanmar",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Burma" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
   "name" : "Pitcairn Islands",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Pitcairn" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
   "name" : "New Zealand",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "NZ", "Aotearoa" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

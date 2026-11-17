@@ -1,6 +1,6 @@
 {
   "name" : "The Bahamas",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Bahamas" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

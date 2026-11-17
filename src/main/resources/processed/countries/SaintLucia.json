@@ -1,6 +1,6 @@
 {
   "name" : "Saint Lucia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "St Lucia", "St. Lucia" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

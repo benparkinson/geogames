@@ -1,6 +1,6 @@
 {
   "name" : "Vatican",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Vatican City", "Holy See", "The Vatican" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

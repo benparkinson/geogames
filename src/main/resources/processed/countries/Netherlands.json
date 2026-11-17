@@ -1,6 +1,6 @@
 {
   "name" : "Netherlands",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "The Netherlands", "Holland" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

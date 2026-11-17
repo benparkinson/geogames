@@ -1,6 +1,6 @@
 {
   "name" : "Bosnia and Herzegovina",
-  "additionalNames" : [ "Bosnia" ],
+  "additionalNames" : [ "Bosnia", "Bosnia-Herzegovina" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
   "name" : "Saint Helena",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "St Helena", "St. Helena" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

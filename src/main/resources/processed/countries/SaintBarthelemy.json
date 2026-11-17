@@ -1,6 +1,6 @@
 {
   "name" : "Saint Barthelemy",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "St Barthelemy", "Saint Barts", "St Barts" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
