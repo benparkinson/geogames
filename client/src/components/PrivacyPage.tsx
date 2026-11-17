@@ -39,8 +39,9 @@ function PrivacyPage(): React.JSX.Element {
 
                 <h2 className="h5">On your device</h2>
                 <p>
-                    Your browser keeps one item in its local storage: <code>gg-theme</code>. It is set only if you use
-                    the light/dark toggle. Clearing site data removes it.
+                    Your browser keeps up to two items in its local storage: <code>gg-theme</code> and{" "}
+                    <code>gg-hardcore</code>. Each is set only if you use its switch (the light/dark toggle and
+                    Hardcore mode). Clearing site data removes them.
                 </p>
 
                 <h2 className="h5">Who else receives data</h2>

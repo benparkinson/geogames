@@ -356,6 +356,21 @@ describe("useRecordHint", () => {
     expect(posts[0].body).toEqual({ hint: 1, guessesBefore: 2 });
   });
 
+  it("refetches the game when the hint is refused", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound() },
+      { method: "POST", url: /\/hints$/, body: {}, status: 409 },
+    ]);
+    const { result } = renderHook(() => ({ round: useRound("g1", 0), record: useRecordHint("g1", 0) }), {
+      wrapper: clientWrapper(),
+    });
+    await waitFor(() => expect(result.current.round.data).toBeDefined());
+
+    act(() => result.current.record.mutate({ hint: 0, guessesBefore: 0 }));
+
+    await waitFor(() => expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(2));
+  });
+
   it("sends a hint, a guess and the answer in the order they were made", async () => {
     const fetchMock = mockFetch([
       { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 1 }) },

@@ -476,6 +476,45 @@ describe("MapGame guess limit", () => {
   });
 });
 
+describe("MapGame clues", () => {
+  const clueFor = vi.fn(() => ({ km: 1236, bearing: 45 }));
+
+  it("shows the clue in the feedback and on the chip, and hides it when Hardcore is switched on in the panel", async () => {
+    const user = userEvent.setup();
+    renderGame({ clueFor });
+
+    await guess(user, "Italy");
+
+    expect(screen.getByText(/The nearest country you still need is 1,240 km to the north-east\./)).toBeInTheDocument();
+    expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("radio", { name: "On" }));
+
+    expect(screen.queryByText(/1,240 km/)).not.toBeInTheDocument();
+  });
+
+  it("shows no clues, and no switch, when the game has no clueFor", async () => {
+    const user = userEvent.setup();
+    renderGame();
+
+    await guess(user, "Italy");
+
+    expect(screen.queryByRole("radio", { name: "On" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
+  });
+
+  it("shows no clue when Hardcore mode was already on", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+    const user = userEvent.setup();
+    renderGame({ clueFor });
+
+    await guess(user, "Italy");
+
+    expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
+    expect(screen.getByText(/isn't right/)).toBeInTheDocument();
+  });
+});
+
 describe("MapGame saving guesses", () => {
   const recordGuess = (props: { round: { recordGuess: unknown } }) => props.round.recordGuess as ReturnType<typeof vi.fn>;
 

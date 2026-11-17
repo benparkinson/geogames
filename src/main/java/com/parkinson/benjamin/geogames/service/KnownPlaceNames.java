@@ -43,7 +43,10 @@ public class KnownPlaceNames {
 
   private List<PlaceName> names(PlaceKind kind) {
     return switch (kind) {
-      case COUNTRIES -> countries.loadCountryNames();
+      case COUNTRIES ->
+          countries.loadCountryNames().stream()
+              .map(c -> new PlaceName(c.name(), c.additionalNames()))
+              .toList();
       case RIVERS -> rivers.loadRiverNames();
       case LAKES -> lakes.loadLakeNames();
     };

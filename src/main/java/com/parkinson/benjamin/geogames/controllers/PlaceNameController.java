@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
@@ -31,7 +32,7 @@ public class PlaceNameController {
   }
 
   @GetMapping("/countries")
-  public ResponseEntity<List<PlaceName>> countries() {
+  public ResponseEntity<List<CountryName>> countries() {
     return cached(countryLoaderService.loadCountryNames());
   }
 
@@ -45,7 +46,7 @@ public class PlaceNameController {
     return cached(lakeLoaderService.loadLakeNames());
   }
 
-  private static ResponseEntity<List<PlaceName>> cached(List<PlaceName> names) {
+  private static <T> ResponseEntity<List<T>> cached(List<T> names) {
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(Duration.ofDays(1))).body(names);
   }
 }

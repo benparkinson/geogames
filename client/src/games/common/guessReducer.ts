@@ -7,6 +7,14 @@ import { AnswerState, CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, UNANSWERED } from
 export interface Guess {
   text: string;
   answer: string | null;
+  /** For a wrong guess in a game with clues: how far, and which way, to the nearest answer not yet found. */
+  clue?: GuessClue;
+}
+
+/** Worked out once, when the guess is made. `bearing` is degrees from north, from the guess to the answer. */
+export interface GuessClue {
+  km: number;
+  bearing: number;
 }
 
 export interface GuessState {
@@ -30,8 +38,8 @@ export type GuessResult =
   | { kind: "empty" }
   | { kind: "duplicate"; guess: string }
   | { kind: "unknown"; guess: string }
-  | { kind: "wrong"; guess: string; guessesLeft: number }
-  | { kind: "outOfGuesses"; guess: string }
+  | { kind: "wrong"; guess: string; guessesLeft: number; clue?: GuessClue }
+  | { kind: "outOfGuesses"; guess: string; clue?: GuessClue }
   | { kind: "correct"; remaining: number }
   | { kind: "over" };
 
@@ -43,6 +51,11 @@ export interface GuessConfig {
   hintsTotal: number;
   /** How many wrong guesses the round allows. Infinity means no limit. */
   guessLimit: number;
+  /**
+   * For a wrong guess: the clue towards the nearest of `targets`, the canonical answers not found yet.
+   * Null when the guess can't be located. Must be deterministic: the reducer stays pure.
+   */
+  clueFor?: (guess: string, targets: string[]) => GuessClue | null;
 }
 
 export interface GuessOutcome {
@@ -174,18 +187,24 @@ function applyGuess(state: GuessState, text: string, config: GuessConfig): Guess
     return { state, result: { kind: "unknown", guess: trimmed } };
   }
 
-  const guesses = [...state.guesses, { text: trimmed, answer: matched }];
+  let clue: GuessClue | undefined;
+  if (matched === null && config.clueFor) {
+    const found = state.guesses.flatMap(g => (g.answer === null ? [] : [g.answer]));
+    const unfound = config.answers.map(a => a.name).filter(name => !found.includes(name));
+    clue = config.clueFor(trimmed, unfound) ?? undefined;
+  }
+  const guesses = [...state.guesses, clue ? { text: trimmed, answer: matched, clue } : { text: trimmed, answer: matched }];
   if (matched === null) {
     const left = config.guessLimit - wrongGuessCount({ ...state, guesses });
     if (left <= 0) {
       // Keep the correct guesses found so far: the other answers are shown as revealed.
       return {
         state: { ...state, guesses, gaveUp: true, outOfGuesses: true, over: true },
-        result: { kind: "outOfGuesses", guess: trimmed },
+        result: { kind: "outOfGuesses", guess: trimmed, clue },
         finished: OUT_OF_GUESSES,
       };
     }
-    return { state: { ...state, guesses }, result: { kind: "wrong", guess: trimmed, guessesLeft: left } };
+    return { state: { ...state, guesses }, result: { kind: "wrong", guess: trimmed, guessesLeft: left, clue } };
   }
 
   const remaining = config.answerCount - guesses.filter(g => g.answer !== null).length;

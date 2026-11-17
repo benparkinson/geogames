@@ -21,6 +21,8 @@ function renderInput(overrides: Partial<React.ComponentProps<typeof MapGameInput
     giveUp: vi.fn(),
     inputPlaceholder: "Country…",
     answerNoun: "country",
+    answerCount: 1,
+    showClues: true,
     ...overrides,
   };
   const view = render(<MapGameInput {...props} />);
@@ -66,6 +68,50 @@ describe("MapGameInput feedback", () => {
 
     expect(screen.getByText('"Spain" isn\'t right. 2 guesses left.')).toBeInTheDocument();
     expect(input()).toHaveValue("");
+  });
+
+  it("adds the distance and direction to a wrong guess, for one answer", async () => {
+    await submitting({ kind: "wrong", guess: "France", guessesLeft: 4, clue: { km: 1236, bearing: 45 } });
+
+    expect(screen.getByText("\"France\" isn't right. The answer is 1,240 km to the north-east. 4 guesses left.")).toBeInTheDocument();
+  });
+
+  it("says the nearest country you still need when there are several answers", async () => {
+    const user = userEvent.setup();
+    renderInput({
+      answerCount: 2,
+      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "wrong", guess: "France", guessesLeft: 1, clue: { km: 480, bearing: 10 } })),
+    });
+    await user.type(input(), "France");
+    await user.click(screen.getByRole("button", { name: "Guess" }));
+
+    expect(
+      screen.getByText("\"France\" isn't right. The nearest country you still need is 480 km to the north. Last guess!"),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the old sentence when clues are off", async () => {
+    const user = userEvent.setup();
+    renderInput({
+      showClues: false,
+      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "wrong", guess: "France", guessesLeft: 4, clue: { km: 1236, bearing: 45 } })),
+    });
+    await user.type(input(), "France");
+    await user.click(screen.getByRole("button", { name: "Guess" }));
+
+    expect(screen.getByText("\"France\" isn't right. 4 guesses left.")).toBeInTheDocument();
+  });
+
+  it("shows the distance and a hidden direction on the wrong-guess chip, unless clues are off", () => {
+    const wrong = [{ text: "France", answer: null, clue: { km: 1236, bearing: 90 } }];
+    const view = renderInput({ wrongGuesses: wrong });
+
+    expect(screen.getByText(/1,240 km/, { selector: ".gg-chip" })).toBeInTheDocument();
+    expect(screen.getByText("1,240 km east")).toHaveClass("gg-visually-hidden");
+
+    view.unmount();
+    renderInput({ wrongGuesses: wrong, showClues: false });
+    expect(screen.queryByText(/1,240 km/)).not.toBeInTheDocument();
   });
 
   it("says when it was the next to last guess", async () => {

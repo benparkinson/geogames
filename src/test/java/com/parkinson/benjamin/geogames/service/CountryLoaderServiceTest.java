@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.CountryName;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -21,16 +21,28 @@ class CountryLoaderServiceTest {
 
   @Test
   void loadsEveryCountryNameSorted() throws IOException {
-    List<PlaceName> names = service.loadCountryNames();
+    List<CountryName> names = service.loadCountryNames();
 
     assertEquals(EXPECTED_COUNTRY_COUNT, names.size());
     assertTrue(names.stream().noneMatch(c -> "Siachen Glacier".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
-    assertEquals(names.stream().sorted(Comparator.comparing(PlaceName::name)).toList(), names);
+    assertEquals(names.stream().sorted(Comparator.comparing(CountryName::name)).toList(), names);
     assertTrue(names.stream().noneMatch(c -> "Antarctica".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "Northern Cyprus".equals(c.name())));
     assertTrue(names.stream().anyMatch(c -> "Palestine".equals(c.name())));
     assertTrue(names.stream().anyMatch(c -> "France".equals(c.name())));
     names.forEach(c -> assertNotNull(c.additionalNames(), c.name()));
+  }
+
+  @Test
+  void positionsAreOnTheMainlandOfTheCountry() {
+    List<CountryName> names = service.loadCountryNames();
+    CountryName france = names.stream().filter(c -> "France".equals(c.name())).findFirst().get();
+    CountryName russia = names.stream().filter(c -> "Russia".equals(c.name())).findFirst().get();
+
+    // Mainland France, not pulled towards French Guiana.
+    assertTrue(france.lat() > 45 && france.lat() < 48, "lat " + france.lat());
+    assertTrue(france.lon() > 1 && france.lon() < 4, "lon " + france.lon());
+    assertTrue(russia.lon() > 40 && russia.lon() < 110, "lon " + russia.lon());
   }
 }

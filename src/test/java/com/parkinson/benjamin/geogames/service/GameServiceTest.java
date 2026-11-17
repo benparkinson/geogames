@@ -26,6 +26,7 @@ import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -106,9 +107,9 @@ class GameServiceTest {
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(
-                new PlaceName("France", List.of("République française")),
-                new PlaceName("Germany", List.of("Deutschland")),
-                new PlaceName("Italy", List.of())));
+                new CountryName("France", List.of("République française"), 0, 0),
+                new CountryName("Germany", List.of("Deutschland"), 0, 0),
+                new CountryName("Italy", List.of(), 0, 0)));
     RiverLoaderService rivers = mock(RiverLoaderService.class);
     when(rivers.loadRiverNames()).thenReturn(List.of(new PlaceName("Rhine", List.of("Rhein"))));
     LakeLoaderService lakes = mock(LakeLoaderService.class);

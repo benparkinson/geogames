@@ -7,7 +7,9 @@ import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import { GuessAction, GuessConfig, guessesLeft, guessReducer, GuessState, restoreGuessState, wrongGuessCount } from "./guessReducer";
+import HardcoreToggle from "../../components/HardcoreToggle";
+import { useHardcoreMode } from "../../settings/hardcoreMode";
+import { GuessAction, GuessClue, GuessConfig, guessesLeft, guessReducer, GuessState, restoreGuessState, wrongGuessCount } from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -23,8 +25,10 @@ function MapGame<Type>({
   suggestions,
   isKnownGuess,
   hints,
+  clueFor,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
+  const [hardcore] = useHardcoreMode();
   const hintCount = round.hintCount;
   const hintConfig = hintCount > 0 ? hints : undefined;
   const config: GuessConfig = {
@@ -33,6 +37,7 @@ function MapGame<Type>({
     isKnownGuess,
     hintsTotal: hintConfig ? hintCount : 0,
     guessLimit: round.guessLimit,
+    clueFor,
   };
   // Rebuilt from the guesses and hints the server saved, so a refresh keeps them.
   const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config));
@@ -139,8 +144,15 @@ function MapGame<Type>({
         giveUp={giveUp}
         inputPlaceholder={inputPlaceholder}
         answerNoun={answerNoun}
+        answerCount={answerCount}
+        showClues={!hardcore}
         suggestions={suggestions}
       />
+      {clueFor && !gameOver && (
+        <div className="mt-2">
+          <HardcoreToggle compact />
+        </div>
+      )}
     </>
   );
 
@@ -179,6 +191,11 @@ export interface MapGameProps<Type> {
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;
+  /**
+   * Gives a wrong guess a clue (distance and direction to the nearest answer not found yet). Leave it
+   * out for a game whose map already shows where the answer is. Hardcore mode hides the clues.
+   */
+  clueFor?: (guess: string, targets: string[]) => GuessClue | null;
   submitAnswer: (answer: RoundAnswer) => void;
 }
 

@@ -83,6 +83,15 @@ describe("Tripoint guessing", () => {
     expect(screen.getByText('"France" isn\'t right. 4 guesses left.')).toBeInTheDocument();
   });
 
+  it("gives no distance clue, because the map shows where the answers are", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    renderTripoint();
+
+    await guess(userEvent.setup(), "France");
+
+    expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
+  });
+
   it("does not check names against the country list until it has loaded", async () => {
     vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
     renderTripoint();

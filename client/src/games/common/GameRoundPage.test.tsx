@@ -32,6 +32,7 @@ function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): 
   const states = [...initialStates];
   const hints = kinds.map(() => 0);
   const saved: { text: string; correct: boolean }[][] = kinds.map(() => []);
+  const taken: number[][] = kinds.map(() => []);
   const build = (i: number) =>
     makeGameRounds(
       kinds.map((kind, n) => ({ river: kind === "RIVERS_BY_SHAPE", answerState: states[n], hintsUsed: hints[n] })),
@@ -47,6 +48,15 @@ function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): 
         states[index] = answer.answerState;
         hints[index] = answer.hintsUsed;
         return build(index);
+      },
+    },
+    {
+      method: "POST",
+      url: /\/api\/games\/g1\/rounds\/\d+\/hints$/,
+      body: ({ url, init }) => {
+        const index = Number(url.match(/rounds\/(\d+)\/hints/)![1]);
+        taken[index].push(JSON.parse(init!.body as string).guessesBefore);
+        return { hintsTakenAt: taken[index] };
       },
     },
     {
@@ -151,6 +161,22 @@ describe("GameRoundPage playing", () => {
     // The next round is prefetched once the answer is patched in; the answered round is not fetched again.
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
     expect(roundGets(fetchMock, 0)).toHaveLength(1);
+  });
+
+  it("saves a hint as it is taken", async () => {
+    const fetchMock = fakeServer(["TRIPOINT"]);
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+
+    await waitFor(() => {
+      const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
+      expect(posts).toHaveLength(1);
+      expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/hints");
+      expect(posts[0].body).toEqual({ hint: 0, guessesBefore: 0 });
+    });
   });
 
   it("moves to the next round", async () => {
