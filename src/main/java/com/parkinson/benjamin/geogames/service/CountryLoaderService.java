@@ -6,23 +6,29 @@ import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+/**
+ * The country names and aliases for autocomplete. They come from the country shapes, which hold the
+ * same names and aliases and are already parsed in memory, instead of from the 24 MB of full
+ * geometry in {@code processed/countries}, which the app never reads. Antarctica has no shape, so
+ * it is not in the list.
+ */
 @Service
 public class CountryLoaderService {
 
-  private final JsonResourceReader reader;
+  private final CountryShapeService shapes;
 
-  public CountryLoaderService(JsonResourceReader reader) {
-    this.reader = reader;
+  public CountryLoaderService(CountryShapeService shapes) {
+    this.shapes = shapes;
   }
 
   @Cacheable("countryNames")
   public List<PlaceName> loadCountryNames() {
-    return reader.readAll("classpath*:/processed/countries/*.json", PlaceName.class).stream()
+    return shapes.loadShapes().stream()
         .map(
-            country ->
+            shape ->
                 new PlaceName(
-                    country.name(),
-                    country.additionalNames() == null ? List.of() : country.additionalNames()))
+                    shape.name(),
+                    shape.additionalNames() == null ? List.of() : shape.additionalNames()))
         .sorted(Comparator.comparing(PlaceName::name))
         .toList();
   }

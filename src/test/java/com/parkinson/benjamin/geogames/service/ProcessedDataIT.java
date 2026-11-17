@@ -17,6 +17,8 @@ import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.TripointDefinition;
+import com.parkinson.benjamin.geogames.model.geojson.GeoData;
+import com.parkinson.benjamin.geogames.model.geojson.Position;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -40,7 +42,6 @@ public class ProcessedDataIT {
   private final JsonResourceReader reader =
       new JsonResourceReader(new PathMatchingResourcePatternResolver());
   private final TripointLoaderService tripointLoaderService = new TripointLoaderService(reader);
-  private final CountryLoaderService countryLoaderService = new CountryLoaderService(reader);
   private final CountryShapeService shapeService = new CountryShapeService(reader);
 
   @Test
@@ -182,15 +183,63 @@ public class ProcessedDataIT {
     }
   }
 
+  @Test
+  public void everyCoordinateReadFromTheProcessedDataIsAPosition() {
+    int points = 0;
+    for (CountryShape shape : shapeService.loadShapes()) {
+      points += assertPositions(shape.outline(), shape.name());
+      points += assertPositions(shape.coast(), shape.name());
+      points += assertPositions(shape.landBorders(), shape.name());
+    }
+    for (River river : new RiverLoaderService(reader).loadRivers()) {
+      points += assertPositions(river.geoData(), river.name());
+    }
+    for (Lake lake : loadLakes()) {
+      points += assertPositions(lake.geoData(), lake.name());
+    }
+    assertTrue(points > 100_000, "only " + points + " points");
+  }
+
+  /** Checks every innermost list under the geometry is a Position, and returns how many there are. */
+  private static int assertPositions(GeoData data, String name) {
+    return data == null ? 0 : assertPositions(data.geometry().coordinates(), name);
+  }
+
+  private static int assertPositions(List<?> list, String name) {
+    if (list.isEmpty()) {
+      return 0;
+    }
+    if (list.get(0) instanceof Number) {
+      assertTrue(list instanceof Position, "not a Position in " + name + ": " + list);
+      return 1;
+    }
+    int count = 0;
+    for (Object child : list) {
+      count += assertPositions((List<?>) child, name);
+    }
+    return count;
+  }
+
   private List<Lake> loadLakes() {
     return reader.readAll("classpath*:/processed/lakes/*.json", Lake.class);
+  }
+
+  /** The names in the raw {@code processed/countries} files, which the app itself never reads. */
+  private List<PlaceName> rawCountryNames() {
+    return reader.readAll("classpath*:/processed/countries/*.json", PlaceName.class).stream()
+        .map(
+            c ->
+                new PlaceName(
+                    c.name(), c.additionalNames() == null ? List.of() : c.additionalNames()))
+        .sorted(Comparator.comparing(PlaceName::name))
+        .toList();
   }
 
   @Test
   public void lakesHaveContinentsCountriesAndClosedRings() {
     List<Lake> lakes = loadLakes();
     Set<String> countryNames =
-        countryLoaderService.loadCountryNames().stream()
+        rawCountryNames().stream()
             .map(PlaceName::name)
             .collect(java.util.stream.Collectors.toSet());
 
@@ -235,9 +284,7 @@ public class ProcessedDataIT {
   public void countryShapesMatchTheProcessedCountries() {
     CountryShapeService shapes = new CountryShapeService(reader);
     List<PlaceName> countries =
-        countryLoaderService.loadCountryNames().stream()
-            .filter(c -> !"Antarctica".equals(c.name()))
-            .toList();
+        rawCountryNames().stream().filter(c -> !"Antarctica".equals(c.name())).toList();
 
     List<PlaceName> shapeNames =
         shapes.loadShapes().stream()

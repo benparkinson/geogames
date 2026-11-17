@@ -15,7 +15,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 class CountryLoaderServiceTest {
 
   private final CountryLoaderService service =
-      new CountryLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()));
+      new CountryLoaderService(
+          new CountryShapeService(
+              new JsonResourceReader(new PathMatchingResourcePatternResolver())));
 
   @Test
   void loadsEveryCountryNameSorted() throws IOException {
@@ -25,6 +27,7 @@ class CountryLoaderServiceTest {
     assertTrue(names.stream().noneMatch(c -> "Siachen Glacier".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
     assertEquals(names.stream().sorted(Comparator.comparing(PlaceName::name)).toList(), names);
+    assertTrue(names.stream().noneMatch(c -> "Antarctica".equals(c.name())));
     assertTrue(names.stream().anyMatch(c -> "France".equals(c.name())));
     names.forEach(c -> assertNotNull(c.additionalNames(), c.name()));
   }

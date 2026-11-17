@@ -161,6 +161,16 @@ class GameApiIT {
   }
 
   @Test
+  void theAnswerResponseHasNoRoundData() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 1);
+
+    String result = answer(id, 0, "CORRECT");
+
+    assertThat(objectMapper.readTree(result).propertyNames())
+        .containsExactlyInAnyOrder("answerState", "hintsUsed", "points", "gameResult");
+  }
+
+  @Test
   void createsARiverGame() throws Exception {
     String id = createGame("RIVERS_BY_SHAPE", 2);
 

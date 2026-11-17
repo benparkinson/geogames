@@ -1,10 +1,9 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
+import { makeAnswerResponse, makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
 import { clientWrapper, newTestClient } from "../test/render";
-import type { AnswerState } from "../games/common/Model";
-import { fetchRound, toRoundView, useCreateGame, useRound, useSubmitAnswer } from "./games";
+import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRound, useSubmitAnswer } from "./games";
 import { queryKeys } from "./queryKeys";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
@@ -150,20 +149,39 @@ describe("useRound", () => {
   });
 });
 
+describe("isCompleteAnswerResponse", () => {
+  it("accepts the backend's answer response and a whole round response", () => {
+    expect(isCompleteAnswerResponse(makeAnswerResponse())).toBe(true);
+    expect(isCompleteAnswerResponse(makeRound())).toBe(true);
+  });
+
+  it("refuses an empty or partial response", () => {
+    expect(isCompleteAnswerResponse({})).toBe(false);
+    expect(isCompleteAnswerResponse(null)).toBe(false);
+    expect(isCompleteAnswerResponse("CORRECT")).toBe(false);
+    expect(isCompleteAnswerResponse({ ...makeAnswerResponse(), hintsUsed: undefined })).toBe(false);
+    const { gameResult, ...rest } = makeAnswerResponse();
+    expect(isCompleteAnswerResponse({ ...rest, gameResult: { ...gameResult, roundPoints: undefined } })).toBe(false);
+    expect(isCompleteAnswerResponse({ ...rest, gameResult: { ...gameResult, score: "100" } })).toBe(false);
+    expect(isCompleteAnswerResponse({ ...rest, gameResult: undefined })).toBe(false);
+  });
+});
+
 describe("useSubmitAnswer", () => {
-  it("posts the answer state and refetches that round", async () => {
-    let state = "UNANSWERED";
-    const fetchMock = mockFetch([
-      { url: /\/rounds\/0$/, body: () => makeRound({ answerState: state as AnswerState }) },
-      {
-        method: "POST",
-        url: "http://localhost:8080/api/games/g1/rounds/0/answers",
-        body: ({ init }) => {
-          state = JSON.parse(init!.body as string).answerState;
-          return makeRound({ answerState: state as AnswerState });
-        },
-      },
+  const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
+    callsTo(fetchMock).filter(c => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
+
+  const answered = makeAnswerResponse({ hintsUsed: 2, points: 83 });
+
+  function setup(post: object | (() => object) = answered, status = 200) {
+    return mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 2 }) },
+      { method: "POST", url: /\/answers$/, body: post, status },
     ]);
+  }
+
+  it("posts the answer and patches the answered round without fetching it again", async () => {
+    const fetchMock = setup();
     const { result } = renderHook(() => ({ round: useRound("g1", 0), submit: useSubmitAnswer("g1", 0) }), {
       wrapper: clientWrapper(),
     });
@@ -171,41 +189,45 @@ describe("useSubmitAnswer", () => {
 
     act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 }));
 
-    await waitFor(() => expect(result.current.round.data?.answerState).toBe("GAVE_UP"));
-    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
+    await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
+    const view = result.current.round.data!;
+    expect(view.hintsUsed).toBe(2);
+    expect(view.points).toBe(83);
+    expect(view.gameResult).toEqual({
+      gameState: answered.gameResult.gameState,
+      score: answered.gameResult.score,
+      maxScore: answered.gameResult.maxScore,
+      roundsCorrect: answered.gameResult.roundsCorrect,
+      perfectRounds: answered.gameResult.perfectRounds,
+      roundAnswerStates: answered.gameResult.roundAnswerStates,
+      roundPoints: answered.gameResult.roundPoints,
+      roundHintsUsed: answered.gameResult.roundHintsUsed,
+    });
+    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
     expect(posts).toHaveLength(1);
     expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
+    expect(roundGets(fetchMock, 0)).toHaveLength(1);
   });
-});
 
-describe("useSubmitAnswer across rounds", () => {
-  const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
-    callsTo(fetchMock).filter((c) => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
-
-  function setup() {
-    const fetchMock = mockFetch([
-      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 2 }) },
-      { method: "POST", url: /\/answers$/, body: {} },
-    ]);
-    return fetchMock;
-  }
-
-  it("refetches the game's other cached rounds and prefetches the next one", async () => {
+  it("gives the game's other cached rounds the new result and keeps their own state and data", async () => {
     const fetchMock = setup();
-    const client = newTestClient();
     const { result } = renderHook(
       () => ({ r0: useRound("g1", 0), r1: useRound("g1", 1), submit: useSubmitAnswer("g1", 0, 2) }),
-      { wrapper: clientWrapper(client) },
+      { wrapper: clientWrapper() },
     );
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
-    expect(roundGets(fetchMock, 1)).toHaveLength(1);
+    const before = result.current.r1.data!;
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 2, wrongGuesses: 0 }));
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
-    expect(roundGets(fetchMock, 0)).toHaveLength(2);
-    // Round 1 is refetched once by the invalidation; the prefetch then finds it fresh.
-    expect(roundGets(fetchMock, 1)).toHaveLength(2);
+    const after = result.current.r1.data!;
+    expect(after.gameResult.roundAnswerStates).toEqual(answered.gameResult.roundAnswerStates);
+    expect(after.gameResult.score).toBe(answered.gameResult.score);
+    expect(after.answerState).toBe(before.answerState);
+    expect(after.data).toBe(before.data);
+    expect(roundGets(fetchMock, 0)).toHaveLength(1);
+    expect(roundGets(fetchMock, 1)).toHaveLength(1);
   });
 
   it("prefetches the next round when nothing has cached it", async () => {
@@ -232,6 +254,52 @@ describe("useSubmitAnswer across rounds", () => {
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
     expect(roundGets(fetchMock, 2)).toHaveLength(0);
+  });
+
+  it("refetches the game's cached rounds when the server refuses the answer", async () => {
+    const fetchMock = setup({ title: "Conflict" }, 409);
+    const { result } = renderHook(
+      () => ({ r0: useRound("g1", 0), r1: useRound("g1", 1), submit: useSubmitAnswer("g1", 0, 2) }),
+      { wrapper: clientWrapper() },
+    );
+    await waitFor(() => expect(result.current.r1.data).toBeDefined());
+
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+
+    await waitFor(() => expect(result.current.submit.isError).toBe(true));
+    await waitFor(() => expect(roundGets(fetchMock, 0)).toHaveLength(2));
+    await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(2));
+  });
+});
+
+describe("useSubmitAnswer with an incomplete response", () => {
+  const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
+    callsTo(fetchMock).filter(c => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
+
+  function setup() {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 2 }) },
+      { method: "POST", url: /\/answers$/, body: {} },
+    ]);
+    return fetchMock;
+  }
+
+  it("refetches the game's other cached rounds and prefetches the next one", async () => {
+    const fetchMock = setup();
+    const client = newTestClient();
+    const { result } = renderHook(
+      () => ({ r0: useRound("g1", 0), r1: useRound("g1", 1), submit: useSubmitAnswer("g1", 0, 2) }),
+      { wrapper: clientWrapper(client) },
+    );
+    await waitFor(() => expect(result.current.r1.data).toBeDefined());
+    expect(roundGets(fetchMock, 1)).toHaveLength(1);
+
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+
+    await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
+    expect(roundGets(fetchMock, 0)).toHaveLength(2);
+    // Round 1 is refetched once by the invalidation; the prefetch then finds it fresh.
+    expect(roundGets(fetchMock, 1)).toHaveLength(2);
   });
 });
 

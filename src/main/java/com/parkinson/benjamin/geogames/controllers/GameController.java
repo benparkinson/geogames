@@ -4,6 +4,7 @@ import com.parkinson.benjamin.geogames.api.GameCreationRequest;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameRoundAnswerRequest;
+import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class GameController {
   }
 
   @PostMapping("/games/{gameId}/rounds/{round}/answers")
-  public ResponseEntity<GameRound> submitAnswer(
+  public ResponseEntity<RoundAnswerResponse> submitAnswer(
       @PathVariable String gameId,
       @PathVariable int round,
       @RequestBody GameRoundAnswerRequest answer) {
@@ -58,7 +59,7 @@ public class GameController {
    * different one is a 409, and a game deleted meanwhile is a 404. It retries once, outside the
    * service's transaction; a second failure propagates.
    */
-  private Optional<GameRound> submitAnswerWithRetry(
+  private Optional<RoundAnswerResponse> submitAnswerWithRetry(
       UUID id, int round, GameRoundAnswerRequest answer) {
     try {
       return submitAnswerOnce(id, round, answer);
@@ -67,7 +68,8 @@ public class GameController {
     }
   }
 
-  private Optional<GameRound> submitAnswerOnce(UUID id, int round, GameRoundAnswerRequest answer) {
+  private Optional<RoundAnswerResponse> submitAnswerOnce(
+      UUID id, int round, GameRoundAnswerRequest answer) {
     return gameService.submitAnswer(
         id, round, answer.answerState(), answer.hintsUsedOrZero(), answer.wrongGuesses());
   }

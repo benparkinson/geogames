@@ -17,6 +17,7 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
@@ -46,6 +47,10 @@ class GameControllerTest {
   private static final UUID GAME_ID = UUID.fromString("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d");
 
   @MockitoBean private GameService gameService;
+
+  private static RoundAnswerResponse answer() {
+    return new RoundAnswerResponse(AnswerState.CORRECT, 0, 100, round().gameResult());
+  }
 
   private static GameRound round() {
     return new GameRound(
@@ -177,7 +182,7 @@ class GameControllerTest {
   @Test
   void submitsAnAnswer() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null))
-        .thenReturn(Optional.of(round()));
+        .thenReturn(Optional.of(answer()));
 
     mockMvc
         .perform(
@@ -185,7 +190,10 @@ class GameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"answerState\":\"CORRECT\"}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.gameType.name").value("TRIPOINT"));
+        .andExpect(jsonPath("$.answerState").value("CORRECT"))
+        .andExpect(jsonPath("$.points").value(100))
+        .andExpect(jsonPath("$.gameResult.maxScore").value(300))
+        .andExpect(jsonPath("$.jsonBlob").doesNotExist());
 
     verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
   }
@@ -193,7 +201,7 @@ class GameControllerTest {
   @Test
   void anAnswerWithHintsUsedPassesThemOn() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null))
-        .thenReturn(Optional.of(round()));
+        .thenReturn(Optional.of(answer()));
 
     mockMvc
         .perform(
@@ -286,7 +294,7 @@ class GameControllerTest {
   void anAnswerThatLostARaceIsRetriedOnce() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
         .thenThrow(lockFailure())
-        .thenReturn(Optional.of(round()));
+        .thenReturn(Optional.of(answer()));
 
     postGaveUp().andExpect(status().isOk());
 
@@ -321,7 +329,7 @@ class GameControllerTest {
   @Test
   void anAnswerWithWrongGuessesPassesThemOn() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, 3))
-        .thenReturn(Optional.of(round()));
+        .thenReturn(Optional.of(answer()));
 
     mockMvc
         .perform(
@@ -336,7 +344,7 @@ class GameControllerTest {
   @Test
   void anAnswerWithoutWrongGuessesPassesNull() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null))
-        .thenReturn(Optional.of(round()));
+        .thenReturn(Optional.of(answer()));
 
     mockMvc
         .perform(
