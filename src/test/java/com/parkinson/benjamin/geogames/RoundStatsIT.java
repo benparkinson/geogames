@@ -125,4 +125,20 @@ class RoundStatsIT {
     assertThat(games.toString()).doesNotContain(id).doesNotContain(other);
     assertThat(rowsOf(id).get(0).get("play_id")).isNotEqualTo(UUID.fromString(id));
   }
+
+  @Test
+  void theStatsRowHasTheHintsTheServerSaw() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 1);
+    mockMvc
+        .perform(
+            post("/api/games/%s/rounds/0/hints".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"hint\":0,\"guessesBefore\":0}"))
+        .andExpect(status().isOk());
+
+    answer(id, 0, "{\"answerState\":\"CORRECT\",\"hintsUsed\":0,\"wrongGuesses\":0}");
+    await().atMost(Duration.ofSeconds(10)).until(() -> rowsOf(id).size() == 1);
+
+    assertThat(((Number) rowsOf(id).get(0).get("hints_used")).intValue()).isEqualTo(1);
+  }
 }

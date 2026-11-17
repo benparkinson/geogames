@@ -58,6 +58,11 @@
           "text" : "string"
         }
       }
+    },
+    "POST /api/games/{id}/rounds/{round}/hints" : {
+      "hintsTakenAt" : {
+        "array" : "number"
+      }
     }
   },
   "rounds" : {
@@ -91,6 +96,9 @@
           "correct" : "boolean",
           "text" : "string"
         }
+      },
+      "hintsTakenAt" : {
+        "array" : "number"
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -213,6 +221,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "cities" : {
@@ -315,6 +326,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "country" : {
@@ -410,6 +424,9 @@
           "correct" : "boolean",
           "text" : "string"
         }
+      },
+      "hintsTakenAt" : {
+        "array" : "number"
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -519,6 +536,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "country" : {
@@ -626,6 +646,9 @@
           "correct" : "boolean",
           "text" : "string"
         }
+      },
+      "hintsTakenAt" : {
+        "array" : "number"
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -750,6 +773,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "gameType" : "string",
@@ -808,6 +834,9 @@
           "correct" : "boolean",
           "text" : "string"
         }
+      },
+      "hintsTakenAt" : {
+        "array" : "number"
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -942,6 +971,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "countries" : {
@@ -1027,6 +1059,9 @@
           "text" : "string"
         }
       },
+      "hintsTakenAt" : {
+        "array" : "number"
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "countries" : {
@@ -1096,6 +1131,9 @@
           "correct" : "boolean",
           "text" : "string"
         }
+      },
+      "hintsTakenAt" : {
+        "array" : "number"
       },
       "hintsUsed" : "number",
       "jsonBlob" : {

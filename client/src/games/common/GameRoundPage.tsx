@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { roundQuery, useRecordGuess, useRound, useSubmitAnswer } from "../../api/games";
+import { roundQuery, useRecordGuess, useRecordHint, useRound, useSubmitAnswer } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import GameSummary from "./GameSummary";
 import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
@@ -20,6 +20,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
     const { error, data, isLoading } = useRound(gameId, currentRound);
     const submitAnswerMutation = useSubmitAnswer(gameId, currentRound, data?.totalRoundCount);
     const recordGuessMutation = useRecordGuess(gameId, currentRound);
+    const recordHintMutation = useRecordHint(gameId, currentRound);
     const queryClient = useQueryClient();
 
     // A round answered before this page loaded: its next round is the likely next click. Does nothing when cached.
@@ -62,6 +63,8 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             guessLimit: data.gameType.guessLimit,
             hintsUsed: data.hintsUsed,
             guesses: data.guesses,
+            hintsTakenAt: data.hintsTakenAt,
+            recordHint: hint => recordHintMutation.mutate(hint),
             recordGuess: guess => recordGuessMutation.mutate(guess),
             points: data.points,
             score: data.gameResult.score,

@@ -7,6 +7,7 @@ import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
+import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
@@ -164,6 +165,57 @@ public class GameService {
                         }));
   }
 
+  /**
+   * Stores that hint {@code hint} was taken after {@code guessesBefore} guesses. Like guesses, it
+   * publishes no statistics event.
+   *
+   * @return empty if the game or round doesn't exist
+   */
+  @Transactional
+  public Optional<RoundHintsResponse> recordHint(
+      UUID gameId, int round, int hint, int guessesBefore) {
+    return gameRepository
+        .findByPublicId(gameId)
+        .flatMap(
+            game ->
+                findRound(game, round)
+                    .map(
+                        r -> {
+                          if (addHint(r, hint, guessesBefore)) {
+                            gameRepository.save(game);
+                          }
+                          return new RoundHintsResponse(List.copyOf(r.getHintsTakenAt()));
+                        }));
+  }
+
+  /** @return whether the round changed */
+  private static boolean addHint(GameRoundEntity round, int hint, int guessesBefore) {
+    if (round.getAnswerState() != AnswerState.UNANSWERED) {
+      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
+    }
+    int taken = round.getHintsTakenAt().size();
+    if (hint < taken) {
+      // Already recorded: the first request wins, so a retry changes nothing.
+      return false;
+    }
+    if (hint != taken) {
+      throw new IllegalArgumentException(
+          "Hint %d can't be taken before hint %d".formatted(hint, taken));
+    }
+    int hintCount = round.getGameType().hintCount();
+    if (hint >= hintCount) {
+      throw new IllegalArgumentException(
+          "A round of %s has %d hints".formatted(round.getGameType(), hintCount));
+    }
+    if (guessesBefore < 0) {
+      throw new IllegalArgumentException("guessesBefore can't be negative");
+    }
+    // Clamped, not rejected: a guess whose request failed makes the client's count larger than the
+    // server's, and that must not turn a real hint into an error.
+    round.addHint(Math.min(guessesBefore, round.getGuesses().size()));
+    return true;
+  }
+
   /** @return whether the round changed */
   private boolean addGuess(GameRoundEntity round, String guess, boolean correct) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {
@@ -222,7 +274,13 @@ public class GameService {
                           // network would otherwise block a legitimate answer.
                           validateHintsUsed(r, hintsUsed);
                           validateWrongGuesses(r, answerState, wrongGuesses);
-                          if (recordAnswer(r, answerState, hintsUsed, wrongGuesses)) {
+                          // The hints that count are at least the ones recorded as taken, so a
+                          // client
+                          // can't report fewer. More is accepted: a hint request may have been
+                          // lost.
+                          // Worked out before the repeat check, so a retry is still a no-op.
+                          int effectiveHints = Math.max(hintsUsed, r.getHintsTakenAt().size());
+                          if (recordAnswer(r, answerState, effectiveHints, wrongGuesses)) {
                             gameRepository.save(game);
                             publishRoundAnswered(game, r);
                           }
@@ -336,7 +394,8 @@ public class GameService {
         round.getHintsUsed(),
         pointsFor(round),
         calculateGameResult(game),
-        recordedGuesses(round));
+        recordedGuesses(round),
+        List.copyOf(round.getHintsTakenAt()));
   }
 
   /** The answer's response has no round data, so it needs no rebuild and no serialising. */

@@ -79,6 +79,7 @@ class ApiContractIT {
     Object merged = "empty";
     for (int i = 0; i < ROUNDS; i++) {
       postGuess(id, i, firstName(type));
+      postHint(id, i, 0, 1);
       JsonNode round = objectMapper.readTree(body(get("/api/games/%s/rounds/%d".formatted(id, i))));
       Map<String, Object> shape = new TreeMap<>();
       round
@@ -115,6 +116,18 @@ class ApiContractIT {
             .content("{\"guess\":\"%s\",\"correct\":false}".formatted(guess)));
   }
 
+  private String postHint(String id, int round, int hint, int guessesBefore) throws Exception {
+    return body(
+        post("/api/games/%s/rounds/%d/hints".formatted(id, round))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"hint\":%d,\"guessesBefore\":%d}".formatted(hint, guessesBefore)));
+  }
+
+  private Object hintShape() throws Exception {
+    String id = createGame(GameType.TRIPOINT).get("id").asString();
+    return JsonShape.of(objectMapper.readTree(postHint(id, 0, 0, 0)));
+  }
+
   private Object guessShape() throws Exception {
     String id = createGame(GameType.TRIPOINT).get("id").asString();
     return JsonShape.of(objectMapper.readTree(postGuess(id, 0, firstName(GameType.TRIPOINT))));
@@ -143,6 +156,7 @@ class ApiContractIT {
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 
     endpoints.put("POST /api/games/{id}/rounds/{round}/guesses", guessShape());
+    endpoints.put("POST /api/games/{id}/rounds/{round}/hints", hintShape());
 
     Map<String, Object> rounds = new TreeMap<>();
     for (GameType type : GameType.values()) {

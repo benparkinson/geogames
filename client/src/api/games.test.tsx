@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
 import { makeAnswerResponse, makeGuessesResponse, makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
 import { clientWrapper, newTestClient } from "../test/render";
-import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRecordGuess, useRound, useSubmitAnswer } from "./games";
+import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRecordGuess, useRecordHint, useRound, useSubmitAnswer } from "./games";
 import { queryKeys } from "./queryKeys";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
@@ -333,6 +333,71 @@ describe("useRecordGuess", () => {
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
     const posts = callsTo(fetchMock).filter(c => c.method === "POST");
     expect(posts.map(c => c.url.split("/").pop())).toEqual(["guesses", "answers"]);
+  });
+});
+
+describe("useRecordHint", () => {
+  it("posts the hint and patches the saved hints into the cached round", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound() },
+      { method: "POST", url: /\/hints$/, body: { hintsTakenAt: [0, 2] } },
+    ]);
+    const { result } = renderHook(() => ({ round: useRound("g1", 0), record: useRecordHint("g1", 0) }), {
+      wrapper: clientWrapper(),
+    });
+    await waitFor(() => expect(result.current.round.data?.hintsTakenAt).toEqual([]));
+
+    act(() => result.current.record.mutate({ hint: 1, guessesBefore: 2 }));
+
+    await waitFor(() => expect(result.current.round.data?.hintsTakenAt).toEqual([0, 2]));
+    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    expect(posts).toHaveLength(1);
+    expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/hints");
+    expect(posts[0].body).toEqual({ hint: 1, guessesBefore: 2 });
+  });
+
+  it("refetches the game when the hint is refused", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound() },
+      { method: "POST", url: /\/hints$/, body: {}, status: 409 },
+    ]);
+    const { result } = renderHook(() => ({ round: useRound("g1", 0), record: useRecordHint("g1", 0) }), {
+      wrapper: clientWrapper(),
+    });
+    await waitFor(() => expect(result.current.round.data).toBeDefined());
+
+    act(() => result.current.record.mutate({ hint: 0, guessesBefore: 0 }));
+
+    await waitFor(() => expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(2));
+  });
+
+  it("sends a hint, a guess and the answer in the order they were made", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 1 }) },
+      { method: "POST", url: /\/hints$/, body: { hintsTakenAt: [0] } },
+      { method: "POST", url: /\/guesses$/, body: makeGuessesResponse() },
+      { method: "POST", url: /\/answers$/, body: makeAnswerResponse() },
+    ]);
+    const { result } = renderHook(
+      () => ({
+        round: useRound("g1", 0),
+        hint: useRecordHint("g1", 0),
+        guess: useRecordGuess("g1", 0),
+        submit: useSubmitAnswer("g1", 0, 1),
+      }),
+      { wrapper: clientWrapper() },
+    );
+    await waitFor(() => expect(result.current.round.data).toBeDefined());
+
+    act(() => {
+      result.current.hint.mutate({ hint: 0, guessesBefore: 0 });
+      result.current.guess.mutate({ text: "France", correct: true });
+      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 1, wrongGuesses: 0 });
+    });
+
+    await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
+    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    expect(posts.map(c => c.url.split("/").pop())).toEqual(["hints", "guesses", "answers"]);
   });
 });
 

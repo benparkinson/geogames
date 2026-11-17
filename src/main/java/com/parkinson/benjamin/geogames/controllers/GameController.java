@@ -5,8 +5,10 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameRoundAnswerRequest;
 import com.parkinson.benjamin.geogames.api.GameRoundGuessRequest;
+import com.parkinson.benjamin.geogames.api.GameRoundHintRequest;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
+import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,6 +80,24 @@ public class GameController {
             id ->
                 retryOnConflict(
                     () -> gameService.recordGuess(id, round, request.guess(), request.correct())))
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/games/{gameId}/rounds/{round}/hints")
+  public ResponseEntity<RoundHintsResponse> recordHint(
+      @PathVariable String gameId,
+      @PathVariable int round,
+      @RequestBody GameRoundHintRequest request) {
+    if (request.hint() == null || request.guessesBefore() == null) {
+      throw new IllegalArgumentException("hint and guessesBefore are required");
+    }
+    return parseGameId(gameId)
+        .flatMap(
+            id ->
+                retryOnConflict(
+                    () ->
+                        gameService.recordHint(id, round, request.hint(), request.guessesBefore())))
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

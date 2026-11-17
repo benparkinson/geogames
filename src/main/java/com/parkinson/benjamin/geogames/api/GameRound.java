@@ -11,4 +11,5 @@ public record GameRound(
     int hintsUsed,
     int points,
     GameResult gameResult,
-    List<RecordedGuess> guesses) {}
+    List<RecordedGuess> guesses,
+    List<Integer> hintsTakenAt) {}

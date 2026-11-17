@@ -603,3 +603,47 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
   });
 });
+
+describe("MapGame saving hints", () => {
+  const hints: HintConfig = { description: "A clue", text: index => `Clue ${index}` };
+
+  it("saves each hint with its index and the guesses made before it", async () => {
+    const user = userEvent.setup();
+    const { props } = renderGame({ hints, round: makeRoundProps({ hintCount: 3 }) });
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await guess(user, "Italy");
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+
+    expect((props.round.recordHint as ReturnType<typeof vi.fn>).mock.calls).toEqual([
+      [{ hint: 0, guessesBefore: 0 }],
+      [{ hint: 1, guessesBefore: 1 }],
+    ]);
+  });
+
+  it("saves a hint, a guess and the answer in that order", async () => {
+    const order: string[] = [];
+    const round = makeRoundProps({
+      hintCount: 3,
+      recordHint: vi.fn(() => void order.push("hint")),
+      recordGuess: vi.fn(() => void order.push("guess")),
+    });
+    const submitAnswer = vi.fn(() => void order.push("answer"));
+    renderGame({ hints, round, submitAnswer, answerCount: 1, answers: [ANSWERS[0]] });
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await guess(user, "France");
+
+    expect(order).toEqual(["hint", "guess", "answer"]);
+  });
+
+  it("shows the hints taken before a refresh, and what the round is now worth", () => {
+    renderGame({ hints, round: makeRoundProps({ hintCount: 3, hintsTakenAt: [0, 0] }) });
+
+    expect(screen.getByText("Clue 0")).toBeInTheDocument();
+    expect(screen.getByText("Clue 1")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Hint \(1 left\)/ })).toBeInTheDocument();
+    expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
+  });
+});

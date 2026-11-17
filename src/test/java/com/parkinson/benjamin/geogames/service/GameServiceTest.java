@@ -18,6 +18,7 @@ import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
+import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
@@ -32,6 +33,7 @@ import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
+import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -1086,5 +1088,133 @@ class GameServiceTest {
     GameRound result = service.getGameRound(GAME_ID, 0).orElseThrow();
 
     assertThat(result.guesses()).containsExactly(new RecordedGuess("Germany", false));
+  }
+
+  // ------------------------------------------------------------- recordHint
+
+  @Test
+  void hintsAreRecordedInOrderWithTheGuessCountAtTheTime() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    service.recordGuess(GAME_ID, 0, "France", false);
+
+    service.recordHint(GAME_ID, 0, 0, 0);
+    RoundHintsResponse response = service.recordHint(GAME_ID, 0, 1, 1).orElseThrow();
+
+    assertThat(response.hintsTakenAt()).containsExactly(0, 1);
+    assertThat(entity.getHintsTakenAt()).containsExactly(0, 1);
+  }
+
+  @Test
+  void aRepeatedHintChangesNothingAndTheFirstCountWins() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    service.recordHint(GAME_ID, 0, 0, 0);
+    service.recordGuess(GAME_ID, 0, "France", false);
+
+    RoundHintsResponse again = service.recordHint(GAME_ID, 0, 0, 1).orElseThrow();
+
+    assertThat(again.hintsTakenAt()).containsExactly(0);
+    assertThat(entity.getHintsTakenAt()).containsExactly(0);
+    verify(gameRepository, times(2)).save(any(GameEntity.class));
+  }
+
+  @Test
+  void aSkippedHintAHintPastTheCountAndANegativeCountAreRejected() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 1, 0))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 0, -1))
+        .isInstanceOf(IllegalArgumentException.class);
+    for (int i = 0; i < GameType.TRIPOINT.hintCount(); i++) {
+      service.recordHint(GAME_ID, 0, i, 0);
+    }
+    int past = GameType.TRIPOINT.hintCount();
+    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, past, 0))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("hints");
+    assertThat(entity.getHintsTakenAt()).hasSize(past);
+  }
+
+  @Test
+  void aGuessCountLargerThanTheStoredGuessesIsClamped() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    service.recordGuess(GAME_ID, 0, "France", false);
+
+    service.recordHint(GAME_ID, 0, 0, 4);
+
+    assertThat(entity.getHintsTakenAt()).containsExactly(1);
+  }
+
+  @Test
+  void aHintOnAnAnsweredRoundIsAConflict() {
+    guessRound(GameType.TRIPOINT, AnswerState.GAVE_UP);
+
+    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 0, 0))
+        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
+  }
+
+  @Test
+  void aHintForAnUnknownGameOrRoundIsEmpty() {
+    when(gameRepository.findByPublicId(OTHER_ID)).thenReturn(Optional.empty());
+    guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    assertThat(service.recordHint(OTHER_ID, 0, 0, 0)).isEmpty();
+    assertThat(service.recordHint(GAME_ID, 5, 0, 0)).isEmpty();
+  }
+
+  @Test
+  void getGameRoundReturnsTheHintsTaken() {
+    Tripoint tripoint = tripoint(1);
+    when(tripointGenerator.rebuild(tripoint.roundKey())).thenReturn(tripoint);
+    GameRoundEntity entity = new GameRoundEntity(0, GameType.TRIPOINT, tripoint.roundKey());
+    entity.addHint(0);
+    entity.addHint(2);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
+
+    GameRound result = service.getGameRound(GAME_ID, 0).orElseThrow();
+
+    assertThat(result.hintsTakenAt()).containsExactly(0, 2);
+    assertThat(result.hintsUsed()).isZero();
+  }
+
+  @Test
+  void anAnswerReportingFewerHintsThanRecordedIsChargedForTheRecordedOnes() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    entity.addHint(0);
+    entity.addHint(0);
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
+
+    assertThat(entity.getHintsUsed()).isEqualTo(2);
+    assertThat(result.hintsUsed()).isEqualTo(2);
+    assertThat(result.points())
+        .isEqualTo(Scoring.roundPoints(AnswerState.CORRECT, 2, GameType.TRIPOINT.hintCount()));
+    ArgumentCaptor<RoundAnswered> event = ArgumentCaptor.forClass(RoundAnswered.class);
+    verify(events).publishEvent(event.capture());
+    assertThat(event.getValue().hintsUsed()).isEqualTo(2);
+  }
+
+  @Test
+  void aRepeatOfThatAnswerIsANoOp() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    entity.addHint(0);
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+
+    RoundAnswerResponse again =
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
+
+    assertThat(again.hintsUsed()).isEqualTo(1);
+    verify(events, times(1)).publishEvent(any(Object.class));
+  }
+
+  @Test
+  void anAnswerReportingMoreHintsThanRecordedIsAccepted() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    entity.addHint(0);
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null);
+
+    assertThat(entity.getHintsUsed()).isEqualTo(2);
   }
 }

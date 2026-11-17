@@ -27,7 +27,7 @@ function PrivacyPage(): React.JSX.Element {
                 <h2 className="h5">What we store</h2>
                 <p>
                     There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the
-                    questions asked, the guesses made (only names from our lists) and how each round ended. It is
+                    questions asked, the guesses made (only names from our lists), the hints taken and how each round ended. It is
                     deleted after 24 hours.
                 </p>
 

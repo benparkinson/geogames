@@ -11,6 +11,7 @@ import {
   RecordedGuess,
   RoundAnswerResponse,
   RoundGuessesResponse,
+  RoundHintsResponse,
 } from "./types";
 
 /** Mutations in one scope run one after another, so an answer reaches the server after the guess that led to it. */
@@ -42,6 +43,7 @@ export function toRoundView(response: GameRoundResponse, round: number): GameRou
     hintsUsed: response.hintsUsed ?? 0,
     points: response.points ?? roundPoints(response.answerState, 0, 0),
     guesses: Array.isArray(response.guesses) ? response.guesses : [],
+    hintsTakenAt: Array.isArray(response.hintsTakenAt) ? response.hintsTakenAt : [],
     gameResult: {
       gameState: result.gameState,
       score: Array.isArray(serverPoints) ? result.score : points.reduce((sum, p) => sum + p, 0),
@@ -167,6 +169,27 @@ export function useRecordGuess(gameId: string, round: number) {
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
         old => old && { ...old, guesses: response.guesses },
+      );
+    },
+    onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
+  });
+}
+
+/**
+ * Saves that a hint was taken, with how many guesses had been made before it, so a refresh keeps it. The hints are
+ * patched into the cached round for the same reason as the guesses.
+ */
+export function useRecordHint(gameId: string, round: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    scope: roundWritesScope(gameId),
+    mutationFn: (hint: { hint: number; guessesBefore: number }) =>
+      postJson<RoundHintsResponse>(roundUrl(gameId, round) + "/hints", "save hint", hint),
+    onSuccess: response => {
+      if (!Array.isArray(response?.hintsTakenAt)) return;
+      queryClient.setQueryData<GameRoundView>(
+        queryKeys.round(gameId, round),
+        old => old && { ...old, hintsTakenAt: response.hintsTakenAt },
       );
     },
     onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),

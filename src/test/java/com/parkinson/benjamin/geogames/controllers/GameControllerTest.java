@@ -24,6 +24,7 @@ import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
+import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
@@ -77,6 +78,7 @@ class GameControllerTest {
             0,
             List.of(0, 0, 0),
             List.of(0, 0, 0)),
+        List.of(),
         List.of());
   }
 
@@ -496,5 +498,61 @@ class GameControllerTest {
     postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isOk());
 
     verify(gameService, times(2)).recordGuess(GAME_ID, 0, "France", false);
+  }
+
+  // ------------------------------------------------------------------ hints
+
+  private ResultActions postHint(String id, String body) throws Exception {
+    return mockMvc.perform(
+        post("/api/games/" + id + "/rounds/0/hints")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body));
+  }
+
+  private static final String FIRST_HINT = "{\"hint\":0,\"guessesBefore\":2}";
+
+  @Test
+  void recordsAHint() throws Exception {
+    when(gameService.recordHint(GAME_ID, 0, 0, 2))
+        .thenReturn(Optional.of(new RoundHintsResponse(List.of(2))));
+
+    postHint(GAME_ID.toString(), FIRST_HINT)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.hintsTakenAt[0]").value(2));
+  }
+
+  @Test
+  void aHintForAMalformedOrUnknownGameIsNotFound() throws Exception {
+    when(gameService.recordHint(GAME_ID, 0, 0, 2)).thenReturn(Optional.empty());
+
+    postHint("12", FIRST_HINT).andExpect(status().isNotFound());
+    postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void aHintWithAMissingFieldIsABadRequest() throws Exception {
+    postHint(GAME_ID.toString(), "{\"guessesBefore\":2}").andExpect(status().isBadRequest());
+    postHint(GAME_ID.toString(), "{\"hint\":0}").andExpect(status().isBadRequest());
+
+    verify(gameService, never()).recordHint(any(), anyInt(), anyInt(), anyInt());
+  }
+
+  @Test
+  void aHintOnAnAnsweredRoundIsAConflict() throws Exception {
+    when(gameService.recordHint(GAME_ID, 0, 0, 2))
+        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+
+    postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isConflict());
+  }
+
+  @Test
+  void aHintThatLostARaceIsRetriedOnce() throws Exception {
+    when(gameService.recordHint(GAME_ID, 0, 0, 2))
+        .thenThrow(lockFailure())
+        .thenReturn(Optional.of(new RoundHintsResponse(List.of(2))));
+
+    postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isOk());
+
+    verify(gameService, times(2)).recordHint(GAME_ID, 0, 0, 2);
   }
 }

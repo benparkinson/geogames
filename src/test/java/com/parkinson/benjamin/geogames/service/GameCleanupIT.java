@@ -70,4 +70,24 @@ class GameCleanupIT {
     return jdbc.queryForObject(
         "select count(*) from game_round_guess where round_id = ?", Long.class, roundId);
   }
+
+  @Test
+  void deletingAGameDeletesItsHintRows() {
+    GameEntity old = game("tripoint:cleanup-hints");
+    old.getRounds().get(0).addHint(0);
+    old.getRounds().get(0).addHint(1);
+    old.setCreatedAt(Instant.now().minus(Duration.ofDays(2)));
+    GameEntity saved = games.save(old);
+    long roundId = saved.getRounds().get(0).getId();
+    assertThat(hintRows(roundId)).isEqualTo(2);
+
+    service.deleteOldGames();
+
+    assertThat(hintRows(roundId)).isZero();
+  }
+
+  private long hintRows(long roundId) {
+    return jdbc.queryForObject(
+        "select count(*) from game_round_hint where round_id = ?", Long.class, roundId);
+  }
 }

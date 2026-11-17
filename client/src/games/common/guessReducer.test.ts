@@ -11,7 +11,7 @@ const answers = [
 
 const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2, guessLimit: Infinity };
 const restored = (answerState: AnswerState, hintsUsed: number, saved: RecordedGuess[] = []) =>
-  restoreGuessState(answerState, hintsUsed, saved, config).state;
+  restoreGuessState(answerState, hintsUsed, saved, [], config).state;
 const fresh = () => restored("UNANSWERED", 0);
 
 /** Applies guesses in order and returns the last outcome. */
@@ -332,8 +332,8 @@ describe("clues on wrong guesses", () => {
 
 describe("restoreGuessState with saved guesses", () => {
   const saved = (text: string, correct = false): RecordedGuess => ({ text, correct });
-  const restore = (state: AnswerState, guesses: RecordedGuess[], cfg: GuessConfig = config, hints = 0) =>
-    restoreGuessState(state, hints, guesses, cfg);
+  const restore = (state: AnswerState, guesses: RecordedGuess[], cfg: GuessConfig = config, hints = 0, hintsTakenAt: number[] = []) =>
+    restoreGuessState(state, hints, guesses, hintsTakenAt, cfg);
 
   it("replays the guesses of an unanswered round", () => {
     const { state, finished } = restore("UNANSWERED", [saved("Peru"), saved("Deutschland", true)]);
@@ -414,5 +414,78 @@ describe("restoreGuessState with saved guesses", () => {
     expect(state.outOfGuesses).toBe(true);
     expect(state.guesses).toHaveLength(2);
     expect(state.hintsUsed).toBe(2);
+  });
+});
+
+describe("restoreGuessState with saved hints", () => {
+  const saved = (text: string, correct = false): RecordedGuess => ({ text, correct });
+
+  /** Plays the actions the way MapGame does, noting how many guesses each hint came after. */
+  function play(actions: ({ guess: string } | "hint")[]) {
+    let state = EMPTY;
+    const guesses: RecordedGuess[] = [];
+    const hintsTakenAt: number[] = [];
+    for (const action of actions) {
+      if (action === "hint") {
+        hintsTakenAt.push(state.guesses.length);
+        state = guessReducer(state, { type: "hint" }, config).state;
+      } else {
+        const outcome = guessReducer(state, { type: "guess", text: action.guess }, config);
+        if (outcome.state.guesses.length > state.guesses.length) {
+          guesses.push(saved(action.guess, outcome.state.guesses.at(-1)!.answer !== null));
+        }
+        state = outcome.state;
+      }
+    }
+    return { state, guesses, hintsTakenAt };
+  }
+
+  const EMPTY: GuessState = { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] };
+
+  it("rebuilds foundAtHint exactly: guess, hint, guess, hint", () => {
+    const { state, guesses, hintsTakenAt } = play([{ guess: "Belgium" }, "hint", { guess: "Peru" }, { guess: "Germany" }, "hint"]);
+    expect(state.foundAtHint).toEqual([["Belgium"], ["Belgium", "Germany"]]);
+    expect(hintsTakenAt).toEqual([1, 3]);
+
+    const restored = restoreGuessState("UNANSWERED", 0, guesses, hintsTakenAt, config).state;
+
+    expect(restored.foundAtHint).toEqual(state.foundAtHint);
+    expect(restored.hintsUsed).toBe(2);
+    expect(restored.guesses).toEqual(state.guesses);
+  });
+
+  it("restores a hint taken before any guess and one taken after the last", () => {
+    const { state, guesses, hintsTakenAt } = play(["hint", { guess: "Belgium" }, "hint"]);
+
+    const restored = restoreGuessState("UNANSWERED", 0, guesses, hintsTakenAt, config).state;
+
+    expect(restored.foundAtHint).toEqual([[], ["Belgium"]]);
+    expect(restored).toEqual(state);
+  });
+
+  it("applies a hint whose count is beyond the last guess at the end", () => {
+    const restored = restoreGuessState("UNANSWERED", 0, [saved("Belgium", true)], [7], config).state;
+
+    expect(restored.hintsUsed).toBe(1);
+    expect(restored.foundAtHint).toEqual([["Belgium"]]);
+  });
+
+  it("caps extra entries at hintsTotal", () => {
+    const restored = restoreGuessState("UNANSWERED", 0, [], [0, 0, 0, 0], config).state;
+
+    expect(restored.hintsUsed).toBe(config.hintsTotal);
+  });
+
+  it("uses the recorded hint moments for an answered round, and the server's hint count", () => {
+    const restored = restoreGuessState("CORRECT", 2, [saved("Belgium", true), saved("Germany", true)], [0, 1], config).state;
+
+    expect(restored.hintsUsed).toBe(2);
+    expect(restored.foundAtHint).toEqual([[], ["Belgium"]]);
+  });
+
+  it("pads an answered round's hints the server counted but has no moment for", () => {
+    const restored = restoreGuessState("GAVE_UP", 2, [], [], config).state;
+
+    expect(restored.foundAtHint).toEqual([[], []]);
   });
 });

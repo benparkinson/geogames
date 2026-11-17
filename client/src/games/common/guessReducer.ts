@@ -82,8 +82,9 @@ export function guessesLeft(state: GuessState, guessLimit: number): number {
 const EMPTY_STATE: GuessState = { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] };
 
 /**
- * Rebuilds a round's state from what the server holds: the answer state, the hints used (only recorded once the
- * round is answered) and the guesses saved while it was played.
+ * Rebuilds a round's state from what the server holds: the answer state, the hints that counted (`hintsUsed`, set
+ * once the round is answered), the guesses saved while it was played and, for each hint taken, how many guesses
+ * came before it (`hintsTakenAt`).
  *
  * The saved guesses are replayed through `guessReducer`, which works out each one's answer again with `matchAnswer`
  * (that is trusted over the stored `correct`). `isKnownGuess` is left out: the server only stored known names, and
@@ -94,24 +95,32 @@ export function restoreGuessState(
   answerState: AnswerState,
   hintsUsed: number,
   saved: RecordedGuess[],
+  hintsTakenAt: number[],
   config: GuessConfig,
 ): { state: GuessState; finished?: GuessOutcome["finished"] } {
   const replayConfig: GuessConfig = { ...config, isKnownGuess: undefined };
   let state = EMPTY_STATE;
   let finished: GuessOutcome["finished"];
-  for (const { text } of saved) {
-    if (state.over) {
-      break;
+  let nextHint = 0;
+  // Guesses and hints are replayed in the order the player made them: hint i was taken after hintsTakenAt[i]
+  // guesses, which is what decides foundAtHint. Hints left over at the end come after the last guess.
+  for (let g = 0; g <= saved.length; g++) {
+    while (nextHint < hintsTakenAt.length && (hintsTakenAt[nextHint] <= g || g === saved.length)) {
+      state = guessReducer(state, { type: "hint" }, replayConfig).state;
+      nextHint++;
     }
-    const outcome = guessReducer(state, { type: "guess", text }, replayConfig);
+    if (g === saved.length || state.over) {
+      continue;
+    }
+    const outcome = guessReducer(state, { type: "guess", text: saved[g].text }, replayConfig);
     state = outcome.state;
     finished = outcome.finished;
   }
   if (answerState === UNANSWERED) {
     return finished ? { state, finished } : { state };
   }
-  // The server doesn't keep the hints' moments, so a reopened round has nothing found at each hint.
-  const foundAtHint: string[][] = Array.from({ length: hintsUsed }, () => []);
+  // The hints that counted are the server's. Where the replay knows what was found at a hint, use it.
+  const foundAtHint: string[][] = Array.from({ length: hintsUsed }, (_, i) => state.foundAtHint[i] ?? []);
   if (answerState === GAVE_UP || answerState === OUT_OF_GUESSES) {
     // The answers found before giving up show as found, and the rest as revealed.
     return {
