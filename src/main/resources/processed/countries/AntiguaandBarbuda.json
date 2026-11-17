@@ -1,6 +1,6 @@
 {
   "name" : "Antigua and Barbuda",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Antigua" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

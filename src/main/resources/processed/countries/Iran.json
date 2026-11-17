@@ -1,6 +1,6 @@
 {
   "name" : "Iran",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Islamic Republic of Iran" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
   "name" : "Saint Kitts and Nevis",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "St Kitts and Nevis", "St. Kitts and Nevis", "Saint Kitts", "St Kitts", "St Kitts & Nevis" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

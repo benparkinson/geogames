@@ -1,6 +1,6 @@
 {
   "name" : "Northern Cyprus",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Turkish Republic of Northern Cyprus", "TRNC" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

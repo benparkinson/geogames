@@ -1,6 +1,6 @@
 {
   "name" : "Philippines",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "The Philippines" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

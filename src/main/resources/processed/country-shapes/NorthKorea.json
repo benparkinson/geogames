@@ -1,6 +1,6 @@
 {
   "name" : "North Korea",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "DPRK", "Democratic People's Republic of Korea", "Korea, North" ],
   "coastKm" : 2143.0,
   "landBorderKm" : 1239.0,
   "areaKm2" : 122087,

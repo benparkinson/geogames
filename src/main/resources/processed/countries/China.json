@@ -1,6 +1,6 @@
 {
   "name" : "China",
-  "additionalNames" : [ "People's Republic of China" ],
+  "additionalNames" : [ "People's Republic of China", "PRC" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -8,7 +8,7 @@ export const CONTACT_EMAIL = "privacy@example.com";
 
 function PrivacyPage(): React.JSX.Element {
     return (
-        <div className="min-vh-100 page-bg">
+        <div className="min-vh-100 page-bg d-flex flex-column">
             <div className="px-3 py-2 d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                     <HomeLink />
@@ -76,7 +76,7 @@ function PrivacyPage(): React.JSX.Element {
                 <h2 className="h5">Changes</h2>
                 <p className="mb-0">Last updated: 17 November 2026.</p>
             </main>
-            <SiteFooter className="pb-4" />
+            <SiteFooter className="mt-auto pt-4 pb-4" />
         </div>
     );
 }

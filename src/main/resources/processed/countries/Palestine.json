@@ -1,6 +1,6 @@
 {
   "name" : "Palestine",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "State of Palestine", "Palestinian Territories", "West Bank and Gaza" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
