@@ -1,4 +1,5 @@
-import { GeoJSON, Tooltip } from "react-leaflet";
+import { GeoJSON, Marker, Tooltip } from "react-leaflet";
+import { targetFlagIcon } from "../../map/flagIcons";
 import { FitBounds } from "../../map/FitBounds";
 import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions, lakeFillOptions, minorRiverOptions } from "../../map/constants";
 import type { CountryGeoData, LineGeoData } from "../common/country";
@@ -16,6 +17,15 @@ export function FocusFit({ country }: { country: CountryShape }): React.JSX.Elem
       ]}
     />
   );
+}
+
+/**
+ * A flag in the middle of the country's largest part, so a gap between the neighbours can't be
+ * mistaken for another one. It carries no name and draws no border, so the answer isn't given away.
+ */
+export function CountryFlag({ country }: { country: CountryShape }): React.JSX.Element {
+  const { south, west, north, east } = country.focus;
+  return <Marker key={`${country.name}/flag`} icon={targetFlagIcon} position={[(south + north) / 2, (west + east) / 2]} interactive={false} />;
 }
 
 /** The filled outline of each neighbour. */
