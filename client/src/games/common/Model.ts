@@ -1,3 +1,5 @@
+import type { RecordedGuess } from "../../api/types";
+
 export type AnswerState = "UNANSWERED" | "CORRECT" | "GAVE_UP" | "OUT_OF_GUESSES";
 export type GameState = "CREATED" | "IN_PROGRESS" | "FINISHED";
 
@@ -34,6 +36,10 @@ export interface Round {
   guessLimit: number;
   /** The hints the server has recorded for this round. 0 until the round is answered. */
   hintsUsed: number;
+  /** The guesses the server has recorded for this round, in order. */
+  guesses: RecordedGuess[];
+  /** Saves a guess that the guess reducer recorded, so a refresh restores it. */
+  recordGuess: (guess: RecordedGuess) => void;
   /** This round's points, as the server last saw them. */
   points: number;
   /** The game's points so far, as the server last saw them. */

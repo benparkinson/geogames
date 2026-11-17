@@ -2,14 +2,21 @@ package com.parkinson.benjamin.geogames.dao;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Version;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * One round of a game. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
@@ -47,6 +54,15 @@ public class GameRoundEntity {
    * didn't report it.
    */
   private Integer wrongGuesses;
+
+  /**
+   * The guesses made so far, in order. A change to this collection bumps the round's version, so
+   * two guesses at the same moment conflict like two answers do.
+   */
+  @ElementCollection
+  @CollectionTable(name = "game_round_guess", joinColumns = @JoinColumn(name = "round_id"))
+  @OrderColumn(name = "position")
+  private List<RoundGuess> guesses = new ArrayList<>();
 
   /** Optimistic lock: a second writer of the same round fails rather than overwriting the first. */
   @Version
@@ -118,5 +134,17 @@ public class GameRoundEntity {
 
   public void setWrongGuesses(Integer wrongGuesses) {
     this.wrongGuesses = wrongGuesses;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public List<RoundGuess> getGuesses() {
+    return Collections.unmodifiableList(guesses);
+  }
+
+  public void addGuess(RoundGuess guess) {
+    guesses.add(guess);
   }
 }

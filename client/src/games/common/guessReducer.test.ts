@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { GuessConfig, GuessState, guessesLeft, guessReducer, initialGuessState, wrongGuessCount } from "./guessReducer";
+import type { RecordedGuess } from "../../api/types";
+import type { AnswerState } from "./Model";
+import { GuessConfig, GuessState, guessesLeft, guessReducer, restoreGuessState, wrongGuessCount } from "./guessReducer";
 
 const answers = [
   { name: "Belgium", additionalNames: [] },
@@ -8,7 +10,9 @@ const answers = [
 ];
 
 const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2, guessLimit: Infinity };
-const fresh = () => initialGuessState("UNANSWERED", answers, 0);
+const restored = (answerState: AnswerState, hintsUsed: number, saved: RecordedGuess[] = []) =>
+  restoreGuessState(answerState, hintsUsed, saved, config).state;
+const fresh = () => restored("UNANSWERED", 0);
 
 /** Applies guesses in order and returns the last outcome. */
 function guessAll(texts: string[], cfg: GuessConfig = config, start: GuessState = fresh()) {
@@ -21,14 +25,14 @@ function guessAll(texts: string[], cfg: GuessConfig = config, start: GuessState 
   return outcome;
 }
 
-describe("initialGuessState hints", () => {
+describe("restoreGuessState hints", () => {
   it("restores the hints the server recorded for an answered round", () => {
-    expect(initialGuessState("CORRECT", answers, 2).hintsUsed).toBe(2);
-    expect(initialGuessState("GAVE_UP", answers, 1).hintsUsed).toBe(1);
+    expect(restored("CORRECT", 2).hintsUsed).toBe(2);
+    expect(restored("GAVE_UP", 1).hintsUsed).toBe(1);
   });
 
   it("starts an unanswered round with no hints", () => {
-    expect(initialGuessState("UNANSWERED", answers, 0).hintsUsed).toBe(0);
+    expect(restored("UNANSWERED", 0).hintsUsed).toBe(0);
   });
 
   it("caps the hint action at hintsTotal", () => {
@@ -41,13 +45,13 @@ describe("initialGuessState hints", () => {
   });
 });
 
-describe("initialGuessState", () => {
+describe("restoreGuessState", () => {
   it("starts empty for an unanswered round", () => {
     expect(fresh()).toEqual({ guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] });
   });
 
   it("starts solved, with every answer found, for a correct round", () => {
-    const state = initialGuessState("CORRECT", answers, 0);
+    const state = restored("CORRECT", 0);
 
     expect(state.over).toBe(true);
     expect(state.gaveUp).toBe(false);
@@ -55,7 +59,7 @@ describe("initialGuessState", () => {
   });
 
   it("starts revealed for a round that was given up", () => {
-    const state = initialGuessState("GAVE_UP", answers, 0);
+    const state = restored("GAVE_UP", 0);
 
     expect(state.over).toBe(true);
     expect(state.gaveUp).toBe(true);
@@ -132,7 +136,7 @@ describe("guessReducer guesses", () => {
   });
 
   it("ignores guesses once the round is over", () => {
-    const over = initialGuessState("CORRECT", answers, 0);
+    const over = restored("CORRECT", 0);
     const outcome = guessReducer(over, { type: "guess", text: "Belgium" }, config);
 
     expect(outcome.result).toEqual({ kind: "over" });
@@ -152,7 +156,7 @@ describe("guessReducer giving up", () => {
   });
 
   it("does nothing when the round is already over", () => {
-    const over = initialGuessState("CORRECT", answers, 0);
+    const over = restored("CORRECT", 0);
     const outcome = guessReducer(over, { type: "giveUp" }, config);
 
     expect(outcome.state).toBe(over);
@@ -171,7 +175,7 @@ describe("guessReducer hints", () => {
   });
 
   it("gives no hints once the round is over", () => {
-    const over = initialGuessState("GAVE_UP", answers, 0);
+    const over = restored("GAVE_UP", 0);
 
     expect(guessReducer(over, { type: "hint" }, config).state.hintsUsed).toBe(0);
   });
@@ -194,15 +198,15 @@ describe("guessReducer foundAtHint", () => {
   });
 
   it("does not record a hint that was refused", () => {
-    const over = initialGuessState("GAVE_UP", answers, 0);
+    const over = restored("GAVE_UP", 0);
 
     expect(guessReducer(over, { type: "hint" }, config).state.foundAtHint).toEqual([]);
   });
 
   it("restores one empty entry per hint for an answered round", () => {
-    expect(initialGuessState("CORRECT", answers, 2).foundAtHint).toEqual([[], []]);
-    expect(initialGuessState("GAVE_UP", answers, 1).foundAtHint).toEqual([[]]);
-    expect(initialGuessState("UNANSWERED", answers, 0).foundAtHint).toEqual([]);
+    expect(restored("CORRECT", 2).foundAtHint).toEqual([[], []]);
+    expect(restored("GAVE_UP", 1).foundAtHint).toEqual([[]]);
+    expect(restored("UNANSWERED", 0).foundAtHint).toEqual([]);
   });
 });
 
@@ -256,7 +260,7 @@ describe("guessReducer guess limit", () => {
   });
 
   it("restores an OUT_OF_GUESSES round as revealed", () => {
-    const state = initialGuessState("OUT_OF_GUESSES", answers, 1);
+    const state = restored("OUT_OF_GUESSES", 1);
 
     expect(state).toEqual({ guesses: [], gaveUp: true, outOfGuesses: true, over: true, hintsUsed: 1, foundAtHint: [[]] });
   });
@@ -266,5 +270,92 @@ describe("guessReducer guess limit", () => {
 
     expect(finished).toBe("GAVE_UP");
     expect(state.outOfGuesses).toBe(false);
+  });
+});
+
+describe("restoreGuessState with saved guesses", () => {
+  const saved = (text: string, correct = false): RecordedGuess => ({ text, correct });
+  const restore = (state: AnswerState, guesses: RecordedGuess[], cfg: GuessConfig = config, hints = 0) =>
+    restoreGuessState(state, hints, guesses, cfg);
+
+  it("replays the guesses of an unanswered round", () => {
+    const { state, finished } = restore("UNANSWERED", [saved("Peru"), saved("Deutschland", true)]);
+
+    expect(state.guesses).toEqual([
+      { text: "Peru", answer: null },
+      { text: "Deutschland", answer: "Germany" },
+    ]);
+    expect(state.over).toBe(false);
+    expect(finished).toBeUndefined();
+    expect(wrongGuessCount(state)).toBe(1);
+  });
+
+  it("works the answer out again instead of trusting the stored flag", () => {
+    const { state } = restore("UNANSWERED", [saved("Belgium", false), saved("Peru", true)]);
+
+    expect(state.guesses.map(g => g.answer)).toEqual(["Belgium", null]);
+  });
+
+  it("makes a repeat of a replayed guess a duplicate", () => {
+    const { state } = restore("UNANSWERED", [saved("Peru")]);
+
+    expect(guessReducer(state, { type: "guess", text: "peru" }, config).result).toEqual({ kind: "duplicate", guess: "peru" });
+  });
+
+  it("does not need the list of known names", () => {
+    const { state } = restore("UNANSWERED", [saved("Peru")], { ...config, isKnownGuess: () => false });
+
+    expect(state.guesses).toHaveLength(1);
+  });
+
+  it("finishes OUT_OF_GUESSES when the replay reaches the limit", () => {
+    const limited = { ...config, guessLimit: 2 };
+
+    const { state, finished } = restore("UNANSWERED", [saved("Peru"), saved("Chile")], limited);
+
+    expect(finished).toBe("OUT_OF_GUESSES");
+    expect(state.over).toBe(true);
+    expect(state.outOfGuesses).toBe(true);
+  });
+
+  it("finishes CORRECT when the replay finds every answer", () => {
+    const { finished } = restore("UNANSWERED", [saved("Belgium", true), saved("Germany", true), saved("Holland", true)]);
+
+    expect(finished).toBe("CORRECT");
+  });
+
+  it("stops replaying once the round is over", () => {
+    const limited = { ...config, guessLimit: 1 };
+
+    const { state } = restore("UNANSWERED", [saved("Peru"), saved("Chile")], limited);
+
+    expect(state.guesses).toHaveLength(1);
+  });
+
+  it("shows the wrong guesses first in a correct round", () => {
+    const { state } = restore("CORRECT", [saved("Peru"), saved("Belgium", true)], config, 1);
+
+    expect(state.guesses.map(g => g.text)).toEqual(["Peru", "Belgium", "Germany", "Netherlands"]);
+    expect(state.over).toBe(true);
+    expect(state.hintsUsed).toBe(1);
+    expect(state.foundAtHint).toEqual([[]]);
+  });
+
+  it("keeps the answers found before giving up as found", () => {
+    const { state, finished } = restore("GAVE_UP", [saved("Peru"), saved("Belgium", true)]);
+
+    expect(finished).toBeUndefined();
+    expect(state.gaveUp).toBe(true);
+    expect(state.outOfGuesses).toBe(false);
+    expect(state.over).toBe(true);
+    expect(state.guesses.map(g => g.answer)).toEqual([null, "Belgium"]);
+  });
+
+  it("restores an OUT_OF_GUESSES round with its guesses", () => {
+    const { state } = restore("OUT_OF_GUESSES", [saved("Peru"), saved("Chile")], { ...config, guessLimit: 2 }, 2);
+
+    expect(state.outOfGuesses).toBe(true);
+    expect(state.guesses).toHaveLength(2);
+    expect(state.hintsUsed).toBe(2);
   });
 });

@@ -3,6 +3,7 @@ import contract from "../test/api-shapes.json";
 import {
   countryNames,
   makeAnswerResponse,
+  makeGuessesResponse,
   lakeNames,
   makeCountryCitiesRound,
   makeCountryPairRound,
@@ -63,7 +64,8 @@ function roundFixtures(): Record<string, GameRoundResponse> {
 
 /** The shape of a round response the way the backend contract describes it: the blob parsed and shaped. */
 function roundShape(round: GameRoundResponse): Shape {
-  const { jsonBlob, ...rest } = round;
+  // The contract records a round with a stored guess, so the shape of its elements is known.
+  const { jsonBlob, ...rest } = { ...round, guesses: makeGuessesResponse().guesses };
   return { ...(shapeOf(rest) as { [key: string]: Shape }), jsonBlob: shapeOf(JSON.parse(jsonBlob)) };
 }
 
@@ -162,6 +164,7 @@ describe("the backend contract (client/src/test/api-shapes.json)", () => {
     ["GET /api/lakes", lakeNames],
     ["POST /api/games", { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }],
     ["POST /api/games/{id}/rounds/{round}/answers", makeAnswerResponse()],
+    ["POST /api/games/{id}/rounds/{round}/guesses", makeGuessesResponse()],
   ])("%s", (endpoint, fixture) => {
     it("matches the backend response exactly", () => {
       const backend = endpoints[endpoint];

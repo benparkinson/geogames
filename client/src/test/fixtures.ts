@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { GameRoundResponse, RoundAnswerResponse } from "../api/types";
+import type { GameRoundResponse, RoundAnswerResponse, RoundGuessesResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
 import type { CountryCitiesRound, CountryRiversRound, CountryShape, CountryShapeRound } from "../games/countries/model";
@@ -20,6 +20,8 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     hintCount: 3,
     guessLimit: 5,
     hintsUsed: 0,
+    guesses: [],
+    recordGuess: vi.fn(),
     points: 0,
     score: 0,
     maxScore: 300,
@@ -212,6 +214,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     answerState: "UNANSWERED",
     hintsUsed: 0,
     points: 0,
+    guesses: [],
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,
@@ -360,4 +363,9 @@ export function makeCountryShapeRound(
     gameType: { name: type, answerCount: 1, hintCount: 3, guessLimit: 5 },
     ...overrides,
   });
+}
+
+/** What POST /api/games/{id}/rounds/{round}/guesses returns: the round's guesses so far. */
+export function makeGuessesResponse(overrides: Partial<RoundGuessesResponse> = {}): RoundGuessesResponse {
+  return { guesses: [{ text: "France", correct: false }], ...overrides };
 }

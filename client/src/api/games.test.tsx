@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { makeAnswerResponse, makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
+import { makeAnswerResponse, makeGuessesResponse, makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
 import { clientWrapper, newTestClient } from "../test/render";
-import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRound, useSubmitAnswer } from "./games";
+import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRecordGuess, useRound, useSubmitAnswer } from "./games";
 import { queryKeys } from "./queryKeys";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
@@ -269,6 +269,70 @@ describe("useSubmitAnswer", () => {
     await waitFor(() => expect(result.current.submit.isError).toBe(true));
     await waitFor(() => expect(roundGets(fetchMock, 0)).toHaveLength(2));
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(2));
+  });
+});
+
+describe("useRecordGuess", () => {
+  const guessesAfter = [
+    { text: "France", correct: false },
+    { text: "Spain", correct: true },
+  ];
+
+  it("posts the guess and patches the saved guesses into the cached round", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound({ guesses: [] }) },
+      { method: "POST", url: /\/guesses$/, body: makeGuessesResponse({ guesses: guessesAfter }) },
+    ]);
+    const { result } = renderHook(() => ({ round: useRound("g1", 0), record: useRecordGuess("g1", 0) }), {
+      wrapper: clientWrapper(),
+    });
+    await waitFor(() => expect(result.current.round.data?.guesses).toEqual([]));
+
+    act(() => result.current.record.mutate({ text: "Spain", correct: true }));
+
+    await waitFor(() => expect(result.current.round.data?.guesses).toEqual(guessesAfter));
+    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    expect(posts).toHaveLength(1);
+    expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/guesses");
+    expect(posts[0].body).toEqual({ guess: "Spain", correct: true });
+    expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(1);
+  });
+
+  it("refetches the game when the guess is refused", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound() },
+      { method: "POST", url: /\/guesses$/, body: {}, status: 409 },
+    ]);
+    const { result } = renderHook(() => ({ round: useRound("g1", 0), record: useRecordGuess("g1", 0) }), {
+      wrapper: clientWrapper(),
+    });
+    await waitFor(() => expect(result.current.round.data).toBeDefined());
+
+    act(() => result.current.record.mutate({ text: "Spain", correct: false }));
+
+    await waitFor(() => expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(2));
+  });
+
+  it("sends a guess and the answer it led to in that order", async () => {
+    const fetchMock = mockFetch([
+      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 1 }) },
+      { method: "POST", url: /\/guesses$/, body: makeGuessesResponse() },
+      { method: "POST", url: /\/answers$/, body: makeAnswerResponse() },
+    ]);
+    const { result } = renderHook(
+      () => ({ round: useRound("g1", 0), record: useRecordGuess("g1", 0), submit: useSubmitAnswer("g1", 0, 1) }),
+      { wrapper: clientWrapper() },
+    );
+    await waitFor(() => expect(result.current.round.data).toBeDefined());
+
+    act(() => {
+      result.current.record.mutate({ text: "France", correct: true });
+      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    });
+
+    await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
+    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    expect(posts.map(c => c.url.split("/").pop())).toEqual(["guesses", "answers"]);
   });
 });
 

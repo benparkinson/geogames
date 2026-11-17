@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
+import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredForGuessException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,11 @@ public class ApiExceptionHandler {
     return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
-  @ExceptionHandler(RoundAlreadyAnsweredException.class)
-  public ProblemDetail conflict(RoundAlreadyAnsweredException e) {
+  @ExceptionHandler({
+    RoundAlreadyAnsweredException.class,
+    RoundAlreadyAnsweredForGuessException.class
+  })
+  public ProblemDetail conflict(RuntimeException e) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
   }
 

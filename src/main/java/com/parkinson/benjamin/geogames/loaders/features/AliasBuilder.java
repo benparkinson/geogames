@@ -1,10 +1,9 @@
 package com.parkinson.benjamin.geogames.loaders.features;
 
-import java.text.Normalizer;
+import com.parkinson.benjamin.geogames.helper.PlaceNames;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -17,10 +16,7 @@ public final class AliasBuilder {
 
   /** A Java copy of the frontend's {@code normaliseString}. */
   public static String normalise(String s) {
-    return Normalizer.normalize(s, Normalizer.Form.NFD)
-        .replaceAll("\\p{M}", "")
-        .toLowerCase(Locale.ROOT)
-        .replaceAll("[^a-z0-9]", "");
+    return PlaceNames.normalise(s);
   }
 
   /** The hand-written correction of a feature; the fields the alias rules read. */
