@@ -6,12 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.CountryCities;
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
@@ -27,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -70,6 +74,9 @@ public class ProcessedDataIT {
     assertUniqueAndShort("lake", loadLakes().stream().map(l -> "lake:" + l.id()).toList());
     assertUniqueAndShort(
         "country", shapeService.loadShapes().stream().map(s -> "country:" + s.name()).toList());
+    assertUniqueAndShort(
+        "cities",
+        new CityService(reader).loadAll().stream().map(c -> "country:" + c.country()).toList());
     assertUniqueAndShort(
         "pair",
         pairs(CountryPairEligibility.borders()).stream()
@@ -345,6 +352,64 @@ public class ProcessedDataIT {
   }
 
   @Test
+  public void everyCountryWithCitiesHasAShapeAndWellFormedCities() {
+    CityService cityService = new CityService(reader);
+    Set<String> shapeNames =
+        shapeService.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
+    List<CountryCities> all = cityService.loadAll();
+
+    assertEquals(
+        all.stream().map(CountryCities::country).sorted().toList(),
+        all.stream().map(CountryCities::country).toList(),
+        "countries not sorted by name");
+    for (CountryCities country : all) {
+      assertTrue(shapeNames.contains(country.country()), "no shape for " + country.country());
+      assertFalse(country.cities().isEmpty(), "no cities for " + country.country());
+      // The 40 largest, and every capital, which is at most a handful.
+      assertTrue(country.cities().size() <= 46, country.country() + " has too many cities");
+      int previous = Integer.MAX_VALUE;
+      for (City city : country.cities()) {
+        assertFalse(city.name().isBlank(), "blank city in " + country.country());
+        assertTrue(city.lon() >= -180 && city.lon() <= 180, city.name() + " longitude");
+        assertTrue(city.lat() >= -90 && city.lat() <= 90, city.name() + " latitude");
+        assertTrue(city.population() >= 0, city.name() + " population");
+        assertTrue(city.population() <= previous, country.country() + " not sorted by population");
+        previous = city.population();
+      }
+    }
+  }
+
+  // Natural Earth marks no capital for these, so Hint 1 of Country Cities would have nothing to
+  // highlight. None of them is eligible for the game today; the test says so if one becomes so.
+  private static final Set<String> NO_CAPITAL_EXCEPTIONS = Set.of();
+
+  @Test
+  public void everyEligibleCountryHasACapitalOrIsAKnownException() {
+    for (CountryCities country : new CityService(reader).loadAll()) {
+      if (CountryCitiesEligibility.countryCities().test(country)) {
+        assertTrue(
+            country.cities().stream().anyMatch(City::capital)
+                || NO_CAPITAL_EXCEPTIONS.contains(country.country()),
+            country.country() + " has no capital flagged");
+      }
+    }
+  }
+
+  @Test
+  public void enoughCountriesHaveEnoughCitiesForTheCitiesGame() {
+    Set<String> shapeNames =
+        shapeService.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
+    long eligible =
+        new CityService(reader)
+            .loadAll().stream()
+                .filter(CountryCitiesEligibility.countryCities())
+                .filter(c -> shapeNames.contains(c.country()))
+                .count();
+
+    assertTrue(eligible >= 80, "only " + eligible + " countries have enough cities");
+  }
+
+  @Test
   public void countryAreasAreRoughlyRight() {
     CountryShapeService shapes = new CountryShapeService(reader);
 
@@ -424,14 +489,12 @@ public class ProcessedDataIT {
    * of this one border are not identical. Don't add to this list without finding out why.
    */
   private static final Set<String> UNMATCHED_BORDERS =
-      Set.of(
-          "Canada and United States of America", "United States of America and Canada");
+      Set.of("Canada and United States of America", "United States of America and Canada");
 
   /** One unit in the fourth decimal place, about 10 m. */
   private static final double SAME_POINT_DEGREES = 0.00011;
 
-  private static List<double[]> borderPoints(
-      CountryShape shape, CountryShape.Neighbour neighbour) {
+  private static List<double[]> borderPoints(CountryShape shape, CountryShape.Neighbour neighbour) {
     List<?> lines = shape.landBorders().geometry().coordinates();
     List<double[]> points = new java.util.ArrayList<>();
     for (int index : neighbour.lines()) {

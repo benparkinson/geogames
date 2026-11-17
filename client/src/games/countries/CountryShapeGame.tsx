@@ -3,24 +3,22 @@ import MapGame, { type HintConfig } from "../common/MapGame";
 import { useGuessList } from "../common/useGuessList";
 import type { MapProps } from "../../map/MapProps";
 import type { GameComponentProps } from "../types";
-import type { CountryShapeRound } from "./model";
+import type { HasCountry } from "./model";
 
-/** What differs between the country-shape games; everything else is shared. */
-export interface CountryShapeVariant {
-  MapComponent: ComponentType<MapProps<CountryShapeRound>>;
+/** What differs between the games that ask for one country; everything else is shared. */
+export interface CountryShapeVariant<T extends HasCountry> {
+  MapComponent: ComponentType<MapProps<T>>;
   prompt: string;
   mapCaption: string;
-  hints: (round: CountryShapeRound) => HintConfig;
+  hints: (round: T) => HintConfig;
 }
 
-/** Builds the game component for one country-shape variant. */
-export function makeCountryShapeGame(variant: CountryShapeVariant) {
-  function CountryShapeGame({
-    data,
-    round,
-    answerCount,
-    submitAnswer,
-  }: GameComponentProps<CountryShapeRound>): React.JSX.Element {
+/**
+ * Builds the game component for one variant of a game whose answer is a country: the country-shape
+ * games, Country Cities and Country Rivers. The round data is anything with a `country`.
+ */
+export function makeCountryShapeGame<T extends HasCountry>(variant: CountryShapeVariant<T>) {
+  function CountryShapeGame({ data, round, answerCount, submitAnswer }: GameComponentProps<T>): React.JSX.Element {
     const { suggestions, isKnownGuess } = useGuessList("countries");
     return (
       <MapGame

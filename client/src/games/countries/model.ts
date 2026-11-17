@@ -47,3 +47,22 @@ export interface CountryShapeRound {
   country: CountryShape;
   neighbours: CountryOutline[];
 }
+
+/** The data of a round of any game whose answer is one country. */
+export interface HasCountry {
+  country: CountryShape;
+}
+
+/** One city, as Country Cities draws it. */
+export interface City {
+  name: string;
+  lon: number;
+  lat: number;
+  population: number;
+  capital: boolean;
+}
+
+/** The data of a round of Country Cities: the country and its largest cities, largest first. */
+export interface CountryCitiesRound extends HasCountry {
+  cities: City[];
+}

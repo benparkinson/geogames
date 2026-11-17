@@ -48,3 +48,32 @@ export function mergedShapeOptions(): PathOptions {
 export function hiddenBorderOptions(): PathOptions {
   return { color: HIDDEN_BORDER_COLOR, weight: 3, fill: false };
 }
+
+/** The smallest and largest radius, in pixels, of a city dot. */
+export const CITY_MIN_RADIUS = 3;
+export const CITY_MAX_RADIUS = 14;
+
+/**
+ * The radius of the dot for a city: the area follows the population, so the radius follows its square
+ * root, between the minimum and the maximum size. `largest` is the biggest population in the round.
+ */
+export function cityRadius(population: number, largest: number): number {
+  if (largest <= 0 || population <= 0) {
+    return CITY_MIN_RADIUS;
+  }
+  const share = Math.min(1, Math.sqrt(population / largest));
+  return CITY_MIN_RADIUS + (CITY_MAX_RADIUS - CITY_MIN_RADIUS) * share;
+}
+
+const CITY_COLOR = "#4a6fa5";
+const CAPITAL_COLOR = "#d9822b";
+
+/** Style for a city dot while playing. */
+export function cityDotOptions(): PathOptions {
+  return { color: CITY_COLOR, weight: 1, fillColor: CITY_COLOR, fillOpacity: 0.55 };
+}
+
+/** Style for the capital's dot once a hint highlights it: a different colour, opaque and outlined in white. */
+export function capitalDotOptions(): PathOptions {
+  return { color: "#ffffff", weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
+}

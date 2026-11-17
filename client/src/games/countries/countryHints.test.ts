@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { makeCountryShapeData, makeCountryShapeRoundData } from "../../test/fixtures";
 import {
   borderLengthHint,
+  capitalHint,
+  coastHint,
   countryHints,
   firstLetterHint,
   longestBorderHint,
@@ -64,5 +66,30 @@ describe("countryHints", () => {
     expect(hints.text?.(0)).toBe("A");
     expect(hints.text?.(1)).toBe("Starts with “N”");
     expect(hints.text?.(2)).toBeNull();
+  });
+});
+
+describe("coastHint", () => {
+  it("says the coastline is on the map", () => {
+    expect(coastHint(makeCountryShapeRoundData())).toBe("Its coastline is on the map");
+  });
+
+  it("says a landlocked country has none", () => {
+    const landlocked = makeCountryShapeRoundData({ country: makeCountryShapeData({ coastKm: 0 }) });
+
+    expect(coastHint(landlocked)).toBe("It has no coastline");
+  });
+});
+
+describe("capitalHint", () => {
+  const city = (name: string, capital: boolean) => ({ name, lon: 0, lat: 0, population: 1, capital });
+  const country = makeCountryShapeData();
+
+  it("says the capital is highlighted", () => {
+    expect(capitalHint({ country, cities: [city("A", true), city("B", false)] })).toBe("Its capital is highlighted");
+  });
+
+  it("says capitals when a country has more than one", () => {
+    expect(capitalHint({ country, cities: [city("A", true), city("B", true)] })).toBe("Its capitals are highlighted");
   });
 });

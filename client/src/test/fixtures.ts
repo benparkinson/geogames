@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import type { GameRoundResponse, RoundAnswerResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
-import type { CountryShape, CountryShapeRound } from "../games/countries/model";
+import type { CountryCitiesRound, CountryShape, CountryShapeRound } from "../games/countries/model";
 import type { CountryPairRound } from "../games/pairs/model";
 import type { Lake, LakeRound } from "../games/lakes/model";
 import type { River, RiverRound } from "../games/rivers/model";
@@ -136,6 +136,22 @@ export function makeCountryShapeRoundData(overrides: Partial<CountryShapeRound> 
     ],
     ...overrides,
   } as unknown as CountryShapeRound;
+}
+
+/**
+ * The data of a round of Country Cities: the Netherlands and three of its cities, largest first.
+ * The country's layers start at: outline 1,1; coast 2,2; land borders 3,3.
+ */
+export function makeCountryCitiesRoundData(overrides: Partial<CountryCitiesRound> = {}): CountryCitiesRound {
+  return {
+    country: makeCountryShapeData(),
+    cities: [
+      { name: "Amsterdam", lon: 4.9, lat: 52.37, population: 1_000_000, capital: true },
+      { name: "Rotterdam", lon: 4.48, lat: 51.92, population: 250_000, capital: false },
+      { name: "Utrecht", lon: 5.12, lat: 52.09, population: 0, capital: false },
+    ],
+    ...overrides,
+  } as CountryCitiesRound;
 }
 
 /**
@@ -288,6 +304,15 @@ export const lakeNames = [
   { name: "Lake Baikal", additionalNames: ["Baikal"] },
   { name: "Lake Victoria", additionalNames: [] as string[] },
 ];
+
+/** The server's response for a Country Cities round. */
+export function makeCountryCitiesRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryCitiesRoundData()),
+    gameType: { name: "COUNTRIES_BY_CITIES", answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
 
 /** The server's response for a round of a pair game. */
 export function makeCountryPairRound(

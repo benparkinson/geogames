@@ -20,7 +20,8 @@ class GameTypeTest {
             GameType.COUNTRIES_BY_LAND_BORDERS,
             GameType.LAKES_BY_SHAPE,
             GameType.BORDERS_BY_SHAPE,
-            GameType.MERGED_COUNTRIES);
+            GameType.MERGED_COUNTRIES,
+            GameType.COUNTRIES_BY_CITIES);
   }
 
   @Test
@@ -34,6 +35,7 @@ class GameTypeTest {
     assertThat(GameType.LAKES_BY_SHAPE.answerCount()).isEqualTo(1);
     assertThat(GameType.BORDERS_BY_SHAPE.answerCount()).isEqualTo(2);
     assertThat(GameType.MERGED_COUNTRIES.answerCount()).isEqualTo(2);
+    assertThat(GameType.COUNTRIES_BY_CITIES.answerCount()).isEqualTo(1);
   }
 
   @ParameterizedTest
@@ -46,7 +48,8 @@ class GameTypeTest {
     "COUNTRIES_BY_LAND_BORDERS, 3",
     "LAKES_BY_SHAPE, 3",
     "BORDERS_BY_SHAPE, 3",
-    "MERGED_COUNTRIES, 3"
+    "MERGED_COUNTRIES, 3",
+    "COUNTRIES_BY_CITIES, 3"
   })
   void hintCounts(GameType type, int hintCount) {
     assertThat(type.hintCount()).isEqualTo(hintCount);
@@ -77,6 +80,7 @@ class GameTypeTest {
     assertThat(GameType.LAKES_BY_SHAPE.name()).isEqualTo("LAKES_BY_SHAPE");
     assertThat(GameType.BORDERS_BY_SHAPE.name()).isEqualTo("BORDERS_BY_SHAPE");
     assertThat(GameType.MERGED_COUNTRIES.name()).isEqualTo("MERGED_COUNTRIES");
+    assertThat(GameType.COUNTRIES_BY_CITIES.name()).isEqualTo("COUNTRIES_BY_CITIES");
   }
 
   @Test

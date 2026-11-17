@@ -13,7 +13,8 @@ public enum GameType {
   COUNTRIES_BY_LAND_BORDERS(1, 3, 5),
   LAKES_BY_SHAPE(1, 3, 5),
   BORDERS_BY_SHAPE(2, 3, 5),
-  MERGED_COUNTRIES(2, 3, 5);
+  MERGED_COUNTRIES(2, 3, 5),
+  COUNTRIES_BY_CITIES(1, 3, 5);
 
   private final int answerCount;
   private final int hintCount;

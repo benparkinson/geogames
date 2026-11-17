@@ -56,6 +56,7 @@ class RoundRebuildIT {
           case RIVERS_BY_SHAPE, RIVERS_BY_COUNTRIES -> rivers.loadRivers().size();
           case COUNTRIES_BY_NEIGHBOURS, COUNTRIES_BY_COASTLINE, COUNTRIES_BY_LAND_BORDERS ->
               shapes.loadShapes().size();
+          case COUNTRIES_BY_CITIES -> shapes.loadShapes().size();
           case BORDERS_BY_SHAPE, MERGED_COUNTRIES ->
               shapes.loadShapes().stream().mapToInt(s -> s.neighbours().size()).sum() / 2;
         };

@@ -32,6 +32,19 @@ for dir in countries country-shapes rivers lakes; do
   fi
 done
 
+# Single files, not directories.
+for file in cities.json; do
+  committed="src/main/resources/processed/$file"
+  regenerated="target/regen/$file"
+  if diff -q --strip-trailing-cr "$committed" "$regenerated" > /dev/null 2>&1; then
+    echo "OK    processed/$file is up to date"
+  else
+    echo "STALE processed/$file differs from what the loader produces (or is missing):"
+    diff -q --strip-trailing-cr "$committed" "$regenerated" || true
+    status=1
+  fi
+done
+
 if [ "$status" -ne 0 ]; then
   echo
   echo "If the change to geodata/ was intended, regenerate the data (see src/main/java/com/parkinson/benjamin/geogames/loaders/CLAUDE.md) and commit it."

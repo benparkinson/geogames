@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { makeCountryPairRoundData, makeCountryShapeRoundData, makeLakeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
+import { makeCountryCitiesRoundData, makeCountryPairRoundData, makeCountryShapeRoundData, makeLakeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "COUNTRIES_BY_CITIES", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
   });
 
   it("has a unique type per module", () => {
@@ -34,6 +34,12 @@ describe("GAME_MODULES", () => {
   });
 });
 
+describe("Country Cities", () => {
+  it("lists the name of the country", () => {
+    expect(findGameModule("COUNTRIES_BY_CITIES")?.answerNames(makeCountryCitiesRoundData())).toEqual(["Netherlands"]);
+  });
+});
+
 describe("pair games", () => {
   it("lists both countries, in name order", () => {
     expect(findGameModule("BORDERS_BY_SHAPE")?.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
@@ -60,7 +66,7 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers the standard games, then a mix of every game, then the extra difficult games", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RANDOM", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "COUNTRIES_BY_CITIES", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RANDOM", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
     expect(MENU_OPTIONS).toContain(RANDOM_OPTION);
   });
 
