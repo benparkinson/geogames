@@ -5,7 +5,6 @@ import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.CountryShapeRoundGenerator;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
-import java.util.Random;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,34 +18,22 @@ import org.springframework.context.annotation.Configuration;
 public class CountryGamesConfig {
 
   @Bean
-  RoundGenerator countriesByNeighbours(CountryShapeService shapes, Random random) {
+  RoundGenerator countriesByNeighbours(CountryShapeService shapes) {
     return new CountryShapeRoundGenerator(
-        GameType.COUNTRIES_BY_NEIGHBOURS,
-        shapes,
-        random,
-        CountryShapeEligibility.neighbours(),
-        true);
+        GameType.COUNTRIES_BY_NEIGHBOURS, shapes, CountryShapeEligibility.neighbours(), true);
   }
 
   /** The coastline alone: countries with a long coast and some land border to hide. */
   @Bean
-  RoundGenerator countriesByCoastline(CountryShapeService shapes, Random random) {
+  RoundGenerator countriesByCoastline(CountryShapeService shapes) {
     return new CountryShapeRoundGenerator(
-        GameType.COUNTRIES_BY_COASTLINE,
-        shapes,
-        random,
-        CountryShapeEligibility.coastline(),
-        false);
+        GameType.COUNTRIES_BY_COASTLINE, shapes, CountryShapeEligibility.coastline(), false);
   }
 
   /** The land borders alone: countries with a long border and a coast to hide. */
   @Bean
-  RoundGenerator countriesByLandBorders(CountryShapeService shapes, Random random) {
+  RoundGenerator countriesByLandBorders(CountryShapeService shapes) {
     return new CountryShapeRoundGenerator(
-        GameType.COUNTRIES_BY_LAND_BORDERS,
-        shapes,
-        random,
-        CountryShapeEligibility.landBorders(),
-        true);
+        GameType.COUNTRIES_BY_LAND_BORDERS, shapes, CountryShapeEligibility.landBorders(), true);
   }
 }

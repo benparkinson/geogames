@@ -49,18 +49,18 @@ class RiverGamesConfigTest {
 
   private static List<String> eligibleIds(RoundGenerator generator, int expected) {
     List<String> ids =
-        generator.generate(expected, Set.of()).stream()
+        generator.generate(expected, Set.of(), new Random(7)).stream()
             .map(round -> ((RiverRound) round).river().id())
             .toList();
     // Asking for one more than is eligible must fail, so the list above is the whole set.
-    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of()))
+    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of(), new Random(7)))
         .isInstanceOf(IllegalArgumentException.class);
     return ids;
   }
 
   @Test
   void riversByShapeAcceptsEveryRiver() {
-    RoundGenerator generator = config.riversByShape(rivers, random);
+    RoundGenerator generator = config.riversByShape(rivers);
 
     assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
     assertThat(eligibleIds(generator, 5)).containsExactlyInAnyOrder("A", "B", "C", "D", "E");
@@ -68,11 +68,11 @@ class RiverGamesConfigTest {
 
   @Test
   void riversByCountriesNeedsThreeOrMoreCountriesAndAttachesThem() {
-    RoundGenerator generator = config.riversByCountries(rivers, countries, random);
+    RoundGenerator generator = config.riversByCountries(rivers, countries);
 
     assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_COUNTRIES);
     assertThat(eligibleIds(generator, 2)).containsExactlyInAnyOrder("B", "C");
-    assertThat(generator.generate(2, Set.of()))
+    assertThat(generator.generate(2, Set.of(), random))
         .allSatisfy(
             round ->
                 assertThat(((RiverRound) round).countries())
@@ -82,7 +82,7 @@ class RiverGamesConfigTest {
 
   @Test
   void riversByShapeAttachesNoCountries() {
-    assertThat(config.riversByShape(rivers, random).generate(5, Set.of()))
+    assertThat(config.riversByShape(rivers).generate(5, Set.of(), random))
         .allSatisfy(round -> assertThat(((RiverRound) round).countries()).isEmpty());
   }
 }

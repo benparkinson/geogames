@@ -25,13 +25,10 @@ public class CountryRiversRoundGenerator implements RoundGenerator {
 
   private final CountryRiversService rivers;
   private final CountryShapeService shapes;
-  private final Random random;
 
-  public CountryRiversRoundGenerator(
-      CountryRiversService rivers, CountryShapeService shapes, Random random) {
+  public CountryRiversRoundGenerator(CountryRiversService rivers, CountryShapeService shapes) {
     this.rivers = rivers;
     this.shapes = shapes;
-    this.random = random;
   }
 
   @Override
@@ -40,7 +37,7 @@ public class CountryRiversRoundGenerator implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     Set<String> withShape =
         shapes.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
     List<CountryRiversIndexEntry> candidates =

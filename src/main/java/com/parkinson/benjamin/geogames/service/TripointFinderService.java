@@ -20,15 +20,11 @@ public class TripointFinderService implements RoundGenerator {
 
   private final TripointLoaderService tripointLoaderService;
   private final CountryShapeService countryShapeService;
-  private final Random random;
 
   public TripointFinderService(
-      TripointLoaderService tripointLoaderService,
-      CountryShapeService countryShapeService,
-      Random random) {
+      TripointLoaderService tripointLoaderService, CountryShapeService countryShapeService) {
     this.tripointLoaderService = tripointLoaderService;
     this.countryShapeService = countryShapeService;
-    this.random = random;
   }
 
   @Override
@@ -37,7 +33,7 @@ public class TripointFinderService implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     // Seven country triples have two tripoints: pick distinct subjects, not distinct definitions,
     // so
     // a game never asks for the same three countries twice.

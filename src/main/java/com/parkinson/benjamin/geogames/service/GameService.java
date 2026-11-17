@@ -94,7 +94,7 @@ public class GameService {
     List<GameData> gameData =
         selection.isRandom()
             ? generateMixedRounds(numberOfRounds)
-            : generators.get(selection.type()).generate(numberOfRounds, Set.of());
+            : generators.get(selection.type()).generate(numberOfRounds, Set.of(), random);
 
     GameEntity saved =
         gameRepository.save(
@@ -117,7 +117,7 @@ public class GameService {
     Set<String> used = new HashSet<>();
     roundsPerType.forEach(
         (type, count) -> {
-          List<GameData> generated = generators.get(type).generate(count, Set.copyOf(used));
+          List<GameData> generated = generators.get(type).generate(count, Set.copyOf(used), random);
           generated.forEach(data -> used.add(data.subjectId()));
           allGameData.addAll(generated);
         });

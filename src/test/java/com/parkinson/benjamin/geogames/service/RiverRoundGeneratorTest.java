@@ -23,6 +23,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class RiverRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private final List<River> rivers =
       IntStream.range(0, 6)
           .mapToObj(
@@ -37,8 +39,7 @@ class RiverRoundGeneratorTest {
 
   private RiverRoundGenerator generator(
       Predicate<River> eligible, Function<River, List<Country>> countries) {
-    return new RiverRoundGenerator(
-        GameType.RIVERS_BY_SHAPE, loader, new Random(3), eligible, countries);
+    return new RiverRoundGenerator(GameType.RIVERS_BY_SHAPE, loader, eligible, countries);
   }
 
   private RiverRoundGenerator generator() {
@@ -48,11 +49,10 @@ class RiverRoundGeneratorTest {
   @Test
   void generatesRoundsOfTheGivenType() {
     RiverRoundGenerator onMap =
-        new RiverRoundGenerator(
-            GameType.RIVERS_BY_SHAPE, loader, new Random(3), r -> true, r -> List.of());
+        new RiverRoundGenerator(GameType.RIVERS_BY_SHAPE, loader, r -> true, r -> List.of());
 
     assertThat(onMap.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
-    assertThat(onMap.generate(1, Set.of()))
+    assertThat(onMap.generate(1, Set.of(), random))
         .singleElement()
         .isInstanceOfSatisfying(
             RiverRound.class,
@@ -61,7 +61,7 @@ class RiverRoundGeneratorTest {
 
   @Test
   void returnsDistinctRiversFromTheInput() {
-    List<GameData> result = generator().generate(3, Set.of());
+    List<GameData> result = generator().generate(3, Set.of(), random);
 
     assertThat(result).hasSize(3).doesNotHaveDuplicates();
     assertThat(result.stream().map(d -> ((RiverRound) d).river())).isSubsetOf(rivers);
@@ -69,19 +69,19 @@ class RiverRoundGeneratorTest {
 
   @Test
   void returnsEveryRiverWhenAskedForAll() {
-    assertThat(generator().generate(rivers.size(), Set.of()))
+    assertThat(generator().generate(rivers.size(), Set.of(), random))
         .extracting(GameData::subjectId)
         .containsExactlyInAnyOrderElementsOf(rivers.stream().map(r -> "river:" + r.id()).toList());
   }
 
   @Test
   void returnsNothingWhenAskedForZero() {
-    assertThat(generator().generate(0, Set.of())).isEmpty();
+    assertThat(generator().generate(0, Set.of(), random)).isEmpty();
   }
 
   @Test
   void rejectsMoreRiversThanAreKnown() {
-    assertThatThrownBy(() -> generator().generate(7, Set.of()))
+    assertThatThrownBy(() -> generator().generate(7, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("7")
         .hasMessageContaining("6");
@@ -92,10 +92,10 @@ class RiverRoundGeneratorTest {
     RiverRoundGenerator evens =
         generator(river -> Integer.parseInt(river.id().substring(1)) % 2 == 0, r -> List.of());
 
-    assertThat(evens.generate(3, Set.of()))
+    assertThat(evens.generate(3, Set.of(), random))
         .extracting(GameData::subjectId)
         .containsExactlyInAnyOrder("river:Q0", "river:Q2", "river:Q4");
-    assertThatThrownBy(() -> evens.generate(4, Set.of()))
+    assertThatThrownBy(() -> evens.generate(4, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -103,10 +103,10 @@ class RiverRoundGeneratorTest {
   void skipsExcludedSubjects() {
     Set<String> excluded = Set.of("river:Q0", "river:Q1", "river:Q2");
 
-    assertThat(generator().generate(3, excluded))
+    assertThat(generator().generate(3, excluded, random))
         .extracting(GameData::subjectId)
         .containsExactlyInAnyOrder("river:Q3", "river:Q4", "river:Q5");
-    assertThatThrownBy(() -> generator().generate(4, excluded))
+    assertThatThrownBy(() -> generator().generate(4, excluded, random))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -116,7 +116,7 @@ class RiverRoundGeneratorTest {
     Country spain = new Country("Spain", List.of(), null);
     RiverRoundGenerator withCountries = generator(river -> true, river -> List.of(spain, france));
 
-    RiverRound round = (RiverRound) withCountries.generate(1, Set.of()).get(0);
+    RiverRound round = (RiverRound) withCountries.generate(1, Set.of(), random).get(0);
 
     assertThat(round.countries()).containsExactly(spain, france);
   }
@@ -127,7 +127,7 @@ class RiverRoundGeneratorTest {
     RiverRoundGenerator generator = generator(river -> true, river -> List.of(spain));
     ObjectMapper mapper = JsonMapper.builder().build();
 
-    for (GameData round : generator.generate(rivers.size(), Set.of())) {
+    for (GameData round : generator.generate(rivers.size(), Set.of(), random)) {
       GameData rebuilt = generator.rebuild(round.roundKey());
 
       assertThat(rebuilt).isEqualTo(round);

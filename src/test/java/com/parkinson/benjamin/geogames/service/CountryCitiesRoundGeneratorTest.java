@@ -26,6 +26,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class CountryCitiesRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private final CityService cities = mock(CityService.class);
   private final CountryShapeService shapes = mock(CountryShapeService.class);
 
@@ -74,7 +76,7 @@ class CountryCitiesRoundGeneratorTest {
   }
 
   private CountryCitiesRoundGenerator generator() {
-    return new CountryCitiesRoundGenerator(cities, shapes, new Random(3));
+    return new CountryCitiesRoundGenerator(cities, shapes);
   }
 
   @Test
@@ -82,20 +84,20 @@ class CountryCitiesRoundGeneratorTest {
     CountryCitiesRoundGenerator generator = generator();
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_CITIES);
-    List<GameData> rounds = generator.generate(2, Set.of());
+    List<GameData> rounds = generator.generate(2, Set.of(), random);
     assertThat(rounds)
         .extracting(r -> ((CountryCitiesRound) r).country().name())
         .containsExactlyInAnyOrder("A", "B");
     assertThat(rounds)
         .allSatisfy(r -> assertThat(r.gameType()).isSameAs(GameType.COUNTRIES_BY_CITIES));
-    assertThatThrownBy(() -> generator.generate(3, Set.of()))
+    assertThatThrownBy(() -> generator.generate(3, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("countries");
   }
 
   @Test
   void skipsExcludedSubjects() {
-    List<GameData> rounds = generator().generate(1, Set.of("country:A"));
+    List<GameData> rounds = generator().generate(1, Set.of("country:A"), random);
 
     assertThat(rounds).extracting(GameData::subjectId).containsExactly("country:B");
   }
@@ -103,7 +105,7 @@ class CountryCitiesRoundGeneratorTest {
   @Test
   void usesTheCountrySubjectIdSoAMixedGameNeverAsksAboutACountryTwice() {
     CountryCitiesRound round =
-        (CountryCitiesRound) generator().generate(1, Set.of("country:B")).get(0);
+        (CountryCitiesRound) generator().generate(1, Set.of("country:B"), random).get(0);
 
     assertThat(round.subjectId()).isEqualTo("country:A");
     assertThat(round.roundKey()).isEqualTo("country:A");
@@ -116,7 +118,7 @@ class CountryCitiesRoundGeneratorTest {
     ObjectMapper mapper = JsonMapper.builder().build();
     CountryCitiesRoundGenerator generator = generator();
 
-    for (GameData round : generator.generate(2, Set.of())) {
+    for (GameData round : generator.generate(2, Set.of(), random)) {
       GameData rebuilt = generator.rebuild(round.roundKey());
 
       assertThat(rebuilt).isEqualTo(round);

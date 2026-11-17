@@ -5,7 +5,6 @@ import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.CountryPairRoundGenerator;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
-import java.util.Random;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,15 +18,15 @@ public class CountryPairGamesConfig {
 
   /** The border between two countries as a lone line. */
   @Bean
-  RoundGenerator bordersByShape(CountryShapeService shapes, Random random) {
+  RoundGenerator bordersByShape(CountryShapeService shapes) {
     return new CountryPairRoundGenerator(
-        GameType.BORDERS_BY_SHAPE, shapes, random, CountryPairEligibility.borderShapes(), false);
+        GameType.BORDERS_BY_SHAPE, shapes, CountryPairEligibility.borderShapes(), false);
   }
 
   /** Two neighbours filled as one shape, with the countries around them for a hint. */
   @Bean
-  RoundGenerator mergedCountries(CountryShapeService shapes, Random random) {
+  RoundGenerator mergedCountries(CountryShapeService shapes) {
     return new CountryPairRoundGenerator(
-        GameType.MERGED_COUNTRIES, shapes, random, CountryPairEligibility.mergedCountries(), true);
+        GameType.MERGED_COUNTRIES, shapes, CountryPairEligibility.mergedCountries(), true);
   }
 }

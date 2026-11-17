@@ -27,6 +27,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class CountryPairRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private static final BiPredicate<CountryShape, CountryShape> BORDERING =
       CountryPairEligibility.borders();
 
@@ -97,7 +99,7 @@ class CountryPairRoundGeneratorTest {
   private CountryPairRoundGenerator generator(
       BiPredicate<CountryShape, CountryShape> eligible, boolean withNeighbours) {
     return new CountryPairRoundGenerator(
-        GameType.MERGED_COUNTRIES, shapes, new Random(3), eligible, withNeighbours);
+        GameType.MERGED_COUNTRIES, shapes, eligible, withNeighbours);
   }
 
   private static CountryPairRound pair(CountryPairRoundGenerator generator, String key) {
@@ -106,7 +108,7 @@ class CountryPairRoundGeneratorTest {
 
   @Test
   void listsEveryEligiblePairOnceWithTheCountriesInNameOrder() {
-    List<GameData> rounds = generator(BORDERING, false).generate(3, Set.of());
+    List<GameData> rounds = generator(BORDERING, false).generate(3, Set.of(), random);
 
     // Of the six name pairs only A|B, A|C and B|D border each other.
     assertThat(rounds)
@@ -125,7 +127,7 @@ class CountryPairRoundGeneratorTest {
   void onlyPicksEligiblePairsThatAreNotExcluded() {
     List<GameData> rounds =
         generator(BORDERING.and((x, y) -> x.name().equals("A")), false)
-            .generate(1, Set.of("pair:A|B"));
+            .generate(1, Set.of("pair:A|B"), random);
 
     assertThat(rounds).extracting(GameData::subjectId).containsExactly("pair:A|C");
   }
@@ -135,7 +137,7 @@ class CountryPairRoundGeneratorTest {
     assertThatThrownBy(
             () ->
                 generator(BORDERING.and((x, y) -> x.name().equals("A")), false)
-                    .generate(3, Set.of()))
+                    .generate(3, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("country pairs");
   }
@@ -196,7 +198,7 @@ class CountryPairRoundGeneratorTest {
     for (boolean withNeighbours : new boolean[] {true, false}) {
       CountryPairRoundGenerator generator = generator(BORDERING, withNeighbours);
 
-      for (GameData round : generator.generate(3, Set.of())) {
+      for (GameData round : generator.generate(3, Set.of(), random)) {
         GameData rebuilt = generator.rebuild(round.roundKey());
 
         assertThat(rebuilt).isEqualTo(round);

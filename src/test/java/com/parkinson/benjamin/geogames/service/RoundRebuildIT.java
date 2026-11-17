@@ -62,7 +62,7 @@ class RoundRebuildIT {
         };
     for (int count = candidates; count > 0; count--) {
       try {
-        return generator.generate(count, Set.of());
+        return generator.generate(count, Set.of(), new java.util.Random(1));
       } catch (IllegalArgumentException tooFewCandidates) {
         // Some candidates aren't eligible for this game type: ask for fewer.
       }

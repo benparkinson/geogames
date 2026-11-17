@@ -36,19 +36,16 @@ public class CountryPairRoundGenerator implements RoundGenerator {
 
   private final GameType gameType;
   private final CountryShapeService shapes;
-  private final Random random;
   private final BiPredicate<CountryShape, CountryShape> eligible;
   private final boolean withNeighbours;
 
   public CountryPairRoundGenerator(
       GameType gameType,
       CountryShapeService shapes,
-      Random random,
       BiPredicate<CountryShape, CountryShape> eligible,
       boolean withNeighbours) {
     this.gameType = gameType;
     this.shapes = shapes;
-    this.random = random;
     this.eligible = eligible;
     this.withNeighbours = withNeighbours;
   }
@@ -59,7 +56,7 @@ public class CountryPairRoundGenerator implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     List<Pair> candidates = new ArrayList<>();
     List<CountryShape> all = shapes.loadShapes();
     for (CountryShape first : all) {

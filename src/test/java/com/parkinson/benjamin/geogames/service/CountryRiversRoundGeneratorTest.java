@@ -28,6 +28,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class CountryRiversRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private final CountryRiversService rivers = mock(CountryRiversService.class);
   private final CountryShapeService shapes = mock(CountryShapeService.class);
 
@@ -82,7 +84,7 @@ class CountryRiversRoundGeneratorTest {
   }
 
   private CountryRiversRoundGenerator generator() {
-    return new CountryRiversRoundGenerator(rivers, shapes, new Random(3));
+    return new CountryRiversRoundGenerator(rivers, shapes);
   }
 
   @Test
@@ -90,20 +92,20 @@ class CountryRiversRoundGeneratorTest {
     CountryRiversRoundGenerator generator = generator();
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_RIVERS);
-    List<GameData> rounds = generator.generate(2, Set.of());
+    List<GameData> rounds = generator.generate(2, Set.of(), random);
     assertThat(rounds)
         .extracting(r -> ((CountryRiversRound) r).country().name())
         .containsExactlyInAnyOrder("A", "B");
     assertThat(rounds)
         .allSatisfy(r -> assertThat(r.gameType()).isSameAs(GameType.COUNTRIES_BY_RIVERS));
-    assertThatThrownBy(() -> generator.generate(3, Set.of()))
+    assertThatThrownBy(() -> generator.generate(3, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("countries");
   }
 
   @Test
   void readsNoGeometryUntilACountryIsPicked() {
-    generator().generate(1, Set.of("country:A"));
+    generator().generate(1, Set.of("country:A"), random);
 
     verify(rivers).load("B");
     verify(rivers, never()).load("A");
@@ -114,7 +116,7 @@ class CountryRiversRoundGeneratorTest {
 
   @Test
   void skipsExcludedSubjects() {
-    List<GameData> rounds = generator().generate(1, Set.of("country:A"));
+    List<GameData> rounds = generator().generate(1, Set.of("country:A"), random);
 
     assertThat(rounds).extracting(GameData::subjectId).containsExactly("country:B");
   }
@@ -122,7 +124,7 @@ class CountryRiversRoundGeneratorTest {
   @Test
   void carriesTheCountrysShapeAndItsFilesGeometry() {
     CountryRiversRound round =
-        (CountryRiversRound) generator().generate(1, Set.of("country:A")).get(0);
+        (CountryRiversRound) generator().generate(1, Set.of("country:A"), random).get(0);
 
     assertThat(round.subjectId()).isEqualTo("country:B");
     assertThat(round.roundKey()).isEqualTo("country:B");
@@ -137,7 +139,7 @@ class CountryRiversRoundGeneratorTest {
     ObjectMapper mapper = JsonMapper.builder().build();
     CountryRiversRoundGenerator generator = generator();
 
-    for (GameData round : generator.generate(2, Set.of())) {
+    for (GameData round : generator.generate(2, Set.of(), random)) {
       GameData rebuilt = generator.rebuild(round.roundKey());
 
       assertThat(rebuilt).isEqualTo(round);

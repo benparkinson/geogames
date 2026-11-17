@@ -68,29 +68,31 @@ class CountryPairGamesConfigTest {
 
   private static List<String> subjects(RoundGenerator generator, int expected) {
     List<String> subjects =
-        generator.generate(expected, Set.of()).stream().map(r -> r.subjectId()).toList();
-    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of()))
+        generator.generate(expected, Set.of(), new Random(7)).stream()
+            .map(r -> r.subjectId())
+            .toList();
+    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of(), new Random(7)))
         .isInstanceOf(IllegalArgumentException.class);
     return subjects;
   }
 
   @Test
   void bordersByShapeNeedsALongBorderAndShowsNoNeighbours() {
-    RoundGenerator generator = config.bordersByShape(shapes, random);
+    RoundGenerator generator = config.bordersByShape(shapes);
 
     assertThat(generator.gameType()).isSameAs(GameType.BORDERS_BY_SHAPE);
     assertThat(subjects(generator, 2)).containsExactlyInAnyOrder("pair:A|B", "pair:A|C");
-    assertThat(generator.generate(2, Set.of()))
+    assertThat(generator.generate(2, Set.of(), random))
         .allSatisfy(round -> assertThat(((CountryPairRound) round).neighbours()).isEmpty());
   }
 
   @Test
   void mergedCountriesAlsoNeedSimilarSizesAndShowTheSurroundings() {
-    RoundGenerator generator = config.mergedCountries(shapes, random);
+    RoundGenerator generator = config.mergedCountries(shapes);
 
     assertThat(generator.gameType()).isSameAs(GameType.MERGED_COUNTRIES);
     assertThat(subjects(generator, 1)).containsExactly("pair:A|B");
-    assertThat(generator.generate(1, Set.of()))
+    assertThat(generator.generate(1, Set.of(), random))
         .singleElement()
         .satisfies(round -> assertThat(((CountryPairRound) round).neighbours()).hasSize(2));
   }

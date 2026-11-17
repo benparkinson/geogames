@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -84,7 +85,7 @@ class GameServiceTest {
     gameRepository = mock(GameRepository.class);
     for (GameType type : GameType.values()) {
       RoundGenerator generator = generatorFor(type);
-      when(generator.generate(anyInt(), any()))
+      when(generator.generate(anyInt(), any(), any()))
           .thenAnswer(invocation -> roundsOf(type, invocation.getArgument(0)));
       generators.put(type, generator);
     }
@@ -234,7 +235,7 @@ class GameServiceTest {
   @ParameterizedTest
   @ValueSource(ints = {1, 10})
   void acceptsBoundaryRoundCounts(int rounds) {
-    when(tripointGenerator.generate(rounds, Set.of())).thenReturn(tripoints(rounds));
+    when(tripointGenerator.generate(eq(rounds), eq(Set.of()), any())).thenReturn(tripoints(rounds));
 
     assertThat(service.createGame("TRIPOINT", rounds)).isNotNull();
     assertThat(savedGame().getRounds()).hasSize(rounds);
@@ -257,13 +258,13 @@ class GameServiceTest {
 
   @Test
   void createsTripointRounds() {
-    when(tripointGenerator.generate(3, Set.of())).thenReturn(tripoints(3));
+    when(tripointGenerator.generate(eq(3), eq(Set.of()), any())).thenReturn(tripoints(3));
 
     GameCreationResponse response = service.createGame("TRIPOINT", 3);
 
     assertThat(response).isEqualTo(new GameCreationResponse(savedGame().getPublicId()));
-    verify(tripointGenerator, times(1)).generate(3, Set.of());
-    verify(riverGenerator, never()).generate(anyInt(), any());
+    verify(tripointGenerator, times(1)).generate(eq(3), eq(Set.of()), any());
+    verify(riverGenerator, never()).generate(anyInt(), any(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(3);
@@ -319,12 +320,12 @@ class GameServiceTest {
 
   @Test
   void createsRiverRounds() {
-    when(riverGenerator.generate(2, Set.of())).thenReturn(rivers(2));
+    when(riverGenerator.generate(eq(2), eq(Set.of()), any())).thenReturn(rivers(2));
 
     service.createGame("RIVERS_BY_SHAPE", 2);
 
-    verify(riverGenerator).generate(2, Set.of());
-    verify(tripointGenerator, never()).generate(anyInt(), any());
+    verify(riverGenerator).generate(eq(2), eq(Set.of()), any());
+    verify(tripointGenerator, never()).generate(anyInt(), any(), any());
 
     List<GameRoundEntity> rounds = savedGame().getRounds();
     assertThat(rounds).hasSize(2);
@@ -361,7 +362,7 @@ class GameServiceTest {
     Map<GameType, Integer> requested = new EnumMap<>(GameType.class);
     for (GameType type : GameType.values()) {
       ArgumentCaptor<Integer> count = ArgumentCaptor.forClass(Integer.class);
-      verify(generators.get(type), atMost(1)).generate(count.capture(), any());
+      verify(generators.get(type), atMost(1)).generate(count.capture(), any(), any());
       requested.put(type, count.getAllValues().stream().mapToInt(Integer::intValue).sum());
     }
     assertThat(requested.values().stream().mapToInt(Integer::intValue).sum()).isEqualTo(total);
@@ -398,7 +399,7 @@ class GameServiceTest {
 
   @Test
   void notEnoughDataForARequestedTypeIsABadRequestAndNothingIsSaved() {
-    when(tripointGenerator.generate(3, Set.of()))
+    when(tripointGenerator.generate(eq(3), eq(Set.of()), any()))
         .thenThrow(
             new IllegalArgumentException("Can't give you 3 tripoints, I only know about 2!"));
 
@@ -435,7 +436,7 @@ class GameServiceTest {
     // Generators are called in GameType order, and each must be told every earlier subject.
     Set<String> returnedSoFar = new HashSet<>();
     for (GameType type : GameType.values()) {
-      when(generators.get(type).generate(anyInt(), any()))
+      when(generators.get(type).generate(anyInt(), any(), any()))
           .thenAnswer(
               invocation -> {
                 Set<String> excluded = invocation.getArgument(1);
