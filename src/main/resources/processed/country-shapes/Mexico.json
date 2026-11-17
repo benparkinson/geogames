@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 15569.0,
   "landBorderKm" : 3690.0,
+  "areaKm2" : 1956544,
   "neighbours" : [ {
     "name" : "United States of America",
     "km" : 2640.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Guatemala",
     "km" : 896.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Belize",
     "km" : 154.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -117.12512148897225,

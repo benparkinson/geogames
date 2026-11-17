@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 3757.0,
+  "areaKm2" : 580515,
   "neighbours" : [ {
     "name" : "South Africa",
     "km" : 1617.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Namibia",
     "km" : 1367.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Zimbabwe",
     "km" : 773.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 19.978345988000115,

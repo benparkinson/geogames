@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 1293.0,
   "landBorderKm" : 261.0,
+  "areaKm2" : 48430,
   "neighbours" : [ {
     "name" : "Haiti",
     "km" : 261.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -72.0098376059999,

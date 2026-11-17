@@ -3,14 +3,17 @@
   "additionalNames" : [ "eSwatini" ],
   "coastKm" : 0.0,
   "landBorderKm" : 537.0,
+  "areaKm2" : 17143,
   "neighbours" : [ {
     "name" : "South Africa",
     "km" : 429.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Mozambique",
     "km" : 109.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 30.782906128000093,

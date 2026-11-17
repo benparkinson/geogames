@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 227.0,
   "landBorderKm" : 390.0,
+  "areaKm2" : 10003,
   "neighbours" : [ {
     "name" : "Syria",
     "km" : 292.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Israel",
     "km" : 98.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 35.09961998800014,

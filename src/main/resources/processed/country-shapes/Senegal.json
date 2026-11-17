@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 1256.0,
   "landBorderKm" : 2492.0,
+  "areaKm2" : 196943,
   "neighbours" : [ {
     "name" : "Gambia",
     "km" : 731.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Mauritania",
     "km" : 722.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Mali",
     "km" : 402.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Guinea Bissau",
     "km" : 337.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Guinea",
     "km" : 300.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : -17.536040818999936,

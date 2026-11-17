@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 405.0,
   "landBorderKm" : 1526.0,
+  "areaKm2" : 109194,
   "neighbours" : [ {
     "name" : "Mexico",
     "km" : 896.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Belize",
     "km" : 250.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Honduras",
     "km" : 223.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "El Salvador",
     "km" : 157.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -92.24623383208248,

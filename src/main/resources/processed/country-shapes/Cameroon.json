@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 789.0,
   "landBorderKm" : 4309.0,
+  "areaKm2" : 466331,
   "neighbours" : [ {
     "name" : "Nigeria",
     "km" : 1589.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Chad",
     "km" : 1026.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Central African Republic",
     "km" : 791.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Republic of Congo",
     "km" : 472.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Gabon",
     "km" : 251.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Equatorial Guinea",
     "km" : 180.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 8.505056186000047,

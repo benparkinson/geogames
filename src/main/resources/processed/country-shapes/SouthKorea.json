@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 4860.0,
   "landBorderKm" : 204.0,
+  "areaKm2" : 93694,
   "neighbours" : [ {
     "name" : "North Korea",
     "km" : 204.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 126.12818444100006,

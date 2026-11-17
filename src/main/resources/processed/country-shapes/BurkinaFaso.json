@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 3277.0,
+  "areaKm2" : 273827,
   "neighbours" : [ {
     "name" : "Mali",
     "km" : 1214.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Niger",
     "km" : 601.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Ghana",
     "km" : 538.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Ivory Coast",
     "km" : 511.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Benin",
     "km" : 285.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Togo",
     "km" : 129.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -5.522578084999879,

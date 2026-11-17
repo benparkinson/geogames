@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 3453.0,
   "landBorderKm" : 369.0,
+  "areaKm2" : 68893,
   "neighbours" : [ {
     "name" : "United Kingdom",
     "km" : 369.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -10.478179490999878,

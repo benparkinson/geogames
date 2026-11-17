@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 5270.0,
   "landBorderKm" : 2332.0,
+  "areaKm2" : 195828,
   "neighbours" : [ {
     "name" : "Indonesia",
     "km" : 1497.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "Thailand",
     "km" : 434.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 1 ]
   }, {
     "name" : "Brunei",
     "km" : 400.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3, 4 ]
   } ],
   "focus" : {
     "west" : 109.52843550600019,

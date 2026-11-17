@@ -3,26 +3,32 @@
   "additionalNames" : [ "Lao PDR", "LPDR" ],
   "coastKm" : 0.0,
   "landBorderKm" : 4396.0,
+  "areaKm2" : 228827,
   "neighbours" : [ {
     "name" : "Vietnam",
     "km" : 1752.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Thailand",
     "km" : 1619.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Cambodia",
     "km" : 433.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "China",
     "km" : 362.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Myanmar",
     "km" : 229.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 100.0970732020001,

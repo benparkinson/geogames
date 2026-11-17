@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 2290.0,
   "landBorderKm" : 1517.0,
+  "areaKm2" : 309680,
   "neighbours" : [ {
     "name" : "Saudi Arabia",
     "km" : 658.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "United Arab Emirates",
     "km" : 568.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2, 3, 4, 5 ]
   }, {
     "name" : "Yemen",
     "km" : 291.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 51.97861495000021,

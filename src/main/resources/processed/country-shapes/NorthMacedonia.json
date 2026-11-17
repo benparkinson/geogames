@@ -3,26 +3,32 @@
   "additionalNames" : [ "Macedonia", "Former Yugoslav Republic of Macedonia", "FYROM" ],
   "coastKm" : 0.0,
   "landBorderKm" : 719.0,
+  "areaKm2" : 25349,
   "neighbours" : [ {
     "name" : "Greece",
     "km" : 213.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Albania",
     "km" : 157.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Bulgaria",
     "km" : 142.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Kosovo",
     "km" : 133.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Serbia",
     "km" : 75.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : 20.44415734900008,

@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 2712.0,
   "landBorderKm" : 2906.0,
+  "areaKm2" : 592429,
   "neighbours" : [ {
     "name" : "Algeria",
     "km" : 1551.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Western Sahara",
     "km" : 1334.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Spain",
     "km" : 22.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1 ]
   } ],
   "focus" : {
     "west" : -17.01374332534519,

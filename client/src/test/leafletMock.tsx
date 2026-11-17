@@ -80,6 +80,24 @@ export function Marker({ position, children }: Children & { position: [number, n
   );
 }
 
+export function CircleMarker({
+  center,
+  radius,
+  pathOptions,
+  children,
+}: Children & { center: [number, number]; radius: number; pathOptions?: { fillColor?: string } }) {
+  return (
+    <div
+      data-testid="CircleMarker"
+      data-center={JSON.stringify(center)}
+      data-radius={radius}
+      data-fill={pathOptions?.fillColor ?? ""}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function Tooltip({ children }: Children) {
   return <div data-testid="Tooltip">{children}</div>;
 }
@@ -118,6 +136,25 @@ export function drawnTileUrls(): string[] {
 /** The `attribution` of each tile layer currently rendered ("" when it has none). */
 export function drawnTileAttributions(): string[] {
   return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map((el) => el.dataset.attribution ?? "");
+}
+
+/** One drawn circle marker: `center` is [lat, lng], `radius` in pixels, `fill` its fill colour. */
+export interface DrawnCircle {
+  center: [number, number];
+  radius: number;
+  fill: string;
+  /** The text of the tooltip inside it, or "" for none. */
+  tooltip: string;
+}
+
+/** The circle markers currently rendered, in drawing order. */
+export function drawnCircles(): DrawnCircle[] {
+  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="CircleMarker"]')).map((el) => ({
+    center: JSON.parse(el.dataset.center ?? "[]"),
+    radius: Number(el.dataset.radius),
+    fill: el.dataset.fill ?? "",
+    tooltip: el.querySelector('[data-testid="Tooltip"]')?.textContent ?? "",
+  }));
 }
 
 /** The position of each marker currently rendered, as [lat, lng]. */

@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 1207.0,
+  "areaKm2" : 29520,
   "neighbours" : [ {
     "name" : "Azerbaijan",
     "km" : 753.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 3, 6, 7 ]
   }, {
     "name" : "Turkey",
     "km" : 259.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Georgia",
     "km" : 159.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Iran",
     "km" : 35.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 43.436293986000095,

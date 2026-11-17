@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 702.0,
   "landBorderKm" : 209.0,
+  "areaKm2" : 14252,
   "neighbours" : [ {
     "name" : "Indonesia",
     "km" : 209.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1 ]
   } ],
   "focus" : {
     "west" : 124.90791019700012,

@@ -425,6 +425,37 @@
                   </arguments>
                 </configuration>
               </execution>
+              <execution>
+                <id>regen-country-rivers</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.rivers.CountryRiversMain</mainClass>
+                  <arguments>
+                    <argument>geodata/rivers/naturalearth/ne_10m_rivers_lake_centerlines_scale_rank.geojson</argument>
+                    <argument>geodata/lakes/naturalearth/ne_10m_lakes.geojson</argument>
+                    <argument>target/regen/countries</argument>
+                    <argument>target/regen/country-rivers</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>regen-cities</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.parkinson.benjamin.geogames.loaders.cities.CityLoaderMain</mainClass>
+                  <arguments>
+                    <argument>geodata/cities/naturalearth/ne_10m_populated_places_simple.geojson</argument>
+                    <argument>target/regen/countries</argument>
+                    <argument>target/regen/cities.json</argument>
+                  </arguments>
+                </configuration>
+              </execution>
             </executions>
           </plugin>
         </plugins>

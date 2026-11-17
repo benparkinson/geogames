@@ -31,3 +31,59 @@ export function clueLineOptions(): PathOptions {
 export function hintLineOptions(): PathOptions {
   return { color: CLUE_COLOR, weight: 3, fill: false, dashArray: "6 6", opacity: 0.7 };
 }
+
+const MERGED_COLOR = "#2f7a6b";
+const HIDDEN_BORDER_COLOR = "#f4f1de";
+
+/**
+ * Style for the merged shape of two countries. The fill is opaque and the stroke is the same colour:
+ * two adjacent polygons filled without a stroke would show a hairline seam where they meet, which
+ * would give the border away.
+ */
+export function mergedShapeOptions(): PathOptions {
+  return { color: MERGED_COLOR, weight: 2, opacity: 1, fillColor: MERGED_COLOR, fillOpacity: 1 };
+}
+
+/** Style for the border a hint draws over the merged shape: light, so it contrasts with the fill. */
+export function hiddenBorderOptions(): PathOptions {
+  return { color: HIDDEN_BORDER_COLOR, weight: 3, fill: false };
+}
+
+/** The smallest and largest radius, in pixels, of a city dot. */
+export const CITY_MIN_RADIUS = 3;
+export const CITY_MAX_RADIUS = 14;
+
+/**
+ * The radius of the dot for a city: the area follows the population, so the radius follows its square
+ * root, between the minimum and the maximum size. `largest` is the biggest population in the round.
+ */
+export function cityRadius(population: number, largest: number): number {
+  if (largest <= 0 || population <= 0) {
+    return CITY_MIN_RADIUS;
+  }
+  const share = Math.min(1, Math.sqrt(population / largest));
+  return CITY_MIN_RADIUS + (CITY_MAX_RADIUS - CITY_MIN_RADIUS) * share;
+}
+
+const CITY_COLOR = "#4a6fa5";
+const CAPITAL_COLOR = "#d9822b";
+
+/** Style for a city dot while playing. */
+export function cityDotOptions(): PathOptions {
+  return { color: CITY_COLOR, weight: 1, fillColor: CITY_COLOR, fillOpacity: 0.55 };
+}
+
+/** Style for the capital's dot once a hint highlights it: a different colour, opaque and outlined in white. */
+export function capitalDotOptions(): PathOptions {
+  return { color: "#ffffff", weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
+}
+
+/** Style for the minor rivers of Country Rivers: thinner than the clue line the major rivers use. */
+export function minorRiverOptions(): PathOptions {
+  return { color: CLUE_COLOR, weight: 1.25, fill: false };
+}
+
+/** Style for a lake that a hint draws: filled more strongly than a clue outline, so it reads as water. */
+export function lakeFillOptions(): PathOptions {
+  return { color: CLUE_COLOR, weight: 1, fillColor: CLUE_COLOR, fillOpacity: 0.5 };
+}

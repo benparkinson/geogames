@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 3556.0,
   "landBorderKm" : 5535.0,
+  "areaKm2" : 1139520,
   "neighbours" : [ {
     "name" : "Venezuela",
     "km" : 2116.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Brazil",
     "km" : 1401.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Peru",
     "km" : 1223.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Ecuador",
     "km" : 522.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Panama",
     "km" : 273.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : -79.02151154699996,

@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 7.0,
   "landBorderKm" : 2.0,
+  "areaKm2" : 4,
   "neighbours" : [ {
     "name" : "Spain",
     "km" : 2.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -5.358386758763487,

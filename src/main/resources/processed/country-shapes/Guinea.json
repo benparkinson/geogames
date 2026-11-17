@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 879.0,
   "landBorderKm" : 3167.0,
+  "areaKm2" : 245290,
   "neighbours" : [ {
     "name" : "Mali",
     "km" : 858.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Sierra Leone",
     "km" : 629.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Ivory Coast",
     "km" : 563.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Liberia",
     "km" : 466.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Guinea Bissau",
     "km" : 352.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Senegal",
     "km" : 300.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   } ],
   "focus" : {
     "west" : -15.081125454999949,

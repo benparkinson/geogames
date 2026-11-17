@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 5778.0,
   "landBorderKm" : 3771.0,
+  "areaKm2" : 327901,
   "neighbours" : [ {
     "name" : "Laos",
     "km" : 1752.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "China",
     "km" : 1050.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Cambodia",
     "km" : 969.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 102.11865523300011,

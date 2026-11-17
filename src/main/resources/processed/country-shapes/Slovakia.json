@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 1264.0,
+  "areaKm2" : 48308,
   "neighbours" : [ {
     "name" : "Hungary",
     "km" : 483.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Poland",
     "km" : 407.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Czech Republic",
     "km" : 205.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Ukraine",
     "km" : 87.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Austria",
     "km" : 82.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 16.84448042800011,

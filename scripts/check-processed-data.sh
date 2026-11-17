@@ -19,7 +19,7 @@ if ! ./mvnw -B -q -Pregenerate-data -Dskip.frontend -DskipTests -Djacoco.skip=tr
 fi
 
 status=0
-for dir in countries country-shapes rivers lakes; do
+for dir in countries country-shapes rivers lakes country-rivers; do
   committed="src/main/resources/processed/$dir"
   regenerated="target/regen/$dir"
   if diff -rq --strip-trailing-cr "$committed" "$regenerated" > /dev/null; then
@@ -28,6 +28,19 @@ for dir in countries country-shapes rivers lakes; do
     echo "STALE processed/$dir differs from what the loaders produce:"
     diff -rq --strip-trailing-cr "$committed" "$regenerated" || true
     git diff --no-index --stat -- "$committed" "$regenerated" || true
+    status=1
+  fi
+done
+
+# Single files, not directories.
+for file in cities.json; do
+  committed="src/main/resources/processed/$file"
+  regenerated="target/regen/$file"
+  if diff -q --strip-trailing-cr "$committed" "$regenerated" > /dev/null 2>&1; then
+    echo "OK    processed/$file is up to date"
+  else
+    echo "STALE processed/$file differs from what the loader produces (or is missing):"
+    diff -q --strip-trailing-cr "$committed" "$regenerated" || true
     status=1
   fi
 done

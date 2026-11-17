@@ -63,6 +63,16 @@ class CountryLocatorTest {
   }
 
   @Test
+  void countryAtNamesTheCountryAPointIsInOrNull() {
+    CountryLocator locator =
+        new CountryLocator(List.of(square("A", 0, 0, 1, 1), square("B", 1, 0, 2, 1)), 10);
+
+    assertThat(locator.countryAt(new double[] {0.5, 0.5})).isEqualTo("A");
+    assertThat(locator.countryAt(new double[] {1.5, 0.5})).isEqualTo("B");
+    assertThat(locator.countryAt(new double[] {5, 5})).isNull();
+  }
+
+  @Test
   void breaksTiesByName() {
     CountryLocator locator =
         new CountryLocator(List.of(square("Zed", 1, -1, 2, 1), square("Alpha", 0, -1, 1, 1)), 10);

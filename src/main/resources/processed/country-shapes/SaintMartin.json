@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 32.0,
   "landBorderKm" : 10.0,
+  "areaKm2" : 69,
   "neighbours" : [ {
     "name" : "Sint Maarten",
     "km" : 10.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -63.14683997299991,

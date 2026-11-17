@@ -3,46 +3,57 @@
   "additionalNames" : [ ],
   "coastKm" : 18713.0,
   "landBorderKm" : 12324.0,
+  "areaKm2" : 8450170,
   "neighbours" : [ {
     "name" : "Bolivia",
     "km" : 2669.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Peru",
     "km" : 1804.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Venezuela",
     "km" : 1605.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Colombia",
     "km" : 1401.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "Paraguay",
     "km" : 1099.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Guyana",
     "km" : 1082.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 9 ]
   }, {
     "name" : "Argentina",
     "km" : 986.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Uruguay",
     "km" : 793.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "France",
     "km" : 518.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Suriname",
     "km" : 367.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -74.01847469099997,

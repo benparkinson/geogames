@@ -3,42 +3,52 @@
   "additionalNames" : [ ],
   "coastKm" : 2658.0,
   "landBorderKm" : 3011.0,
+  "areaKm2" : 354548,
   "neighbours" : [ {
     "name" : "Austria",
     "km" : 652.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Czech Republic",
     "km" : 587.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Netherlands",
     "km" : 476.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Poland",
     "km" : 397.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1 ]
   }, {
     "name" : "France",
     "km" : 373.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Switzerland",
     "km" : 253.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Belgium",
     "km" : 115.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "Luxembourg",
     "km" : 102.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Denmark",
     "km" : 56.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 9 ]
   } ],
   "focus" : {
     "west" : 5.852489868000106,

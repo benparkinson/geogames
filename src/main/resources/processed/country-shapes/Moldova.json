@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 1323.0,
+  "areaKm2" : 33116,
   "neighbours" : [ {
     "name" : "Ukraine",
     "km" : 897.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Romania",
     "km" : 426.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 26.617889038000044,

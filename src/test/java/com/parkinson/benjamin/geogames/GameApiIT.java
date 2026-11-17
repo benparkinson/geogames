@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
+import com.parkinson.benjamin.geogames.model.CountryCitiesRound;
+import com.parkinson.benjamin.geogames.model.CountryPairRound;
+import com.parkinson.benjamin.geogames.model.CountryRiversRound;
 import com.parkinson.benjamin.geogames.model.CountryShapeRound;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -294,6 +297,9 @@ class GameApiIT {
         subjects.add("country:" + JsonPath.read(blob, "$.country.name"));
       } else if (type.startsWith("LAKES_")) {
         subjects.add("lake:" + JsonPath.read(blob, "$.lake.id"));
+      } else if (type.equals("BORDERS_BY_SHAPE") || type.equals("MERGED_COUNTRIES")) {
+        List<String> names = JsonPath.read(blob, "$.countries[*].name");
+        subjects.add("pair:" + names.stream().sorted().collect(Collectors.joining("|")));
       } else {
         subjects.add("river:" + JsonPath.read(blob, "$.river.id"));
       }
@@ -466,6 +472,9 @@ class GameApiIT {
       case COUNTRIES_BY_NEIGHBOURS, COUNTRIES_BY_COASTLINE, COUNTRIES_BY_LAND_BORDERS ->
           CountryShapeRound.class;
       case LAKES_BY_SHAPE -> LakeRound.class;
+      case BORDERS_BY_SHAPE, MERGED_COUNTRIES -> CountryPairRound.class;
+      case COUNTRIES_BY_CITIES -> CountryCitiesRound.class;
+      case COUNTRIES_BY_RIVERS -> CountryRiversRound.class;
     };
   }
 

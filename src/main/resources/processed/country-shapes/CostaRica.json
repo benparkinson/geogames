@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 1452.0,
   "landBorderKm" : 575.0,
+  "areaKm2" : 51295,
   "neighbours" : [ {
     "name" : "Nicaragua",
     "km" : 289.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Panama",
     "km" : 286.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -85.94644120999993,

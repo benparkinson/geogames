@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 3844.0,
   "landBorderKm" : 4409.0,
+  "areaKm2" : 790725,
   "neighbours" : [ {
     "name" : "Malawi",
     "km" : 1465.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5, 7, 8 ]
   }, {
     "name" : "Zimbabwe",
     "km" : 1193.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Tanzania",
     "km" : 725.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "South Africa",
     "km" : 496.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "Zambia",
     "km" : 422.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Swaziland",
     "km" : 109.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 30.213845255000166,

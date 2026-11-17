@@ -38,6 +38,7 @@ class CountryGamesConfigTest {
         List.of(),
         coastKm,
         landKm,
+        0,
         neighbours,
         new Bounds(0, 0, 1, 1),
         data(name, "Polygon"),
@@ -46,7 +47,9 @@ class CountryGamesConfigTest {
   }
 
   private static final List<Neighbour> TWO_MAINLAND =
-      List.of(new Neighbour("Other", 100, true), new Neighbour("Third", 100, true));
+      List.of(
+          new Neighbour("Other", 100, true, List.of()),
+          new Neighbour("Third", 100, true, List.of()));
 
   // Long coast, long border, two mainland neighbours: eligible for all three games.
   private final CountryShape all = shape("All", 500, 500, TWO_MAINLAND);
@@ -56,10 +59,10 @@ class CountryGamesConfigTest {
   private final CountryShape landlocked = shape("Landlocked", 0, 900, TWO_MAINLAND);
   // Short coast and short border.
   private final CountryShape tiny =
-      shape("Tiny", 100, 40, List.of(new Neighbour("Other", 40, true)));
+      shape("Tiny", 100, 40, List.of(new Neighbour("Other", 40, true, List.of())));
   // Only an outlying neighbour: no mainland neighbours at all.
   private final CountryShape outlying =
-      shape("Outlying", 500, 500, List.of(new Neighbour("Other", 500, false)));
+      shape("Outlying", 500, 500, List.of(new Neighbour("Other", 500, false, List.of())));
 
   @BeforeEach
   void setUp() {

@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 319.0,
   "landBorderKm" : 506.0,
+  "areaKm2" : 21934,
   "neighbours" : [ {
     "name" : "Ethiopia",
     "km" : 329.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Eritrea",
     "km" : 112.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Somaliland",
     "km" : 64.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 41.74911014800006,

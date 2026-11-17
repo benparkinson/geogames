@@ -3,62 +3,77 @@
   "additionalNames" : [ ],
   "coastKm" : 74406.0,
   "landBorderKm" : 18829.0,
+  "areaKm2" : 16440153,
   "neighbours" : [ {
     "name" : "Kazakhstan",
     "km" : 6644.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "China",
     "km" : 3539.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4, 6 ]
   }, {
     "name" : "Mongolia",
     "km" : 2907.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Ukraine",
     "km" : 1521.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 10 ]
   }, {
     "name" : "Finland",
     "km" : 1222.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 14 ]
   }, {
     "name" : "Belarus",
     "km" : 918.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 11 ]
   }, {
     "name" : "Georgia",
     "km" : 704.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 9 ]
   }, {
     "name" : "Estonia",
     "km" : 283.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 13 ]
   }, {
     "name" : "Azerbaijan",
     "km" : 277.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Latvia",
     "km" : 212.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 12 ]
   }, {
     "name" : "Poland",
     "km" : 206.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 0 ]
   }, {
     "name" : "Lithuania",
     "km" : 200.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 1, 2 ]
   }, {
     "name" : "Norway",
     "km" : 165.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 15 ]
   }, {
     "name" : "North Korea",
     "km" : 31.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 27.328026571000066,

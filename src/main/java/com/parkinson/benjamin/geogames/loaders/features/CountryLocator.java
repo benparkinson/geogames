@@ -114,6 +114,11 @@ public class CountryLocator {
     return locate(polygons.stream().map(polygon -> polygon.get(0)).toList());
   }
 
+  /** The name of the country whose polygon contains the {lon, lat} point, or null if none does. */
+  public String countryAt(double[] point) {
+    return countryAt(point[0], point[1]);
+  }
+
   private String countryAt(double lon, double lat) {
     for (Shape shape : shapes) {
       for (Part part : shape.parts()) {

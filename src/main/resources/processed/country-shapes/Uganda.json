@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 2440.0,
+  "areaKm2" : 242936,
   "neighbours" : [ {
     "name" : "Kenya",
     "km" : 749.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Democratic Republic of the Congo",
     "km" : 730.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "South Sudan",
     "km" : 436.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Tanzania",
     "km" : 386.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Rwanda",
     "km" : 139.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 29.54845951300007,

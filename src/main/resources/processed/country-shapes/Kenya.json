@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 824.0,
   "landBorderKm" : 3296.0,
+  "areaKm2" : 588147,
   "neighbours" : [ {
     "name" : "Ethiopia",
     "km" : 789.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Tanzania",
     "km" : 763.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Uganda",
     "km" : 749.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Somalia",
     "km" : 688.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "South Sudan",
     "km" : 307.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : 33.89046838400023,

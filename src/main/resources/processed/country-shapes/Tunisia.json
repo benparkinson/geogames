@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 1387.0,
   "landBorderKm" : 1367.0,
+  "areaKm2" : 155999,
   "neighbours" : [ {
     "name" : "Algeria",
     "km" : 917.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Libya",
     "km" : 450.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : 7.479832398000099,

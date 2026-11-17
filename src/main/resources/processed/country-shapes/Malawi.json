@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 2723.0,
+  "areaKm2" : 119648,
   "neighbours" : [ {
     "name" : "Mozambique",
     "km" : 1465.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 2 ]
   }, {
     "name" : "Zambia",
     "km" : 805.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Tanzania",
     "km" : 453.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : 32.66330814700021,

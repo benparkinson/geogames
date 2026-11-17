@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 2595.0,
   "landBorderKm" : 1816.0,
+  "areaKm2" : 247273,
   "neighbours" : [ {
     "name" : "Peru",
     "km" : 1294.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Colombia",
     "km" : 522.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : -81.01301021999984,

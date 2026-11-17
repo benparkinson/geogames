@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 483.0,
   "landBorderKm" : 422.0,
+  "areaKm2" : 16704,
   "neighbours" : [ {
     "name" : "Saudi Arabia",
     "km" : 221.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Iraq",
     "km" : 201.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 46.53243575000013,

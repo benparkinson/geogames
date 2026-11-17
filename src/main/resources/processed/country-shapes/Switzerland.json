@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 1477.0,
+  "areaKm2" : 41323,
   "neighbours" : [ {
     "name" : "Italy",
     "km" : 595.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "France",
     "km" : 460.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Germany",
     "km" : 253.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Austria",
     "km" : 137.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 2 ]
   }, {
     "name" : "Liechtenstein",
     "km" : 32.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 5.954809204000128,

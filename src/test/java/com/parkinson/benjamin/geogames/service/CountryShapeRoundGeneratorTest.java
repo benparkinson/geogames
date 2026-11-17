@@ -38,6 +38,7 @@ class CountryShapeRoundGeneratorTest {
         List.of(),
         coastKm,
         100,
+        0,
         neighbours,
         new Bounds(0, 0, 1, 1),
         data(name, "Polygon"),
@@ -50,10 +51,10 @@ class CountryShapeRoundGeneratorTest {
           "A",
           500,
           List.of(
-              new Neighbour("B", 50, true),
-              new Neighbour("C", 40, false),
-              new Neighbour("D", 30, true)));
-  private final CountryShape b = shape("B", 500, List.of(new Neighbour("A", 50, true)));
+              new Neighbour("B", 50, true, List.of()),
+              new Neighbour("C", 40, false, List.of()),
+              new Neighbour("D", 30, true, List.of())));
+  private final CountryShape b = shape("B", 500, List.of(new Neighbour("A", 50, true, List.of())));
   private final CountryShape c = shape("C", 0, List.of());
   private final CountryShape d = shape("D", 500, List.of());
 

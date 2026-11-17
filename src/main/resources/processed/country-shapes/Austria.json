@@ -3,38 +3,47 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 2076.0,
+  "areaKm2" : 83756,
   "neighbours" : [ {
     "name" : "Germany",
     "km" : 652.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 7 ]
   }, {
     "name" : "Czech Republic",
     "km" : 335.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Italy",
     "km" : 329.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Hungary",
     "km" : 272.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Slovenia",
     "km" : 242.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Switzerland",
     "km" : 137.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4, 6 ]
   }, {
     "name" : "Slovakia",
     "km" : 82.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Liechtenstein",
     "km" : 27.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   } ],
   "focus" : {
     "west" : 9.52115482500011,

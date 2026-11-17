@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 1891.0,
   "landBorderKm" : 4894.0,
+  "areaKm2" : 1242624,
   "neighbours" : [ {
     "name" : "Democratic Republic of the Congo",
     "km" : 2307.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2, 3 ]
   }, {
     "name" : "Namibia",
     "km" : 1331.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Zambia",
     "km" : 1083.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Republic of Congo",
     "km" : 174.0,
-    "mainland" : false
+    "mainland" : false,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : 11.735524936000047,

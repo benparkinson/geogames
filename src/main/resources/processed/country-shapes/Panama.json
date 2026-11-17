@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 3380.0,
   "landBorderKm" : 559.0,
+  "areaKm2" : 73687,
   "neighbours" : [ {
     "name" : "Costa Rica",
     "km" : 286.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Colombia",
     "km" : 273.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   } ],
   "focus" : {
     "west" : -83.05324621699998,

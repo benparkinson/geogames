@@ -13,6 +13,8 @@ export interface Neighbour {
   km: number;
   /** Whether it touches the country's largest polygon part (not an overseas territory). */
   mainland: boolean;
+  /** Which lines of `landBorders` (by index, ascending) are the border with this neighbour. */
+  lines: number[];
 }
 
 /** A country as the country-shape games get it: simplified display geometry and border facts. */
@@ -21,6 +23,8 @@ export interface CountryShape {
   additionalNames: string[];
   coastKm: number;
   landBorderKm: number;
+  /** Area of the largest part, in km². */
+  areaKm2: number;
   /** Longest shared border first. */
   neighbours: Neighbour[];
   /** Bounding box of the largest polygon part: what to fit the map to. */
@@ -42,4 +46,34 @@ export interface CountryOutline {
 export interface CountryShapeRound {
   country: CountryShape;
   neighbours: CountryOutline[];
+}
+
+/** The data of a round of any game whose answer is one country. */
+export interface HasCountry {
+  country: CountryShape;
+}
+
+/** One city, as Country Cities draws it. */
+export interface City {
+  name: string;
+  lon: number;
+  lat: number;
+  population: number;
+  capital: boolean;
+}
+
+/** The data of a round of Country Cities: the country and its largest cities, largest first. */
+export interface CountryCitiesRound extends HasCountry {
+  cities: City[];
+}
+
+/**
+ * The data of a round of Country Rivers: the rivers inside the country, clipped at its borders, and
+ * its lakes. `major` is the more important rivers, which the game draws thicker.
+ */
+export interface CountryRiversRound extends HasCountry {
+  major: LineGeoData;
+  minor: LineGeoData;
+  /** May have no polygons: a country with no large lake. */
+  lakes: CountryGeoData;
 }

@@ -10,6 +10,10 @@ const GAME_TITLES = [
   "Coastlines",
   "Land Borders",
   "Lake Shapes",
+  "Border Shapes",
+  "Merged Countries",
+  "Country Cities",
+  "Country Rivers",
   "Mixed",
 ];
 

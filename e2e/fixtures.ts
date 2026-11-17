@@ -19,7 +19,7 @@ export class Api {
 
   /**
    * Reads a round and works out its answers the way the frontend does (each game module's
-   * `answerNames`): the three countries of a tripoint, the river, lake or country otherwise.
+   * `answerNames`): the countries of a tripoint or a pair game, the river, lake or country otherwise.
    */
   async round(gameId: string, round: number): Promise<RoundInfo> {
     const response = await this.request.get(`/api/games/${gameId}/rounds/${round}`);
@@ -27,7 +27,8 @@ export class Api {
     const body = await response.json();
     const blob = JSON.parse(body.jsonBlob);
     const gameType: string = body.gameType.name;
-    const places: Answer[] = gameType === "TRIPOINT" ? blob.countries : [blob.river ?? blob.lake ?? blob.country];
+    // A river round also lists the countries the river flows through, so the river comes first.
+    const places: Answer[] = blob.river ? [blob.river] : (blob.countries ?? [blob.lake ?? blob.country]);
     return {
       gameType,
       guessLimit: body.gameType.guessLimit,

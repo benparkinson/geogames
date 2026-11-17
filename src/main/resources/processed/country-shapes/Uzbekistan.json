@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 6080.0,
+  "areaKm2" : 446723,
   "neighbours" : [ {
     "name" : "Kazakhstan",
     "km" : 2181.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Turkmenistan",
     "km" : 1595.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Tajikistan",
     "km" : 1119.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3, 7 ]
   }, {
     "name" : "Kyrgyzstan",
     "km" : 1049.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 2 ]
   }, {
     "name" : "Afghanistan",
     "km" : 137.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   } ],
   "focus" : {
     "west" : 55.975838663000076,

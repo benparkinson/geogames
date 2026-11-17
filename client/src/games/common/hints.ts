@@ -24,17 +24,25 @@ const GENERIC_WORDS = new Set([
  * generic words ("Lake", "Rio") are skipped and mentioned, so the letter narrows the answer down.
  */
 export function firstLetterHint(name: string): string | null {
+  const first = firstLetter(name);
+  if (!first) {
+    return null;
+  }
+  return first.prefix ? `Starts with “${first.letter}” (after “${first.prefix}”)` : `Starts with “${first.letter}”`;
+}
+
+/**
+ * The upper-cased first letter of a name and the generic leading words skipped to reach it ("" when
+ * none were), or null for a blank name.
+ */
+export function firstLetter(name: string): { letter: string; prefix: string } | null {
   const words = name.trim().split(/\s+/).filter(Boolean);
   let skipped = 0;
   while (skipped < words.length - 1 && GENERIC_WORDS.has(words[skipped].toLowerCase())) {
     skipped++;
   }
   const letter = (words[skipped] ?? "").charAt(0).toUpperCase();
-  if (!letter) {
-    return null;
-  }
-  const prefix = words.slice(0, skipped).join(" ");
-  return prefix ? `Starts with “${letter}” (after “${prefix}”)` : `Starts with “${letter}”`;
+  return letter ? { letter, prefix: words.slice(0, skipped).join(" ") } : null;
 }
 
 /** For example `countHint(1, "country", "countries", "Borders")` is "Borders 1 country". */

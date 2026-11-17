@@ -1,0 +1,33 @@
+{
+  "name" : "Georgia",
+  "major" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Georgia"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
+    }
+  },
+  "minor" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Georgia"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 43.1587, 41.2781 ], [ 43.3251, 41.3768 ], [ 43.2831, 41.4993 ], [ 43.2952, 41.5472 ], [ 43.2263, 41.5854 ], [ 43.075, 41.5844 ], [ 43.0553, 41.6131 ], [ 43.0761, 41.6695 ], [ 43.5362, 41.9672 ], [ 43.7842, 42.055 ], [ 44.0318, 42.0268 ], [ 44.3926, 41.9204 ] ], [ [ 44.3926, 41.9204 ], [ 44.7405, 41.8201 ], [ 44.8028, 41.7002 ], [ 45.0015, 41.5779 ], [ 45.1021, 41.3365 ] ] ]
+    }
+  },
+  "lakes" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Georgia"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ ]
+    }
+  }
+}

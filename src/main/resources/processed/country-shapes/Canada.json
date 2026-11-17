@@ -3,10 +3,12 @@
   "additionalNames" : [ ],
   "coastKm" : 136806.0,
   "landBorderKm" : 7908.0,
+  "areaKm2" : 8098753,
   "neighbours" : [ {
     "name" : "United States of America",
     "km" : 7908.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 2, 3, 4 ]
   } ],
   "focus" : {
     "west" : -141.0055486371089,

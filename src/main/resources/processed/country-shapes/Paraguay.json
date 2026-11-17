@@ -3,18 +3,22 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 3488.0,
+  "areaKm2" : 400858,
   "neighbours" : [ {
     "name" : "Argentina",
     "km" : 1646.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Brazil",
     "km" : 1099.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Bolivia",
     "km" : 743.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -62.65035721899997,

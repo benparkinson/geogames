@@ -3,14 +3,17 @@
   "additionalNames" : [ ],
   "coastKm" : 1247.0,
   "landBorderKm" : 1025.0,
+  "areaKm2" : 70529,
   "neighbours" : [ {
     "name" : "Oman",
     "km" : 568.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0, 1, 3, 4 ]
   }, {
     "name" : "Saudi Arabia",
     "km" : 457.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 51.56934655000006,

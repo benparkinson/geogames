@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 1886.0,
   "landBorderKm" : 3647.0,
+  "areaKm2" : 470334,
   "neighbours" : [ {
     "name" : "Uzbekistan",
     "km" : 1595.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Iran",
     "km" : 957.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Afghanistan",
     "km" : 723.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Kazakhstan",
     "km" : 373.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 52.43767061734431,

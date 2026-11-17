@@ -2,7 +2,8 @@ import { vi } from "vitest";
 import type { GameRoundResponse, RoundAnswerResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
-import type { CountryShape, CountryShapeRound } from "../games/countries/model";
+import type { CountryCitiesRound, CountryRiversRound, CountryShape, CountryShapeRound } from "../games/countries/model";
+import type { CountryPairRound } from "../games/pairs/model";
 import type { Lake, LakeRound } from "../games/lakes/model";
 import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
@@ -111,10 +112,11 @@ export function makeCountryShapeData(overrides: Partial<CountryShape> = {}): Cou
     additionalNames: ["Holland"],
     coastKm: 451,
     landBorderKm: 1027,
+    areaKm2: 41_000,
     neighbours: [
-      { name: "Germany", km: 577, mainland: true },
-      { name: "Belgium", km: 450, mainland: true },
-      { name: "France", km: 10, mainland: false },
+      { name: "Germany", km: 577, mainland: true, lines: [0] },
+      { name: "Belgium", km: 450, mainland: true, lines: [] },
+      { name: "France", km: 10, mainland: false, lines: [] },
     ],
     focus: { west: 3.3, south: 50.7, east: 7.2, north: 53.6 },
     outline: square(1),
@@ -134,6 +136,72 @@ export function makeCountryShapeRoundData(overrides: Partial<CountryShapeRound> 
     ],
     ...overrides,
   } as unknown as CountryShapeRound;
+}
+
+/**
+ * The data of a round of Country Cities: the Netherlands and three of its cities, largest first.
+ * The country's layers start at: outline 1,1; coast 2,2; land borders 3,3.
+ */
+export function makeCountryCitiesRoundData(overrides: Partial<CountryCitiesRound> = {}): CountryCitiesRound {
+  return {
+    country: makeCountryShapeData(),
+    cities: [
+      { name: "Amsterdam", lon: 4.9, lat: 52.37, population: 1_000_000, capital: true },
+      { name: "Rotterdam", lon: 4.48, lat: 51.92, population: 250_000, capital: false },
+      { name: "Utrecht", lon: 5.12, lat: 52.09, population: 0, capital: false },
+    ],
+    ...overrides,
+  } as CountryCitiesRound;
+}
+
+/**
+ * The data of a round of Country Rivers: the Netherlands, with its major rivers, minor rivers and a
+ * lake. The layers start at: outline 1,1; coast 2,2; land borders 3,3; major rivers 10,10; minor
+ * rivers 11,11; lakes 12,12.
+ */
+export function makeCountryRiversRoundData(overrides: Partial<CountryRiversRound> = {}): CountryRiversRound {
+  return {
+    country: makeCountryShapeData(),
+    major: lines(10),
+    minor: lines(11),
+    lakes: square(12),
+    ...overrides,
+  } as unknown as CountryRiversRound;
+}
+
+/**
+ * The data of a round of a pair game: Belgium and the Netherlands, who border each other. The layers
+ * start at: Belgium outline 1,1, coast 2,2, land borders 3,3; the Netherlands outline 4,4, coast 5,5,
+ * land borders 6,6; the shared border 7,7; the neighbours 8,8 (Germany) and 9,9 (France).
+ */
+export function makeCountryPairRoundData(overrides: Partial<CountryPairRound> = {}): CountryPairRound {
+  return {
+    countries: [
+      makeCountryShapeData({
+        name: "Belgium",
+        additionalNames: [],
+        outline: square(1),
+        coast: lines(2),
+        landBorders: lines(3),
+      } as Partial<CountryShape>),
+      makeCountryShapeData({
+        name: "Netherlands",
+        additionalNames: ["Holland"],
+        outline: square(4),
+        coast: lines(5),
+        landBorders: lines(6),
+      } as Partial<CountryShape>),
+    ],
+    sharedBorder: lines(7),
+    borderKm: 450,
+    neighbours: [
+      { name: "Germany", outline: square(8) },
+      { name: "France", outline: square(9) },
+    ],
+    focus: { west: 2.5, south: 49.5, east: 7.2, north: 53.6 },
+    borderBounds: { west: 3.9, south: 50.7, east: 6.4, north: 51.5 },
+    ...overrides,
+  } as unknown as CountryPairRound;
 }
 
 export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
@@ -251,6 +319,36 @@ export const lakeNames = [
   { name: "Lake Baikal", additionalNames: ["Baikal"] },
   { name: "Lake Victoria", additionalNames: [] as string[] },
 ];
+
+/** The server's response for a Country Cities round. */
+export function makeCountryCitiesRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryCitiesRoundData()),
+    gameType: { name: "COUNTRIES_BY_CITIES", answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
+
+/** The server's response for a Country Rivers round. */
+export function makeCountryRiversRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryRiversRoundData()),
+    gameType: { name: "COUNTRIES_BY_RIVERS", answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
+
+/** The server's response for a round of a pair game. */
+export function makeCountryPairRound(
+  type = "BORDERS_BY_SHAPE",
+  overrides: Partial<GameRoundResponse> = {},
+): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryPairRoundData()),
+    gameType: { name: type, answerCount: 2, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
 
 /** The server's response for a round of a country-shape game. */
 export function makeCountryShapeRound(

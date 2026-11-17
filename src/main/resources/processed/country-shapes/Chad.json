@@ -3,30 +3,37 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 5799.0,
+  "areaKm2" : 1270723,
   "neighbours" : [ {
     "name" : "Sudan",
     "km" : 1296.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Central African Republic",
     "km" : 1173.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Niger",
     "km" : 1169.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Libya",
     "km" : 1051.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Cameroon",
     "km" : 1026.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Nigeria",
     "km" : 85.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   } ],
   "focus" : {
     "west" : 13.449183797000103,

@@ -3,66 +3,82 @@
   "additionalNames" : [ "People's Republic of China" ],
   "coastKm" : 16488.0,
   "landBorderKm" : 18971.0,
+  "areaKm2" : 9333329,
   "neighbours" : [ {
     "name" : "Mongolia",
     "km" : 4371.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 16 ]
   }, {
     "name" : "Russia",
     "km" : 3539.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 15, 17 ]
   }, {
     "name" : "India",
     "km" : 2205.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5, 7, 9 ]
   }, {
     "name" : "Myanmar",
     "km" : 1702.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Kazakhstan",
     "km" : 1502.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 14 ]
   }, {
     "name" : "Nepal",
     "km" : 1112.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 8 ]
   }, {
     "name" : "Vietnam",
     "km" : 1050.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "North Korea",
     "km" : 1004.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Kyrgyzstan",
     "km" : 838.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 13 ]
   }, {
     "name" : "Bhutan",
     "km" : 430.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Tajikistan",
     "km" : 404.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 12 ]
   }, {
     "name" : "Laos",
     "km" : 362.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Pakistan",
     "km" : 351.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 10 ]
   }, {
     "name" : "Afghanistan",
     "km" : 84.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 11 ]
   }, {
     "name" : "Hong Kong S.A.R.",
     "km" : 18.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 73.6022563070002,

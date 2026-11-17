@@ -3,34 +3,42 @@
   "additionalNames" : [ ],
   "coastKm" : 0.0,
   "landBorderKm" : 5594.0,
+  "areaKm2" : 1185161,
   "neighbours" : [ {
     "name" : "Nigeria",
     "km" : 1448.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Chad",
     "km" : 1169.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Algeria",
     "km" : 952.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 5 ]
   }, {
     "name" : "Mali",
     "km" : 844.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Burkina Faso",
     "km" : 601.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Libya",
     "km" : 346.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 6 ]
   }, {
     "name" : "Benin",
     "km" : 233.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : 0.152941121000111,

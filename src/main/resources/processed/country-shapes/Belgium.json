@@ -3,22 +3,27 @@
   "additionalNames" : [ ],
   "coastKm" : 95.0,
   "landBorderKm" : 1049.0,
+  "areaKm2" : 30561,
   "neighbours" : [ {
     "name" : "France",
     "km" : 463.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   }, {
     "name" : "Netherlands",
     "km" : 361.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3, 4 ]
   }, {
     "name" : "Germany",
     "km" : 115.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Luxembourg",
     "km" : 110.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   } ],
   "focus" : {
     "west" : 2.521799927690466,

@@ -3,26 +3,32 @@
   "additionalNames" : [ ],
   "coastKm" : 2648.0,
   "landBorderKm" : 5439.0,
+  "areaKm2" : 1295067,
   "neighbours" : [ {
     "name" : "Brazil",
     "km" : 1804.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 0 ]
   }, {
     "name" : "Ecuador",
     "km" : 1294.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 3 ]
   }, {
     "name" : "Colombia",
     "km" : 1223.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 4 ]
   }, {
     "name" : "Bolivia",
     "km" : 956.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 1 ]
   }, {
     "name" : "Chile",
     "km" : 162.0,
-    "mainland" : true
+    "mainland" : true,
+    "lines" : [ 2 ]
   } ],
   "focus" : {
     "west" : -81.33755752899992,
