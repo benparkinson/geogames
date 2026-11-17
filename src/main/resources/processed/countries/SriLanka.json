@@ -1,6 +1,6 @@
 {
   "name" : "Sri Lanka",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Ceylon" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

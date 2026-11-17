@@ -1,6 +1,6 @@
 {
   "name" : "Bolivia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Plurinational State of Bolivia" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

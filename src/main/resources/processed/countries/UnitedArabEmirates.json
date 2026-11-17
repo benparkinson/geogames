@@ -1,6 +1,6 @@
 {
   "name" : "United Arab Emirates",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "UAE", "The Emirates", "Emirates" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

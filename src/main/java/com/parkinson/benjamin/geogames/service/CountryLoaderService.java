@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.service;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CountryLoaderService {
 
+  /**
+   * Disputed territories with a shape that no game asks about or draws as a neighbour, so nobody
+   * needs to guess them. (Palestine, Kosovo, Somaliland and Western Sahara take part in games.)
+   */
+  static final Set<String> NOT_IN_AUTOCOMPLETE = Set.of("Northern Cyprus");
+
   private final CountryShapeService shapes;
 
   public CountryLoaderService(CountryShapeService shapes) {
@@ -24,6 +31,7 @@ public class CountryLoaderService {
   @Cacheable("countryNames")
   public List<PlaceName> loadCountryNames() {
     return shapes.loadShapes().stream()
+        .filter(shape -> !NOT_IN_AUTOCOMPLETE.contains(shape.name()))
         .map(
             shape ->
                 new PlaceName(

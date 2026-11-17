@@ -1,6 +1,6 @@
 {
   "name" : "United Kingdom",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "UK", "Great Britain", "Britain", "The United Kingdom" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
