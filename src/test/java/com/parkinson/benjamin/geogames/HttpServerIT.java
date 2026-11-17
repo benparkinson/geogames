@@ -22,7 +22,9 @@ import org.springframework.test.web.servlet.client.RestTestClient;
  *
  * <p>The static-site checks only mean something when the frontend was built into the classpath
  * ({@code public/index.html}, copied from {@code client/out}), so the whole class is skipped in a
- * backend-only build. The CI integration job always builds the frontend first, so it runs there.
+ * backend-only build on a developer machine. In CI (the {@code CI} variable is set) it is never
+ * skipped: the integration job always builds the frontend first, and if the site is missing there
+ * the static-site test fails the build instead of the class hiding.
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureRestTestClient
@@ -38,7 +40,8 @@ class HttpServerIT {
   @Autowired private RestTestClient client;
 
   static boolean staticSiteIsBuilt() {
-    return new ClassPathResource("public/index.html").exists();
+    // In CI the integration job always has the built site; if it is missing, fail, don't skip.
+    return System.getenv("CI") != null || new ClassPathResource("public/index.html").exists();
   }
 
   @Test

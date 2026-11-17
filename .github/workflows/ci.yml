@@ -7,12 +7,20 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Monday morning: finds breakage that arrives without a commit (the runner image, the floating
+  # Docker base tags Render also builds from, Playwright's system packages).
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Pull requests cancel superseded runs. Every other run (each merge to main, the weekly run) has a
+# group of its own: a shared group keeps only one pending run and cancels the rest, which would
+# leave a commit on main untested.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -57,6 +65,10 @@ jobs:
       # A Dependabot bump that moves only one of them (a Docker tag, @types/node) fails here.
       - name: Check Java and Node versions agree
         run: bash scripts/check-versions.sh
+
+      # A committed .skip, .fixme or @Disabled passes every other job.
+      - name: Check no test is skipped or focused
+        run: bash scripts/check-no-skipped-tests.sh
 
       - name: Install dependencies
         working-directory: client
@@ -314,9 +326,22 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max,ignore-error=true
 
+      # Production runs this image with the prod profile against Postgres (Neon runs major 17).
+      - name: Start Postgres
+        run: |
+          docker network create geogames-ci
+          docker run -d --name postgres --network geogames-ci             -e POSTGRES_USER=geogames -e POSTGRES_PASSWORD=geogames -e POSTGRES_DB=geogames             postgres:17-alpine
+          for i in $(seq 1 30); do
+            if docker exec postgres pg_isready -U geogames -d geogames > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo "::error::Postgres did not become ready within 30 seconds"
+          exit 1
+
       # 512 MB is the memory of the Render instance; the Dockerfile runs the app with -Xmx400M.
       - name: Start the container
-        run: docker run -d --name geogames --memory=512m -p 8080:8080 geogames:ci
+        run: |
+          docker run -d --name geogames --network geogames-ci --memory=512m -p 8080:8080             -e SPRING_PROFILES_ACTIVE=prod             -e DATABASE_URL=jdbc:postgresql://postgres:5432/geogames             -e DATABASE_USERNAME=geogames -e DATABASE_PASSWORD=geogames             geogames:ci
 
       - name: Wait for /health
         run: |
@@ -345,9 +370,28 @@ jobs:
           curl -sf "http://localhost:8080/api/games/${id}/rounds/0" \
             | jq -e '.totalRoundCount == 1 and (.jsonBlob | length) > 0'
 
+      # Proves the game above went to Postgres, not to H2.
+      - name: Check the game is in Postgres
+        run: |
+          games=$(docker exec postgres psql -U geogames -d geogames -tAc 'select count(*) from game_entity')
+          echo "games: ${games}"
+          test "${games}" -ge 1
+
+      # Errors off the request thread (the cleanup job at start-up, the statistics writer) fail no
+      # request, so the calls above pass. They do log at ERROR.
+      - name: Check the container logged no errors
+        run: |
+          docker logs geogames > container.log 2>&1
+          if grep -E ' ERROR | OutOfMemoryError' container.log; then
+            echo "::error::The container logged errors (see above)"
+            exit 1
+          fi
+
       - name: Container logs
         if: failure()
-        run: docker logs geogames
+        run: |
+          docker logs geogames
+          docker logs postgres
 
   data:
     name: data

@@ -200,4 +200,49 @@ public class TripointFinderTest {
     assertThatThrownBy(() -> service.generate(4, excluded))
         .isInstanceOf(IllegalArgumentException.class);
   }
+
+  private List<TripointDefinition> twoOfThreeShareCountries() {
+    return List.of(
+        new TripointDefinition(new Coordinate(1, 2), List.of("A", "B", "C")),
+        new TripointDefinition(new Coordinate(3, 4), List.of("C", "A", "B")),
+        new TripointDefinition(new Coordinate(5, 6), List.of("D", "E", "F")));
+  }
+
+  @Test
+  void neverPicksTwoTripointsOfTheSameCountries() {
+    when(loader.loadTripointDefinitions()).thenReturn(twoOfThreeShareCountries());
+
+    for (int seed = 0; seed < 200; seed++) {
+      TripointFinderService seeded =
+          new TripointFinderService(loader, countryLoader, new Random(seed));
+      List<GameData> result = seeded.generate(2, Set.of());
+
+      assertThat(result).extracting(GameData::subjectId).doesNotHaveDuplicates();
+    }
+  }
+
+  @Test
+  void bothTripointsOfARepeatedTripleCanComeUp() {
+    when(loader.loadTripointDefinitions()).thenReturn(twoOfThreeShareCountries());
+
+    Set<Coordinate> seen = new java.util.HashSet<>();
+    for (int seed = 0; seed < 200; seed++) {
+      TripointFinderService seeded =
+          new TripointFinderService(loader, countryLoader, new Random(seed));
+      for (GameData round : seeded.generate(2, Set.of())) {
+        seen.add(((Tripoint) round).coordinate());
+      }
+    }
+
+    assertThat(seen).contains(new Coordinate(1, 2), new Coordinate(3, 4));
+  }
+
+  @Test
+  void countsSubjectsNotDefinitionsWhenThereAreTooFew() {
+    when(loader.loadTripointDefinitions()).thenReturn(twoOfThreeShareCountries());
+
+    assertThatThrownBy(() -> service.generate(3, Set.of()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("tripoints");
+  }
 }
