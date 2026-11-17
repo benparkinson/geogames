@@ -26,6 +26,11 @@
         "name" : "string"
       }
     },
+    "POST /api/daily-games" : {
+      "date" : "string",
+      "id" : "string",
+      "number" : "number"
+    },
     "POST /api/games" : {
       "id" : "string"
     },

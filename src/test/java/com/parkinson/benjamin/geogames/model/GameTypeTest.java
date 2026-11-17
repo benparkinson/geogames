@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -92,5 +93,16 @@ class GameTypeTest {
     for (GameType type : GameType.values()) {
       assertThat(type.name()).isNotEqualTo("RANDOM");
     }
+  }
+
+  /**
+   * The daily challenge never uses these. Keep in step with {@code registry.test.ts}, which lists
+   * the frontend modules with {@code extraDifficult: true}.
+   */
+  @Test
+  void theExtraDifficultTypesAreRiverLakeAndBorderShapes() {
+    assertThat(Arrays.stream(GameType.values()).filter(GameType::extraDifficult))
+        .containsExactly(
+            GameType.RIVERS_BY_SHAPE, GameType.LAKES_BY_SHAPE, GameType.BORDERS_BY_SHAPE);
   }
 }

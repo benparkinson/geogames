@@ -23,6 +23,15 @@ export interface RecordedGuess {
   correct: boolean;
 }
 
+/** The JSON of POST /api/daily-games: a new game made from the day's rounds. */
+export interface DailyGameResponse {
+  id: string;
+  /** The date the rounds belong to, `YYYY-MM-DD`. */
+  date: string;
+  /** "Daily #42". */
+  number: number;
+}
+
 /** The JSON of POST /api/games/{id}/rounds/{round}/hints. */
 export interface RoundHintsResponse {
   hintsTakenAt: number[];

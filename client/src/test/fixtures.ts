@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { GameRoundResponse, RoundAnswerResponse, RoundGuessesResponse, RoundHintsResponse } from "../api/types";
+import type { DailyGameResponse, GameRoundResponse, RoundAnswerResponse, RoundGuessesResponse, RoundHintsResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
 import type { CountryCitiesRound, CountryRiversRound, CountryShape, CountryShapeRound } from "../games/countries/model";
@@ -376,4 +376,9 @@ export function makeGuessesResponse(overrides: Partial<RoundGuessesResponse> = {
 /** What POST /api/games/{id}/rounds/{round}/hints returns: for each hint, how many guesses came before it. */
 export function makeHintsResponse(overrides: Partial<RoundHintsResponse> = {}): RoundHintsResponse {
   return { hintsTakenAt: [0, 1], ...overrides };
+}
+
+/** What POST /api/daily-games returns. */
+export function makeDailyGameResponse(overrides: Partial<DailyGameResponse> = {}): DailyGameResponse {
+  return { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d", date: "2026-11-18", number: 2, ...overrides };
 }

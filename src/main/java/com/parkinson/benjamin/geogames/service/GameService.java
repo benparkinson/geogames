@@ -18,6 +18,7 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Scoring;
+import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -96,13 +97,20 @@ public class GameService {
             ? generateMixedRounds(numberOfRounds)
             : generators.get(selection.type()).generate(numberOfRounds, Set.of(), random);
 
-    GameEntity saved =
-        gameRepository.save(
-            new GameEntity(
-                createGameRounds(gameData),
-                selection.isRandom() ? "RANDOM" : selection.type().name()));
+    return createGame(
+        gameData.stream().map(PinnedRound::of).toList(),
+        selection.isRandom() ? "RANDOM" : selection.type().name());
+  }
 
-    return new GameCreationResponse(saved.getPublicId());
+  /** Makes a game from rounds that were chosen earlier (a daily challenge's pinned rounds). */
+  @Transactional
+  public GameCreationResponse createGame(List<PinnedRound> rounds, String gameMode) {
+    List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
+    for (int i = 0; i < rounds.size(); i++) {
+      entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
+    }
+    return new GameCreationResponse(
+        gameRepository.save(new GameEntity(entities, gameMode)).getPublicId());
   }
 
   /** Gives each round a random game type, then shuffles so the types come in a random order. */
@@ -123,15 +131,6 @@ public class GameService {
         });
     Collections.shuffle(allGameData, random);
     return allGameData;
-  }
-
-  private List<GameRoundEntity> createGameRounds(List<GameData> gameData) {
-    List<GameRoundEntity> gameRoundEntities = new ArrayList<>(gameData.size());
-    for (int i = 0; i < gameData.size(); i++) {
-      GameData gameDatum = gameData.get(i);
-      gameRoundEntities.add(new GameRoundEntity(i, gameDatum.gameType(), gameDatum.roundKey()));
-    }
-    return gameRoundEntities;
   }
 
   @Transactional(readOnly = true)
