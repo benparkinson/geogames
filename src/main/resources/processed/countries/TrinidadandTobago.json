@@ -1,6 +1,6 @@
 {
   "name" : "Trinidad and Tobago",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Trinidad" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

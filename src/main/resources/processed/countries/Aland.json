@@ -1,6 +1,6 @@
 {
   "name" : "Aland",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Aland Islands", "Åland Islands", "Åland" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

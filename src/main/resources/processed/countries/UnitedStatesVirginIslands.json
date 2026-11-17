@@ -1,6 +1,6 @@
 {
   "name" : "United States Virgin Islands",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "US Virgin Islands", "U.S. Virgin Islands", "USVI" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

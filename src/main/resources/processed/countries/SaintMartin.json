@@ -1,6 +1,6 @@
 {
   "name" : "Saint Martin",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "St Martin", "St. Martin" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

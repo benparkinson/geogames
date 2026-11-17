@@ -1,6 +1,6 @@
 {
   "name" : "Vietnam",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Viet Nam" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

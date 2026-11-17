@@ -1,6 +1,6 @@
 {
   "name" : "South Africa",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "RSA" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
