@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.helper.CountryCentroid;
+import com.parkinson.benjamin.geogames.model.CountryName;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,14 +23,18 @@ public class CountryLoaderService {
   }
 
   @Cacheable("countryNames")
-  public List<PlaceName> loadCountryNames() {
+  public List<CountryName> loadCountryNames() {
     return shapes.loadShapes().stream()
         .map(
-            shape ->
-                new PlaceName(
-                    shape.name(),
-                    shape.additionalNames() == null ? List.of() : shape.additionalNames()))
-        .sorted(Comparator.comparing(PlaceName::name))
+            shape -> {
+              double[] position = CountryCentroid.of(shape.outline());
+              return new CountryName(
+                  shape.name(),
+                  shape.additionalNames() == null ? List.of() : shape.additionalNames(),
+                  position[0],
+                  position[1]);
+            })
+        .sorted(Comparator.comparing(CountryName::name))
         .toList();
   }
 }

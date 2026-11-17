@@ -1,4 +1,4 @@
-import { answerBox, expect, guess, startGame, test } from "../fixtures";
+import { answerBox, expect, guess, startGame, test, type Api } from "../fixtures";
 
 test("an unknown name is rejected without using a guess, a wrong country uses one", async ({ page, api }) => {
   const countriesLoaded = page.waitForResponse(response => response.url().endsWith("/api/countries"));
@@ -41,4 +41,36 @@ test("an alias of an answer is accepted as that answer", async ({ page, api }) =
   await expect(page.getByText(/^Correct! 2 to go\.$/)).toBeVisible();
   await expect(page.getByRole("group", { name: "Answers: 1 of 3 found" })).toContainText(found!.canonical);
   await expect(page.getByRole("status", { name: "5 guesses left" })).toBeVisible();
+});
+
+/** A country that is not the answer, and plain enough to type. */
+async function wrongCountry(api: Api, id: string): Promise<string> {
+  const { answers } = await api.round(id, 0);
+  const answerNames = new Set(answers.flatMap(a => [a.name, ...a.additionalNames]).map(n => n.toLowerCase()));
+  const countries = await api.countries();
+  return countries.map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()))!;
+}
+
+test("a wrong country in a country game says how far and which way the answer is", async ({ page, api }) => {
+  const id = await startGame(page, "Country Gaps", 3);
+  await expect(answerBox(page)).toBeVisible();
+
+  await guess(page, await wrongCountry(api, id));
+
+  await expect(
+    page.getByText(/isn't right\. The answer is [\d,]+ km to the (north|south|east|west)/),
+  ).toBeVisible();
+});
+
+test("Hardcore mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
+  await page.goto("/");
+  await page.getByRole("group", { name: "Hardcore mode" }).getByText("On", { exact: true }).click();
+
+  const id = await startGame(page, "Country Gaps", 3);
+  await expect(answerBox(page)).toBeVisible();
+  const wrong = await wrongCountry(api, id);
+  await guess(page, wrong);
+
+  await expect(page.getByText(`"${wrong}" isn't right. 4 guesses left.`)).toBeVisible();
+  await expect(page.locator(".guess-feedback")).not.toContainText("km");
 });

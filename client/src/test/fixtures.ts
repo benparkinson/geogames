@@ -302,10 +302,10 @@ export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
 
 /** What GET /api/countries returns. */
 export const countryNames = [
-  { name: "Belgium", additionalNames: [] as string[] },
-  { name: "France", additionalNames: [] as string[] },
-  { name: "Germany", additionalNames: ["Deutschland"] },
-  { name: "Netherlands", additionalNames: ["Holland"] },
+  { name: "Belgium", additionalNames: [] as string[], lat: 50.64, lon: 4.67 },
+  { name: "France", additionalNames: [] as string[], lat: 46.6, lon: 2.45 },
+  { name: "Germany", additionalNames: ["Deutschland"], lat: 51.1, lon: 10.4 },
+  { name: "Netherlands", additionalNames: ["Holland"], lat: 52.2, lon: 5.6 },
 ];
 
 /** What GET /api/rivers returns; matches makeRiverData() plus one other river. */

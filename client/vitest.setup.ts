@@ -5,6 +5,11 @@ import { afterEach, vi } from "vitest";
 // RTL only auto-cleans when test globals are enabled, which we don't do.
 afterEach(() => {
   cleanup();
+  try {
+    localStorage.clear();
+  } catch {
+    // Storage may be stubbed out by a test.
+  }
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
 });

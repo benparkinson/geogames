@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import MapGame, { type HintConfig } from "../common/MapGame";
+import { useCountryClues } from "../common/useCountryClues";
 import { useGuessList } from "../common/useGuessList";
 import type { MapProps } from "../../map/MapProps";
 import type { GameComponentProps } from "../types";
@@ -20,6 +21,7 @@ export interface CountryShapeVariant<T extends HasCountry> {
 export function makeCountryShapeGame<T extends HasCountry>(variant: CountryShapeVariant<T>) {
   function CountryShapeGame({ data, round, answerCount, submitAnswer }: GameComponentProps<T>): React.JSX.Element {
     const { suggestions, isKnownGuess } = useGuessList("countries");
+    const clueFor = useCountryClues();
     return (
       <MapGame
         data={data}
@@ -35,6 +37,7 @@ export function makeCountryShapeGame<T extends HasCountry>(variant: CountryShape
         inputPlaceholder="Country name…"
         answerNoun="country"
         hints={variant.hints(data)}
+        clueFor={clueFor}
         submitAnswer={submitAnswer}
       />
     );

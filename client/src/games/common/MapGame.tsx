@@ -7,7 +7,9 @@ import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import { GuessAction, guessesLeft, guessReducer, GuessState, initialGuessState, wrongGuessCount } from "./guessReducer";
+import HardcoreToggle from "../../components/HardcoreToggle";
+import { useHardcoreMode } from "../../settings/hardcoreMode";
+import { GuessAction, GuessClue, guessesLeft, guessReducer, GuessState, initialGuessState, wrongGuessCount } from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -23,12 +25,14 @@ function MapGame<Type>({
   suggestions,
   isKnownGuess,
   hints,
+  clueFor,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
   const [guessState, setGuessState] = useState<GuessState>(() =>
     initialGuessState(round.answerState, answers, round.hintsUsed));
   const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
   // The backend decides how many hints there are; the game only supplies what they say.
+  const [hardcore] = useHardcoreMode();
   const hintCount = round.hintCount;
   const hintConfig = hintCount > 0 ? hints : undefined;
 
@@ -49,6 +53,7 @@ function MapGame<Type>({
       isKnownGuess,
       hintsTotal: hintConfig ? hintCount : 0,
       guessLimit: round.guessLimit,
+      clueFor,
     });
     setGuessState(outcome.state);
     if (outcome.finished) {
@@ -116,8 +121,15 @@ function MapGame<Type>({
         giveUp={giveUp}
         inputPlaceholder={inputPlaceholder}
         answerNoun={answerNoun}
+        answerCount={answerCount}
+        showClues={!hardcore}
         suggestions={suggestions}
       />
+      {clueFor && !gameOver && (
+        <div className="mt-2">
+          <HardcoreToggle compact />
+        </div>
+      )}
     </>
   );
 
@@ -156,6 +168,11 @@ export interface MapGameProps<Type> {
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   hints?: HintConfig;
+  /**
+   * Gives a wrong guess a clue (distance and direction to the nearest answer not found yet). Leave it
+   * out for a game whose map already shows where the answer is. Hardcore mode hides the clues.
+   */
+  clueFor?: (guess: string, targets: string[]) => GuessClue | null;
   submitAnswer: (answer: RoundAnswer) => void;
 }
 

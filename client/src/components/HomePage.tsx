@@ -6,6 +6,7 @@ import { Fire } from "react-bootstrap-icons";
 import KofiBadge from "./KofiBadge";
 import SiteFooter from "./SiteFooter";
 import ThemeToggle from "./ThemeToggle";
+import HardcoreToggle from "./HardcoreToggle";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 const STANDARD_OPTIONS = MENU_OPTIONS.filter(option => !option.extraDifficult);
@@ -83,6 +84,7 @@ function HomePage(): React.JSX.Element {
             <div className="home-layout">
                 <section className="home-main">
                 <h2 className="h5">Choose a game</h2>
+                <div className="mb-3"><HardcoreToggle /></div>
                 {/* One radio group across both sections, so the arrow keys move through every card. */}
                 <div role="radiogroup" aria-label="Choose a game" className="mb-4">
                     <div className="row g-3">

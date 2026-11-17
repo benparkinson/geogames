@@ -13,9 +13,11 @@ import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
 import com.parkinson.benjamin.geogames.model.CountryRivers;
 import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
@@ -338,6 +340,22 @@ public class ProcessedDataIT {
 
     // Fails if CountryLoaderMain was re-run without CountryShapeMain.
     assertEquals(countries, shapeNames);
+  }
+
+  @Test
+  public void everyCountryHasAPositionInsideItsFocus() {
+    CountryLoaderService service = new CountryLoaderService(new CountryShapeService(reader));
+    CountryShapeService shapes = new CountryShapeService(reader);
+    for (CountryName country : service.loadCountryNames()) {
+      Bounds focus = shapes.loadShape(country.name()).focus();
+      assertTrue(Double.isFinite(country.lat()) && Double.isFinite(country.lon()), country.name());
+      assertTrue(
+          country.lat() >= focus.south() - 1
+              && country.lat() <= focus.north() + 1
+              && country.lon() >= focus.west() - 1
+              && country.lon() <= focus.east() + 1,
+          country.name() + " is outside its focus");
+    }
   }
 
   @Test

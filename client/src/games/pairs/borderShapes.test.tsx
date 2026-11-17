@@ -82,4 +82,16 @@ describe("Border Shapes", () => {
 
     expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
+
+  it("says how far the nearest country you still need is after a wrong guess", async () => {
+    const user = userEvent.setup();
+    renderGame();
+    await screen.findByRole("button", { name: /Hint/ });
+
+    await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
+
+    expect(
+      screen.getByText(/The nearest country you still need is [\d,]+ km to the (north|south|east|west)/),
+    ).toBeInTheDocument();
+  });
 });

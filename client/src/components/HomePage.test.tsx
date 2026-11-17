@@ -289,3 +289,21 @@ describe("HomePage starting a game", () => {
     expect(router.push).not.toHaveBeenCalled();
   });
 });
+
+describe("HomePage Hardcore mode", () => {
+  it("has a switch that turns Hardcore mode on and off", async () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const user = userEvent.setup();
+    renderHome();
+
+    const group = screen.getByRole("group", { name: "Hardcore mode" });
+    expect(within(group).getByRole("radio", { name: "Off" })).toBeChecked();
+
+    await user.click(within(group).getByRole("radio", { name: "On" }));
+    expect(within(group).getByRole("radio", { name: "On" })).toBeChecked();
+    expect(localStorage.getItem("gg-hardcore")).toBe("on");
+
+    await user.click(within(group).getByRole("radio", { name: "Off" }));
+    expect(localStorage.getItem("gg-hardcore")).toBeNull();
+  });
+});
