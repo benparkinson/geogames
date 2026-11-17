@@ -56,7 +56,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
   const gameType = playAgainType(all);
 
   return (
-    <div className="min-vh-100 page-bg">
+    <div className="min-vh-100 page-bg d-flex flex-column">
       <div className="px-3 py-2 d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
           <HomeLink />
@@ -118,7 +118,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
           <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
         </div>
       </div>
-      <SiteFooter className="pb-4" />
+      <SiteFooter className="mt-auto pt-4 pb-4" />
     </div>
   );
 }
