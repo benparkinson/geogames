@@ -1,0 +1,142 @@
+/*
+ * The one place to change the look of the whole site.
+ *
+ * - Tier 1 is the palette: raw colours, named by what they are. Only the semantic tokens may use them.
+ * - Tier 2 is the semantic tokens, named by role. Every other file (components.css, styles.css, the
+ *   React components) uses these and never a raw colour.
+ * - Light values are in the first block, dark overrides in the dark block (only where the dark value
+ *   differs). Colours that must not change with the theme (the blank map) are listed once, in the
+ *   light block.
+ * - Hover, active and focus colours are derived from these with color-mix(), so changing
+ *   --gg-color-accent also changes its hover and focus ring.
+ */
+
+:root,
+[data-bs-theme="light"] {
+  /* ---- Palette ---- */
+  --gg-white: #fff;
+  --gg-black: #000;
+  --gg-blue-600: #0d6efd;
+  --gg-blue-700: #0a58ca;
+  --gg-blue-100: #cfe2ff;
+  --gg-green-600: #198754;
+  --gg-yellow-500: #ffc107;
+  --gg-yellow-900: #664d03;
+  --gg-brown-900: #3d2e00;
+  --gg-red-600: #dc3545;
+  --gg-red-900: #58151c;
+  --gg-red-100: #f8d7da;
+  --gg-red-300: #f1aeb5;
+  --gg-gray-50: #f8f9fa;
+  --gg-gray-100: #e9ecef;
+  --gg-gray-300: #dee2e6;
+  --gg-gray-600: #6c757d;
+  --gg-gray-900: #212529;
+  --gg-periwinkle-200: #c8cfe8;
+  --gg-slate-700: #2f3b52;
+  --gg-cornflower-400: #72a4f2;
+
+  /* ---- Semantic: surfaces and text ---- */
+  --gg-color-page-bg: var(--gg-periwinkle-200);
+  --gg-color-panel-bg: var(--gg-white);
+  --gg-color-surface: var(--gg-white);
+  --gg-color-surface-muted: var(--gg-gray-100);
+  --gg-color-text: var(--gg-gray-900);
+  --gg-color-text-muted: rgb(33 37 41 / 0.75);
+  --gg-color-border: var(--gg-gray-300);
+  --gg-color-border-translucent: rgb(0 0 0 / 0.175);
+  --gg-color-surface-hover: var(--gg-gray-50);
+  --gg-color-surface-active: var(--gg-gray-100);
+  --gg-color-link: var(--gg-blue-600);
+  --gg-color-link-hover: var(--gg-blue-700);
+
+  /* ---- Semantic: roles ---- */
+  --gg-color-accent: var(--gg-blue-600);
+  --gg-color-on-accent: var(--gg-white);
+  --gg-color-accent-subtle: var(--gg-blue-100);
+  --gg-color-correct: var(--gg-green-600);
+  --gg-color-on-correct: var(--gg-white);
+  --gg-color-perfect: var(--gg-yellow-500);
+  --gg-color-on-perfect: var(--gg-brown-900);
+  --gg-color-neutral: var(--gg-gray-600);
+  --gg-color-on-neutral: var(--gg-white);
+  --gg-color-revealed: var(--gg-color-neutral);
+  --gg-color-on-revealed: var(--gg-white);
+  --gg-color-hint: var(--gg-yellow-500);
+  --gg-color-on-hint: var(--gg-black);
+  --gg-color-warning-text: var(--gg-yellow-900);
+  --gg-color-danger: var(--gg-red-600);
+  --gg-color-on-danger: var(--gg-white);
+  --gg-color-danger-text: var(--gg-red-900);
+  --gg-color-danger-subtle: var(--gg-red-100);
+  --gg-color-danger-border: var(--gg-red-300);
+  --gg-color-coffee: var(--gg-cornflower-400);
+
+  /* ---- Semantic: map (the same in both themes) ---- */
+  --gg-color-map-blank: var(--gg-slate-700);
+  --gg-color-map-caption-bg: rgb(0 0 0 / 0.65);
+  --gg-color-map-caption-text: var(--gg-white);
+
+  /* ---- Fonts ---- */
+  --gg-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --gg-font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  /* ---- Shape ---- */
+  --gg-radius-sm: 0.25rem;
+  --gg-radius: 0.375rem;
+  --gg-radius-lg: 0.5rem;
+  --gg-radius-xl: 1rem;
+  --gg-radius-pill: 50rem;
+
+  /* ---- Shadows ---- */
+  --gg-shadow-panel: 0 -2px 12px rgb(0 0 0 / 0.12);
+  --gg-shadow-panel-side: -2px 0 12px rgb(0 0 0 / 0.08);
+  --gg-shadow-floating: 0 -2px 12px rgb(0 0 0 / 0.15);
+  --gg-shadow-floating-side: 0 4px 16px rgb(0 0 0 / 0.12);
+  --gg-shadow-hover: 0 4px 12px rgb(0 0 0 / 0.15);
+  --gg-shadow-flag: drop-shadow(0 1px 2px rgb(0 0 0 / 0.6));
+  --gg-focus-ring: 0 0 0 0.25rem color-mix(in srgb, var(--gg-color-accent) 25%, transparent);
+
+  /* ---- Motion ---- */
+  --gg-duration-fast: 120ms;
+  --gg-duration: 150ms;
+  --gg-duration-slow: 200ms;
+
+  /* ---- Layout ---- */
+  --gg-panel-width: 360px;
+}
+
+[data-bs-theme="dark"] {
+  --gg-blue-300: #6ea8fe;
+  --gg-blue-200: #8bb9fe;
+  --gg-blue-1000: #031633;
+  --gg-yellow-300: #ffda6a;
+  --gg-red-400: #ea868f;
+  --gg-red-1000: #2c0b0e;
+  --gg-red-800: #842029;
+  --gg-gray-850: #2b3035;
+  --gg-gray-800: #343a40;
+  --gg-gray-700: #495057;
+  --gg-gray-200: #dee2e6;
+  --gg-ink-900: #161a23;
+  --gg-ink-800: #222838;
+
+  --gg-color-page-bg: var(--gg-ink-900);
+  --gg-color-panel-bg: var(--gg-ink-800);
+  --gg-color-surface: var(--gg-gray-900);
+  --gg-color-surface-muted: var(--gg-gray-800);
+  --gg-color-text: var(--gg-gray-200);
+  --gg-color-text-muted: rgb(222 226 230 / 0.75);
+  --gg-color-border: var(--gg-gray-700);
+  --gg-color-border-translucent: rgb(255 255 255 / 0.15);
+  --gg-color-surface-hover: var(--gg-gray-850);
+  --gg-color-surface-active: var(--gg-gray-800);
+  --gg-color-link: var(--gg-blue-300);
+  --gg-color-link-hover: var(--gg-blue-200);
+  --gg-color-accent-subtle: var(--gg-blue-1000);
+  --gg-color-warning-text: var(--gg-yellow-300);
+  --gg-color-danger-text: var(--gg-red-400);
+  --gg-color-danger-subtle: var(--gg-red-1000);
+  --gg-color-danger-border: var(--gg-red-800);
+}

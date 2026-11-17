@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeRiverData } from "../../test/fixtures";
-import { continentHint, firstLetterHint, flowsThroughHint, textHints } from "./riverHints";
+import { continentHint, countryCountHint, firstLetterHint, textHints } from "./riverHints";
 
 describe("riverHints", () => {
   const river = makeRiverData();
@@ -9,26 +9,9 @@ describe("riverHints", () => {
     expect(continentHint(river)).toBe("Continent: Europe");
   });
 
-  it("names the countries it flows through", () => {
-    expect(flowsThroughHint(river)).toBe("Flows through: Romania, Germany, Austria");
-  });
-
-  it("names all of up to three countries without saying there are more", () => {
-    expect(flowsThroughHint({ ...river, countries: ["A", "B", "C"] })).toBe("Flows through: A, B, C");
-    expect(flowsThroughHint({ ...river, countries: ["A"] })).toBe("Flows through: A");
-  });
-
-  it("names only the first three countries of a longer river and counts the rest", () => {
-    const danube = ["Germany", "Austria", "Slovakia", "Hungary", "Croatia", "Serbia", "Romania", "Bulgaria", "Ukraine"];
-
-    expect(flowsThroughHint({ ...river, countries: danube })).toBe("Flows through: Germany, Austria, Slovakia and 6 more");
-    expect(flowsThroughHint({ ...river, countries: danube.slice(0, 4) })).toBe(
-      "Flows through: Germany, Austria, Slovakia and 1 more",
-    );
-  });
-
-  it("has nothing to say about countries when there are none", () => {
-    expect(flowsThroughHint({ ...river, countries: [] })).toBeNull();
+  it("counts the countries it flows through without naming them", () => {
+    expect(countryCountHint(river)).toBe("Flows through 3 countries");
+    expect(countryCountHint({ ...river, countries: ["A"] })).toBe("Flows through 1 country");
   });
 
   it("gives the first letter", () => {
@@ -43,7 +26,7 @@ describe("riverHints", () => {
   it("describes as many clues as there are builders", () => {
     expect(textHints(river, continentHint).description).toBe("Shows a clue");
     expect(textHints(river, continentHint, firstLetterHint).description).toBe("Shows 2 clues, one at a time");
-    expect(textHints(river, continentHint, flowsThroughHint, firstLetterHint).description).toBe(
+    expect(textHints(river, continentHint, countryCountHint, firstLetterHint).description).toBe(
       "Shows 3 clues, one at a time",
     );
   });

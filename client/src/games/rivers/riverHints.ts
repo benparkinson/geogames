@@ -1,5 +1,5 @@
 import type { HintConfig } from "../common/MapGame";
-import { firstLetterHint as firstLetter, listHint } from "../common/hints";
+import { countHint, firstLetterHint as firstLetter } from "../common/hints";
 import type { River } from "./model";
 
 /** Builds the text of one hint from the river. Returns null when there is nothing to say. */
@@ -7,11 +7,9 @@ export type HintBuilder = (river: River) => string | null;
 
 export const continentHint: HintBuilder = (river) => `Continent: ${river.continent}`;
 
-/**
- * Names the first few countries the river flows through, in the order stored (along the river),
- * and says how many more there are. A long list would give the river away.
- */
-export const flowsThroughHint: HintBuilder = (river) => listHint("Flows through", river.countries);
+/** How many countries the river flows through, without naming them. */
+export const countryCountHint: HintBuilder = (river) =>
+  countHint(river.countries.length, "country", "countries", "Flows through");
 
 export const firstLetterHint: HintBuilder = (river) => firstLetter(river.name);
 

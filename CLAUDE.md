@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Geogames: geography quiz games. The backend is Spring Boot 4 / Java 25 / Maven, at the repo root. The frontend is Next.js 16 / React 19 / TypeScript, in `client/`. It uses TanStack Query (`@tanstack/react-query`), react-bootstrap and react-leaflet.
+Geogames: geography quiz games. The backend is Spring Boot 4 / Java 25 / Maven, at the repo root. The frontend is Next.js 16 / React 19 / TypeScript, in `client/`. It uses TanStack Query (`@tanstack/react-query`) and react-leaflet; Bootstrap's CSS is loaded for layout utilities only.
 
 ## Working efficiently
 
@@ -46,6 +46,8 @@ Full builds:
 ## Architecture
 
 **Build coupling.** The Maven `frontend-maven-plugin` installs Node 24 into `target/`, then runs `npm ci` and `npm run build` in `client/`. `maven-antrun-plugin` copies `client/out` into `target/classes/public`, so Spring serves the static site and the API from the same jar. The `Dockerfile` does the same build in two stages.
+
+**Theme.** `client/src/theme/tokens.css` is the only place for colours, fonts, radii, shadows and durations (a light block and a dark block). Components use the semantic `--gg-color-*` tokens, never a raw colour or a `--bs-*` variable. Controls come from `client/src/ui/` (`Button` with variants by meaning, `buttonClass` for links that look like buttons, `ToggleGroup`, `Spinner`, `Notice`, `Chip`), styled in `theme/components.css`. `npm run lint` also runs `scripts/check-theme.mjs`, which rejects colour literals, `react-bootstrap` and Bootstrap colour or component classes. Bootstrap is still loaded for layout utilities and its reset only; `theme/bootstrap-bridge.css` points its variables at the tokens. Map colours live in `client/src/map/constants.ts` and `flagIcons.ts` (they don't follow light/dark). See `docs/plans/theme.md`.
 
 **Environment switching.** `client/src/api/gateway.ts` (`serverEndpoint()`) picks the backend URL from `NODE_ENV`: production uses `https://geogames-web-service.onrender.com`, anything else `localhost:8080`. A non-empty `NEXT_PUBLIC_API_URL` at build time wins over both: the browser tests build the bundled site with `NEXT_PUBLIC_API_URL=http://localhost:8080` so the jar talks to itself. Never set it for the Render build. The allowed CORS origins are `geogames.cors.allowed-origins` in `application.properties`; update it if the hosting changes.
 

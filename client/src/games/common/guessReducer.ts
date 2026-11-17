@@ -16,6 +16,8 @@ export interface GuessState {
   outOfGuesses: boolean;
   over: boolean;
   hintsUsed: number;
+  /** One entry per hint taken: the canonical answers found at the moment that hint was taken. */
+  foundAtHint: string[][];
 }
 
 export type GuessAction =
@@ -66,13 +68,15 @@ export function guessesLeft(state: GuessState, guessLimit: number): number {
 /** `hintsUsed` is what the server recorded for the round, which only matters once it is answered. */
 export function initialGuessState(answerState: AnswerState, answers: AnswerCandidate[], hintsUsed: number): GuessState {
   if (answerState === UNANSWERED) {
-    return { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0 };
+    return { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] };
   }
+  // The server doesn't keep the guesses, so a reopened round has nothing found at each hint.
+  const foundAtHint: string[][] = Array.from({ length: hintsUsed }, () => []);
   if (answerState === GAVE_UP || answerState === OUT_OF_GUESSES) {
     // The server doesn't keep the guesses, so every answer shows as revealed rather than found.
-    return { guesses: [], gaveUp: true, outOfGuesses: answerState === OUT_OF_GUESSES, over: true, hintsUsed };
+    return { guesses: [], gaveUp: true, outOfGuesses: answerState === OUT_OF_GUESSES, over: true, hintsUsed, foundAtHint };
   }
-  return { guesses: allFound(answers), gaveUp: false, outOfGuesses: false, over: true, hintsUsed };
+  return { guesses: allFound(answers), gaveUp: false, outOfGuesses: false, over: true, hintsUsed, foundAtHint };
 }
 
 export function guessReducer(state: GuessState, action: GuessAction, config: GuessConfig): GuessOutcome {
@@ -92,7 +96,8 @@ export function guessReducer(state: GuessState, action: GuessAction, config: Gue
       if (state.over || state.hintsUsed >= config.hintsTotal) {
         return { state };
       }
-      return { state: { ...state, hintsUsed: state.hintsUsed + 1 } };
+      const found = state.guesses.flatMap(g => (g.answer === null ? [] : [g.answer]));
+      return { state: { ...state, hintsUsed: state.hintsUsed + 1, foundAtHint: [...state.foundAtHint, found] } };
   }
 }
 

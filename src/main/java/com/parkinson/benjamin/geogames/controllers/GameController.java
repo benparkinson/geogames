@@ -9,6 +9,7 @@ import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,16 +48,30 @@ public class GameController {
       @PathVariable int round,
       @RequestBody GameRoundAnswerRequest answer) {
     return parseGameId(gameId)
-        .flatMap(
-            id ->
-                gameService.submitAnswer(
-                    id,
-                    round,
-                    answer.answerState(),
-                    answer.hintsUsedOrZero(),
-                    answer.wrongGuesses()))
+        .flatMap(id -> submitAnswerWithRetry(id, round, answer))
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
+  }
+
+  /**
+   * Another request changed this round between this one's read and its write. Trying again reads
+   * what that request committed, so the usual rules apply: the identical answer is a no-op, a
+   * different one is a 409, and a game deleted meanwhile is a 404. It retries once, outside the
+   * service's transaction; a second failure propagates.
+   */
+  private Optional<RoundAnswerResponse> submitAnswerWithRetry(
+      UUID id, int round, GameRoundAnswerRequest answer) {
+    try {
+      return submitAnswerOnce(id, round, answer);
+    } catch (ObjectOptimisticLockingFailureException e) {
+      return submitAnswerOnce(id, round, answer);
+    }
+  }
+
+  private Optional<RoundAnswerResponse> submitAnswerOnce(
+      UUID id, int round, GameRoundAnswerRequest answer) {
+    return gameService.submitAnswer(
+        id, round, answer.answerState(), answer.hintsUsedOrZero(), answer.wrongGuesses());
   }
 
   /**

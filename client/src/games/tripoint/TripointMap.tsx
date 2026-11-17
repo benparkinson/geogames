@@ -5,7 +5,7 @@ import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { SatelliteTiles } from "../../map/SatelliteTiles";
 import { answerPathOptions } from "../../map/constants";
-import { TripointRoundData } from "./model";
+import { hintedCountries, TripointRoundData } from "./model";
 
 const markerIcon = L.icon({
   iconUrl: "/flag.png",
@@ -13,7 +13,7 @@ const markerIcon = L.icon({
   iconAnchor: [24, 32],
 });
 
-function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed }: MapProps<TripointRoundData>) {
+function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed, foundAtHint }: MapProps<TripointRoundData>) {
   const color = answerPathOptions(gaveUp);
   const position: [number, number] = [tripoint.coordinate.latitude, tripoint.coordinate.longitude];
 
@@ -23,7 +23,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed }: MapProps<T
     </GeoJSON>
   ));
 
-  const hinted = tripoint.hintOrder.slice(0, hintsUsed);
+  const hinted = hintedCountries(tripoint.hintOrder, hintsUsed, foundAtHint);
   const clueBorders = tripoint.countries
     .filter(country => hinted.includes(country.name))
     .map((country) => (

@@ -166,4 +166,57 @@ class RoundStatsStoreTest {
     assertThat(type).isEqualToIgnoringCase("DATE");
     assertThat(rows().get(0).get("answered_on")).hasToString("2026-11-09");
   }
+
+  @Test
+  void aLostInsertRaceReadsTheOtherWritersLookupRow() {
+    String key = "river:race-" + UUID.randomUUID();
+    jdbc.sql("insert into stat_round_key (round_key) values (:k)").param("k", key).update();
+    int existing =
+        jdbc.sql("select id from stat_round_key where round_key = :k")
+            .param("k", key)
+            .query(Integer.class)
+            .single();
+
+    int id =
+        store.insertOrFind(
+            RoundStatsStore.ROUND_KEY_SELECT,
+            RoundStatsStore.ROUND_KEY_INSERT,
+            Map.of("roundKey", key));
+
+    assertThat(id).isEqualTo(existing);
+    assertThat(count("select count(*) from stat_round_key where round_key = ?", key)).isEqualTo(1);
+  }
+
+  @Test
+  void aLostInsertRaceReadsTheOtherWritersGameRow() {
+    UUID playId = UUID.randomUUID();
+    int modeId =
+        jdbc.sql("select id from stat_game_mode").query(Integer.class).list().stream()
+            .findFirst()
+            .orElseGet(
+                () -> {
+                  jdbc.sql("insert into stat_game_mode (name) values ('RACE_MODE')").update();
+                  return jdbc.sql("select id from stat_game_mode where name = 'RACE_MODE'")
+                      .query(Integer.class)
+                      .single();
+                });
+    Map<String, Object> params =
+        Map.of(
+            "playedOn",
+            LocalDate.of(2026, 11, 9),
+            "modeId",
+            modeId,
+            "roundsInGame",
+            5,
+            "playId",
+            playId);
+    jdbc.sql(RoundStatsStore.GAME_INSERT).params(params).update();
+    int existing =
+        jdbc.sql(RoundStatsStore.GAME_SELECT).param("playId", playId).query(Integer.class).single();
+
+    int id = store.insertOrFind(RoundStatsStore.GAME_SELECT, RoundStatsStore.GAME_INSERT, params);
+
+    assertThat(id).isEqualTo(existing);
+    assertThat(count("select count(*) from stat_game where play_id = ?", playId)).isEqualTo(1);
+  }
 }

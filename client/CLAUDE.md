@@ -1,12 +1,12 @@
 # Frontend (`client/`)
 
-Next.js 16, React 19, TypeScript, TanStack Query, react-bootstrap, react-leaflet. Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
+Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (Bootstrap CSS for layout utilities only; see Theme in the root `CLAUDE.md`). Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
 
 ## Commands
 
 - Dev server with hot reload on port 3000: `npm run dev`. It calls the backend at `http://localhost:8080`.
 - Type-check: `npm run typecheck` (`tsc --noEmit`; CI runs it with lint).
-- Lint: `npm run lint` (zero warnings allowed). TypeScript is pinned to 6.0 (`~6.0.3`) because typescript-eslint doesn't support TS 7 yet (typescript-eslint#10940); Dependabot ignores major TypeScript bumps. Drop the pin and the `ignore` entry once it does.
+- Lint: `npm run lint` (zero warnings allowed, then `scripts/check-theme.mjs`, which keeps colours in `src/theme/tokens.css`). TypeScript is pinned to 6.0 (`~6.0.3`) because typescript-eslint doesn't support TS 7 yet (typescript-eslint#10940); Dependabot ignores major TypeScript bumps. Drop the pin and the `ignore` entry once it does.
 - Lint rules check: `npm run lint:rules` lints `lint-probe/probe.tsx`, which breaks one rule from each ESLint plugin, and fails unless every rule in `scripts/check-lint-rules.mjs` fires. This catches a plugin that silently stops reporting after an ESLint upgrade (several declare peer `eslint` ≤ 9). `npm run lint` and `tsc` ignore the probe folder. When adding a plugin, add a violation and its rule id to both files.
 - Production static export: `npm run build` runs `next build` (with `output: "export"` in `next.config.mjs`) and writes to `out/`. Before that (and before `npm run dev`) `scripts/third-party-licenses.mjs` writes the licence text of every production npm package to `public/third-party-licenses.txt` (git-ignored), which the home page footer links to: the minified bundle keeps no licence comments, and MIT/BSD/Hippocratic (react-leaflet) licences need the notice to ship with the code.
 - Tests (Vitest + React Testing Library + jsdom): `npm test` (single run), `npm run test:watch`, `npm run coverage` (v8; only the `*MapWrapper.tsx` files are excluded).
@@ -22,7 +22,7 @@ Next.js 16, React 19, TypeScript, TanStack Query, react-bootstrap, react-leaflet
 
 ## Credits
 
-The home page footer credits Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA), Esri (satellite imagery) and the Flaticon icon authors. Esri's terms also need its credit on the map itself: always draw satellite imagery with `map/SatelliteTiles` (which sets the `attribution`), never a bare `TileLayer`. A new data source or tile layer needs a credit added to the footer.
+The home page footer credits Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA), EOX (Sentinel-2 cloudless satellite imagery, the 2016 layer, CC BY 4.0) and the Flaticon icon authors. The CC BY licence needs the credit on the map itself too: always draw satellite imagery with `map/SatelliteTiles` (which sets the `attribution`), never a bare `TileLayer`. Later years of the same mosaic are non-commercial, so don't change the layer year without checking its licence. A new data source or tile layer needs a credit added to the footer.
 
 ## Structure (`src/`)
 
@@ -54,6 +54,6 @@ Then add the module to `GAME_MODULES` in `games/registry.ts`, whose order is the
 ## Game families
 
 - **Rivers** (`games/rivers/`): `RiverGame.tsx`'s `makeRiverGame(config)` builds each variant's component from a map, a prompt, a caption and hints, with shared layers in `RiverLayers.tsx` and hint builders in `riverHints.ts`.
-- **Lakes** (`games/lakes/`): the module (`index.ts`), `LakeGame.tsx`, the `LakeShapesMap` pair (the polygon on a blank map with a scale bar, and the satellite map once the round ends: solved, given up or out of guesses), `lakeHints.ts` (continent, countries on the shore, first letter) and `useGuessList("lakes")`.
+- **Lakes** (`games/lakes/`): the module (`index.ts`), `LakeGame.tsx`, the `LakeShapesMap` pair (the polygon on a blank map with a scale bar, and the satellite map once the round ends: solved, given up or out of guesses), `lakeHints.ts` (continent, number of countries on the shore, first letter) and `useGuessList("lakes")`.
 - **Country shapes** (`games/countries/`): `CountryShapeGame.tsx`'s `makeCountryShapeGame(variant)` builds each component from a map, a prompt, a caption and hints, with shared layers in `CountryLayers.tsx` (`FocusFit` fits the largest part, so Russia, Fiji and overseas territories don't zoom out to the world) and hint builders in `countryHints.ts` plus the generic `games/common/hints.ts`. The games use `useGuessList("countries")` and `isKnownGuess`.
 - Removing a variant: delete its module, registry entry and map pair, and the backend constant and bean.

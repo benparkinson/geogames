@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
+import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -32,8 +34,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @WebMvcTest(GameController.class)
 class GameControllerTest {
@@ -273,6 +277,53 @@ class GameControllerTest {
                     "Round 0 was already answered CORRECT with 0 hints and 2 wrong guesses and"
                         + " can't be changed to GAVE_UP with 0 hints and unreported wrong"
                         + " guesses"));
+  }
+
+  private static ObjectOptimisticLockingFailureException lockFailure() {
+    return new ObjectOptimisticLockingFailureException(GameRoundEntity.class, 1L);
+  }
+
+  private ResultActions postGaveUp() throws Exception {
+    return mockMvc.perform(
+        post("/api/games/" + GAME_ID + "/rounds/0/answers")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"answerState\":\"GAVE_UP\"}"));
+  }
+
+  @Test
+  void anAnswerThatLostARaceIsRetriedOnce() throws Exception {
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+        .thenThrow(lockFailure())
+        .thenReturn(Optional.of(answer()));
+
+    postGaveUp().andExpect(status().isOk());
+
+    verify(gameService, times(2)).submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+  }
+
+  @Test
+  void anAnswerThatLostARaceToADifferentAnswerIsAConflict() throws Exception {
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+        .thenThrow(lockFailure())
+        .thenThrow(
+            new RoundAlreadyAnsweredException(
+                0, AnswerState.CORRECT, 0, 2, AnswerState.GAVE_UP, 0, null));
+
+    postGaveUp().andExpect(status().isConflict());
+  }
+
+  @Test
+  void anAnswerThatLosesTheRaceTwiceIsAConflictAndIsNotRetriedAgain() throws Exception {
+    when(gameService.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+        .thenThrow(lockFailure());
+
+    postGaveUp()
+        .andExpect(status().isConflict())
+        .andExpect(
+            jsonPath("$.detail")
+                .value("This round was changed by another request. Please try again."));
+
+    verify(gameService, times(2)).submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
   }
 
   @Test

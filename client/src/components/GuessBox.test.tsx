@@ -29,7 +29,7 @@ describe("GuessBox", () => {
   it("adds a class name to the input", () => {
     render(<GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} className="shake" />);
 
-    expect(screen.getByRole("textbox")).toHaveClass("form-control", "shake");
+    expect(screen.getByRole("textbox")).toHaveClass("gg-input", "shake");
   });
 
   it("links the input to a datalist with one option per suggestion", () => {

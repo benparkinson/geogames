@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 
 /**
  * One round of a game. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
@@ -46,6 +47,11 @@ public class GameRoundEntity {
    * didn't report it.
    */
   private Integer wrongGuesses;
+
+  /** Optimistic lock: a second writer of the same round fails rather than overwriting the first. */
+  @Version
+  @Column(nullable = false)
+  private int version;
 
   public GameRoundEntity() {}
 

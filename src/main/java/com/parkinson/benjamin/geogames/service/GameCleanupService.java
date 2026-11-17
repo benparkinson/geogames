@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  * month at most out of the free 100. That is acceptable, and the job doesn't run while the free web
  * service is asleep anyway. The run at start-up costs nothing extra: the service only starts
  * because a request came in, and that request uses the database too.
+ *
+ * <p>The delete is a single statement and is safe to run from several instances at once.
  */
 @Service
 public class GameCleanupService {
@@ -39,7 +41,7 @@ public class GameCleanupService {
 
   @Transactional
   public long deleteGamesOlderThanMaxAge(Instant now) {
-    long deleted = games.deleteByCreatedAtBefore(now.minus(maxAge));
+    long deleted = games.deleteCreatedBefore(now.minus(maxAge));
     if (deleted > 0) {
       log.info("Deleted {} games older than {}", deleted, maxAge);
     }

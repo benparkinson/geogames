@@ -1,4 +1,5 @@
 import { CheckLg, EyeFill } from "react-bootstrap-icons";
+import { Chip } from "../../ui";
 
 export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: {
   answerCount: number;
@@ -15,22 +16,22 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
       {Array.from({ length: answerCount }, (_v, i) => {
         if (i < found.length) {
           return (
-            <span key={i} className="slot--filled badge rounded-pill bg-success fs-6 fw-normal">
+            <Chip key={i} tone="correct" className="slot--filled">
               {found[i]} <CheckLg aria-hidden="true" />
-            </span>
+            </Chip>
           );
         }
         const revealedAnswer = revealed[i - found.length];
         if (revealedAnswer) {
           return (
-            <span key={i} className="slot--filled badge rounded-pill bg-secondary fs-6 fw-normal" title="Revealed">
+            <Chip key={i} tone="revealed" className="slot--filled" title="Revealed">
               {revealedAnswer} <EyeFill aria-hidden="true" />
               <span className="visually-hidden"> (revealed)</span>
-            </span>
+            </Chip>
           );
         }
         return (
-          <span key={i} className="answer-slot-empty rounded-pill px-3 text-muted fs-6" aria-label="Not found yet">?</span>
+          <span key={i} className="answer-slot-empty px-3 gg-text-muted fs-6" aria-label="Not found yet">?</span>
         );
       })}
     </div>

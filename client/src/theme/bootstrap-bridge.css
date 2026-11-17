@@ -1,0 +1,10 @@
+/* Temporary: points Bootstrap's variables at our tokens until Bootstrap is removed (docs/plans/theme.md, phase 4). */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-body-bg: var(--gg-color-surface);
+  --bs-body-color: var(--gg-color-text);
+  --bs-body-font-family: var(--gg-font-sans);
+}
+a { color: var(--gg-color-link); }
+a:hover { color: var(--gg-color-link-hover); }
