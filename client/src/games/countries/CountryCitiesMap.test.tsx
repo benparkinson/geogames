@@ -56,6 +56,27 @@ describe("CountryCitiesMap", () => {
     expect(fakeMap.fitBounds).toHaveBeenCalledTimes(1);
   });
 
+  it("fits the map to the country and to a city outside it", () => {
+    const data = makeCountryCitiesRoundData();
+    const { south, west, north, east } = data.country.focus;
+    data.cities.push({ name: "Faraway", lon: east + 50, lat: south - 30, population: 1000, capital: false });
+    renderMap({}, data);
+
+    expect(fakeMap.fitBounds).toHaveBeenCalledWith(
+      [
+        [south - 30, west],
+        [north, east + 50],
+      ],
+      expect.anything(),
+    );
+  });
+
+  it("does not label the outline with the country's name once the round is over", () => {
+    renderMap({ gameOver: true });
+
+    expect(document.querySelector('[data-testid="GeoJSON"] [data-testid="Tooltip"]')).toBeNull();
+  });
+
   it("draws the capital again in a different style at the first hint", () => {
     renderMap({ hintsUsed: 1 });
 
