@@ -1,6 +1,6 @@
 {
   "name" : "Cape Verde",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Cabo Verde" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

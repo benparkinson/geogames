@@ -1,6 +1,6 @@
 {
   "name" : "Papua New Guinea",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "PNG" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

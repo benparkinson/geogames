@@ -31,6 +31,7 @@ type Kind = "TRIPOINT" | "RIVERS_BY_SHAPE";
 function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): AnswerState => "UNANSWERED")) {
   const states = [...initialStates];
   const hints = kinds.map(() => 0);
+  const saved: { text: string; correct: boolean }[][] = kinds.map(() => []);
   const build = (i: number) =>
     makeGameRounds(
       kinds.map((kind, n) => ({ river: kind === "RIVERS_BY_SHAPE", answerState: states[n], hintsUsed: hints[n] })),
@@ -46,6 +47,16 @@ function fakeServer(kinds: Kind[], initialStates: AnswerState[] = kinds.map((): 
         states[index] = answer.answerState;
         hints[index] = answer.hintsUsed;
         return build(index);
+      },
+    },
+    {
+      method: "POST",
+      url: /\/api\/games\/g1\/rounds\/\d+\/guesses$/,
+      body: ({ url, init }) => {
+        const index = Number(url.match(/rounds\/(\d+)\/guesses/)![1]);
+        const body = JSON.parse(init!.body as string);
+        saved[index].push({ text: body.guess, correct: body.correct });
+        return { guesses: saved[index] };
       },
     },
     { url: /\/api\/countries$/, body: countryNames },
@@ -132,7 +143,7 @@ describe("GameRoundPage playing", () => {
     await solveTripoint(user);
 
     await waitFor(() => {
-      const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
+      const posts = callsTo(fetchMock).filter((c) => c.method === "POST" && c.url.endsWith("/answers"));
       expect(posts).toHaveLength(1);
       expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/answers");
       expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });

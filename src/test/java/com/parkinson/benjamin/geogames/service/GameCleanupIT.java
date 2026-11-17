@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
+import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.time.Duration;
 import java.time.Instant;
@@ -13,6 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Runs the scheduled cleanup the way the scheduler does: from the real bean, with no surrounding
@@ -26,6 +28,7 @@ class GameCleanupIT {
 
   @Autowired private GameCleanupService service;
   @Autowired private GameRepository games;
+  @Autowired private JdbcTemplate jdbc;
 
   private GameEntity game(String key) {
     List<GameRoundEntity> rounds = new ArrayList<>();
@@ -45,5 +48,26 @@ class GameCleanupIT {
 
     assertThat(games.findByPublicId(old.getPublicId())).isEmpty();
     assertThat(games.findByPublicId(recent.getPublicId())).isPresent();
+  }
+
+  @Test
+  void deletingAGameDeletesItsGuessRows() {
+    GameEntity old = game("tripoint:cleanup-guesses");
+    old.getRounds().get(0).addGuess(new RoundGuess("France", false));
+    old.getRounds().get(0).addGuess(new RoundGuess("Spain", true));
+    old.setCreatedAt(Instant.now().minus(Duration.ofDays(2)));
+    GameEntity saved = games.save(old);
+    long roundId = saved.getRounds().get(0).getId();
+    assertThat(guessRows(roundId)).isEqualTo(2);
+
+    service.deleteOldGames();
+
+    assertThat(games.findByPublicId(saved.getPublicId())).isEmpty();
+    assertThat(guessRows(roundId)).isZero();
+  }
+
+  private long guessRows(long roundId) {
+    return jdbc.queryForObject(
+        "select count(*) from game_round_guess where round_id = ?", Long.class, roundId);
   }
 }

@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.api;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import java.util.List;
 
 public record GameRound(
     GameTypeResponse gameType,
@@ -9,4 +10,5 @@ public record GameRound(
     AnswerState answerState,
     int hintsUsed,
     int points,
-    GameResult gameResult) {}
+    GameResult gameResult,
+    List<RecordedGuess> guesses) {}

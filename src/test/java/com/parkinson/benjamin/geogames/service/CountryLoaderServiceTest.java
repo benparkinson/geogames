@@ -28,6 +28,8 @@ class CountryLoaderServiceTest {
     assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
     assertEquals(names.stream().sorted(Comparator.comparing(CountryName::name)).toList(), names);
     assertTrue(names.stream().noneMatch(c -> "Antarctica".equals(c.name())));
+    assertTrue(names.stream().noneMatch(c -> "Northern Cyprus".equals(c.name())));
+    assertTrue(names.stream().anyMatch(c -> "Palestine".equals(c.name())));
     assertTrue(names.stream().anyMatch(c -> "France".equals(c.name())));
     names.forEach(c -> assertNotNull(c.additionalNames(), c.name()));
   }

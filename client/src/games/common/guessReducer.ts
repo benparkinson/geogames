@@ -1,5 +1,6 @@
 import { normaliseString } from "../../helper/stringHelper";
 import { AnswerCandidate, matchAnswer } from "./answers";
+import type { RecordedGuess } from "../../api/types";
 import { AnswerState, CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 
 /** One thing the player typed. `answer` is the canonical answer it matched, or null if it was wrong. */
@@ -78,18 +79,56 @@ export function guessesLeft(state: GuessState, guessLimit: number): number {
   return Math.max(0, guessLimit - wrongGuessCount(state));
 }
 
-/** `hintsUsed` is what the server recorded for the round, which only matters once it is answered. */
-export function initialGuessState(answerState: AnswerState, answers: AnswerCandidate[], hintsUsed: number): GuessState {
-  if (answerState === UNANSWERED) {
-    return { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] };
+const EMPTY_STATE: GuessState = { guesses: [], gaveUp: false, outOfGuesses: false, over: false, hintsUsed: 0, foundAtHint: [] };
+
+/**
+ * Rebuilds a round's state from what the server holds: the answer state, the hints used (only recorded once the
+ * round is answered) and the guesses saved while it was played.
+ *
+ * The saved guesses are replayed through `guessReducer`, which works out each one's answer again with `matchAnswer`
+ * (that is trusted over the stored `correct`). `isKnownGuess` is left out: the server only stored known names, and
+ * the place names may not have loaded yet. For an unanswered round, `finished` is set when the replay ended the
+ * round, which means the answer request that followed the last guess was lost and must be sent again.
+ */
+export function restoreGuessState(
+  answerState: AnswerState,
+  hintsUsed: number,
+  saved: RecordedGuess[],
+  config: GuessConfig,
+): { state: GuessState; finished?: GuessOutcome["finished"] } {
+  const replayConfig: GuessConfig = { ...config, isKnownGuess: undefined };
+  let state = EMPTY_STATE;
+  let finished: GuessOutcome["finished"];
+  for (const { text } of saved) {
+    if (state.over) {
+      break;
+    }
+    const outcome = guessReducer(state, { type: "guess", text }, replayConfig);
+    state = outcome.state;
+    finished = outcome.finished;
   }
-  // The server doesn't keep the guesses, so a reopened round has nothing found at each hint.
+  if (answerState === UNANSWERED) {
+    return finished ? { state, finished } : { state };
+  }
+  // The server doesn't keep the hints' moments, so a reopened round has nothing found at each hint.
   const foundAtHint: string[][] = Array.from({ length: hintsUsed }, () => []);
   if (answerState === GAVE_UP || answerState === OUT_OF_GUESSES) {
-    // The server doesn't keep the guesses, so every answer shows as revealed rather than found.
-    return { guesses: [], gaveUp: true, outOfGuesses: answerState === OUT_OF_GUESSES, over: true, hintsUsed, foundAtHint };
+    // The answers found before giving up show as found, and the rest as revealed.
+    return {
+      state: { guesses: state.guesses, gaveUp: true, outOfGuesses: answerState === OUT_OF_GUESSES, over: true, hintsUsed, foundAtHint },
+    };
   }
-  return { guesses: allFound(answers), gaveUp: false, outOfGuesses: false, over: true, hintsUsed, foundAtHint };
+  const wrong = state.guesses.filter(g => g.answer === null);
+  return {
+    state: {
+      guesses: [...wrong, ...allFound(config.answers)],
+      gaveUp: false,
+      outOfGuesses: false,
+      over: true,
+      hintsUsed,
+      foundAtHint,
+    },
+  };
 }
 
 export function guessReducer(state: GuessState, action: GuessAction, config: GuessConfig): GuessOutcome {

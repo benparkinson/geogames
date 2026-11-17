@@ -1,6 +1,6 @@
 {
   "name" : "Russia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Russian Federation" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -4,10 +4,13 @@ import com.parkinson.benjamin.geogames.api.GameCreationRequest;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameRoundAnswerRequest;
+import com.parkinson.benjamin.geogames.api.GameRoundGuessRequest;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
+import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,30 +51,49 @@ public class GameController {
       @PathVariable int round,
       @RequestBody GameRoundAnswerRequest answer) {
     return parseGameId(gameId)
-        .flatMap(id -> submitAnswerWithRetry(id, round, answer))
+        .flatMap(
+            id ->
+                retryOnConflict(
+                    () ->
+                        gameService.submitAnswer(
+                            id,
+                            round,
+                            answer.answerState(),
+                            answer.hintsUsedOrZero(),
+                            answer.wrongGuesses())))
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/games/{gameId}/rounds/{round}/guesses")
+  public ResponseEntity<RoundGuessesResponse> recordGuess(
+      @PathVariable String gameId,
+      @PathVariable int round,
+      @RequestBody GameRoundGuessRequest request) {
+    if (request.correct() == null) {
+      throw new IllegalArgumentException("correct is required");
+    }
+    return parseGameId(gameId)
+        .flatMap(
+            id ->
+                retryOnConflict(
+                    () -> gameService.recordGuess(id, round, request.guess(), request.correct())))
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }
 
   /**
    * Another request changed this round between this one's read and its write. Trying again reads
-   * what that request committed, so the usual rules apply: the identical answer is a no-op, a
-   * different one is a 409, and a game deleted meanwhile is a 404. It retries once, outside the
-   * service's transaction; a second failure propagates.
+   * what that request committed, so the usual rules apply: the identical answer or guess is a
+   * no-op, a different answer is a 409, and a game deleted meanwhile is a 404. It retries once,
+   * outside the service's transaction; a second failure propagates.
    */
-  private Optional<RoundAnswerResponse> submitAnswerWithRetry(
-      UUID id, int round, GameRoundAnswerRequest answer) {
+  private static <T> Optional<T> retryOnConflict(Supplier<Optional<T>> call) {
     try {
-      return submitAnswerOnce(id, round, answer);
+      return call.get();
     } catch (ObjectOptimisticLockingFailureException e) {
-      return submitAnswerOnce(id, round, answer);
+      return call.get();
     }
-  }
-
-  private Optional<RoundAnswerResponse> submitAnswerOnce(
-      UUID id, int round, GameRoundAnswerRequest answer) {
-    return gameService.submitAnswer(
-        id, round, answer.answerState(), answer.hintsUsedOrZero(), answer.wrongGuesses());
   }
 
   /**

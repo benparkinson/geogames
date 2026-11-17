@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MapGameInput from "./MapGameInput";
-import { Round, RoundAnswer } from "./Model";
+import { Round, RoundAnswer, UNANSWERED } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
@@ -9,7 +9,7 @@ import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
 import HardcoreToggle from "../../components/HardcoreToggle";
 import { useHardcoreMode } from "../../settings/hardcoreMode";
-import { GuessAction, GuessClue, guessesLeft, guessReducer, GuessState, initialGuessState, wrongGuessCount } from "./guessReducer";
+import { GuessAction, GuessClue, GuessConfig, guessesLeft, guessReducer, GuessState, restoreGuessState, wrongGuessCount } from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -28,13 +28,36 @@ function MapGame<Type>({
   clueFor,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
-  const [guessState, setGuessState] = useState<GuessState>(() =>
-    initialGuessState(round.answerState, answers, round.hintsUsed));
-  const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
-  // The backend decides how many hints there are; the game only supplies what they say.
   const [hardcore] = useHardcoreMode();
   const hintCount = round.hintCount;
   const hintConfig = hintCount > 0 ? hints : undefined;
+  const config: GuessConfig = {
+    answers,
+    answerCount,
+    isKnownGuess,
+    hintsTotal: hintConfig ? hintCount : 0,
+    guessLimit: round.guessLimit,
+    clueFor,
+  };
+  // Rebuilt from the guesses the server saved, so a refresh keeps them.
+  const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, config));
+  const [guessState, setGuessState] = useState<GuessState>(restored.state);
+  const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
+
+  // The guesses ended the round but the answer request after the last guess was lost: send it again, once.
+  const resubmitted = useRef(false);
+  useEffect(() => {
+    if (restored.finished && round.answerState === UNANSWERED && !resubmitted.current) {
+      resubmitted.current = true;
+      submitAnswer({
+        answerState: restored.finished,
+        hintsUsed: restored.state.hintsUsed,
+        wrongGuesses: wrongGuessCount(restored.state),
+      });
+    }
+    // Once, for the state the round was opened with.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (hintCount > 0 && !hints && process.env.NODE_ENV === "development") {
@@ -47,15 +70,13 @@ function MapGame<Type>({
     .filter((text): text is string => !!text);
 
   function dispatch(action: GuessAction) {
-    const outcome = guessReducer(guessState, action, {
-      answers,
-      answerCount,
-      isKnownGuess,
-      hintsTotal: hintConfig ? hintCount : 0,
-      guessLimit: round.guessLimit,
-      clueFor,
-    });
+    const outcome = guessReducer(guessState, action, config);
     setGuessState(outcome.state);
+    // Saved before the answer: the two share a mutation scope, which runs them in the order they were started.
+    if (outcome.state.guesses.length > guessState.guesses.length) {
+      const last = outcome.state.guesses[outcome.state.guesses.length - 1];
+      round.recordGuess({ text: last.text, correct: last.answer !== null });
+    }
     if (outcome.finished) {
       submitAnswer({
         answerState: outcome.finished,

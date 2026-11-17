@@ -15,16 +15,20 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
+import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
+import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
 import com.parkinson.benjamin.geogames.model.Tripoint;
@@ -70,6 +74,7 @@ class GameServiceTest {
   private final Map<GameType, RoundGenerator> generators = new EnumMap<>(GameType.class);
   private GameService service;
   private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
+  private final KnownPlaceNames names = testNames();
 
   @BeforeEach
   void setUp() {
@@ -93,6 +98,30 @@ class GameServiceTest {
             });
   }
 
+  /** Real lookup over a few made-up names, so a guess resolves as it does in the app. */
+  static KnownPlaceNames testNames() {
+    CountryLoaderService countries = mock(CountryLoaderService.class);
+    when(countries.loadCountryNames())
+        .thenReturn(
+            List.of(
+                new PlaceName("France", List.of("République française")),
+                new PlaceName("Germany", List.of("Deutschland")),
+                new PlaceName("Italy", List.of())));
+    RiverLoaderService rivers = mock(RiverLoaderService.class);
+    when(rivers.loadRiverNames()).thenReturn(List.of(new PlaceName("Rhine", List.of("Rhein"))));
+    LakeLoaderService lakes = mock(LakeLoaderService.class);
+    when(lakes.loadLakeNames())
+        .thenReturn(
+            List.of(
+                new PlaceName("Garda", List.of()),
+                new PlaceName("Como", List.of()),
+                new PlaceName("Maggiore", List.of()),
+                new PlaceName("Lugano", List.of()),
+                new PlaceName("Iseo", List.of()),
+                new PlaceName("Orta", List.of())));
+    return new KnownPlaceNames(countries, rivers, lakes);
+  }
+
   // ---------------------------------------------------------------- fixtures
 
   private static RoundGenerator generatorFor(GameType type) {
@@ -103,7 +132,7 @@ class GameServiceTest {
 
   private GameService allGeneratorsService(Random random) {
     return new GameService(
-        gameRepository, List.copyOf(generators.values()), objectMapper, random, events);
+        gameRepository, List.copyOf(generators.values()), objectMapper, random, events, names);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -111,7 +140,8 @@ class GameServiceTest {
   }
 
   private GameService serviceWith(Random random, RoundGenerator... generators) {
-    return new GameService(gameRepository, List.of(generators), objectMapper, random, events);
+    return new GameService(
+        gameRepository, List.of(generators), objectMapper, random, events, names);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -382,7 +412,12 @@ class GameServiceTest {
       GameRepository repository = mock(GameRepository.class);
       when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
       new GameService(
-              repository, List.copyOf(generators.values()), objectMapper, new Random(7), events)
+              repository,
+              List.copyOf(generators.values()),
+              objectMapper,
+              new Random(7),
+              events,
+              names)
           .createGame("RANDOM", 10);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
@@ -924,5 +959,131 @@ class GameServiceTest {
         .hasMessageContaining("at least one round");
     assertThatThrownBy(() -> new GameEntity(null, "TRIPOINT"))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  // ------------------------------------------------------------ recordGuess
+
+  private GameRoundEntity guessRound(GameType type, AnswerState state) {
+    GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
+    entity.setAnswerState(state);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
+    return entity;
+  }
+
+  private static List<String> texts(RoundGuessesResponse response) {
+    return response.guesses().stream().map(RecordedGuess::text).toList();
+  }
+
+  @Test
+  void guessesAreStoredInOrderWithTheListSpelling() {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    service.recordGuess(GAME_ID, 0, "  GERMANY ", false);
+    RoundGuessesResponse response =
+        service.recordGuess(GAME_ID, 0, "republique FRANCAISE", true).orElseThrow();
+
+    assertThat(response.guesses())
+        .containsExactly(
+            new RecordedGuess("Germany", false), new RecordedGuess("République française", true));
+    assertThat(entity.getGuesses()).hasSize(2);
+    verify(gameRepository, times(2)).save(any(GameEntity.class));
+  }
+
+  @Test
+  void aDuplicateGuessChangesNothing() {
+    guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+    service.recordGuess(GAME_ID, 0, "Germany", false);
+
+    RoundGuessesResponse again = service.recordGuess(GAME_ID, 0, "germany", false).orElseThrow();
+
+    assertThat(texts(again)).containsExactly("Germany");
+    verify(gameRepository, times(1)).save(any(GameEntity.class));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"Atlantis", "", "   "})
+  void anUnknownOrBlankGuessIsRejected(String guess) {
+    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, guess, false))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThat(entity.getGuesses()).isEmpty();
+  }
+
+  @Test
+  void aNullOrTooLongGuessIsRejected() {
+    guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, null, false))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "a".repeat(256), false))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void theLastAllowedWrongGuessIsAcceptedAndTheNextIsRejected() {
+    guessRound(GameType.LAKES_BY_SHAPE, AnswerState.UNANSWERED);
+    List<String> lakes = List.of("Garda", "Como", "Maggiore", "Lugano", "Iseo", "Orta");
+    int limit = GameType.LAKES_BY_SHAPE.guessLimit();
+    assertThat(lakes.size()).isGreaterThan(limit);
+
+    for (int i = 0; i < limit; i++) {
+      service.recordGuess(GAME_ID, 0, lakes.get(i), false);
+    }
+
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, lakes.get(limit), false))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("wrong");
+  }
+
+  @Test
+  void moreCorrectGuessesThanAnswersIsRejected() {
+    GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
+    entity.addGuess(new RoundGuess("Rhine", true));
+
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "Rhein", true))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("correct");
+  }
+
+  @Test
+  void aGuessOnAnAnsweredRoundIsAConflict() {
+    guessRound(GameType.TRIPOINT, AnswerState.CORRECT);
+
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "France", false))
+        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
+  }
+
+  @Test
+  void aRiverRoundAcceptsARiverAndRejectsACountry() {
+    GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
+
+    service.recordGuess(GAME_ID, 0, "rhein", false);
+    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "France", false))
+        .isInstanceOf(IllegalArgumentException.class);
+
+    assertThat(entity.getGuesses()).extracting(RoundGuess::getGuess).containsExactly("Rhein");
+  }
+
+  @Test
+  void anUnknownGameOrRoundIsEmpty() {
+    when(gameRepository.findByPublicId(OTHER_ID)).thenReturn(Optional.empty());
+    guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
+
+    assertThat(service.recordGuess(OTHER_ID, 0, "France", false)).isEmpty();
+    assertThat(service.recordGuess(GAME_ID, 5, "France", false)).isEmpty();
+  }
+
+  @Test
+  void getGameRoundReturnsTheStoredGuesses() {
+    Tripoint tripoint = tripoint(1);
+    when(tripointGenerator.rebuild(tripoint.roundKey())).thenReturn(tripoint);
+    GameRoundEntity entity = new GameRoundEntity(0, GameType.TRIPOINT, tripoint.roundKey());
+    entity.addGuess(new RoundGuess("Germany", false));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
+
+    GameRound result = service.getGameRound(GAME_ID, 0).orElseThrow();
+
+    assertThat(result.guesses()).containsExactly(new RecordedGuess("Germany", false));
   }
 }

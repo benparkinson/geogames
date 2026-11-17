@@ -1,6 +1,6 @@
 {
   "name" : "North Korea",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "DPRK", "Democratic People's Republic of Korea", "Korea, North" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

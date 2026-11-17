@@ -1,6 +1,10 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -17,13 +21,16 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
+import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
+import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredForGuessException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +76,8 @@ class GameControllerTest {
             0,
             0,
             List.of(0, 0, 0),
-            List.of(0, 0, 0)));
+            List.of(0, 0, 0)),
+        List.of());
   }
 
   // ------------------------------------------------------------ create game
@@ -431,5 +439,62 @@ class GameControllerTest {
             .andExpect(status().isForbidden())
             .andReturn();
     assertThat(preflight.getResponse().getHeader("Access-Control-Allow-Origin")).isNull();
+  }
+
+  // ---------------------------------------------------------------- guesses
+
+  private ResultActions postGuess(String id, String body) throws Exception {
+    return mockMvc.perform(
+        post("/api/games/" + id + "/rounds/0/guesses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body));
+  }
+
+  private static final String WRONG_FRANCE = "{\"guess\":\"France\",\"correct\":false}";
+
+  @Test
+  void recordsAGuess() throws Exception {
+    when(gameService.recordGuess(GAME_ID, 0, "France", false))
+        .thenReturn(
+            Optional.of(new RoundGuessesResponse(List.of(new RecordedGuess("France", false)))));
+
+    postGuess(GAME_ID.toString(), WRONG_FRANCE)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.guesses[0].text").value("France"))
+        .andExpect(jsonPath("$.guesses[0].correct").value(false));
+  }
+
+  @Test
+  void aGuessForAMalformedOrUnknownGameIsNotFound() throws Exception {
+    when(gameService.recordGuess(GAME_ID, 0, "France", false)).thenReturn(Optional.empty());
+
+    postGuess("12", WRONG_FRANCE).andExpect(status().isNotFound());
+    postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void aGuessWithoutCorrectIsABadRequest() throws Exception {
+    postGuess(GAME_ID.toString(), "{\"guess\":\"France\"}").andExpect(status().isBadRequest());
+
+    verify(gameService, never()).recordGuess(any(), anyInt(), any(), anyBoolean());
+  }
+
+  @Test
+  void aGuessOnAnAnsweredRoundIsAConflict() throws Exception {
+    when(gameService.recordGuess(GAME_ID, 0, "France", false))
+        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+
+    postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isConflict());
+  }
+
+  @Test
+  void aGuessThatLostARaceIsRetriedOnce() throws Exception {
+    when(gameService.recordGuess(GAME_ID, 0, "France", false))
+        .thenThrow(lockFailure())
+        .thenReturn(Optional.of(new RoundGuessesResponse(List.of())));
+
+    postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isOk());
+
+    verify(gameService, times(2)).recordGuess(GAME_ID, 0, "France", false);
   }
 }

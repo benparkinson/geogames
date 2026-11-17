@@ -514,3 +514,92 @@ describe("MapGame clues", () => {
     expect(screen.getByText(/isn't right/)).toBeInTheDocument();
   });
 });
+
+describe("MapGame saving guesses", () => {
+  const recordGuess = (props: { round: { recordGuess: unknown } }) => props.round.recordGuess as ReturnType<typeof vi.fn>;
+
+  it("saves a wrong and a correct guess", async () => {
+    const user = userEvent.setup();
+    const { props } = renderGame();
+
+    await guess(user, "Italy");
+    await guess(user, "france");
+
+    expect(recordGuess(props).mock.calls).toEqual([
+      [{ text: "Italy", correct: false }],
+      [{ text: "france", correct: true }],
+    ]);
+  });
+
+  it("does not save an empty, duplicate or unknown guess", async () => {
+    const user = userEvent.setup();
+    const { props } = renderGame({ isKnownGuess: g => g !== "Atlantis" });
+
+    await guess(user, "Italy");
+    await guess(user, "   ");
+    await user.clear(input());
+    await guess(user, "ITALY");
+    await user.clear(input());
+    await guess(user, "Atlantis");
+
+    expect(recordGuess(props)).toHaveBeenCalledTimes(1);
+  });
+
+  it("saves the guess that ends the round before it reports the answer", async () => {
+    const order: string[] = [];
+    const round = makeRoundProps({ recordGuess: vi.fn(() => void order.push("guess")) });
+    const submitAnswer = vi.fn(() => void order.push("answer"));
+    renderGame({ round, submitAnswer });
+    const user = userEvent.setup();
+
+    await guess(user, "France");
+    await guess(user, "Spain");
+
+    expect(order).toEqual(["guess", "guess", "answer"]);
+  });
+});
+
+describe("MapGame resuming an unfinished round", () => {
+  const saved = (text: string, correct = false) => ({ text, correct });
+
+  it("shows the saved guesses and the guesses left", () => {
+    renderGame({
+      round: makeRoundProps({ guesses: [saved("Italy"), saved("France", true)] }),
+    });
+
+    expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
+    expect(screen.getByText("Italy")).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
+    expect(screen.getByText(/4 guesses left/)).toBeInTheDocument();
+  });
+
+  it("rejects a repeat of a saved guess as a duplicate and saves nothing", async () => {
+    const { props } = renderGame({ round: makeRoundProps({ guesses: [saved("Italy")] }) });
+
+    await guess(userEvent.setup(), "italy");
+
+    expect(screen.getByText("You've already guessed italy.")).toBeInTheDocument();
+    expect(props.round.recordGuess).not.toHaveBeenCalled();
+  });
+
+  it("sends the answer once when the saved guesses had already ended the round", () => {
+    const round = makeRoundProps({
+      guesses: [saved("A"), saved("B"), saved("C"), saved("D"), saved("E")],
+    });
+    const { submitAnswer } = renderGame({ round });
+
+    expect(submitAnswer).toHaveBeenCalledTimes(1);
+    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0, wrongGuesses: 5 });
+  });
+
+  it("does not send an answer again for a round the server has answered", () => {
+    const round = makeRoundProps({
+      answerState: "OUT_OF_GUESSES",
+      guesses: [saved("A"), saved("B"), saved("C"), saved("D"), saved("E")],
+    });
+    const { submitAnswer } = renderGame({ round });
+
+    expect(submitAnswer).not.toHaveBeenCalled();
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+  });
+});

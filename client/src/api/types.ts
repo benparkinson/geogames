@@ -11,6 +11,19 @@ export interface GameRoundResponse {
   /** Missing when talking to an older backend. */
   points?: number;
   gameResult: GameResultResponse;
+  /** Missing when talking to an older backend. */
+  guesses?: RecordedGuess[];
+}
+
+/** A guess the server has stored for a round: a known place name as the name lists spell it. */
+export interface RecordedGuess {
+  text: string;
+  correct: boolean;
+}
+
+/** The JSON of POST /api/games/{id}/rounds/{round}/guesses. */
+export interface RoundGuessesResponse {
+  guesses: RecordedGuess[];
 }
 
 /** The JSON of POST /api/games/{id}/rounds/{round}/answers. An older backend sends a whole GameRoundResponse, which has these fields too. */
@@ -54,6 +67,7 @@ export interface GameRoundView {
   answerState: AnswerState;
   hintsUsed: number;
   points: number;
+  guesses: RecordedGuess[];
   gameResult: {
     gameState: GameState;
     /** The sum of the round points. */

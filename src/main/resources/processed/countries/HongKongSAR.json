@@ -1,6 +1,6 @@
 {
   "name" : "Hong Kong S.A.R.",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Hong Kong" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

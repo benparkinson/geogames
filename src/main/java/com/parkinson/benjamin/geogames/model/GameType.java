@@ -5,29 +5,31 @@ package com.parkinson.benjamin.geogames.model;
  * {@link GameTypeResponse}, so renaming a constant changes both.
  */
 public enum GameType {
-  TRIPOINT(3, 3, 5),
-  RIVERS_BY_SHAPE(1, 3, 5),
-  RIVERS_BY_COUNTRIES(1, 2, 5),
-  COUNTRIES_BY_NEIGHBOURS(1, 3, 5),
-  COUNTRIES_BY_COASTLINE(1, 3, 5),
-  COUNTRIES_BY_LAND_BORDERS(1, 3, 5),
-  LAKES_BY_SHAPE(1, 3, 5),
-  BORDERS_BY_SHAPE(2, 3, 5),
-  MERGED_COUNTRIES(2, 3, 5),
-  COUNTRIES_BY_CITIES(1, 3, 5),
-  COUNTRIES_BY_RIVERS(1, 3, 5);
+  TRIPOINT(3, 3, 5, PlaceKind.COUNTRIES),
+  RIVERS_BY_SHAPE(1, 3, 5, PlaceKind.RIVERS),
+  RIVERS_BY_COUNTRIES(1, 2, 5, PlaceKind.RIVERS),
+  COUNTRIES_BY_NEIGHBOURS(1, 3, 5, PlaceKind.COUNTRIES),
+  COUNTRIES_BY_COASTLINE(1, 3, 5, PlaceKind.COUNTRIES),
+  COUNTRIES_BY_LAND_BORDERS(1, 3, 5, PlaceKind.COUNTRIES),
+  LAKES_BY_SHAPE(1, 3, 5, PlaceKind.LAKES),
+  BORDERS_BY_SHAPE(2, 3, 5, PlaceKind.COUNTRIES),
+  MERGED_COUNTRIES(2, 3, 5, PlaceKind.COUNTRIES),
+  COUNTRIES_BY_CITIES(1, 3, 5, PlaceKind.COUNTRIES),
+  COUNTRIES_BY_RIVERS(1, 3, 5, PlaceKind.COUNTRIES);
 
   private final int answerCount;
   private final int hintCount;
   private final int guessLimit;
+  private final PlaceKind placeKind;
 
-  GameType(int answerCount, int hintCount, int guessLimit) {
+  GameType(int answerCount, int hintCount, int guessLimit, PlaceKind placeKind) {
     if (guessLimit < 1) {
       throw new IllegalArgumentException("guessLimit must be at least 1: " + guessLimit);
     }
     this.answerCount = answerCount;
     this.hintCount = hintCount;
     this.guessLimit = guessLimit;
+    this.placeKind = placeKind;
   }
 
   /** How many things the player has to name to get a round of this type right. */
@@ -49,5 +51,10 @@ public enum GameType {
    */
   public int guessLimit() {
     return guessLimit;
+  }
+
+  /** Which list of names the player's guesses in a round of this type come from. */
+  public PlaceKind placeKind() {
+    return placeKind;
   }
 }

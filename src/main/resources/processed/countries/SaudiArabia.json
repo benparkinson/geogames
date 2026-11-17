@@ -1,6 +1,6 @@
 {
   "name" : "Saudi Arabia",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "KSA" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
