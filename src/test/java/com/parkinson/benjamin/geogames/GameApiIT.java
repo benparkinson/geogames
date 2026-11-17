@@ -622,4 +622,71 @@ class GameApiIT {
         .andExpect(status().isOk())
         .andExpect(header().string("Access-Control-Allow-Origin", production));
   }
+
+  private int postGuess(String id, int round, String guess, boolean correct) throws Exception {
+    return mockMvc
+        .perform(
+            post("/api/games/%s/rounds/%d/guesses".formatted(id, round))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"guess\":\"%s\",\"correct\":%b}".formatted(guess, correct)))
+        .andReturn()
+        .getResponse()
+        .getStatus();
+  }
+
+  @Test
+  void aGuessIsKeptUntilTheRoundIsAnswered() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 1);
+    assertThat((List<?>) JsonPath.read(getRound(id, 0), "$.guesses")).isEmpty();
+
+    assertThat(postGuess(id, 0, "nile", false)).isEqualTo(200);
+    assertThat(postGuess(id, 0, "NILE", false)).isEqualTo(200);
+    assertThat(postGuess(id, 0, "Atlantis", false)).isEqualTo(400);
+
+    String round = getRound(id, 0);
+    assertThat((List<?>) JsonPath.read(round, "$.guesses")).hasSize(1);
+    assertThat((String) JsonPath.read(round, "$.guesses[0].text")).isEqualTo("Nile");
+    assertThat((Boolean) JsonPath.read(round, "$.guesses[0].correct")).isFalse();
+
+    answer(id, 0, "GAVE_UP");
+
+    assertThat((List<?>) JsonPath.read(getRound(id, 0), "$.guesses")).hasSize(1);
+    assertThat(postGuess(id, 0, "Congo", false)).isEqualTo(409);
+  }
+
+  @Test
+  void aGuessOnAnUnknownGameIsNotFound() throws Exception {
+    assertThat(postGuess("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d", 0, "Nile", false)).isEqualTo(404);
+  }
+
+  @Test
+  void guessesMadeAtTheSameMomentAreNotLost() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 1);
+    List<String> names = List.of("Nile", "Amazon", "Danube", "Rhine");
+    java.util.concurrent.CountDownLatch start = new java.util.concurrent.CountDownLatch(1);
+    try (var pool = java.util.concurrent.Executors.newFixedThreadPool(names.size())) {
+      List<java.util.concurrent.Future<Integer>> results =
+          names.stream()
+              .map(
+                  name ->
+                      pool.submit(
+                          () -> {
+                            start.await();
+                            return postGuess(id, 0, name, false);
+                          }))
+              .toList();
+      start.countDown();
+      int stored = 0;
+      for (var result : results) {
+        int status = result.get();
+        // A second lost race is a 409, which the client may simply retry.
+        assertThat(status).isIn(200, 409);
+        if (status == 200) {
+          stored++;
+        }
+      }
+      assertThat((List<?>) JsonPath.read(getRound(id, 0), "$.guesses")).hasSize(stored);
+      assertThat(stored).isPositive();
+    }
+  }
 }

@@ -42,3 +42,38 @@ test("an alias of an answer is accepted as that answer", async ({ page, api }) =
   await expect(page.getByRole("group", { name: "Answers: 1 of 3 found" })).toContainText(found!.canonical);
   await expect(page.getByRole("status", { name: "5 guesses left" })).toBeVisible();
 });
+
+test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicate", async ({ page, api }) => {
+  const countriesLoaded = page.waitForResponse(response => response.url().endsWith("/api/countries"));
+  const id = await startGame(page, "Tripoints", 3);
+  await countriesLoaded;
+  await expect(answerBox(page)).toBeVisible();
+
+  const { answers } = await api.round(id, 0);
+  const answerNames = new Set(answers.flatMap(a => [a.name, ...a.additionalNames]).map(n => n.toLowerCase()));
+  const wrong = (await api.countries()).map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()));
+  const saved = page.waitForResponse(response => response.url().endsWith("/guesses") && response.ok());
+  await guess(page, wrong!);
+  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await saved;
+
+  // The jar doesn't serve /games/{id} itself (see deep-link.spec.ts), so answer the page request with the
+  // exported game page, which is what a working server would do. The reload is otherwise a real one.
+  await page.route(`**/games/${id}`, async route => {
+    if (route.request().resourceType() !== "document") {
+      return route.continue();
+    }
+    const origin = new URL(route.request().url()).origin;
+    return route.fulfill({ response: await route.fetch({ url: `${origin}/games/%5BgameId%5D.html` }) });
+  });
+  await page.reload();
+
+  await expect(answerBox(page)).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await expect(page.getByText("Wrong guesses")).toBeVisible();
+  await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
+
+  await guess(page, wrong!);
+  await expect(page.getByText(`You've already guessed ${wrong}.`)).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+});

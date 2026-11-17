@@ -4,7 +4,19 @@ import { AnswerState, CORRECT_ANSWER, RoundAnswer, UNANSWERED } from "../games/c
 import { isPerfect, MAX_ROUND_POINTS, roundPoints } from "../games/common/scoring";
 import { fetchJson, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
-import { GameResultResponse, GameRoundResponse, GameRoundView, RoundAnswerResponse } from "./types";
+import {
+  GameResultResponse,
+  GameRoundResponse,
+  GameRoundView,
+  RecordedGuess,
+  RoundAnswerResponse,
+  RoundGuessesResponse,
+} from "./types";
+
+/** Mutations in one scope run one after another, so an answer reaches the server after the guess that led to it. */
+function roundWritesScope(gameId: string) {
+  return { id: "round-writes:" + gameId };
+}
 
 function roundUrl(gameId: string, round: number): string {
   return "/api/games/" + gameId + "/rounds/" + round;
@@ -29,6 +41,7 @@ export function toRoundView(response: GameRoundResponse, round: number): GameRou
     answerState: response.answerState,
     hintsUsed: response.hintsUsed ?? 0,
     points: response.points ?? roundPoints(response.answerState, 0, 0),
+    guesses: Array.isArray(response.guesses) ? response.guesses : [],
     gameResult: {
       gameState: result.gameState,
       score: Array.isArray(serverPoints) ? result.score : points.reduce((sum, p) => sum + p, 0),
@@ -117,6 +130,7 @@ export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?:
   const queryClient = useQueryClient();
   const invalidateGame = () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) });
   return useMutation({
+    scope: roundWritesScope(gameId),
     mutationFn: (answer: RoundAnswer) =>
       postJson<RoundAnswerResponse>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
     // Returning the promise keeps the mutation pending until the refetch or prefetch is done.
@@ -132,6 +146,30 @@ export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?:
         await queryClient.prefetchQuery(roundQuery(gameId, round + 1));
       }
     },
+  });
+}
+
+/**
+ * Saves a guess the guess reducer recorded, so a refresh restores it. The response's guesses are patched into
+ * the cached round: round queries never go stale, so without it a round reopened from the cache would have none.
+ */
+export function useRecordGuess(gameId: string, round: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    scope: roundWritesScope(gameId),
+    mutationFn: (guess: RecordedGuess) =>
+      postJson<RoundGuessesResponse>(roundUrl(gameId, round) + "/guesses", "save guess", {
+        guess: guess.text,
+        correct: guess.correct,
+      }),
+    onSuccess: response => {
+      if (!Array.isArray(response?.guesses)) return;
+      queryClient.setQueryData<GameRoundView>(
+        queryKeys.round(gameId, round),
+        old => old && { ...old, guesses: response.guesses },
+      );
+    },
+    onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
   });
 }
 

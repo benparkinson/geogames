@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -306,5 +307,33 @@ class GameRepositoryTest {
 
     assertThat(reloaded.getRounds().stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2);
+  }
+
+  @Test
+  void guessesRoundTripInOrder() {
+    GameEntity game = gameWithRounds("tripoint:a");
+    GameRoundEntity round = game.getRounds().get(0);
+    round.addGuess(new RoundGuess("Spain", false));
+    round.addGuess(new RoundGuess("France", true));
+    round.addGuess(new RoundGuess("Italy", false));
+
+    GameEntity reloaded = saveAndReload(game);
+
+    assertThat(sorted(reloaded).get(0).getGuesses())
+        .extracting(RoundGuess::getGuess, RoundGuess::isCorrect)
+        .containsExactly(tuple("Spain", false), tuple("France", true), tuple("Italy", false));
+    assertThat(sorted(reloaded).get(1).getGuesses()).isEmpty();
+  }
+
+  @Test
+  void addingAGuessBumpsTheRoundsVersion() {
+    GameEntity game = saveAndReload(gameWithRounds("tripoint:a"));
+    GameRoundEntity round = sorted(game).get(0);
+    int before = round.getVersion();
+
+    round.addGuess(new RoundGuess("Spain", false));
+    entityManager.flush();
+
+    assertThat(round.getVersion()).isGreaterThan(before);
   }
 }

@@ -48,6 +48,14 @@
       },
       "hintsUsed" : "number",
       "points" : "number"
+    },
+    "POST /api/games/{id}/rounds/{round}/guesses" : {
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      }
     }
   },
   "rounds" : {
@@ -75,6 +83,12 @@
         "guessLimit" : "number",
         "hintCount" : "number",
         "name" : "string"
+      },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -191,6 +205,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "cities" : {
@@ -287,6 +307,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "country" : {
@@ -376,6 +402,12 @@
         "guessLimit" : "number",
         "hintCount" : "number",
         "name" : "string"
+      },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -479,6 +511,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "country" : {
@@ -580,6 +618,12 @@
         "guessLimit" : "number",
         "hintCount" : "number",
         "name" : "string"
+      },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -698,6 +742,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "gameType" : "string",
@@ -750,6 +800,12 @@
         "guessLimit" : "number",
         "hintCount" : "number",
         "name" : "string"
+      },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
       },
       "hintsUsed" : "number",
       "jsonBlob" : {
@@ -878,6 +934,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "countries" : {
@@ -957,6 +1019,12 @@
         "hintCount" : "number",
         "name" : "string"
       },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
+      },
       "hintsUsed" : "number",
       "jsonBlob" : {
         "countries" : {
@@ -1020,6 +1088,12 @@
         "guessLimit" : "number",
         "hintCount" : "number",
         "name" : "string"
+      },
+      "guesses" : {
+        "array" : {
+          "correct" : "boolean",
+          "text" : "string"
+        }
       },
       "hintsUsed" : "number",
       "jsonBlob" : {

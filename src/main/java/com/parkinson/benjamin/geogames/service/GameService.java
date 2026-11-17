@@ -4,10 +4,14 @@ import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
+import com.parkinson.benjamin.geogames.api.RecordedGuess;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
+import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
+import com.parkinson.benjamin.geogames.dao.RoundGuess;
+import com.parkinson.benjamin.geogames.helper.PlaceNames;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
@@ -37,24 +41,28 @@ import tools.jackson.databind.ObjectMapper;
 public class GameService {
 
   private static final int MAX_ROUNDS = 10;
+  private static final int MAX_GUESS_LENGTH = 255;
 
   private final GameRepository gameRepository;
   private final Map<GameType, RoundGenerator> generators;
   private final ObjectMapper objectMapper;
   private final Random random;
   private final ApplicationEventPublisher events;
+  private final KnownPlaceNames knownPlaceNames;
 
   public GameService(
       GameRepository gameRepository,
       List<RoundGenerator> roundGenerators,
       ObjectMapper objectMapper,
       Random random,
-      ApplicationEventPublisher events) {
+      ApplicationEventPublisher events,
+      KnownPlaceNames knownPlaceNames) {
     this.gameRepository = gameRepository;
     this.generators = generatorsByType(roundGenerators);
     this.objectMapper = objectMapper;
     this.random = random;
     this.events = events;
+    this.knownPlaceNames = knownPlaceNames;
   }
 
   private static Map<GameType, RoundGenerator> generatorsByType(List<RoundGenerator> generators) {
@@ -132,6 +140,69 @@ public class GameService {
         .flatMap(game -> findRound(game, round).map(r -> toResponse(game, r)));
   }
 
+  /**
+   * Stores a guess the client recorded, as the list's spelling of a known place name. The server
+   * doesn't check {@code correct}: the client checks answers. It publishes no statistics event,
+   * which are recorded once per answered round.
+   *
+   * @return empty if the game or round doesn't exist
+   */
+  @Transactional
+  public Optional<RoundGuessesResponse> recordGuess(
+      UUID gameId, int round, String guess, boolean correct) {
+    return gameRepository
+        .findByPublicId(gameId)
+        .flatMap(
+            game ->
+                findRound(game, round)
+                    .map(
+                        r -> {
+                          if (addGuess(r, guess, correct)) {
+                            gameRepository.save(game);
+                          }
+                          return new RoundGuessesResponse(recordedGuesses(r));
+                        }));
+  }
+
+  /** @return whether the round changed */
+  private boolean addGuess(GameRoundEntity round, String guess, boolean correct) {
+    if (round.getAnswerState() != AnswerState.UNANSWERED) {
+      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
+    }
+    if (guess == null || guess.isBlank() || guess.length() > MAX_GUESS_LENGTH) {
+      throw new IllegalArgumentException(
+          "A guess must be between 1 and %d characters".formatted(MAX_GUESS_LENGTH));
+    }
+    GameType type = round.getGameType();
+    String resolved =
+        knownPlaceNames
+            .resolve(type.placeKind(), guess)
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "Not a known %s name".formatted(type.placeKind().name().toLowerCase())));
+    String normalised = PlaceNames.normalise(resolved);
+    if (round.getGuesses().stream()
+        .anyMatch(g -> PlaceNames.normalise(g.getGuess()).equals(normalised))) {
+      return false;
+    }
+    long same = round.getGuesses().stream().filter(g -> g.isCorrect() == correct).count();
+    int limit = correct ? type.answerCount() : type.guessLimit();
+    if (same >= limit) {
+      throw new IllegalArgumentException(
+          "A round of %s allows %d %s guesses"
+              .formatted(type, limit, correct ? "correct" : "wrong"));
+    }
+    round.addGuess(new RoundGuess(resolved, correct));
+    return true;
+  }
+
+  private static List<RecordedGuess> recordedGuesses(GameRoundEntity round) {
+    return round.getGuesses().stream()
+        .map(g -> new RecordedGuess(g.getGuess(), g.isCorrect()))
+        .toList();
+  }
+
   @Transactional
   public Optional<RoundAnswerResponse> submitAnswer(
       UUID gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
@@ -146,6 +217,9 @@ public class GameService {
                 findRound(game, round)
                     .map(
                         r -> {
+                          // Not checked against the stored guesses: a guess request that failed on
+                          // the
+                          // network would otherwise block a legitimate answer.
                           validateHintsUsed(r, hintsUsed);
                           validateWrongGuesses(r, answerState, wrongGuesses);
                           if (recordAnswer(r, answerState, hintsUsed, wrongGuesses)) {
@@ -261,7 +335,8 @@ public class GameService {
         round.getAnswerState(),
         round.getHintsUsed(),
         pointsFor(round),
-        calculateGameResult(game));
+        calculateGameResult(game),
+        recordedGuesses(round));
   }
 
   /** The answer's response has no round data, so it needs no rebuild and no serialising. */
