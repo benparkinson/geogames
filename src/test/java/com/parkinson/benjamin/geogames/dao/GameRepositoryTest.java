@@ -336,4 +336,30 @@ class GameRepositoryTest {
 
     assertThat(round.getVersion()).isGreaterThan(before);
   }
+
+  @Test
+  void hintsRoundTripInOrder() {
+    GameEntity game = gameWithRounds("tripoint:a");
+    GameRoundEntity round = game.getRounds().get(0);
+    round.addHint(0);
+    round.addHint(2);
+    round.addHint(2);
+
+    GameEntity reloaded = saveAndReload(game);
+
+    assertThat(sorted(reloaded).get(0).getHintsTakenAt()).containsExactly(0, 2, 2);
+    assertThat(sorted(reloaded).get(1).getHintsTakenAt()).isEmpty();
+  }
+
+  @Test
+  void addingAHintBumpsTheRoundsVersion() {
+    GameEntity game = saveAndReload(gameWithRounds("tripoint:a"));
+    GameRoundEntity round = sorted(game).get(0);
+    int before = round.getVersion();
+
+    round.addHint(0);
+    entityManager.flush();
+
+    assertThat(round.getVersion()).isGreaterThan(before);
+  }
 }

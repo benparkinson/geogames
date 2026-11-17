@@ -64,6 +64,16 @@ public class GameRoundEntity {
   @OrderColumn(name = "position")
   private List<RoundGuess> guesses = new ArrayList<>();
 
+  /**
+   * For each hint taken before the round was answered, how many guesses the round had when it was
+   * taken (entry i is hint i). A change bumps the round's version, like the guesses.
+   */
+  @ElementCollection
+  @CollectionTable(name = "game_round_hint", joinColumns = @JoinColumn(name = "round_id"))
+  @OrderColumn(name = "hint_index")
+  @Column(name = "guesses_before", nullable = false)
+  private List<Integer> hintsTakenAt = new ArrayList<>();
+
   /** Optimistic lock: a second writer of the same round fails rather than overwriting the first. */
   @Version
   @Column(nullable = false)
@@ -146,5 +156,13 @@ public class GameRoundEntity {
 
   public void addGuess(RoundGuess guess) {
     guesses.add(guess);
+  }
+
+  public List<Integer> getHintsTakenAt() {
+    return Collections.unmodifiableList(hintsTakenAt);
+  }
+
+  public void addHint(int guessesBefore) {
+    hintsTakenAt.add(guessesBefore);
   }
 }

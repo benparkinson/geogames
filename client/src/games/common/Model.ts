@@ -38,6 +38,10 @@ export interface Round {
   hintsUsed: number;
   /** The guesses the server has recorded for this round, in order. */
   guesses: RecordedGuess[];
+  /** For each hint the server recorded before the answer: how many guesses had been made when it was taken. */
+  hintsTakenAt: number[];
+  /** Saves a hint as soon as it is taken, so a refresh keeps it. */
+  recordHint: (hint: { hint: number; guessesBefore: number }) => void;
   /** Saves a guess that the guess reducer recorded, so a refresh restores it. */
   recordGuess: (guess: RecordedGuess) => void;
   /** This round's points, as the server last saw them. */

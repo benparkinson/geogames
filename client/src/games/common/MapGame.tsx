@@ -34,8 +34,8 @@ function MapGame<Type>({
     hintsTotal: hintConfig ? hintCount : 0,
     guessLimit: round.guessLimit,
   };
-  // Rebuilt from the guesses the server saved, so a refresh keeps them.
-  const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, config));
+  // Rebuilt from the guesses and hints the server saved, so a refresh keeps them.
+  const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config));
   const [guessState, setGuessState] = useState<GuessState>(restored.state);
   const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
 
@@ -94,6 +94,8 @@ function MapGame<Type>({
     if (gameOver || !hintConfig || hintsUsed >= hintCount) {
       return;
     }
+    // The state before the hint: the index of the hint just taken and the guesses made so far.
+    round.recordHint({ hint: hintsUsed, guessesBefore: guesses.length });
     dispatch({ type: "hint" });
   }
 

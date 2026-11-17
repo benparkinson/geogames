@@ -127,3 +127,18 @@ export async function guess(page: Page, text: string): Promise<void> {
 export function answerBox(page: Page) {
   return page.locator("input.answer-attempt");
 }
+
+/**
+ * Reloads a game page. The jar doesn't serve /games/{id} itself (see deep-link.spec.ts), so the page request is
+ * answered with the exported game page, which is what a working server would do. The reload is otherwise a real one.
+ */
+export async function reloadGamePage(page: Page, id: string): Promise<void> {
+  await page.route(`**/games/${id}`, async route => {
+    if (route.request().resourceType() !== "document") {
+      return route.continue();
+    }
+    const origin = new URL(route.request().url()).origin;
+    return route.fulfill({ response: await route.fetch({ url: `${origin}/games/%5BgameId%5D.html` }) });
+  });
+  await page.reload();
+}

@@ -689,4 +689,39 @@ class GameApiIT {
       assertThat(stored).isPositive();
     }
   }
+
+  private int postHint(String id, int round, int hint, int guessesBefore) throws Exception {
+    return mockMvc
+        .perform(
+            post("/api/games/%s/rounds/%d/hints".formatted(id, round))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"hint\":%d,\"guessesBefore\":%d}".formatted(hint, guessesBefore)))
+        .andReturn()
+        .getResponse()
+        .getStatus();
+  }
+
+  @Test
+  void aHintIsKeptAndStillCostsPointsWhenTheAnswerReportsNone() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 1);
+    assertThat((List<?>) JsonPath.read(getRound(id, 0), "$.hintsTakenAt")).isEmpty();
+
+    assertThat(postHint(id, 0, 0, 0)).isEqualTo(200);
+    assertThat(postHint(id, 0, 0, 0)).isEqualTo(200);
+    assertThat(postHint(id, 0, 2, 0)).isEqualTo(400);
+
+    String round = getRound(id, 0);
+    assertThat((List<Integer>) JsonPath.read(round, "$.hintsTakenAt")).containsExactly(0);
+    assertThat((int) JsonPath.read(round, "$.hintsUsed")).isZero();
+
+    String result = answer(id, 0, "CORRECT", 0);
+
+    int hintCount = GameType.RIVERS_BY_SHAPE.hintCount();
+    assertThat((int) JsonPath.read(result, "$.hintsUsed")).isEqualTo(1);
+    assertThat((int) JsonPath.read(result, "$.points"))
+        .isEqualTo(
+            com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
+                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount));
+    assertThat(postHint(id, 0, 1, 0)).isEqualTo(409);
+  }
 }

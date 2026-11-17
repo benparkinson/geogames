@@ -1,4 +1,4 @@
-import { answerBox, expect, guess, startGame, test } from "../fixtures";
+import { answerBox, expect, guess, reloadGamePage, startGame, test } from "../fixtures";
 
 test("an unknown name is rejected without using a guess, a wrong country uses one", async ({ page, api }) => {
   const countriesLoaded = page.waitForResponse(response => response.url().endsWith("/api/countries"));
@@ -57,16 +57,7 @@ test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicat
   await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
   await saved;
 
-  // The jar doesn't serve /games/{id} itself (see deep-link.spec.ts), so answer the page request with the
-  // exported game page, which is what a working server would do. The reload is otherwise a real one.
-  await page.route(`**/games/${id}`, async route => {
-    if (route.request().resourceType() !== "document") {
-      return route.continue();
-    }
-    const origin = new URL(route.request().url()).origin;
-    return route.fulfill({ response: await route.fetch({ url: `${origin}/games/%5BgameId%5D.html` }) });
-  });
-  await page.reload();
+  await reloadGamePage(page, id);
 
   await expect(answerBox(page)).toBeVisible();
   await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
