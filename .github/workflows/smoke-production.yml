@@ -3,7 +3,7 @@ name: Smoke test production
 # THE ONLY WORKFLOW ALLOWED TO USE THE NETWORK. It calls the deployed services on onrender.com.
 # CI (ci.yml) never does, so a pull request can never fail because Render or the internet is down.
 # It runs on demand and once a day, never on a pull request. It needs no secrets and changes nothing
-# except one throwaway game in the backend's in-memory database.
+# except one throwaway game, deleted after a day.
 #
 # To also run it after each deploy, add a `deployment_status` trigger and gate the job with
 # `if: github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success'`.
