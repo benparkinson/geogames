@@ -107,6 +107,21 @@ class HttpServerIT {
   }
 
   @Test
+  void privacyPageLoadsDirectly() {
+    String html =
+        client
+            .get()
+            .uri("/privacy")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
+    assertThat(html).contains("Privacy");
+  }
+
+  @Test
   void reloadingAGamePageIsA404() {
     // Current behaviour: reloading a game page served by the jar is a 404, because nothing forwards
     // /games/{id} to games/[gameId].html. See the deep-link e2e test, which is marked test.fail().

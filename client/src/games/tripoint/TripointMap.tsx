@@ -1,6 +1,7 @@
 import { MapContainer, Marker, GeoJSON, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { CenterUpdater } from "../../map/CenterUpdater";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { SatelliteTiles } from "../../map/SatelliteTiles";
@@ -44,6 +45,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed, foundAtHint 
       {!gameOver && clueBorders}
 
       <CenterUpdater center={position} zoom={5} />
+      <MapCredits extra="Tripoints: Wikipedia (CC BY-SA 4.0), positions adjusted" />
       <MapResizer />
     </MapContainer>
   );

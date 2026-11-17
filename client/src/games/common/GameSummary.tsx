@@ -4,6 +4,7 @@ import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import KofiBadge from "../../components/KofiBadge";
+import SiteFooter from "../../components/SiteFooter";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
@@ -117,6 +118,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
           <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
         </div>
       </div>
+      <SiteFooter className="pb-4" />
     </div>
   );
 }

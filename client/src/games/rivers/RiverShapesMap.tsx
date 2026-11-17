@@ -1,6 +1,7 @@
 import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { RevealTiles } from "../../map/RevealTiles";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { RiverLine } from "./RiverLayers";
@@ -12,6 +13,7 @@ function RiverShapesMap({ data: { river }, gaveUp, gameOver }: MapProps<RiverRou
       <RevealTiles show={gameOver} />
       <RiverLine river={river} gaveUp={gaveUp} />
       <FitBounds data={river.geoData} id={river.id} />
+      <MapCredits />
       <MapResizer />
     </MapContainer>
   );

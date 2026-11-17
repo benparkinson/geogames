@@ -44,3 +44,7 @@ The rows go to the `stat_*` tables in the same database as the games (created by
 migration): one row per answered round in `stat_round`, one per game in `stat_game`, and the repeated
 names in small lookup tables. The `round_result` view shows them in the flat shape, so production needs no extra configuration. Nothing deletes them when a game expires.
 Set `GEOGAMES_STATS_ENABLED=false` on the Render web service to turn recording off.
+
+## Licence
+
+The code is source-available under the [PolyForm Noncommercial License 1.0.0](LICENSE): you may read, run, change and share it for non-commercial purposes. See [NOTICE.md](NOTICE.md) for the required notice and for the data and images that are not covered by this licence.
