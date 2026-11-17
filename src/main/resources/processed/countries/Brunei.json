@@ -1,6 +1,6 @@
 {
   "name" : "Brunei",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Brunei Darussalam" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

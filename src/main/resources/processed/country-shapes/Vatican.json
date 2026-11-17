@@ -1,6 +1,6 @@
 {
   "name" : "Vatican",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Vatican City", "Holy See", "The Vatican" ],
   "coastKm" : 0.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 0,

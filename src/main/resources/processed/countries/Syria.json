@@ -1,6 +1,6 @@
 {
   "name" : "Syria",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Syrian Arab Republic" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
