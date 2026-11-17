@@ -13,6 +13,7 @@ const GAMES = [
   { type: "BORDERS_BY_SHAPE", title: "Border Shapes" },
   { type: "MERGED_COUNTRIES", title: "Merged Countries" },
   { type: "COUNTRIES_BY_CITIES", title: "Country Cities" },
+  { type: "COUNTRIES_BY_RIVERS", title: "Country Rivers" },
   { type: "RANDOM", title: "Mixed" },
 ];
 

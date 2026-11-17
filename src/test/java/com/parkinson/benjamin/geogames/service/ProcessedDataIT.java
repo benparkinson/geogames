@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
+import com.parkinson.benjamin.geogames.helper.CountryRiversEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
@@ -16,6 +17,8 @@ import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
+import com.parkinson.benjamin.geogames.model.CountryRivers;
+import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.PlaceName;
@@ -74,6 +77,9 @@ public class ProcessedDataIT {
     assertUniqueAndShort("lake", loadLakes().stream().map(l -> "lake:" + l.id()).toList());
     assertUniqueAndShort(
         "country", shapeService.loadShapes().stream().map(s -> "country:" + s.name()).toList());
+    assertUniqueAndShort(
+        "country rivers",
+        new CountryRiversService(reader).index().stream().map(e -> "country:" + e.name()).toList());
     assertUniqueAndShort(
         "cities",
         new CityService(reader).loadAll().stream().map(c -> "country:" + c.country()).toList());
@@ -407,6 +413,68 @@ public class ProcessedDataIT {
                 .count();
 
     assertTrue(eligible >= 80, "only " + eligible + " countries have enough cities");
+  }
+
+  @Test
+  public void everyCountryRiversEntryHasAFileAndAShapeAndFitsTheLimits() {
+    CountryRiversService service = new CountryRiversService(reader);
+    Set<String> shapeNames =
+        shapeService.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
+    List<CountryRiversIndexEntry> index = service.index();
+
+    assertEquals(
+        index.stream().map(CountryRiversIndexEntry::name).sorted().toList(),
+        index.stream().map(CountryRiversIndexEntry::name).toList(),
+        "index not sorted by name");
+    for (CountryRiversIndexEntry entry : index) {
+      assertTrue(shapeNames.contains(entry.name()), "no shape for " + entry.name());
+      CountryRivers rivers = service.load(entry.name());
+      assertEquals(entry.name(), rivers.name());
+      assertEquals("MultiLineString", rivers.major().geometry().type());
+      assertEquals("MultiLineString", rivers.minor().geometry().type());
+      assertEquals("MultiPolygon", rivers.lakes().geometry().type());
+
+      int riverPoints =
+          CountryShapeBuilder.pointCount(rivers.major())
+              + CountryShapeBuilder.pointCount(rivers.minor());
+      assertTrue(riverPoints > 0, entry.name() + " has no river points");
+      assertTrue(riverPoints <= 4_000, entry.name() + " has " + riverPoints + " river points");
+      int lakePoints = CountryShapeBuilder.pointCount(rivers.lakes());
+      assertTrue(lakePoints <= 2_000, entry.name() + " has " + lakePoints + " lake points");
+      assertEquals(
+          entry.lakeCount() == 0, rivers.lakes().geometry().coordinates().isEmpty(), entry.name());
+      assertTrue(entry.riverCount() > 0 && entry.riverKm() > 0, entry.name());
+    }
+  }
+
+  @Test
+  public void everyLakePolygonOfCountryRiversIsClosed() {
+    CountryRiversService service = new CountryRiversService(reader);
+    for (CountryRiversIndexEntry entry : service.index()) {
+      for (Object polygon : service.load(entry.name()).lakes().geometry().coordinates()) {
+        for (Object ring : (List<?>) polygon) {
+          List<?> points = (List<?>) ring;
+          assertTrue(points.size() >= 4, "short lake ring in " + entry.name());
+          assertEquals(
+              points.get(0), points.get(points.size() - 1), "open lake ring in " + entry.name());
+        }
+      }
+    }
+  }
+
+  @Test
+  public void enoughCountriesHaveEnoughRiversForTheRiversGame() {
+    CountryRiversService service = new CountryRiversService(reader);
+    Set<String> shapeNames =
+        shapeService.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
+    long eligible =
+        service.index().stream()
+            .filter(CountryRiversEligibility.countryRivers())
+            .filter(e -> shapeNames.contains(e.name()))
+            .count();
+
+    assertTrue(eligible >= 60, "only " + eligible + " countries have enough rivers");
+    assertTrue(eligible <= 110, eligible + " countries is too many for the rivers game");
   }
 
   @Test

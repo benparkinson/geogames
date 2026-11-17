@@ -145,7 +145,7 @@ describe("HomePage choosing a game", () => {
     renderHome();
     card(/Tripoints/).focus();
 
-    const order = [/Country Gaps/, /Land Borders/, /Merged Countries/, /Country Cities/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Border Shapes/, /Tripoints/];
+    const order = [/Country Gaps/, /Land Borders/, /Merged Countries/, /Country Cities/, /Country Rivers/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Border Shapes/, /Tripoints/];
     for (const [i, name] of order.entries()) {
       await user.keyboard(i % 2 === 0 ? "{ArrowRight}" : "{ArrowDown}");
       expect(card(name)).toHaveAttribute("aria-checked", "true");

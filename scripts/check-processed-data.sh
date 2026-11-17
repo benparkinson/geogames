@@ -19,7 +19,7 @@ if ! ./mvnw -B -q -Pregenerate-data -Dskip.frontend -DskipTests -Djacoco.skip=tr
 fi
 
 status=0
-for dir in countries country-shapes rivers lakes; do
+for dir in countries country-shapes rivers lakes country-rivers; do
   committed="src/main/resources/processed/$dir"
   regenerated="target/regen/$dir"
   if diff -rq --strip-trailing-cr "$committed" "$regenerated" > /dev/null; then

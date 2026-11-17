@@ -1,0 +1,33 @@
+{
+  "name" : "Luxembourg",
+  "major" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Luxembourg"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
+    }
+  },
+  "minor" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Luxembourg"
+    },
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 6.3454, 49.4627 ], [ 6.3423, 49.493 ], [ 6.3508, 49.5349 ], [ 6.3508, 49.5666 ], [ 6.3564, 49.5776 ], [ 6.3976, 49.6139 ], [ 6.4179, 49.6391 ], [ 6.417, 49.6458 ], [ 6.4027, 49.6558 ], [ 6.4182, 49.6699 ], [ 6.4917, 49.7008 ], [ 6.5102, 49.7127 ] ] ]
+    }
+  },
+  "lakes" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Luxembourg"
+    },
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ ]
+    }
+  }
+}

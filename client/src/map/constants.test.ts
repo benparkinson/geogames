@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, CITY_MIN_RADIUS, cityDotOptions, cityRadius, clueLineOptions, clueOutlineOptions, hiddenBorderOptions, hintLineOptions, mergedShapeOptions } from "./constants";
+import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, CITY_MIN_RADIUS, cityDotOptions, cityRadius, clueLineOptions, clueOutlineOptions, hiddenBorderOptions, hintLineOptions, lakeFillOptions, mergedShapeOptions, minorRiverOptions } from "./constants";
 
 describe("map styles", () => {
   it("colours an answer differently once the player gave up", () => {
@@ -64,5 +64,11 @@ describe("map styles", () => {
     expect(capitalDotOptions().fillColor).not.toBe(cityDotOptions().fillColor);
     expect(capitalDotOptions().fillOpacity).toBe(1);
     expect(cityDotOptions().fillOpacity).toBeLessThan(1);
+  });
+
+  it("draws the minor rivers thinner than the clue line, and fills a lake", () => {
+    expect(minorRiverOptions().weight).toBeLessThan(clueLineOptions().weight ?? 0);
+    expect(minorRiverOptions().fill).toBe(false);
+    expect(lakeFillOptions().fillOpacity).toBeGreaterThan(clueOutlineOptions().fillOpacity ?? 0);
   });
 });

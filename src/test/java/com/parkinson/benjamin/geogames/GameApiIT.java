@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.jayway.jsonpath.JsonPath;
 import com.parkinson.benjamin.geogames.model.CountryCitiesRound;
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
+import com.parkinson.benjamin.geogames.model.CountryRiversRound;
 import com.parkinson.benjamin.geogames.model.CountryShapeRound;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -473,6 +474,7 @@ class GameApiIT {
       case LAKES_BY_SHAPE -> LakeRound.class;
       case BORDERS_BY_SHAPE, MERGED_COUNTRIES -> CountryPairRound.class;
       case COUNTRIES_BY_CITIES -> CountryCitiesRound.class;
+      case COUNTRIES_BY_RIVERS -> CountryRiversRound.class;
     };
   }
 

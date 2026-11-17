@@ -556,6 +556,123 @@
       "points" : "number",
       "totalRoundCount" : "number"
     },
+    "COUNTRIES_BY_RIVERS" : {
+      "answerState" : "string",
+      "gameResult" : {
+        "gameState" : "string",
+        "maxScore" : "number",
+        "perfectRounds" : "number",
+        "roundAnswerStates" : {
+          "array" : "string"
+        },
+        "roundHintsUsed" : {
+          "array" : "number"
+        },
+        "roundPoints" : {
+          "array" : "number"
+        },
+        "roundsCorrect" : "number",
+        "roundsUnanswered" : "number",
+        "score" : "number"
+      },
+      "gameType" : {
+        "answerCount" : "number",
+        "guessLimit" : "number",
+        "hintCount" : "number",
+        "name" : "string"
+      },
+      "hintsUsed" : "number",
+      "jsonBlob" : {
+        "country" : {
+          "additionalNames" : {
+            "array" : "string"
+          },
+          "areaKm2" : "number",
+          "coast" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "coastKm" : "number",
+          "focus" : {
+            "east" : "number",
+            "north" : "number",
+            "south" : "number",
+            "west" : "number"
+          },
+          "landBorderKm" : "number",
+          "landBorders" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          },
+          "name" : "string",
+          "neighbours" : {
+            "array" : {
+              "km" : "number",
+              "lines" : {
+                "array" : "number"
+              },
+              "mainland" : "boolean",
+              "name" : "string"
+            }
+          },
+          "outline" : {
+            "geometry" : {
+              "coordinates" : "coordinates",
+              "type" : "string"
+            },
+            "properties" : {
+              "name" : "string"
+            },
+            "type" : "string"
+          }
+        },
+        "gameType" : "string",
+        "lakes" : {
+          "geometry" : {
+            "coordinates" : "coordinates",
+            "type" : "string"
+          },
+          "properties" : {
+            "name" : "string"
+          },
+          "type" : "string"
+        },
+        "major" : {
+          "geometry" : {
+            "coordinates" : "coordinates",
+            "type" : "string"
+          },
+          "properties" : {
+            "name" : "string"
+          },
+          "type" : "string"
+        },
+        "minor" : {
+          "geometry" : {
+            "coordinates" : "coordinates",
+            "type" : "string"
+          },
+          "properties" : {
+            "name" : "string"
+          },
+          "type" : "string"
+        }
+      },
+      "points" : "number",
+      "totalRoundCount" : "number"
+    },
     "LAKES_BY_SHAPE" : {
       "answerState" : "string",
       "gameResult" : {

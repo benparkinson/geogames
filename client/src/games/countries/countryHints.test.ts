@@ -6,6 +6,7 @@ import {
   coastHint,
   countryHints,
   firstLetterHint,
+  lakesHint,
   longestBorderHint,
   mapHint,
   neighbourCountHint,
@@ -78,6 +79,19 @@ describe("coastHint", () => {
     const landlocked = makeCountryShapeRoundData({ country: makeCountryShapeData({ coastKm: 0 }) });
 
     expect(coastHint(landlocked)).toBe("It has no coastline");
+  });
+});
+
+describe("lakesHint", () => {
+  const country = makeCountryShapeData();
+  const lakes = (coordinates: unknown[]) => ({ type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates } }) as never;
+
+  it("says the lakes are on the map", () => {
+    expect(lakesHint({ country, lakes: lakes([[[[0, 0]]]]) })).toBe("Its lakes are on the map");
+  });
+
+  it("says a country with none has no large lakes", () => {
+    expect(lakesHint({ country, lakes: lakes([]) })).toBe("It has no large lakes");
   });
 });
 

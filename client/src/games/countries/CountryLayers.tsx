@@ -1,7 +1,7 @@
 import { GeoJSON, Tooltip } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
-import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions } from "../../map/constants";
-import type { LineGeoData } from "../common/country";
+import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions, lakeFillOptions, minorRiverOptions } from "../../map/constants";
+import type { CountryGeoData, LineGeoData } from "../common/country";
 import type { CountryOutline, CountryShape } from "./model";
 
 /** Fits the map to the country's largest part, so overseas parts and the antimeridian don't zoom out to the world. */
@@ -61,4 +61,19 @@ export function AnswerOutline({ country, gaveUp }: { country: CountryShape; gave
       <Tooltip sticky>{country.name}</Tooltip>
     </GeoJSON>
   );
+}
+
+/** The rivers of Country Rivers: the minor ones thin, the major ones over them in the clue line style. */
+export function RiverLines({ major, minor, id }: { major: LineGeoData; minor: LineGeoData; id: string }): React.JSX.Element {
+  return (
+    <>
+      <GeoJSON key={`${id}/minor`} data={minor} pathOptions={minorRiverOptions()} />
+      <GeoJSON key={`${id}/major`} data={major} pathOptions={clueLineOptions()} />
+    </>
+  );
+}
+
+/** Lakes a hint draws, filled. */
+export function LakeFills({ data, id }: { data: CountryGeoData; id: string }): React.JSX.Element {
+  return <GeoJSON key={id} data={data} pathOptions={lakeFillOptions()} />;
 }

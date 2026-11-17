@@ -65,6 +65,15 @@ public final class CountryShapeBuilder {
   /** What is worked out once for each country before any simplifying. */
   private record Info(int largest, Bounds focus, double tolerance, long areaKm2) {}
 
+  /**
+   * The tolerance, in degrees, this builder simplifies a country's lines with: a four-hundredth of
+   * the diagonal of its largest part, within limits. Other programs that draw things inside a
+   * country (its rivers) simplify with the same tolerance, so they match the outline.
+   */
+  public static double tolerance(Country country) {
+    return info(read(country)).tolerance();
+  }
+
   public static List<CountryShape> build(List<Country> countries) {
     List<Source> sources =
         countries.stream()

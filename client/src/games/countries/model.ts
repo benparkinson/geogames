@@ -66,3 +66,14 @@ export interface City {
 export interface CountryCitiesRound extends HasCountry {
   cities: City[];
 }
+
+/**
+ * The data of a round of Country Rivers: the rivers inside the country, clipped at its borders, and
+ * its lakes. `major` is the more important rivers, which the game draws thicker.
+ */
+export interface CountryRiversRound extends HasCountry {
+  major: LineGeoData;
+  minor: LineGeoData;
+  /** May have no polygons: a country with no large lake. */
+  lakes: CountryGeoData;
+}

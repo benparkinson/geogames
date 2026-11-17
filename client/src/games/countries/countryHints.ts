@@ -1,5 +1,6 @@
 import type { HintConfig } from "../common/MapGame";
 import { countHint, firstLetterHint as firstLetter } from "../common/hints";
+import type { CountryGeoData } from "../common/country";
 import type { City, HasCountry } from "./model";
 
 /** Builds the text of one hint from the round. Returns null when there is nothing to say. */
@@ -40,3 +41,7 @@ export const coastHint: HintBuilder = ({ country }) => (country.coastKm > 0 ? "I
 /** For the hint that highlights the capital. A few countries have more than one. */
 export const capitalHint: HintBuilder<HasCountry & { cities: City[] }> = ({ cities }) =>
   cities.filter((city) => city.capital).length > 1 ? "Its capitals are highlighted" : "Its capital is highlighted";
+
+/** For the hint that draws the lakes. A country with none says so, which is itself a clue. */
+export const lakesHint: HintBuilder<HasCountry & { lakes: CountryGeoData }> = ({ lakes }) =>
+  lakes.geometry.coordinates.length > 0 ? "Its lakes are on the map" : "It has no large lakes";

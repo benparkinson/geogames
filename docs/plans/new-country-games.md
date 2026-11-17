@@ -208,4 +208,4 @@ As phase 1, plus the heap figure. Also confirm that the per-country read is not 
 | Baseline (`main`) | 42,610K (41.6 MB) | - |
 | After phase 1 | 42,752K (41.7 MB) | +142K |
 | After phase 2 | 43,235K (42.2 MB) | +625K |
-| After phase 3 | | |
+| After phase 3 | 43,593K (42.6 MB; a second run gave 43,288K) | +983K |

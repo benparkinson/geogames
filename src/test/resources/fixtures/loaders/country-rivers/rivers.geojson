@@ -1,0 +1,8 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"featurecla":"River","scalerank":3,"rivernum":1,"name":"Crossing"},"geometry":{"type":"LineString","coordinates":[[1,5],[2,5],[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],[9,5],[11,5],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[18,5],[19,5]]}},
+{"type":"Feature","properties":{"featurecla":"River","scalerank":7,"rivernum":2,"name":"Along the border"},"geometry":{"type":"LineString","coordinates":[[10,2],[10,3],[10,4],[10,6],[10,7],[10,8]]}},
+{"type":"Feature","properties":{"featurecla":"River","scalerank":8,"rivernum":3,"name":"Stub"},"geometry":{"type":"LineString","coordinates":[[1,1],[1.01,1]]}},
+{"type":"Feature","properties":{"featurecla":"Lake Centerline","scalerank":6,"rivernum":4,"name":"Beta only"},"geometry":{"type":"MultiLineString","coordinates":[[[12,8],[14,8],[16,8]],[[16,8],[18,8]]]}},
+{"type":"Feature","properties":{"featurecla":"River","scalerank":5,"rivernum":5,"name":"Nowhere"},"geometry":{"type":"LineString","coordinates":[[50,50],[51,50]]}},
+{"type":"Feature","properties":{"featurecla":"River","scalerank":5,"rivernum":6,"name":"Not a line"},"geometry":{"type":"Point","coordinates":[2,2]}}
+]}

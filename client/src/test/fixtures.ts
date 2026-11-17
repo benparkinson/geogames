@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import type { GameRoundResponse, RoundAnswerResponse } from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
-import type { CountryCitiesRound, CountryShape, CountryShapeRound } from "../games/countries/model";
+import type { CountryCitiesRound, CountryRiversRound, CountryShape, CountryShapeRound } from "../games/countries/model";
 import type { CountryPairRound } from "../games/pairs/model";
 import type { Lake, LakeRound } from "../games/lakes/model";
 import type { River, RiverRound } from "../games/rivers/model";
@@ -152,6 +152,21 @@ export function makeCountryCitiesRoundData(overrides: Partial<CountryCitiesRound
     ],
     ...overrides,
   } as CountryCitiesRound;
+}
+
+/**
+ * The data of a round of Country Rivers: the Netherlands, with its major rivers, minor rivers and a
+ * lake. The layers start at: outline 1,1; coast 2,2; land borders 3,3; major rivers 10,10; minor
+ * rivers 11,11; lakes 12,12.
+ */
+export function makeCountryRiversRoundData(overrides: Partial<CountryRiversRound> = {}): CountryRiversRound {
+  return {
+    country: makeCountryShapeData(),
+    major: lines(10),
+    minor: lines(11),
+    lakes: square(12),
+    ...overrides,
+  } as unknown as CountryRiversRound;
 }
 
 /**
@@ -310,6 +325,15 @@ export function makeCountryCitiesRound(overrides: Partial<GameRoundResponse> = {
   return makeRound({
     jsonBlob: JSON.stringify(makeCountryCitiesRoundData()),
     gameType: { name: "COUNTRIES_BY_CITIES", answerCount: 1, hintCount: 3, guessLimit: 5 },
+    ...overrides,
+  });
+}
+
+/** The server's response for a Country Rivers round. */
+export function makeCountryRiversRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
+  return makeRound({
+    jsonBlob: JSON.stringify(makeCountryRiversRoundData()),
+    gameType: { name: "COUNTRIES_BY_RIVERS", answerCount: 1, hintCount: 3, guessLimit: 5 },
     ...overrides,
   });
 }

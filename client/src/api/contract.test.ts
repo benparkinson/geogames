@@ -6,6 +6,7 @@ import {
   lakeNames,
   makeCountryCitiesRound,
   makeCountryPairRound,
+  makeCountryRiversRound,
   makeCountryShapeRound,
   makeLakeRound,
   makeRiverRound,
@@ -56,6 +57,7 @@ function roundFixtures(): Record<string, GameRoundResponse> {
     BORDERS_BY_SHAPE: makeCountryPairRound("BORDERS_BY_SHAPE"),
     MERGED_COUNTRIES: makeCountryPairRound("MERGED_COUNTRIES"),
     COUNTRIES_BY_CITIES: makeCountryCitiesRound(),
+    COUNTRIES_BY_RIVERS: makeCountryRiversRound(),
   };
 }
 

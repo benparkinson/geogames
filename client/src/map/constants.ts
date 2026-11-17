@@ -77,3 +77,13 @@ export function cityDotOptions(): PathOptions {
 export function capitalDotOptions(): PathOptions {
   return { color: "#ffffff", weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
 }
+
+/** Style for the minor rivers of Country Rivers: thinner than the clue line the major rivers use. */
+export function minorRiverOptions(): PathOptions {
+  return { color: CLUE_COLOR, weight: 1.25, fill: false };
+}
+
+/** Style for a lake that a hint draws: filled more strongly than a clue outline, so it reads as water. */
+export function lakeFillOptions(): PathOptions {
+  return { color: CLUE_COLOR, weight: 1, fillColor: CLUE_COLOR, fillOpacity: 0.5 };
+}
