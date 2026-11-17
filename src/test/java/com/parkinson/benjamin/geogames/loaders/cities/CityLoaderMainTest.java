@@ -185,6 +185,38 @@ class CityLoaderMainTest {
   }
 
   @Test
+  void aCapitalOverrideFlagsOnlyTheNamedCities() {
+    List<City> cities =
+        List.of(
+            new City("Johannesburg", 0, 0, 900, true),
+            new City("Pretoria", 0, 0, 500, true),
+            new City("Cape Town", 0, 0, 800, false),
+            new City("Durban", 0, 0, 700, false));
+
+    assertThat(CityLoaderMain.applyCapitalOverride("South Africa", cities))
+        .filteredOn(City::capital)
+        .extracting(City::name)
+        .containsExactly("Pretoria", "Cape Town");
+  }
+
+  @Test
+  void aCountryWithoutAnOverrideIsUnchanged() {
+    List<City> cities =
+        List.of(new City("Sucre", 0, 0, 300, true), new City("Santa Cruz", 0, 0, 1500, false));
+
+    assertThat(CityLoaderMain.applyCapitalOverride("Bolivia", cities)).isEqualTo(cities);
+  }
+
+  @Test
+  void anOldCityNameIsRenamed() {
+    List<City> cities = List.of(new City("Nur-Sultan", 0, 0, 300, true));
+
+    assertThat(CityLoaderMain.applyCapitalOverride("Kazakhstan", cities))
+        .extracting(City::name)
+        .containsExactly("Astana");
+  }
+
+  @Test
   void theSummaryReportsTheCountsTheDroppedCitiesAndTheEligibleCountries() throws Exception {
     String output =
         CapturedOutput.of(
