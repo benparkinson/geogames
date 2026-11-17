@@ -27,7 +27,8 @@ export class Api {
     const body = await response.json();
     const blob = JSON.parse(body.jsonBlob);
     const gameType: string = body.gameType.name;
-    const places: Answer[] = blob.countries ?? [blob.river ?? blob.lake ?? blob.country];
+    // A river round also lists the countries the river flows through, so the river comes first.
+    const places: Answer[] = blob.river ? [blob.river] : (blob.countries ?? [blob.lake ?? blob.country]);
     return {
       gameType,
       guessLimit: body.gameType.guessLimit,

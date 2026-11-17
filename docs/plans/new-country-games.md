@@ -209,3 +209,4 @@ As phase 1, plus the heap figure. Also confirm that the per-country read is not 
 | After phase 1 | 42,752K (41.7 MB) | +142K |
 | After phase 2 | 43,235K (42.2 MB) | +625K |
 | After phase 3 | 43,593K (42.6 MB; a second run gave 43,288K) | +983K |
+| Final (phase 4, the jar from `./mvnw verify`) | 43,444K (42.4 MB) | +834K (budget: 5,120K) |
