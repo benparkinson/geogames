@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceKind;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.List;
@@ -18,11 +19,11 @@ class KnownPlaceNamesTest {
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(
-                new PlaceName("Congo", List.of("Republic of the Congo")),
-                new PlaceName("Côte d'Ivoire", List.of("Ivory Coast")),
+                new CountryName("Congo", List.of("Republic of the Congo"), 0, 0),
+                new CountryName("Côte d'Ivoire", List.of("Ivory Coast"), 0, 0),
                 // An alias that is another place's name must not win over that name.
-                new PlaceName("Guinea", List.of("Congo")),
-                new PlaceName("Chad", null)));
+                new CountryName("Guinea", List.of("Congo"), 0, 0),
+                new CountryName("Chad", null, 0, 0)));
     RiverLoaderService rivers = mock(RiverLoaderService.class);
     when(rivers.loadRiverNames()).thenReturn(List.of(new PlaceName("Nile", List.of())));
     LakeLoaderService lakes = mock(LakeLoaderService.class);
