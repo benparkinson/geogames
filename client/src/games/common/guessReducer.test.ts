@@ -273,6 +273,63 @@ describe("guessReducer guess limit", () => {
   });
 });
 
+describe("clues on wrong guesses", () => {
+  const clue = { km: 123, bearing: 45 };
+  const calls: [string, string[]][] = [];
+  const withClues: GuessConfig = {
+    ...config,
+    guessLimit: 3,
+    clueFor: (guess, targets) => {
+      calls.push([guess, targets]);
+      return guess === "Nowhere" ? null : clue;
+    },
+  };
+
+  it("stores the clue on a wrong guess and reports it", () => {
+    calls.length = 0;
+    const outcome = guessAll(["France"], withClues);
+
+    expect(outcome.state.guesses[0].clue).toEqual(clue);
+    expect(outcome.result).toMatchObject({ kind: "wrong", guess: "France", clue });
+  });
+
+  it("works out the clue against the answers not found yet", () => {
+    calls.length = 0;
+    guessAll(["Holland", "France"], withClues);
+
+    expect(calls).toEqual([["France", ["Belgium", "Germany"]]]);
+  });
+
+  it("gives the guess that runs out the guesses a clue too", () => {
+    const outcome = guessAll(["France", "Spain", "Italy"], withClues);
+
+    expect(outcome.result).toMatchObject({ kind: "outOfGuesses", clue });
+    expect(outcome.state.guesses[2].clue).toEqual(clue);
+  });
+
+  it("stores nothing for correct, duplicate and unknown guesses", () => {
+    calls.length = 0;
+    const cfg = { ...withClues, isKnownGuess: (g: string) => g !== "Zzz" };
+    const outcome = guessAll(["Belgium", "Belgium", "Zzz", ""], cfg);
+
+    expect(calls).toEqual([]);
+    expect(outcome.state.guesses).toEqual([{ text: "Belgium", answer: "Belgium" }]);
+  });
+
+  it("stores no clue when the guess can't be located", () => {
+    const outcome = guessAll(["Nowhere"], withClues);
+
+    expect(outcome.state.guesses[0]).toEqual({ text: "Nowhere", answer: null });
+    expect(outcome.result).toMatchObject({ kind: "wrong" });
+  });
+
+  it("is unchanged without clueFor", () => {
+    const outcome = guessAll(["France"]);
+
+    expect(outcome.state.guesses[0]).toEqual({ text: "France", answer: null });
+  });
+});
+
 describe("restoreGuessState with saved guesses", () => {
   const saved = (text: string, correct = false): RecordedGuess => ({ text, correct });
   const restore = (state: AnswerState, guesses: RecordedGuess[], cfg: GuessConfig = config, hints = 0) =>

@@ -68,6 +68,27 @@ describe("Country Gaps", () => {
     expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
   });
 
+  it("tells a wrong guess how far and which way the answer is", async () => {
+    const user = userEvent.setup();
+    renderGame();
+    await screen.findByRole("button", { name: /Hint/ });
+
+    await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
+
+    expect(screen.getByText(/^"France" isn't right\. The answer is [\d,]+ km to the (north|south|east|west)/)).toBeInTheDocument();
+  });
+
+  it("gives no clue in Hardcore mode", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+    const user = userEvent.setup();
+    renderGame();
+    await screen.findByRole("button", { name: /Hint/ });
+
+    await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
+
+    expect(screen.getByText(/^"France" isn't right\. \d guesses left\.$/)).toBeInTheDocument();
+  });
+
   it("rejects an unknown name once the country list loads, without using a guess", async () => {
     const user = userEvent.setup();
     const submitAnswer = renderGame();

@@ -4,10 +4,11 @@ import { roundPoints } from "./scoring";
 import RoundResult from "./RoundResult";
 import GuessesLeft from "./GuessesLeft";
 import { HintConfig } from "./MapGame";
-import { Guess, GuessResult } from "./guessReducer";
+import { Guess, GuessClue, GuessResult } from "./guessReducer";
+import { compassPoint, formatKm } from "./distance";
 import { Button, Chip } from "../../ui";
 import { useEffect, useRef, useState } from "react";
-import { EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
+import { ArrowUp, EyeFill, Lightbulb, XLg } from "react-bootstrap-icons";
 
 function prefersPreciseInput(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches;
@@ -28,10 +29,12 @@ function MapGameInput({
   giveUp,
   inputPlaceholder,
   answerNoun,
+  answerCount,
+  showClues,
   suggestions
 }: MapGameInputProps): React.JSX.Element {
   const [guess, setGuess] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [result, setResult] = useState<GuessResult | null>(null);
   const [shakeCount, setShakeCount] = useState(0);
   const [confirmReveal, setConfirmReveal] = useState(false);
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,43 +49,26 @@ function MapGameInput({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const result = submitGuess(guess);
+    const outcome = submitGuess(guess);
+    setResult(outcome);
 
-    switch (result.kind) {
-      case "empty":
-        setFeedback("Type a guess first.");
-        break;
-      case "duplicate":
-        setFeedback(`You've already guessed ${result.guess}.`);
-        break;
+    switch (outcome.kind) {
       case "unknown":
-        setFeedback(`We don't recognise "${result.guess}" as a ${answerNoun}. Check the spelling.`);
         setShakeCount(shakeCount + 1);
         break;
       case "wrong":
-        setFeedback(
-          result.guessesLeft === 1
-            ? `"${result.guess}" isn't right. Last guess!`
-            : Number.isFinite(result.guessesLeft)
-              ? `"${result.guess}" isn't right. ${result.guessesLeft} guesses left.`
-              : `"${result.guess}" isn't right. Try again.`,
-        );
-        setGuess("");
-        setShakeCount(shakeCount + 1);
-        break;
       case "outOfGuesses":
-        setFeedback(`"${result.guess}" isn't right. You're out of guesses.`);
         setGuess("");
         setShakeCount(shakeCount + 1);
         break;
       case "correct":
-        setFeedback(result.remaining > 0 ? `Correct! ${result.remaining} to go.` : "Correct!");
         setGuess("");
-        break;
-      case "over":
         break;
     }
   }
+
+  // Worked out from the result on every render, so switching Hardcore mode changes it straight away.
+  const feedback = result ? feedbackText(result, answerNoun, answerCount, showClues) : null;
 
   function handleRevealClick() {
     if (!confirmReveal) {
@@ -154,12 +140,56 @@ function MapGameInput({
             {wrongGuesses.map((a, i) => (
               <Chip key={i} tone="neutral" size="sm" strike>
                 <XLg aria-hidden="true" /> {a.text}
+                {showClues && a.clue && <ClueBadge clue={a.clue} />}
               </Chip>
             ))}
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+function feedbackText(result: GuessResult, answerNoun: string, answerCount: number, showClues: boolean): string | null {
+  switch (result.kind) {
+    case "empty":
+      return "Type a guess first.";
+    case "duplicate":
+      return `You've already guessed ${result.guess}.`;
+    case "unknown":
+      return `We don't recognise "${result.guess}" as a ${answerNoun}. Check the spelling.`;
+    case "wrong": {
+      const clueText = showClues && result.clue ? ` ${clueSentence(result.clue, answerCount, answerNoun)}` : "";
+      return result.guessesLeft === 1
+        ? `"${result.guess}" isn't right.${clueText} Last guess!`
+        : Number.isFinite(result.guessesLeft)
+          ? `"${result.guess}" isn't right.${clueText} ${result.guessesLeft} guesses left.`
+          : `"${result.guess}" isn't right.${clueText} Try again.`;
+    }
+    case "outOfGuesses":
+      return `"${result.guess}" isn't right. You're out of guesses.`;
+    case "correct":
+      return result.remaining > 0 ? `Correct! ${result.remaining} to go.` : "Correct!";
+    case "over":
+      return null;
+  }
+}
+
+/** "The answer is 1,240 km to the north-east." With several answers it is the nearest one still to find. */
+function clueSentence(clue: GuessClue, answerCount: number, answerNoun: string): string {
+  const where = `${formatKm(clue.km)} km to the ${compassPoint(clue.bearing)}`;
+  return answerCount > 1 ? `The nearest ${answerNoun} you still need is ${where}.` : `The answer is ${where}.`;
+}
+
+/** The distance and an arrow towards the answer, after a wrong guess's name. */
+function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
+  return (
+    <>
+      {" · "}
+      {formatKm(clue.km)} km{" "}
+      <ArrowUp aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
+      <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
+    </>
   );
 }
 
@@ -180,6 +210,10 @@ interface MapGameInputProps {
   giveUp: () => void;
   inputPlaceholder: string;
   answerNoun: string;
+  /** How many answers the round has: with several, a clue points to the nearest one still to find. */
+  answerCount: number;
+  /** Whether to show distance clues (false in Hardcore mode). */
+  showClues: boolean;
   suggestions?: string[];
 }
 

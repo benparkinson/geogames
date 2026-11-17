@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.service.CountryLoaderService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
@@ -34,8 +35,8 @@ class PlaceNameControllerTest {
     when(countryLoaderService.loadCountryNames())
         .thenReturn(
             List.of(
-                new PlaceName("France", List.of()),
-                new PlaceName("Netherlands", List.of("Holland"))));
+                new CountryName("France", List.of(), 46.6, 2.5),
+                new CountryName("Netherlands", List.of("Holland"), 52.1, 5.3)));
 
     var result =
         mockMvc
@@ -44,6 +45,8 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$.length()").value(2))
             .andExpect(jsonPath("$[0].name").value("France"))
             .andExpect(jsonPath("$[0].additionalNames.length()").value(0))
+            .andExpect(jsonPath("$[0].lat").value(46.6))
+            .andExpect(jsonPath("$[0].lon").value(2.5))
             .andExpect(jsonPath("$[1].name").value("Netherlands"))
             .andExpect(jsonPath("$[1].additionalNames[0]").value("Holland"))
             .andReturn();

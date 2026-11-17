@@ -56,7 +56,7 @@ Full builds:
 
 **Game flow / API** (`GameController` → `GameService`; validation rules in the backend `CLAUDE.md`):
 - `POST /api/games` with `{gameType, numberOfRounds}` (1–10). `gameType` is a `GameType` constant or `RANDOM` (a mix of every type). Returns `{id}`, the game's **public id** (a random UUID; the `long` primary key never leaves the server).
-- `GET /api/countries`, `GET /api/rivers`, `GET /api/lakes` return `[{name, additionalNames}]` for autocomplete and spell checking, cached.
+- `GET /api/countries`, `GET /api/rivers`, `GET /api/lakes` return `[{name, additionalNames}]` for autocomplete and spell checking, cached. `GET /api/countries` also returns `lat` and `lon` for each country (the centroid of its largest polygon part), which the client uses for distance clues.
 - `GET /api/games/{id}/rounds/{round}` returns a `GameRound`: the game type, `jsonBlob` (the round data, which the frontend `JSON.parse`s), the total round count, the answer state, `hintsUsed`, `points` and the overall `GameResult` (`score` out of `maxScore`, `roundsCorrect`, `perfectRounds`, per-round `roundPoints` / `roundHintsUsed`) and the `guesses` recorded so far (`[{text, correct}]`, `[]` for none).
 - `POST /api/games/{id}/rounds/{round}/guesses` with `{guess, correct}` stores a guess so a refreshed page can restore it. It returns `{guesses}`. The guess must be a known name or alias for the round's type (`GameType.placeKind`), and is stored as the list's spelling.
 - `POST /api/games/{id}/rounds/{round}/answers` with `{answerState, hintsUsed, wrongGuesses}` (`CORRECT` / `GAVE_UP` / `OUT_OF_GUESSES`). It returns the round's `answerState`, `hintsUsed` and `points` and the `GameResult`, with no round data; the client patches them into its cached rounds.
