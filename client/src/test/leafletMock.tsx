@@ -19,6 +19,7 @@ export const fakeMap = {
   setView: vi.fn(),
   fitBounds: vi.fn(),
   invalidateSize: vi.fn(),
+  attributionControl: { addAttribution: vi.fn(), removeAttribution: vi.fn() },
   getContainer: vi.fn(() => document.createElement("div")),
   dragging: { enable: vi.fn(), disable: vi.fn() },
   keyboard: { enable: vi.fn(), disable: vi.fn() },
@@ -159,4 +160,11 @@ export function drawnCircles(): DrawnCircle[] {
 /** The position of each marker currently rendered, as [lat, lng]. */
 export function drawnMarkers(): [number, number][] {
   return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="Marker"]')).map((el) => JSON.parse(el.dataset.position ?? "[]"));
+}
+
+/** The credits added to the map's attribution control (by `MapCredits`) and not removed again. */
+export function addedAttributions(): string[] {
+  const added = fakeMap.attributionControl.addAttribution.mock.calls.map(([html]) => String(html));
+  const removed = fakeMap.attributionControl.removeAttribution.mock.calls.map(([html]) => String(html));
+  return added.filter((html) => !removed.includes(html));
 }

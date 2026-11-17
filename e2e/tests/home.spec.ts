@@ -39,6 +39,15 @@ test("the home page offers every game and the round counts", async ({ page }) =>
   await expect(startButton).toBeEnabled();
 });
 
+test("the privacy page opens from the footer and loads directly", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("contentinfo").getByRole("link", { name: "Privacy" }).click();
+  await expect(page.getByRole("heading", { name: "Privacy", level: 1 })).toBeVisible();
+
+  await page.goto("/privacy");
+  await expect(page.getByRole("heading", { name: "Privacy", level: 1 })).toBeVisible();
+});
+
 test.describe("on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

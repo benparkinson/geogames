@@ -22,7 +22,7 @@ Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (Bootstrap CSS f
 
 ## Credits
 
-The home page footer credits Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA), EOX (Sentinel-2 cloudless satellite imagery, the 2016 layer, CC BY 4.0) and the Flaticon icon authors. The CC BY licence needs the credit on the map itself too: always draw satellite imagery with `map/SatelliteTiles` (which sets the `attribution`), never a bare `TileLayer`. Later years of the same mosaic are non-commercial, so don't change the layer year without checking its licence. A new data source or tile layer needs a credit added to the footer.
+The credits live in `components/SiteFooter` (the home, summary and privacy pages) and `map/MapCredits` (every map, through Leaflet's attribution control). They name Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA, positions adjusted), EOX (Sentinel-2 cloudless satellite imagery, the 2016 layer, CC BY 4.0) and the Flaticon icon authors. Every new map must include `MapCredits`. The CC BY licence needs the credit on the map itself too: always draw satellite imagery with `map/SatelliteTiles` (which sets the `attribution`), never a bare `TileLayer`. Later years of the same mosaic are non-commercial, so don't change the layer year without checking its licence. A new data source or tile layer needs a credit in the footer. A new data source or third party that receives requests from the browser also needs a line on the privacy page (`components/PrivacyPage`).
 
 ## Structure (`src/`)
 

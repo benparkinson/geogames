@@ -48,7 +48,12 @@ public class GameCleanupService {
     return deleted;
   }
 
-  /** Runs at start-up (no initial delay), then an interval after each run finishes. */
+  /**
+   * Runs at start-up (no initial delay), then an interval after each run finishes. The transaction
+   * comes from {@code GameRepository.deleteCreatedBefore}: the call to {@code
+   * deleteGamesOlderThanMaxAge} on {@code this} does not go through the Spring proxy, so that
+   * method's {@code @Transactional} does not apply here.
+   */
   @Scheduled(fixedDelayString = "${geogames.games.cleanup-interval:PT1H}", initialDelay = 0)
   void deleteOldGames() {
     deleteGamesOlderThanMaxAge(Instant.now());
