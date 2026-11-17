@@ -1,4 +1,5 @@
 import { MapContainer } from "react-leaflet";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
@@ -14,6 +15,7 @@ function CoastlineMap({ data: { country }, gameOver, gaveUp, hintsUsed }: MapPro
       {!gameOver && hintsUsed >= 2 && <HintLines data={country.landBorders} id={`${country.name}/borders`} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}
       <FocusFit country={country} />
+      <MapCredits />
       <MapResizer />
     </MapContainer>
   );

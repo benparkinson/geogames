@@ -1,6 +1,7 @@
 import { GeoJSON, MapContainer, ScaleControl } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { MapProps } from "../../map/MapProps";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { RevealTiles } from "../../map/RevealTiles";
 import { answerPathOptions } from "../../map/constants";
@@ -20,6 +21,7 @@ function LakeShapesMap({ data: { lake }, gaveUp, gameOver }: MapProps<LakeRound>
       <GeoJSON pathOptions={{ ...answerPathOptions(gaveUp), fillOpacity: 0.35 }} data={lake.geoData} key={lake.id + (gaveUp ? "gaveUp" : "")} />
       <FitBounds data={lake.geoData} id={lake.id} maxZoom={LAKE_MAX_FIT_ZOOM} />
       <ScaleControl position="bottomleft" imperial={false} />
+      <MapCredits />
       <MapResizer />
     </MapContainer>
   );

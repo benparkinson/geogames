@@ -1,6 +1,7 @@
 import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { RevealTiles } from "../../map/RevealTiles";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { CountryOutlines, EndFlags, RiverLine } from "./RiverLayers";
@@ -16,6 +17,7 @@ function RiverCountriesMap({ data: { river, countries }, gaveUp, gameOver, hints
       {(hintsUsed >= 1 || gameOver) && <EndFlags river={river} />}
       {/* Fit the river, not the countries: Russia crosses the antimeridian and would fit the whole world. */}
       <FitBounds data={river.geoData} id={river.id} />
+      <MapCredits />
       <MapResizer />
     </MapContainer>
   );

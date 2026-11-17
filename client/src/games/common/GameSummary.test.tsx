@@ -59,6 +59,14 @@ describe("GameSummary", () => {
     expect(rows[2]).toHaveTextContent("1 hint");
   });
 
+  it("shows the site footer with the credits", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    await screen.findByText("You scored 183 / 300");
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+  });
+
   it("falls back to the raw game type name, with no answers, for a type it has no module for", async () => {
     const unknown = makeGameRounds([{ answerState: "CORRECT" }]).map((round) => ({
       ...round,

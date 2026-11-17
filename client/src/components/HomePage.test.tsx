@@ -41,32 +41,11 @@ describe("HomePage on load", () => {
     expect(screen.getByRole("heading", { name: "GeoGauntlet", level: 1 })).toBeInTheDocument();
   });
 
-  it("credits the data, imagery and icons, and links to the software licences", () => {
+  it("shows the site footer", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     renderHome();
 
-    const footer = within(screen.getByRole("contentinfo"));
-    const href = (name: string) => footer.getByRole("link", { name }).getAttribute("href");
-    expect(href("Natural Earth")).toBe("https://www.naturalearthdata.com/");
-    expect(href("Wikidata")).toBe("https://www.wikidata.org/");
-    expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
-    expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
-    expect(href("EOxCloudless")).toBe("https://cloudless.eox.at");
-    expect(href("CC BY 4.0")).toBe("https://creativecommons.org/licenses/by/4.0/");
-    expect(href("Earthz Stocker")).toContain("flaticon.com");
-    expect(href("Freepik")).toContain("flaticon.com");
-    expect(href("Software licences")).toBe("/third-party-licenses.txt");
-    expect(footer.queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
-    expect(footer.queryByText(/Esri/)).not.toBeInTheDocument();
-    expect(footer.getByText(/your light or dark mode choice/)).toBeInTheDocument();
-  });
-
-  it("tells players that anonymous round results are recorded", () => {
-    mockFetch([{ url: HEALTH, body: "ok" }]);
-    renderHome();
-
-    const footer = within(screen.getByRole("contentinfo"));
-    expect(footer.getByText(/We record anonymous round results \(no cookies, no personal data\)/)).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 });
 

@@ -1,4 +1,5 @@
 import { MapContainer } from "react-leaflet";
+import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
@@ -14,6 +15,7 @@ function NeighboursMap({ data: { country, neighbours }, gameOver, gaveUp, hintsU
       {!gameOver && hintsUsed >= 1 && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}
       <FocusFit country={country} />
+      <MapCredits />
       <MapResizer />
     </MapContainer>
   );
