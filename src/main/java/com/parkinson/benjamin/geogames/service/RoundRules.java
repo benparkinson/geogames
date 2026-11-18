@@ -24,15 +24,6 @@ public class RoundRules {
     this.knownPlaceNames = knownPlaceNames;
   }
 
-  /**
-   * Brings a stored round key up to date when a country in it has been renamed, so games in
-   * progress and pinned daily challenges survive a rename.
-   */
-  String currentRoundKey(String roundKey) {
-    return StoredRoundKeys.withCurrentCountryNames(
-        roundKey, name -> knownPlaceNames.currentCountryName(name).orElse(name));
-  }
-
   /** @return whether the round changed */
   boolean addHint(GameRoundEntity round, int hint, int guessesBefore) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {

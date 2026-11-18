@@ -39,7 +39,8 @@ public class RawCountryReader {
       throws IOException {
     GeoData[] countryGeoData = objectMapper.readValue(countriesGeoJson.toFile(), GeoData[].class);
     Map<String, String> officialNames =
-        objectMapper.readValue(officialNamesJson.toFile(), Map.class);
+        objectMapper.readValue(
+            officialNamesJson.toFile(), new TypeReference<Map<String, String>>() {});
     Map<String, List<String>> additionalNamesByCountryName =
         objectMapper.readValue(
             additionalNamesJson.toFile(), new TypeReference<Map<String, List<String>>>() {});

@@ -3,9 +3,8 @@ import { createLocalStore } from "../settings/localStore";
 
 const store = createLocalStore("gg-daily", "gg-daily-change");
 
-/** Which daily challenge a game is: its number and its date, `YYYY-MM-DD`. */
+/** Which daily challenge a game is: its date, `YYYY-MM-DD`. */
 export interface DailyInfo {
-  number: number;
   date: string;
 }
 
