@@ -110,23 +110,18 @@ public class GameRoundEntity {
     return answerState;
   }
 
-  public void setAnswerState(AnswerState answerState) {
-    this.answerState = answerState;
-  }
-
   public int getHintsUsed() {
     return hintsUsed;
-  }
-
-  public void setHintsUsed(int hintsUsed) {
-    this.hintsUsed = hintsUsed;
   }
 
   public Integer getWrongGuesses() {
     return wrongGuesses;
   }
 
-  public void setWrongGuesses(Integer wrongGuesses) {
+  /** Records the answer; the caller checks the answer is allowed. */
+  public void recordAnswer(AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+    this.answerState = answerState;
+    this.hintsUsed = hintsUsed;
     this.wrongGuesses = wrongGuesses;
   }
 

@@ -160,15 +160,14 @@ class GameServiceTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.setAnswerState(state);
-    entity.setHintsUsed(hintsUsed);
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
     return entity;
   }
 
@@ -509,7 +508,7 @@ class GameServiceTest {
   void getGameRoundReturnsTheRequestedRound() {
     GameRoundEntity first = new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:first");
     GameRoundEntity second = new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:second");
-    second.setAnswerState(AnswerState.GAVE_UP);
+    second.recordAnswer(AnswerState.GAVE_UP, second.getHintsUsed(), second.getWrongGuesses());
     when(riverGenerator.rebuild("river:second")).thenReturn(rivers(1).get(0));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(first, second)));
 
@@ -807,7 +806,7 @@ class GameServiceTest {
 
   private GameRoundEntity guessRound(GameType type, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
     return entity;
   }

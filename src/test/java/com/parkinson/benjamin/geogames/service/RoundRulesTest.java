@@ -18,13 +18,13 @@ class RoundRulesTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     return entity;
   }
 
   private static GameRoundEntity guessRound(GameType type, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     return entity;
   }
 
@@ -101,7 +101,7 @@ class RoundRulesTest {
   @Test
   void sameAnswerWithSameWrongGuessesIsANoOp() {
     GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.setWrongGuesses(2);
+    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2);
 
     assertThat(rules.recordAnswer(answered, AnswerState.CORRECT, 0, 2)).isFalse();
   }
@@ -109,7 +109,7 @@ class RoundRulesTest {
   @Test
   void sameAnswerWithDifferentWrongGuessesIsAConflict() {
     GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.setWrongGuesses(2);
+    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2);
 
     assertThatThrownBy(() -> rules.recordAnswer(answered, AnswerState.CORRECT, 0, 3))
         .isInstanceOf(RoundAlreadyAnsweredException.class)

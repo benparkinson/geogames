@@ -16,15 +16,14 @@ class GameResultsTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.setAnswerState(state);
-    entity.setHintsUsed(hintsUsed);
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
     return entity;
   }
 

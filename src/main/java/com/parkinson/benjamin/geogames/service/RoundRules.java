@@ -165,9 +165,7 @@ public class RoundRules {
           hintsUsed,
           wrongGuesses);
     }
-    round.setAnswerState(answerState);
-    round.setHintsUsed(hintsUsed);
-    round.setWrongGuesses(wrongGuesses);
+    round.recordAnswer(answerState, hintsUsed, wrongGuesses);
     return true;
   }
 }
