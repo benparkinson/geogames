@@ -399,17 +399,17 @@ describe("MapGame hints", () => {
 describe("MapGame panel", () => {
   const saved = (text: string) => ({ text, correct: false });
 
-  it("shows the guesses left before any guess", () => {
+  it("shows the lives left before any guess", () => {
     renderGame();
 
-    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "5 lives left" })).toBeInTheDocument();
   });
 
-  it("shows the guesses left and the value together in the status row, not in the button row", () => {
+  it("shows the lives left and the value together in the status row, not in the button row", () => {
     renderGame({ round: makeRoundProps({ guesses: [saved("Italy"), saved("Peru")] }) });
 
     const row = document.querySelector(".round-status") as HTMLElement;
-    expect(row).toContainElement(screen.getByRole("status", { name: "3 guesses left" }));
+    expect(row).toContainElement(screen.getByRole("status", { name: "3 lives left" }));
     expect(row).toHaveTextContent(/Worth \d+ pts/);
     const reveal = screen.getByRole("button", { name: /Reveal answer/ });
     expect(reveal.parentElement).not.toHaveTextContent("Worth");
@@ -421,7 +421,7 @@ describe("MapGame panel", () => {
     await guess(userEvent.setup(), "Italy");
 
     expect(screen.getByText("Italy")).toBeInTheDocument();
-    expect(screen.getByText("Last guess!")).toBeInTheDocument();
+    expect(screen.getByText("Last life!")).toBeInTheDocument();
   });
 
   it("shows no wrong guesses heading when there are none", () => {
@@ -473,7 +473,7 @@ describe("MapGame guess limit", () => {
 
     await guess(user, "Spain");
     await guess(user, "Italy");
-    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "1 life left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
     await guess(user, "Peru");
 
@@ -494,7 +494,7 @@ describe("MapGame guess limit", () => {
     await guess(user, "Italy");
     await guess(user, "Spain");
 
-    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "1 life left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -665,7 +665,7 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getAllByText(/480 km/).length).toBeGreaterThan(0);
   });
 
-  it("shows the saved guesses and the guesses left", () => {
+  it("shows the saved guesses and the lives left", () => {
     renderGame({
       round: makeRoundProps({ guesses: [saved("Italy"), saved("France", true)] }),
     });
@@ -673,7 +673,7 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText(/4 guesses left/)).toBeInTheDocument();
+    expect(screen.getByText(/4 of 5 lives left/)).toBeInTheDocument();
   });
 
   it("rejects a repeat of a saved guess as a duplicate and saves nothing", async () => {

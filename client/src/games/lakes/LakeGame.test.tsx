@@ -78,7 +78,7 @@ describe("LakeGame", () => {
     await userEvent.setup().type(input(), "Bakal{Enter}");
 
     expect(screen.getByText(`We don't recognise "Bakal" as a lake. Check the spelling.`)).toBeInTheDocument();
-    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "5 lives left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 

@@ -81,7 +81,7 @@ describe("makeRiverGame with the shape configuration", () => {
     await userEvent.setup().type(input(), "Danub{Enter}");
 
     expect(screen.getByText(`We don't recognise "Danub" as a river. Check the spelling.`)).toBeInTheDocument();
-    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "5 lives left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 

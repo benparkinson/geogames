@@ -96,6 +96,17 @@ code {
   }
 }
 
+@media (max-width: 575.98px) {
+  .top-bar--wrap {
+    flex-wrap: wrap;
+  }
+  .top-bar--wrap .top-bar__rounds {
+    order: 3;
+    flex: 0 0 100%;
+    justify-content: center;
+  }
+}
+
 .round-progress {
   display: flex;
   gap: 4px;
