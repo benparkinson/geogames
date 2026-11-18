@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.SingletonSupplier;
 
 /**
  * Reads the rivers and lakes of each country, generated offline by {@code CountryRiversMain}.
@@ -28,7 +29,7 @@ public class CountryRiversService {
       List<CountryRiversIndexEntry> all, Map<String, CountryRiversIndexEntry> byName) {}
 
   private final JsonResourceReader reader;
-  private Snapshot snapshot;
+  private final SingletonSupplier<Snapshot> snapshot = SingletonSupplier.of(this::loadIndex);
 
   public CountryRiversService(JsonResourceReader reader) {
     this.reader = reader;
@@ -36,12 +37,12 @@ public class CountryRiversService {
 
   /** What is in each country's file, sorted by name. Read once. */
   public List<CountryRiversIndexEntry> index() {
-    return snapshot().all();
+    return snapshot.obtain().all();
   }
 
   /** The index entry of one country, or null if it has no rivers file. */
   public CountryRiversIndexEntry find(String country) {
-    return snapshot().byName().get(country);
+    return snapshot.obtain().byName().get(country);
   }
 
   /**
@@ -58,19 +59,13 @@ public class CountryRiversService {
     return reader.read(FOLDER + entry.file(), CountryRivers.class);
   }
 
-  /** Synchronised, so two first requests cannot both read the file; later calls are cheap. */
-  private synchronized Snapshot snapshot() {
-    if (snapshot == null) {
-      List<CountryRiversIndexEntry> all =
-          List.of(reader.read(FOLDER + "index.json", CountryRiversIndexEntry[].class));
-      snapshot =
-          new Snapshot(
-              all,
-              all.stream()
-                  .collect(
-                      Collectors.toUnmodifiableMap(
-                          CountryRiversIndexEntry::name, Function.identity())));
-    }
-    return snapshot;
+  private Snapshot loadIndex() {
+    List<CountryRiversIndexEntry> all =
+        List.of(reader.read(FOLDER + "index.json", CountryRiversIndexEntry[].class));
+    return new Snapshot(
+        all,
+        all.stream()
+            .collect(
+                Collectors.toUnmodifiableMap(CountryRiversIndexEntry::name, Function.identity())));
   }
 }

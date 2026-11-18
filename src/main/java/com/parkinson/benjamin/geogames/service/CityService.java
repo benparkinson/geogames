@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.SingletonSupplier;
 
 /**
  * Reads the cities generated offline by {@code CityLoaderMain}. The single file is parsed once, on
@@ -18,7 +19,7 @@ public class CityService {
   private record Snapshot(List<CountryCities> all, Map<String, CountryCities> byCountry) {}
 
   private final JsonResourceReader reader;
-  private Snapshot snapshot;
+  private final SingletonSupplier<Snapshot> snapshot = SingletonSupplier.of(this::load);
 
   public CityService(JsonResourceReader reader) {
     this.reader = reader;
@@ -26,26 +27,19 @@ public class CityService {
 
   /** Every country that has cities, sorted by name. */
   public List<CountryCities> loadAll() {
-    return snapshot().all();
+    return snapshot.obtain().all();
   }
 
   /** The cities of one country, or null if the file has none for it. */
   public CountryCities find(String country) {
-    return snapshot().byCountry().get(country);
+    return snapshot.obtain().byCountry().get(country);
   }
 
-  /** Synchronised, so two first requests cannot both read the file; later calls are cheap. */
-  private synchronized Snapshot snapshot() {
-    if (snapshot == null) {
-      List<CountryCities> all =
-          List.of(reader.read("processed/cities.json", CountryCities[].class));
-      snapshot =
-          new Snapshot(
-              all,
-              all.stream()
-                  .collect(
-                      Collectors.toUnmodifiableMap(CountryCities::country, Function.identity())));
-    }
-    return snapshot;
+  private Snapshot load() {
+    List<CountryCities> all = List.of(reader.read("processed/cities.json", CountryCities[].class));
+    return new Snapshot(
+        all,
+        all.stream()
+            .collect(Collectors.toUnmodifiableMap(CountryCities::country, Function.identity())));
   }
 }

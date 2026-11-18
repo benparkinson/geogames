@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.SingletonSupplier;
 
 /**
  * Reads the simplified country shapes generated offline by {@code CountryShapeMain}. Every shape is
@@ -21,14 +22,14 @@ public class CountryShapeService {
   private record Snapshot(List<CountryShape> all, Map<String, CountryShape> byName) {}
 
   private final JsonResourceReader reader;
-  private Snapshot snapshot;
+  private final SingletonSupplier<Snapshot> snapshot = SingletonSupplier.of(this::load);
 
   public CountryShapeService(JsonResourceReader reader) {
     this.reader = reader;
   }
 
   public CountryShape loadShape(String name) {
-    CountryShape shape = snapshot().byName().get(name);
+    CountryShape shape = snapshot.obtain().byName().get(name);
     if (shape == null) {
       throw new UncheckedIOException(
           "No country shape for " + name, new IOException("unknown country: " + name));
@@ -38,7 +39,7 @@ public class CountryShapeService {
 
   /** The shape of the country with this name, or empty if there is none. */
   public Optional<CountryShape> findShape(String name) {
-    return Optional.ofNullable(snapshot().byName().get(name));
+    return Optional.ofNullable(snapshot.obtain().byName().get(name));
   }
 
   /**
@@ -53,19 +54,15 @@ public class CountryShapeService {
   }
 
   public List<CountryShape> loadShapes() {
-    return snapshot().all();
+    return snapshot.obtain().all();
   }
 
-  /** Synchronised, so two first requests cannot both read the files; later calls are cheap. */
-  private synchronized Snapshot snapshot() {
-    if (snapshot == null) {
-      List<CountryShape> all =
-          List.copyOf(
-              reader.readAll("classpath*:/processed/country-shapes/*.json", CountryShape.class));
-      Map<String, CountryShape> byName = new LinkedHashMap<>();
-      all.forEach(shape -> byName.put(shape.name(), shape));
-      snapshot = new Snapshot(all, Map.copyOf(byName));
-    }
-    return snapshot;
+  private Snapshot load() {
+    List<CountryShape> all =
+        List.copyOf(
+            reader.readAll("classpath*:/processed/country-shapes/*.json", CountryShape.class));
+    Map<String, CountryShape> byName = new LinkedHashMap<>();
+    all.forEach(shape -> byName.put(shape.name(), shape));
+    return new Snapshot(all, Map.copyOf(byName));
   }
 }
