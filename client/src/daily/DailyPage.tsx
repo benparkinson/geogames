@@ -79,10 +79,10 @@ function Intro(): React.JSX.Element {
 }
 
 function Finished({ entry, onOpenGame }: { entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> }; onOpenGame: () => void }): React.JSX.Element {
-  const text = shareText({ number: entry.number, hardcore: entry.hardcore, result: entry.result }, window.location.origin);
+  const text = shareText({ date: entry.date, hardcore: entry.hardcore, result: entry.result }, window.location.origin);
   return (
     <Shell>
-      <h1 className="h3 mb-1">Daily #{entry.number}</h1>
+      <h1 className="h3 mb-1">Daily {entry.date}</h1>
       <p className="mb-3">You scored {entry.result.score} / {entry.result.maxScore}</p>
       <pre className="mb-3" aria-label="Your result">{text}</pre>
       <div className="d-flex flex-wrap gap-2">

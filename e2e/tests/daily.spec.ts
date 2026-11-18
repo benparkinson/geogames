@@ -38,11 +38,11 @@ test("the daily: play, share, come back, and a second player gets the same round
   const firstRound = await api.round(gameId, 0);
 
   // 2. The summary shares a spoiler-free text that links to /daily.
-  await expect(page.getByRole("heading", { name: /Daily #\d+: You scored 0 \/ 500/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Daily \d{4}-\d{2}-\d{2}: You scored 0 \/ 500/ })).toBeVisible();
   await page.getByRole("button", { name: "Copy result" }).click();
   await expect(page.getByText("Copied!")).toBeVisible();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expect(copied).toContain("GeoGauntlet Daily #");
+  expect(copied).toContain("GeoGauntlet Daily 20");
   expect(copied).toContain("🟥🟥🟥🟥🟥");
   expect(copied).toContain("/daily");
   expect(copied).not.toContain("/games/");

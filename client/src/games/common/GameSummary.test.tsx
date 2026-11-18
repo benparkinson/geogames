@@ -45,7 +45,7 @@ describe("GameSummary for a daily challenge", () => {
     renderDaily();
 
     expect(await screen.findByRole("button", { name: "Copy result" })).toBeInTheDocument();
-    expect(screen.getByText(/Daily #7/)).toBeInTheDocument();
+    expect(screen.getByText(/Daily 2026-11-18/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Play again" })).not.toBeInTheDocument();
   });
 

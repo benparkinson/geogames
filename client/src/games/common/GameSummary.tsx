@@ -66,7 +66,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
   const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
   const share = daily && all[0].gameResult.gameState === FINISHED
     ? shareText(
-        { number: daily.number, hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore, result: resultFromGame(all[0].gameResult) },
+        { date: daily.date, hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore, result: resultFromGame(all[0].gameResult) },
         window.location.origin,
       )
     : null;
@@ -83,7 +83,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
       <div className="gg-card gg-card--wide mx-auto my-4 p-3">
         {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
         <h1 className="h3 mb-1">
-          {daily && <span className="gg-text-muted">Daily #{daily.number}: </span>}
+          {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
           {perfectGame
             ? <><StarFill aria-hidden="true" className="gg-text-perfect" /> Perfect game! {score} / {maxScore}</>
             : `You scored ${score} / ${maxScore}`}

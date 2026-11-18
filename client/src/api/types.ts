@@ -28,7 +28,7 @@ export interface DailyGameResponse {
   id: string;
   /** The date the rounds belong to, `YYYY-MM-DD`. */
   date: string;
-  /** "Daily #42". */
+  /** "Daily 2026-11-18". */
   number: number;
 }
 
