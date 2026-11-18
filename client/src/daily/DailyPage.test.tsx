@@ -47,7 +47,7 @@ describe("DailyPage with no game for today", () => {
     expect(posts(fetchMock).map(c => c.body)).toEqual([{ date: today }]);
   });
 
-  it("records that Hardcore was on when the game started", async () => {
+  it("records that Hard mode was on when the game started", async () => {
     localStorage.setItem("gg-hardcore", "on");
     mockFetch([
       { url: API + "/health", body: "ok" },
@@ -163,7 +163,7 @@ describe("DailyPage with a game for today", () => {
     await waitFor(() => expect(readDaily()?.result?.rounds).toEqual(["hints", "perfect"]));
   });
 
-  it("keeps Hardcore while it stays on", async () => {
+  it("keeps Hard mode while it stays on", async () => {
     localStorage.setItem("gg-hardcore", "on");
     writeDaily({ ...entry, hardcore: true });
     mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
@@ -173,7 +173,7 @@ describe("DailyPage with a game for today", () => {
     expect(readDaily()?.hardcore).toBe(true);
   });
 
-  it("turns Hardcore off for good if it is switched off mid-game", async () => {
+  it("turns Hard mode off for good if it is switched off mid-game", async () => {
     localStorage.setItem("gg-hardcore", "on");
     writeDaily({ ...entry, hardcore: true });
     mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
@@ -200,7 +200,7 @@ describe("DailyPage with a game for today", () => {
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
-    expect(screen.getByLabelText("Your result")).toHaveTextContent("GeoGauntlet Daily #42 · Hardcore");
+    expect(screen.getByLabelText("Your result")).toHaveTextContent("GeoGauntlet Daily #42 · Hard mode");
     expect(screen.getByLabelText("Your result")).toHaveTextContent("🟩🟨🟩🟥🟩");
     expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();

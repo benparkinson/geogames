@@ -6,7 +6,7 @@ import { CalendarCheck, Fire } from "react-bootstrap-icons";
 import KofiBadge from "./KofiBadge";
 import SiteFooter from "./SiteFooter";
 import ThemeToggle from "./ThemeToggle";
-import HardcoreToggle from "./HardcoreToggle";
+import HardModeToggle from "./HardModeToggle";
 import Link from "next/link";
 import { entryFor, useDailyEntry } from "../daily/dailyStorage";
 import { useToday } from "../daily/useToday";
@@ -132,7 +132,7 @@ function HomePage(): React.JSX.Element {
                                 />
                             </div>
                             {selectedOption.hasClues && (
-                                <div className="w-100"><HardcoreToggle /></div>
+                                <div className="w-100"><HardModeToggle /></div>
                             )}
                             <Button
                                 variant="primary"

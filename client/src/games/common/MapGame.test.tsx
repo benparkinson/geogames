@@ -81,7 +81,7 @@ describe("MapGame guessing", () => {
 
     await guess(userEvent.setup(), "Italy");
 
-    expect(screen.getByText('"Italy" isn\'t right. 4 guesses left.')).toBeInTheDocument();
+    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -231,6 +231,7 @@ describe("MapGame resuming a finished round", () => {
 
     expect(screen.getByText("Correct! +67")).toBeInTheDocument();
     expect(screen.getByText("2 hints used")).toBeInTheDocument();
+    expect(screen.getByText("Hint number 0").closest("ul")).toHaveClass("round-hints");
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
     expect(screen.queryByText("Hint number 2")).not.toBeInTheDocument();
@@ -479,13 +480,13 @@ describe("MapGame guess limit", () => {
 describe("MapGame clues", () => {
   const clueFor = vi.fn(() => ({ km: 1236, bearing: 45 }));
 
-  it("shows the clue in the feedback and on the chip, and hides it when Hardcore is switched on in the panel", async () => {
+  it("shows the clue in the feedback and on the chip, and hides it when Hard mode is switched on in the panel", async () => {
     const user = userEvent.setup();
     renderGame({ clueFor });
 
     await guess(user, "Italy");
 
-    expect(screen.getByText(/The nearest country you still need is 1,240 km to the north-east\./)).toBeInTheDocument();
+    expect(screen.getByText(/^Not Italy · nearest 1,240 km north-east/)).toBeInTheDocument();
     expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "On" }));
@@ -503,7 +504,7 @@ describe("MapGame clues", () => {
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
   });
 
-  it("shows no clue when Hardcore mode was already on", async () => {
+  it("shows no clue when Hard mode was already on", async () => {
     localStorage.setItem("gg-hardcore", "on");
     const user = userEvent.setup();
     renderGame({ clueFor });
@@ -511,7 +512,18 @@ describe("MapGame clues", () => {
     await guess(user, "Italy");
 
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
-    expect(screen.getByText(/isn't right/)).toBeInTheDocument();
+    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
+  });
+
+  it("puts the Hard mode switch after the wrong guesses", async () => {
+    const user = userEvent.setup();
+    renderGame({ clueFor });
+
+    await guess(user, "Italy");
+
+    const label = screen.getByText("Wrong guesses");
+    const toggle = screen.getByRole("group", { name: "Hard mode" });
+    expect(label.compareDocumentPosition(toggle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
 

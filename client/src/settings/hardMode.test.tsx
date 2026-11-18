@@ -1,25 +1,25 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { useHardcoreMode } from "./hardcoreMode";
+import { useHardMode } from "./hardMode";
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("useHardcoreMode", () => {
+describe("useHardMode", () => {
   it("is off by default", () => {
-    const { result } = renderHook(() => useHardcoreMode());
+    const { result } = renderHook(() => useHardMode());
 
     expect(result.current[0]).toBe(false);
   });
 
   it("remembers the setting in localStorage and removes the key when turned off", () => {
-    const { result } = renderHook(() => useHardcoreMode());
+    const { result } = renderHook(() => useHardMode());
 
     act(() => result.current[1](true));
     expect(result.current[0]).toBe(true);
     expect(localStorage.getItem("gg-hardcore")).toBe("on");
-    expect(renderHook(() => useHardcoreMode()).result.current[0]).toBe(true);
+    expect(renderHook(() => useHardMode()).result.current[0]).toBe(true);
 
     act(() => result.current[1](false));
     expect(result.current[0]).toBe(false);
@@ -27,8 +27,8 @@ describe("useHardcoreMode", () => {
   });
 
   it("updates every hook instance in this tab", () => {
-    const first = renderHook(() => useHardcoreMode());
-    const second = renderHook(() => useHardcoreMode());
+    const first = renderHook(() => useHardMode());
+    const second = renderHook(() => useHardMode());
 
     act(() => first.result.current[1](true));
 
@@ -36,7 +36,7 @@ describe("useHardcoreMode", () => {
   });
 
   it("follows a change made in another tab", () => {
-    const { result } = renderHook(() => useHardcoreMode());
+    const { result } = renderHook(() => useHardMode());
 
     act(() => {
       localStorage.setItem("gg-hardcore", "on");
@@ -53,7 +53,7 @@ describe("useHardcoreMode", () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new Error("blocked");
     });
-    const { result } = renderHook(() => useHardcoreMode());
+    const { result } = renderHook(() => useHardMode());
 
     act(() => result.current[1](true));
     expect(result.current[0]).toBe(true);

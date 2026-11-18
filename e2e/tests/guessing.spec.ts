@@ -15,7 +15,7 @@ test("an unknown name is rejected without using a guess, a wrong country uses on
   const answerNames = new Set(answers.flatMap(a => [a.name, ...a.additionalNames]).map(n => n.toLowerCase()));
   const wrong = (await api.countries()).map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()));
   await guess(page, wrong!);
-  await expect(page.getByText(`"${wrong}" isn't right. 4 guesses left.`)).toBeVisible();
+  await expect(page.getByText(`Not ${wrong}.`)).toBeVisible();
   await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
   await expect(page.getByText("Wrong guesses")).toBeVisible();
 });
@@ -58,21 +58,21 @@ test("a wrong country in a country game says how far and which way the answer is
   await guess(page, await wrongCountry(api, id));
 
   await expect(
-    page.getByText(/isn't right\. The answer is [\d,]+ km to the (north|south|east|west)/),
+    page.getByText(/^Not .+ · [\d,]+ km (north|south|east|west)/),
   ).toBeVisible();
 });
 
-test("Hardcore mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
+test("Hard mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
   await page.goto("/");
   await page.getByRole("radio").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
-  await page.getByRole("group", { name: "Hardcore mode" }).getByText("On", { exact: true }).click();
+  await page.getByRole("group", { name: "Hard mode" }).getByText("On", { exact: true }).click();
 
   const id = await startGame(page, "Country Gaps", 3);
   await expect(answerBox(page)).toBeVisible();
   const wrong = await wrongCountry(api, id);
   await guess(page, wrong);
 
-  await expect(page.getByText(`"${wrong}" isn't right. 4 guesses left.`)).toBeVisible();
+  await expect(page.getByText(`Not ${wrong}.`)).toBeVisible();
   await expect(page.locator(".guess-feedback")).not.toContainText("km");
 });
 

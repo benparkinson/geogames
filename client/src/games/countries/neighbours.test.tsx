@@ -75,10 +75,10 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(screen.getByText(/^"France" isn't right\. The answer is [\d,]+ km to the (north|south|east|west)/)).toBeInTheDocument();
+    expect(screen.getByText(/^Not France · [\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
   });
 
-  it("gives no clue in Hardcore mode", async () => {
+  it("gives no clue in Hard mode", async () => {
     localStorage.setItem("gg-hardcore", "on");
     const user = userEvent.setup();
     renderGame();
@@ -86,7 +86,7 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(screen.getByText(/^"France" isn't right\. \d guesses left\.$/)).toBeInTheDocument();
+    expect(screen.getByText("Not France.")).toBeInTheDocument();
   });
 
   it("rejects an unknown name once the country list loads, without using a guess", async () => {

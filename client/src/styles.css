@@ -168,6 +168,24 @@ code {
   background: var(--gg-color-surface);
 }
 .wrong-guesses-label { font-size: 0.7rem; }
+.round-hints {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+.round-hints li {
+  border-left: 3px solid var(--gg-color-hint);
+  padding-left: 0.5rem;
+  margin-bottom: 0.25rem;
+  color: var(--gg-color-text);
+}
+.round-settings {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--gg-color-border);
+}
+.gg-chip.guess-chip { --gg-chip-fg: var(--gg-color-text); }
+.guess-chip__x { color: var(--gg-color-danger); }
 .guesses-left-dots { display: inline-flex; gap: 0.25rem; font-size: 0.7rem; }
 
 /* Flag markers drawn with an inline SVG (see map/flagIcons.ts). */

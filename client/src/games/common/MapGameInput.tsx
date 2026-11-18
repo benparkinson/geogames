@@ -2,7 +2,7 @@ import { GuessBox } from "../../components/GuessBox";
 import { CORRECT_ANSWER, Round } from "./Model";
 import { roundPoints } from "./scoring";
 import RoundResult from "./RoundResult";
-import GuessesLeft from "./GuessesLeft";
+import RoundStatus from "./RoundStatus";
 import { HintConfig } from "./MapGame";
 import { Guess, GuessClue, GuessResult } from "./guessReducer";
 import { compassPoint, formatKm } from "./distance";
@@ -67,7 +67,7 @@ function MapGameInput({
     }
   }
 
-  // Worked out from the result on every render, so switching Hardcore mode changes it straight away.
+  // Worked out from the result on every render, so switching Hard mode changes it straight away.
   const feedback = result ? feedbackText(result, answerNoun, answerCount, showClues) : null;
 
   function handleRevealClick() {
@@ -95,6 +95,12 @@ function MapGameInput({
         <RoundResult gaveUp={gaveUp} outOfGuesses={outOfGuesses} round={round} hintsUsed={hintsUsed} hintCount={hintCount} />
       ) : (
         <>
+        <RoundStatus
+          guessesLeft={guessesLeft}
+          guessLimit={round.guessLimit}
+          points={roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)}
+        />
+
         <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
           <div className="flex-grow-1">
             <GuessBox
@@ -111,6 +117,8 @@ function MapGameInput({
           <Button type="submit" variant="primary" disabled={gameOver}>Guess</Button>
         </form>
 
+        <div className="guess-feedback small" aria-live="polite">{feedback}</div>
+
         <div className="d-flex flex-wrap gap-2 mb-2">
           {hints && (
             <span title={hintTitle}>
@@ -122,24 +130,17 @@ function MapGameInput({
           <Button variant="danger" onClick={handleRevealClick} disabled={gameOver}>
             <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
           </Button>
-          <span className="small gg-text-muted align-self-center">
-            {`Worth ${roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)} pts`}
-          </span>
         </div>
         </>
       )}
-
-      <div className="guess-feedback small" aria-live="polite">{feedback}</div>
-
-      {!gameOver && <GuessesLeft left={guessesLeft} limit={round.guessLimit} />}
 
       {wrongGuesses.length > 0 && (
         <div>
           <div className="gg-text-muted wrong-guesses-label">Wrong guesses</div>
           <div className="d-flex flex-wrap gap-1">
             {wrongGuesses.map((a, i) => (
-              <Chip key={i} tone="neutral" size="sm" strike>
-                <XLg aria-hidden="true" /> {a.text}
+              <Chip key={i} tone="neutral" className="guess-chip">
+                <XLg aria-hidden="true" className="guess-chip__x" /> {a.text}
                 {showClues && a.clue && <ClueBadge clue={a.clue} />}
               </Chip>
             ))}
@@ -158,16 +159,13 @@ function feedbackText(result: GuessResult, answerNoun: string, answerCount: numb
       return `You've already guessed ${result.guess}.`;
     case "unknown":
       return `We don't recognise "${result.guess}" as a ${answerNoun}. Check the spelling.`;
-    case "wrong": {
-      const clueText = showClues && result.clue ? ` ${clueSentence(result.clue, answerCount, answerNoun)}` : "";
-      return result.guessesLeft === 1
-        ? `"${result.guess}" isn't right.${clueText} Last guess!`
-        : Number.isFinite(result.guessesLeft)
-          ? `"${result.guess}" isn't right.${clueText} ${result.guessesLeft} guesses left.`
-          : `"${result.guess}" isn't right.${clueText} Try again.`;
-    }
+    case "wrong":
+      return showClues && result.clue
+        ? `Not ${result.guess} · ${clueText(result.clue, answerCount)}`
+        : `Not ${result.guess}.`;
     case "outOfGuesses":
-      return `"${result.guess}" isn't right. You're out of guesses.`;
+      // The round is over: RoundResult says so, and the feedback line is hidden.
+      return null;
     case "correct":
       return result.remaining > 0 ? `Correct! ${result.remaining} to go.` : "Correct!";
     case "over":
@@ -175,21 +173,20 @@ function feedbackText(result: GuessResult, answerNoun: string, answerCount: numb
   }
 }
 
-/** "The answer is 1,240 km to the north-east." With several answers it is the nearest one still to find. */
-function clueSentence(clue: GuessClue, answerCount: number, answerNoun: string): string {
-  const where = `${formatKm(clue.km)} km to the ${compassPoint(clue.bearing)}`;
-  return answerCount > 1 ? `The nearest ${answerNoun} you still need is ${where}.` : `The answer is ${where}.`;
+/** "1,240 km north-east". With several answers it is the nearest one still to find: "nearest 480 km north". */
+function clueText(clue: GuessClue, answerCount: number): string {
+  const where = `${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`;
+  return answerCount > 1 ? `nearest ${where}` : where;
 }
 
 /** The distance and an arrow towards the answer, after a wrong guess's name. */
 function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
   return (
-    <>
-      {" · "}
+    <span className="ms-2 fw-semibold">
       {formatKm(clue.km)} km{" "}
       <ArrowUp aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
       <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
-    </>
+    </span>
   );
 }
 
@@ -212,7 +209,7 @@ interface MapGameInputProps {
   answerNoun: string;
   /** How many answers the round has: with several, a clue points to the nearest one still to find. */
   answerCount: number;
-  /** Whether to show distance clues (false in Hardcore mode). */
+  /** Whether to show distance clues (false in Hard mode). */
   showClues: boolean;
   suggestions?: string[];
 }

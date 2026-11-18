@@ -91,7 +91,7 @@ describe("Border Shapes", () => {
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
     expect(
-      screen.getByText(/The nearest country you still need is [\d,]+ km to the (north|south|east|west)/),
+      screen.getByText(/^Not France · nearest [\d,]+ km (north|south|east|west)/),
     ).toBeInTheDocument();
   });
 });

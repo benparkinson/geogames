@@ -60,7 +60,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Thames{Enter}");
 
-    expect(screen.getByText('"Thames" isn\'t right. 4 guesses left.')).toBeInTheDocument();
+    expect(screen.getByText("Not Thames.")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -86,7 +86,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Thames{Enter}");
 
-    expect(screen.getByText(`"Thames" isn't right. 4 guesses left.`)).toBeInTheDocument();
+    expect(screen.getByText("Not Thames.")).toBeInTheDocument();
   });
 
   it("counts a misspelling as wrong when the river list fails to load", async () => {
@@ -94,7 +94,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Danub{Enter}");
 
-    expect(screen.getByText(`"Danub" isn't right. 4 guesses left.`)).toBeInTheDocument();
+    expect(screen.getByText("Not Danub.")).toBeInTheDocument();
   });
 
   it("offers a single hint that names the continent", async () => {

@@ -40,9 +40,9 @@ function PrivacyPage(): React.JSX.Element {
                 <h2 className="h5">On your device</h2>
                 <p>
                     Your browser keeps up to three items in its local storage: <code>gg-theme</code>,{" "}
-                    <code>gg-hardcore</code> and <code>gg-daily</code>. The first two are set only if you use their
-                    switch (the light/dark toggle and Hardcore mode). The third is set only when you play the daily
-                    challenge: it holds today&apos;s game id, whether Hardcore was on and, once you finish,
+                    <code>gg-hardcore</code> (your Hard mode setting) and <code>gg-daily</code>. The first two are set
+                    only if you use their switch (the light/dark toggle and Hard mode). The third is set only when you play the daily
+                    challenge: it holds today&apos;s game id, whether Hard mode was on and, once you finish,
                     your score and how each round ended. It is replaced the next day and never sent anywhere.
                     Clearing site data removes all three.
                 </p>
