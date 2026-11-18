@@ -7,7 +7,7 @@ import { renderWithClient } from "../../test/render";
 import { makeRiverGame } from "./RiverGame";
 import { continentHint, textHints } from "./riverHints";
 
-const CAPTION = "Shape only. The satellite map appears when you answer.";
+const CAPTION = "Shape only. The relief map appears when you answer.";
 
 const RiverGame = makeRiverGame({
   MapComponent: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
@@ -107,7 +107,7 @@ describe("makeRiverGame with the shape configuration", () => {
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
-  it("hides the satellite map until the round ends", async () => {
+  it("hides the relief map until the round ends", async () => {
     await renderRiver();
     expect(screen.getByText(CAPTION)).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "false");

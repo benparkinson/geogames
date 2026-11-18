@@ -15,7 +15,7 @@ export default defineGame({
     MapComponent: RiverShapesMapWrapper,
     prompt: "Name this river from its shape.",
     blankMap: true,
-    mapCaption: "Shape only. The satellite map appears when you answer.",
+    mapCaption: "Shape only. The relief map appears when you answer.",
     hints: (river) => textHints(river, continentHint, countryCountHint, firstLetterHint),
   }),
   answerNames: (round) => [round.river.name],

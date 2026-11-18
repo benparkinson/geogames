@@ -8,7 +8,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Leaflet styles these from JavaScript, on satellite imagery or the blank map, and they don't follow light/dark.
+// Leaflet styles these from JavaScript, on the relief map or the blank map, and they don't follow light/dark.
 const COLOUR_LITERAL_EXCEPTIONS = [
   "src/map/constants.ts", // answer, revealed and clue colours for Leaflet layers
   "src/map/flagIcons.ts", // flag marker SVGs

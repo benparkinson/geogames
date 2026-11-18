@@ -1,11 +1,10 @@
 import type { PathOptions } from "leaflet";
 
-export const SATELLITE_TILE_URL =
-  "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg";
+/** The self-hosted relief tiles (`public/tiles/relief`, served from the site root). */
+export const RELIEF_TILE_URL = "/tiles/relief/{z}/{x}/{y}.jpg";
 
-/** EOX's required credit for Sentinel-2 cloudless (HTML, shown by Leaflet's attribution control). */
-export const SATELLITE_ATTRIBUTION =
-  '<a href="https://cloudless.eox.at">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)';
+/** The tiles stop at zoom 6; Leaflet stretches them at deeper zooms. */
+export const RELIEF_MAX_NATIVE_ZOOM = 6;
 
 const ANSWER_COLOR = "LightGoldenRodYellow";
 const REVEALED_COLOR = "darkred";

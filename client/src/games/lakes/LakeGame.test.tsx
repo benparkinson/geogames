@@ -88,7 +88,7 @@ describe("LakeGame", () => {
     expect(options).toEqual(["Lake Baikal", "Lake Victoria"]);
   });
 
-  it("shows the satellite map once the round is over", async () => {
+  it("shows the relief map once the round is over", async () => {
     await renderLake();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "false");
 

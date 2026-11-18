@@ -4,7 +4,7 @@ import { CenterUpdater } from "../../map/CenterUpdater";
 import { MapCredits } from "../../map/MapCredits";
 import { MapResizer } from "../../map/MapResizer";
 import { MapProps } from "../../map/MapProps";
-import { SatelliteTiles } from "../../map/SatelliteTiles";
+import { ReliefTiles } from "../../map/ReliefTiles";
 import { answerPathOptions } from "../../map/constants";
 import { hintedCountries, TripointRoundData } from "./model";
 
@@ -39,7 +39,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed, foundAtHint 
       maxZoom={10}
       minZoom={4}
     >
-      <SatelliteTiles />
+      <ReliefTiles />
       <Marker icon={markerIcon} position={position} />
       {gameOver && answerBorders}
       {!gameOver && clueBorders}

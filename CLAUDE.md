@@ -15,6 +15,7 @@ Geogames: geography quiz games. The backend is Spring Boot 4 / Java 25 / Maven, 
 
 - Check your work with the `scripts/check-*.sh` scripts below. They print a few lines on success and only the failures otherwise; the full output is in `target/check-logs/`. Read a log only when the summary isn't enough.
 - Read the files (or line ranges) you need rather than `cat`-ing whole folders. `src/main/resources/processed/` (580+ generated JSON files, some a single line of megabytes) and the raw sources in `geodata/` are hidden from ripgrep by `.ignore`. Never print them without a narrow path and `head` or `grep -o`. To list the source files: `git ls-files ':!src/main/resources/processed' ':!geodata'`.
+- `client/public/tiles/` holds about 5,500 committed JPEG map tiles (the relief map) and is hidden from ripgrep by `.ignore`.
 - Every text file is LF in the working tree (`.gitattributes`), except `mvnw.cmd`. Edit scripts don't need to handle CRLF.
 
 ## Commands

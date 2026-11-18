@@ -10,3 +10,5 @@ geodata/countries/countries.geo.json
 geodata/**/wikidata.json
 # Lock files.
 **/package-lock.json
+# About 5,500 committed JPEG map tiles.
+client/public/tiles/
