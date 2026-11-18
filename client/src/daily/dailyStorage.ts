@@ -42,7 +42,10 @@ function isResult(value: unknown): value is DailyResult {
   if (typeof value !== "object" || value === null) return false;
   const r = value as Record<string, unknown>;
   return (
-    typeof r.score === "number" && typeof r.maxScore === "number" && Array.isArray(r.rounds) && r.rounds.every(isOutcome)
+    typeof r.score === "number" &&
+    typeof r.maxScore === "number" &&
+    Array.isArray(r.rounds) &&
+    r.rounds.every(isOutcome)
   );
 }
 

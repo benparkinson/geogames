@@ -2,7 +2,14 @@ import { GeoJSON, Marker, Tooltip } from "react-leaflet";
 import { targetFlagIcon } from "../../map/flagIcons";
 import { FitBounds } from "../../map/FitBounds";
 import { boundsToLatLng } from "../../map/boundsToLatLng";
-import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions, lakeFillOptions, minorRiverOptions } from "../../map/constants";
+import {
+  answerPathOptions,
+  clueLineOptions,
+  clueOutlineOptions,
+  hintLineOptions,
+  lakeFillOptions,
+  minorRiverOptions,
+} from "../../map/constants";
 import type { CountryGeoData, LineGeoData } from "../common/country";
 import type { CountryOutline, CountryShape } from "./model";
 
@@ -17,7 +24,14 @@ export function FocusFit({ country }: { country: CountryShape }): React.JSX.Elem
  */
 export function CountryFlag({ country }: { country: CountryShape }): React.JSX.Element {
   const { south, west, north, east } = country.focus;
-  return <Marker key={`${country.name}/flag`} icon={targetFlagIcon} position={[(south + north) / 2, (west + east) / 2]} interactive={false} />;
+  return (
+    <Marker
+      key={`${country.name}/flag`}
+      icon={targetFlagIcon}
+      position={[(south + north) / 2, (west + east) / 2]}
+      interactive={false}
+    />
+  );
 }
 
 /** The filled outline of each neighbour. */
@@ -53,7 +67,15 @@ export function HintLines({ data, id }: { data: LineGeoData; id: string }): Reac
 }
 
 /** The country's whole outline. Re-created when the round is lost or given up so the colour changes. */
-export function AnswerOutline({ country, gaveUp, labelled = true }: { country: CountryShape; gaveUp: boolean; labelled?: boolean }): React.JSX.Element {
+export function AnswerOutline({
+  country,
+  gaveUp,
+  labelled = true,
+}: {
+  country: CountryShape;
+  gaveUp: boolean;
+  labelled?: boolean;
+}): React.JSX.Element {
   return (
     <GeoJSON
       pathOptions={answerPathOptions(gaveUp)}
@@ -69,7 +91,15 @@ export function AnswerOutline({ country, gaveUp, labelled = true }: { country: C
 }
 
 /** The rivers of Country Rivers: the minor ones thin, the major ones over them in the clue line style. */
-export function RiverLines({ major, minor, id }: { major: LineGeoData; minor: LineGeoData; id: string }): React.JSX.Element {
+export function RiverLines({
+  major,
+  minor,
+  id,
+}: {
+  major: LineGeoData;
+  minor: LineGeoData;
+  id: string;
+}): React.JSX.Element {
   return (
     <>
       <GeoJSON key={`${id}/minor`} data={minor} pathOptions={minorRiverOptions()} />

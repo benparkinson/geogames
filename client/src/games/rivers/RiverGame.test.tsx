@@ -23,7 +23,14 @@ const RiverGame = makeRiverGame({
 async function renderRiver({ listFails = false } = {}) {
   const submitAnswer = vi.fn();
   mockFetch([{ url: /\/api\/rivers$/, ...(listFails ? { status: 503, body: {} } : { body: riverNames }) }]);
-  const { client } = renderWithClient(<RiverGame data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 1 })} answerCount={1} submitAnswer={submitAnswer} />);
+  const { client } = renderWithClient(
+    <RiverGame
+      data={makeRiverRoundData()}
+      round={makeRoundProps({ hintCount: 1 })}
+      answerCount={1}
+      submitAnswer={submitAnswer}
+    />,
+  );
   if (!listFails) {
     await waitFor(() => expect(client.getQueryData(["placeNames", "rivers"])).toBeDefined());
   }

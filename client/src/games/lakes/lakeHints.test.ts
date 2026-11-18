@@ -24,7 +24,11 @@ describe("lakeHints", () => {
   it("offers the three hints in order, each with text", () => {
     const { text } = lakeHints(lake);
 
-    expect([0, 1, 2].map((i) => text?.(i))).toEqual(["Continent: Asia", "Lies in 1 country", "Starts with “B” (after “Lake”)"]);
+    expect([0, 1, 2].map((i) => text?.(i))).toEqual([
+      "Continent: Asia",
+      "Lies in 1 country",
+      "Starts with “B” (after “Lake”)",
+    ]);
     expect(text?.(3)).toBeNull();
   });
 });

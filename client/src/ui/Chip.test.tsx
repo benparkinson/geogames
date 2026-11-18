@@ -4,7 +4,11 @@ import { Chip } from "./Chip";
 
 describe("Chip", () => {
   it("has the tone class and forwards attributes", () => {
-    render(<Chip tone="revealed" title="Revealed" className="slot--filled">France</Chip>);
+    render(
+      <Chip tone="revealed" title="Revealed" className="slot--filled">
+        France
+      </Chip>,
+    );
 
     const chip = screen.getByText("France");
     expect(chip).toHaveClass("gg-chip", "gg-chip--revealed", "slot--filled");
@@ -13,7 +17,11 @@ describe("Chip", () => {
   });
 
   it("can be small", () => {
-    render(<Chip tone="neutral" size="sm">Spain</Chip>);
+    render(
+      <Chip tone="neutral" size="sm">
+        Spain
+      </Chip>,
+    );
 
     expect(screen.getByText("Spain")).toHaveClass("gg-chip--neutral", "gg-chip--sm");
   });

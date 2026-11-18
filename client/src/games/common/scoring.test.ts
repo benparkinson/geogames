@@ -14,12 +14,15 @@ const table: [hintCount: number, hintsUsed: number, correct: number, gaveUp: num
 ];
 
 describe("roundPoints", () => {
-  it.each(table)("with %i hints and %i used: correct is %i, revealed is %i", (hintCount, hintsUsed, correct, gaveUp) => {
-    expect(roundPoints("CORRECT", hintsUsed, hintCount)).toBe(correct);
-    expect(roundPoints("GAVE_UP", hintsUsed, hintCount)).toBe(gaveUp);
-    expect(roundPoints("OUT_OF_GUESSES", hintsUsed, hintCount)).toBe(gaveUp);
-    expect(roundPoints("UNANSWERED", hintsUsed, hintCount)).toBe(0);
-  });
+  it.each(table)(
+    "with %i hints and %i used: correct is %i, revealed is %i",
+    (hintCount, hintsUsed, correct, gaveUp) => {
+      expect(roundPoints("CORRECT", hintsUsed, hintCount)).toBe(correct);
+      expect(roundPoints("GAVE_UP", hintsUsed, hintCount)).toBe(gaveUp);
+      expect(roundPoints("OUT_OF_GUESSES", hintsUsed, hintCount)).toBe(gaveUp);
+      expect(roundPoints("UNANSWERED", hintsUsed, hintCount)).toBe(0);
+    },
+  );
 });
 
 describe("isPerfect", () => {

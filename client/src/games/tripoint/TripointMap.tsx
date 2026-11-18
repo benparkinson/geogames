@@ -25,11 +25,8 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed, foundAtHint 
 
   const hinted = hintedCountries(tripoint.hintOrder, hintsUsed, foundAtHint);
   const clueBorders = tripoint.countries
-    .filter(country => hinted.includes(country.name))
-    .map((country) => (
-      <GeoJSON key={country.name} data={country.geoData} pathOptions={color}>
-      </GeoJSON>
-    ));
+    .filter((country) => hinted.includes(country.name))
+    .map((country) => <GeoJSON key={country.name} data={country.geoData} pathOptions={color}></GeoJSON>);
 
   return (
     <GameMap center={position} zoom={4} minZoom={4} credit="Tripoints: Wikipedia (CC BY-SA 4.0), positions adjusted">

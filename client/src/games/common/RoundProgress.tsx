@@ -2,14 +2,19 @@ import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import { AnswerState, CORRECT_ANSWER, isRevealed, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 import { MAX_ROUND_POINTS } from "./scoring";
 
-export default function RoundProgress({ states, points, currentRound, goToRound }: {
+export default function RoundProgress({
+  states,
+  points,
+  currentRound,
+  goToRound,
+}: {
   states: string[];
   /** The points of each round, in the same order as `states`. */
   points: number[];
   currentRound: number;
   goToRound: (round: number) => void;
 }): React.JSX.Element {
-  const firstUnanswered = states.findIndex(s => s === UNANSWERED);
+  const firstUnanswered = states.findIndex((s) => s === UNANSWERED);
 
   function isPerfectRound(i: number): boolean {
     return states[i] === CORRECT_ANSWER && points[i] === MAX_ROUND_POINTS;
@@ -55,10 +60,15 @@ export default function RoundProgress({ states, points, currentRound, goToRound 
               disabled={!visitable}
               onClick={() => goToRound(i)}
             >
-              {isPerfectRound(i) ? <StarFill aria-hidden="true" />
-                : state === CORRECT_ANSWER ? <CheckLg aria-hidden="true" />
-                : isRevealed(state as AnswerState) ? <EyeFill aria-hidden="true" />
-                : i + 1}
+              {isPerfectRound(i) ? (
+                <StarFill aria-hidden="true" />
+              ) : state === CORRECT_ANSWER ? (
+                <CheckLg aria-hidden="true" />
+              ) : isRevealed(state as AnswerState) ? (
+                <EyeFill aria-hidden="true" />
+              ) : (
+                i + 1
+              )}
             </button>
           </span>
         );

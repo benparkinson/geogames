@@ -1,7 +1,12 @@
 import { CheckLg, EyeFill } from "react-bootstrap-icons";
 import { Chip } from "../../ui";
 
-export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: {
+export default function AnswerSlots({
+  answerCount,
+  found,
+  gaveUp,
+  allAnswers,
+}: {
   answerCount: number;
   found: string[];
   gaveUp: boolean;
@@ -9,7 +14,7 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
 }): React.JSX.Element {
   const label = `Answers: ${found.length} of ${answerCount} found`;
   // After giving up, the slots after the found answers show the answers that weren't found.
-  const revealed = gaveUp ? allAnswers.filter(a => !found.includes(a)) : [];
+  const revealed = gaveUp ? allAnswers.filter((a) => !found.includes(a)) : [];
 
   return (
     <div className="d-flex gap-2 flex-wrap mb-2" role="group" aria-label={label}>
@@ -31,7 +36,9 @@ export default function AnswerSlots({ answerCount, found, gaveUp, allAnswers }: 
           );
         }
         return (
-          <span key={i} className="answer-slot-empty px-3 gg-text-muted fs-6" aria-label="Not found yet">?</span>
+          <span key={i} className="answer-slot-empty px-3 gg-text-muted fs-6" aria-label="Not found yet">
+            ?
+          </span>
         );
       })}
     </div>

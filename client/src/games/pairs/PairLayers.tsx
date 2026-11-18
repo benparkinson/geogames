@@ -14,9 +14,7 @@ export function pairId(round: CountryPairRound): string {
 
 /** Fits the map to `bounds`, and again whenever `id` changes. */
 export function BoundsFit({ bounds, id }: { bounds: Bounds; id: string }): React.JSX.Element {
-  return (
-    <FitBounds id={id} bounds={boundsToLatLng(bounds)} />
-  );
+  return <FitBounds id={id} bounds={boundsToLatLng(bounds)} />;
 }
 
 /** Each country's whole outline, with its name on hover. Re-created when the round is given up so the colour changes. */

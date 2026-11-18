@@ -14,7 +14,10 @@ export default function MyApp({ Component, pageProps }: AppProps): React.JSX.Ele
   return (
     <>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+        />
       </Head>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />

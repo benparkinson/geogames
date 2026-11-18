@@ -24,7 +24,9 @@ describe("MapCredits", () => {
   it("puts an extra credit first", () => {
     render(<MapCredits extra="Tripoints: Wikipedia" />);
 
-    expect(fakeMap.attributionControl.addAttribution).toHaveBeenCalledExactlyOnceWith("Tripoints: Wikipedia | " + CREDITS);
+    expect(fakeMap.attributionControl.addAttribution).toHaveBeenCalledExactlyOnceWith(
+      "Tripoints: Wikipedia | " + CREDITS,
+    );
   });
 
   it("removes exactly what it added when it unmounts", () => {

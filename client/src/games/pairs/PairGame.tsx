@@ -17,7 +17,12 @@ export interface PairVariant {
 
 /** Builds the game component for one pair variant. The player names both countries. */
 export function makePairGame(variant: PairVariant) {
-  function PairGame({ data, round, answerCount, submitAnswer }: GameComponentProps<CountryPairRound>): React.JSX.Element {
+  function PairGame({
+    data,
+    round,
+    answerCount,
+    submitAnswer,
+  }: GameComponentProps<CountryPairRound>): React.JSX.Element {
     const { suggestions, isKnownGuess } = useGuessList("countries");
     const clueFor = useCountryClues();
     return (

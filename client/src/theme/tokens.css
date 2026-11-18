@@ -78,8 +78,9 @@
   --gg-color-map-caption-text: var(--gg-white);
 
   /* ---- Fonts ---- */
-  --gg-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --gg-font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   --gg-font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 
   /* ---- Shape ---- */

@@ -7,7 +7,17 @@ import type { GeoJsonObject } from "geojson";
  * Fits the map to `bounds` when given, otherwise to the extent of `data`, without zooming in past
  * `maxZoom` (7 unless given). Fits again only when `id` changes.
  */
-export function FitBounds({ data, bounds, id, maxZoom = 7 }: { data?: GeoJsonObject; bounds?: L.LatLngBoundsExpression; id: string; maxZoom?: number }): null {
+export function FitBounds({
+  data,
+  bounds,
+  id,
+  maxZoom = 7,
+}: {
+  data?: GeoJsonObject;
+  bounds?: L.LatLngBoundsExpression;
+  id: string;
+  maxZoom?: number;
+}): null {
   const map = useMap();
 
   useEffect(() => {

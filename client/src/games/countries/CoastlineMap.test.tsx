@@ -15,7 +15,9 @@ const COAST = "2,2";
 const BORDERS = "3,3";
 
 function renderMap(overrides: Partial<MapProps<CountryShapeRound>> = {}) {
-  return render(<CoastlineMap data={makeCountryShapeRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />);
+  return render(
+    <CoastlineMap data={makeCountryShapeRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />,
+  );
 }
 
 const points = () => drawnLayers().map((layer) => layer.point);

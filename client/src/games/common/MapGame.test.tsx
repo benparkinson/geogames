@@ -528,7 +528,8 @@ describe("MapGame clues", () => {
 });
 
 describe("MapGame saving guesses", () => {
-  const recordGuess = (props: { round: { recordGuess: unknown } }) => props.round.recordGuess as ReturnType<typeof vi.fn>;
+  const recordGuess = (props: { round: { recordGuess: unknown } }) =>
+    props.round.recordGuess as ReturnType<typeof vi.fn>;
 
   it("saves a wrong and a correct guess", async () => {
     const user = userEvent.setup();
@@ -545,7 +546,7 @@ describe("MapGame saving guesses", () => {
 
   it("does not save an empty, duplicate or unknown guess", async () => {
     const user = userEvent.setup();
-    const { props } = renderGame({ isKnownGuess: g => g !== "Atlantis" });
+    const { props } = renderGame({ isKnownGuess: (g) => g !== "Atlantis" });
 
     await guess(user, "Italy");
     await guess(user, "   ");
@@ -583,7 +584,7 @@ describe("MapGame resuming an unfinished round", () => {
       answers: ANSWERS,
       round,
       prompt: "Name them",
-      inputPlaceholder: "Country…",
+      inputPlaceholder: "Countryï¿½",
       answerNoun: "country",
       submitAnswer: vi.fn(),
     };
@@ -638,7 +639,7 @@ describe("MapGame resuming an unfinished round", () => {
 });
 
 describe("MapGame saving hints", () => {
-  const hints: HintConfig = { description: "A clue", text: index => `Clue ${index}` };
+  const hints: HintConfig = { description: "A clue", text: (index) => `Clue ${index}` };
 
   it("saves each hint with its index and the guesses made before it", async () => {
     const user = userEvent.setup();

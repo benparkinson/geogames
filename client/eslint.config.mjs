@@ -12,7 +12,9 @@ export default defineConfig([
       "no-restricted-imports": [
         "error",
         {
-          paths: [{ name: "react-leaflet", importNames: ["MapContainer"], message: "Use GameMap, which adds the credits." }],
+          paths: [
+            { name: "react-leaflet", importNames: ["MapContainer"], message: "Use GameMap, which adds the credits." },
+          ],
         },
       ],
     },

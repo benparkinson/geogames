@@ -16,7 +16,9 @@ vi.mock("./CountryRiversMapWrapper", () => ({
 function renderGame(data: CountryRiversRound = makeCountryRiversRoundData(), submitAnswer = vi.fn()) {
   const Component = countryRivers.Component;
   mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
-  renderWithClient(<Component data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />);
+  renderWithClient(
+    <Component data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />,
+  );
   return submitAnswer;
 }
 

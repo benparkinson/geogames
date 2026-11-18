@@ -14,7 +14,19 @@ import tripoint from "./tripoint";
 import type { AnyGameModule } from "./types";
 
 /** Every type of game, in home page order. To add a game, build its module and add it here. */
-export const GAME_MODULES: AnyGameModule[] = [tripoint, countriesByNeighbours, landBorders, mergedCountries, cities, countryRivers, riverCountries, coastline, riverShapes, lakeShapes, borderShapes];
+export const GAME_MODULES: AnyGameModule[] = [
+  tripoint,
+  countriesByNeighbours,
+  landBorders,
+  mergedCountries,
+  cities,
+  countryRivers,
+  riverCountries,
+  coastline,
+  riverShapes,
+  lakeShapes,
+  borderShapes,
+];
 
 export function findGameModule(type: string): AnyGameModule | undefined {
   return GAME_MODULES.find((module) => module.type === type);

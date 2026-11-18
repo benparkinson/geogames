@@ -2,7 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { addedAttributions, drawnLayers, drawnMarkers, drawnTileAttributions, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import {
+  addedAttributions,
+  drawnLayers,
+  drawnMarkers,
+  drawnTileAttributions,
+  drawnTileUrls,
+  fakeMap,
+} from "../../test/leafletMock";
 import { makeTripointData } from "../../test/fixtures";
 import TripointMap from "./TripointMap";
 import type { TripointRoundData } from "./model";
@@ -63,7 +70,11 @@ describe("TripointMap", () => {
     renderMap({ gameOver: true });
 
     expect(points().sort()).toEqual(["0,0", "1,1", "2,2"]);
-    expect(screen.getAllByTestId("Tooltip").map((tip) => tip.textContent)).toEqual(["Belgium", "Netherlands", "Germany"]);
+    expect(screen.getAllByTestId("Tooltip").map((tip) => tip.textContent)).toEqual([
+      "Belgium",
+      "Netherlands",
+      "Germany",
+    ]);
     expect(drawnLayers().every((layer) => layer.color === answerPathOptions(false).color)).toBe(true);
   });
 

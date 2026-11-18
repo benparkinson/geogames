@@ -10,7 +10,7 @@ import {
   longestBorderHint,
   mapHint,
   neighbourCountHint,
-}  from "./countryHints";
+} from "./countryHints";
 
 describe("countryHints", () => {
   const round = makeCountryShapeRoundData();
@@ -84,7 +84,8 @@ describe("coastHint", () => {
 
 describe("lakesHint", () => {
   const country = makeCountryShapeData();
-  const lakes = (coordinates: unknown[]) => ({ type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates } }) as never;
+  const lakes = (coordinates: unknown[]) =>
+    ({ type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates } }) as never;
 
   it("says the lakes are on the map", () => {
     expect(lakesHint({ country, lakes: lakes([[[[0, 0]]]]) })).toBe("Its lakes are on the map");

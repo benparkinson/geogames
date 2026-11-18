@@ -56,7 +56,7 @@ function Intro(): React.JSX.Element {
     // Another tab may have started the game since this page loaded.
     if (entryFor(readDaily(), date)) return;
     mutate(date, {
-      onSuccess: game => {
+      onSuccess: (game) => {
         writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore: hardMode });
       },
     });
@@ -66,28 +66,50 @@ function Intro(): React.JSX.Element {
     <Shell>
       <h1 className="h3 mb-1">Daily challenge</h1>
       <p className="mb-3">Five rounds, one of each kind, the same for everyone today.</p>
-      <div className="mb-3"><HardModeToggle /></div>
+      <div className="mb-3">
+        <HardModeToggle />
+      </div>
       <Button variant="primary" onClick={play} disabled={isPending}>
-        {isPending ? <><Spinner size="sm" decorative /> Starting…</> : "Play today's challenge"}
+        {isPending ? (
+          <>
+            <Spinner size="sm" decorative /> Starting…
+          </>
+        ) : (
+          "Play today's challenge"
+        )}
       </Button>
       <div aria-live="polite" className="mt-2">
         {isPending && slow && <p className="gg-text-muted mb-0">Waking up the server…</p>}
-        {!!error && !isPending && <Notice className="mb-0">Couldn&apos;t start. The server may be down. Try again.</Notice>}
+        {!!error && !isPending && (
+          <Notice className="mb-0">Couldn&apos;t start. The server may be down. Try again.</Notice>
+        )}
       </div>
     </Shell>
   );
 }
 
-function Finished({ entry, onOpenGame }: { entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> }; onOpenGame: () => void }): React.JSX.Element {
+function Finished({
+  entry,
+  onOpenGame,
+}: {
+  entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
+  onOpenGame: () => void;
+}): React.JSX.Element {
   const text = shareText({ date: entry.date, hardcore: entry.hardcore, result: entry.result }, window.location.origin);
   return (
     <Shell>
       <h1 className="h3 mb-1">Daily {entry.date}</h1>
-      <p className="mb-3">You scored {entry.result.score} / {entry.result.maxScore}</p>
-      <pre className="mb-3" aria-label="Your result">{text}</pre>
+      <p className="mb-3">
+        You scored {entry.result.score} / {entry.result.maxScore}
+      </p>
+      <pre className="mb-3" aria-label="Your result">
+        {text}
+      </pre>
       <div className="d-flex flex-wrap gap-2">
         <ShareButton text={text} />
-        <Button variant="secondary" onClick={onOpenGame}>See the rounds</Button>
+        <Button variant="secondary" onClick={onOpenGame}>
+          See the rounds
+        </Button>
       </div>
     </Shell>
   );

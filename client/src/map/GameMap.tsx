@@ -10,7 +10,15 @@ interface GameMapProps extends MapContainerProps {
 }
 
 /** The container for every game map, so each one has its credits and resizes with the page. */
-export function GameMap({ children, credit, zoom = 3, minZoom = 2, maxZoom = 10, center = [0, 0], ...rest }: GameMapProps): React.JSX.Element {
+export function GameMap({
+  children,
+  credit,
+  zoom = 3,
+  minZoom = 2,
+  maxZoom = 10,
+  center = [0, 0],
+  ...rest
+}: GameMapProps): React.JSX.Element {
   return (
     <MapContainer zoom={zoom} minZoom={minZoom} maxZoom={maxZoom} center={center} {...rest}>
       {children}

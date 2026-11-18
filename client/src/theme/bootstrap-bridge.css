@@ -6,5 +6,9 @@
   --bs-body-color: var(--gg-color-text);
   --bs-body-font-family: var(--gg-font-sans);
 }
-a { color: var(--gg-color-link); }
-a:hover { color: var(--gg-color-link-hover); }
+a {
+  color: var(--gg-color-link);
+}
+a:hover {
+  color: var(--gg-color-link-hover);
+}

@@ -16,7 +16,7 @@ export function matchAnswer(guess: string, candidates: AnswerCandidate[]): strin
     if (normaliseString(candidate.name) === normalisedGuess) {
       return candidate.name;
     }
-    if (candidate.additionalNames.some(alias => normaliseString(alias) === normalisedGuess)) {
+    if (candidate.additionalNames.some((alias) => normaliseString(alias) === normalisedGuess)) {
       return candidate.name;
     }
   }

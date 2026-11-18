@@ -28,7 +28,7 @@ export function toRoundView(response: GameRoundResponse, round: number): GameRou
   const states = roundAnswerStates(response, round);
   const serverPoints = result.roundPoints;
   // Older backends send none of the points fields, and their score counted correct rounds.
-  const points = Array.isArray(serverPoints) ? serverPoints : states.map(state => roundPoints(state, 0, 0));
+  const points = Array.isArray(serverPoints) ? serverPoints : states.map((state) => roundPoints(state, 0, 0));
   const hintsUsed = Array.isArray(result.roundHintsUsed) ? result.roundHintsUsed : states.map(() => 0);
   return {
     gameType: {
@@ -48,9 +48,8 @@ export function toRoundView(response: GameRoundResponse, round: number): GameRou
       gameState: result.gameState,
       score: Array.isArray(serverPoints) ? result.score : points.reduce((sum, p) => sum + p, 0),
       maxScore: result.maxScore ?? MAX_ROUND_POINTS * response.totalRoundCount,
-      roundsCorrect: result.roundsCorrect ?? states.filter(s => s === CORRECT_ANSWER).length,
-      perfectRounds:
-        result.perfectRounds ?? states.filter((s, i) => isPerfect(s, hintsUsed[i] ?? 0)).length,
+      roundsCorrect: result.roundsCorrect ?? states.filter((s) => s === CORRECT_ANSWER).length,
+      perfectRounds: result.perfectRounds ?? states.filter((s, i) => isPerfect(s, hintsUsed[i] ?? 0)).length,
       roundAnswerStates: states,
       roundPoints: points,
       roundHintsUsed: hintsUsed,
@@ -137,7 +136,7 @@ export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?:
       postJson<RoundAnswerResponse>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
     // Returning the promise keeps the mutation pending until the refetch or prefetch is done.
     onError: invalidateGame,
-    onSuccess: async response => {
+    onSuccess: async (response) => {
       if (isCompleteAnswerResponse(response)) {
         patchRounds(queryClient, gameId, round, response);
       } else {
@@ -164,11 +163,11 @@ export function useRecordGuess(gameId: string, round: number) {
         guess: guess.text,
         correct: guess.correct,
       }),
-    onSuccess: response => {
+    onSuccess: (response) => {
       if (!Array.isArray(response?.guesses)) return;
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
-        old => old && { ...old, guesses: response.guesses },
+        (old) => old && { ...old, guesses: response.guesses },
       );
     },
     onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
@@ -185,23 +184,18 @@ export function useRecordHint(gameId: string, round: number) {
     scope: roundWritesScope(gameId),
     mutationFn: (hint: { hint: number; guessesBefore: number }) =>
       postJson<RoundHintsResponse>(roundUrl(gameId, round) + "/hints", "save hint", hint),
-    onSuccess: response => {
+    onSuccess: (response) => {
       if (!Array.isArray(response?.hintsTakenAt)) return;
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
-        old => old && { ...old, hintsTakenAt: response.hintsTakenAt },
+        (old) => old && { ...old, hintsTakenAt: response.hintsTakenAt },
       );
     },
     onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
   });
 }
 
-function patchRounds(
-  queryClient: QueryClient,
-  gameId: string,
-  round: number,
-  response: CompleteAnswerResponse,
-) {
+function patchRounds(queryClient: QueryClient, gameId: string, round: number, response: CompleteAnswerResponse) {
   const result = response.gameResult;
   const gameResult: GameRoundView["gameResult"] = {
     gameState: result.gameState,
@@ -214,10 +208,13 @@ function patchRounds(
     roundHintsUsed: result.roundHintsUsed,
   };
   // Every round of the game carries the whole game's result. Only round queries live under the game's key.
-  queryClient.setQueriesData<GameRoundView>({ queryKey: queryKeys.game(gameId) }, old => old && { ...old, gameResult });
+  queryClient.setQueriesData<GameRoundView>(
+    { queryKey: queryKeys.game(gameId) },
+    (old) => old && { ...old, gameResult },
+  );
   queryClient.setQueryData<GameRoundView>(
     queryKeys.round(gameId, round),
-    old =>
+    (old) =>
       old && {
         ...old,
         answerState: response.answerState,

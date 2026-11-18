@@ -31,7 +31,7 @@ function MapGameInput({
   answerNoun,
   answerCount,
   showClues,
-  suggestions
+  suggestions,
 }: MapGameInputProps): React.JSX.Element {
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<GuessResult | null>(null);
@@ -92,45 +92,55 @@ function MapGameInput({
   return (
     <div>
       {gameOver ? (
-        <RoundResult gaveUp={gaveUp} outOfGuesses={outOfGuesses} round={round} hintsUsed={hintsUsed} hintCount={hintCount} />
+        <RoundResult
+          gaveUp={gaveUp}
+          outOfGuesses={outOfGuesses}
+          round={round}
+          hintsUsed={hintsUsed}
+          hintCount={hintCount}
+        />
       ) : (
         <>
-        <RoundStatus
-          guessesLeft={guessesLeft}
-          guessLimit={round.guessLimit}
-          points={roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)}
-        />
+          <RoundStatus
+            guessesLeft={guessesLeft}
+            guessLimit={round.guessLimit}
+            points={roundPoints(CORRECT_ANSWER, hintsUsed, hintCount)}
+          />
 
-        <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
-          <div className="flex-grow-1">
-            <GuessBox
-              key={shakeCount}
-              className={shakeCount > 0 ? "shake" : undefined}
-              autoFocus={shakeCount > 0 || prefersPreciseInput()}
-              value={guess}
-              name={inputPlaceholder}
-              onChange={e => setGuess(e.currentTarget.value)}
-              disabled={gameOver}
-              suggestions={suggestions}
-            />
+          <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
+            <div className="flex-grow-1">
+              <GuessBox
+                key={shakeCount}
+                className={shakeCount > 0 ? "shake" : undefined}
+                autoFocus={shakeCount > 0 || prefersPreciseInput()}
+                value={guess}
+                name={inputPlaceholder}
+                onChange={(e) => setGuess(e.currentTarget.value)}
+                disabled={gameOver}
+                suggestions={suggestions}
+              />
+            </div>
+            <Button type="submit" variant="primary" disabled={gameOver}>
+              Guess
+            </Button>
+          </form>
+
+          <div className="guess-feedback small" aria-live="polite">
+            {feedback}
           </div>
-          <Button type="submit" variant="primary" disabled={gameOver}>Guess</Button>
-        </form>
 
-        <div className="guess-feedback small" aria-live="polite">{feedback}</div>
-
-        <div className="d-flex flex-wrap gap-2 mb-2">
-          {hints && (
-            <span title={hintTitle}>
-              <Button variant="hint" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
-                <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
-              </Button>
-            </span>
-          )}
-          <Button variant="danger" onClick={handleRevealClick} disabled={gameOver}>
-            <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
-          </Button>
-        </div>
+          <div className="d-flex flex-wrap gap-2 mb-2">
+            {hints && (
+              <span title={hintTitle}>
+                <Button variant="hint" onClick={onHint} disabled={gameOver || hintsLeft <= 0}>
+                  <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
+                </Button>
+              </span>
+            )}
+            <Button variant="danger" onClick={handleRevealClick} disabled={gameOver}>
+              <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
+            </Button>
+          </div>
         </>
       )}
 
@@ -183,8 +193,7 @@ function clueText(clue: GuessClue, answerCount: number): string {
 function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
   return (
     <span className="ms-2 fw-semibold">
-      {formatKm(clue.km)} km{" "}
-      <ArrowUp aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
+      {formatKm(clue.km)} km <ArrowUp aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
       <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
     </span>
   );

@@ -3,7 +3,13 @@ import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "rea
 import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
 
-export default function RoundResult({ gaveUp, outOfGuesses = false, round, hintsUsed, hintCount }: {
+export default function RoundResult({
+  gaveUp,
+  outOfGuesses = false,
+  round,
+  hintsUsed,
+  hintCount,
+}: {
   gaveUp: boolean;
   /** The round ended because the guesses ran out (`gaveUp` is true too). */
   outOfGuesses?: boolean;
@@ -19,16 +25,26 @@ export default function RoundResult({ gaveUp, outOfGuesses = false, round, hints
     <div className="round-result mb-3">
       <div className={"mb-2 fw-semibold " + (gaveUp ? "gg-text-revealed" : "gg-text-correct")} aria-live="polite">
         {outOfGuesses ? (
-          <><XCircleFill aria-hidden="true" /> Out of guesses · 0 pts</>
+          <>
+            <XCircleFill aria-hidden="true" /> Out of guesses · 0 pts
+          </>
         ) : gaveUp ? (
-          <><EyeFill aria-hidden="true" /> Answer revealed · 0 pts</>
+          <>
+            <EyeFill aria-hidden="true" /> Answer revealed · 0 pts
+          </>
         ) : perfect ? (
-          <><StarFill aria-hidden="true" /> Perfect! +{points}</>
+          <>
+            <StarFill aria-hidden="true" /> Perfect! +{points}
+          </>
         ) : (
-          <><CheckCircleFill aria-hidden="true" /> Correct! +{points}</>
+          <>
+            <CheckCircleFill aria-hidden="true" /> Correct! +{points}
+          </>
         )}
         {!gaveUp && !perfect && (
-          <div className="small fw-normal gg-text-muted">{hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}</div>
+          <div className="small fw-normal gg-text-muted">
+            {hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}
+          </div>
         )}
       </div>
       {round.hasNextRound ? (

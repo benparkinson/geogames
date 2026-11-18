@@ -8,14 +8,14 @@ import { buttonClass } from "../ui";
  * third-party script on every page.
  */
 export default function KofiBadge(): React.JSX.Element {
-    return (
-        <a
-            href="https://ko-fi.com/O3J02ABGOW"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonClass({ variant: "quiet", size: "sm", pill: true })}
-        >
-            <CupHotFill aria-hidden="true" className="kofi-icon" /> Buy me a coffee
-        </a>
-    );
+  return (
+    <a
+      href="https://ko-fi.com/O3J02ABGOW"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={buttonClass({ variant: "quiet", size: "sm", pill: true })}
+    >
+      <CupHotFill aria-hidden="true" className="kofi-icon" /> Buy me a coffee
+    </a>
+  );
 }

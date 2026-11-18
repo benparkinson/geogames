@@ -90,8 +90,6 @@ describe("Border Shapes", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(
-      screen.getByText(/^Not France · nearest [\d,]+ km (north|south|east|west)/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/^Not France · nearest [\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
   });
 });

@@ -9,7 +9,16 @@ import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
 import HardModeToggle from "../../components/HardModeToggle";
 import { useHardMode } from "../../settings/hardMode";
-import { GuessAction, GuessClue, GuessConfig, guessesLeft, guessReducer, GuessState, restoreGuessState, wrongGuessCount } from "./guessReducer";
+import {
+  GuessAction,
+  GuessClue,
+  GuessConfig,
+  guessesLeft,
+  guessReducer,
+  GuessState,
+  restoreGuessState,
+  wrongGuessCount,
+} from "./guessReducer";
 
 function MapGame<Type>({
   data,
@@ -40,22 +49,27 @@ function MapGame<Type>({
     clueFor,
   };
   // Rebuilt from the guesses and hints the server saved, so a refresh keeps them.
-  const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config));
+  const [restored] = useState(() =>
+    restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config),
+  );
   const [savedGuessState, setGuessState] = useState<GuessState>(restored.state);
   // The country list that the clues come from may load after the round was restored. Clues are computed, never
   // saved, so once it has loaded, work out the ones the restored guesses missed (a refresh must show them too).
   const lateClues = useMemo(
-    () => (clueFor ? restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state.guesses : []),
+    () =>
+      clueFor
+        ? restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state.guesses
+        : [],
     // The config is rebuilt every render; only the clues becoming available matters.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [clueFor],
   );
   const guessState = useMemo<GuessState>(() => {
-    if (!savedGuessState.guesses.some(g => g.answer === null && !g.clue)) {
+    if (!savedGuessState.guesses.some((g) => g.answer === null && !g.clue)) {
       return savedGuessState;
     }
-    const guesses = savedGuessState.guesses.map(g => {
-      const clue = g.answer === null && !g.clue ? lateClues.find(w => w.text === g.text)?.clue : undefined;
+    const guesses = savedGuessState.guesses.map((g) => {
+      const clue = g.answer === null && !g.clue ? lateClues.find((w) => w.text === g.text)?.clue : undefined;
       return clue ? { ...g, clue } : g;
     });
     return { ...savedGuessState, guesses };
@@ -84,8 +98,9 @@ function MapGame<Type>({
   }, [hintCount, hints]);
 
   // Derived, so a reopened round shows the hints that were used.
-  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hintConfig?.text?.(i))
-    .filter((text): text is string => !!text);
+  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hintConfig?.text?.(i)).filter(
+    (text): text is string => !!text,
+  );
 
   function dispatch(action: GuessAction) {
     const outcome = guessReducer(guessState, action, config);
@@ -122,13 +137,19 @@ function MapGame<Type>({
     dispatch({ type: "hint" });
   }
 
-  const foundAnswers = guesses.flatMap(g => (g.answer === null ? [] : [g.answer]));
+  const foundAnswers = guesses.flatMap((g) => (g.answer === null ? [] : [g.answer]));
   const showBlankMap = !!blankMap && !gameOver;
   const showCaption = !!mapCaption && !gameOver;
 
   const map = (
     <>
-      <MapComponent data={data} gameOver={gameOver} gaveUp={gaveUp} hintsUsed={hintsUsed} foundAtHint={guessState.foundAtHint} />
+      <MapComponent
+        data={data}
+        gameOver={gameOver}
+        gaveUp={gaveUp}
+        hintsUsed={hintsUsed}
+        foundAtHint={guessState.foundAtHint}
+      />
       {showCaption && <div className="map-caption">{mapCaption}</div>}
     </>
   );
@@ -149,7 +170,7 @@ function MapGame<Type>({
         answerCount={answerCount}
         found={foundAnswers}
         gaveUp={gaveUp}
-        allAnswers={answers.map(a => a.name)}
+        allAnswers={answers.map((a) => a.name)}
       />
       <MapGameInput
         gameOver={gameOver}
@@ -157,7 +178,7 @@ function MapGame<Type>({
         outOfGuesses={outOfGuesses}
         guessesLeft={guessesLeft(guessState, round.guessLimit)}
         round={round}
-        wrongGuesses={guesses.filter(g => g.answer === null)}
+        wrongGuesses={guesses.filter((g) => g.answer === null)}
         submitGuess={submitGuess}
         onHint={takeHint}
         hintsUsed={hintsUsed}
@@ -180,7 +201,15 @@ function MapGame<Type>({
 
   return (
     <GameLayout
-      topBar={<GameTopBar round={round} gameOver={gameOver} gaveUp={gaveUp} outOfGuesses={outOfGuesses} hintsUsed={hintsUsed} />}
+      topBar={
+        <GameTopBar
+          round={round}
+          gameOver={gameOver}
+          gaveUp={gaveUp}
+          outOfGuesses={outOfGuesses}
+          hintsUsed={hintsUsed}
+        />
+      }
       map={map}
       panel={panel}
       mapClassName={showBlankMap ? "game-map--blank" : undefined}

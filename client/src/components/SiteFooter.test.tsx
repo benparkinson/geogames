@@ -31,7 +31,9 @@ describe("SiteFooter", () => {
   it("tells players that anonymous round results are recorded", () => {
     render(<SiteFooter />);
 
-    expect(footer().getByText(/We record anonymous round results \(no cookies, no personal data\)/)).toBeInTheDocument();
+    expect(
+      footer().getByText(/We record anonymous round results \(no cookies, no personal data\)/),
+    ).toBeInTheDocument();
   });
 
   it("links to the privacy page", () => {

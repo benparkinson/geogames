@@ -47,8 +47,23 @@ export function MapContainer({ children }: Children) {
   return <div data-testid="MapContainer">{children}</div>;
 }
 
-export function TileLayer({ url, attribution, maxNativeZoom }: { url: string; attribution?: string; maxNativeZoom?: number }) {
-  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} data-max-native-zoom={maxNativeZoom} />;
+export function TileLayer({
+  url,
+  attribution,
+  maxNativeZoom,
+}: {
+  url: string;
+  attribution?: string;
+  maxNativeZoom?: number;
+}) {
+  return (
+    <div
+      data-testid="TileLayer"
+      data-url={url}
+      data-attribution={attribution ?? ""}
+      data-max-native-zoom={maxNativeZoom}
+    />
+  );
 }
 
 export function GeoJSON({
@@ -133,12 +148,16 @@ export function drawnLayers(): DrawnLayer[] {
 
 /** The `url` of each tile layer currently rendered. */
 export function drawnTileUrls(): string[] {
-  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map((el) => el.dataset.url ?? "");
+  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map(
+    (el) => el.dataset.url ?? "",
+  );
 }
 
 /** The `attribution` of each tile layer currently rendered ("" when it has none). */
 export function drawnTileAttributions(): string[] {
-  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map((el) => el.dataset.attribution ?? "");
+  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="TileLayer"]')).map(
+    (el) => el.dataset.attribution ?? "",
+  );
 }
 
 /** One drawn circle marker: `center` is [lat, lng], `radius` in pixels, `fill` its fill colour. */
@@ -162,7 +181,9 @@ export function drawnCircles(): DrawnCircle[] {
 
 /** The position of each marker currently rendered, as [lat, lng]. */
 export function drawnMarkers(): [number, number][] {
-  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="Marker"]')).map((el) => JSON.parse(el.dataset.position ?? "[]"));
+  return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="Marker"]')).map((el) =>
+    JSON.parse(el.dataset.position ?? "[]"),
+  );
 }
 
 /** The credits added to the map's attribution control (by `MapCredits`) and not removed again. */

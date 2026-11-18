@@ -80,7 +80,12 @@ describe("MapGameInput feedback", () => {
     const user = userEvent.setup();
     renderInput({
       answerCount: 2,
-      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "wrong", guess: "France", guessesLeft: 1, clue: { km: 480, bearing: 10 } })),
+      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({
+        kind: "wrong",
+        guess: "France",
+        guessesLeft: 1,
+        clue: { km: 480, bearing: 10 },
+      })),
     });
     await user.type(input(), "France");
     await user.click(screen.getByRole("button", { name: "Guess" }));
@@ -92,7 +97,12 @@ describe("MapGameInput feedback", () => {
     const user = userEvent.setup();
     renderInput({
       showClues: false,
-      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "wrong", guess: "France", guessesLeft: 4, clue: { km: 1236, bearing: 45 } })),
+      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({
+        kind: "wrong",
+        guess: "France",
+        guessesLeft: 4,
+        clue: { km: 1236, bearing: 45 },
+      })),
     });
     await user.type(input(), "France");
     await user.click(screen.getByRole("button", { name: "Guess" }));
@@ -116,7 +126,10 @@ describe("MapGameInput feedback", () => {
 
   it("says when it was the next to last guess", async () => {
     const user = userEvent.setup();
-    renderInput({ guessesLeft: 1, submitGuess: vi.fn(() => ({ kind: "wrong" as const, guess: "Spain", guessesLeft: 1 })) });
+    renderInput({
+      guessesLeft: 1,
+      submitGuess: vi.fn(() => ({ kind: "wrong" as const, guess: "Spain", guessesLeft: 1 })),
+    });
     await user.type(input(), "Spain");
     await user.click(screen.getByRole("button", { name: "Guess" }));
 
@@ -329,7 +342,12 @@ describe("MapGameInput states", () => {
   });
 
   it("lists each wrong guess", () => {
-    renderInput({ wrongGuesses: [{ text: "Italy", answer: null }, { text: "Peru", answer: null }] });
+    renderInput({
+      wrongGuesses: [
+        { text: "Italy", answer: null },
+        { text: "Peru", answer: null },
+      ],
+    });
 
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();

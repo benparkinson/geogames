@@ -20,7 +20,7 @@ export function useCountryClues(): ((guess: string, targets: string[]) => GuessC
     for (const country of data) {
       const position = { lat: country.lat, lon: country.lon };
       positions.set(normaliseString(country.name), position);
-      country.additionalNames.forEach(alias => positions.set(normaliseString(alias), position));
+      country.additionalNames.forEach((alias) => positions.set(normaliseString(alias), position));
     }
 
     return (guess: string, targets: string[]): GuessClue | null => {

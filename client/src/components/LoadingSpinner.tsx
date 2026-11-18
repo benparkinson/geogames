@@ -1,6 +1,9 @@
 import { Spinner } from "../ui";
 
-export default function LoadingSpinner({ fullPage = false, className }: {
+export default function LoadingSpinner({
+  fullPage = false,
+  className,
+}: {
   fullPage?: boolean;
   className?: string;
 }): React.JSX.Element {

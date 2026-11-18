@@ -10,7 +10,13 @@ const line = (end: number): GeoJsonObject =>
   ({
     type: "Feature",
     properties: {},
-    geometry: { type: "LineString", coordinates: [[0, 0], [end, end]] },
+    geometry: {
+      type: "LineString",
+      coordinates: [
+        [0, 0],
+        [end, end],
+      ],
+    },
   }) as GeoJsonObject;
 
 beforeEach(() => {
@@ -57,10 +63,22 @@ describe("FitBounds", () => {
 
 describe("FitBounds with bounds", () => {
   it("uses the bounds rather than the data when both are given", () => {
-    render(<FitBounds data={line(10)} bounds={[[1, 2], [3, 4]]} id="france" />);
+    render(
+      <FitBounds
+        data={line(10)}
+        bounds={[
+          [1, 2],
+          [3, 4],
+        ]}
+        id="france"
+      />,
+    );
 
     const [bounds, options] = fakeMap.fitBounds.mock.calls[0];
-    expect(bounds).toEqual([[1, 2], [3, 4]]);
+    expect(bounds).toEqual([
+      [1, 2],
+      [3, 4],
+    ]);
     expect(options).toEqual({ padding: [24, 24], maxZoom: 7, animate: false });
   });
 

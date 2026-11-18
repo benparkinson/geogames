@@ -1,5 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, CITY_MIN_RADIUS, cityDotOptions, cityRadius, clueLineOptions, clueOutlineOptions, hiddenBorderOptions, hintLineOptions, lakeFillOptions, mergedShapeOptions, minorRiverOptions } from "./constants";
+import {
+  answerPathOptions,
+  capitalDotOptions,
+  CITY_MAX_RADIUS,
+  CITY_MIN_RADIUS,
+  cityDotOptions,
+  cityRadius,
+  clueLineOptions,
+  clueOutlineOptions,
+  hiddenBorderOptions,
+  hintLineOptions,
+  lakeFillOptions,
+  mergedShapeOptions,
+  minorRiverOptions,
+} from "./constants";
 
 describe("map styles", () => {
   it("colours an answer differently once the player gave up", () => {

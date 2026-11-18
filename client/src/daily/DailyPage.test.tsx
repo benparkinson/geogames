@@ -27,7 +27,7 @@ const finishedGame = makeGameRounds([{ answerState: "CORRECT" }, { river: true, 
 beforeEach(resetDailyStorageForTests);
 
 function posts(fetchMock: ReturnType<typeof mockFetch>) {
-  return callsTo(fetchMock).filter(c => c.method === "POST");
+  return callsTo(fetchMock).filter((c) => c.method === "POST");
 }
 
 describe("DailyPage with no game for today", () => {
@@ -44,7 +44,7 @@ describe("DailyPage with no game for today", () => {
     await userEvent.click(play);
 
     await waitFor(() => expect(readDaily()).toEqual({ v: 1, date: today, number: 7, gameId: "g1", hardcore: false }));
-    expect(posts(fetchMock).map(c => c.body)).toEqual([{ date: today }]);
+    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today }]);
   });
 
   it("records that Hard mode was on when the game started", async () => {
@@ -194,7 +194,11 @@ describe("DailyPage with a game for today", () => {
   });
 
   it("shows a finished entry's result without fetching anything", async () => {
-    const result = { score: 430, maxScore: 500, rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] as const };
+    const result = {
+      score: 430,
+      maxScore: 500,
+      rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] as const,
+    };
     writeDaily({ ...entry, number: 42, hardcore: true, result: { ...result, rounds: [...result.rounds] } });
     const fetchMock = mockFetch([]);
     renderWithClient(<DailyPage />);

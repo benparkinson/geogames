@@ -16,8 +16,8 @@ export function hintedCountries(hintOrder: string[], hintsUsed: number, foundAtH
   for (let i = 0; i < hintsUsed; i++) {
     const found = foundAtHint[i] ?? [];
     const next =
-      hintOrder.find(name => !picked.includes(name) && !found.includes(name)) ??
-      hintOrder.find(name => !picked.includes(name));
+      hintOrder.find((name) => !picked.includes(name) && !found.includes(name)) ??
+      hintOrder.find((name) => !picked.includes(name));
     if (next === undefined) {
       break;
     }
