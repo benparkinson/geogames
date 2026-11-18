@@ -34,7 +34,16 @@ export default function GameTopBar({
     }
   }
 
-  const scoreText = round.gameCompleted ? `Final score ${score} / ${round.maxScore}` : `Score ${score}`;
+  // The finished game's text is longer and has a Results button beside it: on a phone, drop the words so the bar
+  // still fits the screen instead of widening the page.
+  const scoreText = round.gameCompleted ? (
+    <>
+      <span className="d-none d-sm-inline">{`Final score ${score} / ${round.maxScore}`}</span>
+      <span className="d-sm-none">{`${score} / ${round.maxScore}`}</span>
+    </>
+  ) : (
+    `Score ${score}`
+  );
 
   return (
     <div className="d-flex align-items-center justify-content-between px-3 py-2 gap-2">
