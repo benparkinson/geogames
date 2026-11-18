@@ -16,12 +16,12 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TripointFinderService implements RoundGenerator {
+public class TripointRoundGenerator implements RoundGenerator {
 
   private final TripointLoaderService tripointLoaderService;
   private final CountryShapeService countryShapeService;
 
-  public TripointFinderService(
+  public TripointRoundGenerator(
       TripointLoaderService tripointLoaderService, CountryShapeService countryShapeService) {
     this.tripointLoaderService = tripointLoaderService;
     this.countryShapeService = countryShapeService;

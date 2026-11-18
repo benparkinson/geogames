@@ -52,7 +52,7 @@ Adding a type (the root `CLAUDE.md` has the four steps):
 
 ## Game families
 
-**Tripoints.** `TripointFinderService` picks random definitions from `processed/tripoints.json` and builds each country with `CountryShapeService.loadDisplayCountry(name)`, so `jsonBlob` carries the simplified `processed/country-shapes` outline (in the usual `Country` shape), not the full-resolution geometry of `processed/countries`.
+**Tripoints.** `TripointRoundGenerator` picks random definitions from `processed/tripoints.json` and builds each country with `CountryShapeService.loadDisplayCountry(name)`, so `jsonBlob` carries the simplified `processed/country-shapes` outline (in the usual `Country` shape), not the full-resolution geometry of `processed/countries`.
 
 **Rivers.** Two types share the 50 rivers in `processed/rivers` (read by classpath glob, cached as `rivers`): `RIVERS_BY_SHAPE` (the line on a blank map), and `RIVERS_BY_COUNTRIES` (the outlines of the countries it flows through; only rivers through three or more). `model/River` is the file format and `model/RiverRound` (`gameType`, `river`, `countries`) the round data. `service/RiverRoundGenerator` is one class, registered as two beans in `config/RiverGamesConfig`, each with an eligibility filter and a function that attaches countries. To remove a variant, delete its `GameType` constant, its `@Bean`, and its frontend module, registry entry and map pair.
 
