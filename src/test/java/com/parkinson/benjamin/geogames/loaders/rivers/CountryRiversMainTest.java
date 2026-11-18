@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.CapturedOutput;
-import com.parkinson.benjamin.geogames.loaders.rivers.CountryRiversMain.Kept;
-import com.parkinson.benjamin.geogames.loaders.rivers.CountryRiversMain.Lake;
+import com.parkinson.benjamin.geogames.loaders.rivers.CountryLakes.Lake;
+import com.parkinson.benjamin.geogames.loaders.rivers.CountryRiverLimits.Kept;
 import com.parkinson.benjamin.geogames.loaders.rivers.RiverClipper.Run;
 import com.parkinson.benjamin.geogames.model.CountryRivers;
 import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
@@ -151,7 +151,7 @@ class CountryRiversMainTest {
     Kept middling = new Kept(run(5, 2, 1_500), 100);
     Kept least = new Kept(run(9, 3, 1_500), 100);
 
-    List<Kept> kept = CountryRiversMain.withinPointLimit(List.of(important, middling, least));
+    List<Kept> kept = CountryRiverLimits.withinPointLimit(List.of(important, middling, least));
 
     assertThat(kept).containsExactly(important, middling);
   }
@@ -161,7 +161,7 @@ class CountryRiversMainTest {
     Kept longer = new Kept(run(9, 1, 2_100), 300);
     Kept shorter = new Kept(run(9, 2, 2_100), 100);
 
-    assertThat(CountryRiversMain.withinPointLimit(List.of(longer, shorter)))
+    assertThat(CountryRiverLimits.withinPointLimit(List.of(longer, shorter)))
         .containsExactly(longer);
   }
 
@@ -169,7 +169,7 @@ class CountryRiversMainTest {
   void keepsEverythingWithinThePointLimit() {
     List<Kept> kept = List.of(new Kept(run(2, 1, 2_000), 100), new Kept(run(9, 2, 2_000), 100));
 
-    assertThat(CountryRiversMain.withinPointLimit(kept)).isEqualTo(kept);
+    assertThat(CountryRiverLimits.withinPointLimit(kept)).isEqualTo(kept);
   }
 
   private static Lake lake(double area, int points) {
@@ -186,7 +186,7 @@ class CountryRiversMainTest {
     Lake big = lake(500, 1_000); // does not fit after huge
     Lake small = lake(100, 400);
 
-    assertThat(CountryRiversMain.withinLakeLimit(List.of(small, big, huge)))
+    assertThat(CountryLakes.withinLakeLimit(List.of(small, big, huge)))
         .containsExactly(huge, small);
   }
 
@@ -214,7 +214,7 @@ class CountryRiversMainTest {
             new double[] {0, 0});
 
     List<List<List<double[]>>> result =
-        CountryRiversMain.simplifyLake(List.of(List.of(outer, sliver), List.of(tiny)), 0.05);
+        CountryLakes.simplifyLake(List.of(List.of(outer, sliver), List.of(tiny)), 0.05);
 
     assertThat(result).hasSize(1); // the tiny polygon's outer ring has too few points left
     assertThat(result.get(0).get(0)).hasSize(5); // the near-straight point on the bottom edge goes

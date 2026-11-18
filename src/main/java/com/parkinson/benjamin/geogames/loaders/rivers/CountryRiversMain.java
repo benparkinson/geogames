@@ -2,17 +2,17 @@ package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
 
-import com.parkinson.benjamin.geogames.helper.CountryRiversEligibility;
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryWriter;
 import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
-import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.loaders.features.GeoJsonCoordinates;
 import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.loaders.lakes.LakeGeometry;
+import com.parkinson.benjamin.geogames.loaders.rivers.CountryLakes.Lake;
+import com.parkinson.benjamin.geogames.loaders.rivers.CountryRiverLimits.Kept;
 import com.parkinson.benjamin.geogames.loaders.rivers.RiverClipper.Run;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryRivers;
@@ -23,13 +23,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.TreeMap;
 import tools.jackson.databind.JsonNode;
 
@@ -43,7 +41,8 @@ import tools.jackson.databind.JsonNode;
  * what is in each file. Offline and deterministic. Clears the {@code *.json} files in outDir first.
  *
  * <p>The app reads one country's file each time a round is built and holds none of them, so the
- * limits here ({@link #MAX_RIVER_POINTS}, {@link #MAX_LAKE_POINTS}) are what keep a round small.
+ * limits ({@link CountryRiverLimits#MAX_RIVER_POINTS}, {@link CountryLakes#MAX_LAKE_POINTS}) are
+ * what keep a round small.
  */
 public class CountryRiversMain {
 
@@ -54,28 +53,10 @@ public class CountryRiversMain {
    */
   static final int MAJOR_MAX_SCALERANK = 4;
 
-  /** A stretch shorter than this (after simplifying) is a stub, not a river on this map. */
-  static final double MIN_RUN_KM = 5;
-
-  /** The most river points a country keeps: the least important rivers are dropped to fit. */
-  static final int MAX_RIVER_POINTS = 4_000;
-
-  /** The most lake points a country keeps: the smallest lakes are dropped to fit. */
-  static final int MAX_LAKE_POINTS = 2_000;
-
-  /** A lake needs this area to be a hint. */
-  static final double MIN_LAKE_KM2 = 100;
-
   /** The shoreline a country needs on a lake to count as being on its shore. */
   static final double MIN_SHORE_KM = 5;
 
   static final String INDEX_FILE = "index.json";
-
-  /** A stretch of river kept for a country, with its length. */
-  record Kept(Run run, double km) {}
-
-  /** A lake on a country's shore. */
-  record Lake(double areaKm2, List<List<List<double[]>>> polygons) {}
 
   /**
    * What a run produced, for the summary.
@@ -85,8 +66,10 @@ public class CountryRiversMain {
    * @param kmByScalerank the length of every river in the source, by scalerank
    * @param majorKm the length of the major rivers that were kept
    * @param minorKm the length of the other rivers that were kept
-   * @param droppedForSize how many stretches were dropped to stay within {@link #MAX_RIVER_POINTS}
-   * @param lakesDroppedForSize how many lakes were dropped to stay within {@link #MAX_LAKE_POINTS}
+   * @param droppedForSize how many stretches were dropped to stay within {@link
+   *     CountryRiverLimits#MAX_RIVER_POINTS}
+   * @param lakesDroppedForSize how many lakes were dropped to stay within {@link
+   *     CountryLakes#MAX_LAKE_POINTS}
    * @param bytes the total size of the files written, with the index
    */
   public record Report(
@@ -99,9 +82,23 @@ public class CountryRiversMain {
       int lakesDroppedForSize,
       long bytes) {}
 
+  /** The river stretches in each country, and the source's length by scalerank. */
+  private record Clipped(
+      Map<String, List<Run>> runsByCountry, Map<Integer, Double> kmByScalerank) {}
+
+  /** One country's file as written, with what the summary needs to know about it. */
+  private record Written(
+      CountryRivers rivers,
+      CountryRiversIndexEntry entry,
+      double majorKm,
+      double minorKm,
+      int droppedForSize,
+      int lakesDroppedForSize,
+      long bytes) {}
+
   public static void main(String[] args) throws IOException {
     Report report = run(Path.of(args[0]), Path.of(args[1]), Path.of(args[2]), Path.of(args[3]));
-    printSummary(report);
+    CountryRiversSummary.printSummary(report);
   }
 
   /** Does everything {@code main} does except print. */
@@ -116,7 +113,58 @@ public class CountryRiversMain {
       }
     }
 
-    // Rivers, cut at the borders.
+    Clipped clipped = clipRivers(riversFile, locator);
+    Map<String, List<Lake>> lakesByCountry = collectLakes(lakesFile, locator);
+
+    // One file for each country with at least one stretch of river.
+    Files.createDirectories(outDir);
+    new CountryWriter().clearOutput(outDir);
+    List<CountryRiversIndexEntry> index = new ArrayList<>();
+    Map<String, CountryRivers> rivers = new TreeMap<>();
+    double majorKm = 0;
+    double minorKm = 0;
+    int droppedForSize = 0;
+    int lakesDroppedForSize = 0;
+    long bytes = 0;
+    for (Map.Entry<String, List<Run>> entry : clipped.runsByCountry().entrySet()) {
+      String name = entry.getKey();
+      Optional<Written> written =
+          writeCountry(
+              name,
+              entry.getValue(),
+              lakesByCountry.getOrDefault(name, List.of()),
+              tolerances.get(name),
+              outDir);
+      if (written.isEmpty()) {
+        continue;
+      }
+      Written w = written.get();
+      rivers.put(name, w.rivers());
+      index.add(w.entry());
+      majorKm += w.majorKm();
+      minorKm += w.minorKm();
+      droppedForSize += w.droppedForSize();
+      lakesDroppedForSize += w.lakesDroppedForSize();
+      bytes += w.bytes();
+    }
+    index.sort(Comparator.comparing(CountryRiversIndexEntry::name));
+    Path indexPath = outDir.resolve(INDEX_FILE);
+    Files.writeString(indexPath, GeoJson.prettyWriter().writeValueAsString(index) + "\n");
+    bytes += Files.size(indexPath);
+
+    return new Report(
+        index,
+        rivers,
+        clipped.kmByScalerank(),
+        majorKm,
+        minorKm,
+        droppedForSize,
+        lakesDroppedForSize,
+        bytes);
+  }
+
+  /** Cuts every river of the source at the country borders. */
+  private static Clipped clipRivers(Path riversFile, CountryLocator locator) throws IOException {
     RiverClipper clipper = new RiverClipper(locator);
     Map<String, List<Run>> runsByCountry = new TreeMap<>();
     Map<Integer, Double> kmByScalerank = new TreeMap<>();
@@ -133,12 +181,16 @@ public class CountryRiversMain {
                     runsByCountry.computeIfAbsent(country, key -> new ArrayList<>()).addAll(runs));
       }
     }
+    return new Clipped(runsByCountry, kmByScalerank);
+  }
 
-    // Lakes, whole, given to every country on their shore.
+  /** The big lakes, whole, given to every country on their shore. */
+  private static Map<String, List<Lake>> collectLakes(Path lakesFile, CountryLocator locator)
+      throws IOException {
     Map<String, List<Lake>> lakesByCountry = new TreeMap<>();
     for (JsonNode feature : GeoJson.readTree(lakesFile).path("features")) {
       List<List<List<double[]>>> raw = GeoJsonCoordinates.polygons(feature.path("geometry"));
-      if (raw.isEmpty() || LakeGeometry.areaKm2(raw) < MIN_LAKE_KM2) {
+      if (raw.isEmpty() || LakeGeometry.areaKm2(raw) < CountryLakes.MIN_LAKE_KM2) {
         continue;
       }
       List<List<List<double[]>>> simplified = LakeGeometry.simplify(raw);
@@ -150,167 +202,60 @@ public class CountryRiversMain {
         lakesByCountry.computeIfAbsent(country, key -> new ArrayList<>()).add(lake);
       }
     }
-
-    // One file for each country with at least one stretch of river.
-    Files.createDirectories(outDir);
-    new CountryWriter().clearOutput(outDir);
-    List<CountryRiversIndexEntry> index = new ArrayList<>();
-    Map<String, CountryRivers> written = new TreeMap<>();
-    double majorKm = 0;
-    double minorKm = 0;
-    int droppedForSize = 0;
-    int lakesDroppedForSize = 0;
-    long bytes = 0;
-    for (Map.Entry<String, List<Run>> entry : runsByCountry.entrySet()) {
-      String name = entry.getKey();
-      List<Kept> kept = simplified(entry.getValue(), tolerances.get(name));
-      if (kept.isEmpty()) {
-        continue;
-      }
-      int before = kept.size();
-      kept = withinPointLimit(kept);
-      droppedForSize += before - kept.size();
-
-      List<Lake> lakes =
-          lakesByCountry.getOrDefault(name, List.of()).stream()
-              .map(
-                  lake ->
-                      new Lake(lake.areaKm2(), simplifyLake(lake.polygons(), tolerances.get(name))))
-              .toList();
-      List<Lake> keptLakes = withinLakeLimit(lakes);
-      lakesDroppedForSize += lakes.size() - keptLakes.size();
-
-      List<Kept> major =
-          kept.stream().filter(k -> k.run().scalerank() <= MAJOR_MAX_SCALERANK).toList();
-      List<Kept> minor =
-          kept.stream().filter(k -> k.run().scalerank() > MAJOR_MAX_SCALERANK).toList();
-      majorKm += km(major);
-      minorKm += km(minor);
-
-      CountryRivers rivers =
-          new CountryRivers(
-              name, lineData(name, major), lineData(name, minor), lakeData(name, keptLakes));
-      String file = convertCountryNameToFileName(name);
-      Path path = outDir.resolve(file);
-      Files.writeString(path, GeoJson.prettyWriter().writeValueAsString(rivers) + "\n");
-      bytes += Files.size(path);
-      written.put(name, rivers);
-      index.add(
-          new CountryRiversIndexEntry(
-              name,
-              file,
-              (int) kept.stream().map(k -> k.run().rivernum()).distinct().count(),
-              Math.round(km(kept)),
-              keptLakes.size()));
-    }
-    index.sort(Comparator.comparing(CountryRiversIndexEntry::name));
-    Path indexPath = outDir.resolve(INDEX_FILE);
-    Files.writeString(indexPath, GeoJson.prettyWriter().writeValueAsString(index) + "\n");
-    bytes += Files.size(indexPath);
-
-    return new Report(
-        index,
-        written,
-        kmByScalerank,
-        majorKm,
-        minorKm,
-        droppedForSize,
-        lakesDroppedForSize,
-        bytes);
+    return lakesByCountry;
   }
 
-  // ---- rivers ----
-
-  /** Simplifies every run with the country's tolerance and drops the stubs. */
-  private static List<Kept> simplified(List<Run> runs, double tolerance) {
-    List<Kept> kept = new ArrayList<>();
-    for (Run run : runs) {
-      List<double[]> points = GeoPoints.roundLine(DouglasPeucker.simplify(run.points(), tolerance));
-      if (points.size() < 2) {
-        continue;
-      }
-      double km = Geo.lineKm(points);
-      if (km >= MIN_RUN_KM) {
-        kept.add(new Kept(new Run(run.scalerank(), run.rivernum(), points), km));
-      }
+  /** Writes one country's file, or nothing when no stretch of river is left after simplifying. */
+  private static Optional<Written> writeCountry(
+      String name, List<Run> runs, List<Lake> countryLakes, double tolerance, Path outDir)
+      throws IOException {
+    List<Kept> kept = CountryRiverLimits.simplified(runs, tolerance);
+    if (kept.isEmpty()) {
+      return Optional.empty();
     }
-    return kept;
+    int before = kept.size();
+    kept = CountryRiverLimits.withinPointLimit(kept);
+    int droppedForSize = before - kept.size();
+
+    List<Lake> lakes =
+        countryLakes.stream()
+            .map(
+                lake ->
+                    new Lake(lake.areaKm2(), CountryLakes.simplifyLake(lake.polygons(), tolerance)))
+            .toList();
+    List<Lake> keptLakes = CountryLakes.withinLakeLimit(lakes);
+
+    List<Kept> major =
+        kept.stream().filter(k -> k.run().scalerank() <= MAJOR_MAX_SCALERANK).toList();
+    List<Kept> minor =
+        kept.stream().filter(k -> k.run().scalerank() > MAJOR_MAX_SCALERANK).toList();
+
+    CountryRivers rivers =
+        new CountryRivers(
+            name,
+            lineData(name, major),
+            lineData(name, minor),
+            CountryLakes.lakeData(name, keptLakes));
+    String file = convertCountryNameToFileName(name);
+    Path path = outDir.resolve(file);
+    Files.writeString(path, GeoJson.prettyWriter().writeValueAsString(rivers) + "\n");
+    CountryRiversIndexEntry entry =
+        new CountryRiversIndexEntry(
+            name,
+            file,
+            (int) kept.stream().map(k -> k.run().rivernum()).distinct().count(),
+            Math.round(CountryRiverLimits.km(kept)),
+            keptLakes.size());
+    return Optional.of(
+        new Written(
+            rivers,
+            entry,
+            CountryRiverLimits.km(major),
+            CountryRiverLimits.km(minor),
+            droppedForSize,
+            lakes.size() - keptLakes.size(),
+            Files.size(path)));
   }
-
-  /**
-   * Drops stretches until the country has at most {@link #MAX_RIVER_POINTS} points: the highest
-   * scalerank (least important) first, the shortest first among those.
-   */
-  static List<Kept> withinPointLimit(List<Kept> kept) {
-    int points = kept.stream().mapToInt(k -> k.run().points().size()).sum();
-    if (points <= MAX_RIVER_POINTS) {
-      return kept;
-    }
-    List<Kept> byLeastImportant = new ArrayList<>(kept);
-    byLeastImportant.sort(
-        Comparator.comparingInt((Kept k) -> k.run().scalerank())
-            .reversed()
-            .thenComparingDouble(Kept::km)
-            .thenComparingInt(k -> k.run().rivernum()));
-    Set<Kept> dropped = Collections.newSetFromMap(new IdentityHashMap<>());
-    for (Kept k : byLeastImportant) {
-      if (points <= MAX_RIVER_POINTS) {
-        break;
-      }
-      dropped.add(k);
-      points -= k.run().points().size();
-    }
-    return kept.stream().filter(k -> !dropped.contains(k)).toList();
-  }
-
-  private static double km(List<Kept> kept) {
-    return kept.stream().mapToDouble(Kept::km).sum();
-  }
-
-  // ---- lakes ----
-
-  /**
-   * Simplifies a lake's rings with the country's tolerance, so a lake on a large country's map
-   * isn't drawn in more detail than that country's outline. A ring left with too few points is
-   * dropped (a polygon with it).
-   */
-  static List<List<List<double[]>>> simplifyLake(
-      List<List<List<double[]>>> polygons, double tolerance) {
-    List<List<List<double[]>>> result = new ArrayList<>();
-    for (List<List<double[]>> polygon : polygons) {
-      List<List<double[]>> rings = new ArrayList<>();
-      for (int i = 0; i < polygon.size(); i++) {
-        List<double[]> ring = DouglasPeucker.simplify(polygon.get(i), tolerance);
-        if (ring.size() >= 4) {
-          rings.add(ring);
-        } else if (i == 0) {
-          break; // without its outer ring the whole polygon goes
-        }
-      }
-      if (!rings.isEmpty()) {
-        result.add(rings);
-      }
-    }
-    return result;
-  }
-
-  /** The largest lakes that fit in {@link #MAX_LAKE_POINTS} points, the largest first. */
-  static List<Lake> withinLakeLimit(List<Lake> lakes) {
-    List<Lake> bySize = new ArrayList<>(lakes);
-    bySize.sort(Comparator.comparingDouble(Lake::areaKm2).reversed());
-    List<Lake> kept = new ArrayList<>();
-    int points = 0;
-    for (Lake lake : bySize) {
-      int size = LakeGeometry.pointCount(lake.polygons());
-      if (points + size <= MAX_LAKE_POINTS) {
-        kept.add(lake);
-        points += size;
-      }
-    }
-    return kept;
-  }
-
-  // ---- output ----
 
   private static GeoData lineData(String name, List<Kept> kept) {
     List<List<List<Double>>> lines = new ArrayList<>();
@@ -318,86 +263,5 @@ public class CountryRiversMain {
       lines.add(GeoPoints.toPositions(k.run().points()));
     }
     return GeoData.feature(name, new GeoGeometry("MultiLineString", lines));
-  }
-
-  private static GeoData lakeData(String name, List<Lake> lakes) {
-    List<List<List<List<Double>>>> polygons = new ArrayList<>();
-    for (Lake lake : lakes) {
-      for (List<List<double[]>> polygon : lake.polygons()) {
-        List<List<List<Double>>> rings = new ArrayList<>();
-        for (List<double[]> ring : polygon) {
-          rings.add(GeoPoints.toPositions(ring));
-        }
-        polygons.add(rings);
-      }
-    }
-    return GeoData.feature(name, new GeoGeometry("MultiPolygon", polygons));
-  }
-
-  // ---- summary ----
-
-  private static void printSummary(Report report) {
-    double total = report.kmByScalerank().values().stream().mapToDouble(Double::doubleValue).sum();
-    System.out.println("Source river length by scalerank (lower is more important):");
-    System.out.println("Major: scalerank up to " + MAJOR_MAX_SCALERANK);
-    double cumulative = 0;
-    for (Map.Entry<Integer, Double> e : report.kmByScalerank().entrySet()) {
-      cumulative += e.getValue();
-      System.out.printf(
-          "  %2d: %8.0f km, %5.1f%% cumulative%n",
-          e.getKey(), e.getValue(), 100 * cumulative / total);
-    }
-    double kept = report.majorKm() + report.minorKm();
-    System.out.printf(
-        "Kept: %.0f km, of which major %.1f%%%n",
-        kept, kept == 0 ? 0 : 100 * report.majorKm() / kept);
-    System.out.println(
-        "Dropped to stay within "
-            + MAX_RIVER_POINTS
-            + " river points: "
-            + report.droppedForSize()
-            + " stretches; within "
-            + MAX_LAKE_POINTS
-            + " lake points: "
-            + report.lakesDroppedForSize()
-            + " lakes");
-
-    List<CountryRiversIndexEntry> index = report.index();
-    System.out.println("Written: " + index.size() + " countries, " + report.bytes() + " bytes");
-    CountryRivers largest = null;
-    int largestPoints = 0;
-    for (CountryRivers rivers : report.rivers().values()) {
-      int points =
-          rivers.major().geometry().positionCount() + rivers.minor().geometry().positionCount();
-      if (points > largestPoints) {
-        largestPoints = points;
-        largest = rivers;
-      }
-    }
-    if (largest != null) {
-      System.out.println("Most river points: " + largest.name() + " " + largestPoints);
-    }
-
-    List<CountryRiversIndexEntry> eligible =
-        index.stream().filter(CountryRiversEligibility.countryRivers()).toList();
-    System.out.println(
-        "Eligible (at least "
-            + CountryRiversEligibility.MIN_RIVERS
-            + " rivers and "
-            + (long) CountryRiversEligibility.MIN_RIVER_KM
-            + " km): "
-            + eligible.size());
-    eligible.forEach(
-        e ->
-            System.out.println(
-                "  "
-                    + e.name()
-                    + ": "
-                    + e.riverCount()
-                    + " rivers, "
-                    + e.riverKm()
-                    + " km, "
-                    + e.lakeCount()
-                    + " lakes"));
   }
 }
