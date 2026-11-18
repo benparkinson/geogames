@@ -202,7 +202,7 @@ describe("DailyPage with a game for today", () => {
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
     expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
     expect(screen.getByLabelText("Your result")).toHaveTextContent("🟩🟨🟩🟥🟩");
-    expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
