@@ -58,7 +58,7 @@ test("a wrong country in a country game says how far and which way the answer is
   await guess(page, await wrongCountry(api, id));
 
   await expect(
-    page.getByText(/^Not .+ · [d,]+ km (north|south|east|west)/),
+    page.getByText(/^Not .+ · [\d,]+ km (north|south|east|west)/),
   ).toBeVisible();
 });
 
