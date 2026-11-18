@@ -49,7 +49,7 @@ function PrivacyPage(): React.JSX.Element {
                 <p>
                     Everyone who plays the daily challenge on a date gets the same rounds. The server stores which
                     rounds those are for each date, and nothing about who played them. Copying your result writes to
-                    your clipboard only when you click Share.
+                    your clipboard only when you click Copy result.
                 </p>
 
                 <h2 className="h5">Who else receives data</h2>
