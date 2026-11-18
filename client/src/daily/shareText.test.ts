@@ -7,7 +7,7 @@ describe("shareText", () => {
   it("is the title, the score, one square per round and the link", () => {
     expect(
       shareText(
-        { date: "2026-11-18", hardcore: false, result: { ...result, rounds: [...result.rounds] } },
+        { date: "2026-11-18", hardMode: false, result: { ...result, rounds: [...result.rounds] } },
         "https://example.org",
       ),
     ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n🟩🟨🟩🟥🟩\nhttps://example.org/daily");
@@ -15,11 +15,11 @@ describe("shareText", () => {
 
   it("marks Hard mode only when it was on throughout", () => {
     const on = shareText(
-      { date: "2026-11-18", hardcore: true, result: { ...result, rounds: [...result.rounds] } },
+      { date: "2026-11-18", hardMode: true, result: { ...result, rounds: [...result.rounds] } },
       "http://localhost:8080",
     );
     const off = shareText(
-      { date: "2026-11-18", hardcore: false, result: { ...result, rounds: [...result.rounds] } },
+      { date: "2026-11-18", hardMode: false, result: { ...result, rounds: [...result.rounds] } },
       "http://localhost:8080",
     );
 
@@ -32,7 +32,7 @@ describe("shareText", () => {
     const text = shareText(
       {
         date: "2026-11-18",
-        hardcore: false,
+        hardMode: false,
         result: { score: 0, maxScore: 500, rounds: ["revealed", "revealed", "revealed", "revealed", "revealed"] },
       },
       "https://a.b",

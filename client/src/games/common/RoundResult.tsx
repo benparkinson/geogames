@@ -1,6 +1,6 @@
 import { Button } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
-import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round } from "./Model";
+import { finalAnswerState, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
 
 export default function RoundResult({
@@ -17,7 +17,7 @@ export default function RoundResult({
   hintsUsed: number;
   hintCount: number;
 }): React.JSX.Element {
-  const answerState = outOfGuesses ? OUT_OF_GUESSES : gaveUp ? GAVE_UP : CORRECT_ANSWER;
+  const answerState = finalAnswerState(gaveUp, outOfGuesses);
   const points = roundPoints(answerState, hintsUsed, hintCount);
   const perfect = isPerfect(answerState, hintsUsed);
 

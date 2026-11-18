@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import type { GeoJsonObject } from "geojson";
@@ -20,12 +20,15 @@ export function FitBounds({
 }): null {
   const map = useMap();
 
-  useEffect(() => {
+  const fit = useEffectEvent(() => {
     const target = bounds ?? (data ? L.geoJSON(data).getBounds() : undefined);
     if (target) {
       map.fitBounds(target, { padding: [24, 24], maxZoom, animate: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  useEffect(() => {
+    fit();
   }, [map, id]);
 
   return null;

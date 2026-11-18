@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import MapGameInput from "./MapGameInput";
 import { Round, RoundAnswer, UNANSWERED } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
@@ -16,8 +16,11 @@ import {
   guessesLeft,
   guessReducer,
   GuessState,
+  foundAnswers,
   restoreGuessState,
+  withLateClues,
   wrongGuessCount,
+  wrongGuesses,
 } from "./guessReducer";
 
 function MapGame<Type>({
@@ -55,30 +58,19 @@ function MapGame<Type>({
   const [savedGuessState, setGuessState] = useState<GuessState>(restored.state);
   // The country list that the clues come from may load after the round was restored. Clues are computed, never
   // saved, so once it has loaded, work out the ones the restored guesses missed (a refresh must show them too).
-  const lateClues = useMemo(
-    () =>
-      clueFor
-        ? restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state.guesses
-        : [],
-    // The config is rebuilt every render; only the clues becoming available matters.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [clueFor],
-  );
-  const guessState = useMemo<GuessState>(() => {
-    if (!savedGuessState.guesses.some((g) => g.answer === null && !g.clue)) {
-      return savedGuessState;
-    }
-    const guesses = savedGuessState.guesses.map((g) => {
-      const clue = g.answer === null && !g.clue ? lateClues.find((w) => w.text === g.text)?.clue : undefined;
-      return clue ? { ...g, clue } : g;
-    });
-    return { ...savedGuessState, guesses };
-  }, [savedGuessState, lateClues]);
+  const guessState = clueFor
+    ? withLateClues(
+        savedGuessState,
+        () =>
+          restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state
+            .guesses,
+      )
+    : savedGuessState;
   const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
 
   // The guesses ended the round but the answer request after the last guess was lost: send it again, once.
   const resubmitted = useRef(false);
-  useEffect(() => {
+  const resubmit = useEffectEvent(() => {
     if (restored.finished && round.answerState === UNANSWERED && !resubmitted.current) {
       resubmitted.current = true;
       submitAnswer({
@@ -87,8 +79,10 @@ function MapGame<Type>({
         wrongGuesses: wrongGuessCount(restored.state),
       });
     }
-    // Once, for the state the round was opened with.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+  // Once, for the state the round was opened with.
+  useEffect(() => {
+    resubmit();
   }, []);
 
   useEffect(() => {
@@ -137,7 +131,6 @@ function MapGame<Type>({
     dispatch({ type: "hint" });
   }
 
-  const foundAnswers = guesses.flatMap((g) => (g.answer === null ? [] : [g.answer]));
   const showBlankMap = !!blankMap && !gameOver;
   const showCaption = !!mapCaption && !gameOver;
 
@@ -168,7 +161,7 @@ function MapGame<Type>({
       )}
       <AnswerSlots
         answerCount={answerCount}
-        found={foundAnswers}
+        found={foundAnswers(guessState)}
         gaveUp={gaveUp}
         allAnswers={answers.map((a) => a.name)}
       />
@@ -178,7 +171,7 @@ function MapGame<Type>({
         outOfGuesses={outOfGuesses}
         guessesLeft={guessesLeft(guessState, round.guessLimit)}
         round={round}
-        wrongGuesses={guesses.filter((g) => g.answer === null)}
+        wrongGuesses={wrongGuesses(guessState)}
         submitGuess={submitGuess}
         onHint={takeHint}
         hintsUsed={hintsUsed}

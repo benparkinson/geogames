@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { postJson } from "./http";
+import { hasStatus, postJson } from "./http";
 import type { DailyGameResponse } from "./types";
 
 /**
@@ -10,11 +10,6 @@ export function localDateString(now: Date = new Date()): string {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   return `${now.getFullYear()}-${month}-${day}`;
-}
-
-/** `fetchJson` errors end with the status, for example "Failed to create daily game (400)". */
-function isBadRequest(error: unknown): boolean {
-  return error instanceof Error && error.message.endsWith("(400)");
 }
 
 /**
@@ -28,7 +23,7 @@ export function useCreateDailyGame() {
       try {
         return await postJson<DailyGameResponse>("/api/daily-games", "create daily game", { date });
       } catch (error) {
-        if (!isBadRequest(error)) throw error;
+        if (!hasStatus(error, 400)) throw error;
         return postJson<DailyGameResponse>("/api/daily-games", "create daily game", {});
       }
     },

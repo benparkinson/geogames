@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { fetchJson, postJson } from "./http";
+import { fetchJson, hasStatus, HttpError, postJson } from "./http";
 
 describe("fetchJson", () => {
   it("prefixes the server endpoint and returns the parsed body", async () => {
@@ -27,5 +27,26 @@ describe("postJson", () => {
     expect(call.method).toBe("POST");
     expect(call.body).toEqual({ x: 2 });
     expect(new Headers(call.init?.headers).get("Content-Type")).toBe("application/json");
+  });
+});
+
+describe("HttpError", () => {
+  it("is what fetchJson throws, with the status", async () => {
+    mockFetch([{ url: /\/api\/thing$/, status: 404, body: {} }]);
+
+    const error = await fetchJson("/api/thing", "load thing").catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(HttpError);
+    expect((error as HttpError).status).toBe(404);
+    expect((error as HttpError).message).toBe("Failed to load thing (404)");
+  });
+});
+
+describe("hasStatus", () => {
+  it("is true only for an HttpError with that status", () => {
+    expect(hasStatus(new HttpError("Failed", 404), 404)).toBe(true);
+    expect(hasStatus(new HttpError("Failed", 500), 404)).toBe(false);
+    expect(hasStatus(new Error("Failed to load thing (404)"), 404)).toBe(false);
+    expect(hasStatus(undefined, 404)).toBe(false);
   });
 });

@@ -3,19 +3,14 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { roundQuery, useRecordGuess, useRecordHint, useRound, useSubmitAnswer } from "../../api/games";
 import { GameRoundView } from "../../api/types";
+import type { DailyInfo } from "../../daily/dailyStorage";
 import GameSummary from "./GameSummary";
 import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
 /** `daily` is set when the game is a daily challenge: the title says so, and the summary shares instead of replaying. */
-function GameRoundPage({
-  gameId,
-  daily,
-}: {
-  gameId: string;
-  daily?: { number: number; date: string };
-}): React.JSX.Element {
+function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo }): React.JSX.Element {
   // Until the player acts, resume at the first unanswered round, which the first round's game result tells us.
   const [chosenRound, setRound] = useState<number | null>(null);
   const [summaryChoice, setSummaryChoice] = useState<boolean | null>(null);

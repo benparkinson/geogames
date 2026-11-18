@@ -1,7 +1,7 @@
 import { Button } from "../../ui";
 import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
-import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round, UNANSWERED } from "./Model";
+import { finalAnswerState, Round, UNANSWERED } from "./Model";
 import RoundProgress from "./RoundProgress";
 import { roundPoints } from "./scoring";
 
@@ -19,17 +19,17 @@ export default function GameTopBar({
   outOfGuesses?: boolean;
   hintsUsed: number;
 }): React.JSX.Element {
-  // Reflect the local state of the current round straight away, without waiting for the refetch.
+  // Reflect the local state of the current round straight away, without waiting for the server.
   const states = round.roundAnswerStates.slice();
   const points = round.roundPoints.slice();
   let score = round.score;
   if (gameOver) {
-    const answerState = outOfGuesses ? OUT_OF_GUESSES : gaveUp ? GAVE_UP : CORRECT_ANSWER;
+    const answerState = finalAnswerState(gaveUp, outOfGuesses);
     const localPoints = roundPoints(answerState, hintsUsed, round.hintCount);
     states[round.currentRound] = answerState;
     points[round.currentRound] = localPoints;
     if (round.answerState === UNANSWERED) {
-      // The round ended here and the server's copy hasn't been refetched yet.
+      // The round ended here and the server's copy hasn't been updated yet.
       score += localPoints;
     }
   }
