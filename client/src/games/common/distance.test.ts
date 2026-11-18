@@ -20,13 +20,23 @@ describe("distanceKm", () => {
 
 describe("bearingDegrees", () => {
   it("points south-east from London to Paris", () => {
-    expect(bearingDegrees(london, paris)).toBeCloseTo(148, 0);
+    expect(bearingDegrees(london, paris)).toBeCloseTo(149, 0);
     expect(compassPoint(bearingDegrees(london, paris))).toBe("south-east");
   });
 
   it("is 0 due north and 90 due east", () => {
     expect(bearingDegrees({ lat: 0, lon: 0 }, { lat: 10, lon: 0 })).toBeCloseTo(0, 5);
     expect(bearingDegrees({ lat: 0, lon: 0 }, { lat: 0, lon: 10 })).toBeCloseTo(90, 5);
+  });
+
+  it("points east and south, not north-east, from South Korea to Paraguay (the great circle goes over the pole)", () => {
+    const korea = { lat: 37, lon: 127.5 };
+    const paraguay = { lat: -23.4, lon: -58.4 };
+    expect(distanceKm(korea, paraguay)).toBeGreaterThan(17000);
+    const bearing = bearingDegrees(korea, paraguay);
+    expect(bearing).toBeGreaterThan(90);
+    expect(bearing).toBeLessThan(180);
+    expect(compassPoint(bearing)).not.toBe("north-east");
   });
 
   it("points east across the antimeridian", () => {
