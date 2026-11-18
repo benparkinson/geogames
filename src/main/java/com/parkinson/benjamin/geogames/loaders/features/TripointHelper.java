@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.helper;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;

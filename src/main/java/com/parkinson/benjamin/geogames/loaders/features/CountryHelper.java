@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.helper;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import java.text.Normalizer;
 

@@ -1,6 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
-import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
+import static com.parkinson.benjamin.geogames.loaders.features.CountryHelper.convertCountryNameToFileName;
 
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.helper.GeoJson;
