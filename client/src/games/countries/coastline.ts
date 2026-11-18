@@ -3,7 +3,8 @@ import { defineGame } from "../types";
 import { makeCountryShapeGame } from "./CountryShapeGame";
 import type { CountryShapeRound } from "./model";
 import CoastlineMapWrapper from "./CoastlineMapWrapper";
-import { countryHints, firstLetterHint, mapHint, neighbourCountHint } from "./countryHints";
+import { hintsFrom, mapHint } from "../common/hints";
+import { firstLetterHint, neighbourCountHint } from "./countryHints";
 
 export default defineGame({
   type: "COUNTRIES_BY_COASTLINE",
@@ -17,7 +18,7 @@ export default defineGame({
     prompt: "Name the country with this coastline.",
     mapCaption: "Coastline only. Land borders are hidden.",
     hints: (round) =>
-      countryHints(
+      hintsFrom(
         "Shows how many countries its mainland borders, then its land borders, then its first letter",
         round,
         neighbourCountHint,

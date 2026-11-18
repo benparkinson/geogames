@@ -1,9 +1,8 @@
-import type { HintConfig } from "../common/hints";
 import { countHint, firstLetterHint as firstLetter } from "../common/hints";
 import type { CountryGeoData } from "../common/country";
 import type { City, HasCountry } from "./model";
 
-/** Builds the text of one hint from the round. Returns null when there is nothing to say. */
+/** A hint builder for a round with a country: the other rounds' builders only need what they use. */
 export type HintBuilder<T extends HasCountry = HasCountry> = (round: T) => string | null;
 
 /** How many countries its mainland borders. Neighbours of overseas territories aren't counted: the map shows the mainland. */
@@ -21,23 +20,6 @@ export const borderLengthHint: HintBuilder = ({ country }) =>
   `No coastline. Its borders are ${country.landBorderKm.toLocaleString("en-GB")} km long`;
 
 export const firstLetterHint: HintBuilder = ({ country }) => firstLetter(country.name);
-
-/** A hint whose text is always the same, for hints that change the map. */
-export function mapHint(text: string): HintBuilder {
-  return () => text;
-}
-
-/** One hint per builder, revealed in order. */
-export function countryHints<T extends HasCountry>(
-  description: string,
-  round: T,
-  ...builders: HintBuilder<T>[]
-): HintConfig {
-  return {
-    description,
-    text: (index) => builders[index]?.(round) ?? null,
-  };
-}
 
 /** Says the coastline is on the map, or, for a landlocked country, that it has none, which is itself a clue. */
 export const coastHint: HintBuilder = ({ country }) =>

@@ -3,7 +3,8 @@ import { defineGame } from "../types";
 import { makeCountryShapeGame } from "./CountryShapeGame";
 import type { CountryShapeRound } from "./model";
 import LandBordersMapWrapper from "./LandBordersMapWrapper";
-import { countryHints, firstLetterHint, mapHint } from "./countryHints";
+import { hintsFrom, mapHint } from "../common/hints";
+import { firstLetterHint } from "./countryHints";
 
 export default defineGame({
   type: "COUNTRIES_BY_LAND_BORDERS",
@@ -18,7 +19,7 @@ export default defineGame({
     mapCaption: "Land borders only. The coastline is hidden.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      countryHints(
+      hintsFrom(
         "Shows its neighbours, then its coastline, then its first letter",
         round,
         mapHint("Its neighbours are on the map"),

@@ -3,7 +3,8 @@ import { defineGame } from "../types";
 import { makeCountryShapeGame } from "./CountryShapeGame";
 import type { CountryRiversRound } from "./model";
 import CountryRiversMapWrapper from "./CountryRiversMapWrapper";
-import { coastHint, countryHints, firstLetterHint, lakesHint } from "./countryHints";
+import { hintsFrom } from "../common/hints";
+import { coastHint, firstLetterHint, lakesHint } from "./countryHints";
 
 export default defineGame({
   type: "COUNTRIES_BY_RIVERS",
@@ -18,7 +19,7 @@ export default defineGame({
     mapCaption: "Its rivers, the major ones thicker. The outline is hidden.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      countryHints(
+      hintsFrom(
         "Shows its lakes, then its coastline, then its first letter",
         round,
         lakesHint,

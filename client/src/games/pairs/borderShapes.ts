@@ -2,7 +2,8 @@ import { Bezier2 } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import BorderShapesMapWrapper from "./BorderShapesMapWrapper";
 import { makePairGame } from "./PairGame";
-import { bothFirstLettersHint, mapHint, pairHints } from "./pairHints";
+import { hintsFrom, mapHint } from "../common/hints";
+import { bothFirstLettersHint } from "./pairHints";
 
 export default defineGame({
   type: "BORDERS_BY_SHAPE",
@@ -18,7 +19,7 @@ export default defineGame({
     mapCaption: (round) => `Border length: ${round.borderKm.toLocaleString("en-GB")} km`,
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      pairHints(
+      hintsFrom(
         "Shows the rest of their land borders, then their coastlines, then their first letters",
         round,
         mapHint("The rest of both countries' land borders are on the map"),

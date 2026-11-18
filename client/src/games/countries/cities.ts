@@ -3,7 +3,8 @@ import { defineGame } from "../types";
 import { makeCountryShapeGame } from "./CountryShapeGame";
 import type { CountryCitiesRound } from "./model";
 import CountryCitiesMapWrapper from "./CountryCitiesMapWrapper";
-import { capitalHint, coastHint, countryHints, firstLetterHint } from "./countryHints";
+import { hintsFrom } from "../common/hints";
+import { capitalHint, coastHint, firstLetterHint } from "./countryHints";
 
 export default defineGame({
   type: "COUNTRIES_BY_CITIES",
@@ -18,7 +19,7 @@ export default defineGame({
     mapCaption: "Its cities, sized by population. The outline is hidden.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      countryHints(
+      hintsFrom(
         "Highlights its capital, then shows its coastline, then its first letter",
         round,
         capitalHint,

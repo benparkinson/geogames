@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countHint, firstLetter, firstLetterHint } from "./hints";
+import { cluesDescription, countHint, firstLetter, firstLetterHint, hintsFrom, mapHint } from "./hints";
 
 describe("firstLetterHint", () => {
   it("gives the upper-cased first letter", () => {
@@ -43,5 +43,37 @@ describe("firstLetter", () => {
 
   it("gives nothing for a blank name", () => {
     expect(firstLetter("")).toBeNull();
+  });
+});
+
+describe("mapHint", () => {
+  it("always says the same thing", () => {
+    expect(mapHint("On the map")("any round")).toBe("On the map");
+  });
+});
+
+describe("hintsFrom", () => {
+  it("makes one hint per builder, in order, and nothing past the last", () => {
+    const hints = hintsFrom("Shows clues", "Nepal", mapHint("A"), mapHint("B"), firstLetterHint);
+
+    expect(hints.description).toBe("Shows clues");
+    expect(hints.text?.(0)).toBe("A");
+    expect(hints.text?.(1)).toBe("B");
+    expect(hints.text?.(2)).toBe("Starts with “N”");
+    expect(hints.text?.(3)).toBeNull();
+  });
+
+  it("gives nothing for a builder with nothing to say", () => {
+    const hints = hintsFrom("Shows a clue", " ", firstLetterHint);
+
+    expect(hints.text?.(0)).toBeNull();
+  });
+});
+
+describe("cluesDescription", () => {
+  it("says a clue for one and counts several", () => {
+    expect(cluesDescription(1)).toBe("Shows a clue");
+    expect(cluesDescription(2)).toBe("Shows 2 clues, one at a time");
+    expect(cluesDescription(3)).toBe("Shows 3 clues, one at a time");
   });
 });
