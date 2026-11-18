@@ -34,6 +34,13 @@ export interface RoundAnswer {
 export interface Round {
   /** The kind of round: the game module's name and icon, shown at the top of the panel. */
   kind: { title: string; Icon: Icon };
+  /**
+   * Whether the round's answer has reached the server. Moving on (next round, results, another round) waits until
+   * it is "saved", or the next page would show the round as unanswered.
+   */
+  answerSave: "saved" | "saving" | "failed";
+  /** Sends the answer again after it failed. */
+  retryAnswer: () => void;
   nextRound: () => void;
   goToRound: (round: number) => void;
   showSummary: () => void;

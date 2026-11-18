@@ -1,4 +1,4 @@
-import { Button } from "../../ui";
+import { Button, Notice } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { finalAnswerState, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
@@ -47,12 +47,33 @@ export default function RoundResult({
           </div>
         )}
       </div>
-      {round.hasNextRound ? (
-        <Button variant="primary" size="lg" block autoFocus onClick={round.nextRound}>
+      {round.answerSave === "failed" ? (
+        <>
+          <Notice className="mb-2">Couldn&apos;t save your answer.</Notice>
+          <Button variant="primary" size="lg" block autoFocus onClick={round.retryAnswer}>
+            Try again
+          </Button>
+        </>
+      ) : round.hasNextRound ? (
+        <Button
+          variant="primary"
+          size="lg"
+          block
+          autoFocus
+          disabled={round.answerSave === "saving"}
+          onClick={round.nextRound}
+        >
           Next round <ArrowRight aria-hidden="true" />
         </Button>
       ) : (
-        <Button variant="primary" size="lg" block autoFocus onClick={round.showSummary}>
+        <Button
+          variant="primary"
+          size="lg"
+          block
+          autoFocus
+          disabled={round.answerSave === "saving"}
+          onClick={round.showSummary}
+        >
           See results
         </Button>
       )}

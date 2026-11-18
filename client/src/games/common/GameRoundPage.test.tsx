@@ -157,6 +157,64 @@ describe("GameRoundPage game types", () => {
   });
 });
 
+describe("GameRoundPage answer saving", () => {
+  it("ignores a jump to another round while the answer is still being saved", async () => {
+    const server = fakeServer(["TRIPOINT", "TRIPOINT"]);
+    const working = server.getMockImplementation()!;
+    let release: () => void = () => {};
+    const held = new Promise<void>((resolve) => (release = resolve));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if (String(url).endsWith("/rounds/0/answers")) {
+          await held;
+        }
+        return working(url, init);
+      }),
+    );
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+
+    await solveTripoint(user);
+
+    expect(await screen.findByRole("button", { name: /Next round/ })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Round 1: current" }));
+    expect(screen.getByRole("button", { name: /Next round/ })).toBeDisabled();
+
+    release();
+    await waitFor(() => expect(screen.getByRole("button", { name: /Next round/ })).toBeEnabled());
+  });
+
+  it("holds the player on the round until the answer is saved, and retries a failed save", async () => {
+    let attempts = 0;
+    const server = fakeServer(["TRIPOINT", "TRIPOINT"]);
+    const working = server.getMockImplementation()!;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string, init?: RequestInit) => {
+        if (String(url).endsWith("/rounds/0/answers") && attempts++ === 0) {
+          return Promise.resolve(new Response("{}", { status: 500 }));
+        }
+        return working(url, init);
+      }),
+    );
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+
+    await solveTripoint(user);
+
+    await user.click(await screen.findByRole("button", { name: "Try again" }));
+    const next = await screen.findByRole("button", { name: /Next round/ });
+    await waitFor(() => expect(next).toBeEnabled());
+    await user.click(next);
+
+    expect(await screen.findByText("Round 2 of 2")).toBeInTheDocument();
+    expect(attempts).toBe(2);
+  });
+});
+
 describe("GameRoundPage playing", () => {
   it("posts the answer and patches the round instead of reloading it", async () => {
     const fetchMock = fakeServer(["TRIPOINT", "TRIPOINT"]);

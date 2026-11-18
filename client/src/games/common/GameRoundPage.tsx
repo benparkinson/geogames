@@ -10,7 +10,10 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
 /** The callbacks of the page that a `Round` hands to the game. */
-type RoundActions = Pick<Round, "nextRound" | "goToRound" | "showSummary" | "recordHint" | "recordGuess">;
+type RoundActions = Pick<
+  Round,
+  "answerSave" | "retryAnswer" | "nextRound" | "goToRound" | "showSummary" | "recordHint" | "recordGuess"
+>;
 
 /** What a game component is told about its round: the server's view of it, and what the player can do next. */
 function buildRound(
@@ -72,13 +75,38 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
     }
   }, [answered, currentRound, totalRoundCount, gameId, queryClient]);
 
+  // Leaving a round before its answer is saved would show it as unanswered (a stale fetch of the next round can
+  // also overwrite the patched game result), so every way out waits for the save.
+  const answerSave: Round["answerSave"] = submitAnswerMutation.isError
+    ? "failed"
+    : submitAnswerMutation.isPending
+      ? "saving"
+      : "saved";
+
+  function whenSaved(action: () => void): void {
+    if (answerSave === "saved") {
+      action();
+    }
+  }
+
   function nextRound(): void {
-    setRound(currentRound + 1);
+    whenSaved(() => setRound(currentRound + 1));
   }
 
   function goToRound(round: number): void {
-    setRound(round);
-    setSummaryChoice(false);
+    whenSaved(() => {
+      setRound(round);
+      setSummaryChoice(false);
+    });
+  }
+
+  function showSummaryPage(): void {
+    whenSaved(() => setSummaryChoice(true));
+  }
+
+  function retryAnswer(): void {
+    // Only offered once the answer failed, so the mutation still holds its request.
+    submitAnswerMutation.mutate(submitAnswerMutation.variables as RoundAnswer);
   }
 
   function submitAnswer(answer: RoundAnswer): void {
@@ -93,9 +121,11 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
     }
     const kind = { title: gameModule.title, Icon: gameModule.Icon };
     const round = buildRound(data, currentRound, kind, !!gameModule.hasClues, daily?.date, {
+      answerSave,
+      retryAnswer,
       nextRound,
       goToRound,
-      showSummary: () => setSummaryChoice(true),
+      showSummary: showSummaryPage,
       recordHint: (hint) => recordHintMutation.mutate(hint),
       recordGuess: (guess) => recordGuessMutation.mutate(guess),
     });

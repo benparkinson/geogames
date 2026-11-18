@@ -52,7 +52,7 @@ export default function GameTopBar({
       <div className="d-flex align-items-center gap-2 small gg-text-muted text-nowrap">
         {scoreText}
         {round.gameCompleted && (
-          <Button size="sm" variant="secondary" onClick={round.showSummary}>
+          <Button size="sm" variant="secondary" disabled={round.answerSave !== "saved"} onClick={round.showSummary}>
             Results
           </Button>
         )}
