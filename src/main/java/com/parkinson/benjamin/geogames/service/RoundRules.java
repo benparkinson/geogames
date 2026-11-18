@@ -36,7 +36,7 @@ public class RoundRules {
   /** @return whether the round changed */
   boolean addHint(GameRoundEntity round, int hint, int guessesBefore) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {
-      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
+      throw new RoundClosedException(round.getRoundNumber());
     }
     int taken = round.getHintsTakenAt().size();
     if (hint < taken) {
@@ -64,7 +64,7 @@ public class RoundRules {
   /** @return whether the round changed */
   boolean addGuess(GameRoundEntity round, String guess, boolean correct) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {
-      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
+      throw new RoundClosedException(round.getRoundNumber());
     }
     if (guess == null || guess.isBlank() || guess.length() > MAX_GUESS_LENGTH) {
       throw new IllegalArgumentException(

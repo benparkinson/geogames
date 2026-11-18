@@ -31,7 +31,7 @@ import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
-import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredForGuessException;
+import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import java.util.List;
 import java.util.Optional;
@@ -486,7 +486,7 @@ class GameControllerTest {
   @Test
   void aGuessOnAnAnsweredRoundIsAConflict() throws Exception {
     when(gameService.recordGuess(GAME_ID, 0, "France", false))
-        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+        .thenThrow(new RoundClosedException(0));
 
     postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isConflict());
   }
@@ -541,8 +541,7 @@ class GameControllerTest {
 
   @Test
   void aHintOnAnAnsweredRoundIsAConflict() throws Exception {
-    when(gameService.recordHint(GAME_ID, 0, 0, 2))
-        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+    when(gameService.recordHint(GAME_ID, 0, 0, 2)).thenThrow(new RoundClosedException(0));
 
     postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isConflict());
   }

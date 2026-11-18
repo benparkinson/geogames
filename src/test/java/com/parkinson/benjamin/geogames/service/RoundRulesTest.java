@@ -183,7 +183,7 @@ class RoundRulesTest {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.CORRECT);
 
     assertThatThrownBy(() -> rules.addGuess(entity, "France", false))
-        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
+        .isInstanceOf(RoundClosedException.class);
   }
 
   @Test
@@ -242,7 +242,6 @@ class RoundRulesTest {
   void aHintOnAnAnsweredRoundIsAConflict() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.GAVE_UP);
 
-    assertThatThrownBy(() -> rules.addHint(entity, 0, 0))
-        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
+    assertThatThrownBy(() -> rules.addHint(entity, 0, 0)).isInstanceOf(RoundClosedException.class);
   }
 }
