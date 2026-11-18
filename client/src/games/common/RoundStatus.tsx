@@ -1,6 +1,6 @@
 import GuessesLeft from "./GuessesLeft";
 
-/** One row above the input: the guesses left on the left, what the round is worth now on the right. */
+/** One row above the input: the lives left on the left, what the round is worth now on the right. */
 export default function RoundStatus({
   guessesLeft,
   guessLimit,
