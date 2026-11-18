@@ -1,21 +1,17 @@
-import { MapContainer } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
 import { RevealTiles } from "../../map/RevealTiles";
-import { MapCredits } from "../../map/MapCredits";
-import { MapResizer } from "../../map/MapResizer";
+import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 function RiverShapesMap({ data: { river }, gaveUp, gameOver }: MapProps<RiverRound>): React.JSX.Element {
   return (
-    <MapContainer zoom={3} maxZoom={7} minZoom={3} center={[0, 0]}>
+    <GameMap minZoom={3} maxZoom={7}>
       <RevealTiles show={gameOver} />
       <RiverLine river={river} gaveUp={gaveUp} />
       <FitBounds data={river.geoData} id={river.id} />
-      <MapCredits />
-      <MapResizer />
-    </MapContainer>
+    </GameMap>
   );
 }
 

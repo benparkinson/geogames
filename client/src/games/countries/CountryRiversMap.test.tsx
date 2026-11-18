@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueLineOptions, lakeFillOptions, minorRiverOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import { drawnLayers, drawnTileUrls, addedAttributions, fakeMap } from "../../test/leafletMock";
 import { makeCountryRiversRoundData, makeCountryShapeData } from "../../test/fixtures";
 import CountryRiversMap from "./CountryRiversMap";
 import type { CountryRiversRound } from "./model";
@@ -29,6 +29,12 @@ const noLakes = { type: "MultiPolygon", properties: {}, geometry: { type: "Multi
 beforeEach(() => vi.clearAllMocks());
 
 describe("CountryRiversMap", () => {
+  it("credits Natural Earth", () => {
+    renderMap();
+
+    expect(addedAttributions().join(" ")).toContain("Natural Earth");
+  });
+
   it("draws the minor rivers thin and the major rivers over them on a blank map while playing", () => {
     renderMap();
 

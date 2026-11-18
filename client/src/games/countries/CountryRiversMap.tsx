@@ -1,5 +1,4 @@
-import { MapContainer } from "react-leaflet";
-import { MapResizer } from "../../map/MapResizer";
+import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
 import { AnswerOutline, FocusFit, HintLines, LakeFills, RiverLines } from "./CountryLayers";
@@ -14,15 +13,14 @@ function CountryRiversMap({ data: { country, major, minor, lakes }, gameOver, ga
   const hasLakes = lakes.geometry.coordinates.length > 0;
   const hasCoast = country.coast.geometry.coordinates.length > 0;
   return (
-    <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>
+    <GameMap>
       <RevealTiles show={gameOver} />
       {!gameOver && hintsUsed >= 1 && hasLakes && <LakeFills data={lakes} id={`${country.name}/lakes`} />}
       {!gameOver && hintsUsed >= 2 && hasCoast && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       {!gameOver && <RiverLines major={major} minor={minor} id={country.name} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}
       <FocusFit country={country} />
-      <MapResizer />
-    </MapContainer>
+    </GameMap>
   );
 }
 

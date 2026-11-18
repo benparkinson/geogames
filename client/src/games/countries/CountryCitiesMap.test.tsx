@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, cityDotOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnCircles, drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import { drawnCircles, drawnLayers, drawnTileUrls, addedAttributions, fakeMap } from "../../test/leafletMock";
 import { makeCountryCitiesRoundData, makeCountryShapeData } from "../../test/fixtures";
 import CountryCitiesMap from "./CountryCitiesMap";
 import type { CountryCitiesRound } from "./model";
@@ -22,6 +22,12 @@ const points = () => drawnLayers().map((layer) => layer.point);
 beforeEach(() => vi.clearAllMocks());
 
 describe("CountryCitiesMap", () => {
+  it("credits Natural Earth", () => {
+    renderMap();
+
+    expect(addedAttributions().join(" ")).toContain("Natural Earth");
+  });
+
   it("draws only the cities, as dots, on a blank map while playing", () => {
     renderMap();
 
