@@ -19,7 +19,7 @@ describe("ShareButton", () => {
     setClipboard(writeText);
     render(<ShareButton text="the text" />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Share" }));
+    await userEvent.click(screen.getByRole("button", { name: "Copy result" }));
 
     expect(writeText).toHaveBeenCalledWith("the text");
     await waitFor(() => expect(screen.getByText("Copied!")).toBeInTheDocument());
@@ -30,7 +30,7 @@ describe("ShareButton", () => {
     setClipboard(vi.fn().mockRejectedValue(new Error("denied")));
     render(<ShareButton text="the text" />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Share" }));
+    await userEvent.click(screen.getByRole("button", { name: "Copy result" }));
 
     const box = await screen.findByRole("textbox", { name: "Copy this text" });
     expect(box).toHaveValue("the text");
@@ -42,7 +42,7 @@ describe("ShareButton", () => {
     setClipboard(undefined);
     render(<ShareButton text="the text" />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Share" }));
+    await userEvent.click(screen.getByRole("button", { name: "Copy result" }));
 
     expect(await screen.findByRole("textbox", { name: "Copy this text" })).toHaveValue("the text");
   });
@@ -52,10 +52,10 @@ describe("ShareButton", () => {
     Object.defineProperty(navigator, "share", { value: share, configurable: true });
     render(<ShareButton text="the text" />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Share…" }));
+    await userEvent.click(screen.getByRole("button", { name: "Share" }));
 
     expect(share).toHaveBeenCalledWith({ text: "the text" });
-    expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
   });
 
   it("ignores a cancelled share sheet", async () => {
@@ -63,7 +63,7 @@ describe("ShareButton", () => {
     Object.defineProperty(navigator, "share", { value: share, configurable: true });
     render(<ShareButton text="the text" />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Share…" }));
+    await userEvent.click(screen.getByRole("button", { name: "Share" }));
 
     expect(share).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("textbox")).toBeNull();
@@ -72,7 +72,7 @@ describe("ShareButton", () => {
   it("selects the text when the box is focused", async () => {
     setClipboard(undefined);
     render(<ShareButton text="the text" />);
-    await userEvent.click(screen.getByRole("button", { name: "Share" }));
+    await userEvent.click(screen.getByRole("button", { name: "Copy result" }));
     const box = (await screen.findByRole("textbox")) as HTMLTextAreaElement;
     box.setSelectionRange(0, 0);
 
@@ -87,7 +87,7 @@ describe("ShareButton", () => {
       setClipboard(vi.fn().mockResolvedValue(undefined));
       render(<ShareButton text="the text" />);
 
-      fireEvent.click(screen.getByRole("button", { name: "Share" }));
+      fireEvent.click(screen.getByRole("button", { name: "Copy result" }));
       await act(async () => {
         await Promise.resolve();
       });
@@ -102,9 +102,9 @@ describe("ShareButton", () => {
     }
   });
 
-  it("has no Share… button without navigator.share", () => {
+  it("has no Share button without navigator.share", () => {
     render(<ShareButton text="the text" />);
 
-    expect(screen.queryByRole("button", { name: "Share…" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Share" })).toBeNull();
   });
 });

@@ -189,7 +189,7 @@ https://geogauntlet.onrender.com/daily
 - On click, `navigator.clipboard.writeText(text)`. It only works in a secure context (https or localhost) and in response to a click, so call it straight from the handler with no `await` before it.
 - On success, show "Copied!" in an `aria-live="polite"` region for a few seconds.
 - If `navigator.clipboard` is missing or the promise rejects, show the text in a read-only `<textarea>`, selected, with "Copy this text". Don't use `document.execCommand("copy")` (deprecated).
-- Optional: when `navigator.share` exists (mostly phones), add a second **Share…** button that opens the system share sheet with `{ text }`. Don't replace the Copy button: some desktop browsers have `navigator.share` with a poor share sheet.
+- Optional: when `navigator.share` exists (mostly phones), add a second **Share** button that opens the system share sheet with `{ text }`. Don't replace the Copy button: some desktop browsers have `navigator.share` with a poor share sheet.
 - Use `Button` from `src/ui/` and theme tokens only (`npm run lint` rejects colour literals). The emoji are in the shared text, not in our CSS, so they don't count.
 
 ### 14. Home page
@@ -202,7 +202,7 @@ Add a **Daily challenge** card above the "Choose a game" heading (and so above t
 
 - The "On your device" paragraph lists `gg-theme` and `gg-hardcore` today ("up to two items"). Make it "up to three", and add `gg-daily`: today's daily (the game id, whether Hardcore was on and, once finished, the score and how each round ended). It is set only when you play the daily, replaced the next day, never sent anywhere, and cleared with the site data.
 - One sentence on the daily: everyone gets the same rounds on a date; the server stores which rounds those are for each date, and nothing about who played them.
-- Copying a result writes to your clipboard only when you click Share.
+- Copying a result writes to your clipboard only when you click Copy result.
 - Update "Last updated" to the day PR 3 merges.
 
 ### 16. Frontend tests (Vitest)
