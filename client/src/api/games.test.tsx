@@ -11,7 +11,6 @@ import {
 import { clientWrapper, newTestClient } from "../test/render";
 import {
   fetchRound,
-  isCompleteAnswerResponse,
   toRoundView,
   useCreateGame,
   useRecordGuess,
@@ -50,13 +49,13 @@ describe("toRoundView", () => {
     const view = toRoundView(
       makeRound({
         gameResult: {
+          ...makeRound().gameResult,
           gameState: "IN_PROGRESS",
           roundsUnanswered: 1,
           score: 1,
           roundAnswerStates: ["CORRECT", "UNANSWERED"],
         },
       }),
-      0,
     );
 
     expect(view.gameResult.roundAnswerStates).toEqual(["CORRECT", "UNANSWERED"]);
@@ -80,7 +79,6 @@ describe("toRoundView", () => {
           roundHintsUsed: [0, 1, 0],
         },
       }),
-      1,
     );
 
     expect(view.hintsUsed).toBe(1);
@@ -97,60 +95,6 @@ describe("toRoundView", () => {
       roundHintsUsed: [0, 1, 0],
     });
   });
-
-  it("works out the points itself when an older backend sends none", () => {
-    const response = makeRound({
-      totalRoundCount: 3,
-      answerState: "CORRECT",
-      hintsUsed: undefined,
-      points: undefined,
-      gameType: { name: "TRIPOINT", answerCount: 3 },
-      gameResult: {
-        gameState: "IN_PROGRESS",
-        roundsUnanswered: 1,
-        // The old score counted correct rounds, so it must not be used as points.
-        score: 2,
-        roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
-      },
-    });
-
-    const view = toRoundView(response, 1);
-
-    expect(view.gameType.hintCount).toBe(0);
-    expect(view.gameType.guessLimit).toBe(Infinity);
-    expect(view.hintsUsed).toBe(0);
-    expect(view.points).toBe(100);
-    expect(view.gameResult).toEqual({
-      gameState: "IN_PROGRESS",
-      score: 200,
-      maxScore: 300,
-      roundsCorrect: 2,
-      perfectRounds: 2,
-      roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
-      roundPoints: [100, 100, 0],
-      roundHintsUsed: [0, 0, 0],
-    });
-  });
-
-  it("counts a correct round with no recorded hints as perfect when the backend sends no perfectRounds", () => {
-    const response = makeRound({ totalRoundCount: 3 });
-    response.gameResult = {
-      ...response.gameResult,
-      roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
-      roundHintsUsed: [1],
-    };
-    delete response.gameResult.perfectRounds;
-
-    // Round 0 used a hint; round 1 has no hint entry at all.
-    expect(toRoundView(response, 0).gameResult.perfectRounds).toBe(1);
-  });
-
-  it("falls back to this round's state when an older backend sends no roundAnswerStates", () => {
-    const response = makeRound({ totalRoundCount: 3, answerState: "GAVE_UP" });
-    delete response.gameResult.roundAnswerStates;
-
-    expect(toRoundView(response, 1).gameResult.roundAnswerStates).toEqual(["UNANSWERED", "GAVE_UP", "UNANSWERED"]);
-  });
 });
 
 describe("useRound", () => {
@@ -161,24 +105,6 @@ describe("useRound", () => {
 
     await waitFor(() => expect(result.current.data?.totalRoundCount).toBe(3));
     expect(client.getQueryData(queryKeys.round("g1", 2))).toBeDefined();
-  });
-});
-
-describe("isCompleteAnswerResponse", () => {
-  it("accepts the backend's answer response and a whole round response", () => {
-    expect(isCompleteAnswerResponse(makeAnswerResponse())).toBe(true);
-    expect(isCompleteAnswerResponse(makeRound())).toBe(true);
-  });
-
-  it("refuses an empty or partial response", () => {
-    expect(isCompleteAnswerResponse({})).toBe(false);
-    expect(isCompleteAnswerResponse(null)).toBe(false);
-    expect(isCompleteAnswerResponse("CORRECT")).toBe(false);
-    expect(isCompleteAnswerResponse({ ...makeAnswerResponse(), hintsUsed: undefined })).toBe(false);
-    const { gameResult, ...rest } = makeAnswerResponse();
-    expect(isCompleteAnswerResponse({ ...rest, gameResult: { ...gameResult, roundPoints: undefined } })).toBe(false);
-    expect(isCompleteAnswerResponse({ ...rest, gameResult: { ...gameResult, score: "100" } })).toBe(false);
-    expect(isCompleteAnswerResponse({ ...rest, gameResult: undefined })).toBe(false);
   });
 });
 
@@ -413,37 +339,6 @@ describe("useRecordHint", () => {
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
     const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts.map((c) => c.url.split("/").pop())).toEqual(["hints", "guesses", "answers"]);
-  });
-});
-
-describe("useSubmitAnswer with an incomplete response", () => {
-  const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
-    callsTo(fetchMock).filter((c) => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
-
-  function setup() {
-    const fetchMock = mockFetch([
-      { url: /\/rounds\/\d$/, body: () => makeRound({ totalRoundCount: 2 }) },
-      { method: "POST", url: /\/answers$/, body: {} },
-    ]);
-    return fetchMock;
-  }
-
-  it("refetches the game's other cached rounds and prefetches the next one", async () => {
-    const fetchMock = setup();
-    const client = newTestClient();
-    const { result } = renderHook(
-      () => ({ r0: useRound("g1", 0), r1: useRound("g1", 1), submit: useSubmitAnswer("g1", 0, 2) }),
-      { wrapper: clientWrapper(client) },
-    );
-    await waitFor(() => expect(result.current.r1.data).toBeDefined());
-    expect(roundGets(fetchMock, 1)).toHaveLength(1);
-
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
-
-    await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
-    expect(roundGets(fetchMock, 0)).toHaveLength(2);
-    // Round 1 is refetched once by the invalidation; the prefetch then finds it fresh.
-    expect(roundGets(fetchMock, 1)).toHaveLength(2);
   });
 });
 

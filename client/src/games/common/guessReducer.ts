@@ -46,7 +46,7 @@ export interface GuessConfig {
   /** When set, a guess it rejects is reported as "unknown" instead of wrong. */
   isKnownGuess?: (guess: string) => boolean;
   hintsTotal: number;
-  /** How many wrong guesses the round allows. Infinity means no limit. */
+  /** How many wrong guesses the round allows. */
   guessLimit: number;
   /**
    * For a wrong guess: the clue towards the nearest of `targets`, the canonical answers not found yet.

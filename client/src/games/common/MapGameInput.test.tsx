@@ -137,12 +137,6 @@ describe("MapGameInput feedback", () => {
     expect(screen.getByText("Last guess!")).toBeInTheDocument();
   });
 
-  it("leaves out the count when there is no limit", async () => {
-    await submitting({ kind: "wrong", guess: "Spain", guessesLeft: Infinity });
-
-    expect(screen.getByText("Not Spain.")).toBeInTheDocument();
-  });
-
   it("clears the text when the guesses have run out, and leaves the saying to RoundResult", async () => {
     const { container } = await submitting({ kind: "outOfGuesses", guess: "Spain" });
 
@@ -333,12 +327,6 @@ describe("MapGameInput states", () => {
     renderInput({ guessesLeft: 5 });
 
     expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
-  });
-
-  it("shows nothing about guesses when there is no limit", () => {
-    renderInput({ guessesLeft: Infinity, round: makeRoundProps({ guessLimit: Infinity }) });
-
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
   it("lists each wrong guess", () => {

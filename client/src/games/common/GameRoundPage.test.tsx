@@ -147,7 +147,7 @@ describe("GameRoundPage game types", () => {
     mockFetch([
       {
         url: /\/rounds\/0$/,
-        body: makeRound({ gameType: { name: "MYSTERY", answerCount: 1 } }),
+        body: makeRound({ gameType: { name: "MYSTERY", answerCount: 1, hintCount: 3, guessLimit: 5 } }),
       },
     ]);
     renderPage();
@@ -284,32 +284,5 @@ describe("GameRoundPage results", () => {
     await user.click(screen.getByRole("button", { name: "See results" }));
 
     expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
-  });
-
-  it("falls back to the current round's state when the backend sends no round states", async () => {
-    // The older backend can't say which rounds are answered, so the page opens the first round and reads its state.
-    mockFetch([
-      {
-        url: /\/rounds\/0$/,
-        body: {
-          ...makeRound({ answerState: "CORRECT", totalRoundCount: 3 }),
-          gameResult: { gameState: "IN_PROGRESS", roundsUnanswered: 2, score: 1 },
-        },
-      },
-      {
-        url: /\/rounds\/1$/,
-        body: {
-          ...makeRound({ answerState: "UNANSWERED", totalRoundCount: 3 }),
-          gameResult: { gameState: "IN_PROGRESS", roundsUnanswered: 2, score: 1 },
-        },
-      },
-      { url: /\/api\/countries$/, body: countryNames },
-    ]);
-    renderPage();
-    await screen.findByText(TRIPOINT_PROMPT);
-
-    expect(screen.getAllByRole("button", { name: /^Round \d/ })).toHaveLength(3);
-    expect(screen.getByRole("button", { name: "Round 2: current" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 3: not played" })).toBeDisabled();
   });
 });

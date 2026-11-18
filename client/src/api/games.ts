@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnswerState, CORRECT_ANSWER, RoundAnswer, UNANSWERED } from "../games/common/Model";
-import { isPerfect, MAX_ROUND_POINTS, roundPoints } from "../games/common/scoring";
+import { RoundAnswer } from "../games/common/Model";
 import { fetchJson, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
 import {
@@ -23,53 +22,36 @@ function roundUrl(gameId: string, round: number): string {
   return "/api/games/" + gameId + "/rounds/" + round;
 }
 
-export function toRoundView(response: GameRoundResponse, round: number): GameRoundView {
-  const result = response.gameResult;
-  const states = roundAnswerStates(response, round);
-  const serverPoints = result.roundPoints;
-  // Older backends send none of the points fields, and their score counted correct rounds.
-  const points = Array.isArray(serverPoints) ? serverPoints : states.map((state) => roundPoints(state, 0, 0));
-  const hintsUsed = Array.isArray(result.roundHintsUsed) ? result.roundHintsUsed : states.map(() => 0);
+function toGameResultView(result: GameResultResponse): GameRoundView["gameResult"] {
   return {
-    gameType: {
-      ...response.gameType,
-      hintCount: response.gameType.hintCount ?? 0,
-      // An older backend has no limit.
-      guessLimit: response.gameType.guessLimit ?? Infinity,
-    },
-    data: JSON.parse(response.jsonBlob),
-    totalRoundCount: response.totalRoundCount,
-    answerState: response.answerState,
-    hintsUsed: response.hintsUsed ?? 0,
-    points: response.points ?? roundPoints(response.answerState, 0, 0),
-    guesses: Array.isArray(response.guesses) ? response.guesses : [],
-    hintsTakenAt: Array.isArray(response.hintsTakenAt) ? response.hintsTakenAt : [],
-    gameResult: {
-      gameState: result.gameState,
-      score: Array.isArray(serverPoints) ? result.score : points.reduce((sum, p) => sum + p, 0),
-      maxScore: result.maxScore ?? MAX_ROUND_POINTS * response.totalRoundCount,
-      roundsCorrect: result.roundsCorrect ?? states.filter((s) => s === CORRECT_ANSWER).length,
-      perfectRounds: result.perfectRounds ?? states.filter((s, i) => isPerfect(s, hintsUsed[i] ?? 0)).length,
-      roundAnswerStates: states,
-      roundPoints: points,
-      roundHintsUsed: hintsUsed,
-    },
+    gameState: result.gameState,
+    score: result.score,
+    maxScore: result.maxScore,
+    roundsCorrect: result.roundsCorrect,
+    perfectRounds: result.perfectRounds,
+    roundAnswerStates: result.roundAnswerStates,
+    roundPoints: result.roundPoints,
+    roundHintsUsed: result.roundHintsUsed,
   };
 }
 
-// Older backends don't send roundAnswerStates; fall back to what this response tells us.
-function roundAnswerStates(response: GameRoundResponse, round: number): AnswerState[] {
-  if (Array.isArray(response.gameResult?.roundAnswerStates)) {
-    return response.gameResult.roundAnswerStates;
-  }
-  const states: AnswerState[] = Array(response.totalRoundCount).fill(UNANSWERED);
-  states[round] = response.answerState;
-  return states;
+export function toRoundView(response: GameRoundResponse): GameRoundView {
+  return {
+    gameType: response.gameType,
+    data: JSON.parse(response.jsonBlob),
+    totalRoundCount: response.totalRoundCount,
+    answerState: response.answerState,
+    hintsUsed: response.hintsUsed,
+    points: response.points,
+    guesses: response.guesses,
+    hintsTakenAt: response.hintsTakenAt,
+    gameResult: toGameResultView(response.gameResult),
+  };
 }
 
 export async function fetchRound(gameId: string, round: number): Promise<GameRoundView> {
   const response = await fetchJson<GameRoundResponse>(roundUrl(gameId, round), `load round ${round}`);
-  return toRoundView(response, round);
+  return toRoundView(response);
 }
 
 export function roundQuery(gameId: string, round: number) {
@@ -77,7 +59,7 @@ export function roundQuery(gameId: string, round: number) {
     queryKey: queryKeys.round(gameId, round),
     queryFn: () => fetchRound(gameId, round),
     // Round data only changes when this client answers, and an answer patches the cached rounds (see
-    // useSubmitAnswer); only a failed answer refetches them.
+    // useSubmitAnswer); a failed answer, guess or hint refetches the game.
     staleTime: Infinity,
   };
 }
@@ -86,46 +68,12 @@ export function useRound(gameId: string, round: number) {
   return useQuery(roundQuery(gameId, round));
 }
 
-/** The answer response with every field the cache patch needs. A current backend always sends them all. */
-export type CompleteAnswerResponse = RoundAnswerResponse & {
-  hintsUsed: number;
-  points: number;
-  gameResult: GameResultResponse &
-    Required<
-      Pick<
-        GameResultResponse,
-        "maxScore" | "roundsCorrect" | "perfectRounds" | "roundAnswerStates" | "roundPoints" | "roundHintsUsed"
-      >
-    >;
-};
-
-/** Whether an answer response can be patched into the cache; an older backend or `{}` can't, and the game is refetched. */
-export function isCompleteAnswerResponse(response: unknown): response is CompleteAnswerResponse {
-  if (typeof response !== "object" || response === null) return false;
-  const r = response as Record<string, unknown>;
-  const result = r.gameResult;
-  if (typeof result !== "object" || result === null) return false;
-  const g = result as Record<string, unknown>;
-  return (
-    typeof r.answerState === "string" &&
-    typeof r.hintsUsed === "number" &&
-    typeof r.points === "number" &&
-    typeof g.score === "number" &&
-    typeof g.maxScore === "number" &&
-    typeof g.roundsCorrect === "number" &&
-    typeof g.perfectRounds === "number" &&
-    Array.isArray(g.roundAnswerStates) &&
-    Array.isArray(g.roundPoints) &&
-    Array.isArray(g.roundHintsUsed)
-  );
-}
-
 /**
  * `totalRoundCount` is known once the round has loaded; it decides whether there is a next round to prefetch.
  *
  * The answer's response carries the answered round's state and the whole game's result, and no round data. They
- * are patched into the cached rounds, so nothing is refetched. If the response isn't complete (an older backend),
- * or the server refused the answer (a round's answer is final), the cache is wrong and the game's rounds are refetched.
+ * are patched into the cached rounds, so nothing is refetched. If the server refused the answer (a round's answer
+ * is final), the cache is wrong and the game's rounds are refetched.
  */
 export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?: number) {
   const queryClient = useQueryClient();
@@ -134,14 +82,10 @@ export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?:
     scope: roundWritesScope(gameId),
     mutationFn: (answer: RoundAnswer) =>
       postJson<RoundAnswerResponse>(roundUrl(gameId, round) + "/answers", "submit answer", answer),
-    // Returning the promise keeps the mutation pending until the refetch or prefetch is done.
+    // Returning the promise keeps the mutation pending until the refetch (onError) or the prefetch (onSuccess) is done.
     onError: invalidateGame,
     onSuccess: async (response) => {
-      if (isCompleteAnswerResponse(response)) {
-        patchRounds(queryClient, gameId, round, response);
-      } else {
-        await invalidateGame();
-      }
+      patchRounds(queryClient, gameId, round, response);
       // Only now, so the next round's score isn't already out of date.
       if (totalRoundCount !== undefined && round + 1 < totalRoundCount) {
         await queryClient.prefetchQuery(roundQuery(gameId, round + 1));
@@ -164,7 +108,6 @@ export function useRecordGuess(gameId: string, round: number) {
         correct: guess.correct,
       }),
     onSuccess: (response) => {
-      if (!Array.isArray(response?.guesses)) return;
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
         (old) => old && { ...old, guesses: response.guesses },
@@ -185,7 +128,6 @@ export function useRecordHint(gameId: string, round: number) {
     mutationFn: (hint: { hint: number; guessesBefore: number }) =>
       postJson<RoundHintsResponse>(roundUrl(gameId, round) + "/hints", "save hint", hint),
     onSuccess: (response) => {
-      if (!Array.isArray(response?.hintsTakenAt)) return;
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
         (old) => old && { ...old, hintsTakenAt: response.hintsTakenAt },
@@ -195,18 +137,8 @@ export function useRecordHint(gameId: string, round: number) {
   });
 }
 
-function patchRounds(queryClient: QueryClient, gameId: string, round: number, response: CompleteAnswerResponse) {
-  const result = response.gameResult;
-  const gameResult: GameRoundView["gameResult"] = {
-    gameState: result.gameState,
-    score: result.score,
-    maxScore: result.maxScore,
-    roundsCorrect: result.roundsCorrect,
-    perfectRounds: result.perfectRounds,
-    roundAnswerStates: result.roundAnswerStates,
-    roundPoints: result.roundPoints,
-    roundHintsUsed: result.roundHintsUsed,
-  };
+function patchRounds(queryClient: QueryClient, gameId: string, round: number, response: RoundAnswerResponse) {
+  const gameResult = toGameResultView(response.gameResult);
   // Every round of the game carries the whole game's result. Only round queries live under the game's key.
   queryClient.setQueriesData<GameRoundView>(
     { queryKey: queryKeys.game(gameId) },

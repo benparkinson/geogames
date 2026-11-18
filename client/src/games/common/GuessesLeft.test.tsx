@@ -36,10 +36,4 @@ describe("GuessesLeft", () => {
     expect(screen.getByText("11 guesses left")).toBeInTheDocument();
     expect(container.querySelectorAll("svg")).toHaveLength(0);
   });
-
-  it("renders nothing without a limit", () => {
-    const { container } = render(<GuessesLeft left={Infinity} limit={Infinity} />);
-
-    expect(container).toBeEmptyDOMElement();
-  });
 });
