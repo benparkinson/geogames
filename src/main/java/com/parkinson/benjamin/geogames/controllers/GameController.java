@@ -36,7 +36,8 @@ public class GameController {
   @PostMapping("/games")
   public ResponseEntity<GameCreationResponse> createGame(@RequestBody GameCreationRequest request) {
 
-    return ResponseEntity.ok(gameService.createGame(request.gameType(), request.numberOfRounds()));
+    return ResponseEntity.ok(
+        gameService.createGame(request.gameType(), request.numberOfRounds(), request.hardMode()));
   }
 
   @GetMapping("/games/{gameId}/rounds/{round}")

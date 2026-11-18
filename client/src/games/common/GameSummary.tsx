@@ -39,7 +39,7 @@ export default function GameSummary({
 
   const all = results.flatMap((r) => (r.data ? [r.data] : []));
   // Called before the early return below: a hook can't be skipped.
-  const share = useDailyShareText(daily, all[0]?.gameResult);
+  const share = useDailyShareText(daily, all[0]);
 
   if (all.length < totalRoundCount) {
     return <LoadingSpinner fullPage className="page-bg" />;
@@ -55,6 +55,8 @@ export default function GameSummary({
     withHints > 0 && `${withHints} with hints`,
     revealed > 0 && `${revealed} revealed`,
   ].filter(Boolean);
+  const outcomes = breakdown.length > 0 ? breakdown : ["0 perfect"];
+  const summaryLine = [...outcomes, ...(all[0].hardMode ? ["Hard mode"] : [])].join(" · ");
   const gameType = playAgainType(all);
   // A game of one type names it once at the top; a mixed game (the daily or Mixed) names each round's type.
   const mixed = gameType === RANDOM_OPTION.type;
@@ -72,7 +74,7 @@ export default function GameSummary({
           `You scored ${score} / ${maxScore}`
         )}
       </h1>
-      <p className="gg-text-muted mb-3">{breakdown.length > 0 ? breakdown.join(" · ") : "0 perfect"}</p>
+      <p className="gg-text-muted mb-3">{summaryLine}</p>
 
       <div className="gg-list mb-3">
         {all.map((r, i) => (
@@ -92,11 +94,19 @@ export default function GameSummary({
       )}
       <div className="d-flex gap-2">
         {daily ? (
-          <Button variant="secondary" onClick={() => createGame(RANDOM_OPTION.type, 5)} disabled={creating}>
+          <Button
+            variant="secondary"
+            onClick={() => createGame(RANDOM_OPTION.type, 5, all[0].hardMode)}
+            disabled={creating}
+          >
             {creating ? <Spinner size="sm" /> : "Play a Mixed game"}
           </Button>
         ) : (
-          <Button variant="primary" onClick={() => createGame(gameType, totalRoundCount)} disabled={creating}>
+          <Button
+            variant="primary"
+            onClick={() => createGame(gameType, totalRoundCount, all[0].hardMode)}
+            disabled={creating}
+          >
             {creating ? <Spinner size="sm" /> : "Play again"}
           </Button>
         )}

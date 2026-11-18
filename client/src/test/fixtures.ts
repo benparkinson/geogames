@@ -30,6 +30,7 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     hintCount: 3,
     guessLimit: 5,
     hasClues: false,
+    hardMode: false,
     hintsUsed: 0,
     guesses: [],
     hintsTakenAt: [],
@@ -263,6 +264,7 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     points: 0,
     guesses: [],
     hintsTakenAt: [],
+    hardMode: false,
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,

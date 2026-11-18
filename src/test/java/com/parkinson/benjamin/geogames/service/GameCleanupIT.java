@@ -33,7 +33,7 @@ class GameCleanupIT {
   private GameEntity game(String key) {
     List<GameRoundEntity> rounds = new ArrayList<>();
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
-    return new GameEntity(rounds, "TRIPOINT");
+    return new GameEntity(rounds, "TRIPOINT", null);
   }
 
   @Test
