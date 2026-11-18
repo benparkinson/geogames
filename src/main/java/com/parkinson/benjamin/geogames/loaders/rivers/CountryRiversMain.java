@@ -10,6 +10,7 @@ import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoJsonCoordinates;
 import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.loaders.lakes.LakeGeometry;
 import com.parkinson.benjamin.geogames.loaders.rivers.RiverClipper.Run;
@@ -123,7 +124,7 @@ public class CountryRiversMain {
       JsonNode props = feature.path("properties");
       int scalerank = props.path("scalerank").asInt(99);
       int rivernum = props.path("rivernum").asInt(-1);
-      for (List<double[]> line : lines(feature.path("geometry"))) {
+      for (List<double[]> line : GeoJsonCoordinates.lines(feature.path("geometry"))) {
         kmByScalerank.merge(scalerank, Geo.lineKm(line), Double::sum);
         clipper
             .clip(scalerank, rivernum, line)
@@ -136,7 +137,7 @@ public class CountryRiversMain {
     // Lakes, whole, given to every country on their shore.
     Map<String, List<Lake>> lakesByCountry = new TreeMap<>();
     for (JsonNode feature : GeoJson.readTree(lakesFile).path("features")) {
-      List<List<List<double[]>>> raw = polygons(feature.path("geometry"));
+      List<List<List<double[]>>> raw = GeoJsonCoordinates.polygons(feature.path("geometry"));
       if (raw.isEmpty() || LakeGeometry.areaKm2(raw) < MIN_LAKE_KM2) {
         continue;
       }
@@ -331,50 +332,6 @@ public class CountryRiversMain {
       }
     }
     return GeoData.feature(name, new GeoGeometry("MultiPolygon", polygons));
-  }
-
-  // ---- reading ----
-
-  private static List<List<double[]>> lines(JsonNode geometry) {
-    List<List<double[]>> lines = new ArrayList<>();
-    String type = geometry.path("type").asString("");
-    if (type.equals("LineString")) {
-      lines.add(points(geometry.path("coordinates")));
-    } else if (type.equals("MultiLineString")) {
-      for (JsonNode line : geometry.path("coordinates")) {
-        lines.add(points(line));
-      }
-    }
-    return lines;
-  }
-
-  private static List<List<List<double[]>>> polygons(JsonNode geometry) {
-    List<List<List<double[]>>> polygons = new ArrayList<>();
-    String type = geometry.path("type").asString("");
-    if (type.equals("Polygon")) {
-      polygons.add(rings(geometry.path("coordinates")));
-    } else if (type.equals("MultiPolygon")) {
-      for (JsonNode polygon : geometry.path("coordinates")) {
-        polygons.add(rings(polygon));
-      }
-    }
-    return polygons;
-  }
-
-  private static List<List<double[]>> rings(JsonNode rings) {
-    List<List<double[]>> result = new ArrayList<>();
-    for (JsonNode ring : rings) {
-      result.add(points(ring));
-    }
-    return result;
-  }
-
-  private static List<double[]> points(JsonNode line) {
-    List<double[]> points = new ArrayList<>();
-    for (JsonNode p : line) {
-      points.add(new double[] {p.get(0).asDouble(), p.get(1).asDouble()});
-    }
-    return points;
   }
 
   // ---- summary ----

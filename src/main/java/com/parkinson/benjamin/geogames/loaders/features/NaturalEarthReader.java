@@ -41,16 +41,16 @@ public class NaturalEarthReader {
       JsonNode geometry = feature.path("geometry");
       String type = text(geometry.path("type"));
       if (type.equals("LineString")) {
-        parts.add(line(geometry.path("coordinates")));
+        parts.add(GeoJsonCoordinates.points(geometry.path("coordinates")));
       } else if (type.equals("MultiLineString")) {
         for (JsonNode part : geometry.path("coordinates")) {
-          parts.add(line(part));
+          parts.add(GeoJsonCoordinates.points(part));
         }
       } else if (type.equals("Polygon")) {
-        shapes.add(polygon(geometry.path("coordinates")));
+        shapes.add(GeoJsonCoordinates.rings(geometry.path("coordinates")));
       } else if (type.equals("MultiPolygon")) {
         for (JsonNode shape : geometry.path("coordinates")) {
-          shapes.add(polygon(shape));
+          shapes.add(GeoJsonCoordinates.rings(shape));
         }
       }
       names.merge(qid, text(props.path("name")), (old, neu) -> old.isEmpty() ? neu : old);
@@ -65,22 +65,6 @@ public class NaturalEarthReader {
                 new NaturalEarthFeature(
                     qid, names.get(qid), namesEn.get(qid), parts, polygons.get(qid))));
     return result;
-  }
-
-  private static List<List<double[]>> polygon(JsonNode rings) {
-    List<List<double[]>> result = new ArrayList<>();
-    for (JsonNode ring : rings) {
-      result.add(line(ring));
-    }
-    return result;
-  }
-
-  private static List<double[]> line(JsonNode coordinates) {
-    List<double[]> points = new ArrayList<>();
-    for (JsonNode c : coordinates) {
-      points.add(new double[] {c.get(0).asDouble(), c.get(1).asDouble()});
-    }
-    return points;
   }
 
   private static String text(JsonNode node) {
