@@ -19,7 +19,6 @@ export default function TripointGame(props: GameComponentProps<TripointModel>): 
       MapComponent={TripointMapWrapper}
       answers={props.data.countries}
       prompt={`Which ${props.answerCount} countries meet at this flag?`}
-      mapKey="The flag marks a tripoint, the spot where their borders meet."
       hints={{ description: "Shows the outline of a country you haven't named yet" }}
     />
   );

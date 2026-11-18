@@ -15,7 +15,6 @@ export default defineGame({
     MapComponent: RiverShapesMapWrapper,
     prompt: "Which river is this?",
     blankMap: true,
-    mapKey: "The line is the river's course, with no map behind it.",
     hints: (river) => textHints(river, continentHint, countryCountHint, firstLetterHint),
   }),
   answerNames: (round) => [round.river.name],

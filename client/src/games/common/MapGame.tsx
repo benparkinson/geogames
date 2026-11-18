@@ -28,7 +28,6 @@ function MapGame<Type>({
   inputPlaceholder,
   answerNoun,
   blankMap,
-  mapKey,
   suggestions,
   isKnownGuess,
   hints,
@@ -66,12 +65,7 @@ function MapGame<Type>({
 
   const panel = (
     <>
-      <RoundBrief
-        title={round.kind.title}
-        Icon={round.kind.Icon}
-        question={prompt}
-        mapKey={gameOver ? undefined : mapKey}
-      />
+      <RoundBrief title={round.kind.title} Icon={round.kind.Icon} question={prompt} />
       {hintTexts.length > 0 && (
         <ul className="round-hints">
           {hintTexts.map((text, index) => (
@@ -89,13 +83,16 @@ function MapGame<Type>({
       />
       <div>
         {gameOver ? (
-          <RoundResult
-            gaveUp={gaveUp}
-            outOfGuesses={outOfGuesses}
-            round={round}
-            hintsUsed={hintsUsed}
-            hintCount={round.hintCount}
-          />
+          <>
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
+            <RoundResult
+              gaveUp={gaveUp}
+              outOfGuesses={outOfGuesses}
+              round={round}
+              hintsUsed={hintsUsed}
+              hintCount={round.hintCount}
+            />
+          </>
         ) : (
           <>
             <RoundStatus
@@ -103,12 +100,11 @@ function MapGame<Type>({
               guessLimit={round.guessLimit}
               points={roundPoints(CORRECT_ANSWER, hintsUsed, round.hintCount)}
             />
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
             <GuessForm
               submitGuess={submitGuess}
               inputPlaceholder={inputPlaceholder}
               answerNoun={answerNoun}
-              answerCount={answerCount}
-              showClues={!hardMode}
               suggestions={suggestions}
             />
             <RoundActions
@@ -120,7 +116,6 @@ function MapGame<Type>({
             />
           </>
         )}
-        {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
       </div>
       {clueFor && !gameOver && (
         <div className="round-settings">
@@ -161,8 +156,6 @@ export interface MapGameProps<Type> {
   answerNoun: string;
   /** Shows a grey map instead of the real one while the round is being played. */
   blankMap?: boolean;
-  /** What the marks on the map are, shown in the round brief until the round ends. */
-  mapKey: string;
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   /** What the round's hints say. The round's `hintCount` (from the backend) says how many there are. */

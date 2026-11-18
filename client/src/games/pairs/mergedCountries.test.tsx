@@ -33,13 +33,10 @@ describe("Merged Countries", () => {
     expect(mergedCountries.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
   });
 
-  it("shows the prompt and the map key", () => {
+  it("shows the prompt", () => {
     renderGame();
 
     expect(screen.getByText("Which two neighbouring countries make this shape?")).toBeInTheDocument();
-    expect(
-      screen.getByText("They are filled in as one shape. The border between them isn't drawn at first."),
-    ).toBeInTheDocument();
   });
 
   it("offers three hints: the surroundings and the border on the map, then both first letters", async () => {

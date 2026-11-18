@@ -16,7 +16,6 @@ export default defineGame({
   Component: makeCountryGame<CountryCitiesRound>({
     MapComponent: CountryCitiesMapWrapper,
     prompt: "Which country has these cities?",
-    mapKey: "Each dot is one of its cities. Bigger dots have more people.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(

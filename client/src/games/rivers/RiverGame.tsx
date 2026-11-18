@@ -12,7 +12,6 @@ export interface RiverVariant {
   /** Show a grey map instead of the real one while playing. */
   blankMap?: boolean;
   /** What the marks on the map are. */
-  mapKey: string;
   hints: (river: River) => HintConfig;
 }
 
@@ -26,7 +25,6 @@ export function makeRiverGame(variant: RiverVariant) {
         MapComponent={variant.MapComponent}
         answers={[game.data.river]}
         blankMap={variant.blankMap}
-        mapKey={variant.mapKey}
         prompt={variant.prompt}
         hints={variant.hints(game.data.river)}
       />

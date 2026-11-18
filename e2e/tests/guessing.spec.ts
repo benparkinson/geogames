@@ -15,9 +15,8 @@ test("an unknown name is rejected without using a guess, a wrong country uses on
   const answerNames = new Set(answers.flatMap(a => [a.name, ...a.additionalNames]).map(n => n.toLowerCase()));
   const wrong = (await api.countries()).map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()));
   await guess(page, wrong!);
-  await expect(page.getByText(`Not ${wrong}.`)).toBeVisible();
+  await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
   await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
-  await expect(page.getByText("Wrong guesses")).toBeVisible();
 });
 
 test("an alias of an answer is accepted as that answer", async ({ page, api }) => {
@@ -57,9 +56,7 @@ test("a wrong country in a country game says how far and which way the answer is
 
   await guess(page, await wrongCountry(api, id));
 
-  await expect(
-    page.getByText(/^Not .+ · [\d,]+ km (north|south|east|west)/),
-  ).toBeVisible();
+  await expect(page.locator(".guess-chip").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
 });
 
 test("Hard mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
@@ -72,8 +69,8 @@ test("Hard mode, switched on from the home page, hides the distance clues", asyn
   const wrong = await wrongCountry(api, id);
   await guess(page, wrong);
 
-  await expect(page.getByText(`Not ${wrong}.`)).toBeVisible();
-  await expect(page.locator(".guess-feedback")).not.toContainText("km");
+  await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
+  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
 });
 
 test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicate", async ({ page, api }) => {
@@ -94,7 +91,6 @@ test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicat
 
   await expect(answerBox(page)).toBeVisible();
   await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
-  await expect(page.getByText("Wrong guesses")).toBeVisible();
   await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
 
   await guess(page, wrong!);

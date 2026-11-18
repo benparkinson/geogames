@@ -15,7 +15,6 @@ export default defineGame({
   Component: makePairGame({
     MapComponent: MergedCountriesMapWrapper,
     prompt: "Which two neighbouring countries make this shape?",
-    mapKey: () => "They are filled in as one shape. The border between them isn't drawn at first.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(
