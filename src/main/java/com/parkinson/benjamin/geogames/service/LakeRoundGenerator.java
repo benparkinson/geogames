@@ -1,13 +1,12 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.helper.RandomPicker;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.LakeRound;
+import com.parkinson.benjamin.geogames.model.SubjectIds;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,46 +14,32 @@ import org.springframework.stereotype.Service;
  * into a parameterised class registered as several beans, as the rivers did.
  */
 @Service
-public class LakeRoundGenerator implements RoundGenerator {
-
-  private static final String PREFIX = "lake:";
+public class LakeRoundGenerator extends SubjectRoundGenerator<Lake> {
 
   private final LakeLoaderService lakeLoaderService;
 
   public LakeRoundGenerator(LakeLoaderService lakeLoaderService) {
+    super(GameType.LAKES_BY_SHAPE, SubjectIds.LAKE, "lakes");
     this.lakeLoaderService = lakeLoaderService;
   }
 
   @Override
-  public GameType gameType() {
-    return GameType.LAKES_BY_SHAPE;
+  List<Lake> candidates() {
+    return lakeLoaderService.loadLakes();
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
-    List<Lake> candidates =
-        lakeLoaderService.loadLakes().stream()
-            .filter(lake -> !excludedSubjects.contains("lake:" + lake.id()))
-            .toList();
-    return RandomPicker.pickDistinct(candidates, count, random, "lakes").stream()
-        .<GameData>map(this::toRound)
-        .toList();
+  String id(Lake lake) {
+    return lake.id();
   }
 
   @Override
-  public GameData rebuild(String roundKey) {
-    if (!roundKey.startsWith(PREFIX)) {
-      throw new RoundDataMissingException(gameType(), roundKey);
-    }
-    String id = roundKey.substring(PREFIX.length());
-    return lakeLoaderService.loadLakes().stream()
-        .filter(lake -> lake.id().equals(id))
-        .findFirst()
-        .map(this::toRound)
-        .orElseThrow(() -> new RoundDataMissingException(gameType(), roundKey));
+  Optional<Lake> find(String id) {
+    return lakeLoaderService.loadLakes().stream().filter(lake -> lake.id().equals(id)).findFirst();
   }
 
-  private LakeRound toRound(Lake lake) {
+  @Override
+  GameData toRound(Lake lake) {
     return new LakeRound(GameType.LAKES_BY_SHAPE, lake);
   }
 }
