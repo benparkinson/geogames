@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MapGameInput from "./MapGameInput";
 import { Round, RoundAnswer, UNANSWERED } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
@@ -41,7 +41,25 @@ function MapGame<Type>({
   };
   // Rebuilt from the guesses and hints the server saved, so a refresh keeps them.
   const [restored] = useState(() => restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config));
-  const [guessState, setGuessState] = useState<GuessState>(restored.state);
+  const [savedGuessState, setGuessState] = useState<GuessState>(restored.state);
+  // The country list that the clues come from may load after the round was restored. Clues are computed, never
+  // saved, so once it has loaded, work out the ones the restored guesses missed (a refresh must show them too).
+  const lateClues = useMemo(
+    () => (clueFor ? restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state.guesses : []),
+    // The config is rebuilt every render; only the clues becoming available matters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [clueFor],
+  );
+  const guessState = useMemo<GuessState>(() => {
+    if (!savedGuessState.guesses.some(g => g.answer === null && !g.clue)) {
+      return savedGuessState;
+    }
+    const guesses = savedGuessState.guesses.map(g => {
+      const clue = g.answer === null && !g.clue ? lateClues.find(w => w.text === g.text)?.clue : undefined;
+      return clue ? { ...g, clue } : g;
+    });
+    return { ...savedGuessState, guesses };
+  }, [savedGuessState, lateClues]);
   const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
 
   // The guesses ended the round but the answer request after the last guess was lost: send it again, once.
