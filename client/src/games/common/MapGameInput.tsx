@@ -3,7 +3,7 @@ import { CORRECT_ANSWER, Round } from "./Model";
 import { roundPoints } from "./scoring";
 import RoundResult from "./RoundResult";
 import RoundStatus from "./RoundStatus";
-import { HintConfig } from "./MapGame";
+import type { HintConfig } from "./hints";
 import { Guess, GuessClue, GuessResult } from "./guessReducer";
 import { compassPoint, formatKm } from "./distance";
 import { Button, Chip } from "../../ui";

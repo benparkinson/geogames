@@ -2,7 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
-import MapGame, { HintConfig } from "./MapGame";
+import MapGame from "./MapGame";
+import type { HintConfig } from "./hints";
 
 const ANSWERS = [
   { name: "France", additionalNames: [] },

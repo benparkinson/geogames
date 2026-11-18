@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
-import MapGame, { type HintConfig } from "../common/MapGame";
+import MapGame from "../common/MapGame";
+import type { HintConfig } from "../common/hints";
 import { useCountryClues } from "../common/useCountryClues";
 import { useGuessList } from "../common/useGuessList";
 import type { MapProps } from "../../map/MapProps";

@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
-import { HintConfig } from "./MapGame";
+import type { HintConfig } from "./hints";
 import { GuessResult } from "./guessReducer";
 import MapGameInput from "./MapGameInput";
 
