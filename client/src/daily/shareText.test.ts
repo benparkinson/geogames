@@ -10,11 +10,11 @@ describe("shareText", () => {
     );
   });
 
-  it("marks Hardcore only when it was on throughout", () => {
+  it("marks Hard mode only when it was on throughout", () => {
     const on = shareText({ number: 3, hardcore: true, result: { ...result, rounds: [...result.rounds] } }, "http://localhost:8080");
     const off = shareText({ number: 3, hardcore: false, result: { ...result, rounds: [...result.rounds] } }, "http://localhost:8080");
 
-    expect(on.split("\n")[0]).toBe("GeoGauntlet Daily #3 · Hardcore");
+    expect(on.split("\n")[0]).toBe("GeoGauntlet Daily #3 · Hard mode");
     expect(off.split("\n")[0]).toBe("GeoGauntlet Daily #3");
     expect(on.split("\n").slice(1)).toEqual(off.split("\n").slice(1));
   });

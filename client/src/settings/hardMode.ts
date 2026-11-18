@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 
+// Stored name kept from when this was called Hardcore mode.
 const KEY = "gg-hardcore";
 const CHANGE_EVENT = "gg-hardcore-change";
 
@@ -38,10 +39,10 @@ function subscribe(onChange: () => void): () => void {
 }
 
 /**
- * Hardcore mode: no distance or direction clues after a wrong guess. It only hides the clues, so
+ * Hard mode: no distance or direction clues after a wrong guess. It only hides the clues, so
  * scoring and the server are unaffected. Off by default, and kept in this browser's localStorage.
  */
-export function useHardcoreMode(): [boolean, (on: boolean) => void] {
+export function useHardMode(): [boolean, (on: boolean) => void] {
   const hardcore = useSyncExternalStore(subscribe, read, () => false);
   return [hardcore, write];
 }

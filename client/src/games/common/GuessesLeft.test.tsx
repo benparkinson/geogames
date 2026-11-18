@@ -15,7 +15,7 @@ describe("GuessesLeft", () => {
     render(<GuessesLeft left={1} limit={5} />);
 
     expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
-    expect(screen.getByText("1 guess left")).toHaveClass("gg-text-warning");
+    expect(screen.getByText("Last guess!")).toHaveClass("gg-text-warning");
   });
 
   it("says 0 guesses left", () => {

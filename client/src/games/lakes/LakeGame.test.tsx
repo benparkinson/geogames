@@ -67,7 +67,7 @@ describe("LakeGame", () => {
 
     await userEvent.setup().type(input(), "Lake Victoria{Enter}");
 
-    expect(screen.getByText(`"Lake Victoria" isn't right. 4 guesses left.`)).toBeInTheDocument();
+    expect(screen.getByText("Not Lake Victoria.")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 

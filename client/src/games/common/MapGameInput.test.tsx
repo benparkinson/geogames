@@ -66,14 +66,14 @@ describe("MapGameInput feedback", () => {
   it("says when a guess is wrong and clears the text", async () => {
     await submitting({ kind: "wrong", guess: "Spain", guessesLeft: 2 });
 
-    expect(screen.getByText('"Spain" isn\'t right. 2 guesses left.')).toBeInTheDocument();
+    expect(screen.getByText("Not Spain.")).toBeInTheDocument();
     expect(input()).toHaveValue("");
   });
 
   it("adds the distance and direction to a wrong guess, for one answer", async () => {
     await submitting({ kind: "wrong", guess: "France", guessesLeft: 4, clue: { km: 1236, bearing: 45 } });
 
-    expect(screen.getByText("\"France\" isn't right. The answer is 1,240 km to the north-east. 4 guesses left.")).toBeInTheDocument();
+    expect(screen.getByText("Not France · 1,240 km north-east")).toBeInTheDocument();
   });
 
   it("says the nearest country you still need when there are several answers", async () => {
@@ -85,12 +85,10 @@ describe("MapGameInput feedback", () => {
     await user.type(input(), "France");
     await user.click(screen.getByRole("button", { name: "Guess" }));
 
-    expect(
-      screen.getByText("\"France\" isn't right. The nearest country you still need is 480 km to the north. Last guess!"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Not France · nearest 480 km north")).toBeInTheDocument();
   });
 
-  it("keeps the old sentence when clues are off", async () => {
+  it("leaves out the clue when clues are off", async () => {
     const user = userEvent.setup();
     renderInput({
       showClues: false,
@@ -99,14 +97,16 @@ describe("MapGameInput feedback", () => {
     await user.type(input(), "France");
     await user.click(screen.getByRole("button", { name: "Guess" }));
 
-    expect(screen.getByText("\"France\" isn't right. 4 guesses left.")).toBeInTheDocument();
+    expect(screen.getByText("Not France.")).toBeInTheDocument();
   });
 
   it("shows the distance and a hidden direction on the wrong-guess chip, unless clues are off", () => {
     const wrong = [{ text: "France", answer: null, clue: { km: 1236, bearing: 90 } }];
     const view = renderInput({ wrongGuesses: wrong });
 
-    expect(screen.getByText(/1,240 km/, { selector: ".gg-chip" })).toBeInTheDocument();
+    const chip = screen.getByText("France", { selector: ".gg-chip" });
+    expect(chip).not.toHaveClass("gg-chip--strike");
+    expect(chip).toHaveTextContent(/1,240 km/);
     expect(screen.getByText("1,240 km east")).toHaveClass("gg-visually-hidden");
 
     view.unmount();
@@ -115,22 +115,43 @@ describe("MapGameInput feedback", () => {
   });
 
   it("says when it was the next to last guess", async () => {
-    await submitting({ kind: "wrong", guess: "Spain", guessesLeft: 1 });
+    const user = userEvent.setup();
+    renderInput({ guessesLeft: 1, submitGuess: vi.fn(() => ({ kind: "wrong" as const, guess: "Spain", guessesLeft: 1 })) });
+    await user.type(input(), "Spain");
+    await user.click(screen.getByRole("button", { name: "Guess" }));
 
-    expect(screen.getByText('"Spain" isn\'t right. Last guess!')).toBeInTheDocument();
+    expect(screen.getByText("Not Spain.")).toBeInTheDocument();
+    expect(screen.getByText("Last guess!")).toBeInTheDocument();
   });
 
   it("leaves out the count when there is no limit", async () => {
     await submitting({ kind: "wrong", guess: "Spain", guessesLeft: Infinity });
 
-    expect(screen.getByText('"Spain" isn\'t right. Try again.')).toBeInTheDocument();
+    expect(screen.getByText("Not Spain.")).toBeInTheDocument();
   });
 
-  it("says when the guesses have run out and clears the text", async () => {
-    await submitting({ kind: "outOfGuesses", guess: "Spain" });
+  it("clears the text when the guesses have run out, and leaves the saying to RoundResult", async () => {
+    const { container } = await submitting({ kind: "outOfGuesses", guess: "Spain" });
 
-    expect(screen.getByText('"Spain" isn\'t right. You\'re out of guesses.')).toBeInTheDocument();
+    expect(container.querySelector(".guess-feedback")).toBeEmptyDOMElement();
     expect(input()).toHaveValue("");
+  });
+
+  it("shows the guesses left and the value together in the status row, not in the button row", () => {
+    const { container } = renderInput({ guessesLeft: 3 });
+
+    const row = container.querySelector(".round-status") as HTMLElement;
+    expect(row).toContainElement(screen.getByRole("status", { name: "3 guesses left" }));
+    expect(row).toHaveTextContent(/Worth \d+ pts/);
+    const reveal = screen.getByRole("button", { name: /Reveal answer/ });
+    expect(reveal.parentElement).not.toHaveTextContent("Worth");
+  });
+
+  it("has no status row or feedback line once the round is over", () => {
+    const { container } = renderInput({ gameOver: true });
+
+    expect(container.querySelector(".round-status")).toBeNull();
+    expect(container.querySelector(".guess-feedback")).toBeNull();
   });
 
   it("counts the answers still to find after a correct guess", async () => {

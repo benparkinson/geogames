@@ -8,8 +8,8 @@ import HomeLink from "../components/HomeLink";
 import ThemeToggle from "../components/ThemeToggle";
 import SiteFooter from "../components/SiteFooter";
 import LoadingSpinner from "../components/LoadingSpinner";
-import HardcoreToggle from "../components/HardcoreToggle";
-import { useHardcoreMode } from "../settings/hardcoreMode";
+import HardModeToggle from "../components/HardModeToggle";
+import { useHardMode } from "../settings/hardMode";
 import { Button, Notice, Spinner } from "../ui";
 import ShareButton from "./ShareButton";
 import { clearDaily, DailyEntry, entryFor, readDaily, useDailyEntry, writeDaily } from "./dailyStorage";
@@ -32,7 +32,7 @@ function Shell({ children }: { children: React.ReactNode }): React.JSX.Element {
 
 function Intro(): React.JSX.Element {
   const { mutate, isPending, error } = useCreateDailyGame();
-  const [hardcore] = useHardcoreMode();
+  const [hardMode] = useHardMode();
   const [slow, setSlow] = useState(false);
 
   // Start waking a cold server while the player reads.
@@ -57,7 +57,7 @@ function Intro(): React.JSX.Element {
     if (entryFor(readDaily(), date)) return;
     mutate(date, {
       onSuccess: game => {
-        writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore });
+        writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore: hardMode });
       },
     });
   }
@@ -66,7 +66,7 @@ function Intro(): React.JSX.Element {
     <Shell>
       <h1 className="h3 mb-1">Daily challenge</h1>
       <p className="mb-3">Five rounds, one of each kind, the same for everyone today.</p>
-      <div className="mb-3"><HardcoreToggle /></div>
+      <div className="mb-3"><HardModeToggle /></div>
       <Button variant="primary" onClick={play} disabled={isPending}>
         {isPending ? <><Spinner size="sm" decorative /> Starting…</> : "Play today's challenge"}
       </Button>
@@ -94,12 +94,12 @@ function Finished({ entry, onOpenGame }: { entry: DailyEntry & { result: NonNull
 }
 
 /**
- * Shows the player's game and keeps their entry up to date: the result once the game is finished, Hardcore
+ * Shows the player's game and keeps their entry up to date: the result once the game is finished, Hard mode
  * turned off for good if it ever is, and no entry if the server has deleted the game.
  */
 function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void }): React.JSX.Element {
   const first = useRound(entry.gameId, 0);
-  const [hardcore] = useHardcoreMode();
+  const [hardMode] = useHardMode();
   const finished = first.data?.gameResult.gameState === FINISHED;
   const gone = first.error instanceof Error && first.error.message.endsWith("(404)");
   const hasResult = entry.result !== undefined;
@@ -113,11 +113,11 @@ function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void
   }, [finished, hasResult, result, entry, onFinished]);
 
   useEffect(() => {
-    // Only a game played in Hardcore throughout earns the marker.
-    if (!hardcore && entry.hardcore && !hasResult) {
+    // Only a game played in Hard mode throughout earns the marker.
+    if (!hardMode && entry.hardcore && !hasResult) {
       writeDaily({ ...entry, hardcore: false });
     }
-  }, [hardcore, entry, hasResult]);
+  }, [hardMode, entry, hasResult]);
 
   useEffect(() => {
     // The game is deleted about a day after it is made. A finished entry keeps its result for sharing.

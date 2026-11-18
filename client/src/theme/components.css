@@ -159,7 +159,6 @@
 .gg-chip--correct { --gg-chip-bg: var(--gg-color-correct); --gg-chip-fg: var(--gg-color-on-correct); }
 .gg-chip--revealed { --gg-chip-bg: var(--gg-color-revealed); --gg-chip-fg: var(--gg-color-on-revealed); }
 .gg-chip--neutral { --gg-chip-border: var(--gg-color-border); }
-.gg-chip--strike { text-decoration: line-through; }
 .answer-slot-empty { border: 2px dashed var(--gg-color-border); border-radius: var(--gg-radius-pill); }
 
 /* ---- Card ---- */

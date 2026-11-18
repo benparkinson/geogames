@@ -292,14 +292,14 @@ describe("HomePage starting a game", () => {
   });
 });
 
-describe("HomePage Hardcore mode", () => {
-  it("has a switch that turns Hardcore mode on and off", async () => {
+describe("HomePage Hard mode", () => {
+  it("has a switch that turns Hard mode on and off", async () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
     await user.click(card(/Country Gaps/));
 
-    const group = screen.getByRole("group", { name: "Hardcore mode" });
+    const group = screen.getByRole("group", { name: "Hard mode" });
     expect(within(group).getByRole("radio", { name: "Off" })).toBeChecked();
 
     await user.click(within(group).getByRole("radio", { name: "On" }));
@@ -314,19 +314,19 @@ describe("HomePage Hardcore mode", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
-    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
 
     await user.click(card(/Tripoints/));
-    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
 
     await user.click(card(/Mixed/));
-    expect(screen.getByRole("group", { name: "Hardcore mode" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
 
     await user.click(card(/River Shapes/));
-    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
 
     await user.click(card(/Merged Countries/));
-    expect(screen.getByRole("group", { name: "Hardcore mode" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
   });
 });
 

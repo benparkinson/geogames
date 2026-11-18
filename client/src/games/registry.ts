@@ -27,7 +27,7 @@ export interface MenuOption {
   description: string;
   Icon: Icon;
   extraDifficult?: boolean;
-  /** Wrong guesses get a distance clue, so the Hardcore switch is relevant. */
+  /** Wrong guesses get a distance clue, so the Hard mode switch is relevant. */
   hasClues?: boolean;
 }
 

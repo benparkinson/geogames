@@ -14,7 +14,7 @@ export function shareText(
   daily: { number: number; hardcore: boolean; result: DailyResult },
   origin: string,
 ): string {
-  const title = `GeoGauntlet Daily #${daily.number}` + (daily.hardcore ? " · Hardcore" : "");
+  const title = `GeoGauntlet Daily #${daily.number}` + (daily.hardcore ? " · Hard mode" : "");
   return [
     title,
     `${daily.result.score} / ${daily.result.maxScore}`,

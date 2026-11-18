@@ -80,7 +80,7 @@ describe("Tripoint guessing", () => {
 
     await guess(userEvent.setup(), "France");
 
-    expect(screen.getByText('"France" isn\'t right. 4 guesses left.')).toBeInTheDocument();
+    expect(screen.getByText("Not France.")).toBeInTheDocument();
   });
 
   it("gives no distance clue, because the map shows where the answers are", async () => {
@@ -98,7 +98,7 @@ describe("Tripoint guessing", () => {
 
     await guess(userEvent.setup(), "Atlantis");
 
-    expect(screen.getByText('"Atlantis" isn\'t right. 4 guesses left.')).toBeInTheDocument();
+    expect(screen.getByText("Not Atlantis.")).toBeInTheDocument();
   });
 
   it("rejects a name that is not a country once the list has loaded, and accepts aliases", async () => {

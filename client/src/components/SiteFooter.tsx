@@ -17,7 +17,7 @@ function SiteFooter({ className = "mt-4" }: { className?: string }): React.JSX.E
             <br />
             We record anonymous round results (no cookies, no personal data) to see which questions are hardest.
             <br />
-            Your browser keeps a few settings on your device, only if you use them: your light or dark mode choice, Hardcore mode and today&apos;s daily challenge. Nothing else is saved.
+            Your browser keeps a few settings on your device, only if you use them: your light or dark mode choice, Hard mode and today&apos;s daily challenge. Nothing else is saved.
             <br />
             <Link href="/privacy">Privacy</Link>
         </footer>

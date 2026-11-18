@@ -7,8 +7,8 @@ import GameTopBar from "./GameTopBar";
 import AnswerSlots from "./AnswerSlots";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import HardcoreToggle from "../../components/HardcoreToggle";
-import { useHardcoreMode } from "../../settings/hardcoreMode";
+import HardModeToggle from "../../components/HardModeToggle";
+import { useHardMode } from "../../settings/hardMode";
 import { GuessAction, GuessClue, GuessConfig, guessesLeft, guessReducer, GuessState, restoreGuessState, wrongGuessCount } from "./guessReducer";
 
 function MapGame<Type>({
@@ -28,7 +28,7 @@ function MapGame<Type>({
   clueFor,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
-  const [hardcore] = useHardcoreMode();
+  const [hardMode] = useHardMode();
   const hintCount = round.hintCount;
   const hintConfig = hintCount > 0 ? hints : undefined;
   const config: GuessConfig = {
@@ -118,11 +118,15 @@ function MapGame<Type>({
   const panel = (
     <>
       <div className="mb-2">{prompt}</div>
-      {hintTexts.map((text, index) => (
-        <div key={index} className="small gg-text-muted mb-1">
-          <Lightbulb aria-hidden="true" /> {text}
-        </div>
-      ))}
+      {hintTexts.length > 0 && (
+        <ul className="round-hints">
+          {hintTexts.map((text, index) => (
+            <li key={index}>
+              <Lightbulb aria-hidden="true" /> {text}
+            </li>
+          ))}
+        </ul>
+      )}
       <AnswerSlots
         answerCount={answerCount}
         found={foundAnswers}
@@ -145,12 +149,12 @@ function MapGame<Type>({
         inputPlaceholder={inputPlaceholder}
         answerNoun={answerNoun}
         answerCount={answerCount}
-        showClues={!hardcore}
+        showClues={!hardMode}
         suggestions={suggestions}
       />
       {clueFor && !gameOver && (
-        <div className="mt-2">
-          <HardcoreToggle compact />
+        <div className="round-settings">
+          <HardModeToggle compact />
         </div>
       )}
     </>
@@ -193,7 +197,7 @@ export interface MapGameProps<Type> {
   hints?: HintConfig;
   /**
    * Gives a wrong guess a clue (distance and direction to the nearest answer not found yet). Leave it
-   * out for a game whose map already shows where the answer is. Hardcore mode hides the clues.
+   * out for a game whose map already shows where the answer is. Hard mode hides the clues.
    */
   clueFor?: (guess: string, targets: string[]) => GuessClue | null;
   submitAnswer: (answer: RoundAnswer) => void;
