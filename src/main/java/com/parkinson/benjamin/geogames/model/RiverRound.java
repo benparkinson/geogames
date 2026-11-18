@@ -16,6 +16,6 @@ public record RiverRound(GameType gameType, River river, List<Country> countries
 
   @Override
   public String subjectId() {
-    return "river:" + river.id();
+    return SubjectIds.river(river.id());
   }
 }

@@ -5,6 +5,6 @@ public record LakeRound(GameType gameType, Lake lake) implements GameData {
 
   @Override
   public String subjectId() {
-    return "lake:" + lake.id();
+    return SubjectIds.lake(lake.id());
   }
 }
