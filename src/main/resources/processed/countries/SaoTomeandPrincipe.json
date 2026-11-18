@@ -1,10 +1,10 @@
 {
-  "name" : "Sao Tome and Principe",
-  "additionalNames" : [ ],
+  "name" : "São Tomé and Príncipe",
+  "additionalNames" : [ "São Tomé" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Sao Tome and Principe"
+      "name" : "São Tomé and Príncipe"
     },
     "geometry" : {
       "type" : "MultiPolygon",

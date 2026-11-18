@@ -28,6 +28,7 @@ class CountryLoaderMainTest {
   private CountryLoaderMain.Report run(Path outDir) throws IOException {
     return CountryLoaderMain.run(
         fixtures.resolve("countries.geo.json"),
+        fixtures.resolve("officialNames.json"),
         fixtures.resolve("additionalNames.json"),
         fixtures.resolve("excludedNames.json"),
         outDir);
@@ -103,6 +104,7 @@ class CountryLoaderMainTest {
                 CountryLoaderMain.main(
                     new String[] {
                       fixtures.resolve("countries.geo.json").toString(),
+                      fixtures.resolve("officialNames.json").toString(),
                       fixtures.resolve("additionalNames.json").toString(),
                       fixtures.resolve("excludedNames.json").toString(),
                       out.toString()

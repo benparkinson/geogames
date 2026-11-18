@@ -1,6 +1,6 @@
 {
   "name" : "Indian Ocean Territories",
-  "additionalNames" : [ ],
+  "additionalNames" : [ "Australian Indian Ocean Territories", "Christmas Island", "Cocos Islands", "Cocos (Keeling) Islands", "Keeling Islands" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {

@@ -1,6 +1,6 @@
 {
-  "name" : "Aland",
-  "additionalNames" : [ "Aland Islands", "Åland Islands", "Åland" ],
+  "name" : "Åland",
+  "additionalNames" : [ "Åland Islands" ],
   "coastKm" : 595.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 584,
@@ -14,7 +14,7 @@
   "outline" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Aland"
+      "name" : "Åland"
     },
     "geometry" : {
       "type" : "MultiPolygon",
@@ -24,7 +24,7 @@
   "coast" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Aland"
+      "name" : "Åland"
     },
     "geometry" : {
       "type" : "MultiLineString",
@@ -34,7 +34,7 @@
   "landBorders" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Aland"
+      "name" : "Åland"
     },
     "geometry" : {
       "type" : "MultiLineString",

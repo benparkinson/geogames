@@ -173,7 +173,7 @@ public class CityLoaderMain {
   /**
    * Countries where Natural Earth flags the wrong cities, with the cities that really are capitals.
    * Benin's official capital is Porto-Novo (Cotonou is the seat of government in practice) and
-   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from Yangon to Naypyidaw in 2006; Ivory Coast's official capital is
+   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from Yangon to Naypyidaw in 2006; Côte d'Ivoire's official capital is
    * Yamoussoukro (Abidjan is the economic centre); South Africa has three capitals (Pretoria
    * executive, Cape Town legislative, Bloemfontein judicial) and Johannesburg is none of them.
    * Kazakhstan's capital was renamed Astana in 2022.
@@ -182,7 +182,7 @@ public class CityLoaderMain {
       Map.of(
           "Benin", List.of("Porto-Novo"),
           "Myanmar", List.of("Naypyidaw"),
-          "Ivory Coast", List.of("Yamoussoukro"),
+          "Côte d'Ivoire", List.of("Yamoussoukro"),
           "South Africa", List.of("Pretoria", "Cape Town", "Bloemfontein"),
           "Tanzania", List.of("Dodoma"));
 

@@ -307,6 +307,19 @@ class GameServiceTest {
   }
 
   @Test
+  void aRoundStoredUnderACountrysOldNameStillLoads() {
+    Tripoint tripoint = tripoint(1);
+    when(tripointGenerator.rebuild("tripoint:France|Germany|Italy@1.0,2.0")).thenReturn(tripoint);
+    GameRoundEntity entity =
+        new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:Deutschland|France|Italy@1.0,2.0");
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
+
+    GameRound result = service.getGameRound(GAME_ID, 0).orElseThrow();
+
+    assertThat(result.jsonBlob()).isEqualTo(objectMapper.writeValueAsString(tripoint));
+  }
+
+  @Test
   void missingRoundDataReachesTheCaller() {
     when(tripointGenerator.rebuild("tripoint:gone"))
         .thenThrow(new RoundDataMissingException(GameType.TRIPOINT, "tripoint:gone"));

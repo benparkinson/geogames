@@ -1,6 +1,6 @@
 {
-  "name" : "Saint Barthelemy",
-  "additionalNames" : [ "St Barthelemy", "Saint Barts", "St Barts" ],
+  "name" : "Saint Barthélemy",
+  "additionalNames" : [ "St Barthélemy", "Saint Barts", "St Barts" ],
   "coastKm" : 21.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 25,
@@ -14,7 +14,7 @@
   "outline" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Saint Barthelemy"
+      "name" : "Saint Barthélemy"
     },
     "geometry" : {
       "type" : "MultiPolygon",
@@ -24,7 +24,7 @@
   "coast" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Saint Barthelemy"
+      "name" : "Saint Barthélemy"
     },
     "geometry" : {
       "type" : "MultiLineString",
@@ -34,7 +34,7 @@
   "landBorders" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Saint Barthelemy"
+      "name" : "Saint Barthélemy"
     },
     "geometry" : {
       "type" : "MultiLineString",

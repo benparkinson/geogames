@@ -384,7 +384,10 @@ public class GameService {
   }
 
   private GameRound toResponse(GameEntity game, GameRoundEntity round) {
-    GameData data = generators.get(round.getGameType()).rebuild(round.getRoundKey());
+    String roundKey =
+        StoredRoundKeys.withCurrentCountryNames(
+            round.getRoundKey(), name -> knownPlaceNames.currentCountryName(name).orElse(name));
+    GameData data = generators.get(round.getGameType()).rebuild(roundKey);
     return new GameRound(
         GameTypeResponse.from(round.getGameType()),
         objectMapper.writeValueAsString(data),

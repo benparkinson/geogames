@@ -1,10 +1,10 @@
 {
-  "name" : "Saint Barthelemy",
-  "additionalNames" : [ "St Barthelemy", "Saint Barts", "St Barts" ],
+  "name" : "Saint Barthélemy",
+  "additionalNames" : [ "St Barthélemy", "Saint Barts", "St Barts" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Saint Barthelemy"
+      "name" : "Saint Barthélemy"
     },
     "geometry" : {
       "type" : "MultiPolygon",
