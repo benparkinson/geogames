@@ -510,17 +510,33 @@ describe("MapGame guess limit", () => {
 describe("MapGame clues", () => {
   const clueFor = vi.fn(() => ({ km: 1236, bearing: 45 }));
 
-  it("shows the clue on the chip, and hides it when Hard mode is switched on in the panel", async () => {
+  it("shows the clue on the chip when the round is not in Hard mode", async () => {
+    const user = userEvent.setup();
+    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+
+    await guess(user, "Italy");
+
+    expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
+  });
+
+  it("shows no Hard mode switch during a round", async () => {
     const user = userEvent.setup();
     renderGame({ clueFor });
 
     await guess(user, "Italy");
 
+    expect(screen.queryByRole("group", { name: "Hard mode" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("radio", { name: "On" })).not.toBeInTheDocument();
+  });
+
+  it("still shows clues when the preference is on but the round is not in Hard mode", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+    const user = userEvent.setup();
+    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+
+    await guess(user, "Italy");
+
     expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
-
-    await user.click(screen.getByRole("radio", { name: "On" }));
-
-    expect(screen.queryByText(/1,240 km/)).not.toBeInTheDocument();
   });
 
   it("shows no clues, and no switch, when the game has no clueFor", async () => {
@@ -533,26 +549,14 @@ describe("MapGame clues", () => {
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
   });
 
-  it("shows no clue when Hard mode was already on", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+  it("shows no clue when the round is in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame({ clueFor });
+    renderGame({ clueFor, round: makeRoundProps({ hardMode: true }) });
 
     await guess(user, "Italy");
 
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
-  });
-
-  it("puts the Hard mode switch after the wrong guesses", async () => {
-    const user = userEvent.setup();
-    renderGame({ clueFor });
-
-    await guess(user, "Italy");
-
-    const label = screen.getByText("Wrong guesses");
-    const toggle = screen.getByRole("group", { name: "Hard mode" });
-    expect(label.compareDocumentPosition(toggle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
 

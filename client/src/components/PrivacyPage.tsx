@@ -27,14 +27,15 @@ function PrivacyPage(): React.JSX.Element {
         <h2 className="h5">What we store</h2>
         <p>
           There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the questions
-          asked, the guesses made (only names from our lists), the hints taken and how each round ended. It is deleted
-          after 24 hours.
+          asked, the guesses made (only names from our lists), the hints taken, whether Hard mode is on and how each
+          round ended. It is deleted after 24 hours.
         </p>
 
         <h2 className="h5">Anonymous statistics</h2>
         <p>
           For each answered round we keep the date, the game type, the question, the result, and the hints and wrong
-          guesses used. Nothing in it identifies a person or a device, so it is kept indefinitely.
+          guesses used, and whether Hard mode was on. Nothing in it identifies a person or a device, so it is kept
+          indefinitely.
         </p>
 
         <h2 className="h5">On your device</h2>

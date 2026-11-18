@@ -332,11 +332,6 @@ code {
   margin-bottom: 0.25rem;
   color: var(--gg-color-text);
 }
-.round-settings {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--gg-color-border);
-}
 .gg-chip.guess-chip {
   --gg-chip-fg: var(--gg-color-text);
 }

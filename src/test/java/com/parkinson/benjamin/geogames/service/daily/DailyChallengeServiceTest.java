@@ -34,7 +34,7 @@ class DailyChallengeServiceTest {
   private DailyChallengeService service(LocalDate utcToday) {
     Clock clock = Clock.fixed(utcToday.atTime(23, 59).toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
     when(store.findOrCreate(any(), any())).thenReturn(ROUNDS);
-    when(games.createGame(ROUNDS, "DAILY")).thenReturn(new GameCreationResponse(gameId));
+    when(games.createGame(ROUNDS, "DAILY", null)).thenReturn(new GameCreationResponse(gameId));
     return new DailyChallengeService(clock, mock(DailyRoundPicker.class), store, games);
   }
 
@@ -44,7 +44,7 @@ class DailyChallengeServiceTest {
 
     for (int offset = -1; offset <= 1; offset++) {
       LocalDate date = TODAY.plusDays(offset);
-      DailyGameResponse response = service.createDailyGame(Optional.of(date));
+      DailyGameResponse response = service.createDailyGame(Optional.of(date), null);
 
       assertThat(response.date()).isEqualTo(date);
       assertThat(response.id()).isEqualTo(gameId);
@@ -55,9 +55,9 @@ class DailyChallengeServiceTest {
   void twoDaysAwayIsRejected() {
     DailyChallengeService service = service(TODAY);
 
-    assertThatThrownBy(() -> service.createDailyGame(Optional.of(TODAY.plusDays(2))))
+    assertThatThrownBy(() -> service.createDailyGame(Optional.of(TODAY.plusDays(2)), null))
         .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> service.createDailyGame(Optional.of(TODAY.minusDays(2))))
+    assertThatThrownBy(() -> service.createDailyGame(Optional.of(TODAY.minusDays(2)), null))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -68,7 +68,7 @@ class DailyChallengeServiceTest {
     assertThatThrownBy(
             () ->
                 service.createDailyGame(
-                    Optional.of(DailyChallengeService.DAILY_EPOCH.minusDays(1))))
+                    Optional.of(DailyChallengeService.DAILY_EPOCH.minusDays(1)), null))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -76,17 +76,17 @@ class DailyChallengeServiceTest {
   void noDateMeansTheServersUtcDate() {
     DailyChallengeService service = service(TODAY);
 
-    assertThat(service.createDailyGame(Optional.empty()).date()).isEqualTo(TODAY);
+    assertThat(service.createDailyGame(Optional.empty(), null).date()).isEqualTo(TODAY);
   }
 
   @Test
   void theEpochIsNumberOneAndEachDayAddsOne() {
     DailyChallengeService service = service(DailyChallengeService.DAILY_EPOCH);
 
-    assertThat(service.createDailyGame(Optional.empty()).number()).isEqualTo(1);
+    assertThat(service.createDailyGame(Optional.empty(), null).number()).isEqualTo(1);
     assertThat(
             service
-                .createDailyGame(Optional.of(DailyChallengeService.DAILY_EPOCH.plusDays(1)))
+                .createDailyGame(Optional.of(DailyChallengeService.DAILY_EPOCH.plusDays(1)), null)
                 .number())
         .isEqualTo(2);
   }
@@ -94,7 +94,7 @@ class DailyChallengeServiceTest {
   @Test
   void generatesRoundsOnlyThroughTheStore() {
     DailyChallengeService service = service(TODAY);
-    service.createDailyGame(Optional.empty());
+    service.createDailyGame(Optional.empty(), null);
 
     org.mockito.Mockito.verify(store).findOrCreate(eq(TODAY), anySupplier());
   }

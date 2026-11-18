@@ -32,7 +32,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
     rounds.add(new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:Q1"));
     rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "tripoint:third"));
-    return new GameEntity(rounds, "TRIPOINT");
+    return new GameEntity(rounds, "TRIPOINT", null);
   }
 
   private GameEntity saveAndReload(GameEntity game) {
@@ -270,7 +270,7 @@ class GameRepositoryTest {
       rounds.add(new GameRoundEntity(rounds.size(), type, "tripoint:x"));
     }
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT"));
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT", null));
 
     assertThat(sorted(reloaded).stream().map(GameRoundEntity::getGameType).toList())
         .containsExactly(GameType.values());
@@ -318,7 +318,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:0"));
     rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "tripoint:1"));
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT"));
+    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT", null));
 
     assertThat(reloaded.getRounds().stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2);

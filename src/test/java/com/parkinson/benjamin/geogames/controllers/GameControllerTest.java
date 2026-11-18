@@ -79,14 +79,15 @@ class GameControllerTest {
             List.of(0, 0, 0),
             List.of(0, 0, 0)),
         List.of(),
-        List.of());
+        List.of(),
+        false);
   }
 
   // ------------------------------------------------------------ create game
 
   @Test
   void createsAGame() throws Exception {
-    when(gameService.createGame("TRIPOINT", 3)).thenReturn(new GameCreationResponse(GAME_ID));
+    when(gameService.createGame("TRIPOINT", 3, null)).thenReturn(new GameCreationResponse(GAME_ID));
 
     mockMvc
         .perform(
@@ -96,12 +97,26 @@ class GameControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(GAME_ID.toString()));
 
-    verify(gameService).createGame("TRIPOINT", 3);
+    verify(gameService).createGame("TRIPOINT", 3, null);
+  }
+
+  @Test
+  void hardModeIsPassedToTheService() throws Exception {
+    when(gameService.createGame("TRIPOINT", 3, true)).thenReturn(new GameCreationResponse(GAME_ID));
+
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"hardMode\":true}"))
+        .andExpect(status().isOk());
+
+    verify(gameService).createGame("TRIPOINT", 3, true);
   }
 
   @Test
   void createGameWithInvalidArgumentsIsABadRequestWithAProblemBody() throws Exception {
-    when(gameService.createGame("FOO", 3)).thenThrow(new IllegalArgumentException("Unknown"));
+    when(gameService.createGame("FOO", 3, null)).thenThrow(new IllegalArgumentException("Unknown"));
 
     mockMvc
         .perform(

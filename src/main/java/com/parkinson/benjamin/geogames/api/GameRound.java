@@ -12,4 +12,5 @@ public record GameRound(
     int points,
     GameResult gameResult,
     List<RecordedGuess> guesses,
-    List<Integer> hintsTakenAt) {}
+    List<Integer> hintsTakenAt,
+    boolean hardMode) {}

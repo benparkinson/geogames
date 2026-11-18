@@ -30,7 +30,7 @@ class DailyGameControllerTest {
   @Test
   void aDailyGameWithADateUsesThatDate() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
-    when(dailyService.createDailyGame(Optional.of(date)))
+    when(dailyService.createDailyGame(Optional.of(date), null))
         .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
 
     mockMvc
@@ -45,9 +45,24 @@ class DailyGameControllerTest {
   }
 
   @Test
+  void hardModeIsPassedToTheService() throws Exception {
+    LocalDate date = LocalDate.of(2026, 11, 20);
+    when(dailyService.createDailyGame(Optional.empty(), true))
+        .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
+
+    mockMvc
+        .perform(
+            post("/api/daily-games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"hardMode\":true}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.number").value(3));
+  }
+
+  @Test
   void aDailyGameWithNoDateUsesTheServersDate() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
-    when(dailyService.createDailyGame(Optional.empty()))
+    when(dailyService.createDailyGame(Optional.empty(), null))
         .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
 
     mockMvc

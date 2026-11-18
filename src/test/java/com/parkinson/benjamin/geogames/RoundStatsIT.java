@@ -27,12 +27,19 @@ class RoundStatsIT {
   @Autowired private JdbcClient jdbc;
 
   private String createGame(String type, int rounds) throws Exception {
+    return createGame(type, rounds, "");
+  }
+
+  /** {@code extra} is more JSON members, such as {@code ,"hardMode":true}. */
+  private String createGame(String type, int rounds, String extra) throws Exception {
     String body =
         mockMvc
             .perform(
                 post("/api/games")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"gameType\":\"%s\",\"numberOfRounds\":%d}".formatted(type, rounds)))
+                    .content(
+                        "{\"gameType\":\"%s\",\"numberOfRounds\":%d%s}"
+                            .formatted(type, rounds, extra)))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -124,6 +131,19 @@ class RoundStatsIT {
     List<Map<String, Object>> games = jdbc.sql("select * from stat_game").query().listOfRows();
     assertThat(games.toString()).doesNotContain(id).doesNotContain(other);
     assertThat(rowsOf(id).get(0).get("play_id")).isNotEqualTo(UUID.fromString(id));
+  }
+
+  @Test
+  void hardModeIsRecordedPerGameAndNullWhenNotSent() throws Exception {
+    String hard = createGame("RIVERS_BY_SHAPE", 1, ",\"hardMode\":true");
+    String unknown = createGame("RIVERS_BY_SHAPE", 1);
+    answer(hard, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");
+    answer(unknown, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");
+    await().atMost(Duration.ofSeconds(10)).until(() -> rowsOf(hard).size() == 1);
+    await().atMost(Duration.ofSeconds(10)).until(() -> rowsOf(unknown).size() == 1);
+
+    assertThat(rowsOf(hard).get(0).get("hard_mode")).isEqualTo(true);
+    assertThat(rowsOf(unknown).get(0).get("hard_mode")).isNull();
   }
 
   @Test

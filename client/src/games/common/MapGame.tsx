@@ -1,7 +1,5 @@
 import { Lightbulb } from "react-bootstrap-icons";
-import HardModeToggle from "../../components/HardModeToggle";
 import { MapProps } from "../../map/MapProps";
-import { useHardMode } from "../../settings/hardMode";
 import { AnswerCandidate } from "./answers";
 import AnswerSlots from "./AnswerSlots";
 import GameLayout from "./GameLayout";
@@ -34,7 +32,6 @@ function MapGame<Type>({
   clueFor,
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
-  const [hardMode] = useHardMode();
   const { state, submitGuess, giveUp, takeHint } = useRoundGuesses({
     round,
     answers,
@@ -84,7 +81,7 @@ function MapGame<Type>({
       <div>
         {gameOver ? (
           <>
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!round.hardMode} />}
             <RoundResult
               gaveUp={gaveUp}
               outOfGuesses={outOfGuesses}
@@ -100,7 +97,7 @@ function MapGame<Type>({
               guessLimit={round.guessLimit}
               points={roundPoints(CORRECT_ANSWER, hintsUsed, round.hintCount)}
             />
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!round.hardMode} />}
             <GuessForm
               submitGuess={submitGuess}
               inputPlaceholder={inputPlaceholder}
@@ -117,11 +114,6 @@ function MapGame<Type>({
           </>
         )}
       </div>
-      {clueFor && !gameOver && (
-        <div className="round-settings">
-          <HardModeToggle compact />
-        </div>
-      )}
     </>
   );
 

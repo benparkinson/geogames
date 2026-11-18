@@ -11,6 +11,8 @@ export interface GameRoundResponse {
   gameResult: GameResultResponse;
   guesses: RecordedGuess[];
   hintsTakenAt: number[];
+  /** Hard mode was chosen when the game was created and never changes. */
+  hardMode: boolean;
 }
 
 /** A guess the server has stored for a round: a known place name as the name lists spell it. */
@@ -78,5 +80,7 @@ export interface GameRoundView {
   points: number;
   guesses: RecordedGuess[];
   hintsTakenAt: number[];
+  /** Hard mode: fixed when the game was created, so the distance clues stay hidden for all of it. */
+  hardMode: boolean;
   gameResult: Omit<GameResultResponse, "roundsUnanswered">;
 }

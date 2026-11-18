@@ -19,12 +19,15 @@ export function localDateString(now: Date = new Date()): string {
  */
 export function useCreateDailyGame() {
   return useMutation({
-    mutationFn: async (date: string): Promise<DailyGameResponse> => {
+    mutationFn: async ({ date, hardMode }: { date: string; hardMode: boolean }): Promise<DailyGameResponse> => {
       try {
-        return await postJson<DailyGameResponse>("/api/daily-games", "create daily game", { date });
+        return await postJson<DailyGameResponse>("/api/daily-games", "create daily game", {
+          date,
+          hardMode,
+        });
       } catch (error) {
         if (!hasStatus(error, 400)) throw error;
-        return postJson<DailyGameResponse>("/api/daily-games", "create daily game", {});
+        return postJson<DailyGameResponse>("/api/daily-games", "create daily game", { hardMode });
       }
     },
   });

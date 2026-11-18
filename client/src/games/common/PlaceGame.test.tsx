@@ -56,7 +56,7 @@ describe("PlaceGame", () => {
     expect(urls.some((url) => url.endsWith("/api/countries"))).toBe(false);
   });
 
-  it("gives a wrong guess a clue when the round has clues, and the Hard mode switch", async () => {
+  it("gives a wrong guess a clue when the round has clues", async () => {
     const user = userEvent.setup();
     renderPlaceGame("countries", true);
     await screen.findByRole("combobox", { name: "Country name…" });
@@ -64,10 +64,9 @@ describe("PlaceGame", () => {
     await user.type(screen.getByRole("combobox", { name: "Country name…" }), "France{Enter}");
 
     expect(screen.getAllByText(/[\d,]+ km/).length).toBeGreaterThan(0);
-    expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
   });
 
-  it("gives no clue and no Hard mode switch when the round has none, even for countries", async () => {
+  it("gives no clue when the round has none, even for countries", async () => {
     const user = userEvent.setup();
     renderPlaceGame("countries", false);
     await screen.findByRole("combobox", { name: "Country name…" });
@@ -75,6 +74,5 @@ describe("PlaceGame", () => {
     await user.type(screen.getByRole("combobox", { name: "Country name…" }), "France{Enter}");
 
     expect(screen.getByText("France")).toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: "Hard mode" })).not.toBeInTheDocument();
   });
 });

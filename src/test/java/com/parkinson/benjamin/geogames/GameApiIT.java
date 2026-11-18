@@ -49,13 +49,19 @@ class GameApiIT {
   private String[] allowedOrigins;
 
   private String createGame(String gameType, int rounds) throws Exception {
+    return createGame(gameType, rounds, "");
+  }
+
+  /** {@code extra} is more JSON members, such as {@code ,"hardMode":true}. */
+  private String createGame(String gameType, int rounds, String extra) throws Exception {
     String body =
         mockMvc
             .perform(
                 post("/api/games")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        "{\"gameType\":\"%s\",\"numberOfRounds\":%d}".formatted(gameType, rounds)))
+                        "{\"gameType\":\"%s\",\"numberOfRounds\":%d%s}"
+                            .formatted(gameType, rounds, extra)))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -100,6 +106,24 @@ class GameApiIT {
         .andReturn()
         .getResponse()
         .getContentAsString();
+  }
+
+  @Test
+  void hardModeIsStoredWithTheGameAndReturnedOnEveryRound() throws Exception {
+    String id = createGame("TRIPOINT", 3, ",\"hardMode\":true");
+
+    for (int round = 0; round < 3; round++) {
+      assertThat((Boolean) JsonPath.read(getRound(id, round), "$.hardMode")).isTrue();
+    }
+  }
+
+  @Test
+  void aGameCreatedWithoutHardModeReturnsFalse() throws Exception {
+    String id = createGame("TRIPOINT", 3);
+
+    for (int round = 0; round < 3; round++) {
+      assertThat((Boolean) JsonPath.read(getRound(id, round), "$.hardMode")).isFalse();
+    }
   }
 
   @Test

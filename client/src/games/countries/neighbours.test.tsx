@@ -12,13 +12,13 @@ vi.mock("./NeighboursMapWrapper", () => ({
   ),
 }));
 
-function renderGame(data = makeCountryShapeRoundData(), submitAnswer = vi.fn()) {
+function renderGame(data = makeCountryShapeRoundData(), submitAnswer = vi.fn(), hardMode = false) {
   const Component = neighbours.Component;
   mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
   renderWithClient(
     <Component
       data={data}
-      round={makeRoundProps({ hintCount: 3, hasClues: true })}
+      round={makeRoundProps({ hintCount: 3, hasClues: true, hardMode })}
       answerCount={1}
       submitAnswer={submitAnswer}
     />,
@@ -83,14 +83,14 @@ describe("Country Gaps", () => {
   });
 
   it("gives no clue in Hard mode", async () => {
-    localStorage.setItem("gg-hardcore", "on");
     const user = userEvent.setup();
-    renderGame();
+    renderGame(makeCountryShapeRoundData(), vi.fn(), true);
     await screen.findByRole("button", { name: /Hint/ });
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
     expect(screen.getByText("France")).toBeInTheDocument();
+    expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
   });
 
   it("rejects an unknown name once the country list loads, without using a guess", async () => {

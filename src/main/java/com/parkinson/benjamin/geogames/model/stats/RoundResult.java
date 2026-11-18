@@ -7,7 +7,8 @@ import java.util.UUID;
  * One anonymous, flat, logical row (the same columns as the {@code round_result} view): how one
  * answered round went. {@code RoundStatsStore} splits it across the {@code stat_*} tables. It holds
  * neither game id, and no time of day. {@code wrongGuesses} is null when the client didn't report
- * it, which is not the same as 0.
+ * it, which is not the same as 0. {@code hardMode} is null when unknown (a game from before the
+ * setting existed, or an old client), which is not the same as false.
  */
 public record RoundResult(
     LocalDate answeredOn,
@@ -22,4 +23,5 @@ public record RoundResult(
     Integer wrongGuesses,
     int hintCount,
     int guessLimit,
-    int points) {}
+    int points,
+    Boolean hardMode) {}

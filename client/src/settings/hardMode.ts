@@ -13,8 +13,9 @@ function write(on: boolean): void {
 }
 
 /**
- * Hard mode: no distance or direction clues after a wrong guess. It only hides the clues, so
- * scoring and the server are unaffected. Off by default, and kept in this browser's localStorage.
+ * The Hard mode preference for the next game: no distance or direction clues after a wrong guess. It
+ * only hides the clues, so scoring is unaffected. Off by default, and kept in this browser's localStorage.
+ * It is read when a game starts; each game then keeps its own setting on the server (`GameRound.hardMode`).
  */
 export function useHardMode(): [boolean, (on: boolean) => void] {
   const hardMode = useSyncExternalStore(store.subscribe, read, () => false);

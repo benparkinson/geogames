@@ -35,6 +35,16 @@ class RoundStatsStoreTest {
 
   private static RoundResult row(
       UUID playId, int roundNumber, String roundKey, Integer wrong, int hintCount) {
+    return row(playId, roundNumber, roundKey, wrong, hintCount, false);
+  }
+
+  private static RoundResult row(
+      UUID playId,
+      int roundNumber,
+      String roundKey,
+      Integer wrong,
+      int hintCount,
+      Boolean hardMode) {
     return new RoundResult(
         LocalDate.of(2026, 11, 9),
         playId,
@@ -48,7 +58,8 @@ class RoundStatsStoreTest {
         wrong,
         hintCount,
         5,
-        83);
+        83,
+        hardMode);
   }
 
   private static RoundResult row(String roundKey, Integer wrongGuesses) {
@@ -87,6 +98,26 @@ class RoundStatsStoreTest {
     assertThat(((Number) read.get("hint_count")).intValue()).isEqualTo(3);
     assertThat(((Number) read.get("guess_limit")).intValue()).isEqualTo(5);
     assertThat(((Number) read.get("points")).intValue()).isEqualTo(83);
+    assertThat(read.get("hard_mode")).isEqualTo(false);
+  }
+
+  @Test
+  void hardModeIsReadBackAsTrueFalseOrNull() {
+    store.insert(row(UUID.randomUUID(), 0, "river:A", 0, 3, true));
+    store.insert(row(UUID.randomUUID(), 0, "river:B", 0, 3, false));
+    store.insert(row(UUID.randomUUID(), 0, "river:C", 0, 3, null));
+
+    Map<String, Object> hard = rowFor("river:A");
+    assertThat(hard.get("hard_mode")).isEqualTo(true);
+    assertThat(rowFor("river:B").get("hard_mode")).isEqualTo(false);
+    assertThat(rowFor("river:C").get("hard_mode")).isNull();
+  }
+
+  private Map<String, Object> rowFor(String roundKey) {
+    return rows().stream()
+        .filter(r -> roundKey.equals(r.get("round_key")))
+        .findFirst()
+        .orElseThrow();
   }
 
   @Test
@@ -209,7 +240,9 @@ class RoundStatsStoreTest {
             "roundsInGame",
             5,
             "playId",
-            playId);
+            playId,
+            "hardMode",
+            true);
     jdbc.sql(RoundStatsStore.GAME_INSERT).params(params).update();
     int existing =
         jdbc.sql(RoundStatsStore.GAME_SELECT).param("playId", playId).query(Integer.class).single();

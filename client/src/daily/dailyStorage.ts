@@ -24,7 +24,7 @@ export interface DailyEntry {
   date: string;
   number: number;
   gameId: string;
-  /** Hard mode was on for the whole game so far. */
+  /** Hard mode was chosen for this game. */
   // Stored name kept from when this was called Hardcore mode.
   hardcore: boolean;
   /** Set once the game is finished. */

@@ -67,9 +67,23 @@ test("Hard mode, switched on from the home page, hides the distance clues", asyn
   const id = await startGame(page, "Country Gaps", 3);
   await expect(answerBox(page)).toBeVisible();
   const wrong = await wrongCountry(api, id);
+  const saved = page.waitForResponse(response => response.url().endsWith("/guesses") && response.ok());
   await guess(page, wrong);
 
   await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
+  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
+
+  // The game is fixed in Hard mode: no switch in the round, and the server's setting survives a reload.
+  await expect(page.getByRole("group", { name: "Hard mode" })).toHaveCount(0);
+  await saved;
+  await reloadGamePage(page, id);
+  await expect(page.getByText(wrong, { exact: true })).toBeVisible();
+  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
+
+  // Clearing the browser's preference changes nothing: the server decides.
+  await page.evaluate(() => localStorage.removeItem("gg-hardcore"));
+  await reloadGamePage(page, id);
+  await expect(page.getByText(wrong, { exact: true })).toBeVisible();
   await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
 });
 

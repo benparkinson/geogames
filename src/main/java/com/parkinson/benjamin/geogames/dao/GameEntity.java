@@ -56,14 +56,23 @@ public class GameEntity {
   @Column(nullable = false, updatable = false)
   private String gameMode;
 
+  /**
+   * Hard mode (no distance or direction clues), chosen when the game was created and never changed.
+   * Null means unknown: the game was created before this column existed, or by a client that did
+   * not send it. It reads as false in the API.
+   */
+  @Column(updatable = false)
+  private Boolean hardMode;
+
   public GameEntity() {}
 
   /**
    * A game always has at least one round, so its result is never "finished" with nothing played.
    *
    * @param gameMode what was requested: a {@code GameType} name, or {@code RANDOM}
+   * @param hardMode whether Hard mode is on, or null if unknown
    */
-  public GameEntity(List<GameRoundEntity> rounds, String gameMode) {
+  public GameEntity(List<GameRoundEntity> rounds, String gameMode, Boolean hardMode) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -76,6 +85,7 @@ public class GameEntity {
     this.publicId = UUID.randomUUID();
     this.playId = UUID.randomUUID();
     this.gameMode = gameMode;
+    this.hardMode = hardMode;
   }
 
   public long getId() {
@@ -92,6 +102,16 @@ public class GameEntity {
 
   public String getGameMode() {
     return gameMode;
+  }
+
+  /** For statistics: null when unknown. */
+  public Boolean getHardMode() {
+    return hardMode;
+  }
+
+  /** For the API: unknown reads as false. */
+  public boolean isHardMode() {
+    return Boolean.TRUE.equals(hardMode);
   }
 
   public List<GameRoundEntity> getRounds() {

@@ -41,11 +41,11 @@ describe("useCreateDailyGame", () => {
     const fetchMock = stubFetch({ status: 200, body: response });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate("2026-11-18");
+    result.current.mutate({ date: "2026-11-18", hardMode: true });
 
     await waitFor(() => expect(result.current.data).toEqual(response));
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ date: "2026-11-18" });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ date: "2026-11-18", hardMode: true });
   });
 
   it("asks again with no date after a 400", async () => {
@@ -53,17 +53,17 @@ describe("useCreateDailyGame", () => {
     const fetchMock = stubFetch({ status: 400 }, { status: 200, body: response });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate("2031-01-01");
+    result.current.mutate({ date: "2031-01-01", hardMode: true });
 
     await waitFor(() => expect(result.current.data).toEqual(response));
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({});
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ hardMode: true });
   });
 
   it("does not retry other errors", async () => {
     const fetchMock = stubFetch({ status: 500 });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate("2026-11-18");
+    result.current.mutate({ date: "2026-11-18", hardMode: false });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(fetchMock).toHaveBeenCalledTimes(1);
