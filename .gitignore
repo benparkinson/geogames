@@ -68,3 +68,6 @@ client/next-env.d.ts
 
 # Claude Code worktrees (whole checkouts of other branches)
 .claude/worktrees/
+
+# Natural Earth II raster (a 325 MB zip and a 700 MB TIFF), source of the relief tiles
+/geodata/relief/

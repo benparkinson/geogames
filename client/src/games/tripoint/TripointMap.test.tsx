@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, SATELLITE_ATTRIBUTION, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { addedAttributions, drawnLayers, drawnMarkers, drawnTileAttributions, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeTripointData } from "../../test/fixtures";
@@ -23,11 +23,11 @@ const points = () => drawnLayers().map((layer) => layer.point);
 beforeEach(() => vi.clearAllMocks());
 
 describe("TripointMap", () => {
-  it("shows satellite imagery and a flag on the tripoint but no borders at first", () => {
+  it("shows the relief map and a flag on the tripoint but no borders at first", () => {
     renderMap();
 
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
-    expect(drawnTileAttributions()).toEqual([SATELLITE_ATTRIBUTION]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
+    expect(drawnTileAttributions()).toEqual([""]);
     expect(drawnMarkers()).toEqual([[50.75, 6.02]]);
     expect(drawnLayers()).toEqual([]);
   });

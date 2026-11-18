@@ -53,17 +53,11 @@ function PrivacyPage(): React.JSX.Element {
                 </p>
 
                 <h2 className="h5">Who else receives data</h2>
-                <p>Loading any web page sends your IP address to the server that hosts it. Two companies receive yours:</p>
-                <ul>
-                    <li>
-                        <a href="https://render.com/privacy">Render</a> (render.com, a United States company) hosts this
-                        site and its game server.
-                    </li>
-                    <li>
-                        <a href="https://cloudless.eox.at">EOX IT Services GmbH</a> (Austria) serves the satellite
-                        images. Your browser asks EOX for them directly whenever a satellite map is shown.
-                    </li>
-                </ul>
+                <p>
+                    Loading any web page sends your IP address to the server that hosts it.{" "}
+                    <a href="https://render.com/privacy">Render</a> (render.com, a United States company) hosts this
+                    site, its map images and its game server, so it receives yours.
+                </p>
                 <p>The &quot;Buy me a coffee&quot; link opens Ko-fi. Nothing is sent to Ko-fi unless you click it.</p>
 
                 <h2 className="h5">Why this is allowed</h2>

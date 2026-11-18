@@ -1,6 +1,6 @@
-import { SatelliteTiles } from "./SatelliteTiles";
+import { ReliefTiles } from "./ReliefTiles";
 
-/** Satellite imagery, shown once the round is over. Its tiles carry no labels. */
+/** The relief map, shown once the round is over. Its tiles carry no labels. */
 export function RevealTiles({ show }: { show: boolean }): React.JSX.Element | null {
-  return show ? <SatelliteTiles /> : null;
+  return show ? <ReliefTiles /> : null;
 }

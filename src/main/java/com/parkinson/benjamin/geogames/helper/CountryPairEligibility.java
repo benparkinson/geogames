@@ -11,7 +11,7 @@ public final class CountryPairEligibility {
 
   /**
    * Under 50 km the shared border is a short stub that nobody can recognise (and the map has to
-   * zoom in so far that the satellite imagery at the end is only a few streets).
+   * zoom in so far that the relief map at the end is a blur).
    */
   public static final double MIN_BORDER_KM = 50;
 

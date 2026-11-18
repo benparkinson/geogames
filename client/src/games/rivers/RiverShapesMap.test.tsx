@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeRiverRoundData } from "../../test/fixtures";
@@ -24,10 +24,10 @@ describe("RiverShapesMap", () => {
     expect(drawnTileUrls()).toEqual([]);
   });
 
-  it("shows the satellite imagery only once the round is over", () => {
+  it("shows the relief map only once the round is over", () => {
     renderMap({ gameOver: true });
 
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
   });
 
   it("colours the river differently when the player gave up", () => {

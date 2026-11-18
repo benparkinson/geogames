@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueOutlineOptions, hiddenBorderOptions, mergedShapeOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueOutlineOptions, hiddenBorderOptions, mergedShapeOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryPairRoundData } from "../../test/fixtures";
@@ -55,12 +55,12 @@ describe("MergedCountriesMap", () => {
     expect(drawnLayers()[4].color).toBe(hiddenBorderOptions().color);
   });
 
-  it("shows the neighbours, both countries and the satellite imagery once the round is over", () => {
+  it("shows the neighbours, both countries and the relief map once the round is over", () => {
     renderMap({ gameOver: true });
 
     expect(points()).toEqual([...NEIGHBOURS, ...OUTLINES]);
     expect(drawnLayers()[2].color).toBe(answerPathOptions(false).color);
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
   });
 
   it("colours the outlines differently when the player gave up", () => {
