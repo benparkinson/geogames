@@ -4,15 +4,13 @@ import {
   borderLengthHint,
   capitalHint,
   coastHint,
-  countryHints,
   firstLetterHint,
   lakesHint,
   longestBorderHint,
-  mapHint,
   neighbourCountHint,
 } from "./countryHints";
 
-describe("countryHints", () => {
+describe("country hint builders", () => {
   const round = makeCountryShapeRoundData();
 
   it("counts only the mainland neighbours, not those of overseas territories", () => {
@@ -54,19 +52,6 @@ describe("countryHints", () => {
 
   it("gives the first letter", () => {
     expect(firstLetterHint(round)).toBe("Starts with “N”");
-  });
-
-  it("mapHint always says the same thing", () => {
-    expect(mapHint("On the map")(round)).toBe("On the map");
-  });
-
-  it("makes one hint per builder, in order", () => {
-    const hints = countryHints("Shows clues", round, mapHint("A"), firstLetterHint);
-
-    expect(hints.description).toBe("Shows clues");
-    expect(hints.text?.(0)).toBe("A");
-    expect(hints.text?.(1)).toBe("Starts with “N”");
-    expect(hints.text?.(2)).toBeNull();
   });
 });
 

@@ -42,6 +42,8 @@ export interface Round {
   hintCount: number;
   /** Wrong guesses allowed this round, from the backend. */
   guessLimit: number;
+  /** Whether the game gives distance clues: the game module's `hasClues`. */
+  hasClues: boolean;
   /** The hints the server has recorded for this round. 0 until the round is answered. */
   hintsUsed: number;
   /** The guesses the server has recorded for this round, in order. */

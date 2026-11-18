@@ -25,6 +25,7 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     answerState: "UNANSWERED",
     hintCount: 3,
     guessLimit: 5,
+    hasClues: false,
     hintsUsed: 0,
     guesses: [],
     hintsTakenAt: [],

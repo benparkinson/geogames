@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { countryNames, riverNames } from "../test/fixtures";
 import { mockFetch } from "../test/fetchMock";
 import { clientWrapper, newTestClient } from "../test/render";
-import { usePlaceNames } from "./placeNames";
+import { useCountryNames, usePlaceNames } from "./placeNames";
 
 describe("usePlaceNames", () => {
   it("returns the country list from the server", async () => {
@@ -63,5 +63,24 @@ describe("usePlaceNames", () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(String(result.current.error)).toContain("Failed to load rivers (503)");
+  });
+});
+
+describe("useCountryNames", () => {
+  it("returns the countries with their positions", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    const { result } = renderHook(() => useCountryNames(), { wrapper: clientWrapper() });
+
+    await waitFor(() => expect(result.current.data).toEqual(countryNames));
+  });
+
+  it("fetches nothing when it is not enabled", async () => {
+    const fetchMock = mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    const { result } = renderHook(() => useCountryNames(false), { wrapper: clientWrapper() });
+
+    await Promise.resolve();
+
+    expect(result.current.data).toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

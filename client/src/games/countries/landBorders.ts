@@ -1,9 +1,10 @@
 import { BoundingBox } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import LandBordersMapWrapper from "./LandBordersMapWrapper";
-import { countryHints, firstLetterHint, mapHint } from "./countryHints";
+import { hintsFrom, mapHint } from "../common/hints";
+import { firstLetterHint } from "./countryHints";
 
 export default defineGame({
   type: "COUNTRIES_BY_LAND_BORDERS",
@@ -12,13 +13,13 @@ export default defineGame({
   description: "Name a country from its land borders alone.",
   Icon: BoundingBox,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryShapeRound>({
+  Component: makeCountryGame<CountryShapeRound>({
     MapComponent: LandBordersMapWrapper,
     prompt: "Name the country with these land borders.",
     mapCaption: "Land borders only. The coastline is hidden.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      countryHints(
+      hintsFrom(
         "Shows its neighbours, then its coastline, then its first letter",
         round,
         mapHint("Its neighbours are on the map"),

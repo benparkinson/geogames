@@ -56,3 +56,20 @@ export function firstLetter(name: string): { letter: string; prefix: string } | 
 export function countHint(count: number, singular: string, plural: string, verb: string): string {
   return `${verb} ${count} ${count === 1 ? singular : plural}`;
 }
+
+/** Builds the text of one hint. Returns null when there is nothing to say. */
+export type HintBuilder<T> = (round: T) => string | null;
+
+/** One hint per builder, revealed in order. */
+export function hintsFrom<T>(description: string, round: T, ...builders: HintBuilder<T>[]): HintConfig {
+  return { description, text: (index) => builders[index]?.(round) ?? null };
+}
+
+/** A hint whose text is always the same, for hints that change the map. */
+export function mapHint<T>(text: string): HintBuilder<T> {
+  return () => text;
+}
+
+export function cluesDescription(count: number): string {
+  return "Shows " + (count === 1 ? "a clue" : `${count} clues, one at a time`);
+}

@@ -52,6 +52,10 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
   function renderGame(data: GameRoundView) {
     const hasNextRound = currentRound < data.totalRoundCount - 1;
     const roundData = data.data;
+    const gameModule = findGameModule(data.gameType.name);
+    if (!gameModule) {
+      return <div>Unknown game type...</div>;
+    }
     const gameCompleted = data.gameResult.gameState === FINISHED;
     const round: Round = {
       nextRound,
@@ -63,6 +67,7 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
       answerState: data.answerState,
       hintCount: data.gameType.hintCount,
       guessLimit: data.gameType.guessLimit,
+      hasClues: !!gameModule.hasClues,
       hintsUsed: data.hintsUsed,
       guesses: data.guesses,
       hintsTakenAt: data.hintsTakenAt,
@@ -78,10 +83,6 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
       dailyDate: daily?.date,
     };
 
-    const gameModule = findGameModule(data.gameType.name);
-    if (!gameModule) {
-      return <div>Unknown game type...</div>;
-    }
     // The key resets the round's state, and the game type can change between rounds of a mixed game.
     return (
       <gameModule.Component

@@ -7,13 +7,15 @@ import type { GuessClue } from "./guessReducer";
 /**
  * Builds `clueFor` for a game whose answers are countries: how far the guessed country is from the
  * nearest answer still to find, and which way to go. Undefined until the country list has loaded,
- * so a game that opts in has no clues until then. Everything is worked out in the browser.
+ * so a game that opts in has no clues until then, and always undefined when `enabled` is false (the game
+ * has no clues, so the list isn't fetched for it, even if it is already cached). Everything is worked out
+ * in the browser.
  */
-export function useCountryClues(): ((guess: string, targets: string[]) => GuessClue | null) | undefined {
-  const { data } = useCountryNames();
+export function useCountryClues(enabled = true): ((guess: string, targets: string[]) => GuessClue | null) | undefined {
+  const { data } = useCountryNames(enabled);
 
   return useMemo(() => {
-    if (!data) {
+    if (!enabled || !data) {
       return undefined;
     }
     const positions = new Map<string, LatLon>();
@@ -44,5 +46,5 @@ export function useCountryClues(): ((guess: string, targets: string[]) => GuessC
       }
       return best;
     };
-  }, [data]);
+  }, [data, enabled]);
 }

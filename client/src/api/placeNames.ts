@@ -31,7 +31,10 @@ export function usePlaceNames(kind: PlaceKind): UseQueryResult<PlaceName[]> {
   return useQuery<PlaceName[]>(placeNamesQuery(kind));
 }
 
-/** The countries with their positions. Shares its query, and so its single fetch, with `usePlaceNames("countries")`. */
-export function useCountryNames(): UseQueryResult<CountryName[]> {
-  return useQuery<CountryName[]>(placeNamesQuery<CountryName>("countries"));
+/**
+ * The countries with their positions. Shares its query, and so its single fetch, with `usePlaceNames("countries")`.
+ * With `enabled` false it fetches nothing.
+ */
+export function useCountryNames(enabled = true): UseQueryResult<CountryName[]> {
+  return useQuery<CountryName[]>({ ...placeNamesQuery<CountryName>("countries"), enabled });
 }

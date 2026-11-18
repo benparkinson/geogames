@@ -1,7 +1,6 @@
 import type { ComponentType } from "react";
-import MapGame from "../common/MapGame";
+import PlaceGame from "../common/PlaceGame";
 import type { HintConfig } from "../common/hints";
-import { useGuessList } from "../common/useGuessList";
 import type { MapProps } from "../../map/MapProps";
 import type { GameComponentProps } from "../types";
 import type { River, RiverRound } from "./model";
@@ -19,24 +18,17 @@ export interface RiverVariant {
 
 /** Builds the game component for one river variant. */
 export function makeRiverGame(variant: RiverVariant) {
-  function RiverGame({ data, round, answerCount, submitAnswer }: GameComponentProps<RiverRound>): React.JSX.Element {
-    const { suggestions, isKnownGuess } = useGuessList("rivers");
+  function RiverGame(game: GameComponentProps<RiverRound>): React.JSX.Element {
     return (
-      <MapGame
-        data={data}
-        answerCount={answerCount}
+      <PlaceGame
+        kind="rivers"
+        game={game}
         MapComponent={variant.MapComponent}
-        answers={[data.river]}
-        round={round}
-        suggestions={suggestions}
-        isKnownGuess={isKnownGuess}
+        answers={[game.data.river]}
         blankMap={variant.blankMap}
         mapCaption={variant.mapCaption}
         prompt={variant.prompt}
-        inputPlaceholder="River name…"
-        answerNoun="river"
-        hints={variant.hints(data.river)}
-        submitAnswer={submitAnswer}
+        hints={variant.hints(game.data.river)}
       />
     );
   }

@@ -2,7 +2,8 @@ import { Union } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import MergedCountriesMapWrapper from "./MergedCountriesMapWrapper";
 import { makePairGame } from "./PairGame";
-import { bothFirstLettersHint, mapHint, pairHints } from "./pairHints";
+import { hintsFrom, mapHint } from "../common/hints";
+import { bothFirstLettersHint } from "./pairHints";
 
 export default defineGame({
   type: "MERGED_COUNTRIES",
@@ -17,7 +18,7 @@ export default defineGame({
     mapCaption: () => "Two neighbours as one shape. The border between them is hidden.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
-      pairHints(
+      hintsFrom(
         "Shows the countries around them, then the hidden border, then their first letters",
         round,
         mapHint("The surrounding countries are on the map"),
