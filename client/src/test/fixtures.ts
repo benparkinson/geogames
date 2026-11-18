@@ -18,6 +18,8 @@ import type { TripointModel } from "../games/tripoint/model";
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
   return {
     kind: { title: "Test Game", Icon: Globe },
+    answerSave: "saved",
+    retryAnswer: vi.fn(),
     nextRound: vi.fn(),
     goToRound: vi.fn(),
     showSummary: vi.fn(),
