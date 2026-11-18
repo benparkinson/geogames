@@ -28,14 +28,20 @@ export function distanceKm(a: LatLon, b: LatLon): number {
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-/** The initial bearing from one position to another, in degrees from north: 0 up to (not including) 360. */
+/** The Mercator "stretched" latitude, so that a constant bearing is a straight line on a flat map. */
+const mercatorY = (lat: number): number =>
+  Math.log(Math.tan(Math.PI / 4 + toRadians(Math.min(89.9, Math.max(-89.9, lat))) / 2));
+
+/**
+ * The direction from one position to another as it looks on a flat map, in degrees from north: 0 up to (not including)
+ * 360. It is the constant (rhumb line) bearing, taking the shorter way round in longitude, not the great-circle initial
+ * bearing: that one bends over the poles for far-apart places (South Korea to Paraguay starts "north-east"), which
+ * doesn't match the map the player is looking at.
+ */
 export function bearingDegrees(from: LatLon, to: LatLon): number {
-  const dLon = toRadians(to.lon - from.lon);
-  const lat1 = toRadians(from.lat);
-  const lat2 = toRadians(to.lat);
-  const y = Math.sin(dLon) * Math.cos(lat2);
-  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+  const dLon = ((((to.lon - from.lon) % 360) + 540) % 360) - 180;
+  const dY = mercatorY(to.lat) - mercatorY(from.lat);
+  return ((Math.atan2(toRadians(dLon), dY) * 180) / Math.PI + 360) % 360;
 }
 
 /** One of 8 compass points: sectors of 45° centred on each point. */
