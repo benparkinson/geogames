@@ -83,29 +83,30 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
       ? "saving"
       : "saved";
 
-  function nextRound(): void {
+  function whenSaved(action: () => void): void {
     if (answerSave === "saved") {
-      setRound(currentRound + 1);
+      action();
     }
+  }
+
+  function nextRound(): void {
+    whenSaved(() => setRound(currentRound + 1));
   }
 
   function goToRound(round: number): void {
-    if (answerSave === "saved") {
+    whenSaved(() => {
       setRound(round);
       setSummaryChoice(false);
-    }
+    });
   }
 
   function showSummaryPage(): void {
-    if (answerSave === "saved") {
-      setSummaryChoice(true);
-    }
+    whenSaved(() => setSummaryChoice(true));
   }
 
   function retryAnswer(): void {
-    if (submitAnswerMutation.variables) {
-      submitAnswerMutation.mutate(submitAnswerMutation.variables);
-    }
+    // Only offered once the answer failed, so the mutation still holds its request.
+    submitAnswerMutation.mutate(submitAnswerMutation.variables as RoundAnswer);
   }
 
   function submitAnswer(answer: RoundAnswer): void {

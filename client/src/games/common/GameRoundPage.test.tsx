@@ -158,6 +158,34 @@ describe("GameRoundPage game types", () => {
 });
 
 describe("GameRoundPage answer saving", () => {
+  it("ignores a jump to another round while the answer is still being saved", async () => {
+    const server = fakeServer(["TRIPOINT", "TRIPOINT"]);
+    const working = server.getMockImplementation()!;
+    let release: () => void = () => {};
+    const held = new Promise<void>((resolve) => (release = resolve));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if (String(url).endsWith("/rounds/0/answers")) {
+          await held;
+        }
+        return working(url, init);
+      }),
+    );
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+
+    await solveTripoint(user);
+
+    expect(await screen.findByRole("button", { name: /Next round/ })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Round 1: current" }));
+    expect(screen.getByRole("button", { name: /Next round/ })).toBeDisabled();
+
+    release();
+    await waitFor(() => expect(screen.getByRole("button", { name: /Next round/ })).toBeEnabled());
+  });
+
   it("holds the player on the round until the answer is saved, and retries a failed save", async () => {
     let attempts = 0;
     const server = fakeServer(["TRIPOINT", "TRIPOINT"]);
