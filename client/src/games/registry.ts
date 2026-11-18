@@ -27,6 +27,8 @@ export interface MenuOption {
   description: string;
   Icon: Icon;
   extraDifficult?: boolean;
+  /** Wrong guesses get a distance clue, so the Hardcore switch is relevant. */
+  hasClues?: boolean;
 }
 
 /** The request-only game type that mixes every registered game. It has no module of its own. */
@@ -35,6 +37,7 @@ export const RANDOM_OPTION: MenuOption = {
   title: "Mixed",
   description: "A random mix of every game.",
   Icon: Shuffle,
+  hasClues: true,
 };
 
 /** The home page cards in order: the standard games, the mix, then the extra difficult games. */

@@ -11,6 +11,7 @@ export default defineGame({
   singular: "Country by coastline",
   description: "Name a country from its coastline alone.",
   Icon: Tsunami,
+  hasClues: true,
   Component: makeCountryShapeGame<CountryShapeRound>({
     MapComponent: CoastlineMapWrapper,
     prompt: "Name the country with this coastline.",

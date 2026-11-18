@@ -11,6 +11,7 @@ export default defineGame({
   singular: "Country by rivers",
   description: "Name a country from the rivers inside it.",
   Icon: Water,
+  hasClues: true,
   Component: makeCountryShapeGame<CountryRiversRound>({
     MapComponent: CountryRiversMapWrapper,
     prompt: "Name the country with these rivers.",

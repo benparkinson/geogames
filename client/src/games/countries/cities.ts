@@ -11,6 +11,7 @@ export default defineGame({
   singular: "Country by cities",
   description: "Name a country from where its cities are.",
   Icon: Buildings,
+  hasClues: true,
   Component: makeCountryShapeGame<CountryCitiesRound>({
     MapComponent: CountryCitiesMapWrapper,
     prompt: "Name the country with these cities.",
