@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Notice, Spinner, ToggleGroup } from "../ui";
 import { wakeServer } from "../api/health";
 import { useCreateGame } from "../api/games";
-import { Fire } from "react-bootstrap-icons";
+import { CalendarCheck, Fire } from "react-bootstrap-icons";
 import KofiBadge from "./KofiBadge";
 import SiteFooter from "./SiteFooter";
 import ThemeToggle from "./ThemeToggle";
 import HardcoreToggle from "./HardcoreToggle";
+import Link from "next/link";
+import { entryFor, useDailyEntry } from "../daily/dailyStorage";
+import { useToday } from "../daily/useToday";
 import { MENU_OPTIONS, MenuOption, ROUND_OPTIONS } from "../games/registry";
 
 const STANDARD_OPTIONS = MENU_OPTIONS.filter(option => !option.extraDifficult);
@@ -19,6 +22,10 @@ function HomePage(): React.JSX.Element {
     const [rounds, setRounds] = useState(5);
     const [slow, setSlow] = useState(false);
     const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const todaysDaily = entryFor(useDailyEntry(), useToday());
+    const dailyStatus = todaysDaily?.result
+        ? `Done: ${todaysDaily.result.score} / ${todaysDaily.result.maxScore}`
+        : todaysDaily ? "Continue" : "Five rounds, one of each kind. The same for everyone today.";
 
     // Start waking a cold server while the player is still choosing.
     useEffect(() => {
@@ -83,6 +90,11 @@ function HomePage(): React.JSX.Element {
             </header>
             <div className="home-layout">
                 <section className="home-main">
+                {/* A link, outside the radio group below, so the arrow keys through the games don't reach it. */}
+                <Link href="/daily" className="game-card d-block w-100 text-start text-decoration-none p-3 mb-4">
+                    <div className="fw-bold"><CalendarCheck aria-hidden="true" /> Daily challenge</div>
+                    <div className="small gg-text-muted">{dailyStatus}</div>
+                </Link>
                 <h2 className="h5">Choose a game</h2>
                 <div className="mb-3"><HardcoreToggle /></div>
                 {/* One radio group across both sections, so the arrow keys move through every card. */}

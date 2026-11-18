@@ -56,6 +56,9 @@ class GameControllerTest {
 
   @MockitoBean private GameService gameService;
 
+  @MockitoBean
+  private com.parkinson.benjamin.geogames.service.daily.DailyChallengeService dailyService;
+
   private static RoundAnswerResponse answer() {
     return new RoundAnswerResponse(AnswerState.CORRECT, 0, 100, round().gameResult());
   }
@@ -554,5 +557,46 @@ class GameControllerTest {
     postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isOk());
 
     verify(gameService, times(2)).recordHint(GAME_ID, 0, 0, 2);
+  }
+
+  @Test
+  void aDailyGameWithADateUsesThatDate() throws Exception {
+    java.time.LocalDate date = java.time.LocalDate.of(2026, 11, 20);
+    when(dailyService.createDailyGame(Optional.of(date)))
+        .thenReturn(new com.parkinson.benjamin.geogames.api.DailyGameResponse(GAME_ID, date, 3));
+
+    mockMvc
+        .perform(
+            post("/api/daily-games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"date\":\"2026-11-20\"}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(GAME_ID.toString()))
+        .andExpect(jsonPath("$.date").value("2026-11-20"))
+        .andExpect(jsonPath("$.number").value(3));
+  }
+
+  @Test
+  void aDailyGameWithNoDateUsesTheServersDate() throws Exception {
+    java.time.LocalDate date = java.time.LocalDate.of(2026, 11, 20);
+    when(dailyService.createDailyGame(Optional.empty()))
+        .thenReturn(new com.parkinson.benjamin.geogames.api.DailyGameResponse(GAME_ID, date, 3));
+
+    mockMvc
+        .perform(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .andExpect(status().isOk());
+    mockMvc.perform(post("/api/daily-games")).andExpect(status().isOk());
+  }
+
+  @Test
+  void aMalformedDailyDateIsABadRequest() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/daily-games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"date\":\"20/11/2026\"}"))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(dailyService);
   }
 }

@@ -153,6 +153,14 @@ class ApiContractIT {
     endpoints.put("GET /api/rivers", endpointShape("/api/rivers"));
     endpoints.put("GET /api/lakes", endpointShape("/api/lakes"));
     endpoints.put("POST /api/games", JsonShape.of(createGame(GameType.TRIPOINT)));
+    endpoints.put(
+        "POST /api/daily-games",
+        JsonShape.of(
+            objectMapper.readTree(
+                body(
+                    post("/api/daily-games")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")))));
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 
     endpoints.put("POST /api/games/{id}/rounds/{round}/guesses", guessShape());

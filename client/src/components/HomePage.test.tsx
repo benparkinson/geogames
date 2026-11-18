@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
 import { renderWithClient } from "../test/render";
 import HomePage from "./HomePage";
+import { localDateString } from "../api/daily";
+import { resetDailyStorageForTests, writeDaily } from "../daily/dailyStorage";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
 vi.mock("next/router", () => ({ useRouter: () => router }));
@@ -305,5 +307,45 @@ describe("HomePage Hardcore mode", () => {
 
     await user.click(within(group).getByRole("radio", { name: "Off" }));
     expect(localStorage.getItem("gg-hardcore")).toBeNull();
+  });
+});
+
+describe("HomePage daily challenge card", () => {
+  const entry = { v: 1 as const, date: localDateString(), number: 2, gameId: "g1", hardcore: false };
+
+  beforeEach(resetDailyStorageForTests);
+
+  it("links to /daily, outside the game cards, without creating a game", () => {
+    const fetchMock = mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    const link = screen.getByRole("link", { name: /Daily challenge/ });
+    expect(link).toHaveAttribute("href", "/daily");
+    expect(cards().queryByRole("link", { name: /Daily challenge/ })).toBeNull();
+    expect(callsTo(fetchMock).filter((c) => c.method === "POST")).toEqual([]);
+  });
+
+  it("says Continue for a game started today", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    writeDaily(entry);
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Continue");
+  });
+
+  it("shows the score once today's game is finished", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    writeDaily({ ...entry, result: { score: 430, maxScore: 500, rounds: ["perfect", "perfect", "perfect", "perfect", "perfect"] } });
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 430 / 500");
+  });
+
+  it("ignores a game from another day", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    writeDaily({ ...entry, date: "2020-01-01" });
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).not.toHaveTextContent("Continue");
   });
 });

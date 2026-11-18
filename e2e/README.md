@@ -27,6 +27,7 @@ Useful options: `--project=desktop` or `--project=mobile` (Pixel 7), `--headed`,
 | `home.spec.ts` | The home page lists every game and the round counts. |
 | `every-game.spec.ts` | Every game type, and the mix, played start to finish with the right answers. |
 | `full-game.spec.ts` | A Tripoint game with a hint, a reveal and running out of guesses, and its score. |
+| `daily.spec.ts` | The daily challenge: play, share, reload with no new game, and a second player gets the same rounds. |
 | `guessing.spec.ts` | Unknown names, wrong guesses, aliases, distance clues and Hardcore mode. |
 | `deep-link.spec.ts` | Reloading a game page. Marked `test.fail()`: it is a known bug (see the comment in the file). |
 

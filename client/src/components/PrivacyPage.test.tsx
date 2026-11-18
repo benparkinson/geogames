@@ -27,6 +27,9 @@ describe("PrivacyPage", () => {
     render(<PrivacyPage />);
 
     expect(screen.getByText("gg-theme")).toBeInTheDocument();
+    expect(screen.getByText("gg-hardcore")).toBeInTheDocument();
+    expect(screen.getByText("gg-daily")).toBeInTheDocument();
+    expect(screen.getByText(/up to three items/)).toBeInTheDocument();
   });
 
   it("shows the site footer", () => {
