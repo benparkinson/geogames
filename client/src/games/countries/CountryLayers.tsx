@@ -1,22 +1,14 @@
 import { GeoJSON, Marker, Tooltip } from "react-leaflet";
 import { targetFlagIcon } from "../../map/flagIcons";
 import { FitBounds } from "../../map/FitBounds";
+import { boundsToLatLng } from "../../map/boundsToLatLng";
 import { answerPathOptions, clueLineOptions, clueOutlineOptions, hintLineOptions, lakeFillOptions, minorRiverOptions } from "../../map/constants";
 import type { CountryGeoData, LineGeoData } from "../common/country";
 import type { CountryOutline, CountryShape } from "./model";
 
 /** Fits the map to the country's largest part, so overseas parts and the antimeridian don't zoom out to the world. */
 export function FocusFit({ country }: { country: CountryShape }): React.JSX.Element {
-  const { south, west, north, east } = country.focus;
-  return (
-    <FitBounds
-      id={country.name}
-      bounds={[
-        [south, west],
-        [north, east],
-      ]}
-    />
-  );
+  return <FitBounds id={country.name} bounds={boundsToLatLng(country.focus)} />;
 }
 
 /**

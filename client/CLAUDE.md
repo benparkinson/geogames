@@ -28,7 +28,7 @@ localStorage key `gg-daily` (`dailyStorage.ts`, modelled on `settings/hardMode.t
 
 ## Credits
 
-The credits live in `components/SiteFooter` (the home, summary and privacy pages) and `map/MapCredits` (every map, through Leaflet's attribution control). They name Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA, positions adjusted) and the Flaticon icon authors. The relief tiles are Natural Earth II (public domain), self-hosted in `public/tiles/relief/` (zooms 0–6, made by `ReliefTilesMain`, committed), so no browser request for a map leaves the site; always draw them with `map/ReliefTiles`, never a bare `TileLayer`. Every new map must include `MapCredits`. A new data source or tile layer needs a credit in the footer. A new data source or third party that receives requests from the browser also needs a line on the privacy page (`components/PrivacyPage`).
+The credits live in `components/SiteFooter` (the home, summary and privacy pages) and `map/MapCredits` (every map, through Leaflet's attribution control). They name Natural Earth (all geometry), Wikidata (names), Wikipedia (the tripoint list, CC BY-SA, positions adjusted) and the Flaticon icon authors. The relief tiles are Natural Earth II (public domain), self-hosted in `public/tiles/relief/` (zooms 0–6, made by `ReliefTilesMain`, committed), so no browser request for a map leaves the site; always draw them with `map/ReliefTiles`, never a bare `TileLayer`. Every map is built on `map/GameMap`, which adds `MapCredits` and `MapResizer` (ESLint rejects a bare `MapContainer`); pass `credit` for a credit only that map needs. A new data source or tile layer needs a credit in the footer. A new data source or third party that receives requests from the browser also needs a line on the privacy page (`components/PrivacyPage`).
 
 ## Structure (`src/`)
 
@@ -51,7 +51,7 @@ The client checks answers, not the server. It compares guesses with the data in 
 Create `src/games/<name>/` with:
 - a module built by `defineGame` (its fields are described in `games/types.ts`: the backend `type`, titles, description, icon, component and `answerNames`),
 - a component, usually built on the generic `games/common/MapGame`,
-- a `*Map.tsx` + `*MapWrapper.tsx` pair that takes `MapProps<T>`.
+- a `*Map.tsx` + `*MapWrapper.tsx` pair that takes `MapProps<T>`, with the map built on `map/GameMap` (it adds `MapCredits` and `MapResizer`).
 
 A game whose answers are countries and whose map hides the location should pass `clueFor={useCountryClues()}` to `MapGame`.
 
