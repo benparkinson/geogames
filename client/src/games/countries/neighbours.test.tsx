@@ -32,11 +32,11 @@ describe("Country Gaps", () => {
     expect(neighbours.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the caption", () => {
+  it("shows the prompt and the map key", () => {
     renderGame();
 
-    expect(screen.getByText("Name the missing country.")).toBeInTheDocument();
-    expect(screen.getByText("Only its neighbours are shown. The country is the gap.")).toBeInTheDocument();
+    expect(screen.getByText("Which country is missing?")).toBeInTheDocument();
+    expect(screen.getByText("The shaded countries are its neighbours. The flag marks the gap.")).toBeInTheDocument();
   });
 
   it("offers three hints: the coastline on the map, the longest border, then the first letter", async () => {

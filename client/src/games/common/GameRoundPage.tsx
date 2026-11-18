@@ -16,12 +16,14 @@ type RoundActions = Pick<Round, "nextRound" | "goToRound" | "showSummary" | "rec
 function buildRound(
   data: GameRoundView,
   currentRound: number,
+  kind: Round["kind"],
   hasClues: boolean,
   dailyDate: string | undefined,
   actions: RoundActions,
 ): Round {
   return {
     ...actions,
+    kind,
     hasNextRound: currentRound < data.totalRoundCount - 1,
     currentRound,
     totalRoundCount: data.totalRoundCount,
@@ -89,7 +91,8 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
     if (!gameModule) {
       return <div>Unknown game type...</div>;
     }
-    const round = buildRound(data, currentRound, !!gameModule.hasClues, daily?.date, {
+    const kind = { title: gameModule.title, Icon: gameModule.Icon };
+    const round = buildRound(data, currentRound, kind, !!gameModule.hasClues, daily?.date, {
       nextRound,
       goToRound,
       showSummary: () => setSummaryChoice(true),

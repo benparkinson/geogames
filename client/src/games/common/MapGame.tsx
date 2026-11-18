@@ -11,6 +11,7 @@ import { foundAnswers, GuessClue, guessesLeft, wrongGuesses } from "./guessReduc
 import type { HintConfig } from "./hints";
 import { CORRECT_ANSWER, Round, RoundAnswer } from "./Model";
 import RoundActions from "./RoundActions";
+import RoundBrief from "./RoundBrief";
 import RoundResult from "./RoundResult";
 import RoundStatus from "./RoundStatus";
 import { roundPoints } from "./scoring";
@@ -27,7 +28,7 @@ function MapGame<Type>({
   inputPlaceholder,
   answerNoun,
   blankMap,
-  mapCaption,
+  mapKey,
   suggestions,
   isKnownGuess,
   hints,
@@ -60,13 +61,17 @@ function MapGame<Type>({
         hintsUsed={hintsUsed}
         foundAtHint={state.foundAtHint}
       />
-      {mapCaption && !gameOver && <div className="map-caption">{mapCaption}</div>}
     </>
   );
 
   const panel = (
     <>
-      <div className="mb-2">{prompt}</div>
+      <RoundBrief
+        title={round.kind.title}
+        Icon={round.kind.Icon}
+        question={prompt}
+        mapKey={gameOver ? undefined : mapKey}
+      />
       {hintTexts.length > 0 && (
         <ul className="round-hints">
           {hintTexts.map((text, index) => (
@@ -156,8 +161,8 @@ export interface MapGameProps<Type> {
   answerNoun: string;
   /** Shows a grey map instead of the real one while the round is being played. */
   blankMap?: boolean;
-  /** A caption over the map while the round is being played. */
-  mapCaption?: string;
+  /** What the marks on the map are, shown in the round brief until the round ends. */
+  mapKey: string;
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
   /** What the round's hints say. The round's `hintCount` (from the backend) says how many there are. */

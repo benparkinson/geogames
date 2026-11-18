@@ -29,11 +29,13 @@ describe("Country Rivers", () => {
     expect(countryRivers.answerNames(makeCountryRiversRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the caption", () => {
+  it("shows the prompt and the map key", () => {
     renderGame();
 
-    expect(screen.getByText("Name the country with these rivers.")).toBeInTheDocument();
-    expect(screen.getByText("Its rivers, the major ones thicker. The outline is hidden.")).toBeInTheDocument();
+    expect(screen.getByText("Which country has these rivers?")).toBeInTheDocument();
+    expect(
+      screen.getByText("The solid lines are rivers inside it. Thicker lines are major rivers."),
+    ).toBeInTheDocument();
   });
 
   it("offers three hints: the lakes and the coastline on the map, then the first letter", async () => {

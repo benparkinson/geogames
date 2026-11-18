@@ -15,8 +15,8 @@ export default defineGame({
   extraDifficult: true,
   Component: makePairGame({
     MapComponent: BorderShapesMapWrapper,
-    prompt: "Name the two countries this border separates.",
-    mapCaption: (round) => `Border length: ${round.borderKm.toLocaleString("en-GB")} km`,
+    prompt: "Which two countries does this border separate?",
+    mapKey: (round) => `The solid line is the border between them, ${round.borderKm.toLocaleString("en-GB")} km long.`,
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(

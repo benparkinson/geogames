@@ -23,6 +23,7 @@ function renderGame(overrides: Partial<React.ComponentProps<typeof MapGame<objec
     answers: ANSWERS,
     round: makeRoundProps(),
     prompt: "Name them",
+    mapKey: "The map key.",
     inputPlaceholder: "Country…",
     answerNoun: "country",
     hints: { description: "A clue" },
@@ -47,33 +48,37 @@ async function reveal(user: ReturnType<typeof userEvent.setup>) {
 
 describe("MapGame fresh round", () => {
   it("starts with nothing found and the map still hiding the answer", () => {
-    renderGame({ blankMap: true, mapCaption: "Shape only." });
+    renderGame({ blankMap: true });
 
     expect(screen.getByText("Name them")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 0 of 2 found" })).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "false");
     expect(map()).toHaveAttribute("data-gave-up", "false");
-    expect(screen.getByText("Shape only.")).toBeInTheDocument();
   });
 
-  it("shows no caption when none is configured", () => {
+  it("shows the round name, the question and the map key in that order, before the answer slots", () => {
     renderGame();
 
-    expect(screen.queryByText("Shape only.")).not.toBeInTheDocument();
+    const name = screen.getByText("Test Game");
+    const question = screen.getByRole("heading", { level: 1, name: "Name them" });
+    const key = screen.getByText("The map key.");
+    const slots = screen.getByRole("group", { name: /Answers:/ });
+    expect(name.compareDocumentPosition(question) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(question.compareDocumentPosition(key) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(key.compareDocumentPosition(slots) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it("can show a caption on a normal map", () => {
-    renderGame({ mapCaption: "Zoom is limited." });
+  it("puts nothing on the map but the map", () => {
+    renderGame();
 
-    expect(screen.getByText("Zoom is limited.")).toBeInTheDocument();
-    expect(document.querySelector(".game-map--blank")).toBeNull();
+    expect(map().parentElement?.children).toHaveLength(1);
+    expect(screen.queryByText("The map key.", { selector: ".game-map *" })).not.toBeInTheDocument();
   });
 
-  it("can blank the map without a caption", () => {
+  it("can blank the map by itself", () => {
     renderGame({ blankMap: true });
 
     expect(document.querySelector(".game-map--blank")).not.toBeNull();
-    expect(document.querySelector(".map-caption")).toBeNull();
   });
 });
 
@@ -131,7 +136,7 @@ describe("MapGame guessing", () => {
 
   it("finishes the round exactly once when every answer is found", async () => {
     const user = userEvent.setup();
-    const { submitAnswer } = renderGame({ blankMap: true, mapCaption: "Shape only." });
+    const { submitAnswer } = renderGame({ blankMap: true });
 
     await guess(user, "France");
     await guess(user, "Spain");
@@ -142,7 +147,9 @@ describe("MapGame guessing", () => {
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("button", { name: /Next round/ })).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-    expect(screen.queryByText("Shape only.")).not.toBeInTheDocument();
+    expect(screen.getByText("Name them")).toBeInTheDocument();
+    expect(screen.getByText("Test Game")).toBeInTheDocument();
+    expect(screen.queryByText("The map key.")).not.toBeInTheDocument();
   });
 
   it("reports only the guesses that count against the limit as wrong guesses", async () => {
@@ -617,6 +624,7 @@ describe("MapGame resuming a solved round", () => {
       answers: ANSWERS,
       round,
       prompt: "Name them",
+      mapKey: "The map key.",
       inputPlaceholder: "Country…",
       answerNoun: "country",
       hints: { description: "A clue" },
@@ -648,6 +656,7 @@ describe("MapGame resuming an unfinished round", () => {
       answers: ANSWERS,
       round,
       prompt: "Name them",
+      mapKey: "The map key.",
       inputPlaceholder: "Country�",
       answerNoun: "country",
       hints: { description: "A clue" },

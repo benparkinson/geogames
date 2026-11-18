@@ -1,3 +1,4 @@
+import type { Icon } from "react-bootstrap-icons";
 import type { RecordedGuess } from "../../api/types";
 
 export type AnswerState = "UNANSWERED" | "CORRECT" | "GAVE_UP" | "OUT_OF_GUESSES";
@@ -31,6 +32,8 @@ export interface RoundAnswer {
 }
 
 export interface Round {
+  /** The kind of round: the game module's name and icon, shown at the top of the panel. */
+  kind: { title: string; Icon: Icon };
   nextRound: () => void;
   goToRound: (round: number) => void;
   showSummary: () => void;

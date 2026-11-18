@@ -32,11 +32,13 @@ describe("Coastlines", () => {
     expect(coastline.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the caption", () => {
+  it("shows the prompt and the map key", () => {
     renderGame();
 
-    expect(screen.getByText("Name the country with this coastline.")).toBeInTheDocument();
-    expect(screen.getByText("Coastline only. Land borders are hidden.")).toBeInTheDocument();
+    expect(screen.getByText("Which country has this coastline?")).toBeInTheDocument();
+    expect(
+      screen.getByText("The solid lines are its coast. Its land borders aren't drawn at first."),
+    ).toBeInTheDocument();
   });
 
   it("offers three hints: the neighbour count, the land borders on the map, then the first letter", async () => {

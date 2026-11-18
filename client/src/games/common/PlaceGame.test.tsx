@@ -28,6 +28,7 @@ function renderPlaceGame(kind: "countries" | "rivers" | "lakes", hasClues: boole
       MapComponent={MapStub}
       answers={[{ name: "Netherlands", additionalNames: [] }]}
       prompt="Name it"
+      mapKey="The map key."
       hints={{ description: "A clue" }}
     />,
   );

@@ -36,8 +36,8 @@ describe("Border Shapes", () => {
   it("shows the prompt and the border length from the start", () => {
     renderGame();
 
-    expect(screen.getByText("Name the two countries this border separates.")).toBeInTheDocument();
-    expect(screen.getByText("Border length: 450 km")).toBeInTheDocument();
+    expect(screen.getByText("Which two countries does this border separate?")).toBeInTheDocument();
+    expect(screen.getByText("The solid line is the border between them, 450 km long.")).toBeInTheDocument();
   });
 
   it("writes a long border length with a thousands separator", () => {
@@ -52,7 +52,7 @@ describe("Border Shapes", () => {
       />,
     );
 
-    expect(screen.getByText("Border length: 8,908 km")).toBeInTheDocument();
+    expect(screen.getByText("The solid line is the border between them, 8,908 km long.")).toBeInTheDocument();
   });
 
   it("offers three hints: the other borders and the coastlines on the map, then both first letters", async () => {

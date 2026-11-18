@@ -9,7 +9,7 @@ import type { HasCountry } from "./model";
 export interface CountryVariant<T extends HasCountry> {
   MapComponent: ComponentType<MapProps<T>>;
   prompt: string;
-  mapCaption: string;
+  mapKey: string;
   hints: (round: T) => HintConfig;
 }
 
@@ -27,7 +27,7 @@ export function makeCountryGame<T extends HasCountry>(variant: CountryVariant<T>
         MapComponent={variant.MapComponent}
         answers={[{ name: country.name, additionalNames: country.additionalNames }]}
         blankMap
-        mapCaption={variant.mapCaption}
+        mapKey={variant.mapKey}
         prompt={variant.prompt}
         hints={variant.hints(game.data)}
       />

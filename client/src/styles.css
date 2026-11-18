@@ -65,20 +65,22 @@ code {
 .game-map--blank .leaflet-container {
   background: var(--gg-color-map-blank);
 }
-.map-caption {
-  position: absolute;
-  top: 0.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 500;
-  pointer-events: none;
-  max-width: calc(100% - 1.5rem);
-  text-align: center;
-  background: var(--gg-color-map-caption-bg);
-  color: var(--gg-color-map-caption-text);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--gg-radius-xl);
+.round-brief {
+  margin-bottom: 0.5rem;
+}
+.round-brief-title {
   font-size: 0.8rem;
+  color: var(--gg-color-text-muted);
+}
+.round-brief-question {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.round-brief-key {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
 }
 
 @media (min-width: 992px) {
@@ -286,7 +288,8 @@ code {
       opacity: 1;
     }
   }
-  .round-result {
+  .round-result,
+  .round-brief {
     animation: result-in var(--gg-duration-slow) ease-out;
   }
 
