@@ -9,7 +9,12 @@ import { CountryRiversRound } from "./model";
  * The first hint adds its lakes and the second its coastline. Once the round is over the outline and
  * the relief map replace them.
  */
-function CountryRiversMap({ data: { country, major, minor, lakes }, gameOver, gaveUp, hintsUsed }: MapProps<CountryRiversRound>): React.JSX.Element {
+function CountryRiversMap({
+  data: { country, major, minor, lakes },
+  gameOver,
+  gaveUp,
+  hintsUsed,
+}: MapProps<CountryRiversRound>): React.JSX.Element {
   const hasLakes = lakes.geometry.coordinates.length > 0;
   const hasCoast = country.coast.geometry.coordinates.length > 0;
   return (

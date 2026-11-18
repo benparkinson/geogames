@@ -96,7 +96,10 @@ async function solveTripoint(user: ReturnType<typeof userEvent.setup>) {
 
 describe("GameRoundPage loading and errors", () => {
   it("shows a spinner and a loading title while the round loads", () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => { })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
     renderPage();
 
     expect(screen.getByRole("status")).toBeTruthy();
@@ -114,7 +117,11 @@ describe("GameRoundPage loading and errors", () => {
 describe("GameRoundPage game types", () => {
   it("titles and tells a daily game by its number", async () => {
     fakeServer(["TRIPOINT"]);
-    render(<QueryClientProvider client={client}><GameRoundPage gameId="g1" daily={{ number: 42, date: "2026-11-18" }} /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={client}>
+        <GameRoundPage gameId="g1" daily={{ number: 42, date: "2026-11-18" }} />
+      </QueryClientProvider>,
+    );
 
     expect(await screen.findByText("Daily 2026-11-18")).toBeInTheDocument();
     expect(title()).toBe("Daily 2026-11-18 | GeoGauntlet");

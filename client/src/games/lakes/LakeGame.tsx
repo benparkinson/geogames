@@ -5,7 +5,12 @@ import { lakeHints } from "./lakeHints";
 import LakeShapesMapWrapper from "./LakeShapesMapWrapper";
 import type { LakeRound } from "./model";
 
-export default function LakeGame({ data, round, answerCount, submitAnswer }: GameComponentProps<LakeRound>): React.JSX.Element {
+export default function LakeGame({
+  data,
+  round,
+  answerCount,
+  submitAnswer,
+}: GameComponentProps<LakeRound>): React.JSX.Element {
   const { suggestions, isKnownGuess } = useGuessList("lakes");
   return (
     <MapGame

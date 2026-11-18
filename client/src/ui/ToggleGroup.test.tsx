@@ -4,14 +4,24 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ToggleGroup } from "./ToggleGroup";
 
-const OPTIONS = [1, 3, 5].map(n => ({ value: n, label: String(n) }));
+const OPTIONS = [1, 3, 5].map((n) => ({ value: n, label: String(n) }));
 
 function Harness({ onChange }: { onChange: (n: number) => void }): React.JSX.Element {
   const [value, setValue] = useState(3);
   return (
     <>
       <span id="lbl">Rounds</span>
-      <ToggleGroup name="rounds" value={value} options={OPTIONS} size="sm" aria-labelledby="lbl" onChange={n => { setValue(n); onChange(n); }} />
+      <ToggleGroup
+        name="rounds"
+        value={value}
+        options={OPTIONS}
+        size="sm"
+        aria-labelledby="lbl"
+        onChange={(n) => {
+          setValue(n);
+          onChange(n);
+        }}
+      />
     </>
   );
 }

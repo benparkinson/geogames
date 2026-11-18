@@ -67,7 +67,11 @@ function roundFixtures(): Record<string, GameRoundResponse> {
 /** The shape of a round response the way the backend contract describes it: the blob parsed and shaped. */
 function roundShape(round: GameRoundResponse): Shape {
   // The contract records a round with a stored guess and hint, so the shape of their elements is known.
-  const { jsonBlob, ...rest } = { ...round, guesses: makeGuessesResponse().guesses, hintsTakenAt: makeHintsResponse().hintsTakenAt };
+  const { jsonBlob, ...rest } = {
+    ...round,
+    guesses: makeGuessesResponse().guesses,
+    hintsTakenAt: makeHintsResponse().hintsTakenAt,
+  };
   return { ...(shapeOf(rest) as { [key: string]: Shape }), jsonBlob: shapeOf(JSON.parse(jsonBlob)) };
 }
 
@@ -127,7 +131,7 @@ function join(path: string, key: string): string {
 function unexpectedlyMissing(fixture: Shape, backend: Shape): string[] {
   const missing: string[] = [];
   missingFromFixture(fixture, backend, "", missing);
-  return missing.filter(path => !(path in IGNORED_BACKEND_FIELDS));
+  return missing.filter((path) => !(path in IGNORED_BACKEND_FIELDS));
 }
 
 describe("the backend contract (client/src/test/api-shapes.json)", () => {
@@ -137,7 +141,7 @@ describe("the backend contract (client/src/test/api-shapes.json)", () => {
     expect(Object.keys(fixtures).sort()).toEqual(Object.keys(rounds).sort());
   });
 
-  describe.each(Object.keys(rounds))("%s", type => {
+  describe.each(Object.keys(rounds))("%s", (type) => {
     it("has only fields the backend sends", () => {
       const problems: string[] = [];
       inventedByFixture(roundShape(fixtures[type]), rounds[type], "", problems);
@@ -154,9 +158,9 @@ describe("the backend contract (client/src/test/api-shapes.json)", () => {
     for (const type of Object.keys(rounds)) {
       const missing: string[] = [];
       missingFromFixture(roundShape(fixtures[type]), rounds[type], "", missing);
-      missing.forEach(path => stillMissing.add(path));
+      missing.forEach((path) => stillMissing.add(path));
     }
-    const stale = Object.keys(IGNORED_BACKEND_FIELDS).filter(path => !stillMissing.has(path));
+    const stale = Object.keys(IGNORED_BACKEND_FIELDS).filter((path) => !stillMissing.has(path));
     expect(stale).toEqual([]);
   });
 

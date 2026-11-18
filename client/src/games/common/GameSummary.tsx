@@ -27,11 +27,16 @@ function roundAnswers(round: GameRoundView): string[] {
 
 /** The game type to start for "Play again": the one every round used, or a mix if they differed. */
 function playAgainType(rounds: GameRoundView[]): string {
-  const types = new Set(rounds.map(r => r.gameType.name));
+  const types = new Set(rounds.map((r) => r.gameType.name));
   return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
 }
 
-export default function GameSummary({ gameId, totalRoundCount, onOpenRound, daily }: {
+export default function GameSummary({
+  gameId,
+  totalRoundCount,
+  onOpenRound,
+  daily,
+}: {
   gameId: string;
   totalRoundCount: number;
   onOpenRound: (round: number) => void;
@@ -44,7 +49,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
   });
   const { createGame, isLoading: creating, error: createError } = useCreateGame();
 
-  const all = results.flatMap(r => (r.data ? [r.data] : []));
+  const all = results.flatMap((r) => (r.data ? [r.data] : []));
 
   if (all.length < totalRoundCount) {
     return <LoadingSpinner fullPage className="page-bg" />;
@@ -64,12 +69,17 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
   // A game of one type names it once at the top; a mixed game (the daily or Mixed) names each round's type.
   const mixed = gameType === RANDOM_OPTION.type;
   const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
-  const share = daily && all[0].gameResult.gameState === FINISHED
-    ? shareText(
-        { date: daily.date, hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore, result: resultFromGame(all[0].gameResult) },
-        window.location.origin,
-      )
-    : null;
+  const share =
+    daily && all[0].gameResult.gameState === FINISHED
+      ? shareText(
+          {
+            date: daily.date,
+            hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore,
+            result: resultFromGame(all[0].gameResult),
+          },
+          window.location.origin,
+        )
+      : null;
 
   return (
     <div className="min-vh-100 page-bg d-flex flex-column">
@@ -84,9 +94,13 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
         {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
         <h1 className="h3 mb-1">
           {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
-          {perfectGame
-            ? <><StarFill aria-hidden="true" className="gg-text-perfect" /> Perfect game! {score} / {maxScore}</>
-            : `You scored ${score} / ${maxScore}`}
+          {perfectGame ? (
+            <>
+              <StarFill aria-hidden="true" className="gg-text-perfect" /> Perfect game! {score} / {maxScore}
+            </>
+          ) : (
+            `You scored ${score} / ${maxScore}`
+          )}
         </h1>
         <p className="gg-text-muted mb-3">{breakdown.length > 0 ? breakdown.join(" · ") : "0 perfect"}</p>
 
@@ -102,9 +116,19 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
                 onClick={() => onOpenRound(i)}
               >
                 <span>
-                  {mixed
-                    ? <><span className="gg-text-muted">{i + 1}. {roundLabel(r)}</span><br />{roundAnswers(r).join(", ")}</>
-                    : <><span className="gg-text-muted">{i + 1}.</span> {roundAnswers(r).join(", ")}</>}
+                  {mixed ? (
+                    <>
+                      <span className="gg-text-muted">
+                        {i + 1}. {roundLabel(r)}
+                      </span>
+                      <br />
+                      {roundAnswers(r).join(", ")}
+                    </>
+                  ) : (
+                    <>
+                      <span className="gg-text-muted">{i + 1}.</span> {roundAnswers(r).join(", ")}
+                    </>
+                  )}
                   {r.answerState === OUT_OF_GUESSES && (
                     <>
                       <br />
@@ -114,22 +138,37 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
                   {r.hintsUsed > 0 && (
                     <>
                       <br />
-                      <span className="small gg-text-muted">{r.hintsUsed === 1 ? "1 hint" : `${r.hintsUsed} hints`}</span>
+                      <span className="small gg-text-muted">
+                        {r.hintsUsed === 1 ? "1 hint" : `${r.hintsUsed} hints`}
+                      </span>
                     </>
                   )}
                 </span>
                 <span className={"text-nowrap " + (isCorrect ? "gg-text-correct" : "gg-text-revealed")}>
-                  {perfect ? <StarFill aria-hidden="true" />
-                    : isCorrect ? <CheckLg aria-hidden="true" />
-                    : <EyeFill aria-hidden="true" />} +{r.points}
+                  {perfect ? (
+                    <StarFill aria-hidden="true" />
+                  ) : isCorrect ? (
+                    <CheckLg aria-hidden="true" />
+                  ) : (
+                    <EyeFill aria-hidden="true" />
+                  )}{" "}
+                  +{r.points}
                 </span>
               </button>
             );
           })}
         </div>
 
-        {!!createError && <div className="gg-text-danger small mb-2" role="alert">Couldn&apos;t start a new game. Try again.</div>}
-        {share !== null && <div className="mb-3"><ShareButton text={share} /></div>}
+        {!!createError && (
+          <div className="gg-text-danger small mb-2" role="alert">
+            Couldn&apos;t start a new game. Try again.
+          </div>
+        )}
+        {share !== null && (
+          <div className="mb-3">
+            <ShareButton text={share} />
+          </div>
+        )}
         <div className="d-flex gap-2">
           {daily ? (
             <Button variant="secondary" onClick={() => createGame("RANDOM", 5)} disabled={creating}>
@@ -140,7 +179,9 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
               {creating ? <Spinner size="sm" /> : "Play again"}
             </Button>
           )}
-          <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
+          <Link href="/" className={buttonClass({ variant: "quiet" })}>
+            Home
+          </Link>
         </div>
       </div>
       <SiteFooter className="mt-auto pt-4 pb-4" />

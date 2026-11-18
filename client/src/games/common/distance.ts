@@ -24,8 +24,7 @@ const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
 export function distanceKm(a: LatLon, b: LatLon): number {
   const dLat = toRadians(b.lat - a.lat);
   const dLon = toRadians(b.lon - a.lon);
-  const h =
-    Math.sin(dLat / 2) ** 2 + Math.cos(toRadians(a.lat)) * Math.cos(toRadians(b.lat)) * Math.sin(dLon / 2) ** 2;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRadians(a.lat)) * Math.cos(toRadians(b.lat)) * Math.sin(dLon / 2) ** 2;
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
@@ -41,7 +40,7 @@ export function bearingDegrees(from: LatLon, to: LatLon): number {
 
 /** One of 8 compass points: sectors of 45° centred on each point. */
 export function compassPoint(bearing: number): CompassPoint {
-  const sector = Math.floor((((bearing % 360) + 360) % 360 + 22.5) / 45) % 8;
+  const sector = Math.floor(((((bearing % 360) + 360) % 360) + 22.5) / 45) % 8;
   return COMPASS_POINTS[sector];
 }
 

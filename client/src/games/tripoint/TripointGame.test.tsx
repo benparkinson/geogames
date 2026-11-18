@@ -93,7 +93,10 @@ describe("Tripoint guessing", () => {
   });
 
   it("does not check names against the country list until it has loaded", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
     renderTripoint();
 
     await guess(userEvent.setup(), "Atlantis");

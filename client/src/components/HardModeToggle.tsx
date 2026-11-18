@@ -22,13 +22,15 @@ export default function HardModeToggle({ compact = false }: { compact?: boolean 
         name={`hard-mode-${id}`}
         aria-labelledby={labelId}
         value={hardMode ? "on" : "off"}
-        onChange={value => setHardMode(value === "on")}
+        onChange={(value) => setHardMode(value === "on")}
         options={[
           { value: "off", label: "Off" },
           { value: "on", label: "On" },
         ]}
       />
-      <span className="small gg-text-muted">{compact ? (hardMode ? "No distance clues" : "Distance clues on") : description}</span>
+      <span className="small gg-text-muted">
+        {compact ? (hardMode ? "No distance clues" : "Distance clues on") : description}
+      </span>
     </div>
   );
 }

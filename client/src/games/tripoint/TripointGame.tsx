@@ -6,11 +6,16 @@ import type { GameComponentProps } from "../types";
 import TripointMapWrapper from "./TripointMapWrapper";
 import type { TripointModel, TripointRoundData } from "./model";
 
-export default function TripointGame({ data: tripoint, round, answerCount, submitAnswer }: GameComponentProps<TripointModel>): React.JSX.Element {
+export default function TripointGame({
+  data: tripoint,
+  round,
+  answerCount,
+  submitAnswer,
+}: GameComponentProps<TripointModel>): React.JSX.Element {
   // Hints reveal country outlines in this order. It is picked once per round and never changes.
   const [data] = useState<TripointRoundData>(() => ({
     ...tripoint,
-    hintOrder: shuffle(tripoint.countries.map(country => country.name)),
+    hintOrder: shuffle(tripoint.countries.map((country) => country.name)),
   }));
   const { suggestions, isKnownGuess } = useGuessList("countries");
 

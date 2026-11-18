@@ -10,7 +10,10 @@ afterEach(() => {
 });
 
 function setClipboard(writeText: unknown) {
-  Object.defineProperty(navigator, "clipboard", { value: writeText === undefined ? undefined : { writeText }, configurable: true });
+  Object.defineProperty(navigator, "clipboard", {
+    value: writeText === undefined ? undefined : { writeText },
+    configurable: true,
+  });
 }
 
 describe("ShareButton", () => {

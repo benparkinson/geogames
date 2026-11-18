@@ -43,13 +43,23 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
   return (
     <div>
       <div className="d-flex flex-wrap align-items-center gap-2">
-        <Button variant="primary" onClick={copy}><span aria-hidden="true">📋</span> Copy result</Button>
-        {canShare && <Button variant="secondary" onClick={share}><span aria-hidden="true">↗</span> Share</Button>}
-        <span aria-live="polite" className="small gg-text-muted">{copied ? "Copied!" : ""}</span>
+        <Button variant="primary" onClick={copy}>
+          <span aria-hidden="true">📋</span> Copy result
+        </Button>
+        {canShare && (
+          <Button variant="secondary" onClick={share}>
+            <span aria-hidden="true">↗</span> Share
+          </Button>
+        )}
+        <span aria-live="polite" className="small gg-text-muted">
+          {copied ? "Copied!" : ""}
+        </span>
       </div>
       {manual && (
         <div className="mt-2">
-          <label htmlFor="daily-share-text" className="small gg-text-muted">Copy this text</label>
+          <label htmlFor="daily-share-text" className="small gg-text-muted">
+            Copy this text
+          </label>
           <textarea
             id="daily-share-text"
             ref={textarea}
@@ -57,7 +67,7 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
             rows={5}
             className="gg-input w-100"
             value={text}
-            onFocus={e => e.currentTarget.select()}
+            onFocus={(e) => e.currentTarget.select()}
           />
         </div>
       )}

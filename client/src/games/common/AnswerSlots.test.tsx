@@ -18,14 +18,7 @@ describe("AnswerSlots", () => {
   });
 
   it("shows the remaining answers as revealed after giving up", () => {
-    render(
-      <AnswerSlots
-        answerCount={3}
-        found={["France"]}
-        gaveUp
-        allAnswers={["France", "Spain", "Italy"]}
-      />,
-    );
+    render(<AnswerSlots answerCount={3} found={["France"]} gaveUp allAnswers={["France", "Spain", "Italy"]} />);
 
     expect(screen.getByText("Spain")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
@@ -41,14 +34,7 @@ describe("AnswerSlots", () => {
   });
 
   it("reveals only the answers that weren't found, whatever order they were found in", () => {
-    render(
-      <AnswerSlots
-        answerCount={3}
-        found={["Italy"]}
-        gaveUp
-        allAnswers={["France", "Spain", "Italy"]}
-      />,
-    );
+    render(<AnswerSlots answerCount={3} found={["Italy"]} gaveUp allAnswers={["France", "Spain", "Italy"]} />);
 
     expect(screen.getAllByText("Italy")).toHaveLength(1);
     expect(screen.getAllByText("(revealed)")).toHaveLength(2);

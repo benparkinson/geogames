@@ -6,7 +6,9 @@ import type { River } from "./model";
 
 /** The river's line. Re-created when the player gives up so the colour changes. */
 export function RiverLine({ river, gaveUp }: { river: River; gaveUp: boolean }): React.JSX.Element {
-  return <GeoJSON pathOptions={answerPathOptions(gaveUp)} data={river.geoData} key={river.id + (gaveUp ? "gaveUp" : "")} />;
+  return (
+    <GeoJSON pathOptions={answerPathOptions(gaveUp)} data={river.geoData} key={river.id + (gaveUp ? "gaveUp" : "")} />
+  );
 }
 
 /** A green flag where the river starts and a red one where it ends. */
@@ -24,7 +26,13 @@ export function EndFlags({ river }: { river: River }): React.JSX.Element {
 }
 
 /** The outline of each country the river flows through. */
-export function CountryOutlines({ countries, labelled = false }: { countries: Country[]; labelled?: boolean }): React.JSX.Element {
+export function CountryOutlines({
+  countries,
+  labelled = false,
+}: {
+  countries: Country[];
+  labelled?: boolean;
+}): React.JSX.Element {
   return (
     <>
       {countries.map((country) => (

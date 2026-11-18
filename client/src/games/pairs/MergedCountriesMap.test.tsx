@@ -1,6 +1,12 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueOutlineOptions, hiddenBorderOptions, mergedShapeOptions, RELIEF_TILE_URL } from "../../map/constants";
+import {
+  answerPathOptions,
+  clueOutlineOptions,
+  hiddenBorderOptions,
+  mergedShapeOptions,
+  RELIEF_TILE_URL,
+} from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnTileUrls, addedAttributions, fakeMap } from "../../test/leafletMock";
 import { makeCountryPairRoundData } from "../../test/fixtures";
@@ -16,7 +22,15 @@ const BORDER = "7,7";
 const NEIGHBOURS = ["8,8", "9,9"];
 
 function renderMap(overrides: Partial<MapProps<CountryPairRound>> = {}) {
-  render(<MergedCountriesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />);
+  render(
+    <MergedCountriesMap
+      data={makeCountryPairRoundData()}
+      gaveUp={false}
+      gameOver={false}
+      hintsUsed={0}
+      {...overrides}
+    />,
+  );
 }
 
 const points = () => drawnLayers().map((layer) => layer.point);

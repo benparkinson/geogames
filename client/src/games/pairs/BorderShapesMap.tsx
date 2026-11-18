@@ -15,8 +15,16 @@ function BorderShapesMap({ data, gameOver, gaveUp, hintsUsed }: MapProps<Country
   return (
     <GameMap>
       <RevealTiles show={gameOver} />
-      {!gameOver && hintsUsed >= 1 && data.countries.map((country) => <HintLines key={`${country.name}/borders`} data={country.landBorders} id={`${id}/${country.name}/borders`} />)}
-      {!gameOver && hintsUsed >= 2 && data.countries.map((country) => <HintLines key={`${country.name}/coast`} data={country.coast} id={`${id}/${country.name}/coast`} />)}
+      {!gameOver &&
+        hintsUsed >= 1 &&
+        data.countries.map((country) => (
+          <HintLines key={`${country.name}/borders`} data={country.landBorders} id={`${id}/${country.name}/borders`} />
+        ))}
+      {!gameOver &&
+        hintsUsed >= 2 &&
+        data.countries.map((country) => (
+          <HintLines key={`${country.name}/coast`} data={country.coast} id={`${id}/${country.name}/coast`} />
+        ))}
       {!gameOver && <ClueLines data={data.sharedBorder} id={`${id}/border`} />}
       {gameOver && <AnswerOutlines round={data} gaveUp={gaveUp} />}
       <BoundsFit bounds={wide ? data.focus : data.borderBounds} id={`${id}/${wide ? "focus" : "border"}`} />

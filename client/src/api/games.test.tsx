@@ -1,9 +1,24 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { makeAnswerResponse, makeGuessesResponse, makeRiverRound, makeRiverRoundData, makeRound } from "../test/fixtures";
+import {
+  makeAnswerResponse,
+  makeGuessesResponse,
+  makeRiverRound,
+  makeRiverRoundData,
+  makeRound,
+} from "../test/fixtures";
 import { clientWrapper, newTestClient } from "../test/render";
-import { fetchRound, isCompleteAnswerResponse, toRoundView, useCreateGame, useRecordGuess, useRecordHint, useRound, useSubmitAnswer } from "./games";
+import {
+  fetchRound,
+  isCompleteAnswerResponse,
+  toRoundView,
+  useCreateGame,
+  useRecordGuess,
+  useRecordHint,
+  useRound,
+  useSubmitAnswer,
+} from "./games";
 import { queryKeys } from "./queryKeys";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
@@ -20,7 +35,7 @@ describe("fetchRound", () => {
     expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/games/g1/rounds/3");
     expect(view.data).toEqual(makeRiverRoundData());
     expect(view.totalRoundCount).toBe(5);
-    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 3, guessLimit: 5  });
+    expect(view.gameType).toEqual({ name: "RIVERS_BY_SHAPE", answerCount: 1, hintCount: 3, guessLimit: 5 });
   });
 
   it("rejects with the round and status when the response is not ok", async () => {
@@ -169,7 +184,7 @@ describe("isCompleteAnswerResponse", () => {
 
 describe("useSubmitAnswer", () => {
   const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
-    callsTo(fetchMock).filter(c => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
+    callsTo(fetchMock).filter((c) => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
 
   const answered = makeAnswerResponse({ hintsUsed: 2, points: 83 });
 
@@ -203,7 +218,7 @@ describe("useSubmitAnswer", () => {
       roundPoints: answered.gameResult.roundPoints,
       roundHintsUsed: answered.gameResult.roundHintsUsed,
     });
-    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
     expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
     expect(roundGets(fetchMock, 0)).toHaveLength(1);
@@ -291,11 +306,11 @@ describe("useRecordGuess", () => {
     act(() => result.current.record.mutate({ text: "Spain", correct: true }));
 
     await waitFor(() => expect(result.current.round.data?.guesses).toEqual(guessesAfter));
-    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
     expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/guesses");
     expect(posts[0].body).toEqual({ guess: "Spain", correct: true });
-    expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(1);
+    expect(callsTo(fetchMock).filter((c) => c.method === "GET")).toHaveLength(1);
   });
 
   it("refetches the game when the guess is refused", async () => {
@@ -310,7 +325,7 @@ describe("useRecordGuess", () => {
 
     act(() => result.current.record.mutate({ text: "Spain", correct: false }));
 
-    await waitFor(() => expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(2));
+    await waitFor(() => expect(callsTo(fetchMock).filter((c) => c.method === "GET")).toHaveLength(2));
   });
 
   it("sends a guess and the answer it led to in that order", async () => {
@@ -331,8 +346,8 @@ describe("useRecordGuess", () => {
     });
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
-    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
-    expect(posts.map(c => c.url.split("/").pop())).toEqual(["guesses", "answers"]);
+    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
+    expect(posts.map((c) => c.url.split("/").pop())).toEqual(["guesses", "answers"]);
   });
 });
 
@@ -350,7 +365,7 @@ describe("useRecordHint", () => {
     act(() => result.current.record.mutate({ hint: 1, guessesBefore: 2 }));
 
     await waitFor(() => expect(result.current.round.data?.hintsTakenAt).toEqual([0, 2]));
-    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
+    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
     expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/hints");
     expect(posts[0].body).toEqual({ hint: 1, guessesBefore: 2 });
@@ -368,7 +383,7 @@ describe("useRecordHint", () => {
 
     act(() => result.current.record.mutate({ hint: 0, guessesBefore: 0 }));
 
-    await waitFor(() => expect(callsTo(fetchMock).filter(c => c.method === "GET")).toHaveLength(2));
+    await waitFor(() => expect(callsTo(fetchMock).filter((c) => c.method === "GET")).toHaveLength(2));
   });
 
   it("sends a hint, a guess and the answer in the order they were made", async () => {
@@ -396,14 +411,14 @@ describe("useRecordHint", () => {
     });
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
-    const posts = callsTo(fetchMock).filter(c => c.method === "POST");
-    expect(posts.map(c => c.url.split("/").pop())).toEqual(["hints", "guesses", "answers"]);
+    const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
+    expect(posts.map((c) => c.url.split("/").pop())).toEqual(["hints", "guesses", "answers"]);
   });
 });
 
 describe("useSubmitAnswer with an incomplete response", () => {
   const roundGets = (fetchMock: ReturnType<typeof mockFetch>, round: number) =>
-    callsTo(fetchMock).filter(c => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
+    callsTo(fetchMock).filter((c) => c.method === "GET" && c.url.endsWith(`/rounds/${round}`));
 
   function setup() {
     const fetchMock = mockFetch([
@@ -461,7 +476,9 @@ describe("useCreateGame", () => {
     act(() => result.current.createGame("RANDOM", 3));
     await waitFor(() => expect(result.current.isLoading).toBe(true));
 
-    await act(async () => finish({ ok: true, status: 200, json: async () => ({ id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }) }));
+    await act(async () =>
+      finish({ ok: true, status: 200, json: async () => ({ id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" }) }),
+    );
     await waitFor(() => expect(result.current.isLoading).toBe(false));
   });
 

@@ -5,7 +5,13 @@ import { CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, Round, UNANSWERED } from "./Mo
 import RoundProgress from "./RoundProgress";
 import { roundPoints } from "./scoring";
 
-export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = false, hintsUsed }: {
+export default function GameTopBar({
+  round,
+  gameOver,
+  gaveUp,
+  outOfGuesses = false,
+  hintsUsed,
+}: {
   round: Round;
   gameOver: boolean;
   gaveUp: boolean;
@@ -28,9 +34,7 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
     }
   }
 
-  const scoreText = round.gameCompleted
-    ? `Final score ${score} / ${round.maxScore}`
-    : `Score ${score}`;
+  const scoreText = round.gameCompleted ? `Final score ${score} / ${round.maxScore}` : `Score ${score}`;
 
   return (
     <div className="d-flex align-items-center justify-content-between px-3 py-2 gap-2">
@@ -40,13 +44,17 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
       </div>
       <div className="d-flex align-items-center gap-2 small gg-text-muted overflow-hidden">
         {round.dailyDate !== undefined && <span className="fw-semibold text-nowrap">Daily {round.dailyDate}</span>}
-        <span className="d-none d-sm-inline text-nowrap">Round {round.currentRound + 1} of {round.totalRoundCount}</span>
+        <span className="d-none d-sm-inline text-nowrap">
+          Round {round.currentRound + 1} of {round.totalRoundCount}
+        </span>
         <RoundProgress states={states} points={points} currentRound={round.currentRound} goToRound={round.goToRound} />
       </div>
       <div className="d-flex align-items-center gap-2 small gg-text-muted text-nowrap">
         {scoreText}
         {round.gameCompleted && (
-          <Button size="sm" variant="secondary" onClick={round.showSummary}>Results</Button>
+          <Button size="sm" variant="secondary" onClick={round.showSummary}>
+            Results
+          </Button>
         )}
       </div>
     </div>

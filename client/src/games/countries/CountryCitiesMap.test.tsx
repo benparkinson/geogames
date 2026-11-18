@@ -1,6 +1,12 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, cityDotOptions, RELIEF_TILE_URL } from "../../map/constants";
+import {
+  answerPathOptions,
+  capitalDotOptions,
+  CITY_MAX_RADIUS,
+  cityDotOptions,
+  RELIEF_TILE_URL,
+} from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnCircles, drawnLayers, drawnTileUrls, addedAttributions, fakeMap } from "../../test/leafletMock";
 import { makeCountryCitiesRoundData, makeCountryShapeData } from "../../test/fixtures";

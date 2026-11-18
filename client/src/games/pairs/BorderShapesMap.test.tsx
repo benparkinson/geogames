@@ -17,7 +17,9 @@ const COASTS = ["2,2", "5,5"];
 const OUTLINES = ["1,1", "4,4"];
 
 function renderMap(overrides: Partial<MapProps<CountryPairRound>> = {}) {
-  render(<BorderShapesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />);
+  render(
+    <BorderShapesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />,
+  );
 }
 
 const points = () => drawnLayers().map((layer) => layer.point);
@@ -53,7 +55,11 @@ describe("BorderShapesMap", () => {
     renderMap({ hintsUsed: 1 });
 
     expect(points()).toEqual([...BORDERS, BORDER]);
-    expect(drawnLayers().slice(0, 2).every((layer) => layer.dashed)).toBe(true);
+    expect(
+      drawnLayers()
+        .slice(0, 2)
+        .every((layer) => layer.dashed),
+    ).toBe(true);
     expect(drawnLayers()[2].dashed).toBe(false);
     expect(fakeMap.fitBounds.mock.calls[0][0]).toEqual([
       [49.5, 2.5],
@@ -76,7 +82,9 @@ describe("BorderShapesMap", () => {
   });
 
   it("fits the map again when the first hint is taken", () => {
-    const { rerender } = render(<BorderShapesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} />);
+    const { rerender } = render(
+      <BorderShapesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} />,
+    );
     rerender(<BorderShapesMap data={makeCountryPairRoundData()} gaveUp={false} gameOver={false} hintsUsed={1} />);
 
     expect(fakeMap.fitBounds).toHaveBeenCalledTimes(2);
@@ -97,6 +105,9 @@ describe("BorderShapesMap", () => {
   it("colours the outlines differently when the player gave up", () => {
     renderMap({ gameOver: true, gaveUp: true });
 
-    expect(drawnLayers().map((layer) => layer.color)).toEqual([answerPathOptions(true).color, answerPathOptions(true).color]);
+    expect(drawnLayers().map((layer) => layer.color)).toEqual([
+      answerPathOptions(true).color,
+      answerPathOptions(true).color,
+    ]);
   });
 });

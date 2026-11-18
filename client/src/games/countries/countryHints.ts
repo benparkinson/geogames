@@ -28,7 +28,11 @@ export function mapHint(text: string): HintBuilder {
 }
 
 /** One hint per builder, revealed in order. */
-export function countryHints<T extends HasCountry>(description: string, round: T, ...builders: HintBuilder<T>[]): HintConfig {
+export function countryHints<T extends HasCountry>(
+  description: string,
+  round: T,
+  ...builders: HintBuilder<T>[]
+): HintConfig {
   return {
     description,
     text: (index) => builders[index]?.(round) ?? null,
@@ -36,7 +40,8 @@ export function countryHints<T extends HasCountry>(description: string, round: T
 }
 
 /** Says the coastline is on the map, or, for a landlocked country, that it has none, which is itself a clue. */
-export const coastHint: HintBuilder = ({ country }) => (country.coastKm > 0 ? "Its coastline is on the map" : "It has no coastline");
+export const coastHint: HintBuilder = ({ country }) =>
+  country.coastKm > 0 ? "Its coastline is on the map" : "It has no coastline";
 
 /** For the hint that highlights the capital. A few countries have more than one. */
 export const capitalHint: HintBuilder<HasCountry & { cities: City[] }> = ({ cities }) =>

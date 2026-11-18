@@ -1,10 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { makeCountryCitiesRoundData, makeCountryPairRoundData, makeCountryRiversRoundData, makeCountryShapeRoundData, makeLakeRoundData, makeRiverRoundData, makeTripointData } from "../test/fixtures";
+import {
+  makeCountryCitiesRoundData,
+  makeCountryPairRoundData,
+  makeCountryRiversRoundData,
+  makeCountryShapeRoundData,
+  makeLakeRoundData,
+  makeRiverRoundData,
+  makeTripointData,
+} from "../test/fixtures";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
-    expect(GAME_MODULES.map((m) => m.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "COUNTRIES_BY_CITIES", "COUNTRIES_BY_RIVERS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
+    expect(GAME_MODULES.map((m) => m.type)).toEqual([
+      "TRIPOINT",
+      "COUNTRIES_BY_NEIGHBOURS",
+      "COUNTRIES_BY_LAND_BORDERS",
+      "MERGED_COUNTRIES",
+      "COUNTRIES_BY_CITIES",
+      "COUNTRIES_BY_RIVERS",
+      "RIVERS_BY_COUNTRIES",
+      "COUNTRIES_BY_COASTLINE",
+      "RIVERS_BY_SHAPE",
+      "LAKES_BY_SHAPE",
+      "BORDERS_BY_SHAPE",
+    ]);
   });
 
   it("has a unique type per module", () => {
@@ -26,7 +46,9 @@ describe("GAME_MODULES", () => {
   });
 
   it("lists the name of a country", () => {
-    expect(findGameModule("COUNTRIES_BY_NEIGHBOURS")?.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+    expect(findGameModule("COUNTRIES_BY_NEIGHBOURS")?.answerNames(makeCountryShapeRoundData())).toEqual([
+      "Netherlands",
+    ]);
   });
 
   it("lists the name of a river", () => {
@@ -48,8 +70,14 @@ describe("Country Rivers", () => {
 
 describe("pair games", () => {
   it("lists both countries, in name order", () => {
-    expect(findGameModule("BORDERS_BY_SHAPE")?.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
-    expect(findGameModule("MERGED_COUNTRIES")?.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
+    expect(findGameModule("BORDERS_BY_SHAPE")?.answerNames(makeCountryPairRoundData())).toEqual([
+      "Belgium",
+      "Netherlands",
+    ]);
+    expect(findGameModule("MERGED_COUNTRIES")?.answerNames(makeCountryPairRoundData())).toEqual([
+      "Belgium",
+      "Netherlands",
+    ]);
   });
 });
 
@@ -72,18 +100,39 @@ describe("findGameModule", () => {
 
 describe("MENU_OPTIONS", () => {
   it("offers the standard games, then a mix of every game, then the extra difficult games", () => {
-    expect(MENU_OPTIONS.map((o) => o.type)).toEqual(["TRIPOINT", "COUNTRIES_BY_NEIGHBOURS", "COUNTRIES_BY_LAND_BORDERS", "MERGED_COUNTRIES", "COUNTRIES_BY_CITIES", "COUNTRIES_BY_RIVERS", "RIVERS_BY_COUNTRIES", "COUNTRIES_BY_COASTLINE", "RANDOM", "RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
+    expect(MENU_OPTIONS.map((o) => o.type)).toEqual([
+      "TRIPOINT",
+      "COUNTRIES_BY_NEIGHBOURS",
+      "COUNTRIES_BY_LAND_BORDERS",
+      "MERGED_COUNTRIES",
+      "COUNTRIES_BY_CITIES",
+      "COUNTRIES_BY_RIVERS",
+      "RIVERS_BY_COUNTRIES",
+      "COUNTRIES_BY_COASTLINE",
+      "RANDOM",
+      "RIVERS_BY_SHAPE",
+      "LAKES_BY_SHAPE",
+      "BORDERS_BY_SHAPE",
+    ]);
     expect(MENU_OPTIONS).toContain(RANDOM_OPTION);
   });
 
   it("marks only the shape games, where the answer is a lone shape on a blank map, as extra difficult", () => {
-    expect(MENU_OPTIONS.filter((o) => o.extraDifficult).map((o) => o.type)).toEqual(["RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
+    expect(MENU_OPTIONS.filter((o) => o.extraDifficult).map((o) => o.type)).toEqual([
+      "RIVERS_BY_SHAPE",
+      "LAKES_BY_SHAPE",
+      "BORDERS_BY_SHAPE",
+    ]);
   });
 
   // Keep in step with GameTypeTest.theExtraDifficultTypesAreRiverLakeAndBorderShapes in the backend, which
   // decides what the daily challenge leaves out.
   it("has the extra difficult modules the backend leaves out of the daily challenge", () => {
-    expect(GAME_MODULES.filter((m) => m.extraDifficult).map((m) => m.type).sort()).toEqual(["BORDERS_BY_SHAPE", "LAKES_BY_SHAPE", "RIVERS_BY_SHAPE"]);
+    expect(
+      GAME_MODULES.filter((m) => m.extraDifficult)
+        .map((m) => m.type)
+        .sort(),
+    ).toEqual(["BORDERS_BY_SHAPE", "LAKES_BY_SHAPE", "RIVERS_BY_SHAPE"]);
   });
 
   it("gives every option a title, description and icon", () => {

@@ -5,7 +5,12 @@ import { AnswerOutline, CountryFlag, FocusFit, HintLines, NeighbourOutlines } fr
 import { CountryShapeRound } from "./model";
 
 /** The neighbours' outlines on a blank map: the country is the gap, marked by a flag at its centre. The coastline is hint 1. */
-function NeighboursMap({ data: { country, neighbours }, gameOver, gaveUp, hintsUsed }: MapProps<CountryShapeRound>): React.JSX.Element {
+function NeighboursMap({
+  data: { country, neighbours },
+  gameOver,
+  gaveUp,
+  hintsUsed,
+}: MapProps<CountryShapeRound>): React.JSX.Element {
   return (
     <GameMap>
       <RevealTiles show={gameOver} />

@@ -1,6 +1,14 @@
 import { useId } from "react";
 
-export function GuessBox({ value, name, onChange, disabled, className, autoFocus, suggestions }: GuessBoxProps): React.JSX.Element {
+export function GuessBox({
+  value,
+  name,
+  onChange,
+  disabled,
+  className,
+  autoFocus,
+  suggestions,
+}: GuessBoxProps): React.JSX.Element {
   const listId = useId();
 
   // On mobile, choosing an option from a native datalist blurs the input and
@@ -35,7 +43,9 @@ export function GuessBox({ value, name, onChange, disabled, className, autoFocus
       />
       {suggestions && (
         <datalist id={listId}>
-          {suggestions.map(suggestion => <option key={suggestion} value={suggestion} />)}
+          {suggestions.map((suggestion) => (
+            <option key={suggestion} value={suggestion} />
+          ))}
         </datalist>
       )}
     </>

@@ -17,7 +17,11 @@ function LakeShapesMap({ data: { lake }, gaveUp, gameOver }: MapProps<LakeRound>
   return (
     <GameMap maxZoom={12}>
       <RevealTiles show={gameOver} />
-      <GeoJSON pathOptions={{ ...answerPathOptions(gaveUp), fillOpacity: 0.35 }} data={lake.geoData} key={lake.id + (gaveUp ? "gaveUp" : "")} />
+      <GeoJSON
+        pathOptions={{ ...answerPathOptions(gaveUp), fillOpacity: 0.35 }}
+        data={lake.geoData}
+        key={lake.id + (gaveUp ? "gaveUp" : "")}
+      />
       <FitBounds data={lake.geoData} id={lake.id} maxZoom={LAKE_MAX_FIT_ZOOM} />
       <ScaleControl position="bottomleft" imperial={false} />
     </GameMap>

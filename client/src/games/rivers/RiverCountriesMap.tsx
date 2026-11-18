@@ -6,7 +6,12 @@ import { CountryOutlines, EndFlags, RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
 /** The outlines of the river's countries on a blank map. The relief map and the river come at the end. */
-function RiverCountriesMap({ data: { river, countries }, gaveUp, gameOver, hintsUsed }: MapProps<RiverRound>): React.JSX.Element {
+function RiverCountriesMap({
+  data: { river, countries },
+  gaveUp,
+  gameOver,
+  hintsUsed,
+}: MapProps<RiverRound>): React.JSX.Element {
   return (
     <GameMap>
       <RevealTiles show={gameOver} />

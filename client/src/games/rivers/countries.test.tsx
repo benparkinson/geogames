@@ -16,7 +16,14 @@ function renderGame() {
   const submitAnswer = vi.fn();
   const Component = countries.Component;
   mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
-  renderWithClient(<Component data={makeRiverRoundData()} round={makeRoundProps({ hintCount: 2 })} answerCount={1} submitAnswer={submitAnswer} />);
+  renderWithClient(
+    <Component
+      data={makeRiverRoundData()}
+      round={makeRoundProps({ hintCount: 2 })}
+      answerCount={1}
+      submitAnswer={submitAnswer}
+    />,
+  );
   return { submitAnswer };
 }
 

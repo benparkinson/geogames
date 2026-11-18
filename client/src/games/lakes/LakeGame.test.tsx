@@ -16,7 +16,9 @@ vi.mock("./LakeShapesMapWrapper", () => ({
 async function renderLake(data = makeLakeRoundData()) {
   const submitAnswer = vi.fn();
   mockFetch([{ url: /\/api\/lakes$/, body: lakeNames }]);
-  const { client } = renderWithClient(<LakeGame data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />);
+  const { client } = renderWithClient(
+    <LakeGame data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />,
+  );
   await waitFor(() => expect(client.getQueryData(["placeNames", "lakes"])).toBeDefined());
   return { submitAnswer };
 }

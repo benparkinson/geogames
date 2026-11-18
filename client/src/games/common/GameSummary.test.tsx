@@ -35,9 +35,7 @@ describe("GameSummary for a daily challenge", () => {
   const done = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
 
   function renderDaily() {
-    return renderWithClient(
-      <GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />,
-    );
+    return renderWithClient(<GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />);
   }
 
   it("offers Copy result and a Mixed game instead of Play again", async () => {
@@ -59,9 +57,11 @@ describe("GameSummary for a daily challenge", () => {
     await userEvent.click(await screen.findByRole("button", { name: "Play a Mixed game" }));
 
     await waitFor(() =>
-      expect(callsTo(fetchMock).filter((c) => c.method === "POST").map((c) => c.body)).toEqual([
-        { gameType: "RANDOM", numberOfRounds: 5 },
-      ]),
+      expect(
+        callsTo(fetchMock)
+          .filter((c) => c.method === "POST")
+          .map((c) => c.body),
+      ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5 }]),
     );
   });
 
@@ -76,7 +76,10 @@ describe("GameSummary for a daily challenge", () => {
 
 describe("GameSummary", () => {
   it("shows a spinner while the rounds load", () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
     renderSummary();
 
     expect(screen.getByRole("status")).toBeTruthy();
@@ -149,7 +152,9 @@ describe("GameSummary", () => {
   });
 
   it("counts a round that ran out of guesses as revealed and says so", async () => {
-    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "OUT_OF_GUESSES" }]))]);
+    mockFetch([
+      roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "OUT_OF_GUESSES" }])),
+    ]);
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
@@ -210,7 +215,10 @@ describe("GameSummary", () => {
   });
 
   it("plays again with the same type when every round shared it", async () => {
-    const rivers = makeGameRounds([{ river: true, answerState: "CORRECT" }, { river: true, answerState: "CORRECT" }]);
+    const rivers = makeGameRounds([
+      { river: true, answerState: "CORRECT" },
+      { river: true, answerState: "CORRECT" },
+    ]);
     const fetchMock = mockFetch([
       roundsRoute(rivers),
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },

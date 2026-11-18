@@ -78,7 +78,9 @@ describe("HomePage choosing a game", () => {
     expect(within(panel).getByRole("button", { name: "Start game" })).toBeInTheDocument();
 
     await user.click(card(/Lake Shapes/));
-    expect(within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Lake Shapes")).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Lake Shapes"),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Start game" })).toHaveLength(1);
   });
 
@@ -89,7 +91,9 @@ describe("HomePage choosing a game", () => {
 
     await user.keyboard("{ArrowRight}");
 
-    expect(within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Gaps")).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Gaps"),
+    ).toBeInTheDocument();
     expect(card(/Country Gaps/)).toHaveFocus();
   });
 
@@ -126,7 +130,20 @@ describe("HomePage choosing a game", () => {
     renderHome();
     card(/Tripoints/).focus();
 
-    const order = [/Country Gaps/, /Land Borders/, /Merged Countries/, /Country Cities/, /Country Rivers/, /River Countries/, /Coastlines/, /Mixed/, /River Shapes/, /Lake Shapes/, /Border Shapes/, /Tripoints/];
+    const order = [
+      /Country Gaps/,
+      /Land Borders/,
+      /Merged Countries/,
+      /Country Cities/,
+      /Country Rivers/,
+      /River Countries/,
+      /Coastlines/,
+      /Mixed/,
+      /River Shapes/,
+      /Lake Shapes/,
+      /Border Shapes/,
+      /Tripoints/,
+    ];
     for (const [i, name] of order.entries()) {
       await user.keyboard(i % 2 === 0 ? "{ArrowRight}" : "{ArrowDown}");
       expect(card(name)).toHaveAttribute("aria-checked", "true");
@@ -226,7 +243,7 @@ describe("HomePage starting a game", () => {
   it("disables the button and says it is starting while waiting", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn((url: string) => (url === HEALTH ? Promise.resolve({}) : new Promise(() => { }))),
+      vi.fn((url: string) => (url === HEALTH ? Promise.resolve({}) : new Promise(() => {}))),
     );
     renderHome();
 
@@ -239,12 +256,10 @@ describe("HomePage starting a game", () => {
 
   it("explains a slow server after three seconds, and stops once the request ends", async () => {
     vi.useFakeTimers();
-    let finish: (value: unknown) => void = () => { };
+    let finish: (value: unknown) => void = () => {};
     vi.stubGlobal(
       "fetch",
-      vi.fn((url: string) =>
-        url === HEALTH ? Promise.resolve({}) : new Promise((resolve) => (finish = resolve)),
-      ),
+      vi.fn((url: string) => (url === HEALTH ? Promise.resolve({}) : new Promise((resolve) => (finish = resolve)))),
     );
     renderHome();
     // Testing Library only detects Jest's fake timers, so user-event would hang here: use fireEvent.
@@ -355,7 +370,10 @@ describe("HomePage daily challenge card", () => {
 
   it("shows the score once today's game is finished", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
-    writeDaily({ ...entry, result: { score: 430, maxScore: 500, rounds: ["perfect", "perfect", "perfect", "perfect", "perfect"] } });
+    writeDaily({
+      ...entry,
+      result: { score: 430, maxScore: 500, rounds: ["perfect", "perfect", "perfect", "perfect", "perfect"] },
+    });
     renderHome();
 
     expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 430 / 500");

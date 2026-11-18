@@ -30,8 +30,7 @@ export function mockFetch(routes: Route[]) {
     const method = (init?.method ?? "GET").toUpperCase();
     const route = routes.find(
       (r) =>
-        (r.method ?? "GET").toUpperCase() === method &&
-        (typeof r.url === "string" ? r.url === url : r.url.test(url)),
+        (r.method ?? "GET").toUpperCase() === method && (typeof r.url === "string" ? r.url === url : r.url.test(url)),
     );
     if (!route) {
       throw new Error(`Unrouted fetch: ${method} ${url}`);

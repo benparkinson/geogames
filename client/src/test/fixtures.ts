@@ -1,5 +1,11 @@
 import { vi } from "vitest";
-import type { DailyGameResponse, GameRoundResponse, RoundAnswerResponse, RoundGuessesResponse, RoundHintsResponse } from "../api/types";
+import type {
+  DailyGameResponse,
+  GameRoundResponse,
+  RoundAnswerResponse,
+  RoundGuessesResponse,
+  RoundHintsResponse,
+} from "../api/types";
 import type { AnswerState, Round } from "../games/common/Model";
 import { roundPoints } from "../games/common/scoring";
 import type { CountryCitiesRound, CountryRiversRound, CountryShape, CountryShapeRound } from "../games/countries/model";
@@ -41,7 +47,14 @@ function square(offset: number) {
     properties: { name: "square" },
     geometry: {
       type: "Polygon",
-      coordinates: [[[offset, offset], [offset + 1, offset], [offset + 1, offset + 1], [offset, offset]]],
+      coordinates: [
+        [
+          [offset, offset],
+          [offset + 1, offset],
+          [offset + 1, offset + 1],
+          [offset, offset],
+        ],
+      ],
     },
   };
 }
@@ -70,7 +83,15 @@ export function makeRiverData(): River {
     geoData: {
       type: "Feature",
       properties: { name: "Danube" },
-      geometry: { type: "MultiLineString", coordinates: [[[0, 0], [1, 1]]] },
+      geometry: {
+        type: "MultiLineString",
+        coordinates: [
+          [
+            [0, 0],
+            [1, 1],
+          ],
+        ],
+      },
     },
   } as unknown as River;
 }
@@ -91,7 +112,18 @@ export function makeLakeData(): Lake {
     geoData: {
       type: "Feature",
       properties: { name: "Lake Baikal" },
-      geometry: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]] },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [0, 0],
+          ],
+        ],
+      },
     },
   } as unknown as Lake;
 }
@@ -105,7 +137,15 @@ function lines(offset: number) {
   return {
     type: "Feature",
     properties: { name: "lines" },
-    geometry: { type: "MultiLineString", coordinates: [[[offset, offset], [offset + 1, offset + 1]]] },
+    geometry: {
+      type: "MultiLineString",
+      coordinates: [
+        [
+          [offset, offset],
+          [offset + 1, offset + 1],
+        ],
+      ],
+    },
   };
 }
 
@@ -280,16 +320,16 @@ export interface RoundSpec {
 /** The server's responses for a whole game, each carrying the same complete result. */
 export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
   const hintCounts = specs.map(() => 3);
-  const hintsUsed = specs.map(spec => spec.hintsUsed ?? 0);
+  const hintsUsed = specs.map((spec) => spec.hintsUsed ?? 0);
   const points = specs.map((spec, i) => roundPoints(spec.answerState, hintsUsed[i], hintCounts[i]));
-  const unanswered = specs.filter(spec => spec.answerState === "UNANSWERED").length;
+  const unanswered = specs.filter((spec) => spec.answerState === "UNANSWERED").length;
   const gameResult = {
     gameState: unanswered === 0 ? "FINISHED" : unanswered === specs.length ? "CREATED" : "IN_PROGRESS",
     roundsUnanswered: unanswered,
     score: points.reduce((sum, p) => sum + p, 0),
-    roundAnswerStates: specs.map(spec => spec.answerState),
+    roundAnswerStates: specs.map((spec) => spec.answerState),
     maxScore: 100 * specs.length,
-    roundsCorrect: specs.filter(spec => spec.answerState === "CORRECT").length,
+    roundsCorrect: specs.filter((spec) => spec.answerState === "CORRECT").length,
     perfectRounds: specs.filter((spec, i) => spec.answerState === "CORRECT" && hintsUsed[i] === 0).length,
     roundPoints: points,
     roundHintsUsed: hintsUsed,

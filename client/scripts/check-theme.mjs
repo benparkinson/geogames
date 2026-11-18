@@ -64,7 +64,12 @@ function* walk(dir) {
 }
 
 function isChecked(file) {
-  return /\.(css|ts|tsx)$/.test(file) && !/\.test\.tsx?$/.test(file) && !file.endsWith(".d.ts") && !file.startsWith("src/test/");
+  return (
+    /\.(css|ts|tsx)$/.test(file) &&
+    !/\.test\.tsx?$/.test(file) &&
+    !file.endsWith(".d.ts") &&
+    !file.startsWith("src/test/")
+  );
 }
 
 function main() {
@@ -76,11 +81,13 @@ function main() {
       if (!isChecked(file)) {
         continue;
       }
-      readFileSync(path, "utf8").split("\n").forEach((line, index) => {
-        for (const problem of problemsInLine(file, line)) {
-          failures.push(`${file}:${index + 1}: ${problem}`);
-        }
-      });
+      readFileSync(path, "utf8")
+        .split("\n")
+        .forEach((line, index) => {
+          for (const problem of problemsInLine(file, line)) {
+            failures.push(`${file}:${index + 1}: ${problem}`);
+          }
+        });
     }
   }
   if (failures.length > 0) {

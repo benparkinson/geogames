@@ -6,7 +6,9 @@ import GameTopBar from "./GameTopBar";
 
 describe("GameTopBar", () => {
   it("names a daily challenge", () => {
-    render(<GameTopBar round={makeRoundProps({ dailyDate: "2026-11-18" })} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    render(
+      <GameTopBar round={makeRoundProps({ dailyDate: "2026-11-18" })} gameOver={false} gaveUp={false} hintsUsed={0} />,
+    );
 
     expect(screen.getByText("Daily 2026-11-18")).toBeInTheDocument();
   });
@@ -53,7 +55,15 @@ describe("GameTopBar", () => {
   });
 
   it("marks a round that ran out of guesses here, for no points", () => {
-    render(<GameTopBar round={makeRoundProps({ score: 100 })} gameOver={true} gaveUp={true} outOfGuesses={true} hintsUsed={1} />);
+    render(
+      <GameTopBar
+        round={makeRoundProps({ score: 100 })}
+        gameOver={true}
+        gaveUp={true}
+        outOfGuesses={true}
+        hintsUsed={1}
+      />,
+    );
 
     expect(screen.getByText("Score 100")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
@@ -67,7 +77,14 @@ describe("GameTopBar", () => {
   });
 
   it("shows which round is being played", () => {
-    render(<GameTopBar round={makeRoundProps({ currentRound: 1, totalRoundCount: 3 })} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    render(
+      <GameTopBar
+        round={makeRoundProps({ currentRound: 1, totalRoundCount: 3 })}
+        gameOver={false}
+        gaveUp={false}
+        hintsUsed={0}
+      />,
+    );
 
     expect(screen.getByText("Round 2 of 3")).toBeInTheDocument();
   });

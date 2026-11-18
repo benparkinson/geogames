@@ -11,7 +11,12 @@ import { CountryCitiesRound } from "./model";
  * relief map appear, and each dot shows its city's name (the outline itself is not labelled).
  * The map starts framed on the country's main part and every city, so none is off screen.
  */
-function CountryCitiesMap({ data: { country, cities }, gameOver, gaveUp, hintsUsed }: MapProps<CountryCitiesRound>): React.JSX.Element {
+function CountryCitiesMap({
+  data: { country, cities },
+  gameOver,
+  gaveUp,
+  hintsUsed,
+}: MapProps<CountryCitiesRound>): React.JSX.Element {
   const hasCoast = country.coast.geometry.coordinates.length > 0;
   return (
     <GameMap>

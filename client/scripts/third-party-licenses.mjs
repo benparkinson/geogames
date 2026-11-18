@@ -26,7 +26,11 @@ for (const { path, name, version, license } of entries) {
   if (seen.has(key)) continue;
   seen.add(key);
   const dir = join(root, path);
-  const files = existsSync(dir) ? readdirSync(dir).filter((f) => LICENSE_FILE.test(f)).sort() : [];
+  const files = existsSync(dir)
+    ? readdirSync(dir)
+        .filter((f) => LICENSE_FILE.test(f))
+        .sort()
+    : [];
   const texts = files.map((f) => readFileSync(join(dir, f), "utf8").trim());
   const body = texts.length > 0 ? texts.join("\n\n") : `Licence: ${license} (no licence file in the package)`;
   sections.push(`${key} (${license})\n${"-".repeat(key.length + license.length + 3)}\n\n${body}\n`);

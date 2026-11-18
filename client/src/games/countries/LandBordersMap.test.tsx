@@ -16,7 +16,9 @@ const BORDERS = "3,3";
 const NEIGHBOURS = ["4,4", "5,5"];
 
 function renderMap(overrides: Partial<MapProps<CountryShapeRound>> = {}) {
-  render(<LandBordersMap data={makeCountryShapeRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />);
+  render(
+    <LandBordersMap data={makeCountryShapeRoundData()} gaveUp={false} gameOver={false} hintsUsed={0} {...overrides} />,
+  );
 }
 
 const points = () => drawnLayers().map((layer) => layer.point);
