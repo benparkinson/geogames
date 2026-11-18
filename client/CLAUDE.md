@@ -25,7 +25,7 @@ Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (Bootstrap CSS f
 
 `/daily` (`pages/daily.tsx`, `daily/DailyPage`) is one puzzle a day, the same five rounds for everyone (backend `CLAUDE.md`, "Daily challenge"). It shows the game itself (`GameRoundPage` with a `daily` prop), so the URL stays `/daily` and a reload works; a shared link must never point at a game id. The page is pre-rendered at build time: **nothing may read the date or localStorage while rendering**. The date comes from `useToday()` and storage from `useDailyEntry()`, both `useSyncExternalStore` with a `null` server snapshot, and the game is created on click (crawlers and link previews fetch the page). The date is the player's local date (`localDateString`, never `toISOString()`).
 
-localStorage key `gg-daily` (`dailyStorage.ts`, modelled on `settings/hardMode.ts`) holds only the latest daily: game id, whether Hard mode stayed on, and the result once finished (so Share works after the server deletes the game). It is a convenience, not enforcement: a private window or another device can replay. It must be listed on the privacy page. `shareText.ts` is spoiler-free (squares, score, `/daily` link).
+localStorage key `gg-daily` (`dailyStorage.ts`; it and `settings/hardMode.ts` are both built on `settings/localStore.ts`, which keeps the value in memory when storage is blocked) holds only the latest daily: game id, whether Hard mode stayed on, and the result once finished (so Share works after the server deletes the game). It is a convenience, not enforcement: a private window or another device can replay. It must be listed on the privacy page. `shareText.ts` is spoiler-free (squares, score, `/daily` link).
 
 ## Credits
 

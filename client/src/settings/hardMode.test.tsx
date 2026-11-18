@@ -1,6 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { useHardMode } from "./hardMode";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { resetHardModeForTests, useHardMode } from "./hardMode";
+
+beforeEach(resetHardModeForTests);
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -58,6 +60,19 @@ describe("useHardMode", () => {
     act(() => result.current[1](true));
     expect(result.current[0]).toBe(true);
 
+    act(() => result.current[1](false));
+    expect(result.current[0]).toBe(false);
+  });
+
+  it("still takes effect for the page when saving fails but reading works", () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("quota");
+    });
+    const { result } = renderHook(() => useHardMode());
+
+    act(() => result.current[1](true));
+
+    expect(result.current[0]).toBe(true);
     act(() => result.current[1](false));
     expect(result.current[0]).toBe(false);
   });

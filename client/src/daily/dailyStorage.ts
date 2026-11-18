@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
+import { createLocalStore } from "../settings/localStore";
 
-const KEY = "gg-daily";
-const CHANGE_EVENT = "gg-daily-change";
+const store = createLocalStore("gg-daily", "gg-daily-change");
 
 /** Which daily challenge a game is: its number and its date, `YYYY-MM-DD`. */
 export interface DailyInfo {
@@ -31,10 +31,6 @@ export interface DailyEntry {
   /** Set once the game is finished. */
   result?: DailyResult;
 }
-
-/** Used only when localStorage is blocked: the entry then lasts until the page is reloaded. */
-let fallbackRaw: string | null = null;
-let useFallback = false;
 
 /** `useSyncExternalStore` compares snapshots with `Object.is`, so the same string must give the same object. */
 let cachedRaw: string | null = null;
@@ -77,19 +73,9 @@ function parse(raw: string | null): DailyEntry | null {
   }
 }
 
-function readRaw(): string | null {
-  if (useFallback) return fallbackRaw;
-  try {
-    return localStorage.getItem(KEY);
-  } catch {
-    useFallback = true;
-    return fallbackRaw;
-  }
-}
-
 /** The stored entry, or null if there is none or it can't be understood. */
 export function readDaily(): DailyEntry | null {
-  const raw = readRaw();
+  const raw = store.read();
   if (raw !== cachedRaw) {
     cachedRaw = raw;
     cachedEntry = parse(raw);
@@ -97,44 +83,18 @@ export function readDaily(): DailyEntry | null {
   return cachedEntry;
 }
 
-function writeRaw(raw: string | null): void {
-  fallbackRaw = raw;
-  if (!useFallback) {
-    try {
-      if (raw === null) {
-        localStorage.removeItem(KEY);
-      } else {
-        localStorage.setItem(KEY, raw);
-      }
-    } catch {
-      // Storage blocked or full: the in-memory copy holds the entry for this page.
-      useFallback = true;
-    }
-  }
-  window.dispatchEvent(new Event(CHANGE_EVENT));
-}
-
 /** Replaces the stored entry: only the latest daily is kept. */
 export function writeDaily(entry: DailyEntry): void {
-  writeRaw(JSON.stringify(entry));
+  store.write(JSON.stringify(entry));
 }
 
 export function clearDaily(): void {
-  writeRaw(null);
-}
-
-function subscribe(onChange: () => void): () => void {
-  window.addEventListener("storage", onChange);
-  window.addEventListener(CHANGE_EVENT, onChange);
-  return () => {
-    window.removeEventListener("storage", onChange);
-    window.removeEventListener(CHANGE_EVENT, onChange);
-  };
+  store.write(null);
 }
 
 /** The stored daily. Null on the server and during the first client render, so the static page hydrates cleanly. */
 export function useDailyEntry(): DailyEntry | null {
-  return useSyncExternalStore(subscribe, readDaily, () => null);
+  return useSyncExternalStore(store.subscribe, readDaily, () => null);
 }
 
 /** The entry if it was started on `date`; an entry for another day counts as none. */
@@ -144,8 +104,7 @@ export function entryFor(entry: DailyEntry | null, date: string | null): DailyEn
 
 /** Test helper: forget the in-memory state so each test starts clean. */
 export function resetDailyStorageForTests(): void {
-  fallbackRaw = null;
-  useFallback = false;
+  store.resetForTests();
   cachedRaw = null;
   cachedEntry = null;
 }

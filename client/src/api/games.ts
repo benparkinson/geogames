@@ -95,45 +95,56 @@ export function useSubmitAnswer(gameId: string, round: number, totalRoundCount?:
 }
 
 /**
- * Saves a guess the guess reducer recorded, so a refresh restores it. The response's guesses are patched into
- * the cached round: round queries never go stale, so without it a round reopened from the cache would have none.
+ * A POST that saves something about a round while it is played. Its response is patched into the cached round
+ * (round queries never go stale, so a round reopened from the cache would otherwise lack it). The writes of a game
+ * share a scope, so they reach the server in the order they were started, and a refused one refetches the game.
  */
-export function useRecordGuess(gameId: string, round: number) {
+function useRoundWrite<Request, Response>(
+  gameId: string,
+  round: number,
+  write: {
+    /** What follows the round's URL, for example "/guesses". */
+    suffix: string;
+    /** What failed, for the error message: "Failed to <what> (status)". */
+    what: string;
+    /** The request body the server expects. */
+    toBody: (request: Request) => unknown;
+    /** The cached round with the server's response folded in. */
+    patch: (cached: GameRoundView, response: Response) => GameRoundView;
+  },
+) {
   const queryClient = useQueryClient();
   return useMutation({
     scope: roundWritesScope(gameId),
-    mutationFn: (guess: RecordedGuess) =>
-      postJson<RoundGuessesResponse>(roundUrl(gameId, round) + "/guesses", "save guess", {
-        guess: guess.text,
-        correct: guess.correct,
-      }),
+    mutationFn: (request: Request) =>
+      postJson<Response>(roundUrl(gameId, round) + write.suffix, write.what, write.toBody(request)),
     onSuccess: (response) => {
       queryClient.setQueryData<GameRoundView>(
         queryKeys.round(gameId, round),
-        (old) => old && { ...old, guesses: response.guesses },
+        (cached) => cached && write.patch(cached, response),
       );
     },
     onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
   });
 }
 
-/**
- * Saves that a hint was taken, with how many guesses had been made before it, so a refresh keeps it. The hints are
- * patched into the cached round for the same reason as the guesses.
- */
+/** Saves a guess the guess reducer recorded, so a refresh restores it. */
+export function useRecordGuess(gameId: string, round: number) {
+  return useRoundWrite<RecordedGuess, RoundGuessesResponse>(gameId, round, {
+    suffix: "/guesses",
+    what: "save guess",
+    toBody: (guess) => ({ guess: guess.text, correct: guess.correct }),
+    patch: (cached, response) => ({ ...cached, guesses: response.guesses }),
+  });
+}
+
+/** Saves that a hint was taken, with how many guesses had been made before it, so a refresh keeps it. */
 export function useRecordHint(gameId: string, round: number) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    scope: roundWritesScope(gameId),
-    mutationFn: (hint: { hint: number; guessesBefore: number }) =>
-      postJson<RoundHintsResponse>(roundUrl(gameId, round) + "/hints", "save hint", hint),
-    onSuccess: (response) => {
-      queryClient.setQueryData<GameRoundView>(
-        queryKeys.round(gameId, round),
-        (old) => old && { ...old, hintsTakenAt: response.hintsTakenAt },
-      );
-    },
-    onError: () => queryClient.invalidateQueries({ queryKey: queryKeys.game(gameId) }),
+  return useRoundWrite<{ hint: number; guessesBefore: number }, RoundHintsResponse>(gameId, round, {
+    suffix: "/hints",
+    what: "save hint",
+    toBody: (hint) => hint,
+    patch: (cached, response) => ({ ...cached, hintsTakenAt: response.hintsTakenAt }),
   });
 }
 
