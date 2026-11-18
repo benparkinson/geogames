@@ -31,7 +31,7 @@ class PlaceNameControllerTest {
   @MockitoBean private LakeLoaderService lakeLoaderService;
 
   @Test
-  void returnsCountryNamesWithADayOfCaching() throws Exception {
+  void returnsCountryNames() throws Exception {
     when(countryNameService.loadCountryNames())
         .thenReturn(
             List.of(
@@ -51,7 +51,7 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$[1].additionalNames[0]").value("Holland"))
             .andReturn();
 
-    assertThat(result.getResponse().getHeader("Cache-Control")).contains("max-age=86400");
+    assertThat(result.getResponse().getHeader("Cache-Control")).isEqualTo("no-cache");
   }
 
   @Test
@@ -66,7 +66,7 @@ class PlaceNameControllerTest {
   }
 
   @Test
-  void returnsRiverNamesWithADayOfCaching() throws Exception {
+  void returnsRiverNames() throws Exception {
     when(riverLoaderService.loadRiverNames())
         .thenReturn(
             List.of(new PlaceName("Danube", List.of("Donau")), new PlaceName("Nile", List.of())));
@@ -82,7 +82,7 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$[1].additionalNames.length()").value(0))
             .andReturn();
 
-    assertThat(result.getResponse().getHeader("Cache-Control")).contains("max-age=86400");
+    assertThat(result.getResponse().getHeader("Cache-Control")).isEqualTo("no-cache");
   }
 
   @Test
@@ -96,7 +96,7 @@ class PlaceNameControllerTest {
   }
 
   @Test
-  void returnsLakeNamesWithADayOfCaching() throws Exception {
+  void returnsLakeNames() throws Exception {
     when(lakeLoaderService.loadLakeNames())
         .thenReturn(
             List.of(
@@ -113,6 +113,6 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$[1].additionalNames.length()").value(0))
             .andReturn();
 
-    assertThat(result.getResponse().getHeader("Cache-Control")).contains("max-age=86400");
+    assertThat(result.getResponse().getHeader("Cache-Control")).isEqualTo("no-cache");
   }
 }
