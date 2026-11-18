@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * it is not in the list.
  */
 @Service
-public class CountryLoaderService {
+public class CountryNameService {
 
   /**
    * Disputed territories with a shape that no game asks about or draws as a neighbour, so nobody
@@ -25,7 +25,7 @@ public class CountryLoaderService {
 
   private final CountryShapeService shapes;
 
-  public CountryLoaderService(CountryShapeService shapes) {
+  public CountryNameService(CountryShapeService shapes) {
     this.shapes = shapes;
   }
 

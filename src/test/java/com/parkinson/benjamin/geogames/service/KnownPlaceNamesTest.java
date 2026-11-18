@@ -15,7 +15,7 @@ class KnownPlaceNamesTest {
   private final KnownPlaceNames names = build();
 
   private static KnownPlaceNames build() {
-    CountryLoaderService countries = mock(CountryLoaderService.class);
+    CountryNameService countries = mock(CountryNameService.class);
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(

@@ -104,7 +104,7 @@ class GameServiceTest {
 
   /** Real lookup over a few made-up names, so a guess resolves as it does in the app. */
   static KnownPlaceNames testNames() {
-    CountryLoaderService countries = mock(CountryLoaderService.class);
+    CountryNameService countries = mock(CountryNameService.class);
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(

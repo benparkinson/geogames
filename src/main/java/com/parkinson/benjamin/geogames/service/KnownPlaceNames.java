@@ -18,14 +18,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class KnownPlaceNames {
 
-  private final CountryLoaderService countries;
+  private final CountryNameService countries;
   private final RiverLoaderService rivers;
   private final LakeLoaderService lakes;
   private final Map<PlaceKind, Map<String, String>> byKind = new EnumMap<>(PlaceKind.class);
   private Map<String, String> currentCountryNames;
 
   public KnownPlaceNames(
-      CountryLoaderService countries, RiverLoaderService rivers, LakeLoaderService lakes) {
+      CountryNameService countries, RiverLoaderService rivers, LakeLoaderService lakes) {
     this.countries = countries;
     this.rivers = rivers;
     this.lakes = lakes;

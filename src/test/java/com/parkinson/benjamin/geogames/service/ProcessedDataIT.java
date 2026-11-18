@@ -343,7 +343,7 @@ public class ProcessedDataIT {
 
   @Test
   public void everyCountryHasAPositionInsideItsFocus() {
-    CountryLoaderService service = new CountryLoaderService(new CountryShapeService(reader));
+    CountryNameService service = new CountryNameService(new CountryShapeService(reader));
     CountryShapeService shapes = new CountryShapeService(reader);
     for (CountryName country : service.loadCountryNames()) {
       Bounds focus = shapes.loadShape(country.name()).focus();
