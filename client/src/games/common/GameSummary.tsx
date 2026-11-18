@@ -61,6 +61,9 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
     revealed > 0 && `${revealed} revealed`,
   ].filter(Boolean);
   const gameType = playAgainType(all);
+  // A game of one type names it once at the top; a mixed game (the daily or Mixed) names each round's type.
+  const mixed = gameType === RANDOM_OPTION.type;
+  const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
   const share = daily && all[0].gameResult.gameState === FINISHED
     ? shareText(
         { number: daily.number, hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore, result: resultFromGame(all[0].gameResult) },
@@ -77,7 +80,8 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
         </div>
         <KofiBadge />
       </div>
-      <div className="gg-card mx-auto my-4 p-3">
+      <div className="gg-card gg-card--wide mx-auto my-4 p-3">
+        {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
         <h1 className="h3 mb-1">
           {daily && <span className="gg-text-muted">Daily #{daily.number}: </span>}
           {perfectGame
@@ -94,13 +98,13 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound, dail
               <button
                 key={i}
                 type="button"
-                className="gg-list__item d-flex justify-content-between align-items-center gap-2 text-start"
+                className="gg-list__item d-flex justify-content-between align-items-center gap-4 text-start"
                 onClick={() => onOpenRound(i)}
               >
                 <span>
-                  <span className="gg-text-muted">{i + 1}. {roundLabel(r)}</span>
-                  <br />
-                  {roundAnswers(r).join(", ")}
+                  {mixed
+                    ? <><span className="gg-text-muted">{i + 1}. {roundLabel(r)}</span><br />{roundAnswers(r).join(", ")}</>
+                    : <><span className="gg-text-muted">{i + 1}.</span> {roundAnswers(r).join(", ")}</>}
                   {r.answerState === OUT_OF_GUESSES && (
                     <>
                       <br />
