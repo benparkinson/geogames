@@ -53,4 +53,6 @@ export interface Round {
   gameCompleted: boolean;
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
+  /** Set when this round is part of a daily challenge: the title shows "Daily #n". */
+  dailyNumber?: number;
 }

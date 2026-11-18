@@ -30,6 +30,50 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
   return { ...view, onOpenRound };
 }
 
+describe("GameSummary for a daily challenge", () => {
+  const daily = { number: 7, date: "2026-11-18" };
+  const done = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
+
+  function renderDaily() {
+    return renderWithClient(
+      <GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />,
+    );
+  }
+
+  it("offers Share and a Mixed game instead of Play again", async () => {
+    mockFetch([roundsRoute(done)]);
+    renderDaily();
+
+    expect(await screen.findByRole("button", { name: "Share" })).toBeInTheDocument();
+    expect(screen.getByText(/Daily #7/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Play again" })).not.toBeInTheDocument();
+  });
+
+  it("starts a five round Mixed game", async () => {
+    const fetchMock = mockFetch([
+      roundsRoute(done),
+      { method: "POST", url: "http://localhost:8080/api/games", body: { id: "new" } },
+    ]);
+    renderDaily();
+
+    await userEvent.click(await screen.findByRole("button", { name: "Play a Mixed game" }));
+
+    await waitFor(() =>
+      expect(callsTo(fetchMock).filter((c) => c.method === "POST").map((c) => c.body)).toEqual([
+        { gameType: "RANDOM", numberOfRounds: 5 },
+      ]),
+    );
+  });
+
+  it("has no Share button until the game is finished", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
+    renderDaily();
+
+    expect(await screen.findByText(/You scored/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
+  });
+});
+
 describe("GameSummary", () => {
   it("shows a spinner while the rounds load", () => {
     vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
@@ -37,6 +81,14 @@ describe("GameSummary", () => {
 
     expect(screen.getByRole("status")).toBeTruthy();
     expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
+  });
+
+  it("has no Share button and offers Play again in an ordinary game", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    expect(await screen.findByRole("button", { name: "Play again" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
   });
 
   it("shows the score and one row per round", async () => {

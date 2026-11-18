@@ -65,6 +65,12 @@ jobs:
           echo "${FRONTEND}/ -> ${status}"
           test "${status}" = "200"
 
+      - name: Check the daily challenge page is up
+        run: |
+          status=$(curl -s --max-time 30 -o /dev/null -w '%{http_code}' "${FRONTEND}/daily")
+          echo "${FRONTEND}/daily -> ${status}"
+          test "${status}" = "200"
+
       # What the browser does before the frontend's first POST. If the frontend's origin is missing from
       # geogames.cors.allowed-origins, the site loads but no game can start.
       - name: Check the backend allows the frontend's origin
