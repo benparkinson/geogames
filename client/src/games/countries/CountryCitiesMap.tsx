@@ -9,7 +9,7 @@ import { CountryCitiesRound } from "./model";
 /**
  * The country's cities as dots sized by population on a blank map, with no outline. The first hint
  * highlights the capital and the second adds the coastline. Once the round is over the outline and the
- * satellite imagery appear, and each dot shows its city's name (the outline itself is not labelled).
+ * relief map appear, and each dot shows its city's name (the outline itself is not labelled).
  * The map starts framed on the country's main part and every city, so none is off screen.
  */
 function CountryCitiesMap({ data: { country, cities }, gameOver, gaveUp, hintsUsed }: MapProps<CountryCitiesRound>): React.JSX.Element {

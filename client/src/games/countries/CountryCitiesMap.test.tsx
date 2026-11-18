@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, cityDotOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, capitalDotOptions, CITY_MAX_RADIUS, cityDotOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnCircles, drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryCitiesRoundData, makeCountryShapeData } from "../../test/fixtures";
@@ -117,12 +117,12 @@ describe("CountryCitiesMap", () => {
     expect(drawnLayers()).toEqual([]);
   });
 
-  it("shows the outline, the capital, the satellite imagery and the city names once the round is over", () => {
+  it("shows the outline, the capital, the relief map and the city names once the round is over", () => {
     renderMap({ gameOver: true });
 
     expect(points()).toEqual([OUTLINE]);
     expect(drawnLayers()[0].color).toBe(answerPathOptions(false).color);
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
     expect(drawnCircles().map((circle) => circle.tooltip)).toEqual(["Amsterdam", "Rotterdam", "Utrecht", "Amsterdam"]);
   });
 

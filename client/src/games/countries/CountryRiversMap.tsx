@@ -8,7 +8,7 @@ import { CountryRiversRound } from "./model";
 /**
  * The rivers inside a country, clipped at its borders, with the major ones thicker, on a blank map.
  * The first hint adds its lakes and the second its coastline. Once the round is over the outline and
- * the satellite imagery replace them.
+ * the relief map replace them.
  */
 function CountryRiversMap({ data: { country, major, minor, lakes }, gameOver, gaveUp, hintsUsed }: MapProps<CountryRiversRound>): React.JSX.Element {
   const hasLakes = lakes.geometry.coordinates.length > 0;

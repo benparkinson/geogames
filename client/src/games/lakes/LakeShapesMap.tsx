@@ -11,7 +11,7 @@ import { LakeRound } from "./model";
 const LAKE_MAX_FIT_ZOOM = 11;
 
 /**
- * The lake's shape on a blank map, with a scale bar because size is a fair clue. The satellite map
+ * The lake's shape on a blank map, with a scale bar because size is a fair clue. The relief map
  * appears when the round ends. `gaveUp` is also true when the round ran out of guesses.
  */
 function LakeShapesMap({ data: { lake }, gaveUp, gameOver }: MapProps<LakeRound>): React.JSX.Element {

@@ -47,8 +47,8 @@ export function MapContainer({ children }: Children) {
   return <div data-testid="MapContainer">{children}</div>;
 }
 
-export function TileLayer({ url, attribution }: { url: string; attribution?: string }) {
-  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} />;
+export function TileLayer({ url, attribution, maxNativeZoom }: { url: string; attribution?: string; maxNativeZoom?: number }) {
+  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} data-max-native-zoom={maxNativeZoom} />;
 }
 
 export function GeoJSON({

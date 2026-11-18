@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueOutlineOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueOutlineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnMarkers, drawnTileUrls } from "../../test/leafletMock";
 import { makeCountryShapeData, makeRiverRoundData } from "../../test/fixtures";
@@ -57,14 +57,14 @@ describe("RiverCountriesMap", () => {
     expect(drawnMarkers()).toHaveLength(2);
   });
 
-  it("draws the river, the flags and the satellite imagery once the round is over", () => {
+  it("draws the river, the flags and the relief map once the round is over", () => {
     renderMap({ gameOver: true });
 
     const river = drawnLayers().filter((layer) => layer.point === RIVER_POINT);
     expect(river).toHaveLength(1);
     expect(river[0].color).toBe(answerPathOptions(false).color);
     expect(drawnMarkers()).toHaveLength(2);
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
   });
 
   it("colours the river differently when the player gave up", () => {
