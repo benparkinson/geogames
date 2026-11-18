@@ -44,6 +44,13 @@ class KnownPlaceNamesTest {
   }
 
   @Test
+  void bringsAStoredRoundKeyUpToDate() {
+    assertThat(names.currentRoundKey("country:Ivory Coast")).isEqualTo("country:Côte d'Ivoire");
+    assertThat(names.currentRoundKey("country:Atlantis")).isEqualTo("country:Atlantis");
+    assertThat(names.currentRoundKey("river:Q1")).isEqualTo("river:Q1");
+  }
+
+  @Test
   void resolvesAnAliasToItsOwnSpelling() {
     assertThat(names.resolve(PlaceKind.COUNTRIES, "ivory coast")).contains("Ivory Coast");
   }

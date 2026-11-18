@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
+import com.parkinson.benjamin.geogames.model.SubjectIds;
 import com.parkinson.benjamin.geogames.model.Tripoint;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.function.UnaryOperator;
  */
 final class StoredRoundKeys {
 
-  private static final String COUNTRY = "country:";
   private static final String PAIR = "pair:";
   private static final String TRIPOINT = "tripoint:";
 
@@ -21,8 +21,8 @@ final class StoredRoundKeys {
 
   /** The key with each country's current name. A key that names no country is returned as is. */
   static String withCurrentCountryNames(String roundKey, UnaryOperator<String> currentName) {
-    if (roundKey.startsWith(COUNTRY)) {
-      return COUNTRY + currentName.apply(roundKey.substring(COUNTRY.length()));
+    if (roundKey.startsWith(SubjectIds.COUNTRY)) {
+      return SubjectIds.country(currentName.apply(roundKey.substring(SubjectIds.COUNTRY.length())));
     }
     if (roundKey.startsWith(PAIR)) {
       List<String> names = names(roundKey.substring(PAIR.length()), currentName);

@@ -60,6 +60,15 @@ public class KnownPlaceNames {
     return Optional.ofNullable(currentCountryNames.get(PlaceNames.normalise(name)));
   }
 
+  /**
+   * Brings a stored round key up to date when a country in it has been renamed, so games in
+   * progress and pinned daily challenges survive a rename.
+   */
+  public String currentRoundKey(String roundKey) {
+    return StoredRoundKeys.withCurrentCountryNames(
+        roundKey, name -> currentCountryName(name).orElse(name));
+  }
+
   private synchronized Map<String, String> lookup(PlaceKind kind) {
     return byKind.computeIfAbsent(kind, k -> build(names(k)));
   }

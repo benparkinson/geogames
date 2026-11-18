@@ -31,7 +31,7 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
 }
 
 describe("GameSummary for a daily challenge", () => {
-  const daily = { number: 7, date: "2026-11-18" };
+  const daily = { date: "2026-11-18" };
   const done = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
 
   function renderDaily() {

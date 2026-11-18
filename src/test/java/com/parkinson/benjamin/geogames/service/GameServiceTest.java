@@ -141,7 +141,8 @@ class GameServiceTest {
         new RoundRules(names),
         objectMapper,
         random,
-        events);
+        events,
+        names);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -155,7 +156,8 @@ class GameServiceTest {
         new RoundRules(names),
         objectMapper,
         random,
-        events);
+        events,
+        names);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -443,7 +445,8 @@ class GameServiceTest {
               new RoundRules(names),
               objectMapper,
               new Random(7),
-              events)
+              events,
+              names)
           .createGame("RANDOM", 10);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());

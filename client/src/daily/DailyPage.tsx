@@ -124,7 +124,7 @@ function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void
     if (gone && !hasResult) clearDaily();
   }, [gone, hasResult]);
 
-  return <GameRoundPage gameId={entry.gameId} daily={{ number: entry.number, date: entry.date }} />;
+  return <GameRoundPage gameId={entry.gameId} daily={{ date: entry.date }} />;
 }
 
 export default function DailyPage(): React.JSX.Element {

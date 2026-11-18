@@ -39,6 +39,7 @@ public class GameService {
   private final Random random;
   private final ApplicationEventPublisher events;
   private final RoundRules rules;
+  private final KnownPlaceNames placeNames;
 
   public GameService(
       GameRepository gameRepository,
@@ -46,13 +47,15 @@ public class GameService {
       RoundRules rules,
       ObjectMapper objectMapper,
       Random random,
-      ApplicationEventPublisher events) {
+      ApplicationEventPublisher events,
+      KnownPlaceNames placeNames) {
     this.gameRepository = gameRepository;
     this.generators = generators;
     this.objectMapper = objectMapper;
     this.random = random;
     this.events = events;
     this.rules = rules;
+    this.placeNames = placeNames;
   }
 
   @Transactional
@@ -199,7 +202,7 @@ public class GameService {
   }
 
   private GameRound toResponse(GameEntity game, GameRoundEntity round) {
-    String roundKey = rules.currentRoundKey(round.getRoundKey());
+    String roundKey = placeNames.currentRoundKey(round.getRoundKey());
     GameData data = generators.rebuild(round.getGameType(), roundKey);
     return new GameRound(
         GameTypeResponse.from(round.getGameType()),

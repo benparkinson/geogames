@@ -115,11 +115,11 @@ describe("GameRoundPage loading and errors", () => {
 });
 
 describe("GameRoundPage game types", () => {
-  it("titles and tells a daily game by its number", async () => {
+  it("titles and tells a daily game by its date", async () => {
     fakeServer(["TRIPOINT"]);
     render(
       <QueryClientProvider client={client}>
-        <GameRoundPage gameId="g1" daily={{ number: 42, date: "2026-11-18" }} />
+        <GameRoundPage gameId="g1" daily={{ date: "2026-11-18" }} />
       </QueryClientProvider>,
     );
 

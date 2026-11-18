@@ -9,9 +9,9 @@ import DailyPage from "./DailyPage";
 import { DailyEntry, readDaily, resetDailyStorageForTests, writeDaily } from "./dailyStorage";
 
 vi.mock("../games/common/GameRoundPage", () => ({
-  default: ({ gameId, daily }: { gameId: string; daily: { number: number } }) => (
+  default: ({ gameId, daily }: { gameId: string; daily: { date: string } }) => (
     <div>
-      game {gameId} (daily {daily.number})
+      game {gameId} (daily {daily.date})
     </div>
   ),
 }));
@@ -137,7 +137,7 @@ describe("DailyPage with a game for today", () => {
     mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
     renderWithClient(<DailyPage />);
 
-    expect(await screen.findByText("game g1 (daily 2)")).toBeInTheDocument();
+    expect(await screen.findByText(`game g1 (daily ${today})`)).toBeInTheDocument();
     expect(readDaily()?.result).toBeUndefined();
   });
 
@@ -162,7 +162,7 @@ describe("DailyPage with a game for today", () => {
     await waitFor(() =>
       expect(readDaily()?.result).toEqual({ score: 100, maxScore: 200, rounds: ["perfect", "revealed"] }),
     );
-    expect(screen.getByText("game g1 (daily 2)")).toBeInTheDocument();
+    expect(screen.getByText(`game g1 (daily ${today})`)).toBeInTheDocument();
   });
 
   it("counts a round with hints as 'hints'", async () => {
@@ -179,7 +179,7 @@ describe("DailyPage with a game for today", () => {
     writeDaily({ ...entry, hardcore: true });
     mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
     renderWithClient(<DailyPage />);
-    await screen.findByText("game g1 (daily 2)");
+    await screen.findByText(`game g1 (daily ${today})`);
 
     expect(readDaily()?.hardcore).toBe(true);
   });
@@ -189,7 +189,7 @@ describe("DailyPage with a game for today", () => {
     writeDaily({ ...entry, hardcore: true });
     mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
     renderWithClient(<DailyPage />);
-    await screen.findByText("game g1 (daily 2)");
+    await screen.findByText(`game g1 (daily ${today})`);
 
     act(() => {
       localStorage.removeItem("gg-hardcore");
@@ -228,7 +228,7 @@ describe("DailyPage with a game for today", () => {
 
     await userEvent.click(await screen.findByRole("button", { name: "See the rounds" }));
 
-    expect(await screen.findByText("game g1 (daily 2)")).toBeInTheDocument();
+    expect(await screen.findByText(`game g1 (daily ${today})`)).toBeInTheDocument();
   });
 
   it("keeps a finished entry's result even if the game has been deleted", async () => {
@@ -237,7 +237,7 @@ describe("DailyPage with a game for today", () => {
     renderWithClient(<DailyPage />);
 
     await userEvent.click(await screen.findByRole("button", { name: "See the rounds" }));
-    await screen.findByText("game g1 (daily 2)");
+    await screen.findByText(`game g1 (daily ${today})`);
 
     expect(readDaily()?.result).toBeDefined();
   });
