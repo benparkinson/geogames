@@ -10,8 +10,6 @@ import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
-import com.parkinson.benjamin.geogames.dao.RoundGuess;
-import com.parkinson.benjamin.geogames.helper.PlaceNames;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -25,7 +23,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -40,28 +37,27 @@ import tools.jackson.databind.ObjectMapper;
 public class GameService {
 
   private static final int MAX_ROUNDS = 10;
-  private static final int MAX_GUESS_LENGTH = 255;
 
   private final GameRepository gameRepository;
   private final Map<GameType, RoundGenerator> generators;
   private final ObjectMapper objectMapper;
   private final Random random;
   private final ApplicationEventPublisher events;
-  private final KnownPlaceNames knownPlaceNames;
+  private final RoundRules rules;
 
   public GameService(
       GameRepository gameRepository,
       List<RoundGenerator> roundGenerators,
+      RoundRules rules,
       ObjectMapper objectMapper,
       Random random,
-      ApplicationEventPublisher events,
-      KnownPlaceNames knownPlaceNames) {
+      ApplicationEventPublisher events) {
     this.gameRepository = gameRepository;
     this.generators = generatorsByType(roundGenerators);
     this.objectMapper = objectMapper;
     this.random = random;
     this.events = events;
-    this.knownPlaceNames = knownPlaceNames;
+    this.rules = rules;
   }
 
   private static Map<GameType, RoundGenerator> generatorsByType(List<RoundGenerator> generators) {
@@ -149,7 +145,7 @@ public class GameService {
         gameId,
         round,
         (game, r) -> {
-          if (addGuess(r, guess, correct)) {
+          if (rules.addGuess(r, guess, correct)) {
             gameRepository.save(game);
           }
           return new RoundGuessesResponse(recordedGuesses(r));
@@ -169,72 +165,11 @@ public class GameService {
         gameId,
         round,
         (game, r) -> {
-          if (addHint(r, hint, guessesBefore)) {
+          if (rules.addHint(r, hint, guessesBefore)) {
             gameRepository.save(game);
           }
           return new RoundHintsResponse(List.copyOf(r.getHintsTakenAt()));
         });
-  }
-
-  /** @return whether the round changed */
-  private static boolean addHint(GameRoundEntity round, int hint, int guessesBefore) {
-    if (round.getAnswerState() != AnswerState.UNANSWERED) {
-      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
-    }
-    int taken = round.getHintsTakenAt().size();
-    if (hint < taken) {
-      // Already recorded: the first request wins, so a retry changes nothing.
-      return false;
-    }
-    if (hint != taken) {
-      throw new IllegalArgumentException(
-          "Hint %d can't be taken before hint %d".formatted(hint, taken));
-    }
-    int hintCount = round.getGameType().hintCount();
-    if (hint >= hintCount) {
-      throw new IllegalArgumentException(
-          "A round of %s has %d hints".formatted(round.getGameType(), hintCount));
-    }
-    if (guessesBefore < 0) {
-      throw new IllegalArgumentException("guessesBefore can't be negative");
-    }
-    // Clamped, not rejected: a guess whose request failed makes the client's count larger than the
-    // server's, and that must not turn a real hint into an error.
-    round.addHint(Math.min(guessesBefore, round.getGuesses().size()));
-    return true;
-  }
-
-  /** @return whether the round changed */
-  private boolean addGuess(GameRoundEntity round, String guess, boolean correct) {
-    if (round.getAnswerState() != AnswerState.UNANSWERED) {
-      throw new RoundAlreadyAnsweredForGuessException(round.getRoundNumber());
-    }
-    if (guess == null || guess.isBlank() || guess.length() > MAX_GUESS_LENGTH) {
-      throw new IllegalArgumentException(
-          "A guess must be between 1 and %d characters".formatted(MAX_GUESS_LENGTH));
-    }
-    GameType type = round.getGameType();
-    String resolved =
-        knownPlaceNames
-            .resolve(type.placeKind(), guess)
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "Not a known %s name".formatted(type.placeKind().name().toLowerCase())));
-    String normalised = PlaceNames.normalise(resolved);
-    if (round.getGuesses().stream()
-        .anyMatch(g -> PlaceNames.normalise(g.getGuess()).equals(normalised))) {
-      return false;
-    }
-    long same = round.getGuesses().stream().filter(g -> g.isCorrect() == correct).count();
-    int limit = correct ? type.answerCount() : type.guessLimit();
-    if (same >= limit) {
-      throw new IllegalArgumentException(
-          "A round of %s allows %d %s guesses"
-              .formatted(type, limit, correct ? "correct" : "wrong"));
-    }
-    round.addGuess(new RoundGuess(resolved, correct));
-    return true;
   }
 
   private static List<RecordedGuess> recordedGuesses(GameRoundEntity round) {
@@ -260,15 +195,14 @@ public class GameService {
       AnswerState answerState,
       int hintsUsed,
       Integer wrongGuesses) {
-    validateHintsUsed(round, hintsUsed);
     // Wrong guesses aren't checked against the stored guesses: a guess request lost on the
     // network would otherwise block a real answer.
-    validateWrongGuesses(round, answerState, wrongGuesses);
+    rules.validateAnswer(round, answerState, hintsUsed, wrongGuesses);
     // The hints that count are at least those recorded, so a client can't report fewer. More is
     // accepted, because a hint request may have been lost. This is worked out before the repeat
     // check, so a retry is still a no-op.
     int effectiveHints = Math.max(hintsUsed, round.getHintsTakenAt().size());
-    if (recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
+    if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
       gameRepository.save(game);
       publishRoundAnswered(game, round);
     }
@@ -297,76 +231,6 @@ public class GameService {
             LocalDate.now(ZoneOffset.UTC)));
   }
 
-  private static void validateHintsUsed(GameRoundEntity round, int hintsUsed) {
-    int hintCount = round.getGameType().hintCount();
-    if (hintsUsed < 0 || hintsUsed > hintCount) {
-      throw new IllegalArgumentException(
-          "A round of %s has %d hints, so %d can't have been used"
-              .formatted(round.getGameType(), hintCount, hintsUsed));
-    }
-  }
-
-  /**
-   * Checks the reported wrong guesses against the guess limit: running out of guesses means exactly
-   * {@code guessLimit} wrong guesses, and any other answer means fewer. A null (not reported) is
-   * always accepted.
-   */
-  private static void validateWrongGuesses(
-      GameRoundEntity round, AnswerState answerState, Integer wrongGuesses) {
-    if (wrongGuesses == null) {
-      return;
-    }
-    GameType type = round.getGameType();
-    int limit = type.guessLimit();
-    if (wrongGuesses < 0 || wrongGuesses > limit) {
-      throw new IllegalArgumentException(
-          "A round of %s allows %d wrong guesses, so %d is not possible"
-              .formatted(type, limit, wrongGuesses));
-    }
-    if (answerState == AnswerState.OUT_OF_GUESSES && wrongGuesses != limit) {
-      throw new IllegalArgumentException(
-          "A round of %s that ran out of guesses must have %d wrong guesses, not %d"
-              .formatted(type, limit, wrongGuesses));
-    }
-    if (answerState != AnswerState.OUT_OF_GUESSES && wrongGuesses == limit) {
-      throw new IllegalArgumentException(
-          "A round of %s with %d wrong guesses ran out of guesses, so it can't be %s"
-              .formatted(type, wrongGuesses, answerState));
-    }
-  }
-
-  /**
-   * A round's answer is final. Sending the same answer (and hints and wrong guesses) again does
-   * nothing, so a retried request is harmless, but changing an answered round is a conflict.
-   * Concurrent answers to one round are stopped by the round's version, and the controller retries
-   * once.
-   *
-   * @return whether the round changed
-   */
-  private static boolean recordAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
-    AnswerState current = round.getAnswerState();
-    if (current != AnswerState.UNANSWERED) {
-      if (current == answerState
-          && round.getHintsUsed() == hintsUsed
-          && Objects.equals(round.getWrongGuesses(), wrongGuesses)) {
-        return false;
-      }
-      throw new RoundAlreadyAnsweredException(
-          round.getRoundNumber(),
-          current,
-          round.getHintsUsed(),
-          round.getWrongGuesses(),
-          answerState,
-          hintsUsed,
-          wrongGuesses);
-    }
-    round.setAnswerState(answerState);
-    round.setHintsUsed(hintsUsed);
-    round.setWrongGuesses(wrongGuesses);
-    return true;
-  }
-
   private <T> Optional<T> withRound(
       UUID gameId, int round, BiFunction<GameEntity, GameRoundEntity, T> action) {
     return gameRepository
@@ -379,9 +243,7 @@ public class GameService {
   }
 
   private GameRound toResponse(GameEntity game, GameRoundEntity round) {
-    String roundKey =
-        StoredRoundKeys.withCurrentCountryNames(
-            round.getRoundKey(), name -> knownPlaceNames.currentCountryName(name).orElse(name));
+    String roundKey = rules.currentRoundKey(round.getRoundKey());
     GameData data = generators.get(round.getGameType()).rebuild(roundKey);
     return new GameRound(
         GameTypeResponse.from(round.getGameType()),
