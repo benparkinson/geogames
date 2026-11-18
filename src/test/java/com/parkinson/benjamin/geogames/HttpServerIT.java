@@ -125,6 +125,21 @@ class HttpServerIT {
   }
 
   @Test
+  void dailyPageLoadsDirectly() {
+    String html =
+        client
+            .get()
+            .uri("/daily")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
+    assertThat(html).contains("Daily challenge");
+  }
+
+  @Test
   void reloadingAGamePageIsA404() {
     // Current behaviour: reloading a game page served by the jar is a 404, because nothing forwards
     // /games/{id} to games/[gameId].html. See the deep-link e2e test, which is marked test.fail().

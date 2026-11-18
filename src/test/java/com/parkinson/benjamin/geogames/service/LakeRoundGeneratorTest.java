@@ -20,6 +20,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class LakeRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private final List<Lake> lakes =
       IntStream.range(0, 6)
           .mapToObj(i -> new Lake("Q" + i, "Lake" + i, List.of(), "Asia", null, List.of()))
@@ -30,13 +32,13 @@ class LakeRoundGeneratorTest {
   @BeforeEach
   void setUp() {
     when(loader.loadLakes()).thenReturn(lakes);
-    generator = new LakeRoundGenerator(loader, new Random(3));
+    generator = new LakeRoundGenerator(loader);
   }
 
   @Test
   void generatesLakeShapeRounds() {
     assertThat(generator.gameType()).isSameAs(GameType.LAKES_BY_SHAPE);
-    assertThat(generator.generate(3, Set.of()))
+    assertThat(generator.generate(3, Set.of(), random))
         .hasSize(3)
         .doesNotHaveDuplicates()
         .allSatisfy(
@@ -54,16 +56,16 @@ class LakeRoundGeneratorTest {
   void skipsExcludedSubjects() {
     Set<String> excluded = Set.of("lake:Q0", "lake:Q1", "lake:Q2");
 
-    assertThat(generator.generate(3, excluded))
+    assertThat(generator.generate(3, excluded, random))
         .extracting(GameData::subjectId)
         .containsExactlyInAnyOrder("lake:Q3", "lake:Q4", "lake:Q5");
-    assertThatThrownBy(() -> generator.generate(4, excluded))
+    assertThatThrownBy(() -> generator.generate(4, excluded, random))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void rejectsMoreLakesThanAreKnown() {
-    assertThatThrownBy(() -> generator.generate(7, Set.of()))
+    assertThatThrownBy(() -> generator.generate(7, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("7")
         .hasMessageContaining("6");
@@ -73,7 +75,7 @@ class LakeRoundGeneratorTest {
   void rebuildGivesBackEveryGeneratedRound() {
     ObjectMapper mapper = JsonMapper.builder().build();
 
-    for (GameData round : generator.generate(lakes.size(), Set.of())) {
+    for (GameData round : generator.generate(lakes.size(), Set.of(), random)) {
       GameData rebuilt = generator.rebuild(round.roundKey());
 
       assertThat(rebuilt).isEqualTo(round);

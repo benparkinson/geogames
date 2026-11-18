@@ -10,8 +10,12 @@ import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
-import { CORRECT_ANSWER, isRevealed, OUT_OF_GUESSES } from "./Model";
+import { CORRECT_ANSWER, FINISHED, isRevealed, OUT_OF_GUESSES } from "./Model";
 import { isPerfect } from "./scoring";
+import ShareButton from "../../daily/ShareButton";
+import { useDailyEntry } from "../../daily/dailyStorage";
+import { resultFromGame } from "../../daily/result";
+import { shareText } from "../../daily/shareText";
 
 function roundLabel(round: GameRoundView): string {
   return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
@@ -27,11 +31,14 @@ function playAgainType(rounds: GameRoundView[]): string {
   return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
 }
 
-export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
+export default function GameSummary({ gameId, totalRoundCount, onOpenRound, daily }: {
   gameId: string;
   totalRoundCount: number;
   onOpenRound: (round: number) => void;
+  /** Set for a daily challenge: the buttons share the result instead of starting the same game again. */
+  daily?: { number: number; date: string };
 }): React.JSX.Element {
+  const dailyEntry = useDailyEntry();
   const results = useQueries({
     queries: Array.from({ length: totalRoundCount }, (_v, i) => roundQuery(gameId, i)),
   });
@@ -54,6 +61,12 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
     revealed > 0 && `${revealed} revealed`,
   ].filter(Boolean);
   const gameType = playAgainType(all);
+  const share = daily && all[0].gameResult.gameState === FINISHED
+    ? shareText(
+        { number: daily.number, hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore, result: resultFromGame(all[0].gameResult) },
+        window.location.origin,
+      )
+    : null;
 
   return (
     <div className="min-vh-100 page-bg d-flex flex-column">
@@ -66,6 +79,7 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
       </div>
       <div className="gg-card mx-auto my-4 p-3">
         <h1 className="h3 mb-1">
+          {daily && <span className="gg-text-muted">Daily #{daily.number}: </span>}
           {perfectGame
             ? <><StarFill aria-hidden="true" className="gg-text-perfect" /> Perfect game! {score} / {maxScore}</>
             : `You scored ${score} / ${maxScore}`}
@@ -111,10 +125,17 @@ export default function GameSummary({ gameId, totalRoundCount, onOpenRound }: {
         </div>
 
         {!!createError && <div className="gg-text-danger small mb-2" role="alert">Couldn&apos;t start a new game. Try again.</div>}
+        {share !== null && <div className="mb-3"><ShareButton text={share} /></div>}
         <div className="d-flex gap-2">
-          <Button variant="primary" onClick={() => createGame(gameType, totalRoundCount)} disabled={creating}>
-            {creating ? <Spinner size="sm" /> : "Play again"}
-          </Button>
+          {daily ? (
+            <Button variant="secondary" onClick={() => createGame("RANDOM", 5)} disabled={creating}>
+              {creating ? <Spinner size="sm" /> : "Play a Mixed game"}
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={() => createGame(gameType, totalRoundCount)} disabled={creating}>
+              {creating ? <Spinner size="sm" /> : "Play again"}
+            </Button>
+          )}
           <Link href="/" className={buttonClass({ variant: "quiet" })}>Home</Link>
         </div>
       </div>

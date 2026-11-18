@@ -23,19 +23,16 @@ public class RiverRoundGenerator implements RoundGenerator {
 
   private final GameType gameType;
   private final RiverLoaderService riverLoaderService;
-  private final Random random;
   private final Predicate<River> eligible;
   private final Function<River, List<Country>> countries;
 
   public RiverRoundGenerator(
       GameType gameType,
       RiverLoaderService riverLoaderService,
-      Random random,
       Predicate<River> eligible,
       Function<River, List<Country>> countries) {
     this.gameType = gameType;
     this.riverLoaderService = riverLoaderService;
-    this.random = random;
     this.eligible = eligible;
     this.countries = countries;
   }
@@ -46,7 +43,7 @@ public class RiverRoundGenerator implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     List<River> candidates =
         riverLoaderService.loadRivers().stream()
             .filter(eligible)

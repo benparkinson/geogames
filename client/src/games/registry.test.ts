@@ -80,6 +80,12 @@ describe("MENU_OPTIONS", () => {
     expect(MENU_OPTIONS.filter((o) => o.extraDifficult).map((o) => o.type)).toEqual(["RIVERS_BY_SHAPE", "LAKES_BY_SHAPE", "BORDERS_BY_SHAPE"]);
   });
 
+  // Keep in step with GameTypeTest.theExtraDifficultTypesAreRiverLakeAndBorderShapes in the backend, which
+  // decides what the daily challenge leaves out.
+  it("has the extra difficult modules the backend leaves out of the daily challenge", () => {
+    expect(GAME_MODULES.filter((m) => m.extraDifficult).map((m) => m.type).sort()).toEqual(["BORDERS_BY_SHAPE", "LAKES_BY_SHAPE", "RIVERS_BY_SHAPE"]);
+  });
+
   it("gives every option a title, description and icon", () => {
     for (const option of MENU_OPTIONS) {
       expect(option.title).not.toBe("");

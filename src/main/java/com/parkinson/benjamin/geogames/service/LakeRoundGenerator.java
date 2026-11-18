@@ -20,11 +20,9 @@ public class LakeRoundGenerator implements RoundGenerator {
   private static final String PREFIX = "lake:";
 
   private final LakeLoaderService lakeLoaderService;
-  private final Random random;
 
-  public LakeRoundGenerator(LakeLoaderService lakeLoaderService, Random random) {
+  public LakeRoundGenerator(LakeLoaderService lakeLoaderService) {
     this.lakeLoaderService = lakeLoaderService;
-    this.random = random;
   }
 
   @Override
@@ -33,7 +31,7 @@ public class LakeRoundGenerator implements RoundGenerator {
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects) {
+  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     List<Lake> candidates =
         lakeLoaderService.loadLakes().stream()
             .filter(lake -> !excludedSubjects.contains("lake:" + lake.id()))

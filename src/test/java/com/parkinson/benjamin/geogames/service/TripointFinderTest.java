@@ -29,6 +29,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 public class TripointFinderTest {
 
+  private final Random random = new Random(3);
+
   private TripointLoaderService loader;
   private CountryShapeService countryLoader;
   private TripointFinderService service;
@@ -38,7 +40,7 @@ public class TripointFinderTest {
   void setUp() {
     loader = mock(TripointLoaderService.class);
     countryLoader = mock(CountryShapeService.class);
-    service = new TripointFinderService(loader, countryLoader, new Random(5));
+    service = new TripointFinderService(loader, countryLoader);
 
     definitions =
         IntStream.range(0, 5)
@@ -61,9 +63,9 @@ public class TripointFinderTest {
     TripointLoaderService emptyLoader = mock(TripointLoaderService.class);
     when(emptyLoader.loadTripointDefinitions()).thenReturn(List.of());
     TripointFinderService emptyService =
-        new TripointFinderService(emptyLoader, mock(CountryShapeService.class), new Random(5));
+        new TripointFinderService(emptyLoader, mock(CountryShapeService.class));
 
-    assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1, Set.of()));
+    assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1, Set.of(), random));
   }
 
   @Test
@@ -73,7 +75,7 @@ public class TripointFinderTest {
 
   @Test
   void returnsDistinctTripointsBuiltFromDefinitions() {
-    List<GameData> result = service.generate(3, Set.of());
+    List<GameData> result = service.generate(3, Set.of(), random);
 
     assertThat(result).hasSize(3);
     List<Coordinate> coordinates = result.stream().map(t -> ((Tripoint) t).coordinate()).toList();
@@ -95,7 +97,7 @@ public class TripointFinderTest {
 
   @Test
   void canReturnEveryDefinition() {
-    List<GameData> result = service.generate(definitions.size(), Set.of());
+    List<GameData> result = service.generate(definitions.size(), Set.of(), random);
 
     assertThat(result.stream().map(t -> ((Tripoint) t).coordinate()).toList())
         .containsExactlyInAnyOrderElementsOf(
@@ -104,7 +106,7 @@ public class TripointFinderTest {
 
   @Test
   void returnsNothingWithoutLoadingCountriesWhenAskedForZero() {
-    assertThat(service.generate(0, Set.of())).isEmpty();
+    assertThat(service.generate(0, Set.of(), random)).isEmpty();
     verifyNoInteractions(countryLoader);
   }
 
@@ -113,7 +115,7 @@ public class TripointFinderTest {
     when(countryLoader.loadDisplayCountry(anyString()))
         .thenThrow(new UncheckedIOException(new IOException("boom")));
 
-    assertThatThrownBy(() -> service.generate(1, Set.of()))
+    assertThatThrownBy(() -> service.generate(1, Set.of(), random))
         .isInstanceOf(UncheckedIOException.class)
         .hasRootCauseMessage("boom");
   }
@@ -122,7 +124,7 @@ public class TripointFinderTest {
   void rebuildGivesBackEveryGeneratedRound() {
     ObjectMapper mapper = JsonMapper.builder().build();
 
-    for (GameData round : service.generate(definitions.size(), Set.of())) {
+    for (GameData round : service.generate(definitions.size(), Set.of(), random)) {
       GameData rebuilt = service.rebuild(round.roundKey());
 
       assertThat(rebuilt).isEqualTo(round);
@@ -160,7 +162,7 @@ public class TripointFinderTest {
 
   @Test
   void roundKeyIncludesTheCoordinate() {
-    Tripoint tripoint = (Tripoint) service.generate(1, Set.of()).get(0);
+    Tripoint tripoint = (Tripoint) service.generate(1, Set.of(), random).get(0);
 
     assertThat(tripoint.roundKey())
         .isEqualTo(
@@ -192,12 +194,12 @@ public class TripointFinderTest {
   void skipsExcludedSubjectsWithoutLoadingTheirCountries() {
     Set<String> excluded = Set.of("tripoint:A0|B0|C0", "tripoint:A1|B1|C1");
 
-    List<GameData> result = service.generate(3, excluded);
+    List<GameData> result = service.generate(3, excluded, random);
 
     assertThat(result).extracting(GameData::subjectId).doesNotContainAnyElementsOf(excluded);
     verify(countryLoader, never()).loadDisplayCountry("A0");
     verify(countryLoader, never()).loadDisplayCountry("A1");
-    assertThatThrownBy(() -> service.generate(4, excluded))
+    assertThatThrownBy(() -> service.generate(4, excluded, random))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -213,9 +215,7 @@ public class TripointFinderTest {
     when(loader.loadTripointDefinitions()).thenReturn(twoOfThreeShareCountries());
 
     for (int seed = 0; seed < 200; seed++) {
-      TripointFinderService seeded =
-          new TripointFinderService(loader, countryLoader, new Random(seed));
-      List<GameData> result = seeded.generate(2, Set.of());
+      List<GameData> result = service.generate(2, Set.of(), new Random(seed));
 
       assertThat(result).extracting(GameData::subjectId).doesNotHaveDuplicates();
     }
@@ -227,9 +227,7 @@ public class TripointFinderTest {
 
     Set<Coordinate> seen = new java.util.HashSet<>();
     for (int seed = 0; seed < 200; seed++) {
-      TripointFinderService seeded =
-          new TripointFinderService(loader, countryLoader, new Random(seed));
-      for (GameData round : seeded.generate(2, Set.of())) {
+      for (GameData round : service.generate(2, Set.of(), new Random(seed))) {
         seen.add(((Tripoint) round).coordinate());
       }
     }
@@ -241,7 +239,7 @@ public class TripointFinderTest {
   void countsSubjectsNotDefinitionsWhenThereAreTooFew() {
     when(loader.loadTripointDefinitions()).thenReturn(twoOfThreeShareCountries());
 
-    assertThatThrownBy(() -> service.generate(3, Set.of()))
+    assertThatThrownBy(() -> service.generate(3, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("tripoints");
   }

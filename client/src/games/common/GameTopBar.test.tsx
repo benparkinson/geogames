@@ -5,6 +5,18 @@ import { makeRoundProps } from "../../test/fixtures";
 import GameTopBar from "./GameTopBar";
 
 describe("GameTopBar", () => {
+  it("names a daily challenge", () => {
+    render(<GameTopBar round={makeRoundProps({ dailyNumber: 42 })} gameOver={false} gaveUp={false} hintsUsed={0} />);
+
+    expect(screen.getByText("Daily #42")).toBeInTheDocument();
+  });
+
+  it("says nothing about a daily in an ordinary game", () => {
+    render(<GameTopBar round={makeRoundProps()} gameOver={false} gaveUp={false} hintsUsed={0} />);
+
+    expect(screen.queryByText(/Daily/)).not.toBeInTheDocument();
+  });
+
   it("shows the running score mid-game", () => {
     render(<GameTopBar round={makeRoundProps({ score: 183 })} gameOver={false} gaveUp={false} hintsUsed={0} />);
 

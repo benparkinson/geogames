@@ -78,41 +78,41 @@ class CountryGamesConfigTest {
 
   private static List<String> eligibleNames(RoundGenerator generator, int expected) {
     List<String> names =
-        generator.generate(expected, Set.of()).stream()
+        generator.generate(expected, Set.of(), new Random(7)).stream()
             .map(round -> ((CountryShapeRound) round).country().name())
             .toList();
-    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of()))
+    assertThatThrownBy(() -> generator.generate(expected + 1, Set.of(), new Random(7)))
         .isInstanceOf(IllegalArgumentException.class);
     return names;
   }
 
   @Test
   void countriesByNeighboursNeedsTwoMainlandNeighboursAndDrawsThem() {
-    RoundGenerator generator = config.countriesByNeighbours(shapes, random);
+    RoundGenerator generator = config.countriesByNeighbours(shapes);
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_NEIGHBOURS);
     assertThat(eligibleNames(generator, 2)).containsExactlyInAnyOrder("All", "Landlocked");
-    assertThat(generator.generate(2, Set.of()))
+    assertThat(generator.generate(2, Set.of(), random))
         .allSatisfy(round -> assertThat(((CountryShapeRound) round).neighbours()).hasSize(2));
   }
 
   @Test
   void countriesByCoastlineNeedsALongCoastAndSomeLandBorder() {
-    RoundGenerator generator = config.countriesByCoastline(shapes, random);
+    RoundGenerator generator = config.countriesByCoastline(shapes);
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_COASTLINE);
     assertThat(eligibleNames(generator, 2)).containsExactlyInAnyOrder("All", "Outlying");
-    assertThat(generator.generate(2, Set.of()))
+    assertThat(generator.generate(2, Set.of(), random))
         .allSatisfy(round -> assertThat(((CountryShapeRound) round).neighbours()).isEmpty());
   }
 
   @Test
   void countriesByLandBordersNeedsALongBorderACoastAndAMainlandNeighbour() {
-    RoundGenerator generator = config.countriesByLandBorders(shapes, random);
+    RoundGenerator generator = config.countriesByLandBorders(shapes);
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_LAND_BORDERS);
     assertThat(eligibleNames(generator, 1)).containsExactly("All");
-    assertThat(generator.generate(1, Set.of()))
+    assertThat(generator.generate(1, Set.of(), random))
         .allSatisfy(round -> assertThat(((CountryShapeRound) round).neighbours()).hasSize(2));
   }
 }

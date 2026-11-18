@@ -39,9 +39,17 @@ function PrivacyPage(): React.JSX.Element {
 
                 <h2 className="h5">On your device</h2>
                 <p>
-                    Your browser keeps up to two items in its local storage: <code>gg-theme</code> and{" "}
-                    <code>gg-hardcore</code>. Each is set only if you use its switch (the light/dark toggle and
-                    Hardcore mode). Clearing site data removes them.
+                    Your browser keeps up to three items in its local storage: <code>gg-theme</code>,{" "}
+                    <code>gg-hardcore</code> and <code>gg-daily</code>. The first two are set only if you use their
+                    switch (the light/dark toggle and Hardcore mode). The third is set only when you play the daily
+                    challenge: it holds today&apos;s game id, whether Hardcore was on and, once you finish,
+                    your score and how each round ended. It is replaced the next day and never sent anywhere.
+                    Clearing site data removes all three.
+                </p>
+                <p>
+                    Everyone who plays the daily challenge on a date gets the same rounds. The server stores which
+                    rounds those are for each date, and nothing about who played them. Copying your result writes to
+                    your clipboard only when you click Share.
                 </p>
 
                 <h2 className="h5">Who else receives data</h2>
@@ -75,7 +83,7 @@ function PrivacyPage(): React.JSX.Element {
                 </p>
 
                 <h2 className="h5">Changes</h2>
-                <p className="mb-0">Last updated: 17 November 2026.</p>
+                <p className="mb-0">Last updated: 18 November 2026.</p>
             </main>
             <SiteFooter className="mt-auto pt-4 pb-4" />
         </div>

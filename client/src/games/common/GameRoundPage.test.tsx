@@ -112,6 +112,14 @@ describe("GameRoundPage loading and errors", () => {
 });
 
 describe("GameRoundPage game types", () => {
+  it("titles and tells a daily game by its number", async () => {
+    fakeServer(["TRIPOINT"]);
+    render(<QueryClientProvider client={client}><GameRoundPage gameId="g1" daily={{ number: 42, date: "2026-11-18" }} /></QueryClientProvider>);
+
+    expect(await screen.findByText("Daily #42")).toBeInTheDocument();
+    expect(title()).toBe("Daily #42 | GeoGauntlet");
+  });
+
   it("renders the tripoint game and title", async () => {
     fakeServer(["TRIPOINT"]);
     renderPage();

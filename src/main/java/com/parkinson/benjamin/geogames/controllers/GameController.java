@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.api.DailyGameRequest;
+import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationRequest;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -10,6 +12,9 @@ import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.service.GameService;
+import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -27,9 +32,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
   private final GameService gameService;
+  private final DailyChallengeService dailyChallengeService;
 
-  public GameController(GameService gameService) {
+  public GameController(GameService gameService, DailyChallengeService dailyChallengeService) {
     this.gameService = gameService;
+    this.dailyChallengeService = dailyChallengeService;
+  }
+
+  /** A new game from the daily challenge's pinned rounds. The body may be {@code {}}. */
+  @PostMapping("/daily-games")
+  public ResponseEntity<DailyGameResponse> createDailyGame(
+      @RequestBody(required = false) DailyGameRequest request) {
+    Optional<LocalDate> date = Optional.empty();
+    if (request != null && request.date() != null) {
+      try {
+        date = Optional.of(LocalDate.parse(request.date()));
+      } catch (DateTimeParseException e) {
+        throw new IllegalArgumentException("date must be YYYY-MM-DD");
+      }
+    }
+    return ResponseEntity.ok(dailyChallengeService.createDailyGame(date));
   }
 
   @PostMapping("/games")

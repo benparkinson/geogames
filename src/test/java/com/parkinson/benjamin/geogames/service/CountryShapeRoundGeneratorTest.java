@@ -26,6 +26,8 @@ import tools.jackson.databind.json.JsonMapper;
 
 class CountryShapeRoundGeneratorTest {
 
+  private final Random random = new Random(3);
+
   private final CountryShapeService shapes = mock(CountryShapeService.class);
 
   private static GeoData data(String name, String type) {
@@ -69,7 +71,7 @@ class CountryShapeRoundGeneratorTest {
   private CountryShapeRoundGenerator generator(
       Predicate<CountryShape> eligible, boolean withNeighbours) {
     return new CountryShapeRoundGenerator(
-        GameType.COUNTRIES_BY_NEIGHBOURS, shapes, new Random(3), eligible, withNeighbours);
+        GameType.COUNTRIES_BY_NEIGHBOURS, shapes, eligible, withNeighbours);
   }
 
   @Test
@@ -77,7 +79,7 @@ class CountryShapeRoundGeneratorTest {
     CountryShapeRoundGenerator generator = generator(s -> true, false);
 
     assertThat(generator.gameType()).isSameAs(GameType.COUNTRIES_BY_NEIGHBOURS);
-    assertThat(generator.generate(1, Set.of()))
+    assertThat(generator.generate(1, Set.of(), random))
         .singleElement()
         .isInstanceOfSatisfying(
             CountryShapeRound.class,
@@ -86,7 +88,7 @@ class CountryShapeRoundGeneratorTest {
 
   @Test
   void onlyPicksEligibleCountries() {
-    List<GameData> rounds = generator(s -> s.coastKm() > 0, false).generate(3, Set.of());
+    List<GameData> rounds = generator(s -> s.coastKm() > 0, false).generate(3, Set.of(), random);
 
     assertThat(rounds)
         .extracting(r -> ((CountryShapeRound) r).country().name())
@@ -95,7 +97,7 @@ class CountryShapeRoundGeneratorTest {
 
   @Test
   void skipsExcludedSubjects() {
-    List<GameData> rounds = generator(s -> true, false).generate(3, Set.of("country:A"));
+    List<GameData> rounds = generator(s -> true, false).generate(3, Set.of("country:A"), random);
 
     assertThat(rounds).extracting(GameData::subjectId).doesNotContain("country:A").hasSize(3);
   }
@@ -103,7 +105,8 @@ class CountryShapeRoundGeneratorTest {
   @Test
   void attachesOnlyMainlandNeighboursInOrderWhenAsked() {
     CountryShapeRound round =
-        (CountryShapeRound) generator(s -> s.name().equals("A"), true).generate(1, Set.of()).get(0);
+        (CountryShapeRound)
+            generator(s -> s.name().equals("A"), true).generate(1, Set.of(), random).get(0);
 
     assertThat(round.neighbours()).extracting(CountryOutline::name).containsExactly("B", "D");
     assertThat(round.neighbours().get(0).outline()).isSameAs(b.outline());
@@ -113,20 +116,20 @@ class CountryShapeRoundGeneratorTest {
   void attachesNoNeighboursOtherwise() {
     CountryShapeRound round =
         (CountryShapeRound)
-            generator(s -> s.name().equals("A"), false).generate(1, Set.of()).get(0);
+            generator(s -> s.name().equals("A"), false).generate(1, Set.of(), random).get(0);
 
     assertThat(round.neighbours()).isEmpty();
   }
 
   @Test
   void usesTheCountrySubjectId() {
-    assertThat(generator(s -> true, false).generate(1, Set.of()).get(0).subjectId())
+    assertThat(generator(s -> true, false).generate(1, Set.of(), random).get(0).subjectId())
         .startsWith("country:");
   }
 
   @Test
   void tooFewEligibleCountriesIsAnError() {
-    assertThatThrownBy(() -> generator(s -> s.coastKm() == 0, false).generate(2, Set.of()))
+    assertThatThrownBy(() -> generator(s -> s.coastKm() == 0, false).generate(2, Set.of(), random))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("countries");
   }
@@ -137,7 +140,7 @@ class CountryShapeRoundGeneratorTest {
     for (boolean withNeighbours : new boolean[] {true, false}) {
       CountryShapeRoundGenerator generator = generator(s -> true, withNeighbours);
 
-      for (GameData round : generator.generate(4, Set.of())) {
+      for (GameData round : generator.generate(4, Set.of(), random)) {
         GameData rebuilt = generator.rebuild(round.roundKey());
 
         assertThat(rebuilt).isEqualTo(round);

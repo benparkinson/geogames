@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.service;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public interface RoundGenerator {
    *
    * @throws IllegalArgumentException if there isn't enough data for that many
    */
-  List<GameData> generate(int count, Set<String> excludedSubjects);
+  List<GameData> generate(int count, Set<String> excludedSubjects, Random random);
 
   /**
    * Rebuilds the round that generate() returned with this roundKey(), from the same data. Share one
