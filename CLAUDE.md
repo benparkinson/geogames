@@ -69,7 +69,7 @@ Full builds:
 **Game types.** `model/GameType` is a Java enum with `answerCount` (TRIPOINT=3, the two pair games 2, 1 for the rest), `hintCount` and `guessLimit` (wrong guesses allowed, at least 1); the client reads all three from the API. The types are `TRIPOINT`, the river family (`RIVERS_BY_SHAPE`, `RIVERS_BY_COUNTRIES`), the country-shape family (`COUNTRIES_BY_NEIGHBOURS`, `COUNTRIES_BY_COASTLINE`, `COUNTRIES_BY_LAND_BORDERS`), `LAKES_BY_SHAPE`, the pair games (`BORDERS_BY_SHAPE`, `MERGED_COUNTRIES`: two neighbouring countries) and the games that draw data inside a country (`COUNTRIES_BY_CITIES`, `COUNTRIES_BY_RIVERS`). Adding one takes:
 1. A constant in `GameType`.
 2. A `GameData` record in `model/` and its loader services, unless an existing record fits.
-3. A `RoundGenerator` bean. `GameService` picks it up with no edits, and `RANDOM` mixes it in.
+3. A `RoundGenerator` bean. `RoundGenerators` picks it up with no edits, and `RANDOM` mixes it in.
 4. A frontend module in `client/src/games/<name>/`, added to `GAME_MODULES` in `games/registry.ts`.
 
 Steps 1–3 are explained in the backend `CLAUDE.md`, step 4 in `client/CLAUDE.md`. Usage statistics need nothing extra.
