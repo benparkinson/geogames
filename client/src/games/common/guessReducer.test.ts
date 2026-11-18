@@ -9,7 +9,7 @@ const answers = [
   { name: "Netherlands", additionalNames: ["Holland"] },
 ];
 
-const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2, guessLimit: Infinity };
+const config: GuessConfig = { answers, answerCount: 3, hintsTotal: 2, guessLimit: 99 };
 const restored = (answerState: AnswerState, hintsUsed: number, saved: RecordedGuess[] = []) =>
   restoreGuessState(answerState, hintsUsed, saved, [], config).state;
 const fresh = () => restored("UNANSWERED", 0);
@@ -90,7 +90,7 @@ describe("guessReducer guesses", () => {
   it("records a wrong guess without an answer", () => {
     const { state, result } = guessAll(["Peru"]);
 
-    expect(result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: Infinity });
+    expect(result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: 98 });
     expect(state.guesses).toEqual([{ text: "Peru", answer: null }]);
   });
 
@@ -132,7 +132,7 @@ describe("guessReducer guesses", () => {
 
     expect(guessAll(["Atlantis"], cfg).result).toEqual({ kind: "unknown", guess: "Atlantis" });
     expect(guessAll(["Atlantis"], cfg).state.guesses).toEqual([]);
-    expect(guessAll(["Peru"], cfg).result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: Infinity });
+    expect(guessAll(["Peru"], cfg).result).toEqual({ kind: "wrong", guess: "Peru", guessesLeft: 98 });
   });
 
   it("checks duplicates before unknown", () => {
@@ -251,13 +251,12 @@ describe("guessReducer guess limit", () => {
     expect(state.over).toBe(false);
   });
 
-  it("never ends the round when there is no limit", () => {
+  it("never ends the round while guesses are left", () => {
     const texts = Array.from({ length: 50 }, (_, i) => "Nowhere" + i);
     const { state, finished } = guessAll(texts);
 
     expect(state.over).toBe(false);
     expect(finished).toBeUndefined();
-    expect(guessesLeft(state, Infinity)).toBe(Infinity);
   });
 
   it("ignores guesses after the round ran out", () => {

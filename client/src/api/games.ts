@@ -23,8 +23,16 @@ function roundUrl(gameId: string, round: number): string {
 }
 
 function toGameResultView(result: GameResultResponse): GameRoundView["gameResult"] {
-  const { roundsUnanswered: _roundsUnanswered, ...view } = result;
-  return view;
+  return {
+    gameState: result.gameState,
+    score: result.score,
+    maxScore: result.maxScore,
+    roundsCorrect: result.roundsCorrect,
+    perfectRounds: result.perfectRounds,
+    roundAnswerStates: result.roundAnswerStates,
+    roundPoints: result.roundPoints,
+    roundHintsUsed: result.roundHintsUsed,
+  };
 }
 
 export function toRoundView(response: GameRoundResponse): GameRoundView {
