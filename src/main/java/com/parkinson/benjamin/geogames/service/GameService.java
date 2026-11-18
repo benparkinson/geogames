@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,9 +136,7 @@ public class GameService {
 
   @Transactional(readOnly = true)
   public Optional<GameRound> getGameRound(UUID gameId, int round) {
-    return gameRepository
-        .findByPublicId(gameId)
-        .flatMap(game -> findRound(game, round).map(r -> toResponse(game, r)));
+    return withRound(gameId, round, this::toResponse);
   }
 
   /**
@@ -150,18 +149,15 @@ public class GameService {
   @Transactional
   public Optional<RoundGuessesResponse> recordGuess(
       UUID gameId, int round, String guess, boolean correct) {
-    return gameRepository
-        .findByPublicId(gameId)
-        .flatMap(
-            game ->
-                findRound(game, round)
-                    .map(
-                        r -> {
-                          if (addGuess(r, guess, correct)) {
-                            gameRepository.save(game);
-                          }
-                          return new RoundGuessesResponse(recordedGuesses(r));
-                        }));
+    return withRound(
+        gameId,
+        round,
+        (game, r) -> {
+          if (addGuess(r, guess, correct)) {
+            gameRepository.save(game);
+          }
+          return new RoundGuessesResponse(recordedGuesses(r));
+        });
   }
 
   /**
@@ -173,18 +169,15 @@ public class GameService {
   @Transactional
   public Optional<RoundHintsResponse> recordHint(
       UUID gameId, int round, int hint, int guessesBefore) {
-    return gameRepository
-        .findByPublicId(gameId)
-        .flatMap(
-            game ->
-                findRound(game, round)
-                    .map(
-                        r -> {
-                          if (addHint(r, hint, guessesBefore)) {
-                            gameRepository.save(game);
-                          }
-                          return new RoundHintsResponse(List.copyOf(r.getHintsTakenAt()));
-                        }));
+    return withRound(
+        gameId,
+        round,
+        (game, r) -> {
+          if (addHint(r, hint, guessesBefore)) {
+            gameRepository.save(game);
+          }
+          return new RoundHintsResponse(List.copyOf(r.getHintsTakenAt()));
+        });
   }
 
   /** @return whether the round changed */
@@ -261,30 +254,29 @@ public class GameService {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
 
-    return gameRepository
-        .findByPublicId(gameId)
-        .flatMap(
-            game ->
-                findRound(game, round)
-                    .map(
-                        r -> {
-                          // Not checked against the stored guesses: a guess request that failed on
-                          // the
-                          // network would otherwise block a legitimate answer.
-                          validateHintsUsed(r, hintsUsed);
-                          validateWrongGuesses(r, answerState, wrongGuesses);
-                          // The hints that count are at least the ones recorded as taken, so a
-                          // client
-                          // can't report fewer. More is accepted: a hint request may have been
-                          // lost.
-                          // Worked out before the repeat check, so a retry is still a no-op.
-                          int effectiveHints = Math.max(hintsUsed, r.getHintsTakenAt().size());
-                          if (recordAnswer(r, answerState, effectiveHints, wrongGuesses)) {
-                            gameRepository.save(game);
-                            publishRoundAnswered(game, r);
-                          }
-                          return toAnswerResponse(game, r);
-                        }));
+    return withRound(
+        gameId, round, (game, r) -> answer(game, r, answerState, hintsUsed, wrongGuesses));
+  }
+
+  private RoundAnswerResponse answer(
+      GameEntity game,
+      GameRoundEntity round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses) {
+    validateHintsUsed(round, hintsUsed);
+    // Wrong guesses aren't checked against the stored guesses: a guess request lost on the
+    // network would otherwise block a real answer.
+    validateWrongGuesses(round, answerState, wrongGuesses);
+    // The hints that count are at least those recorded, so a client can't report fewer. More is
+    // accepted, because a hint request may have been lost. This is worked out before the repeat
+    // check, so a retry is still a no-op.
+    int effectiveHints = Math.max(hintsUsed, round.getHintsTakenAt().size());
+    if (recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
+      gameRepository.save(game);
+      publishRoundAnswered(game, round);
+    }
+    return toAnswerResponse(game, round);
   }
 
   /**
@@ -377,6 +369,13 @@ public class GameService {
     round.setHintsUsed(hintsUsed);
     round.setWrongGuesses(wrongGuesses);
     return true;
+  }
+
+  private <T> Optional<T> withRound(
+      UUID gameId, int round, BiFunction<GameEntity, GameRoundEntity, T> action) {
+    return gameRepository
+        .findByPublicId(gameId)
+        .flatMap(game -> findRound(game, round).map(r -> action.apply(game, r)));
   }
 
   private static Optional<GameRoundEntity> findRound(GameEntity game, int roundNumber) {
