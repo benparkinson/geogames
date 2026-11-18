@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.loaders.countries;
 
 import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryShape;
@@ -311,12 +312,12 @@ public final class CountryShapeBuilder {
         for (Run run : runs) {
           List<double[]> points = simplify(run, infos, info);
           if (run.label().equals(COAST)) {
-            coastLines.add(toLine(points));
+            coastLines.add(GeoPoints.toPositions(points));
           } else if (!run.label().equals(SEAM)) {
             neighbourLines
                 .computeIfAbsent(run.label(), key -> new ArrayList<>())
                 .add(borderLines.size());
-            borderLines.add(toLine(points));
+            borderLines.add(GeoPoints.toPositions(points));
           }
           for (int j = simplified.isEmpty() ? 0 : 1; j < points.size(); j++) {
             simplified.add(points.get(j));
@@ -326,7 +327,7 @@ public final class CountryShapeBuilder {
           simplified = roundedRing(ring);
         }
         if (simplified.size() >= 4) {
-          rings.add(toLine(simplified));
+          rings.add(GeoPoints.toPositions(simplified));
         }
       }
       if (!rings.isEmpty()) {
@@ -365,14 +366,6 @@ public final class CountryShapeBuilder {
         GeoData.feature(source.name(), new GeoGeometry("MultiLineString", borderLines)));
   }
 
-  private static List<List<Double>> toLine(List<double[]> points) {
-    List<List<Double>> line = new ArrayList<>(points.size());
-    for (double[] p : points) {
-      line.add(List.of(p[0], p[1]));
-    }
-    return line;
-  }
-
   private static double perimeterKm(Ring ring) {
     double km = 0;
     for (int i = 0; i < ring.size(); i++) {
@@ -384,7 +377,7 @@ public final class CountryShapeBuilder {
   private static List<double[]> roundedRing(Ring ring) {
     List<double[]> points = new ArrayList<>(ring.points());
     points.add(ring.points().get(0));
-    return round(points);
+    return GeoPoints.roundLine(points);
   }
 
   // ---- runs ----
@@ -450,7 +443,7 @@ public final class CountryShapeBuilder {
     if (reverse) {
       Collections.reverse(result);
     }
-    return round(result);
+    return GeoPoints.roundLine(result);
   }
 
   /**
@@ -495,23 +488,7 @@ public final class CountryShapeBuilder {
       joined = new ArrayList<>(joined);
       Collections.reverse(joined);
     }
-    return round(joined);
-  }
-
-  private static List<double[]> round(List<double[]> points) {
-    List<double[]> rounded = new ArrayList<>();
-    for (double[] p : points) {
-      double[] r = {round4(p[0]), round4(p[1])};
-      double[] last = rounded.isEmpty() ? null : rounded.get(rounded.size() - 1);
-      if (last == null || last[0] != r[0] || last[1] != r[1]) {
-        rounded.add(r);
-      }
-    }
-    return rounded;
-  }
-
-  private static double round4(double v) {
-    return Math.round(v * 10_000d) / 10_000d;
+    return GeoPoints.roundLine(joined);
   }
 
   /** Every position in a Polygon, MultiPolygon or MultiLineString. */

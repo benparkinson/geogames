@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -128,23 +129,11 @@ public final class RiverGeometry {
   private static List<List<double[]>> round(List<List<double[]>> lines) {
     List<List<double[]>> result = new ArrayList<>();
     for (List<double[]> line : lines) {
-      List<double[]> rounded = new ArrayList<>();
-      for (double[] p : line) {
-        double[] r = {round4(p[0]), round4(p[1])};
-        if (rounded.isEmpty()
-            || rounded.get(rounded.size() - 1)[0] != r[0]
-            || rounded.get(rounded.size() - 1)[1] != r[1]) {
-          rounded.add(r);
-        }
-      }
+      List<double[]> rounded = GeoPoints.roundLine(line);
       if (rounded.size() >= 2) {
         result.add(rounded);
       }
     }
     return result;
-  }
-
-  private static double round4(double v) {
-    return Math.round(v * 10_000d) / 10_000d;
   }
 }

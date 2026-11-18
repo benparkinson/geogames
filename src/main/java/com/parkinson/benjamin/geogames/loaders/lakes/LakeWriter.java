@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.loaders.lakes;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryWriter;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.loaders.features.Slugs;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
@@ -40,11 +41,7 @@ public class LakeWriter {
     for (List<List<double[]>> polygon : candidate.polygons()) {
       List<List<List<Double>>> rings = new ArrayList<>();
       for (List<double[]> ring : polygon) {
-        List<List<Double>> points = new ArrayList<>();
-        for (double[] p : ring) {
-          points.add(List.of(p[0], p[1]));
-        }
-        rings.add(points);
+        rings.add(GeoPoints.toPositions(ring));
       }
       polygons.add(rings);
     }

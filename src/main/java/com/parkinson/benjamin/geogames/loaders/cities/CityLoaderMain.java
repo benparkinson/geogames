@@ -6,6 +6,7 @@ import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
@@ -36,8 +37,6 @@ public class CityLoaderMain {
 
   /** A coastal city can fall just outside its polygon: look this far (about 3 km) around it. */
   static final double NUDGE_DEGREES = 0.03;
-
-  private static final int DECIMALS = 10_000;
 
   /**
    * What a run produced, for the summary.
@@ -104,8 +103,8 @@ public class CityLoaderMain {
               new Place(
                   new City(
                       name,
-                      round(point[0]),
-                      round(point[1]),
+                      GeoPoints.round4(point[0]),
+                      GeoPoints.round4(point[1]),
                       Math.max(0, props.path("pop_max").asInt(0)),
                       false),
                   capitalKind(props)));
@@ -250,10 +249,6 @@ public class CityLoaderMain {
       }
     }
     return kept;
-  }
-
-  private static double round(double v) {
-    return Math.round(v * DECIMALS) / (double) DECIMALS;
   }
 
   private static void printSummary(Report report) {

@@ -10,6 +10,7 @@ import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.loaders.lakes.LakeGeometry;
 import com.parkinson.benjamin.geogames.loaders.rivers.RiverClipper.Run;
 import com.parkinson.benjamin.geogames.model.Country;
@@ -223,7 +224,7 @@ public class CountryRiversMain {
   private static List<Kept> simplified(List<Run> runs, double tolerance) {
     List<Kept> kept = new ArrayList<>();
     for (Run run : runs) {
-      List<double[]> points = round(DouglasPeucker.simplify(run.points(), tolerance));
+      List<double[]> points = GeoPoints.roundLine(DouglasPeucker.simplify(run.points(), tolerance));
       if (points.size() < 2) {
         continue;
       }
@@ -263,22 +264,6 @@ public class CountryRiversMain {
 
   private static double km(List<Kept> kept) {
     return kept.stream().mapToDouble(Kept::km).sum();
-  }
-
-  private static List<double[]> round(List<double[]> points) {
-    List<double[]> rounded = new ArrayList<>();
-    for (double[] p : points) {
-      double[] r = {round4(p[0]), round4(p[1])};
-      double[] last = rounded.isEmpty() ? null : rounded.get(rounded.size() - 1);
-      if (last == null || last[0] != r[0] || last[1] != r[1]) {
-        rounded.add(r);
-      }
-    }
-    return rounded;
-  }
-
-  private static double round4(double v) {
-    return Math.round(v * 10_000d) / 10_000d;
   }
 
   // ---- lakes ----
@@ -329,7 +314,7 @@ public class CountryRiversMain {
   private static GeoData lineData(String name, List<Kept> kept) {
     List<List<List<Double>>> lines = new ArrayList<>();
     for (Kept k : kept) {
-      lines.add(toLine(k.run().points()));
+      lines.add(GeoPoints.toPositions(k.run().points()));
     }
     return GeoData.feature(name, new GeoGeometry("MultiLineString", lines));
   }
@@ -340,20 +325,12 @@ public class CountryRiversMain {
       for (List<List<double[]>> polygon : lake.polygons()) {
         List<List<List<Double>>> rings = new ArrayList<>();
         for (List<double[]> ring : polygon) {
-          rings.add(toLine(ring));
+          rings.add(GeoPoints.toPositions(ring));
         }
         polygons.add(rings);
       }
     }
     return GeoData.feature(name, new GeoGeometry("MultiPolygon", polygons));
-  }
-
-  private static List<List<Double>> toLine(List<double[]> points) {
-    List<List<Double>> line = new ArrayList<>(points.size());
-    for (double[] p : points) {
-      line.add(List.of(p[0], p[1]));
-    }
-    return line;
   }
 
   // ---- reading ----
