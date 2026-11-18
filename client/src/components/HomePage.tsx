@@ -96,7 +96,6 @@ function HomePage(): React.JSX.Element {
                     <div className="small gg-text-muted">{dailyStatus}</div>
                 </Link>
                 <h2 className="h5">Choose a game</h2>
-                <div className="mb-3"><HardcoreToggle /></div>
                 {/* One radio group across both sections, so the arrow keys move through every card. */}
                 <div role="radiogroup" aria-label="Choose a game" className="mb-4">
                     <div className="row g-3">
@@ -132,6 +131,9 @@ function HomePage(): React.JSX.Element {
                                     options={ROUND_OPTIONS.map(n => ({ value: n, label: n }))}
                                 />
                             </div>
+                            {selectedOption.hasClues && (
+                                <div className="w-100"><HardcoreToggle /></div>
+                            )}
                             <Button
                                 variant="primary"
                                 className="home-start-button flex-grow-1"

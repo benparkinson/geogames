@@ -11,6 +11,7 @@ export default defineGame({
   singular: "Country by land borders",
   description: "Name a country from its land borders alone.",
   Icon: BoundingBox,
+  hasClues: true,
   Component: makeCountryShapeGame<CountryShapeRound>({
     MapComponent: LandBordersMapWrapper,
     prompt: "Name the country with these land borders.",
