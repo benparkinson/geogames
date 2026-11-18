@@ -562,6 +562,27 @@ describe("MapGame saving guesses", () => {
 describe("MapGame resuming an unfinished round", () => {
   const saved = (text: string, correct = false) => ({ text, correct });
 
+  it("adds the distance clue to a saved guess once the clues are available", () => {
+    const round = makeRoundProps({ guesses: [saved("Italy")] });
+    const props: React.ComponentProps<typeof MapGame<object>> = {
+      data: {},
+      answerCount: 2,
+      MapComponent: MapStub,
+      answers: ANSWERS,
+      round,
+      prompt: "Name them",
+      inputPlaceholder: "Country…",
+      answerNoun: "country",
+      submitAnswer: vi.fn(),
+    };
+    const { rerender } = render(<MapGame {...props} />);
+    expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
+
+    rerender(<MapGame {...props} clueFor={() => ({ km: 480, bearing: 10 })} />);
+
+    expect(screen.getAllByText(/480 km/).length).toBeGreaterThan(0);
+  });
+
   it("shows the saved guesses and the guesses left", () => {
     renderGame({
       round: makeRoundProps({ guesses: [saved("Italy"), saved("France", true)] }),

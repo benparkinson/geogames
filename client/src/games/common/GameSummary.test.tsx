@@ -129,8 +129,23 @@ describe("GameSummary", () => {
 
     const row = (await screen.findAllByRole("button")).find((b) => /^1\./.test(b.textContent ?? ""))!;
 
-    expect(row).toHaveTextContent("1. MYSTERY_GAME");
+    expect(screen.getByText("MYSTERY_GAME")).toBeInTheDocument();
     expect(row).not.toHaveTextContent("Belgium");
+  });
+
+  it("names the game type once at the top, not on each row, when every round shared it", async () => {
+    const same = makeGameRounds([{ answerState: "CORRECT" }, { answerState: "CORRECT" }]).map((round) => ({
+      ...round,
+      gameType: { ...round.gameType, name: "MYSTERY_GAME" },
+    }));
+    mockFetch([roundsRoute(same)]);
+    renderSummary(vi.fn(), 2);
+
+    const rows = (await screen.findAllByRole("button")).filter((b) => /^\d\./.test(b.textContent ?? ""));
+
+    expect(screen.getAllByText("MYSTERY_GAME")).toHaveLength(1);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).not.toHaveTextContent("MYSTERY_GAME");
   });
 
   it("counts a round that ran out of guesses as revealed and says so", async () => {

@@ -77,6 +77,12 @@ describe("CountryCitiesMap", () => {
     expect(document.querySelector('[data-testid="GeoJSON"] [data-testid="Tooltip"]')).toBeNull();
   });
 
+  it("makes the outline non-interactive so the city names can be hovered", () => {
+    renderMap({ gameOver: true });
+
+    expect(document.querySelector('[data-testid="GeoJSON"]')?.getAttribute("data-interactive")).toBe("false");
+  });
+
   it("draws the capital again in a different style at the first hint", () => {
     renderMap({ hintsUsed: 1 });
 
