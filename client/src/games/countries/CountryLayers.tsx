@@ -67,6 +67,9 @@ export function AnswerOutline({ country, gaveUp, labelled = true }: { country: C
       pathOptions={answerPathOptions(gaveUp)}
       data={country.outline}
       key={`${country.name}/outline${gaveUp ? "/gaveUp" : ""}`}
+      // An unlabelled outline is drawn after the round's other layers, so it would otherwise catch the
+      // hover meant for the dots beneath it (the city names).
+      interactive={labelled}
     >
       {labelled && <Tooltip sticky>{country.name}</Tooltip>}
     </GeoJSON>
