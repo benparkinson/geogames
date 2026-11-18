@@ -47,16 +47,18 @@ export function MapContainer({ children }: Children) {
   return <div data-testid="MapContainer">{children}</div>;
 }
 
-export function TileLayer({ url, attribution }: { url: string; attribution?: string }) {
-  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} />;
+export function TileLayer({ url, attribution, maxNativeZoom }: { url: string; attribution?: string; maxNativeZoom?: number }) {
+  return <div data-testid="TileLayer" data-url={url} data-attribution={attribution ?? ""} data-max-native-zoom={maxNativeZoom} />;
 }
 
 export function GeoJSON({
   data,
   pathOptions,
+  interactive,
   children,
 }: Children & {
   data: { properties?: { name?: string } };
+  interactive?: boolean;
   pathOptions?: { color?: string; dashArray?: string; fill?: boolean };
 }) {
   return (
@@ -66,6 +68,7 @@ export function GeoJSON({
       data-first-point={firstPoint(data)}
       data-color={pathOptions?.color ?? ""}
       data-dash={pathOptions?.dashArray ?? ""}
+      data-interactive={String(interactive ?? true)}
     >
       {children}
     </div>

@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueLineOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueLineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryPairRoundData } from "../../test/fixtures";
@@ -76,12 +76,12 @@ describe("BorderShapesMap", () => {
     expect(fakeMap.fitBounds).toHaveBeenCalledTimes(2);
   });
 
-  it("shows both countries and the satellite imagery once the round is over", () => {
+  it("shows both countries and the relief map once the round is over", () => {
     renderMap({ gameOver: true });
 
     expect(points()).toEqual(OUTLINES);
     expect(drawnLayers()[0].color).toBe(answerPathOptions(false).color);
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
     expect(fakeMap.fitBounds.mock.calls[0][0]).toEqual([
       [49.5, 2.5],
       [53.6, 7.2],

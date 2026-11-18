@@ -7,7 +7,7 @@ import { MapProps } from "../../map/MapProps";
 import { CountryOutlines, EndFlags, RiverLine } from "./RiverLayers";
 import { RiverRound } from "./model";
 
-/** The outlines of the river's countries on a blank map. The satellite map and the river come at the end. */
+/** The outlines of the river's countries on a blank map. The relief map and the river come at the end. */
 function RiverCountriesMap({ data: { river, countries }, gaveUp, gameOver, hintsUsed }: MapProps<RiverRound>): React.JSX.Element {
   return (
     <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>

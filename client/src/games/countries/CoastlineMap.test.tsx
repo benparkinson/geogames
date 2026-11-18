@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueLineOptions, SATELLITE_ATTRIBUTION, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueLineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnTileAttributions, drawnTileUrls } from "../../test/leafletMock";
 import { makeCountryShapeRoundData } from "../../test/fixtures";
@@ -50,13 +50,13 @@ describe("CoastlineMap", () => {
     expect(borders?.dashed).toBe(true);
   });
 
-  it("swaps the clue lines for the country's outline and satellite imagery once the round is over", () => {
+  it("swaps the clue lines for the country's outline and relief map once the round is over", () => {
     renderMap({ gameOver: true, hintsUsed: 2 });
 
     expect(drawnLayers()).toHaveLength(1);
     expect(drawnLayers()[0]).toMatchObject({ point: OUTLINE, color: answerPathOptions(false).color });
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
-    expect(drawnTileAttributions()).toEqual([SATELLITE_ATTRIBUTION]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
+    expect(drawnTileAttributions()).toEqual([""]);
   });
 
   it("colours the outline differently when the player gave up", () => {

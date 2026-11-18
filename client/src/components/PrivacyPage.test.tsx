@@ -20,7 +20,7 @@ describe("PrivacyPage", () => {
     render(<PrivacyPage />);
 
     expect(screen.getByRole("link", { name: "Render" }).getAttribute("href")).toBe("https://render.com/privacy");
-    expect(screen.getByRole("link", { name: "EOX IT Services GmbH" }).getAttribute("href")).toBe("https://cloudless.eox.at");
+    expect(screen.queryByText(/EOX/)).not.toBeInTheDocument();
   });
 
   it("says what is kept on the device", () => {

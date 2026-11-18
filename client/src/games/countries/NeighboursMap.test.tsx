@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { answerPathOptions, clueOutlineOptions, SATELLITE_TILE_URL } from "../../map/constants";
+import { answerPathOptions, clueOutlineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
 import { drawnLayers, drawnMarkers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryShapeRoundData } from "../../test/fixtures";
@@ -51,12 +51,12 @@ describe("NeighboursMap", () => {
     expect(points()).not.toContain(BORDERS);
   });
 
-  it("draws the country's outline and the satellite imagery once the round is over", () => {
+  it("draws the country's outline and the relief map once the round is over", () => {
     renderMap({ gameOver: true });
 
     const outline = drawnLayers().find((layer) => layer.point === OUTLINE);
     expect(outline?.color).toBe(answerPathOptions(false).color);
-    expect(drawnTileUrls()).toEqual([SATELLITE_TILE_URL]);
+    expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
   });
 
   it("drops the hint line when the round is over", () => {
