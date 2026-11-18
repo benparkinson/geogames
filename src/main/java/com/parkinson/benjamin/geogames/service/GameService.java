@@ -59,7 +59,7 @@ public class GameService {
   }
 
   @Transactional
-  public GameCreationResponse createGame(String gameType, int numberOfRounds) {
+  public GameCreationResponse createGame(String gameType, int numberOfRounds, Boolean hardMode) {
     if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
       throw new IllegalArgumentException(
           "Number of rounds must be between 1 and %d, was %d!"
@@ -74,18 +74,20 @@ public class GameService {
 
     return createGame(
         gameData.stream().map(PinnedRound::of).toList(),
-        selection.isRandom() ? "RANDOM" : selection.type().name());
+        selection.isRandom() ? "RANDOM" : selection.type().name(),
+        hardMode);
   }
 
   /** Makes a game from rounds that were chosen earlier (a daily challenge's pinned rounds). */
   @Transactional
-  public GameCreationResponse createGame(List<PinnedRound> rounds, String gameMode) {
+  public GameCreationResponse createGame(
+      List<PinnedRound> rounds, String gameMode, Boolean hardMode) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
     return new GameCreationResponse(
-        gameRepository.save(new GameEntity(entities, gameMode)).getPublicId());
+        gameRepository.save(new GameEntity(entities, gameMode, hardMode)).getPublicId());
   }
 
   @Transactional(readOnly = true)
@@ -187,7 +189,8 @@ public class GameService {
             round.getAnswerState(),
             round.getHintsUsed(),
             round.getWrongGuesses(),
-            LocalDate.now(ZoneOffset.UTC)));
+            LocalDate.now(ZoneOffset.UTC),
+            game.getHardMode()));
   }
 
   private <T> Optional<T> withRound(
@@ -213,7 +216,8 @@ public class GameService {
         GameResults.pointsFor(round),
         GameResults.of(game),
         recordedGuesses(round),
-        List.copyOf(round.getHintsTakenAt()));
+        List.copyOf(round.getHintsTakenAt()),
+        game.isHardMode());
   }
 
   /** The answer's response has no round data, so it needs no rebuild and no serialising. */

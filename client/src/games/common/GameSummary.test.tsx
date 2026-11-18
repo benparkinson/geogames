@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
 import { makeGameRounds } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
@@ -22,6 +22,13 @@ const mixed = makeGameRounds([
   { river: true, answerState: "GAVE_UP" },
   { answerState: "CORRECT", hintsUsed: 1 },
 ]);
+
+const hard = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, hardMode: true }));
+
+afterEach(() => {
+  localStorage.clear();
+  Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true });
+});
 
 function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
   const view = renderWithClient(
@@ -61,8 +68,49 @@ describe("GameSummary for a daily challenge", () => {
         callsTo(fetchMock)
           .filter((c) => c.method === "POST")
           .map((c) => c.body),
-      ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5 }]),
+      ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5, hardMode: false }]),
     );
+  });
+
+  it("starts the Mixed game in Hard mode after a hard daily, whatever the preference", async () => {
+    const fetchMock = mockFetch([
+      roundsRoute(hard(done)),
+      { method: "POST", url: "http://localhost:8080/api/games", body: { id: "new" } },
+    ]);
+    renderDaily();
+
+    await userEvent.click(await screen.findByRole("button", { name: "Play a Mixed game" }));
+
+    await waitFor(() =>
+      expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
+        gameType: "RANDOM",
+        numberOfRounds: 5,
+        hardMode: true,
+      }),
+    );
+  });
+
+  async function copiedText(rounds: GameRoundResponse[]) {
+    mockFetch([roundsRoute(rounds)]);
+    renderDaily();
+    await userEvent.click(await screen.findByRole("button", { name: "Copy result" }));
+    return (await screen.findByRole("textbox", { name: "Copy this text" })) as HTMLTextAreaElement;
+  }
+
+  it("puts Hard mode in the copied title of a hard daily, whatever the preference says", async () => {
+    expect((await copiedText(hard(done))).value).toContain("Daily 2026-11-18 · Hard mode");
+  });
+
+  it("leaves Hard mode out of a normal daily's copied text, even with the preference on", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+    expect((await copiedText(done)).value).not.toContain("Hard mode");
+  });
+
+  it("ends the breakdown with Hard mode for a hard daily", async () => {
+    mockFetch([roundsRoute(hard(done))]);
+    renderDaily();
+
+    expect(await screen.findByText("1 perfect · 1 revealed · Hard mode")).toBeInTheDocument();
   });
 
   it("has no Copy result button until the game is finished", async () => {
@@ -112,6 +160,44 @@ describe("GameSummary", () => {
     expect(rows[1]).toHaveTextContent("+0");
     expect(rows[2]).toHaveTextContent("+83");
     expect(rows[2]).toHaveTextContent("1 hint");
+  });
+
+  it("ends the breakdown with Hard mode for a hard game, and does not mention it otherwise", async () => {
+    mockFetch([roundsRoute(hard(mixed))]);
+    const { unmount } = renderSummary();
+    expect(await screen.findByText("1 perfect · 1 with hints · 1 revealed · Hard mode")).toBeInTheDocument();
+    unmount();
+
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+    expect(await screen.findByText("1 perfect · 1 with hints · 1 revealed")).toBeInTheDocument();
+    expect(screen.queryByText(/· Hard mode$/)).not.toBeInTheDocument();
+  });
+
+  it("shows 0 perfect with Hard mode for a hard game with no answered rounds", async () => {
+    mockFetch([roundsRoute(hard(makeGameRounds([{ answerState: "UNANSWERED" }])))]);
+    renderSummary(vi.fn(), 1);
+
+    expect(await screen.findByText("0 perfect · Hard mode")).toBeInTheDocument();
+  });
+
+  it("plays again with the game's Hard mode, not the preference", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+    const fetchMock = mockFetch([
+      roundsRoute(mixed),
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
+    ]);
+    renderSummary();
+    await screen.findByText("You scored 183 / 300");
+
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+
+    await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
+    expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
+      gameType: "RANDOM",
+      numberOfRounds: 3,
+      hardMode: false,
+    });
   });
 
   it("shows the site footer with the credits", async () => {
@@ -211,7 +297,7 @@ describe("GameSummary", () => {
 
     await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const post = callsTo(fetchMock).find((c) => c.method === "POST")!;
-    expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3 });
+    expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3, hardMode: false });
   });
 
   it("plays again with the same type when every round shared it", async () => {
@@ -232,6 +318,7 @@ describe("GameSummary", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RIVERS_BY_SHAPE",
       numberOfRounds: 2,
+      hardMode: false,
     });
   });
 

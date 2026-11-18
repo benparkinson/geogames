@@ -55,12 +55,12 @@ describe("DailyPage with no game for today", () => {
     await userEvent.click(play);
 
     await waitFor(() => expect(readDaily()).toEqual({ v: 1, date: today, number: 7, gameId: "g1", hardcore: false }));
-    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today }]);
+    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, hardMode: false }]);
   });
 
   it("records that Hard mode was on when the game started", async () => {
     localStorage.setItem("gg-hardcore", "on");
-    mockFetch([
+    const fetchMock = mockFetch([
       { url: API + "/health", body: "ok" },
       { method: "POST", url: API + "/api/daily-games", body: makeDailyGameResponse({ id: "g1" }) },
     ]);
@@ -69,6 +69,7 @@ describe("DailyPage with no game for today", () => {
     await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
 
     await waitFor(() => expect(readDaily()?.hardcore).toBe(true));
+    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, hardMode: true }]);
   });
 
   it("says when the server can't be reached", async () => {
@@ -154,8 +155,7 @@ describe("DailyPage with a game for today", () => {
   });
 
   it("writes the result when the last round is finished, and stays on the game", async () => {
-    writeDaily({ ...entry, hardcore: true });
-    localStorage.setItem("gg-hardcore", "on");
+    writeDaily(entry);
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
     renderWithClient(<DailyPage />);
 
@@ -174,33 +174,26 @@ describe("DailyPage with a game for today", () => {
     await waitFor(() => expect(readDaily()?.result?.rounds).toEqual(["hints", "perfect"]));
   });
 
-  it("keeps Hard mode while it stays on", async () => {
-    localStorage.setItem("gg-hardcore", "on");
-    writeDaily({ ...entry, hardcore: true });
-    mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
-    renderWithClient(<DailyPage />);
-    await screen.findByText(`game g1 (daily ${today})`);
+  it("stores the server's Hard mode with the result, and the finished page shares it", async () => {
+    writeDaily(entry);
+    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], hardMode: true } }]);
+    const { unmount } = renderWithClient(<DailyPage />);
 
-    expect(readDaily()?.hardcore).toBe(true);
+    await waitFor(() => expect(readDaily()?.hardcore).toBe(true));
+    expect(readDaily()?.result).toBeDefined();
+    unmount();
+
+    renderWithClient(<DailyPage />);
+    expect(await screen.findByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
   });
 
-  it("turns Hard mode off for good if it is switched off mid-game", async () => {
+  it("does not turn Hard mode on from the preference alone", async () => {
     localStorage.setItem("gg-hardcore", "on");
-    writeDaily({ ...entry, hardcore: true });
-    mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
+    writeDaily(entry);
+    mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
     renderWithClient(<DailyPage />);
-    await screen.findByText(`game g1 (daily ${today})`);
 
-    act(() => {
-      localStorage.removeItem("gg-hardcore");
-      window.dispatchEvent(new StorageEvent("storage", { key: "gg-hardcore" }));
-    });
-    await waitFor(() => expect(readDaily()?.hardcore).toBe(false));
-
-    act(() => {
-      localStorage.setItem("gg-hardcore", "on");
-      window.dispatchEvent(new StorageEvent("storage", { key: "gg-hardcore" }));
-    });
+    await waitFor(() => expect(readDaily()?.result).toBeDefined());
     expect(readDaily()?.hardcore).toBe(false);
   });
 

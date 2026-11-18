@@ -34,6 +34,7 @@ function buildRound(
     hintCount: data.gameType.hintCount,
     guessLimit: data.gameType.guessLimit,
     hasClues,
+    hardMode: data.hardMode,
     hintsUsed: data.hintsUsed,
     guesses: data.guesses,
     hintsTakenAt: data.hintsTakenAt,

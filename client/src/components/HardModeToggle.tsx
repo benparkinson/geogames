@@ -5,8 +5,8 @@ import { useHardMode } from "../settings/hardMode";
 const ON_DESCRIPTION = "No distance or direction clues after a wrong guess.";
 const OFF_DESCRIPTION = "You get a distance and direction clue after a wrong guess.";
 
-/** The Hard mode switch. `compact` is the small form for the game panel. */
-export default function HardModeToggle({ compact = false }: { compact?: boolean }): React.JSX.Element {
+/** The Hard mode switch, on the start screens only: a game keeps the setting it started with. */
+export default function HardModeToggle(): React.JSX.Element {
   const [hardMode, setHardMode] = useHardMode();
   const id = useId();
   const labelId = `${id}-label`;
@@ -14,7 +14,7 @@ export default function HardModeToggle({ compact = false }: { compact?: boolean 
 
   return (
     <div className="d-flex flex-wrap align-items-center gap-2" title={description}>
-      <span id={labelId} className={compact ? "small fw-semibold" : "fw-semibold"}>
+      <span id={labelId} className="fw-semibold">
         Hard mode
       </span>
       <ToggleGroup
@@ -28,9 +28,7 @@ export default function HardModeToggle({ compact = false }: { compact?: boolean 
           { value: "on", label: "On" },
         ]}
       />
-      <span className="small gg-text-muted">
-        {compact ? (hardMode ? "No distance clues" : "Distance clues on") : description}
-      </span>
+      <span className="small gg-text-muted">{description}</span>
     </div>
   );
 }

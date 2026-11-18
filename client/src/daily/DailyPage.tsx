@@ -30,11 +30,14 @@ function Intro(): React.JSX.Element {
     const date = localDateString();
     // Another tab may have started the game since this page loaded.
     if (entryFor(readDaily(), date)) return;
-    mutate(date, {
-      onSuccess: (game) => {
-        writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore: hardMode });
+    mutate(
+      { date, hardMode },
+      {
+        onSuccess: (game) => {
+          writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore: hardMode });
+        },
       },
-    });
+    );
   }
 
   return (
@@ -94,30 +97,22 @@ function Finished({
 }
 
 /**
- * Shows the player's game and keeps their entry up to date: the result once the game is finished, Hard mode
- * turned off for good if it ever is, and no entry if the server has deleted the game.
+ * Shows the player's game and keeps their entry up to date: the result and the game's Hard mode setting once it is
+ * finished, and no entry if the server has deleted the game.
  */
 function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void }): React.JSX.Element {
   const first = useRound(entry.gameId, 0);
-  const [hardMode] = useHardMode();
-  const finished = first.data?.gameResult.gameState === FINISHED;
+  const game = first.data;
   const gone = hasStatus(first.error, 404);
   const hasResult = entry.result !== undefined;
-  const result = first.data?.gameResult;
 
   useEffect(() => {
-    if (finished && !hasResult && result) {
-      writeDaily({ ...entry, result: resultFromGame(result) });
+    // One write: the result and the setting together, so two writes from one stale entry can't overwrite each other.
+    if (game?.gameResult.gameState === FINISHED && !hasResult) {
+      writeDaily({ ...entry, hardcore: game.hardMode, result: resultFromGame(game.gameResult) });
       onFinished();
     }
-  }, [finished, hasResult, result, entry, onFinished]);
-
-  useEffect(() => {
-    // Only a game played in Hard mode throughout earns the marker.
-    if (!hardMode && entry.hardcore && !hasResult) {
-      writeDaily({ ...entry, hardcore: false });
-    }
-  }, [hardMode, entry, hasResult]);
+  }, [game, hasResult, entry, onFinished]);
 
   useEffect(() => {
     // The game is deleted about a day after it is made. A finished entry keeps its result for sharing.

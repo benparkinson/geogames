@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCreateGame } from "../api/games";
+import { useHardMode } from "../settings/hardMode";
 import { MenuOption, ROUND_OPTIONS } from "../games/registry";
 import { Button, Notice, Spinner, ToggleGroup } from "../ui";
 import { useDelayedFlag } from "../ui/useDelayedFlag";
@@ -8,6 +9,7 @@ import HardModeToggle from "./HardModeToggle";
 /** The chosen game with its round count, Hard mode switch and start button. It creates the game. */
 export default function StartPanel({ option }: { option: MenuOption }): React.JSX.Element {
   const { createGame, isLoading, error } = useCreateGame();
+  const [hardMode] = useHardMode();
   const [rounds, setRounds] = useState(5);
   const slow = useDelayedFlag(isLoading, 3000);
 
@@ -39,7 +41,7 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
         <Button
           variant="primary"
           className="home-start-button flex-grow-1"
-          onClick={() => createGame(option.type, rounds)}
+          onClick={() => createGame(option.type, rounds, !!option.hasClues && hardMode)}
           disabled={isLoading}
         >
           {isLoading ? (

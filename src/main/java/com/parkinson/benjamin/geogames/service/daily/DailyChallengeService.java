@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * game); the rounds are the same for everyone on that date.
  *
  * <p>Not {@code @Transactional}: {@link DailyChallengeStore} must commit its own insert, and the
- * game is created in its own transaction by {@link GameService#createGame(List, String)}.
+ * game is created in its own transaction by {@link GameService#createGame(List, String, Boolean)}.
  */
 @Service
 public class DailyChallengeService {
@@ -41,9 +41,10 @@ public class DailyChallengeService {
   /**
    * @param requested the player's local date, or empty for the server's UTC date. Accepted within
    *     one day of the server's UTC date, which covers every time zone (UTC-12 to UTC+14).
+   * @param hardMode whether Hard mode is on for the game, or null if the client did not say
    * @throws IllegalArgumentException if the date is out of range
    */
-  public DailyGameResponse createDailyGame(Optional<LocalDate> requested) {
+  public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Boolean hardMode) {
     LocalDate today = LocalDate.now(clock);
     LocalDate date = requested.orElse(today);
     if (Math.abs(ChronoUnit.DAYS.between(today, date)) > 1) {
@@ -54,7 +55,7 @@ public class DailyChallengeService {
     }
     List<PinnedRound> rounds =
         store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
-    UUID id = gameService.createGame(rounds, GAME_MODE).id();
+    UUID id = gameService.createGame(rounds, GAME_MODE, hardMode).id();
     return new DailyGameResponse(id, date, number(date));
   }
 

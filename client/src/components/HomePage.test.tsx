@@ -219,6 +219,7 @@ describe("HomePage starting a game", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RANDOM",
       numberOfRounds: 10,
+      hardMode: false,
     });
   });
 
@@ -237,6 +238,7 @@ describe("HomePage starting a game", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "TRIPOINT",
       numberOfRounds: 5,
+      hardMode: false,
     });
   });
 
@@ -342,6 +344,34 @@ describe("HomePage Hard mode", () => {
 
     await user.click(card(/Merged Countries/));
     expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
+  });
+});
+
+describe("HomePage Hard mode when starting", () => {
+  async function startWithPreferenceOn(game: RegExp) {
+    localStorage.setItem("gg-hardcore", "on");
+    const fetchMock = mockFetch([
+      { url: HEALTH, body: "ok" },
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
+    ]);
+    const user = userEvent.setup();
+    renderHome();
+    await user.click(card(game));
+    await user.click(startButton());
+    await waitFor(() => expect(router.push).toHaveBeenCalled());
+    return callsTo(fetchMock).find((c) => c.method === "POST")!.body as { hardMode: boolean };
+  }
+
+  it("sends true for a game with clues when the preference is on", async () => {
+    expect((await startWithPreferenceOn(/Country Gaps/)).hardMode).toBe(true);
+  });
+
+  it("sends true for a Mixed game when the preference is on", async () => {
+    expect((await startWithPreferenceOn(/Mixed/)).hardMode).toBe(true);
+  });
+
+  it("sends false for a game without clues even when the preference is on", async () => {
+    expect((await startWithPreferenceOn(/Tripoints/)).hardMode).toBe(false);
   });
 });
 

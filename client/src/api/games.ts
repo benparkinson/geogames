@@ -45,6 +45,7 @@ export function toRoundView(response: GameRoundResponse): GameRoundView {
     points: response.points,
     guesses: response.guesses,
     hintsTakenAt: response.hintsTakenAt,
+    hardMode: response.hardMode,
     gameResult: toGameResultView(response.gameResult),
   };
 }
@@ -168,13 +169,13 @@ function patchRounds(queryClient: QueryClient, gameId: string, round: number, re
 }
 
 export function useCreateGame(): {
-  createGame: (gameType: string, numberOfRounds: number) => void;
+  createGame: (gameType: string, numberOfRounds: number, hardMode: boolean) => void;
   isLoading: boolean;
   error: unknown;
 } {
   const router = useRouter();
   const { mutate, isPending, error } = useMutation({
-    mutationFn: (request: { gameType: string; numberOfRounds: number }) =>
+    mutationFn: (request: { gameType: string; numberOfRounds: number; hardMode: boolean }) =>
       postJson<{ id: string }>("/api/games", "create game", request),
     onSuccess: (data) => {
       router.push("/games/" + data.id);
@@ -182,7 +183,7 @@ export function useCreateGame(): {
   });
 
   return {
-    createGame: (gameType, numberOfRounds) => mutate({ gameType, numberOfRounds }),
+    createGame: (gameType, numberOfRounds, hardMode) => mutate({ gameType, numberOfRounds, hardMode }),
     isLoading: isPending,
     error,
   };

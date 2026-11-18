@@ -28,7 +28,7 @@ class GameResultsTest {
   }
 
   private static GameEntity game(GameRoundEntity... rounds) {
-    return new GameEntity(new ArrayList<>(List.of(rounds)), "TRIPOINT");
+    return new GameEntity(new ArrayList<>(List.of(rounds)), "TRIPOINT", null);
   }
 
   @Test

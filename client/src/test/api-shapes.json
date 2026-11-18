@@ -102,6 +102,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -226,6 +227,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -331,6 +333,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -430,6 +433,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -541,6 +545,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -652,6 +657,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -778,6 +784,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -840,6 +847,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -976,6 +984,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -1064,6 +1073,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -1137,6 +1147,7 @@
           "text" : "string"
         }
       },
+      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },

@@ -34,6 +34,7 @@ public class DailyGameController {
         throw new IllegalArgumentException("date must be YYYY-MM-DD");
       }
     }
-    return ResponseEntity.ok(dailyChallengeService.createDailyGame(date));
+    return ResponseEntity.ok(
+        dailyChallengeService.createDailyGame(date, request == null ? null : request.hardMode()));
   }
 }
