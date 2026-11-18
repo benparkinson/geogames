@@ -297,6 +297,7 @@ describe("HomePage Hardcore mode", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
+    await user.click(card(/Country Gaps/));
 
     const group = screen.getByRole("group", { name: "Hardcore mode" });
     expect(within(group).getByRole("radio", { name: "Off" })).toBeChecked();
@@ -307,6 +308,25 @@ describe("HomePage Hardcore mode", () => {
 
     await user.click(within(group).getByRole("radio", { name: "Off" }));
     expect(localStorage.getItem("gg-hardcore")).toBeNull();
+  });
+
+  it("shows the switch only for games with distance clues", async () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const user = userEvent.setup();
+    renderHome();
+    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+
+    await user.click(card(/Tripoints/));
+    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+
+    await user.click(card(/Mixed/));
+    expect(screen.getByRole("group", { name: "Hardcore mode" })).toBeInTheDocument();
+
+    await user.click(card(/River Shapes/));
+    expect(screen.queryByRole("group", { name: "Hardcore mode" })).toBeNull();
+
+    await user.click(card(/Merged Countries/));
+    expect(screen.getByRole("group", { name: "Hardcore mode" })).toBeInTheDocument();
   });
 });
 

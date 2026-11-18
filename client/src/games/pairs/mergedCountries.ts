@@ -10,6 +10,7 @@ export default defineGame({
   singular: "Merged countries",
   description: "Name the two neighbouring countries merged into one shape.",
   Icon: Union,
+  hasClues: true,
   Component: makePairGame({
     MapComponent: MergedCountriesMapWrapper,
     prompt: "Name the two countries merged into this shape.",

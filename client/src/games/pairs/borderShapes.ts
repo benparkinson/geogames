@@ -10,6 +10,7 @@ export default defineGame({
   singular: "Border",
   description: "Name the two countries a border separates, from its shape alone.",
   Icon: Bezier2,
+  hasClues: true,
   extraDifficult: true,
   Component: makePairGame({
     MapComponent: BorderShapesMapWrapper,

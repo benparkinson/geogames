@@ -64,6 +64,7 @@ test("a wrong country in a country game says how far and which way the answer is
 
 test("Hardcore mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
   await page.goto("/");
+  await page.getByRole("radio").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
   await page.getByRole("group", { name: "Hardcore mode" }).getByText("On", { exact: true }).click();
 
   const id = await startGame(page, "Country Gaps", 3);

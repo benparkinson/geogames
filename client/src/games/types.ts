@@ -28,6 +28,8 @@ export interface GameModule<T> {
   Icon: Icon;
   /** Shown in the home page's "Extra difficult" section, after the other games. */
   extraDifficult?: boolean;
+  /** Wrong guesses get a distance and direction clue, so Hardcore mode matters (see `clueFor`). */
+  hasClues?: boolean;
   Component: ComponentType<GameComponentProps<T>>;
   /** The answers of a round, for the summary page. */
   answerNames: (data: T) => string[];

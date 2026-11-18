@@ -11,6 +11,7 @@ export default defineGame({
   singular: "Country by neighbours",
   description: "Name the country hidden between its neighbours.",
   Icon: PuzzleFill,
+  hasClues: true,
   Component: makeCountryShapeGame<CountryShapeRound>({
     MapComponent: NeighboursMapWrapper,
     prompt: "Name the missing country.",
