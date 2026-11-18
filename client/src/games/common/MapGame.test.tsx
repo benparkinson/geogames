@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
-import MapGame, { HintConfig } from "./MapGame";
+import MapGame from "./MapGame";
+import type { HintConfig } from "./hints";
 
 const ANSWERS = [
   { name: "France", additionalNames: [] },
@@ -24,6 +25,7 @@ function renderGame(overrides: Partial<React.ComponentProps<typeof MapGame<objec
     prompt: "Name them",
     inputPlaceholder: "Country…",
     answerNoun: "country",
+    hints: { description: "A clue" },
     submitAnswer,
     ...overrides,
   };
@@ -250,37 +252,7 @@ describe("MapGame resuming a finished round", () => {
   });
 });
 
-describe("MapGame without hints configured", () => {
-  afterEach(() => vi.restoreAllMocks());
-
-  it("logs an error in development when the game type has hints but the component supplies none", () => {
-    vi.stubEnv("NODE_ENV", "development");
-    const error = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    renderGame({ round: makeRoundProps({ hintCount: 2 }) });
-
-    expect(error).toHaveBeenCalledWith("This game type has 2 hints but its component supplies no hints.");
-  });
-
-  it("stays quiet outside development", () => {
-    vi.stubEnv("NODE_ENV", "test");
-    const error = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    renderGame({ round: makeRoundProps({ hintCount: 2 }) });
-
-    expect(error).not.toHaveBeenCalled();
-  });
-
-  it("stays quiet in development when the game type has no hints", () => {
-    vi.stubEnv("NODE_ENV", "development");
-    const error = vi.spyOn(console, "error").mockImplementation(() => {});
-
-    renderGame({ round: makeRoundProps({ hintCount: 0 }) });
-
-    expect(error).not.toHaveBeenCalled();
-    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
-  });
-
+describe("MapGame hint button", () => {
   it("offers no hint button once the round is over", async () => {
     renderGame({
       hints: { description: "A clue" },
@@ -419,18 +391,73 @@ describe("MapGame hints", () => {
 
     expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
   });
+});
 
-  it("offers no hints when the backend says there are none", () => {
-    renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 0 }) });
+describe("MapGame panel", () => {
+  const saved = (text: string) => ({ text, correct: false });
 
-    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
-    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+  it("shows the guesses left before any guess", () => {
+    renderGame();
+
+    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
   });
 
-  it("offers no hint button when a game forgets to supply its hints", () => {
-    renderGame({ hints: undefined, round: makeRoundProps({ hintCount: 2 }) });
+  it("shows the guesses left and the value together in the status row, not in the button row", () => {
+    renderGame({ round: makeRoundProps({ guesses: [saved("Italy"), saved("Peru")] }) });
 
-    expect(screen.queryByRole("button", { name: /Hint/ })).not.toBeInTheDocument();
+    const row = document.querySelector(".round-status") as HTMLElement;
+    expect(row).toContainElement(screen.getByRole("status", { name: "3 guesses left" }));
+    expect(row).toHaveTextContent(/Worth \d+ pts/);
+    const reveal = screen.getByRole("button", { name: /Reveal answer/ });
+    expect(reveal.parentElement).not.toHaveTextContent("Worth");
+  });
+
+  it("says when it was the next to last guess", async () => {
+    renderGame({ round: makeRoundProps({ guessLimit: 2 }) });
+
+    await guess(userEvent.setup(), "Italy");
+
+    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
+    expect(screen.getByText("Last guess!")).toBeInTheDocument();
+  });
+
+  it("shows no wrong guesses heading when there are none", () => {
+    renderGame();
+
+    expect(screen.queryByText("Wrong guesses")).not.toBeInTheDocument();
+  });
+
+  it("has no status row or feedback line once the round is over", () => {
+    renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
+
+    expect(document.querySelector(".round-status")).toBeNull();
+    expect(document.querySelector(".guess-feedback")).toBeNull();
+  });
+
+  it("shows no feedback once the round is over", async () => {
+    const user = userEvent.setup();
+    renderGame();
+
+    await guess(user, "France");
+    await guess(user, "Spain");
+
+    expect(document.querySelector(".guess-feedback")).toBeNull();
+  });
+
+  it("shows the round result instead of the form when the round is over", () => {
+    renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
+
+    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
+  });
+
+  it("shows out of guesses instead of the form", () => {
+    renderGame({ round: makeRoundProps({ answerState: "OUT_OF_GUESSES" }) });
+
+    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(screen.queryByText("Answer revealed · 0 pts")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });
 
@@ -592,6 +619,7 @@ describe("MapGame resuming a solved round", () => {
       prompt: "Name them",
       inputPlaceholder: "Country…",
       answerNoun: "country",
+      hints: { description: "A clue" },
       submitAnswer: vi.fn(),
     };
     const { rerender } = render(<MapGame {...props} />);
@@ -622,6 +650,7 @@ describe("MapGame resuming an unfinished round", () => {
       prompt: "Name them",
       inputPlaceholder: "Country�",
       answerNoun: "country",
+      hints: { description: "A clue" },
       submitAnswer: vi.fn(),
     };
     const { rerender } = render(<MapGame {...props} />);

@@ -1,4 +1,4 @@
-import type { HintConfig } from "../common/MapGame";
+import type { HintConfig } from "../common/hints";
 import { countHint, firstLetterHint as firstLetter } from "../common/hints";
 import type { River } from "./model";
 
