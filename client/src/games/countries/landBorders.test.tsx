@@ -32,13 +32,10 @@ describe("Land Borders", () => {
     expect(landBorders.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the map key", () => {
+  it("shows the prompt", () => {
     renderGame();
 
     expect(screen.getByText("Which country has these land borders?")).toBeInTheDocument();
-    expect(
-      screen.getByText("The solid lines are its borders with other countries. Its coast isn't drawn at first."),
-    ).toBeInTheDocument();
   });
 
   it("offers three hints: the neighbours and the coastline on the map, then the first letter", async () => {

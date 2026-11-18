@@ -10,7 +10,6 @@ export interface PairVariant {
   MapComponent: ComponentType<MapProps<CountryPairRound>>;
   prompt: string;
   /** What the marks on the map are, built from the round. */
-  mapKey: (round: CountryPairRound) => string;
   hints: (round: CountryPairRound) => HintConfig;
 }
 
@@ -27,7 +26,6 @@ export function makePairGame(variant: PairVariant) {
           additionalNames: country.additionalNames,
         }))}
         blankMap
-        mapKey={variant.mapKey(game.data)}
         prompt={variant.prompt}
         hints={variant.hints(game.data)}
       />

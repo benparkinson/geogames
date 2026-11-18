@@ -14,7 +14,6 @@ export default defineGame({
   Component: makeRiverGame({
     MapComponent: RiverCountriesMapWrapper,
     prompt: "Which river flows through all of these countries?",
-    mapKey: "The shaded countries are the ones it crosses. The river itself isn't drawn.",
     blankMap: true,
     hints: (river) =>
       hintsFrom(

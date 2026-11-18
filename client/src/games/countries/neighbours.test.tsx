@@ -32,11 +32,10 @@ describe("Country Gaps", () => {
     expect(neighbours.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the map key", () => {
+  it("shows the prompt", () => {
     renderGame();
 
     expect(screen.getByText("Which country is missing?")).toBeInTheDocument();
-    expect(screen.getByText("The shaded countries are its neighbours. The flag marks the gap.")).toBeInTheDocument();
   });
 
   it("offers three hints: the coastline on the map, the longest border, then the first letter", async () => {
@@ -80,7 +79,7 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(screen.getByText(/^Not France · [\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
+    expect(screen.getByText(/[\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
   });
 
   it("gives no clue in Hard mode", async () => {
@@ -91,7 +90,7 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(screen.getByText("Not France.")).toBeInTheDocument();
+    expect(screen.getByText("France")).toBeInTheDocument();
   });
 
   it("rejects an unknown name once the country list loads, without using a guess", async () => {

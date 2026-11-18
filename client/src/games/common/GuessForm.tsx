@@ -13,17 +13,11 @@ export default function GuessForm({
   submitGuess,
   inputPlaceholder,
   answerNoun,
-  answerCount,
-  showClues,
   suggestions,
 }: {
   submitGuess: (guess: string) => GuessResult;
   inputPlaceholder: string;
   answerNoun: string;
-  /** How many answers the round has: with several, a clue points to the nearest one still to find. */
-  answerCount: number;
-  /** Whether to show distance clues (false in Hard mode). */
-  showClues: boolean;
   suggestions?: string[];
 }): React.JSX.Element {
   const [guess, setGuess] = useState("");
@@ -50,8 +44,8 @@ export default function GuessForm({
     }
   }
 
-  // Worked out from the result on every render, so switching Hard mode changes it straight away.
-  const feedback = result ? feedbackText(result, answerNoun, answerCount, showClues) : null;
+  // Worked out from the result on every render.
+  const feedback = result ? feedbackText(result, answerNoun) : null;
 
   return (
     <>

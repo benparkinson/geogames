@@ -16,7 +16,6 @@ export default defineGame({
   Component: makeCountryGame<CountryRiversRound>({
     MapComponent: CountryRiversMapWrapper,
     prompt: "Which country has these rivers?",
-    mapKey: "The solid lines are rivers inside it. Thicker lines are major rivers.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(

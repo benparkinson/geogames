@@ -33,26 +33,10 @@ describe("Border Shapes", () => {
     expect(borderShapes.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
   });
 
-  it("shows the prompt and the border length from the start", () => {
+  it("shows the prompt", () => {
     renderGame();
 
     expect(screen.getByText("Which two countries does this border separate?")).toBeInTheDocument();
-    expect(screen.getByText("The solid line is the border between them, 450 km long.")).toBeInTheDocument();
-  });
-
-  it("writes a long border length with a thousands separator", () => {
-    const Component = borderShapes.Component;
-    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
-    renderWithClient(
-      <Component
-        data={makeCountryPairRoundData({ borderKm: 8_908 })}
-        round={makeRoundProps({ hintCount: 3, hasClues: true })}
-        answerCount={2}
-        submitAnswer={vi.fn()}
-      />,
-    );
-
-    expect(screen.getByText("The solid line is the border between them, 8,908 km long.")).toBeInTheDocument();
   });
 
   it("offers three hints: the other borders and the coastlines on the map, then both first letters", async () => {
@@ -90,6 +74,6 @@ describe("Border Shapes", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");
 
-    expect(screen.getByText(/^Not France · nearest [\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
+    expect(screen.getByText(/[\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
   });
 });

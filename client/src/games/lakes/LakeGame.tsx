@@ -12,7 +12,6 @@ export default function LakeGame(game: GameComponentProps<LakeRound>): React.JSX
       MapComponent={LakeShapesMapWrapper}
       answers={[game.data.lake]}
       blankMap
-      mapKey="The shape is the lake's outline. The scale bar shows its size."
       prompt="Which lake is this?"
       hints={lakeHints(game.data.lake)}
     />

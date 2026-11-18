@@ -66,6 +66,10 @@ code {
   background: var(--gg-color-map-blank);
 }
 .round-brief {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 .round-brief-title {
@@ -77,10 +81,6 @@ code {
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.3;
-}
-.round-brief-key {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
 }
 
 @media (min-width: 992px) {
@@ -309,9 +309,6 @@ code {
   line-height: 1;
   padding: 0.25rem 0.4rem;
   background: var(--gg-color-surface);
-}
-.wrong-guesses-label {
-  font-size: 0.7rem;
 }
 .round-hints {
   list-style: none;
