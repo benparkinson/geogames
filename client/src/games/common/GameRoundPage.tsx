@@ -9,6 +9,40 @@ import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
+/** The callbacks of the page that a `Round` hands to the game. */
+type RoundActions = Pick<Round, "nextRound" | "goToRound" | "showSummary" | "recordHint" | "recordGuess">;
+
+/** What a game component is told about its round: the server's view of it, and what the player can do next. */
+function buildRound(
+  data: GameRoundView,
+  currentRound: number,
+  hasClues: boolean,
+  dailyDate: string | undefined,
+  actions: RoundActions,
+): Round {
+  return {
+    ...actions,
+    hasNextRound: currentRound < data.totalRoundCount - 1,
+    currentRound,
+    totalRoundCount: data.totalRoundCount,
+    answerState: data.answerState,
+    hintCount: data.gameType.hintCount,
+    guessLimit: data.gameType.guessLimit,
+    hasClues,
+    hintsUsed: data.hintsUsed,
+    guesses: data.guesses,
+    hintsTakenAt: data.hintsTakenAt,
+    points: data.points,
+    score: data.gameResult.score,
+    maxScore: data.gameResult.maxScore,
+    perfectRounds: data.gameResult.perfectRounds,
+    gameCompleted: data.gameResult.gameState === FINISHED,
+    roundAnswerStates: data.gameResult.roundAnswerStates,
+    roundPoints: data.gameResult.roundPoints,
+    dailyDate,
+  };
+}
+
 /** `daily` is set when the game is a daily challenge: the title says so, and the summary shares instead of replaying. */
 function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo }): React.JSX.Element {
   // Until the player acts, resume at the first unanswered round, which the first round's game result tells us.
@@ -20,6 +54,8 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
   const resumeRound = Math.max(0, firstRound?.gameResult.roundAnswerStates.indexOf(UNANSWERED) ?? 0);
   const currentRound = chosenRound ?? resumeRound;
   const { error, data, isLoading } = useRound(gameId, currentRound);
+  // A mixed game's rounds can differ in type, so this is looked up for the round being shown.
+  const gameModule = data ? findGameModule(data.gameType.name) : undefined;
   const submitAnswerMutation = useSubmitAnswer(gameId, currentRound, data?.totalRoundCount);
   const recordGuessMutation = useRecordGuess(gameId, currentRound);
   const recordHintMutation = useRecordHint(gameId, currentRound);
@@ -50,44 +86,22 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
   }
 
   function renderGame(data: GameRoundView) {
-    const hasNextRound = currentRound < data.totalRoundCount - 1;
-    const roundData = data.data;
-    const gameModule = findGameModule(data.gameType.name);
     if (!gameModule) {
       return <div>Unknown game type...</div>;
     }
-    const gameCompleted = data.gameResult.gameState === FINISHED;
-    const round: Round = {
+    const round = buildRound(data, currentRound, !!gameModule.hasClues, daily?.date, {
       nextRound,
       goToRound,
       showSummary: () => setSummaryChoice(true),
-      hasNextRound,
-      currentRound,
-      totalRoundCount: data.totalRoundCount,
-      answerState: data.answerState,
-      hintCount: data.gameType.hintCount,
-      guessLimit: data.gameType.guessLimit,
-      hasClues: !!gameModule.hasClues,
-      hintsUsed: data.hintsUsed,
-      guesses: data.guesses,
-      hintsTakenAt: data.hintsTakenAt,
       recordHint: (hint) => recordHintMutation.mutate(hint),
       recordGuess: (guess) => recordGuessMutation.mutate(guess),
-      points: data.points,
-      score: data.gameResult.score,
-      maxScore: data.gameResult.maxScore,
-      perfectRounds: data.gameResult.perfectRounds,
-      gameCompleted,
-      roundAnswerStates: data.gameResult.roundAnswerStates,
-      roundPoints: data.gameResult.roundPoints,
-      dailyDate: daily?.date,
-    };
+    });
 
     // The key resets the round's state, and the game type can change between rounds of a mixed game.
     return (
       <gameModule.Component
         key={currentRound}
-        data={roundData}
+        data={data.data}
         round={round}
         answerCount={data.gameType.answerCount}
         submitAnswer={submitAnswer}
@@ -99,7 +113,6 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
     if (!data) {
       return <title>Loading... | GeoGauntlet</title>;
     }
-    const gameModule = findGameModule(data.gameType.name);
     if (!gameModule) {
       return <title>Unknown game! | GeoGauntlet</title>;
     }

@@ -1,54 +1,28 @@
 import { useEffect, useState } from "react";
-import { wakeServer } from "../api/health";
+import { useWakeServer } from "../api/health";
 import { hasStatus } from "../api/http";
 import { localDateString, useCreateDailyGame } from "../api/daily";
 import { useRound } from "../api/games";
 import { FINISHED } from "../games/common/Model";
 import GameRoundPage from "../games/common/GameRoundPage";
-import HomeLink from "../components/HomeLink";
-import ThemeToggle from "../components/ThemeToggle";
-import SiteFooter from "../components/SiteFooter";
+import PageShell from "../components/PageShell";
 import LoadingSpinner from "../components/LoadingSpinner";
 import HardModeToggle from "../components/HardModeToggle";
 import { useHardMode } from "../settings/hardMode";
 import { Button, Notice, Spinner } from "../ui";
+import { useDelayedFlag } from "../ui/useDelayedFlag";
 import ShareButton from "./ShareButton";
 import { clearDaily, DailyEntry, entryFor, readDaily, useDailyEntry, writeDaily } from "./dailyStorage";
 import { resultFromGame } from "./result";
 import { shareText } from "./shareText";
 import { useToday } from "./useToday";
 
-function Shell({ children }: { children: React.ReactNode }): React.JSX.Element {
-  return (
-    <div className="min-vh-100 page-bg d-flex flex-column">
-      <div className="px-3 py-2 d-flex align-items-center gap-2">
-        <HomeLink />
-        <ThemeToggle />
-      </div>
-      <div className="gg-card mx-auto my-4 p-3">{children}</div>
-      <SiteFooter className="mt-auto pt-4 pb-4" />
-    </div>
-  );
-}
-
 function Intro(): React.JSX.Element {
   const { mutate, isPending, error } = useCreateDailyGame();
   const [hardMode] = useHardMode();
-  const [slow, setSlow] = useState(false);
-
+  const slow = useDelayedFlag(isPending, 3000);
   // Start waking a cold server while the player reads.
-  useEffect(() => {
-    wakeServer();
-  }, []);
-
-  useEffect(() => {
-    if (!isPending) return;
-    const timer = setTimeout(() => setSlow(true), 3000);
-    return () => {
-      clearTimeout(timer);
-      setSlow(false);
-    };
-  }, [isPending]);
+  useWakeServer();
 
   // On click and not on load: link previews and crawlers fetch this page, and must not make games.
   function play(): void {
@@ -64,7 +38,7 @@ function Intro(): React.JSX.Element {
   }
 
   return (
-    <Shell>
+    <PageShell>
       <h1 className="h3 mb-1">Daily challenge</h1>
       <p className="mb-3">Five rounds, one of each kind, the same for everyone today.</p>
       <div className="mb-3">
@@ -85,7 +59,7 @@ function Intro(): React.JSX.Element {
           <Notice className="mb-0">Couldn&apos;t start. The server may be down. Try again.</Notice>
         )}
       </div>
-    </Shell>
+    </PageShell>
   );
 }
 
@@ -98,7 +72,7 @@ function Finished({
 }): React.JSX.Element {
   const text = shareText({ date: entry.date, hardMode: entry.hardcore, result: entry.result }, window.location.origin);
   return (
-    <Shell>
+    <PageShell>
       <h1 className="h3 mb-1">Daily {entry.date}</h1>
       <p className="mb-3">
         You scored {entry.result.score} / {entry.result.maxScore}
@@ -112,7 +86,7 @@ function Finished({
           See the rounds
         </Button>
       </div>
-    </Shell>
+    </PageShell>
   );
 }
 
