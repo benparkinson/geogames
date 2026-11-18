@@ -26,11 +26,7 @@ public class RiverLoaderService {
   @Cacheable("riverNames")
   public List<PlaceName> loadRiverNames() {
     return loadRivers().stream()
-        .map(
-            river ->
-                new PlaceName(
-                    river.name(),
-                    river.additionalNames() == null ? List.of() : river.additionalNames()))
+        .map(river -> PlaceName.of(river.name(), river.additionalNames()))
         .sorted(Comparator.comparing(PlaceName::name))
         .toList();
   }
