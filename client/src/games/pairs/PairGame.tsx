@@ -1,8 +1,6 @@
 import type { ComponentType } from "react";
-import MapGame from "../common/MapGame";
+import PlaceGame from "../common/PlaceGame";
 import type { HintConfig } from "../common/hints";
-import { useCountryClues } from "../common/useCountryClues";
-import { useGuessList } from "../common/useGuessList";
 import type { MapProps } from "../../map/MapProps";
 import type { GameComponentProps } from "../types";
 import type { CountryPairRound } from "./model";
@@ -18,31 +16,20 @@ export interface PairVariant {
 
 /** Builds the game component for one pair variant. The player names both countries. */
 export function makePairGame(variant: PairVariant) {
-  function PairGame({
-    data,
-    round,
-    answerCount,
-    submitAnswer,
-  }: GameComponentProps<CountryPairRound>): React.JSX.Element {
-    const { suggestions, isKnownGuess } = useGuessList("countries");
-    const clueFor = useCountryClues();
+  function PairGame(game: GameComponentProps<CountryPairRound>): React.JSX.Element {
     return (
-      <MapGame
-        data={data}
-        answerCount={answerCount}
+      <PlaceGame
+        kind="countries"
+        game={game}
         MapComponent={variant.MapComponent}
-        answers={data.countries.map((country) => ({ name: country.name, additionalNames: country.additionalNames }))}
-        round={round}
-        suggestions={suggestions}
-        isKnownGuess={isKnownGuess}
+        answers={game.data.countries.map((country) => ({
+          name: country.name,
+          additionalNames: country.additionalNames,
+        }))}
         blankMap
-        mapCaption={variant.mapCaption(data)}
+        mapCaption={variant.mapCaption(game.data)}
         prompt={variant.prompt}
-        inputPlaceholder="Country name…"
-        answerNoun="country"
-        hints={variant.hints(data)}
-        clueFor={clueFor}
-        submitAnswer={submitAnswer}
+        hints={variant.hints(game.data)}
       />
     );
   }

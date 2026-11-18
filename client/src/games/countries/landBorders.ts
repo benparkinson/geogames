@@ -1,6 +1,6 @@
 import { BoundingBox } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import LandBordersMapWrapper from "./LandBordersMapWrapper";
 import { hintsFrom, mapHint } from "../common/hints";
@@ -13,7 +13,7 @@ export default defineGame({
   description: "Name a country from its land borders alone.",
   Icon: BoundingBox,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryShapeRound>({
+  Component: makeCountryGame<CountryShapeRound>({
     MapComponent: LandBordersMapWrapper,
     prompt: "Name the country with these land borders.",
     mapCaption: "Land borders only. The coastline is hidden.",

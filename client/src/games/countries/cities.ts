@@ -1,6 +1,6 @@
 import { Buildings } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryCitiesRound } from "./model";
 import CountryCitiesMapWrapper from "./CountryCitiesMapWrapper";
 import { hintsFrom } from "../common/hints";
@@ -13,7 +13,7 @@ export default defineGame({
   description: "Name a country from where its cities are.",
   Icon: Buildings,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryCitiesRound>({
+  Component: makeCountryGame<CountryCitiesRound>({
     MapComponent: CountryCitiesMapWrapper,
     prompt: "Name the country with these cities.",
     mapCaption: "Its cities, sized by population. The outline is hidden.",

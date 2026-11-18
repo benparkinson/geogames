@@ -18,7 +18,7 @@ function renderGame(submitAnswer = vi.fn()) {
   renderWithClient(
     <Component
       data={makeCountryPairRoundData()}
-      round={makeRoundProps({ hintCount: 3 })}
+      round={makeRoundProps({ hintCount: 3, hasClues: true })}
       answerCount={2}
       submitAnswer={submitAnswer}
     />,
@@ -46,7 +46,7 @@ describe("Border Shapes", () => {
     renderWithClient(
       <Component
         data={makeCountryPairRoundData({ borderKm: 8_908 })}
-        round={makeRoundProps({ hintCount: 3 })}
+        round={makeRoundProps({ hintCount: 3, hasClues: true })}
         answerCount={2}
         submitAnswer={vi.fn()}
       />,

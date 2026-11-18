@@ -1,40 +1,25 @@
 import { useState } from "react";
 import { shuffle } from "../../helper/shuffle";
-import MapGame from "../common/MapGame";
-import { useGuessList } from "../common/useGuessList";
+import PlaceGame from "../common/PlaceGame";
 import type { GameComponentProps } from "../types";
 import TripointMapWrapper from "./TripointMapWrapper";
 import type { TripointModel, TripointRoundData } from "./model";
 
-export default function TripointGame({
-  data: tripoint,
-  round,
-  answerCount,
-  submitAnswer,
-}: GameComponentProps<TripointModel>): React.JSX.Element {
+export default function TripointGame(props: GameComponentProps<TripointModel>): React.JSX.Element {
   // Hints reveal country outlines in this order. It is picked once per round and never changes.
   const [data] = useState<TripointRoundData>(() => ({
-    ...tripoint,
-    hintOrder: shuffle(tripoint.countries.map((country) => country.name)),
+    ...props.data,
+    hintOrder: shuffle(props.data.countries.map((country) => country.name)),
   }));
-  const { suggestions, isKnownGuess } = useGuessList("countries");
 
   return (
-    <MapGame
-      data={data}
-      answerCount={answerCount}
+    <PlaceGame
+      kind="countries"
+      game={{ ...props, data }}
       MapComponent={TripointMapWrapper}
-      answers={tripoint.countries}
-      round={round}
-      suggestions={suggestions}
-      isKnownGuess={isKnownGuess}
-      prompt={`Name the ${answerCount} countries that meet at the flag.`}
-      inputPlaceholder="Country name…"
-      answerNoun="country"
-      hints={{
-        description: "Shows the outline of a country you haven't named yet",
-      }}
-      submitAnswer={submitAnswer}
+      answers={props.data.countries}
+      prompt={`Name the ${props.answerCount} countries that meet at the flag.`}
+      hints={{ description: "Shows the outline of a country you haven't named yet" }}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { Water } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryRiversRound } from "./model";
 import CountryRiversMapWrapper from "./CountryRiversMapWrapper";
 import { hintsFrom } from "../common/hints";
@@ -13,7 +13,7 @@ export default defineGame({
   description: "Name a country from the rivers inside it.",
   Icon: Water,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryRiversRound>({
+  Component: makeCountryGame<CountryRiversRound>({
     MapComponent: CountryRiversMapWrapper,
     prompt: "Name the country with these rivers.",
     mapCaption: "Its rivers, the major ones thicker. The outline is hidden.",

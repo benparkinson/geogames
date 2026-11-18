@@ -1,6 +1,6 @@
 import { PuzzleFill } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import NeighboursMapWrapper from "./NeighboursMapWrapper";
 import { hintsFrom, mapHint } from "../common/hints";
@@ -13,7 +13,7 @@ export default defineGame({
   description: "Name the country hidden between its neighbours.",
   Icon: PuzzleFill,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryShapeRound>({
+  Component: makeCountryGame<CountryShapeRound>({
     MapComponent: NeighboursMapWrapper,
     prompt: "Name the missing country.",
     mapCaption: "Only its neighbours are shown. The country is the gap.",

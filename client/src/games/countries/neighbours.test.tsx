@@ -16,7 +16,12 @@ function renderGame(data = makeCountryShapeRoundData(), submitAnswer = vi.fn()) 
   const Component = neighbours.Component;
   mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
   renderWithClient(
-    <Component data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />,
+    <Component
+      data={data}
+      round={makeRoundProps({ hintCount: 3, hasClues: true })}
+      answerCount={1}
+      submitAnswer={submitAnswer}
+    />,
   );
   return submitAnswer;
 }

@@ -1,6 +1,6 @@
 import { Tsunami } from "react-bootstrap-icons";
 import { defineGame } from "../types";
-import { makeCountryShapeGame } from "./CountryShapeGame";
+import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import CoastlineMapWrapper from "./CoastlineMapWrapper";
 import { hintsFrom, mapHint } from "../common/hints";
@@ -13,7 +13,7 @@ export default defineGame({
   description: "Name a country from its coastline alone.",
   Icon: Tsunami,
   hasClues: true,
-  Component: makeCountryShapeGame<CountryShapeRound>({
+  Component: makeCountryGame<CountryShapeRound>({
     MapComponent: CoastlineMapWrapper,
     prompt: "Name the country with this coastline.",
     mapCaption: "Coastline only. Land borders are hidden.",
