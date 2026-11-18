@@ -1,7 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
-import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RecordedGuess;
@@ -15,16 +14,13 @@ import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.helper.PlaceNames;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
-import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
-import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
@@ -393,8 +389,8 @@ public class GameService {
         game.getRounds().size(),
         round.getAnswerState(),
         round.getHintsUsed(),
-        pointsFor(round),
-        calculateGameResult(game),
+        GameResults.pointsFor(round),
+        GameResults.of(game),
         recordedGuesses(round),
         List.copyOf(round.getHintsTakenAt()));
   }
@@ -402,59 +398,9 @@ public class GameService {
   /** The answer's response has no round data, so it needs no rebuild and no serialising. */
   private static RoundAnswerResponse toAnswerResponse(GameEntity game, GameRoundEntity round) {
     return new RoundAnswerResponse(
-        round.getAnswerState(), round.getHintsUsed(), pointsFor(round), calculateGameResult(game));
-  }
-
-  private static int pointsFor(GameRoundEntity round) {
-    return Scoring.roundPoints(
-        round.getAnswerState(), round.getHintsUsed(), round.getGameType().hintCount());
-  }
-
-  static GameResult calculateGameResult(GameEntity game) {
-    List<GameRoundEntity> rounds =
-        game.getRounds().stream()
-            .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
-            .toList();
-    List<AnswerState> roundAnswerStates = new ArrayList<>(rounds.size());
-    List<Integer> roundPoints = new ArrayList<>(rounds.size());
-    List<Integer> roundHintsUsed = new ArrayList<>(rounds.size());
-    int roundsUnanswered = 0;
-    int roundsCorrect = 0;
-    int perfectRounds = 0;
-    int score = 0;
-    for (GameRoundEntity round : rounds) {
-      AnswerState state = round.getAnswerState();
-      int points = pointsFor(round);
-      roundAnswerStates.add(state);
-      roundPoints.add(points);
-      roundHintsUsed.add(round.getHintsUsed());
-      score += points;
-      if (state == AnswerState.UNANSWERED) {
-        roundsUnanswered++;
-      } else if (state == AnswerState.CORRECT) {
-        roundsCorrect++;
-        if (round.getHintsUsed() == 0) {
-          perfectRounds++;
-        }
-      }
-    }
-    GameState gameState;
-    if (roundsUnanswered == 0) {
-      gameState = GameState.FINISHED;
-    } else if (roundsUnanswered == rounds.size()) {
-      gameState = GameState.CREATED;
-    } else {
-      gameState = GameState.IN_PROGRESS;
-    }
-    return new GameResult(
-        gameState,
-        roundsUnanswered,
-        score,
-        roundAnswerStates,
-        Scoring.MAX_ROUND_POINTS * rounds.size(),
-        roundsCorrect,
-        perfectRounds,
-        roundPoints,
-        roundHintsUsed);
+        round.getAnswerState(),
+        round.getHintsUsed(),
+        GameResults.pointsFor(round),
+        GameResults.of(game));
   }
 }
