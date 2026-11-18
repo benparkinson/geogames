@@ -40,11 +40,11 @@ describe("GameSummary for a daily challenge", () => {
     );
   }
 
-  it("offers Share and a Mixed game instead of Play again", async () => {
+  it("offers Copy result and a Mixed game instead of Play again", async () => {
     mockFetch([roundsRoute(done)]);
     renderDaily();
 
-    expect(await screen.findByRole("button", { name: "Share" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Copy result" })).toBeInTheDocument();
     expect(screen.getByText(/Daily #7/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Play again" })).not.toBeInTheDocument();
   });
@@ -65,12 +65,12 @@ describe("GameSummary for a daily challenge", () => {
     );
   });
 
-  it("has no Share button until the game is finished", async () => {
+  it("has no Copy result button until the game is finished", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
     renderDaily();
 
     expect(await screen.findByText(/You scored/)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Copy result" })).not.toBeInTheDocument();
   });
 });
 
@@ -83,12 +83,12 @@ describe("GameSummary", () => {
     expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
   });
 
-  it("has no Share button and offers Play again in an ordinary game", async () => {
+  it("has no Copy result button and offers Play again in an ordinary game", async () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
 
     expect(await screen.findByRole("button", { name: "Play again" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Copy result" })).not.toBeInTheDocument();
   });
 
   it("shows the score and one row per round", async () => {
