@@ -12,7 +12,7 @@ describe("the daily page on the server", () => {
     const html = renderToString(<DailyPage />);
 
     expect(html).toContain("spinner");
-    expect(html).not.toContain("Daily #9");
+    expect(html).not.toContain("Daily 2026-11-18");
     expect(html).not.toContain("g1");
   });
 });

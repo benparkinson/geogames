@@ -74,7 +74,7 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: { number: nu
             gameCompleted,
             roundAnswerStates: data.gameResult.roundAnswerStates,
             roundPoints: data.gameResult.roundPoints,
-            dailyNumber: daily?.number,
+            dailyDate: daily?.date,
         };
 
         const gameModule = findGameModule(data.gameType.name);
@@ -94,7 +94,7 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: { number: nu
             return <title>Unknown game! | GeoGauntlet</title>
         }
         if (daily) {
-            return <title>{`Daily #${daily.number} | GeoGauntlet`}</title>
+            return <title>{`Daily ${daily.date} | GeoGauntlet`}</title>
         }
         return <title>{`${gameModule.title} | GeoGauntlet`}</title>
     }

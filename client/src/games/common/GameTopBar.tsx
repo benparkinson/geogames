@@ -39,7 +39,7 @@ export default function GameTopBar({ round, gameOver, gaveUp, outOfGuesses = fal
         <ThemeToggle />
       </div>
       <div className="d-flex align-items-center gap-2 small gg-text-muted overflow-hidden">
-        {round.dailyNumber !== undefined && <span className="fw-semibold text-nowrap">Daily #{round.dailyNumber}</span>}
+        {round.dailyDate !== undefined && <span className="fw-semibold text-nowrap">Daily {round.dailyDate}</span>}
         <span className="d-none d-sm-inline text-nowrap">Round {round.currentRound + 1} of {round.totalRoundCount}</span>
         <RoundProgress states={states} points={points} currentRound={round.currentRound} goToRound={round.goToRound} />
       </div>

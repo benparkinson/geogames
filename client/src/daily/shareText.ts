@@ -11,10 +11,10 @@ const SQUARES: Record<RoundOutcome, string> = {
  * or hint counts. The link is always /daily, never the game, so nobody can open (and answer) the sharer's game.
  */
 export function shareText(
-  daily: { number: number; hardcore: boolean; result: DailyResult },
+  daily: { date: string; hardcore: boolean; result: DailyResult },
   origin: string,
 ): string {
-  const title = `GeoGauntlet Daily #${daily.number}` + (daily.hardcore ? " · Hard mode" : "");
+  const title = `GeoGauntlet Daily ${daily.date}` + (daily.hardcore ? " · Hard mode" : "");
   return [
     title,
     `${daily.result.score} / ${daily.result.maxScore}`,
