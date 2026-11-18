@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,11 @@ public class CountryShapeService {
           "No country shape for " + name, new IOException("unknown country: " + name));
     }
     return shape;
+  }
+
+  /** The shape of the country with this name, or empty if there is none. */
+  public Optional<CountryShape> findShape(String name) {
+    return Optional.ofNullable(snapshot().byName().get(name));
   }
 
   /**

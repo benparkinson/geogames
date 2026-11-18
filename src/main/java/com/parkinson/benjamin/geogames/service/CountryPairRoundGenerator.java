@@ -93,9 +93,8 @@ public class CountryPairRoundGenerator implements RoundGenerator {
   }
 
   private CountryShape find(String name, String roundKey) {
-    return shapes.loadShapes().stream()
-        .filter(shape -> shape.name().equals(name))
-        .findFirst()
+    return shapes
+        .findShape(name)
         .orElseThrow(() -> new RoundDataMissingException(gameType, roundKey));
   }
 

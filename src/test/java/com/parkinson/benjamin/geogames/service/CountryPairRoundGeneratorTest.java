@@ -17,6 +17,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -93,6 +94,7 @@ class CountryPairRoundGeneratorTest {
     when(shapes.loadShapes()).thenReturn(all);
     for (CountryShape shape : all) {
       when(shapes.loadShape(shape.name())).thenReturn(shape);
+      when(shapes.findShape(shape.name())).thenReturn(Optional.of(shape));
     }
   }
 
@@ -180,6 +182,7 @@ class CountryPairRoundGeneratorTest {
             List.of(line(5, 0, 6, 1)));
     when(shapes.loadShapes()).thenReturn(List.of(a2, b, c, d));
     when(shapes.loadShape("A")).thenReturn(a2);
+    when(shapes.findShape("A")).thenReturn(Optional.of(a2));
 
     CountryPairRound round = pair(generator(BORDERING, true), "pair:A|B");
 

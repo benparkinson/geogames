@@ -16,6 +16,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -65,6 +66,7 @@ class CountryShapeRoundGeneratorTest {
     when(shapes.loadShapes()).thenReturn(List.of(a, b, c, d));
     for (CountryShape shape : List.of(a, b, c, d)) {
       when(shapes.loadShape(shape.name())).thenReturn(shape);
+      when(shapes.findShape(shape.name())).thenReturn(Optional.of(shape));
     }
   }
 

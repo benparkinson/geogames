@@ -17,6 +17,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +73,7 @@ class CountryCitiesRoundGeneratorTest {
     when(shapes.loadShapes()).thenReturn(all);
     for (CountryShape s : all) {
       when(shapes.loadShape(s.name())).thenReturn(s);
+      when(shapes.findShape(s.name())).thenReturn(Optional.of(s));
     }
   }
 
