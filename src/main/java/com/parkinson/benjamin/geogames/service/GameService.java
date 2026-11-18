@@ -12,17 +12,12 @@ import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
-import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -39,7 +34,7 @@ public class GameService {
   private static final int MAX_ROUNDS = 10;
 
   private final GameRepository gameRepository;
-  private final Map<GameType, RoundGenerator> generators;
+  private final RoundGenerators generators;
   private final ObjectMapper objectMapper;
   private final Random random;
   private final ApplicationEventPublisher events;
@@ -47,33 +42,17 @@ public class GameService {
 
   public GameService(
       GameRepository gameRepository,
-      List<RoundGenerator> roundGenerators,
+      RoundGenerators generators,
       RoundRules rules,
       ObjectMapper objectMapper,
       Random random,
       ApplicationEventPublisher events) {
     this.gameRepository = gameRepository;
-    this.generators = generatorsByType(roundGenerators);
+    this.generators = generators;
     this.objectMapper = objectMapper;
     this.random = random;
     this.events = events;
     this.rules = rules;
-  }
-
-  private static Map<GameType, RoundGenerator> generatorsByType(List<RoundGenerator> generators) {
-    Map<GameType, RoundGenerator> byType = new EnumMap<>(GameType.class);
-    for (RoundGenerator generator : generators) {
-      if (byType.put(generator.gameType(), generator) != null) {
-        throw new IllegalStateException(
-            "More than one round generator for game type " + generator.gameType());
-      }
-    }
-    for (GameType type : GameType.values()) {
-      if (!byType.containsKey(type)) {
-        throw new IllegalStateException("No round generator for game type " + type);
-      }
-    }
-    return byType;
   }
 
   @Transactional
@@ -87,8 +66,8 @@ public class GameService {
     GameSelection selection = GameSelection.parse(gameType);
     List<GameData> gameData =
         selection.isRandom()
-            ? generateMixedRounds(numberOfRounds)
-            : generators.get(selection.type()).generate(numberOfRounds, Set.of(), random);
+            ? generators.generateMixed(numberOfRounds, random)
+            : generators.generate(selection.type(), numberOfRounds, Set.of(), random);
 
     return createGame(
         gameData.stream().map(PinnedRound::of).toList(),
@@ -104,26 +83,6 @@ public class GameService {
     }
     return new GameCreationResponse(
         gameRepository.save(new GameEntity(entities, gameMode)).getPublicId());
-  }
-
-  /** Gives each round a random game type, then shuffles so the types come in a random order. */
-  private List<GameData> generateMixedRounds(int numberOfRounds) {
-    GameType[] types = GameType.values();
-    Map<GameType, Integer> roundsPerType = new EnumMap<>(GameType.class);
-    for (int i = 0; i < numberOfRounds; i++) {
-      roundsPerType.merge(types[random.nextInt(types.length)], 1, Integer::sum);
-    }
-
-    List<GameData> allGameData = new ArrayList<>(numberOfRounds);
-    Set<String> used = new HashSet<>();
-    roundsPerType.forEach(
-        (type, count) -> {
-          List<GameData> generated = generators.get(type).generate(count, Set.copyOf(used), random);
-          generated.forEach(data -> used.add(data.subjectId()));
-          allGameData.addAll(generated);
-        });
-    Collections.shuffle(allGameData, random);
-    return allGameData;
   }
 
   @Transactional(readOnly = true)
@@ -244,7 +203,7 @@ public class GameService {
 
   private GameRound toResponse(GameEntity game, GameRoundEntity round) {
     String roundKey = rules.currentRoundKey(round.getRoundKey());
-    GameData data = generators.get(round.getGameType()).rebuild(roundKey);
+    GameData data = generators.rebuild(round.getGameType(), roundKey);
     return new GameRound(
         GameTypeResponse.from(round.getGameType()),
         objectMapper.writeValueAsString(data),

@@ -137,7 +137,7 @@ class GameServiceTest {
   private GameService allGeneratorsService(Random random) {
     return new GameService(
         gameRepository,
-        List.copyOf(generators.values()),
+        new RoundGenerators(List.copyOf(generators.values())),
         new RoundRules(names),
         objectMapper,
         random,
@@ -150,7 +150,12 @@ class GameServiceTest {
 
   private GameService serviceWith(Random random, RoundGenerator... generators) {
     return new GameService(
-        gameRepository, List.of(generators), new RoundRules(names), objectMapper, random, events);
+        gameRepository,
+        new RoundGenerators(List.of(generators)),
+        new RoundRules(names),
+        objectMapper,
+        random,
+        events);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -435,7 +440,7 @@ class GameServiceTest {
       when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
       new GameService(
               repository,
-              List.copyOf(generators.values()),
+              new RoundGenerators(List.copyOf(generators.values())),
               new RoundRules(names),
               objectMapper,
               new Random(7),

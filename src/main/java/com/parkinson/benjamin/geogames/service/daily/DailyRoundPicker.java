@@ -2,7 +2,7 @@ package com.parkinson.benjamin.geogames.service.daily;
 
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
-import com.parkinson.benjamin.geogames.service.RoundGenerator;
+import com.parkinson.benjamin.geogames.service.RoundGenerators;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,10 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -30,23 +28,16 @@ public class DailyRoundPicker {
 
   public static final int DAILY_ROUNDS = 5;
 
-  private final Map<GameType, RoundGenerator> generators = new EnumMap<>(GameType.class);
+  private final RoundGenerators generators;
   private final List<GameType> pool;
 
-  public DailyRoundPicker(List<RoundGenerator> roundGenerators) {
-    for (RoundGenerator generator : roundGenerators) {
-      generators.put(generator.gameType(), generator);
-    }
+  public DailyRoundPicker(RoundGenerators generators) {
+    this.generators = generators;
     this.pool = Arrays.stream(GameType.values()).filter(type -> !type.extraDifficult()).toList();
     if (pool.size() < DAILY_ROUNDS) {
       throw new IllegalStateException(
           "The daily challenge needs %d game types that aren't extra difficult, found %d"
               .formatted(DAILY_ROUNDS, pool.size()));
-    }
-    for (GameType type : pool) {
-      if (!generators.containsKey(type)) {
-        throw new IllegalStateException("No round generator for game type " + type);
-      }
     }
   }
 
@@ -58,7 +49,7 @@ public class DailyRoundPicker {
     List<GameData> rounds = new ArrayList<>(DAILY_ROUNDS);
     Set<String> used = new HashSet<>();
     for (GameType type : types.subList(0, DAILY_ROUNDS)) {
-      GameData round = generators.get(type).generate(1, Set.copyOf(used), random).get(0);
+      GameData round = generators.generate(type, 1, Set.copyOf(used), random).get(0);
       used.add(round.subjectId());
       rounds.add(round);
     }
