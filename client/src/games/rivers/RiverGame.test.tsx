@@ -7,15 +7,12 @@ import { renderWithClient } from "../../test/render";
 import { makeRiverGame } from "./RiverGame";
 import { continentHint, textHints } from "./riverHints";
 
-const CAPTION = "The line is the river's course, with no map behind it.";
-
 const RiverGame = makeRiverGame({
   MapComponent: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)} />
   ),
   prompt: "Which river is this?",
   blankMap: true,
-  mapKey: CAPTION,
   hints: (river) => textHints(river, continentHint),
 });
 
@@ -67,7 +64,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Thames{Enter}");
 
-    expect(screen.getByText("Not Thames.")).toBeInTheDocument();
+    expect(screen.getByText("Thames")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -84,7 +81,7 @@ describe("makeRiverGame with the shape configuration", () => {
     await userEvent.setup().type(input(), "Danub{Enter}");
 
     expect(screen.getByText(`We don't recognise "Danub" as a river. Check the spelling.`)).toBeInTheDocument();
-    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "5 lives left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -93,7 +90,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Thames{Enter}");
 
-    expect(screen.getByText("Not Thames.")).toBeInTheDocument();
+    expect(screen.getByText("Thames")).toBeInTheDocument();
   });
 
   it("counts a misspelling as wrong when the river list fails to load", async () => {
@@ -101,7 +98,7 @@ describe("makeRiverGame with the shape configuration", () => {
 
     await userEvent.setup().type(input(), "Danub{Enter}");
 
-    expect(screen.getByText("Not Danub.")).toBeInTheDocument();
+    expect(screen.getByText("Danub")).toBeInTheDocument();
   });
 
   it("offers a single hint that names the continent", async () => {
@@ -116,12 +113,10 @@ describe("makeRiverGame with the shape configuration", () => {
 
   it("hides the relief map until the round ends", async () => {
     await renderRiver();
-    expect(screen.getByText(CAPTION)).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "false");
 
     await userEvent.setup().type(input(), "Danube{Enter}");
 
-    expect(screen.queryByText(CAPTION)).not.toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "true");
   });
 });

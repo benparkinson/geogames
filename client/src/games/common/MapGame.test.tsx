@@ -23,7 +23,7 @@ function renderGame(overrides: Partial<React.ComponentProps<typeof MapGame<objec
     answers: ANSWERS,
     round: makeRoundProps(),
     prompt: "Name them",
-    mapKey: "The map key.",
+
     inputPlaceholder: "Country…",
     answerNoun: "country",
     hints: { description: "A clue" },
@@ -56,23 +56,20 @@ describe("MapGame fresh round", () => {
     expect(map()).toHaveAttribute("data-gave-up", "false");
   });
 
-  it("shows the round name, the question and the map key in that order, before the answer slots", () => {
+  it("shows the round name, and the question in that order, before the answer slots", () => {
     renderGame();
 
     const name = screen.getByText("Test Game");
     const question = screen.getByRole("heading", { level: 1, name: "Name them" });
-    const key = screen.getByText("The map key.");
     const slots = screen.getByRole("group", { name: /Answers:/ });
     expect(name.compareDocumentPosition(question) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(question.compareDocumentPosition(key) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(key.compareDocumentPosition(slots) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(question.compareDocumentPosition(slots) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("puts nothing on the map but the map", () => {
     renderGame();
 
     expect(map().parentElement?.children).toHaveLength(1);
-    expect(screen.queryByText("The map key.", { selector: ".game-map *" })).not.toBeInTheDocument();
   });
 
   it("can blank the map by itself", () => {
@@ -88,7 +85,7 @@ describe("MapGame guessing", () => {
 
     await guess(userEvent.setup(), "Italy");
 
-    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
+    expect(screen.getByText("Italy")).toBeInTheDocument();
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -149,7 +146,6 @@ describe("MapGame guessing", () => {
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.getByText("Name them")).toBeInTheDocument();
     expect(screen.getByText("Test Game")).toBeInTheDocument();
-    expect(screen.queryByText("The map key.")).not.toBeInTheDocument();
   });
 
   it("reports only the guesses that count against the limit as wrong guesses", async () => {
@@ -403,17 +399,17 @@ describe("MapGame hints", () => {
 describe("MapGame panel", () => {
   const saved = (text: string) => ({ text, correct: false });
 
-  it("shows the guesses left before any guess", () => {
+  it("shows the lives left before any guess", () => {
     renderGame();
 
-    expect(screen.getByRole("status", { name: "5 guesses left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "5 lives left" })).toBeInTheDocument();
   });
 
-  it("shows the guesses left and the value together in the status row, not in the button row", () => {
+  it("shows the lives left and the value together in the status row, not in the button row", () => {
     renderGame({ round: makeRoundProps({ guesses: [saved("Italy"), saved("Peru")] }) });
 
     const row = document.querySelector(".round-status") as HTMLElement;
-    expect(row).toContainElement(screen.getByRole("status", { name: "3 guesses left" }));
+    expect(row).toContainElement(screen.getByRole("status", { name: "3 lives left" }));
     expect(row).toHaveTextContent(/Worth \d+ pts/);
     const reveal = screen.getByRole("button", { name: /Reveal answer/ });
     expect(reveal.parentElement).not.toHaveTextContent("Worth");
@@ -424,8 +420,8 @@ describe("MapGame panel", () => {
 
     await guess(userEvent.setup(), "Italy");
 
-    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
-    expect(screen.getByText("Last guess!")).toBeInTheDocument();
+    expect(screen.getByText("Italy")).toBeInTheDocument();
+    expect(screen.getByText("Last life!")).toBeInTheDocument();
   });
 
   it("shows no wrong guesses heading when there are none", () => {
@@ -477,7 +473,7 @@ describe("MapGame guess limit", () => {
 
     await guess(user, "Spain");
     await guess(user, "Italy");
-    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "1 life left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
     await guess(user, "Peru");
 
@@ -498,7 +494,7 @@ describe("MapGame guess limit", () => {
     await guess(user, "Italy");
     await guess(user, "Spain");
 
-    expect(screen.getByRole("status", { name: "1 guess left" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "1 life left" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -514,13 +510,12 @@ describe("MapGame guess limit", () => {
 describe("MapGame clues", () => {
   const clueFor = vi.fn(() => ({ km: 1236, bearing: 45 }));
 
-  it("shows the clue in the feedback and on the chip, and hides it when Hard mode is switched on in the panel", async () => {
+  it("shows the clue on the chip, and hides it when Hard mode is switched on in the panel", async () => {
     const user = userEvent.setup();
     renderGame({ clueFor });
 
     await guess(user, "Italy");
 
-    expect(screen.getByText(/^Not Italy · nearest 1,240 km north-east/)).toBeInTheDocument();
     expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "On" }));
@@ -546,7 +541,7 @@ describe("MapGame clues", () => {
     await guess(user, "Italy");
 
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
-    expect(screen.getByText("Not Italy.")).toBeInTheDocument();
+    expect(screen.getByText("Italy")).toBeInTheDocument();
   });
 
   it("puts the Hard mode switch after the wrong guesses", async () => {
@@ -624,7 +619,7 @@ describe("MapGame resuming a solved round", () => {
       answers: ANSWERS,
       round,
       prompt: "Name them",
-      mapKey: "The map key.",
+
       inputPlaceholder: "Country…",
       answerNoun: "country",
       hints: { description: "A clue" },
@@ -656,7 +651,7 @@ describe("MapGame resuming an unfinished round", () => {
       answers: ANSWERS,
       round,
       prompt: "Name them",
-      mapKey: "The map key.",
+
       inputPlaceholder: "Country�",
       answerNoun: "country",
       hints: { description: "A clue" },
@@ -670,7 +665,7 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getAllByText(/480 km/).length).toBeGreaterThan(0);
   });
 
-  it("shows the saved guesses and the guesses left", () => {
+  it("shows the saved guesses and the lives left", () => {
     renderGame({
       round: makeRoundProps({ guesses: [saved("Italy"), saved("France", true)] }),
     });
@@ -678,7 +673,7 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText(/4 guesses left/)).toBeInTheDocument();
+    expect(screen.getByText(/4 of 5 lives left/)).toBeInTheDocument();
   });
 
   it("rejects a repeat of a saved guess as a duplicate and saves nothing", async () => {

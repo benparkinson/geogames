@@ -13,7 +13,7 @@ export default function WrongGuessList({
 }): React.JSX.Element {
   return (
     <div>
-      <div className="gg-text-muted wrong-guesses-label">Wrong guesses</div>
+      <div className="gg-visually-hidden">Wrong guesses</div>
       <div className="d-flex flex-wrap gap-1">
         {guesses.map((a, i) => (
           <Chip key={i} tone="neutral" className="guess-chip">

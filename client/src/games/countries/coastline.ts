@@ -16,7 +16,6 @@ export default defineGame({
   Component: makeCountryGame<CountryShapeRound>({
     MapComponent: CoastlineMapWrapper,
     prompt: "Which country has this coastline?",
-    mapKey: "The solid lines are its coast. Its land borders aren't drawn at first.",
     hints: (round) =>
       hintsFrom(
         "Shows how many countries its mainland borders, then its land borders, then its first letter",

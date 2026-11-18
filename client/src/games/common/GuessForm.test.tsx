@@ -9,8 +9,6 @@ function renderForm(overrides: Partial<React.ComponentProps<typeof GuessForm>> =
     submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "over" })),
     inputPlaceholder: "Country…",
     answerNoun: "country",
-    answerCount: 1,
-    showClues: true,
     ...overrides,
   };
   const view = render(<GuessForm {...props} />);
@@ -47,51 +45,11 @@ describe("GuessForm feedback", () => {
     expect(input()).toHaveValue("Spaan");
   });
 
-  it("says when a guess is wrong and clears the text", async () => {
+  it("clears the text after a wrong guess and leaves the saying to the wrong-guess list", async () => {
     await submitting({ kind: "wrong", guess: "Spain", guessesLeft: 2 });
 
-    expect(screen.getByText("Not Spain.")).toBeInTheDocument();
+    expect(screen.queryByText(/Spain/)).not.toBeInTheDocument();
     expect(input()).toHaveValue("");
-  });
-
-  it("adds the distance and direction to a wrong guess, for one answer", async () => {
-    await submitting({ kind: "wrong", guess: "France", guessesLeft: 4, clue: { km: 1236, bearing: 45 } });
-
-    expect(screen.getByText("Not France · 1,240 km north-east")).toBeInTheDocument();
-  });
-
-  it("says the nearest country you still need when there are several answers", async () => {
-    const user = userEvent.setup();
-    renderForm({
-      answerCount: 2,
-      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({
-        kind: "wrong",
-        guess: "France",
-        guessesLeft: 1,
-        clue: { km: 480, bearing: 10 },
-      })),
-    });
-    await user.type(input(), "France");
-    await user.click(screen.getByRole("button", { name: "Guess" }));
-
-    expect(screen.getByText("Not France · nearest 480 km north")).toBeInTheDocument();
-  });
-
-  it("leaves out the clue when clues are off", async () => {
-    const user = userEvent.setup();
-    renderForm({
-      showClues: false,
-      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({
-        kind: "wrong",
-        guess: "France",
-        guessesLeft: 4,
-        clue: { km: 1236, bearing: 45 },
-      })),
-    });
-    await user.type(input(), "France");
-    await user.click(screen.getByRole("button", { name: "Guess" }));
-
-    expect(screen.getByText("Not France.")).toBeInTheDocument();
   });
 
   it("clears the text when the guesses have run out, and leaves the saying to RoundResult", async () => {

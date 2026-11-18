@@ -66,6 +66,10 @@ code {
   background: var(--gg-color-map-blank);
 }
 .round-brief {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 .round-brief-title {
@@ -78,10 +82,6 @@ code {
   font-weight: 600;
   line-height: 1.3;
 }
-.round-brief-key {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
-}
 
 @media (min-width: 992px) {
   .game-screen {
@@ -93,6 +93,17 @@ code {
     max-height: none;
     border-radius: 0;
     box-shadow: var(--gg-shadow-panel-side);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .top-bar--wrap {
+    flex-wrap: wrap;
+  }
+  .top-bar--wrap .top-bar__rounds {
+    order: 3;
+    flex: 0 0 100%;
+    justify-content: center;
   }
 }
 
@@ -309,9 +320,6 @@ code {
   line-height: 1;
   padding: 0.25rem 0.4rem;
   background: var(--gg-color-surface);
-}
-.wrong-guesses-label {
-  font-size: 0.7rem;
 }
 .round-hints {
   list-style: none;

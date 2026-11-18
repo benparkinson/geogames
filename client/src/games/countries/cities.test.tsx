@@ -29,11 +29,10 @@ describe("Country Cities", () => {
     expect(cities.answerNames(makeCountryCitiesRoundData())).toEqual(["Netherlands"]);
   });
 
-  it("shows the prompt and the map key", () => {
+  it("shows the prompt", () => {
     renderGame();
 
     expect(screen.getByText("Which country has these cities?")).toBeInTheDocument();
-    expect(screen.getByText("Each dot is one of its cities. Bigger dots have more people.")).toBeInTheDocument();
   });
 
   it("offers three hints: the capital and the coastline on the map, then the first letter", async () => {

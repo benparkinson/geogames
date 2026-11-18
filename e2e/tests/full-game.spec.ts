@@ -61,7 +61,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     }
     await guess(page, name);
     if (i < 4) {
-      await expect(page.getByRole("status", { name: i === 3 ? "1 guess left" : `${4 - i} guesses left` })).toBeVisible();
+      await expect(page.getByRole("status", { name: i === 3 ? "1 life left" : `${4 - i} lives left` })).toBeVisible();
     }
   }
   expect((await thirdPosted!).postDataJSON()).toEqual({
