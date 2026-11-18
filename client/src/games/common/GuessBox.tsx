@@ -56,7 +56,7 @@ interface GuessBoxProps {
   value: string;
   name: string;
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
-  disabled: boolean;
+  disabled?: boolean;
   className?: string;
   autoFocus?: boolean;
   suggestions?: string[];

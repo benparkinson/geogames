@@ -1,28 +1,21 @@
-import { useEffect, useEffectEvent, useRef, useState } from "react";
-import MapGameInput from "./MapGameInput";
-import { Round, RoundAnswer, UNANSWERED } from "./Model";
 import { Lightbulb } from "react-bootstrap-icons";
+import HardModeToggle from "../../components/HardModeToggle";
+import { MapProps } from "../../map/MapProps";
+import { useHardMode } from "../../settings/hardMode";
+import { AnswerCandidate } from "./answers";
+import AnswerSlots from "./AnswerSlots";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
-import AnswerSlots from "./AnswerSlots";
-import { MapProps } from "../../map/MapProps";
-import { AnswerCandidate } from "./answers";
+import GuessForm from "./GuessForm";
+import { foundAnswers, GuessClue, guessesLeft, wrongGuesses } from "./guessReducer";
 import type { HintConfig } from "./hints";
-import HardModeToggle from "../../components/HardModeToggle";
-import { useHardMode } from "../../settings/hardMode";
-import {
-  GuessAction,
-  GuessClue,
-  GuessConfig,
-  guessesLeft,
-  guessReducer,
-  GuessState,
-  foundAnswers,
-  restoreGuessState,
-  withLateClues,
-  wrongGuessCount,
-  wrongGuesses,
-} from "./guessReducer";
+import { CORRECT_ANSWER, Round, RoundAnswer } from "./Model";
+import RoundActions from "./RoundActions";
+import RoundResult from "./RoundResult";
+import RoundStatus from "./RoundStatus";
+import { roundPoints } from "./scoring";
+import { useRoundGuesses } from "./useRoundGuesses";
+import WrongGuessList from "./WrongGuessList";
 
 function MapGame<Type>({
   data,
@@ -42,98 +35,21 @@ function MapGame<Type>({
   submitAnswer,
 }: MapGameProps<Type>): React.JSX.Element {
   const [hardMode] = useHardMode();
-  const hintCount = round.hintCount;
-  const hintConfig = hintCount > 0 ? hints : undefined;
-  const config: GuessConfig = {
+  const { state, submitGuess, giveUp, takeHint } = useRoundGuesses({
+    round,
     answers,
     answerCount,
     isKnownGuess,
-    hintsTotal: hintConfig ? hintCount : 0,
-    guessLimit: round.guessLimit,
     clueFor,
-  };
-  // Rebuilt from the guesses and hints the server saved, so a refresh keeps them.
-  const [restored] = useState(() =>
-    restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config),
-  );
-  const [savedGuessState, setGuessState] = useState<GuessState>(restored.state);
-  // The country list that the clues come from may load after the round was restored. Clues are computed, never
-  // saved, so once it has loaded, work out the ones the restored guesses missed (a refresh must show them too).
-  const guessState = clueFor
-    ? withLateClues(
-        savedGuessState,
-        () =>
-          restoreGuessState(round.answerState, round.hintsUsed, round.guesses, round.hintsTakenAt, config).state
-            .guesses,
-      )
-    : savedGuessState;
-  const { guesses, gaveUp, outOfGuesses, over: gameOver, hintsUsed } = guessState;
-
-  // The guesses ended the round but the answer request after the last guess was lost: send it again, once.
-  const resubmitted = useRef(false);
-  const resubmit = useEffectEvent(() => {
-    if (restored.finished && round.answerState === UNANSWERED && !resubmitted.current) {
-      resubmitted.current = true;
-      submitAnswer({
-        answerState: restored.finished,
-        hintsUsed: restored.state.hintsUsed,
-        wrongGuesses: wrongGuessCount(restored.state),
-      });
-    }
+    submitAnswer,
   });
-  // Once, for the state the round was opened with.
-  useEffect(() => {
-    resubmit();
-  }, []);
-
-  useEffect(() => {
-    if (hintCount > 0 && !hints && process.env.NODE_ENV === "development") {
-      console.error(`This game type has ${hintCount} hints but its component supplies no hints.`);
-    }
-  }, [hintCount, hints]);
+  const { gaveUp, outOfGuesses, over: gameOver, hintsUsed } = state;
+  const wrong = wrongGuesses(state);
 
   // Derived, so a reopened round shows the hints that were used.
-  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hintConfig?.text?.(i)).filter(
+  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i)).filter(
     (text): text is string => !!text,
   );
-
-  function dispatch(action: GuessAction) {
-    const outcome = guessReducer(guessState, action, config);
-    setGuessState(outcome.state);
-    // Saved before the answer: the two share a mutation scope, which runs them in the order they were started.
-    if (outcome.state.guesses.length > guessState.guesses.length) {
-      const last = outcome.state.guesses[outcome.state.guesses.length - 1];
-      round.recordGuess({ text: last.text, correct: last.answer !== null });
-    }
-    if (outcome.finished) {
-      submitAnswer({
-        answerState: outcome.finished,
-        hintsUsed: outcome.state.hintsUsed,
-        wrongGuesses: wrongGuessCount(outcome.state),
-      });
-    }
-    return outcome;
-  }
-
-  function submitGuess(guess: string) {
-    return dispatch({ type: "guess", text: guess }).result ?? { kind: "over" as const };
-  }
-
-  function giveUp() {
-    dispatch({ type: "giveUp" });
-  }
-
-  function takeHint() {
-    if (gameOver || !hintConfig || hintsUsed >= hintCount) {
-      return;
-    }
-    // The state before the hint: the index of the hint just taken and the guesses made so far.
-    round.recordHint({ hint: hintsUsed, guessesBefore: guesses.length });
-    dispatch({ type: "hint" });
-  }
-
-  const showBlankMap = !!blankMap && !gameOver;
-  const showCaption = !!mapCaption && !gameOver;
 
   const map = (
     <>
@@ -142,9 +58,9 @@ function MapGame<Type>({
         gameOver={gameOver}
         gaveUp={gaveUp}
         hintsUsed={hintsUsed}
-        foundAtHint={guessState.foundAtHint}
+        foundAtHint={state.foundAtHint}
       />
-      {showCaption && <div className="map-caption">{mapCaption}</div>}
+      {mapCaption && !gameOver && <div className="map-caption">{mapCaption}</div>}
     </>
   );
 
@@ -162,29 +78,45 @@ function MapGame<Type>({
       )}
       <AnswerSlots
         answerCount={answerCount}
-        found={foundAnswers(guessState)}
+        found={foundAnswers(state)}
         gaveUp={gaveUp}
         allAnswers={answers.map((a) => a.name)}
       />
-      <MapGameInput
-        gameOver={gameOver}
-        gaveUp={gaveUp}
-        outOfGuesses={outOfGuesses}
-        guessesLeft={guessesLeft(guessState, round.guessLimit)}
-        round={round}
-        wrongGuesses={wrongGuesses(guessState)}
-        submitGuess={submitGuess}
-        onHint={takeHint}
-        hintsUsed={hintsUsed}
-        hintCount={hintConfig ? hintCount : 0}
-        hints={hintConfig}
-        giveUp={giveUp}
-        inputPlaceholder={inputPlaceholder}
-        answerNoun={answerNoun}
-        answerCount={answerCount}
-        showClues={!hardMode}
-        suggestions={suggestions}
-      />
+      <div>
+        {gameOver ? (
+          <RoundResult
+            gaveUp={gaveUp}
+            outOfGuesses={outOfGuesses}
+            round={round}
+            hintsUsed={hintsUsed}
+            hintCount={round.hintCount}
+          />
+        ) : (
+          <>
+            <RoundStatus
+              guessesLeft={guessesLeft(state, round.guessLimit)}
+              guessLimit={round.guessLimit}
+              points={roundPoints(CORRECT_ANSWER, hintsUsed, round.hintCount)}
+            />
+            <GuessForm
+              submitGuess={submitGuess}
+              inputPlaceholder={inputPlaceholder}
+              answerNoun={answerNoun}
+              answerCount={answerCount}
+              showClues={!hardMode}
+              suggestions={suggestions}
+            />
+            <RoundActions
+              hints={hints}
+              hintCount={round.hintCount}
+              hintsUsed={hintsUsed}
+              onHint={takeHint}
+              onGiveUp={giveUp}
+            />
+          </>
+        )}
+        {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!hardMode} />}
+      </div>
       {clueFor && !gameOver && (
         <div className="round-settings">
           <HardModeToggle compact />
@@ -206,7 +138,7 @@ function MapGame<Type>({
       }
       map={map}
       panel={panel}
-      mapClassName={showBlankMap ? "game-map--blank" : undefined}
+      mapClassName={blankMap && !gameOver ? "game-map--blank" : undefined}
     />
   );
 }
@@ -228,7 +160,8 @@ export interface MapGameProps<Type> {
   mapCaption?: string;
   suggestions?: string[];
   isKnownGuess?: (guess: string) => boolean;
-  hints?: HintConfig;
+  /** What the round's hints say. The round's `hintCount` (from the backend) says how many there are. */
+  hints: HintConfig;
   /**
    * Gives a wrong guess a clue (distance and direction to the nearest answer not found yet). Leave it
    * out for a game whose map already shows where the answer is. Hard mode hides the clues.
