@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.loaders.lakes;
 
 import com.parkinson.benjamin.geogames.loaders.features.DouglasPeucker;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -132,16 +133,12 @@ public final class LakeGeometry {
       for (List<double[]> ring : polygon) {
         List<double[]> rounded = new ArrayList<>();
         for (double[] p : ring) {
-          rounded.add(new double[] {round4(p[0]), round4(p[1])});
+          rounded.add(new double[] {GeoPoints.round4(p[0]), GeoPoints.round4(p[1])});
         }
         rings.add(rounded);
       }
       result.add(rings);
     }
     return result;
-  }
-
-  private static double round4(double v) {
-    return Math.round(v * 10_000d) / 10_000d;
   }
 }

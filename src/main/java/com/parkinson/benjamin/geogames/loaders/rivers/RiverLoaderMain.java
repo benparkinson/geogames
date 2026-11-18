@@ -8,7 +8,6 @@ import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
 import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthReader;
 import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ import tools.jackson.core.type.TypeReference;
  * <p>Picks the most famous rivers of each continent, up to {@link #RIVER_QUOTAS}.
  *
  * <p>Also works out each river's source, mouth and countries (see {@link RiverEnds} and {@link
- * CountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
- * writing.
+ * CountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in
+ * outDir before writing.
  */
 public class RiverLoaderMain {
 
@@ -84,8 +83,9 @@ public class RiverLoaderMain {
       throws IOException {
     Map<String, NaturalEarthFeature> groups =
         new NaturalEarthReader().read(naturalEarth, Set.of("Canal"));
-    Map<String, WikidataEntry> wikidata = readJson(wikidataFile, new TypeReference<>() {});
-    Map<String, RiverOverride> overrides = readJson(overridesFile, new TypeReference<>() {});
+    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
+    Map<String, RiverOverride> overrides =
+        GeoJson.readValue(overridesFile, new TypeReference<>() {});
 
     RiverAssembler.Assembly assembly = new RiverAssembler().assemble(groups, wikidata, overrides);
     FeatureSelector.Selection<RiverCandidate> selection =
@@ -188,12 +188,6 @@ public class RiverLoaderMain {
           RiverGeometry.pointCount(c.lines()),
           c.aliases(),
           c.fromOverride() ? " [override]" : "");
-    }
-  }
-
-  private static <T> T readJson(Path file, TypeReference<T> type) throws IOException {
-    try (InputStream in = Files.newInputStream(file)) {
-      return GeoJson.lenientReader().readValue(in, type);
     }
   }
 }

@@ -13,10 +13,10 @@ import java.util.TreeSet;
  * Cuts a river's line into the stretches that lie in each country.
  *
  * <p>Natural Earth's rivers and the country borders are drawn separately, so a river that follows a
- * border falls on one side of it or the other. A segment therefore belongs to every country that its
- * midpoint, or any of four points {@link #NUDGE_DEGREES} north, south, east and west of the midpoint,
- * is in. A river along a border so goes to both countries, which is what the game wants, and one that
- * only grazes a corner doesn't.
+ * border falls on one side of it or the other. A segment therefore belongs to every country that
+ * its midpoint, or any of four points {@link #NUDGE_DEGREES} north, south, east and west of the
+ * midpoint, is in. A river along a border so goes to both countries, which is what the game wants,
+ * and one that only grazes a corner doesn't.
  */
 public class RiverClipper {
 

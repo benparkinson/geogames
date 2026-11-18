@@ -15,8 +15,8 @@ public interface GameRepository extends CrudRepository<GameEntity, Long> {
 
   /**
    * Deletes games created before the cutoff in one statement. The rounds go with them through the
-   * foreign key's {@code on delete cascade}, not through JPA, so no game is loaded. Deleting nothing
-   * is not an error, so several instances can run this at the same time.
+   * foreign key's {@code on delete cascade}, not through JPA, so no game is loaded. Deleting
+   * nothing is not an error, so several instances can run this at the same time.
    *
    * <p>Opens its own transaction when there is none, so a caller outside a transaction (the
    * scheduled cleanup) works.

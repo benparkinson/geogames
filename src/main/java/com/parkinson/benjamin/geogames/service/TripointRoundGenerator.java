@@ -16,12 +16,12 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TripointFinderService implements RoundGenerator {
+public class TripointRoundGenerator implements RoundGenerator {
 
   private final TripointLoaderService tripointLoaderService;
   private final CountryShapeService countryShapeService;
 
-  public TripointFinderService(
+  public TripointRoundGenerator(
       TripointLoaderService tripointLoaderService, CountryShapeService countryShapeService) {
     this.tripointLoaderService = tripointLoaderService;
     this.countryShapeService = countryShapeService;
@@ -35,8 +35,7 @@ public class TripointFinderService implements RoundGenerator {
   @Override
   public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     // Seven country triples have two tripoints: pick distinct subjects, not distinct definitions,
-    // so
-    // a game never asks for the same three countries twice.
+    // so a game never asks for the same three countries twice.
     Map<String, List<TripointDefinition>> bySubject = new LinkedHashMap<>();
     for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
       String subject = Tripoint.subjectId(definition.countryNames());

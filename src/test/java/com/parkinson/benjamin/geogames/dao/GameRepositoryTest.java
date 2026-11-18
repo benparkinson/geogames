@@ -153,7 +153,7 @@ class GameRepositoryTest {
         .createNativeQuery("update game_round_entity set version = version + 1 where id = ?1")
         .setParameter(1, round.getId())
         .executeUpdate();
-    round.setAnswerState(AnswerState.GAVE_UP);
+    round.recordAnswer(AnswerState.GAVE_UP, round.getHintsUsed(), round.getWrongGuesses());
 
     assertThatThrownBy(() -> entityManager.flush())
         .isInstanceOfAny(
@@ -164,7 +164,12 @@ class GameRepositoryTest {
   @Test
   void answerStatesAreStoredByNameNotByNumber() {
     GameEntity game = repository.save(gameWithRounds("tripoint:x"));
-    game.getRounds().get(1).setAnswerState(AnswerState.OUT_OF_GUESSES);
+    game.getRounds()
+        .get(1)
+        .recordAnswer(
+            AnswerState.OUT_OF_GUESSES,
+            game.getRounds().get(1).getHintsUsed(),
+            game.getRounds().get(1).getWrongGuesses());
     entityManager.flush();
 
     Object stored =
@@ -212,8 +217,18 @@ class GameRepositoryTest {
   @Test
   void updatingARoundAnswerThroughTheParentIsPersisted() {
     GameEntity reloaded = saveAndReload(gameWithRounds("tripoint:x"));
-    sorted(reloaded).get(1).setAnswerState(AnswerState.GAVE_UP);
-    sorted(reloaded).get(2).setAnswerState(AnswerState.CORRECT);
+    sorted(reloaded)
+        .get(1)
+        .recordAnswer(
+            AnswerState.GAVE_UP,
+            sorted(reloaded).get(1).getHintsUsed(),
+            sorted(reloaded).get(1).getWrongGuesses());
+    sorted(reloaded)
+        .get(2)
+        .recordAnswer(
+            AnswerState.CORRECT,
+            sorted(reloaded).get(2).getHintsUsed(),
+            sorted(reloaded).get(2).getWrongGuesses());
 
     GameEntity again = saveAndReload(reloaded);
 

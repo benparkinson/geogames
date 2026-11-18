@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 class DailyChallengeServiceTest {
 
@@ -98,8 +99,7 @@ class DailyChallengeServiceTest {
     org.mockito.Mockito.verify(store).findOrCreate(eq(TODAY), anySupplier());
   }
 
-  @SuppressWarnings("unchecked")
   private static Supplier<List<PinnedRound>> anySupplier() {
-    return any(Supplier.class);
+    return ArgumentMatchers.<Supplier<List<PinnedRound>>>any();
   }
 }

@@ -97,14 +97,14 @@ class GameServiceTest {
         .thenAnswer(
             invocation -> {
               GameEntity game = invocation.getArgument(0);
-              game.setId(42L);
+              ReflectionTestUtils.setField(game, "id", 42L);
               return game;
             });
   }
 
   /** Real lookup over a few made-up names, so a guess resolves as it does in the app. */
   static KnownPlaceNames testNames() {
-    CountryLoaderService countries = mock(CountryLoaderService.class);
+    CountryNameService countries = mock(CountryNameService.class);
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(
@@ -136,7 +136,12 @@ class GameServiceTest {
 
   private GameService allGeneratorsService(Random random) {
     return new GameService(
-        gameRepository, List.copyOf(generators.values()), objectMapper, random, events, names);
+        gameRepository,
+        new RoundGenerators(List.copyOf(generators.values())),
+        new RoundRules(names),
+        objectMapper,
+        random,
+        events);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -145,20 +150,24 @@ class GameServiceTest {
 
   private GameService serviceWith(Random random, RoundGenerator... generators) {
     return new GameService(
-        gameRepository, List.of(generators), objectMapper, random, events, names);
+        gameRepository,
+        new RoundGenerators(List.of(generators)),
+        new RoundRules(names),
+        objectMapper,
+        random,
+        events);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.setAnswerState(state);
-    entity.setHintsUsed(hintsUsed);
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
     return entity;
   }
 
@@ -430,11 +439,11 @@ class GameServiceTest {
       when(repository.save(any(GameEntity.class))).thenAnswer(i -> i.getArgument(0));
       new GameService(
               repository,
-              List.copyOf(generators.values()),
+              new RoundGenerators(List.copyOf(generators.values())),
+              new RoundRules(names),
               objectMapper,
               new Random(7),
-              events,
-              names)
+              events)
           .createGame("RANDOM", 10);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
@@ -499,7 +508,7 @@ class GameServiceTest {
   void getGameRoundReturnsTheRequestedRound() {
     GameRoundEntity first = new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:first");
     GameRoundEntity second = new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:second");
-    second.setAnswerState(AnswerState.GAVE_UP);
+    second.recordAnswer(AnswerState.GAVE_UP, second.getHintsUsed(), second.getWrongGuesses());
     when(riverGenerator.rebuild("river:second")).thenReturn(rivers(1).get(0));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(first, second)));
 
@@ -612,17 +621,6 @@ class GameServiceTest {
   }
 
   @Test
-  void aGameWithoutAPlayIdPublishesNothing() {
-    GameEntity game = game(round(0, AnswerState.UNANSWERED));
-    ReflectionTestUtils.setField(game, "playId", null);
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
-
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
-
-    verify(events, never()).publishEvent(any(Object.class));
-  }
-
-  @Test
   void submitAnswerRefusesToChangeAnAnsweredRound() {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
@@ -729,191 +727,6 @@ class GameServiceTest {
     verify(gameRepository, never()).save(any());
   }
 
-  // ------------------------------------------------------ wrong guesses
-
-  /** Submits to a fresh TRIPOINT round (guess limit 5) and returns it. */
-  private GameRoundEntity submitToFreshRound(AnswerState state, Integer wrongGuesses) {
-    GameEntity game = game(round(0, AnswerState.UNANSWERED));
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
-    service.submitAnswer(GAME_ID, 0, state, 0, wrongGuesses);
-    return game.getRounds().get(0);
-  }
-
-  private GameRoundEntity expectRejected(AnswerState state, Integer wrongGuesses, String message) {
-    GameEntity game = game(round(0, AnswerState.UNANSWERED));
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, state, 0, wrongGuesses))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining(message);
-    GameRoundEntity stored = game.getRounds().get(0);
-    assertThat(stored.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
-    assertThat(stored.getWrongGuesses()).isNull();
-    verify(gameRepository, never()).save(any());
-    return stored;
-  }
-
-  @Test
-  void submitAnswerStoresWrongGuesses() {
-    assertThat(submitToFreshRound(AnswerState.CORRECT, 3).getWrongGuesses()).isEqualTo(3);
-  }
-
-  @Test
-  void aMissingWrongGuessesIsStoredAsUnknownNotZero() {
-    assertThat(submitToFreshRound(AnswerState.CORRECT, null).getWrongGuesses()).isNull();
-    assertThat(submitToFreshRound(AnswerState.GAVE_UP, null).getWrongGuesses()).isNull();
-    assertThat(submitToFreshRound(AnswerState.OUT_OF_GUESSES, null).getWrongGuesses()).isNull();
-  }
-
-  @Test
-  void correctAndGaveUpAcceptZeroUpToOneBelowTheLimit() {
-    assertThat(submitToFreshRound(AnswerState.CORRECT, 0).getWrongGuesses()).isZero();
-    assertThat(submitToFreshRound(AnswerState.CORRECT, 4).getWrongGuesses()).isEqualTo(4);
-    assertThat(submitToFreshRound(AnswerState.GAVE_UP, 0).getWrongGuesses()).isZero();
-    assertThat(submitToFreshRound(AnswerState.GAVE_UP, 4).getWrongGuesses()).isEqualTo(4);
-  }
-
-  @Test
-  void outOfGuessesAcceptsExactlyTheLimit() {
-    assertThat(submitToFreshRound(AnswerState.OUT_OF_GUESSES, 5).getWrongGuesses()).isEqualTo(5);
-  }
-
-  @Test
-  void negativeWrongGuessesAreRejected() {
-    expectRejected(AnswerState.CORRECT, -1, "-1");
-  }
-
-  @Test
-  void moreWrongGuessesThanTheLimitAreRejected() {
-    expectRejected(AnswerState.CORRECT, 6, "allows 5");
-    expectRejected(AnswerState.OUT_OF_GUESSES, 6, "allows 5");
-  }
-
-  @Test
-  void outOfGuessesWithFewerThanTheLimitIsRejected() {
-    expectRejected(
-        AnswerState.OUT_OF_GUESSES,
-        3,
-        "A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3");
-  }
-
-  @Test
-  void correctOrGaveUpWithTheLimitIsRejected() {
-    expectRejected(AnswerState.CORRECT, 5, "ran out of guesses");
-    expectRejected(AnswerState.GAVE_UP, 5, "ran out of guesses");
-  }
-
-  @Test
-  void sameAnswerWithSameWrongGuessesIsANoOp() {
-    GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.setWrongGuesses(2);
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(answered)));
-
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, 2).orElseThrow();
-
-    verify(gameRepository, never()).save(any());
-  }
-
-  @Test
-  void sameAnswerWithDifferentWrongGuessesIsAConflict() {
-    GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.setWrongGuesses(2);
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(answered)));
-
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, 3))
-        .isInstanceOf(RoundAlreadyAnsweredException.class)
-        .hasMessageContaining("2 wrong guesses")
-        .hasMessageContaining("3 wrong guesses");
-
-    assertThat(answered.getWrongGuesses()).isEqualTo(2);
-    verify(gameRepository, never()).save(any());
-  }
-
-  @Test
-  void unreportedWrongGuessesOnlyMatchUnreported() {
-    GameRoundEntity unreported = round(0, AnswerState.CORRECT);
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(unreported)));
-
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
-    verify(gameRepository, never()).save(any());
-
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, 0))
-        .isInstanceOf(RoundAlreadyAnsweredException.class)
-        .hasMessageContaining("unreported");
-  }
-
-  // ------------------------------------------------------ calculateGameResult
-
-  @Test
-  void roundAnswerStatesAreOrderedByIndexAndScored() {
-    GameEntity game =
-        game(
-            round(2, AnswerState.UNANSWERED),
-            round(0, AnswerState.CORRECT),
-            round(1, AnswerState.GAVE_UP));
-
-    GameResult result = GameService.calculateGameResult(game);
-
-    assertThat(result.roundAnswerStates())
-        .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP, AnswerState.UNANSWERED);
-    assertThat(result.score()).isEqualTo(100);
-    assertThat(result.roundsUnanswered()).isEqualTo(1);
-    assertThat(result.gameState()).isEqualTo(GameState.IN_PROGRESS);
-  }
-
-  @Test
-  void gameIsFinishedWhenEveryRoundIsAnswered() {
-    GameEntity game = game(round(1, AnswerState.GAVE_UP), round(0, AnswerState.CORRECT));
-
-    GameResult result = GameService.calculateGameResult(game);
-
-    assertThat(result.gameState()).isEqualTo(GameState.FINISHED);
-    assertThat(result.roundsUnanswered()).isZero();
-    assertThat(result.roundAnswerStates())
-        .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP);
-  }
-
-  @Test
-  void gameIsCreatedWhenNothingIsAnswered() {
-    GameEntity game = game(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
-
-    GameResult result = GameService.calculateGameResult(game);
-
-    assertThat(result.gameState()).isEqualTo(GameState.CREATED);
-    assertThat(result.roundsUnanswered()).isEqualTo(2);
-    assertThat(result.score()).isZero();
-  }
-
-  @Test
-  void scoreIsTheSumOfRoundPoints() {
-    GameEntity game =
-        game(
-            hintedRound(3, GameType.TRIPOINT, AnswerState.GAVE_UP, 2),
-            hintedRound(1, GameType.RIVERS_BY_COUNTRIES, AnswerState.CORRECT, 1),
-            hintedRound(0, GameType.TRIPOINT, AnswerState.CORRECT, 0),
-            hintedRound(2, GameType.TRIPOINT, AnswerState.CORRECT, 1),
-            hintedRound(4, GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED, 0));
-
-    GameResult result = GameService.calculateGameResult(game);
-
-    // perfect 100 + river with 1 of 2 hints 75 + tripoint with 1 of 3 hints 83 + revealed 0
-    assertThat(result.roundPoints()).containsExactly(100, 75, 83, 0, 0);
-    assertThat(result.roundHintsUsed()).containsExactly(0, 1, 1, 2, 0);
-    assertThat(result.score()).isEqualTo(258);
-    assertThat(result.maxScore()).isEqualTo(500);
-    assertThat(result.roundsCorrect()).isEqualTo(3);
-    assertThat(result.perfectRounds()).isEqualTo(1);
-  }
-
-  @Test
-  void revealedRoundsScoreNothing() {
-    GameEntity game = game(round(0, AnswerState.GAVE_UP), round(1, AnswerState.GAVE_UP));
-
-    GameResult result = GameService.calculateGameResult(game);
-
-    assertThat(result.score()).isZero();
-    assertThat(result.maxScore()).isEqualTo(200);
-  }
-
   @Test
   void revealedRoundScoresZeroWhateverTheHints() {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
@@ -978,11 +791,19 @@ class GameServiceTest {
         .isInstanceOf(IllegalArgumentException.class);
   }
 
+  @Test
+  void aGameCannotBeMadeWithoutAMode() {
+    assertThatThrownBy(
+            () -> new GameEntity(new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))), null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("mode");
+  }
+
   // ------------------------------------------------------------ recordGuess
 
   private GameRoundEntity guessRound(GameType type, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
-    entity.setAnswerState(state);
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
     return entity;
   }
@@ -1017,71 +838,6 @@ class GameServiceTest {
     verify(gameRepository, times(1)).save(any(GameEntity.class));
   }
 
-  @ParameterizedTest
-  @ValueSource(strings = {"Atlantis", "", "   "})
-  void anUnknownOrBlankGuessIsRejected(String guess) {
-    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, guess, false))
-        .isInstanceOf(IllegalArgumentException.class);
-    assertThat(entity.getGuesses()).isEmpty();
-  }
-
-  @Test
-  void aNullOrTooLongGuessIsRejected() {
-    guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, null, false))
-        .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "a".repeat(256), false))
-        .isInstanceOf(IllegalArgumentException.class);
-  }
-
-  @Test
-  void theLastAllowedWrongGuessIsAcceptedAndTheNextIsRejected() {
-    guessRound(GameType.LAKES_BY_SHAPE, AnswerState.UNANSWERED);
-    List<String> lakes = List.of("Garda", "Como", "Maggiore", "Lugano", "Iseo", "Orta");
-    int limit = GameType.LAKES_BY_SHAPE.guessLimit();
-    assertThat(lakes.size()).isGreaterThan(limit);
-
-    for (int i = 0; i < limit; i++) {
-      service.recordGuess(GAME_ID, 0, lakes.get(i), false);
-    }
-
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, lakes.get(limit), false))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("wrong");
-  }
-
-  @Test
-  void moreCorrectGuessesThanAnswersIsRejected() {
-    GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
-    entity.addGuess(new RoundGuess("Rhine", true));
-
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "Rhein", true))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("correct");
-  }
-
-  @Test
-  void aGuessOnAnAnsweredRoundIsAConflict() {
-    guessRound(GameType.TRIPOINT, AnswerState.CORRECT);
-
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "France", false))
-        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
-  }
-
-  @Test
-  void aRiverRoundAcceptsARiverAndRejectsACountry() {
-    GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
-
-    service.recordGuess(GAME_ID, 0, "rhein", false);
-    assertThatThrownBy(() -> service.recordGuess(GAME_ID, 0, "France", false))
-        .isInstanceOf(IllegalArgumentException.class);
-
-    assertThat(entity.getGuesses()).extracting(RoundGuess::getGuess).containsExactly("Rhein");
-  }
-
   @Test
   void anUnknownGameOrRoundIsEmpty() {
     when(gameRepository.findByPublicId(OTHER_ID)).thenReturn(Optional.empty());
@@ -1107,18 +863,6 @@ class GameServiceTest {
   // ------------------------------------------------------------- recordHint
 
   @Test
-  void hintsAreRecordedInOrderWithTheGuessCountAtTheTime() {
-    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-    service.recordGuess(GAME_ID, 0, "France", false);
-
-    service.recordHint(GAME_ID, 0, 0, 0);
-    RoundHintsResponse response = service.recordHint(GAME_ID, 0, 1, 1).orElseThrow();
-
-    assertThat(response.hintsTakenAt()).containsExactly(0, 1);
-    assertThat(entity.getHintsTakenAt()).containsExactly(0, 1);
-  }
-
-  @Test
   void aRepeatedHintChangesNothingAndTheFirstCountWins() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
     service.recordHint(GAME_ID, 0, 0, 0);
@@ -1129,42 +873,6 @@ class GameServiceTest {
     assertThat(again.hintsTakenAt()).containsExactly(0);
     assertThat(entity.getHintsTakenAt()).containsExactly(0);
     verify(gameRepository, times(2)).save(any(GameEntity.class));
-  }
-
-  @Test
-  void aSkippedHintAHintPastTheCountAndANegativeCountAreRejected() {
-    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-
-    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 1, 0))
-        .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 0, -1))
-        .isInstanceOf(IllegalArgumentException.class);
-    for (int i = 0; i < GameType.TRIPOINT.hintCount(); i++) {
-      service.recordHint(GAME_ID, 0, i, 0);
-    }
-    int past = GameType.TRIPOINT.hintCount();
-    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, past, 0))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("hints");
-    assertThat(entity.getHintsTakenAt()).hasSize(past);
-  }
-
-  @Test
-  void aGuessCountLargerThanTheStoredGuessesIsClamped() {
-    GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-    service.recordGuess(GAME_ID, 0, "France", false);
-
-    service.recordHint(GAME_ID, 0, 0, 4);
-
-    assertThat(entity.getHintsTakenAt()).containsExactly(1);
-  }
-
-  @Test
-  void aHintOnAnAnsweredRoundIsAConflict() {
-    guessRound(GameType.TRIPOINT, AnswerState.GAVE_UP);
-
-    assertThatThrownBy(() -> service.recordHint(GAME_ID, 0, 0, 0))
-        .isInstanceOf(RoundAlreadyAnsweredForGuessException.class);
   }
 
   @Test

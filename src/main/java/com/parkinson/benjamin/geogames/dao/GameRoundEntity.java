@@ -94,55 +94,34 @@ public class GameRoundEntity {
     return id;
   }
 
-  public void setId(long id) {
-    this.id = id;
-  }
-
   public int getRoundNumber() {
     return roundNumber;
-  }
-
-  public void setRoundNumber(int roundNumber) {
-    this.roundNumber = roundNumber;
   }
 
   public GameType getGameType() {
     return gameType;
   }
 
-  public void setGameType(GameType gameType) {
-    this.gameType = gameType;
-  }
-
   public String getRoundKey() {
     return roundKey;
-  }
-
-  public void setRoundKey(String roundKey) {
-    this.roundKey = roundKey;
   }
 
   public AnswerState getAnswerState() {
     return answerState;
   }
 
-  public void setAnswerState(AnswerState answerState) {
-    this.answerState = answerState;
-  }
-
   public int getHintsUsed() {
     return hintsUsed;
-  }
-
-  public void setHintsUsed(int hintsUsed) {
-    this.hintsUsed = hintsUsed;
   }
 
   public Integer getWrongGuesses() {
     return wrongGuesses;
   }
 
-  public void setWrongGuesses(Integer wrongGuesses) {
+  /** Records the answer; the caller checks the answer is allowed. */
+  public void recordAnswer(AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+    this.answerState = answerState;
+    this.hintsUsed = hintsUsed;
     this.wrongGuesses = wrongGuesses;
   }
 

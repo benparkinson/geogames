@@ -17,6 +17,6 @@ public record CountryShapeRound(
   /** Shared by all the country-shape games, so a mixed game never asks about France twice. */
   @Override
   public String subjectId() {
-    return "country:" + country.name();
+    return SubjectIds.country(country.name());
   }
 }

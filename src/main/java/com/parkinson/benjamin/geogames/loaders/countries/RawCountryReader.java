@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 /**
@@ -30,7 +31,6 @@ public class RawCountryReader {
    * @throws IllegalArgumentException if an excluded or renamed name matches no feature in the
    *     source, or the aliases are for a country that doesn't exist
    */
-  @SuppressWarnings("unchecked")
   public List<Country> readCountries(
       Path countriesGeoJson,
       Path officialNamesJson,
@@ -41,7 +41,8 @@ public class RawCountryReader {
     Map<String, String> officialNames =
         objectMapper.readValue(officialNamesJson.toFile(), Map.class);
     Map<String, List<String>> additionalNamesByCountryName =
-        objectMapper.readValue(additionalNamesJson.toFile(), Map.class);
+        objectMapper.readValue(
+            additionalNamesJson.toFile(), new TypeReference<Map<String, List<String>>>() {});
     Set<String> excludedNames =
         new LinkedHashSet<>(
             Arrays.asList(objectMapper.readValue(excludedNamesJson.toFile(), String[].class)));

@@ -31,7 +31,7 @@ import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
-import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredForGuessException;
+import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
 import java.util.List;
 import java.util.Optional;
@@ -55,9 +55,6 @@ class GameControllerTest {
   private static final UUID GAME_ID = UUID.fromString("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d");
 
   @MockitoBean private GameService gameService;
-
-  @MockitoBean
-  private com.parkinson.benjamin.geogames.service.daily.DailyChallengeService dailyService;
 
   private static RoundAnswerResponse answer() {
     return new RoundAnswerResponse(AnswerState.CORRECT, 0, 100, round().gameResult());
@@ -374,7 +371,7 @@ class GameControllerTest {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, 3))
         .thenThrow(
             new IllegalArgumentException(
-                "A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3"));
+                "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
 
     mockMvc
         .perform(
@@ -384,7 +381,9 @@ class GameControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.detail")
-                .value("A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3"));
+                .value(
+                    "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not"
+                        + " 3"));
   }
 
   @Test
@@ -487,7 +486,7 @@ class GameControllerTest {
   @Test
   void aGuessOnAnAnsweredRoundIsAConflict() throws Exception {
     when(gameService.recordGuess(GAME_ID, 0, "France", false))
-        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+        .thenThrow(new RoundClosedException(0));
 
     postGuess(GAME_ID.toString(), WRONG_FRANCE).andExpect(status().isConflict());
   }
@@ -542,8 +541,7 @@ class GameControllerTest {
 
   @Test
   void aHintOnAnAnsweredRoundIsAConflict() throws Exception {
-    when(gameService.recordHint(GAME_ID, 0, 0, 2))
-        .thenThrow(new RoundAlreadyAnsweredForGuessException(0));
+    when(gameService.recordHint(GAME_ID, 0, 0, 2)).thenThrow(new RoundClosedException(0));
 
     postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isConflict());
   }
@@ -557,46 +555,5 @@ class GameControllerTest {
     postHint(GAME_ID.toString(), FIRST_HINT).andExpect(status().isOk());
 
     verify(gameService, times(2)).recordHint(GAME_ID, 0, 0, 2);
-  }
-
-  @Test
-  void aDailyGameWithADateUsesThatDate() throws Exception {
-    java.time.LocalDate date = java.time.LocalDate.of(2026, 11, 20);
-    when(dailyService.createDailyGame(Optional.of(date)))
-        .thenReturn(new com.parkinson.benjamin.geogames.api.DailyGameResponse(GAME_ID, date, 3));
-
-    mockMvc
-        .perform(
-            post("/api/daily-games")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"date\":\"2026-11-20\"}"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(GAME_ID.toString()))
-        .andExpect(jsonPath("$.date").value("2026-11-20"))
-        .andExpect(jsonPath("$.number").value(3));
-  }
-
-  @Test
-  void aDailyGameWithNoDateUsesTheServersDate() throws Exception {
-    java.time.LocalDate date = java.time.LocalDate.of(2026, 11, 20);
-    when(dailyService.createDailyGame(Optional.empty()))
-        .thenReturn(new com.parkinson.benjamin.geogames.api.DailyGameResponse(GAME_ID, date, 3));
-
-    mockMvc
-        .perform(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}"))
-        .andExpect(status().isOk());
-    mockMvc.perform(post("/api/daily-games")).andExpect(status().isOk());
-  }
-
-  @Test
-  void aMalformedDailyDateIsABadRequest() throws Exception {
-    mockMvc
-        .perform(
-            post("/api/daily-games")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"date\":\"20/11/2026\"}"))
-        .andExpect(status().isBadRequest());
-
-    verifyNoInteractions(dailyService);
   }
 }

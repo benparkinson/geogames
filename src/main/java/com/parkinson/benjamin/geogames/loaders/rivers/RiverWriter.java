@@ -2,11 +2,11 @@ package com.parkinson.benjamin.geogames.loaders.rivers;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.CountryWriter;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.loaders.features.Slugs;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,17 +37,10 @@ public class RiverWriter {
   static River toRiver(RiverCandidate candidate, RiverFacts facts) {
     List<List<List<Double>>> coordinates = new ArrayList<>();
     for (List<double[]> line : candidate.lines()) {
-      List<List<Double>> points = new ArrayList<>();
-      for (double[] p : line) {
-        points.add(List.of(p[0], p[1]));
-      }
-      coordinates.add(points);
+      coordinates.add(GeoPoints.toPositions(line));
     }
     GeoData geoData =
-        new GeoData(
-            "Feature",
-            new GeoProperties(candidate.name()),
-            new GeoGeometry("MultiLineString", coordinates));
+        GeoData.feature(candidate.name(), new GeoGeometry("MultiLineString", coordinates));
     return new River(
         candidate.qid(),
         candidate.name(),

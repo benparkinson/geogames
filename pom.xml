@@ -276,7 +276,7 @@
                   </limits>
                 </rule>
                 <rule>
-                  <!-- Mostly unused JPA setters and one geometry accessor: not worth testing. -->
+                  <!-- Entities and geojson records, now with no unused setters: keep them above 80%. -->
                   <element>PACKAGE</element>
                   <includes>
                     <include>com.parkinson.benjamin.geogames.model.geojson</include>
@@ -286,7 +286,7 @@
                     <limit>
                       <counter>LINE</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>0.72</minimum>
+                      <minimum>0.80</minimum>
                     </limit>
                   </limits>
                 </rule>

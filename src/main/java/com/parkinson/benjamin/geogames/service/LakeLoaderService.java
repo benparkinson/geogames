@@ -26,11 +26,7 @@ public class LakeLoaderService {
   @Cacheable("lakeNames")
   public List<PlaceName> loadLakeNames() {
     return loadLakes().stream()
-        .map(
-            lake ->
-                new PlaceName(
-                    lake.name(),
-                    lake.additionalNames() == null ? List.of() : lake.additionalNames()))
+        .map(lake -> PlaceName.of(lake.name(), lake.additionalNames()))
         .sorted(Comparator.comparing(PlaceName::name))
         .toList();
   }

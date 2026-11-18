@@ -60,7 +60,6 @@ final class JsonShape {
     return node.isNumber() ? "number" : "string";
   }
 
-  @SuppressWarnings("unchecked")
   static Object merge(Object a, Object b) {
     if (a.equals(b) || b.equals(EMPTY) || b.equals(NULL)) {
       return a;
@@ -69,9 +68,9 @@ final class JsonShape {
       return b;
     }
     if (a instanceof Map<?, ?> left && b instanceof Map<?, ?> right) {
-      Map<String, Object> union = new TreeMap<>((Map<String, Object>) left);
-      ((Map<String, Object>) right)
-          .forEach((key, value) -> union.merge(key, value, JsonShape::merge));
+      Map<String, Object> union = new TreeMap<>();
+      left.forEach((key, value) -> union.put((String) key, value));
+      right.forEach((key, value) -> union.merge((String) key, value, JsonShape::merge));
       return union;
     }
     if (a instanceof String left && b instanceof String right) {

@@ -1,8 +1,8 @@
 package com.parkinson.benjamin.geogames.model;
 
 /**
- * How rounds are scored. The client has the same formula in {@code games/common/scoring.ts}; the two
- * share a test table and must agree.
+ * How rounds are scored. The client has the same formula in {@code games/common/scoring.ts}; the
+ * two share a test table and must agree.
  */
 public final class Scoring {
 

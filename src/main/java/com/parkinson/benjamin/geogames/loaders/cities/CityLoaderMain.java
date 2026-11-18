@@ -5,6 +5,8 @@ import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
+import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
 import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
@@ -35,8 +37,6 @@ public class CityLoaderMain {
 
   /** A coastal city can fall just outside its polygon: look this far (about 3 km) around it. */
   static final double NUDGE_DEGREES = 0.03;
-
-  private static final int DECIMALS = 10_000;
 
   /**
    * What a run produced, for the summary.
@@ -103,8 +103,8 @@ public class CityLoaderMain {
               new Place(
                   new City(
                       name,
-                      round(point[0]),
-                      round(point[1]),
+                      GeoPoints.round4(point[0]),
+                      GeoPoints.round4(point[1]),
                       Math.max(0, props.path("pop_max").asInt(0)),
                       false),
                   capitalKind(props)));
@@ -128,7 +128,9 @@ public class CityLoaderMain {
   /** What Natural Earth says about whether a place is a capital. */
   enum CapitalKind {
     NONE,
-    /** The capital of a region of the country (Nuuk in Greenland; Cardiff in the United Kingdom). */
+    /**
+     * The capital of a region of the country (Nuuk in Greenland; Cardiff in the United Kingdom).
+     */
     REGION,
     NATIONAL
   }
@@ -173,8 +175,9 @@ public class CityLoaderMain {
   /**
    * Countries where Natural Earth flags the wrong cities, with the cities that really are capitals.
    * Benin's official capital is Porto-Novo (Cotonou is the seat of government in practice) and
-   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from Yangon to Naypyidaw in 2006; Côte d'Ivoire's official capital is
-   * Yamoussoukro (Abidjan is the economic centre); South Africa has three capitals (Pretoria
+   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from
+   * Yangon to Naypyidaw in 2006; Côte d'Ivoire's official capital is Yamoussoukro (Abidjan is the
+   * economic centre); South Africa has three capitals (Pretoria
    * executive, Cape Town legislative, Bloemfontein judicial) and Johannesburg is none of them.
    * Kazakhstan's capital was renamed Astana in 2022.
    */
@@ -221,7 +224,7 @@ public class CityLoaderMain {
     Map<String, String> byName = new HashMap<>();
     // Antarctica has no shape, so the games can't use it; its research stations are dropped.
     List<Country> countries =
-        allCountries.stream().filter(c -> !"Antarctica".equals(c.name())).toList();
+        allCountries.stream().filter(c -> !Geo.ANTARCTICA.equals(c.name())).toList();
     for (Country country : countries) {
       for (String alias :
           country.additionalNames() == null ? List.<String>of() : country.additionalNames()) {
@@ -246,10 +249,6 @@ public class CityLoaderMain {
       }
     }
     return kept;
-  }
-
-  private static double round(double v) {
-    return Math.round(v * DECIMALS) / (double) DECIMALS;
   }
 
   private static void printSummary(Report report) {

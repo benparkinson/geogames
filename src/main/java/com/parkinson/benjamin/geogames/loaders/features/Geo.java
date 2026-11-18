@@ -7,6 +7,9 @@ public final class Geo {
 
   public static final double EARTH_RADIUS_KM = 6371.0088;
 
+  /** The one country with no shape: the games and the loaders skip it. */
+  public static final String ANTARCTICA = "Antarctica";
+
   private Geo() {}
 
   public static double haversineKm(double[] a, double[] b) {
@@ -25,8 +28,8 @@ public final class Geo {
    * It is the absolute value, so the winding doesn't matter, and the ring may be open or closed. An
    * edge across the antimeridian counts the short way round.
    *
-   * <p>Per edge, with longitudes λ and latitudes φ in radians: (λ₂ − λ₁) · (2 + sin φ₁ + sin φ₂),
-   * summed, times R² / 2.
+   * <p>Per edge, with longitudes λ and latitudes φ in radians:
+   * (λ₂ − λ₁) · (2 + sin φ₁ + sin φ₂), summed, times R² / 2.
    */
   public static double ringAreaKm2(List<double[]> ring) {
     double sum = 0;

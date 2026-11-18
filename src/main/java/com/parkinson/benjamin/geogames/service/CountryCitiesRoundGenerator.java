@@ -1,67 +1,55 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
-import com.parkinson.benjamin.geogames.helper.RandomPicker;
 import com.parkinson.benjamin.geogames.model.CountryCities;
 import com.parkinson.benjamin.geogames.model.CountryCitiesRound;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.SubjectIds;
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /** Makes the rounds of Country Cities: a country's cities as dots. */
 @Service
-public class CountryCitiesRoundGenerator implements RoundGenerator {
-
-  private static final String PREFIX = "country:";
+public class CountryCitiesRoundGenerator extends SubjectRoundGenerator<CountryCities> {
 
   private final CityService cities;
   private final CountryShapeService shapes;
 
   public CountryCitiesRoundGenerator(CityService cities, CountryShapeService shapes) {
+    super(GameType.COUNTRIES_BY_CITIES, SubjectIds.COUNTRY, "countries");
     this.cities = cities;
     this.shapes = shapes;
   }
 
   @Override
-  public GameType gameType() {
-    return GameType.COUNTRIES_BY_CITIES;
+  List<CountryCities> candidates() {
+    Set<String> withShape =
+        shapes.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
+    return cities.loadAll().stream()
+        .filter(CountryCitiesEligibility.countryCities())
+        .filter(c -> withShape.contains(c.country()))
+        .toList();
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
-    Set<String> withShape =
-        shapes.loadShapes().stream().map(CountryShape::name).collect(Collectors.toSet());
-    List<CountryCities> candidates =
-        cities.loadAll().stream()
-            .filter(CountryCitiesEligibility.countryCities())
-            .filter(c -> withShape.contains(c.country()))
-            .filter(c -> !excludedSubjects.contains(PREFIX + c.country()))
-            .toList();
-    return RandomPicker.pickDistinct(candidates, count, random, "countries").stream()
-        .<GameData>map(this::toRound)
-        .toList();
+  String id(CountryCities found) {
+    return found.country();
   }
 
   /** Doesn't check eligibility: the round was eligible when the game was created. */
   @Override
-  public GameData rebuild(String roundKey) {
-    if (!roundKey.startsWith(PREFIX)) {
-      throw new RoundDataMissingException(gameType(), roundKey);
-    }
-    String name = roundKey.substring(PREFIX.length());
-    CountryCities found = cities.find(name);
-    if (found == null || shapes.loadShapes().stream().noneMatch(s -> s.name().equals(name))) {
-      throw new RoundDataMissingException(gameType(), roundKey);
-    }
-    return toRound(found);
+  Optional<CountryCities> find(String name) {
+    return Optional.ofNullable(cities.find(name))
+        .filter(found -> shapes.findShape(name).isPresent());
   }
 
-  private CountryCitiesRound toRound(CountryCities found) {
+  @Override
+  GameData toRound(CountryCities found) {
     return new CountryCitiesRound(gameType(), shapes.loadShape(found.country()), found.cities());
   }
 }

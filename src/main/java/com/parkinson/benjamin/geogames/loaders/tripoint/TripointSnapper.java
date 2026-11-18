@@ -1,6 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.tripoint;
 
-import com.parkinson.benjamin.geogames.helper.TripointHelper;
+import com.parkinson.benjamin.geogames.loaders.features.TripointHelper;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import java.util.Comparator;

@@ -1,6 +1,6 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
-import static com.parkinson.benjamin.geogames.helper.CountryHelper.convertCountryNameToFileName;
+import static com.parkinson.benjamin.geogames.loaders.features.CountryHelper.convertCountryNameToFileName;
 
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
 import com.parkinson.benjamin.geogames.helper.GeoJson;
@@ -76,8 +76,8 @@ public class CountryShapeMain {
   }
 
   static int points(CountryShape shape) {
-    return CountryShapeBuilder.pointCount(shape.outline())
-        + CountryShapeBuilder.pointCount(shape.coast())
-        + CountryShapeBuilder.pointCount(shape.landBorders());
+    return shape.outline().geometry().positionCount()
+        + shape.coast().geometry().positionCount()
+        + shape.landBorders().geometry().positionCount();
   }
 }

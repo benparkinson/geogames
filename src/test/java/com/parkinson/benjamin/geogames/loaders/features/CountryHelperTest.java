@@ -1,4 +1,4 @@
-package com.parkinson.benjamin.geogames.helper;
+package com.parkinson.benjamin.geogames.loaders.features;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

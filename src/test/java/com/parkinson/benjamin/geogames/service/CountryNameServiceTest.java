@@ -12,10 +12,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-class CountryLoaderServiceTest {
+class CountryNameServiceTest {
 
-  private final CountryLoaderService service =
-      new CountryLoaderService(
+  private final CountryNameService service =
+      new CountryNameService(
           new CountryShapeService(
               new JsonResourceReader(new PathMatchingResourcePatternResolver())));
 

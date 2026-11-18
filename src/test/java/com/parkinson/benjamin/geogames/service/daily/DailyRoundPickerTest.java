@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
+import com.parkinson.benjamin.geogames.service.RoundGenerators;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,10 +44,11 @@ class DailyRoundPickerTest {
 
   private final DailyRoundPicker picker =
       new DailyRoundPicker(
-          Arrays.stream(GameType.values())
-              .map(FakeGenerator::new)
-              .map(g -> (RoundGenerator) g)
-              .toList());
+          new RoundGenerators(
+              Arrays.stream(GameType.values())
+                  .map(FakeGenerator::new)
+                  .map(g -> (RoundGenerator) g)
+                  .toList()));
 
   private static List<PinnedRound> pinned(List<GameData> rounds) {
     return rounds.stream().map(PinnedRound::of).toList();
@@ -90,7 +92,10 @@ class DailyRoundPickerTest {
 
   @Test
   void failsAtStartupWithoutEnoughStandardTypes() {
-    assertThatThrownBy(() -> new DailyRoundPicker(List.of(new FakeGenerator(GameType.TRIPOINT))))
+    assertThatThrownBy(
+            () ->
+                new DailyRoundPicker(
+                    new RoundGenerators(List.of(new FakeGenerator(GameType.TRIPOINT)))))
         .isInstanceOf(IllegalStateException.class);
   }
 }

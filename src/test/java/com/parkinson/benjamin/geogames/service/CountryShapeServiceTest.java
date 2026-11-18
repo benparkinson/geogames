@@ -33,6 +33,12 @@ class CountryShapeServiceTest {
   }
 
   @Test
+  void findsAShapeByNameOrNothing() {
+    assertThat(service.findShape("Switzerland")).hasValue(service.loadShape("Switzerland"));
+    assertThat(service.findShape("Atlantis")).isEmpty();
+  }
+
+  @Test
   void loadsADisplayCountryFromTheShape() {
     CountryShape shape = service.loadShape("Switzerland");
 

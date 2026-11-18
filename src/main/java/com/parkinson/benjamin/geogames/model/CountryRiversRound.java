@@ -18,6 +18,6 @@ public record CountryRiversRound(
   /** Shared with the country-shape games, so a mixed game never asks about one country twice. */
   @Override
   public String subjectId() {
-    return "country:" + country.name();
+    return SubjectIds.country(country.name());
   }
 }

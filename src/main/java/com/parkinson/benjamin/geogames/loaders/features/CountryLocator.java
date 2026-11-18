@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Works out which countries a feature (a river, or a lake shoreline) lies in by sampling points along its lines every couple
- * of kilometres and testing them against the country polygons.
+ * Works out which countries a feature (a river, or a lake shoreline) lies in by sampling points
+ * along its lines every couple of kilometres and testing them against the country polygons.
  */
 public class CountryLocator {
 
   static final double SAMPLE_KM = 2;
-  private static final String SKIPPED = "Antarctica";
 
   /**
    * @param countries names sorted by km inside the country (longest first, ties by name), keeping
@@ -57,7 +56,7 @@ public class CountryLocator {
   public CountryLocator(List<Country> countries, double minKm) {
     this.minKm = minKm;
     for (Country country : countries) {
-      if (SKIPPED.equals(country.name())) {
+      if (Geo.ANTARCTICA.equals(country.name())) {
         continue;
       }
       List<Part> parts = new ArrayList<>();

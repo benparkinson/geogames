@@ -85,4 +85,29 @@ public class GeoGeometryTest {
     assertThat(geometry.flattenedCoordinates()).hasSize(3);
     assertThat(geometry.flattenedCoordinates().get(2).get(0).doubleValue()).isEqualTo(5.0);
   }
+
+  @Test
+  public void visitsEveryPositionOfAMultiPolygon() {
+    GeoGeometry geometry =
+        new GeoGeometry(
+            "MultiPolygon",
+            List.of(
+                List.of(List.of(List.of(1.0, 2.0), List.of(3.0, 4.0))),
+                List.of(List.of(List.of(5.0, 6.0)), List.of())));
+    List<String> seen = new java.util.ArrayList<>();
+
+    geometry.forEachPosition((lon, lat) -> seen.add(lon + "," + lat));
+
+    assertThat(seen).containsExactly("1.0,2.0", "3.0,4.0", "5.0,6.0");
+    assertThat(geometry.positionCount()).isEqualTo(3);
+  }
+
+  @Test
+  public void anEmptyGeometryHasNoPositionsAndAddsNoJsonField() {
+    GeoGeometry geometry = new GeoGeometry("MultiLineString", List.of());
+
+    assertThat(geometry.positionCount()).isZero();
+    assertThat(mapper.writeValueAsString(geometry))
+        .isEqualTo("{\"type\":\"MultiLineString\",\"coordinates\":[]}");
+  }
 }

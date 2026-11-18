@@ -2,7 +2,7 @@ package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceName;
-import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.CountryNameService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import java.time.Duration;
@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class PlaceNameController {
 
-  private final CountryLoaderService countryLoaderService;
+  private final CountryNameService countryNameService;
   private final RiverLoaderService riverLoaderService;
   private final LakeLoaderService lakeLoaderService;
 
   public PlaceNameController(
-      CountryLoaderService countryLoaderService,
+      CountryNameService countryNameService,
       RiverLoaderService riverLoaderService,
       LakeLoaderService lakeLoaderService) {
-    this.countryLoaderService = countryLoaderService;
+    this.countryNameService = countryNameService;
     this.riverLoaderService = riverLoaderService;
     this.lakeLoaderService = lakeLoaderService;
   }
 
   @GetMapping("/countries")
   public ResponseEntity<List<CountryName>> countries() {
-    return cached(countryLoaderService.loadCountryNames());
+    return cached(countryNameService.loadCountryNames());
   }
 
   @GetMapping("/rivers")

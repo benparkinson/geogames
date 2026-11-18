@@ -1,14 +1,13 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.helper.RandomPicker;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
+import com.parkinson.benjamin.geogames.model.SubjectIds;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -17,11 +16,8 @@ import java.util.function.Predicate;
  * which rivers are eligible and whether countries are attached, so {@code RiverGamesConfig}
  * registers one of these per type.
  */
-public class RiverRoundGenerator implements RoundGenerator {
+public class RiverRoundGenerator extends SubjectRoundGenerator<River> {
 
-  private static final String PREFIX = "river:";
-
-  private final GameType gameType;
   private final RiverLoaderService riverLoaderService;
   private final Predicate<River> eligible;
   private final Function<River, List<Country>> countries;
@@ -31,44 +27,32 @@ public class RiverRoundGenerator implements RoundGenerator {
       RiverLoaderService riverLoaderService,
       Predicate<River> eligible,
       Function<River, List<Country>> countries) {
-    this.gameType = gameType;
+    super(gameType, SubjectIds.RIVER, "rivers");
     this.riverLoaderService = riverLoaderService;
     this.eligible = eligible;
     this.countries = countries;
   }
 
   @Override
-  public GameType gameType() {
-    return gameType;
+  List<River> candidates() {
+    return riverLoaderService.loadRivers().stream().filter(eligible).toList();
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
-    List<River> candidates =
-        riverLoaderService.loadRivers().stream()
-            .filter(eligible)
-            .filter(river -> !excludedSubjects.contains("river:" + river.id()))
-            .toList();
-    return RandomPicker.pickDistinct(candidates, count, random, "rivers").stream()
-        .<GameData>map(this::toRound)
-        .toList();
+  String id(River river) {
+    return river.id();
   }
 
   /** Doesn't check {@code eligible}: the round was eligible when the game was created. */
   @Override
-  public GameData rebuild(String roundKey) {
-    if (!roundKey.startsWith(PREFIX)) {
-      throw new RoundDataMissingException(gameType, roundKey);
-    }
-    String id = roundKey.substring(PREFIX.length());
+  Optional<River> find(String id) {
     return riverLoaderService.loadRivers().stream()
         .filter(river -> river.id().equals(id))
-        .findFirst()
-        .map(this::toRound)
-        .orElseThrow(() -> new RoundDataMissingException(gameType, roundKey));
+        .findFirst();
   }
 
-  private RiverRound toRound(River river) {
-    return new RiverRound(gameType, river, countries.apply(river));
+  @Override
+  GameData toRound(River river) {
+    return new RiverRound(gameType(), river, countries.apply(river));
   }
 }

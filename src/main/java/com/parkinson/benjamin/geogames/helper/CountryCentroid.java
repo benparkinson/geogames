@@ -34,17 +34,10 @@ public final class CountryCentroid {
     return centroid(best);
   }
 
-  @SuppressWarnings("unchecked")
   private static List<List<double[]>> outerRings(GeoData outline) {
     List<?> coordinates = outline.geometry().coordinates();
-    List<List<List<Number>>> polygons = new ArrayList<>();
-    if (outline.geometry().type().equals("Polygon")) {
-      polygons.add((List<List<Number>>) (List<?>) coordinates);
-    } else {
-      for (Object polygon : coordinates) {
-        polygons.add((List<List<Number>>) polygon);
-      }
-    }
+    List<?> polygons =
+        outline.geometry().type().equals("Polygon") ? List.of(coordinates) : coordinates;
     List<List<double[]>> rings = new ArrayList<>();
     for (Object polygon : polygons) {
       List<?> polygonRings = (List<?>) polygon;
@@ -52,9 +45,12 @@ public final class CountryCentroid {
         continue;
       }
       List<double[]> ring = new ArrayList<>();
-      for (Object p : (List<?>) polygonRings.get(0)) {
-        List<Number> position = (List<Number>) p;
-        ring.add(new double[] {position.get(0).doubleValue(), position.get(1).doubleValue()});
+      for (Object point : (List<?>) polygonRings.get(0)) {
+        List<?> position = (List<?>) point;
+        ring.add(
+            new double[] {
+              ((Number) position.get(0)).doubleValue(), ((Number) position.get(1)).doubleValue()
+            });
       }
       rings.add(ring);
     }

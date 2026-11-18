@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceName;
-import com.parkinson.benjamin.geogames.service.CountryLoaderService;
+import com.parkinson.benjamin.geogames.service.CountryNameService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import java.io.IOException;
@@ -26,13 +26,13 @@ class PlaceNameControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @MockitoBean private CountryLoaderService countryLoaderService;
+  @MockitoBean private CountryNameService countryNameService;
   @MockitoBean private RiverLoaderService riverLoaderService;
   @MockitoBean private LakeLoaderService lakeLoaderService;
 
   @Test
   void returnsCountryNamesWithADayOfCaching() throws Exception {
-    when(countryLoaderService.loadCountryNames())
+    when(countryNameService.loadCountryNames())
         .thenReturn(
             List.of(
                 new CountryName("France", List.of(), 46.6, 2.5),
@@ -56,7 +56,7 @@ class PlaceNameControllerTest {
 
   @Test
   void loadingFailureEscapesTheController() {
-    when(countryLoaderService.loadCountryNames())
+    when(countryNameService.loadCountryNames())
         .thenThrow(new UncheckedIOException(new IOException("disk")));
 
     // Data that won't load is a packaging bug, so it is meant to be a 500, not a 400.

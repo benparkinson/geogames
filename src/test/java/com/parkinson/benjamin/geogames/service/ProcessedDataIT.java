@@ -10,7 +10,6 @@ import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryRiversEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
-import com.parkinson.benjamin.geogames.loaders.countries.CountryShapeBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Bounds;
@@ -344,7 +343,7 @@ public class ProcessedDataIT {
 
   @Test
   public void everyCountryHasAPositionInsideItsFocus() {
-    CountryLoaderService service = new CountryLoaderService(new CountryShapeService(reader));
+    CountryNameService service = new CountryNameService(new CountryShapeService(reader));
     CountryShapeService shapes = new CountryShapeService(reader);
     for (CountryName country : service.loadCountryNames()) {
       Bounds focus = shapes.loadShape(country.name()).focus();
@@ -453,11 +452,10 @@ public class ProcessedDataIT {
       assertEquals("MultiPolygon", rivers.lakes().geometry().type());
 
       int riverPoints =
-          CountryShapeBuilder.pointCount(rivers.major())
-              + CountryShapeBuilder.pointCount(rivers.minor());
+          rivers.major().geometry().positionCount() + rivers.minor().geometry().positionCount();
       assertTrue(riverPoints > 0, entry.name() + " has no river points");
       assertTrue(riverPoints <= 4_000, entry.name() + " has " + riverPoints + " river points");
-      int lakePoints = CountryShapeBuilder.pointCount(rivers.lakes());
+      int lakePoints = rivers.lakes().geometry().positionCount();
       assertTrue(lakePoints <= 2_000, entry.name() + " has " + lakePoints + " lake points");
       assertEquals(
           entry.lakeCount() == 0, rivers.lakes().geometry().coordinates().isEmpty(), entry.name());
@@ -604,9 +602,9 @@ public class ProcessedDataIT {
         }
       }
       int points =
-          CountryShapeBuilder.pointCount(shape.outline())
-              + CountryShapeBuilder.pointCount(shape.coast())
-              + CountryShapeBuilder.pointCount(shape.landBorders());
+          shape.outline().geometry().positionCount()
+              + shape.coast().geometry().positionCount()
+              + shape.landBorders().geometry().positionCount();
       // The outline and the coast repeat the same points, so this is about twice the outline.
       assertTrue(points <= MAX_SHAPE_POINTS, shape.name() + " has " + points + " points");
     }

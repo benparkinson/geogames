@@ -16,6 +16,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +64,7 @@ class CountryPairGamesConfigTest {
     when(shapes.loadShapes()).thenReturn(all);
     for (CountryShape shape : all) {
       when(shapes.loadShape(shape.name())).thenReturn(shape);
+      when(shapes.findShape(shape.name())).thenReturn(Optional.of(shape));
     }
   }
 

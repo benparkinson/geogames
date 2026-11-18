@@ -1,14 +1,13 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.helper.RandomPicker;
 import com.parkinson.benjamin.geogames.model.CountryOutline;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.CountryShapeRound;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.SubjectIds;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -16,11 +15,8 @@ import java.util.function.Predicate;
  * and differ in which are eligible and whether the neighbours' outlines are attached, so {@code
  * CountryGamesConfig} registers one of these per type.
  */
-public class CountryShapeRoundGenerator implements RoundGenerator {
+public class CountryShapeRoundGenerator extends SubjectRoundGenerator<CountryShape> {
 
-  private static final String PREFIX = "country:";
-
-  private final GameType gameType;
   private final CountryShapeService shapes;
   private final Predicate<CountryShape> eligible;
   private final boolean withNeighbours;
@@ -30,45 +26,32 @@ public class CountryShapeRoundGenerator implements RoundGenerator {
       CountryShapeService shapes,
       Predicate<CountryShape> eligible,
       boolean withNeighbours) {
-    this.gameType = gameType;
+    super(gameType, SubjectIds.COUNTRY, "countries");
     this.shapes = shapes;
     this.eligible = eligible;
     this.withNeighbours = withNeighbours;
   }
 
   @Override
-  public GameType gameType() {
-    return gameType;
+  List<CountryShape> candidates() {
+    return shapes.loadShapes().stream().filter(eligible).toList();
   }
 
   @Override
-  public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
-    List<CountryShape> candidates =
-        shapes.loadShapes().stream()
-            .filter(eligible)
-            .filter(shape -> !excludedSubjects.contains("country:" + shape.name()))
-            .toList();
-    return RandomPicker.pickDistinct(candidates, count, random, "countries").stream()
-        .<GameData>map(this::toRound)
-        .toList();
+  String id(CountryShape shape) {
+    return shape.name();
   }
 
   /** Doesn't check {@code eligible}: the round was eligible when the game was created. */
   @Override
-  public GameData rebuild(String roundKey) {
-    if (!roundKey.startsWith(PREFIX)) {
-      throw new RoundDataMissingException(gameType, roundKey);
-    }
-    String name = roundKey.substring(PREFIX.length());
-    return shapes.loadShapes().stream()
-        .filter(shape -> shape.name().equals(name))
-        .findFirst()
-        .map(this::toRound)
-        .orElseThrow(() -> new RoundDataMissingException(gameType, roundKey));
+  Optional<CountryShape> find(String name) {
+    return shapes.findShape(name);
   }
 
-  private CountryShapeRound toRound(CountryShape shape) {
-    return new CountryShapeRound(gameType, shape, withNeighbours ? neighboursOf(shape) : List.of());
+  @Override
+  GameData toRound(CountryShape shape) {
+    return new CountryShapeRound(
+        gameType(), shape, withNeighbours ? neighboursOf(shape) : List.of());
   }
 
   /** The mainland neighbours' outlines, longest border first. */

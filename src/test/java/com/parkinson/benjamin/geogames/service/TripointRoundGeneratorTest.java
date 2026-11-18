@@ -27,20 +27,20 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
-public class TripointFinderTest {
+public class TripointRoundGeneratorTest {
 
   private final Random random = new Random(3);
 
   private TripointLoaderService loader;
   private CountryShapeService countryLoader;
-  private TripointFinderService service;
+  private TripointRoundGenerator service;
   private List<TripointDefinition> definitions;
 
   @BeforeEach
   void setUp() {
     loader = mock(TripointLoaderService.class);
     countryLoader = mock(CountryShapeService.class);
-    service = new TripointFinderService(loader, countryLoader);
+    service = new TripointRoundGenerator(loader, countryLoader);
 
     definitions =
         IntStream.range(0, 5)
@@ -62,8 +62,8 @@ public class TripointFinderTest {
   public void rejectsRequestForTooManyTripoints() {
     TripointLoaderService emptyLoader = mock(TripointLoaderService.class);
     when(emptyLoader.loadTripointDefinitions()).thenReturn(List.of());
-    TripointFinderService emptyService =
-        new TripointFinderService(emptyLoader, mock(CountryShapeService.class));
+    TripointRoundGenerator emptyService =
+        new TripointRoundGenerator(emptyLoader, mock(CountryShapeService.class));
 
     assertThrows(IllegalArgumentException.class, () -> emptyService.generate(1, Set.of(), random));
   }
