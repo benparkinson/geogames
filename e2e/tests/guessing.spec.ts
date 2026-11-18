@@ -5,18 +5,18 @@ test("an unknown name is rejected without using a guess, a wrong country uses on
   const id = await startGame(page, "Tripoints", 3);
   await countriesLoaded;
   await expect(answerBox(page)).toBeVisible();
-  await expect(page.getByRole("status", { name: "5 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "5 lives left" })).toBeVisible();
 
   await guess(page, "Narnia");
   await expect(page.getByText(`We don't recognise "Narnia" as a country. Check the spelling.`)).toBeVisible();
-  await expect(page.getByRole("status", { name: "5 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "5 lives left" })).toBeVisible();
 
   const { answers } = await api.round(id, 0);
   const answerNames = new Set(answers.flatMap(a => [a.name, ...a.additionalNames]).map(n => n.toLowerCase()));
   const wrong = (await api.countries()).map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()));
   await guess(page, wrong!);
   await expect(page.getByText(`Not ${wrong}.`)).toBeVisible();
-  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
   await expect(page.getByText("Wrong guesses")).toBeVisible();
 });
 
@@ -40,7 +40,7 @@ test("an alias of an answer is accepted as that answer", async ({ page, api }) =
   await guess(page, found!.alias);
   await expect(page.getByText(/^Correct! 2 to go\.$/)).toBeVisible();
   await expect(page.getByRole("group", { name: "Answers: 1 of 3 found" })).toContainText(found!.canonical);
-  await expect(page.getByRole("status", { name: "5 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "5 lives left" })).toBeVisible();
 });
 
 /** A country that is not the answer, and plain enough to type. */
@@ -87,17 +87,17 @@ test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicat
   const wrong = (await api.countries()).map(c => c.name).find(name => /^[A-Za-z ]+$/.test(name) && !answerNames.has(name.toLowerCase()));
   const saved = page.waitForResponse(response => response.url().endsWith("/guesses") && response.ok());
   await guess(page, wrong!);
-  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
   await saved;
 
   await reloadGamePage(page, id);
 
   await expect(answerBox(page)).toBeVisible();
-  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
   await expect(page.getByText("Wrong guesses")).toBeVisible();
   await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
 
   await guess(page, wrong!);
   await expect(page.getByText(`You've already guessed ${wrong}.`)).toBeVisible();
-  await expect(page.getByRole("status", { name: "4 guesses left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "4 lives left" })).toBeVisible();
 });

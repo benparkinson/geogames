@@ -98,7 +98,7 @@ describe("Country Gaps", () => {
     const user = userEvent.setup();
     const submitAnswer = renderGame();
     await screen.findByRole("button", { name: /Hint/ });
-    const left = () => screen.getByText(/guesses? left/i).textContent;
+    const left = () => screen.getByText(/(lives? left|Last life)/i).textContent;
     const before = left();
 
     await user.type(screen.getByPlaceholderText("Country name…"), "Atlantis{Enter}");
