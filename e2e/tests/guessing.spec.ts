@@ -56,9 +56,7 @@ test("a wrong country in a country game says how far and which way the answer is
 
   await guess(page, await wrongCountry(api, id));
 
-  await expect(
-    page.getByText(/^[\d,]+ km$/),
-  ).toBeVisible();
+  await expect(page.locator(".guess-chip").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
 });
 
 test("Hard mode, switched on from the home page, hides the distance clues", async ({ page, api }) => {
@@ -72,7 +70,7 @@ test("Hard mode, switched on from the home page, hides the distance clues", asyn
   await guess(page, wrong);
 
   await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
-  await expect(page.locator(".guess-feedback")).not.toContainText("km");
+  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
 });
 
 test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicate", async ({ page, api }) => {
