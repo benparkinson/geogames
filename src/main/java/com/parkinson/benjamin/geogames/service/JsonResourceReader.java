@@ -42,7 +42,7 @@ public class JsonResourceReader {
         stream -> objectMapper.readValue(stream, type));
   }
 
-  /** Reads every file matching a pattern such as {@code classpath*:/data/rivers/*.geo.json}. */
+  /** Reads every file matching a pattern such as {@code classpath*:/processed/rivers/*.json}. */
   public <T> List<T> readAll(String pattern, Class<T> type) {
     Resource[] resources;
     try {

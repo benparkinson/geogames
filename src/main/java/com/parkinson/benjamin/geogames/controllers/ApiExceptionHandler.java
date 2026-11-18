@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Turns bad input into a 400, and a request that conflicts with the game's state (such as changing
- * an answered round, or a round changed by another request at the same moment) into a 409, both
- * with a JSON problem body. Anything else keeps Spring's
- * default 500.
+ * Turns exceptions into JSON problem bodies: bad input is a 400, a conflict with the game's state
+ * (such as changing an answered round, or a round changed by another request at the same moment) is
+ * a 409, and round data that has gone is a 410. Anything else keeps Spring's default 500.
  */
 @RestControllerAdvice
 public class ApiExceptionHandler {

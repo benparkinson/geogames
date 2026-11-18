@@ -75,7 +75,10 @@ public class KnownPlaceNames {
     };
   }
 
-  /** Names go in before aliases, so a name wins over another place's alias. Each maps to its own spelling. */
+  /**
+   * Names go in before aliases, so a name wins over another place's alias. Each maps to its own
+   * spelling.
+   */
   private static Map<String, String> build(List<PlaceName> names) {
     Map<String, String> map = new HashMap<>();
     for (PlaceName place : names) {

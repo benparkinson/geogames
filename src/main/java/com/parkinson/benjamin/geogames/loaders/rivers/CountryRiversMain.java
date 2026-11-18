@@ -48,9 +48,9 @@ import tools.jackson.databind.JsonNode;
 public class CountryRiversMain {
 
   /**
-   * Rivers with a {@code scalerank} up to this are major: that is about a quarter of the total length
-   * (the summary prints the distribution), which leaves the thick lines as the main clue and the
-   * rest as texture.
+   * Rivers with a {@code scalerank} up to this are major: that is about a quarter of the total
+   * length (the summary prints the distribution), which leaves the thick lines as the main clue and
+   * the rest as texture.
    */
   static final int MAJOR_MAX_SCALERANK = 4;
 
@@ -286,9 +286,9 @@ public class CountryRiversMain {
   // ---- lakes ----
 
   /**
-   * Simplifies a lake's rings with the country's tolerance, so a lake on a large country's map isn't
-   * drawn in more detail than that country's outline. A ring left with too few points is dropped (a
-   * polygon with it).
+   * Simplifies a lake's rings with the country's tolerance, so a lake on a large country's map
+   * isn't drawn in more detail than that country's outline. A ring left with too few points is
+   * dropped (a polygon with it).
    */
   static List<List<List<double[]>>> simplifyLake(
       List<List<List<double[]>>> polygons, double tolerance) {

@@ -35,8 +35,7 @@ public class TripointFinderService implements RoundGenerator {
   @Override
   public List<GameData> generate(int count, Set<String> excludedSubjects, Random random) {
     // Seven country triples have two tripoints: pick distinct subjects, not distinct definitions,
-    // so
-    // a game never asks for the same three countries twice.
+    // so a game never asks for the same three countries twice.
     Map<String, List<TripointDefinition>> bySubject = new LinkedHashMap<>();
     for (TripointDefinition definition : tripointLoaderService.loadTripointDefinitions()) {
       String subject = Tripoint.subjectId(definition.countryNames());

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Picks the features to write: the most famous of each continent, by Wikipedia sitelinks, up to that
- * continent's quota. Overrides only correct a feature's data; they don't force it in.
+ * Picks the features to write: the most famous of each continent, by Wikipedia sitelinks, up to
+ * that continent's quota. Overrides only correct a feature's data; they don't force it in.
  */
 public final class FeatureSelector {
 

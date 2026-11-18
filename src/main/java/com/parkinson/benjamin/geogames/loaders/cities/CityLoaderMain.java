@@ -128,7 +128,9 @@ public class CityLoaderMain {
   /** What Natural Earth says about whether a place is a capital. */
   enum CapitalKind {
     NONE,
-    /** The capital of a region of the country (Nuuk in Greenland; Cardiff in the United Kingdom). */
+    /**
+     * The capital of a region of the country (Nuuk in Greenland; Cardiff in the United Kingdom).
+     */
     REGION,
     NATIONAL
   }
@@ -173,8 +175,9 @@ public class CityLoaderMain {
   /**
    * Countries where Natural Earth flags the wrong cities, with the cities that really are capitals.
    * Benin's official capital is Porto-Novo (Cotonou is the seat of government in practice) and
-   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from Yangon to Naypyidaw in 2006; Côte d'Ivoire's official capital is
-   * Yamoussoukro (Abidjan is the economic centre); South Africa has three capitals (Pretoria
+   * Tanzania's is Dodoma (Dar es Salaam is the commercial centre). Myanmar moved its capital from
+   * Yangon to Naypyidaw in 2006; Côte d'Ivoire's official capital is Yamoussoukro (Abidjan is the
+   * economic centre); South Africa has three capitals (Pretoria
    * executive, Cape Town legislative, Bloemfontein judicial) and Johannesburg is none of them.
    * Kazakhstan's capital was renamed Astana in 2022.
    */

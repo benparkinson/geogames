@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Works out which countries a feature (a river, or a lake shoreline) lies in by sampling points along its lines every couple
- * of kilometres and testing them against the country polygons.
+ * Works out which countries a feature (a river, or a lake shoreline) lies in by sampling points
+ * along its lines every couple of kilometres and testing them against the country polygons.
  */
 public class CountryLocator {
 

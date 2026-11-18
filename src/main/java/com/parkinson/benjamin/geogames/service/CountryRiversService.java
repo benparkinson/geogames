@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
  * Reads the rivers and lakes of each country, generated offline by {@code CountryRiversMain}.
  *
  * <p>Only the small index (name, counts and length of each country) is kept in memory. A country's
- * geometry is the one large new data set, so {@link #load} reads that country's file on every call and
- * keeps nothing: a file is at most about 150 KB and a round is built once each time it is shown, so
- * parsing it is cheap, and a cache of the files would put several megabytes on the heap for good.
- * Don't add {@code @Cacheable} to it.
+ * geometry is the one large data set, so {@link #load} reads that country's file on every call
+ * and keeps nothing: a file is at most about 150 KB and a round is built once each time it is
+ * shown, so parsing it is cheap, and a cache of the files would put several megabytes on the heap
+ * for good. Don't add {@code @Cacheable} to it.
  */
 @Service
 public class CountryRiversService {

@@ -29,8 +29,8 @@ import tools.jackson.core.type.TypeReference;
  * <p>Picks the most famous rivers of each continent, up to {@link #RIVER_QUOTAS}.
  *
  * <p>Also works out each river's source, mouth and countries (see {@link RiverEnds} and {@link
- * CountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in outDir before
- * writing.
+ * CountryLocator}). Offline and deterministic: reads no network. Clears the {@code *.json} files in
+ * outDir before writing.
  */
 public class RiverLoaderMain {
 

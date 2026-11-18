@@ -22,7 +22,9 @@ public class RiverGamesConfig {
         GameType.RIVERS_BY_SHAPE, rivers, river -> true, river -> List.of());
   }
 
-  /** Only rivers through three or more countries: one or two outlines are too easy or unguessable. */
+  /**
+   * Only rivers through three or more countries: one or two outlines are too easy or unguessable.
+   */
   @Bean
   RoundGenerator riversByCountries(RiverLoaderService rivers, CountryShapeService shapes) {
     return new RiverRoundGenerator(

@@ -337,7 +337,7 @@ public class GameService {
     }
     if (answerState == AnswerState.OUT_OF_GUESSES && wrongGuesses != limit) {
       throw new IllegalArgumentException(
-          "A round of %s that ran out of guesses had %d wrong guesses, not %d"
+          "A round of %s that ran out of guesses must have %d wrong guesses, not %d"
               .formatted(type, limit, wrongGuesses));
     }
     if (answerState != AnswerState.OUT_OF_GUESSES && wrongGuesses == limit) {

@@ -35,7 +35,10 @@ public class CountryShapeService {
     return shape;
   }
 
-  /** A country with its simplified outline: what the games draw, at a fraction of the full geometry's size. */
+  /**
+   * A country with its simplified outline: what the games draw, at a fraction of the full
+   * geometry's size.
+   */
   @Cacheable("displayCountry")
   public Country loadDisplayCountry(String name) {
     CountryShape shape = loadShape(name);

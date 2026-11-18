@@ -43,7 +43,10 @@ public final class CountryShapeBuilder {
 
   private CountryShapeBuilder() {}
 
-  /** A closed ring without the repeated last point: edge i joins vertex i to vertex i+1 (wrapping). */
+  /**
+   * A closed ring without the repeated last point: edge i joins vertex i to vertex i+1
+   * (wrapping).
+   */
   private record Ring(List<double[]> points, String[] keys) {
     int size() {
       return points.size();

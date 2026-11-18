@@ -793,7 +793,7 @@ class GameServiceTest {
     expectRejected(
         AnswerState.OUT_OF_GUESSES,
         3,
-        "A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3");
+        "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3");
   }
 
   @Test

@@ -374,7 +374,7 @@ class GameControllerTest {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, 3))
         .thenThrow(
             new IllegalArgumentException(
-                "A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3"));
+                "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
 
     mockMvc
         .perform(
@@ -384,7 +384,7 @@ class GameControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.detail")
-                .value("A round of TRIPOINT that ran out of guesses had 5 wrong guesses, not 3"));
+                .value("A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
   }
 
   @Test
