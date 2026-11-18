@@ -8,7 +8,8 @@ import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
 
-function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
+/** `daily` is set when the game is a daily challenge: the title says so, and the summary shares instead of replaying. */
+function GameRoundPage({ gameId, daily }: { gameId: string; daily?: { number: number; date: string } }): React.JSX.Element {
     // Until the player acts, resume at the first unanswered round, which the first round's game result tells us.
     const [chosenRound, setRound] = useState<number | null>(null)
     const [summaryChoice, setSummaryChoice] = useState<boolean | null>(null)
@@ -73,6 +74,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             gameCompleted,
             roundAnswerStates: data.gameResult.roundAnswerStates,
             roundPoints: data.gameResult.roundPoints,
+            dailyNumber: daily?.number,
         };
 
         const gameModule = findGameModule(data.gameType.name);
@@ -91,6 +93,9 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
         if (!gameModule) {
             return <title>Unknown game! | GeoGauntlet</title>
         }
+        if (daily) {
+            return <title>{`Daily #${daily.number} | GeoGauntlet`}</title>
+        }
         return <title>{`${gameModule.title} | GeoGauntlet`}</title>
     }
 
@@ -101,7 +106,7 @@ function GameRoundPage({ gameId }: { gameId: string }): React.JSX.Element {
             </Head>
             {error ? <div className="p-4 gg-text-danger" role="alert">Couldn&apos;t load this round. Please refresh.</div>
                 : isLoading || !data ? <LoadingSpinner fullPage className="gg-text-correct" />
-                    : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} />
+                    : showSummary ? <GameSummary gameId={gameId} totalRoundCount={data.totalRoundCount} onOpenRound={goToRound} daily={daily} />
                         : renderGame(data)}
         </>
     );
