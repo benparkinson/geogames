@@ -3,6 +3,12 @@ import { useSyncExternalStore } from "react";
 const KEY = "gg-daily";
 const CHANGE_EVENT = "gg-daily-change";
 
+/** Which daily challenge a game is: its number and its date, `YYYY-MM-DD`. */
+export interface DailyInfo {
+  number: number;
+  date: string;
+}
+
 /** How one round ended, as the share text shows it. */
 export type RoundOutcome = "perfect" | "hints" | "revealed";
 

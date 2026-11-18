@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
 import type { RecordedGuess } from "../../api/types";
 import type { AnswerState } from "./Model";
-import { GuessConfig, GuessState, guessesLeft, guessReducer, restoreGuessState, wrongGuessCount } from "./guessReducer";
+import {
+  Guess,
+  GuessConfig,
+  GuessState,
+  foundAnswers,
+  guessesLeft,
+  guessReducer,
+  restoreGuessState,
+  withLateClues,
+  wrongGuessCount,
+  wrongGuesses,
+} from "./guessReducer";
 
 const answers = [
   { name: "Belgium", additionalNames: [] },
@@ -531,5 +542,47 @@ describe("restoreGuessState with saved hints", () => {
     const restored = restoreGuessState("GAVE_UP", 2, [], [], config).state;
 
     expect(restored.foundAtHint).toEqual([[], []]);
+  });
+});
+
+describe("foundAnswers and wrongGuesses", () => {
+  it("split the guesses into the answers found and the wrong ones", () => {
+    const { state } = guessAll(["Peru", "holland", "Chile", "Belgium"]);
+
+    expect(foundAnswers(state)).toEqual(["Netherlands", "Belgium"]);
+    expect(wrongGuesses(state).map((g) => g.text)).toEqual(["Peru", "Chile"]);
+    expect(wrongGuessCount(state)).toBe(2);
+  });
+});
+
+describe("withLateClues", () => {
+  const clue = { km: 480, bearing: 10 };
+  const lacking: GuessState = { ...fresh(), guesses: [{ text: "Peru", answer: null }] };
+
+  it("fills in a clue a wrong guess is missing", () => {
+    const filled = withLateClues(lacking, () => [{ text: "Peru", answer: null, clue }]);
+
+    expect(filled.guesses).toEqual([{ text: "Peru", answer: null, clue }]);
+  });
+
+  it("returns the same state when no guess is missing a clue", () => {
+    const complete: GuessState = {
+      ...fresh(),
+      guesses: [
+        { text: "Peru", answer: null, clue },
+        { text: "Belgium", answer: "Belgium" },
+      ],
+    };
+    const replayed = () => {
+      throw new Error("must not replay when nothing is missing");
+    };
+
+    expect(withLateClues(complete, replayed)).toBe(complete);
+  });
+
+  it("leaves a guess without a clue when the replay has none for it", () => {
+    const replay: Guess[] = [{ text: "Chile", answer: null, clue }];
+
+    expect(withLateClues(lacking, () => replay).guesses).toEqual([{ text: "Peru", answer: null }]);
   });
 });

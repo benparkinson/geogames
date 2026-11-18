@@ -572,6 +572,42 @@ describe("MapGame saving guesses", () => {
   });
 });
 
+describe("MapGame resuming a solved round", () => {
+  it("measures a late clue to the answer that was still unfound when the guess was made", () => {
+    // Played: France, then a wrong Italy, then Spain. Italy was guessed while only Spain was unfound.
+    const round = makeRoundProps({
+      answerState: "CORRECT",
+      guesses: [
+        { text: "France", correct: true },
+        { text: "Italy", correct: false },
+        { text: "Spain", correct: true },
+      ],
+    });
+    const props: React.ComponentProps<typeof MapGame<object>> = {
+      data: {},
+      answerCount: 2,
+      MapComponent: MapStub,
+      answers: ANSWERS,
+      round,
+      prompt: "Name them",
+      inputPlaceholder: "Country…",
+      answerNoun: "country",
+      submitAnswer: vi.fn(),
+    };
+    const { rerender } = render(<MapGame {...props} />);
+    expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
+
+    const clueFor = (_guess: string, targets: string[]) => ({
+      km: targets.join() === "Spain" ? 480 : 900,
+      bearing: 10,
+    });
+    rerender(<MapGame {...props} clueFor={clueFor} />);
+
+    expect(screen.getAllByText(/480 km/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/900 km/)).not.toBeInTheDocument();
+  });
+});
+
 describe("MapGame resuming an unfinished round", () => {
   const saved = (text: string, correct = false) => ({ text, correct });
 

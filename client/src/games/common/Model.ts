@@ -14,6 +14,14 @@ export function isRevealed(state: AnswerState): boolean {
   return state === GAVE_UP || state === OUT_OF_GUESSES;
 }
 
+/** How a round that has just ended was answered: out of guesses, given up, or solved. */
+export function finalAnswerState(
+  gaveUp: boolean,
+  outOfGuesses: boolean,
+): typeof CORRECT_ANSWER | typeof GAVE_UP | typeof OUT_OF_GUESSES {
+  return outOfGuesses ? OUT_OF_GUESSES : gaveUp ? GAVE_UP : CORRECT_ANSWER;
+}
+
 /** What the client reports to the server when a round ends. */
 export interface RoundAnswer {
   answerState: AnswerState;

@@ -13,7 +13,7 @@ import { findGameModule, RANDOM_OPTION } from "../registry";
 import { CORRECT_ANSWER, FINISHED, isRevealed, OUT_OF_GUESSES } from "./Model";
 import { isPerfect } from "./scoring";
 import ShareButton from "../../daily/ShareButton";
-import { useDailyEntry } from "../../daily/dailyStorage";
+import { type DailyInfo, useDailyEntry } from "../../daily/dailyStorage";
 import { resultFromGame } from "../../daily/result";
 import { shareText } from "../../daily/shareText";
 
@@ -41,7 +41,7 @@ export default function GameSummary({
   totalRoundCount: number;
   onOpenRound: (round: number) => void;
   /** Set for a daily challenge: the buttons share the result instead of starting the same game again. */
-  daily?: { number: number; date: string };
+  daily?: DailyInfo;
 }): React.JSX.Element {
   const dailyEntry = useDailyEntry();
   const results = useQueries({
@@ -74,7 +74,7 @@ export default function GameSummary({
       ? shareText(
           {
             date: daily.date,
-            hardcore: dailyEntry?.date === daily.date && dailyEntry.hardcore,
+            hardMode: dailyEntry?.date === daily.date && dailyEntry.hardcore,
             result: resultFromGame(all[0].gameResult),
           },
           window.location.origin,
@@ -171,7 +171,7 @@ export default function GameSummary({
         )}
         <div className="d-flex gap-2">
           {daily ? (
-            <Button variant="secondary" onClick={() => createGame("RANDOM", 5)} disabled={creating}>
+            <Button variant="secondary" onClick={() => createGame(RANDOM_OPTION.type, 5)} disabled={creating}>
               {creating ? <Spinner size="sm" /> : "Play a Mixed game"}
             </Button>
           ) : (

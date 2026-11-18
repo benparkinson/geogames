@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { wakeServer } from "../api/health";
+import { hasStatus } from "../api/http";
 import { localDateString, useCreateDailyGame } from "../api/daily";
 import { useRound } from "../api/games";
 import { FINISHED } from "../games/common/Model";
@@ -95,7 +96,7 @@ function Finished({
   entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
   onOpenGame: () => void;
 }): React.JSX.Element {
-  const text = shareText({ date: entry.date, hardcore: entry.hardcore, result: entry.result }, window.location.origin);
+  const text = shareText({ date: entry.date, hardMode: entry.hardcore, result: entry.result }, window.location.origin);
   return (
     <Shell>
       <h1 className="h3 mb-1">Daily {entry.date}</h1>
@@ -123,7 +124,7 @@ function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void
   const first = useRound(entry.gameId, 0);
   const [hardMode] = useHardMode();
   const finished = first.data?.gameResult.gameState === FINISHED;
-  const gone = first.error instanceof Error && first.error.message.endsWith("(404)");
+  const gone = hasStatus(first.error, 404);
   const hasResult = entry.result !== undefined;
   const result = first.data?.gameResult;
 

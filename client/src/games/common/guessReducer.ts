@@ -1,7 +1,7 @@
 import { normaliseString } from "../../helper/stringHelper";
 import { AnswerCandidate, matchAnswer } from "./answers";
 import type { RecordedGuess } from "../../api/types";
-import { AnswerState, CORRECT_ANSWER, GAVE_UP, OUT_OF_GUESSES, UNANSWERED } from "./Model";
+import { AnswerState, CORRECT_ANSWER, GAVE_UP, isRevealed, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 
 /** One thing the player typed. `answer` is the canonical answer it matched, or null if it was wrong. */
 export interface Guess {
@@ -67,9 +67,37 @@ function allFound(answers: AnswerCandidate[]): Guess[] {
   return answers.map((a) => ({ text: a.name, answer: a.name }));
 }
 
+/** The canonical answers found so far, in the order they were found. */
+export function foundAnswers(state: GuessState): string[] {
+  return state.guesses.flatMap((g) => (g.answer === null ? [] : [g.answer]));
+}
+
+/** The wrong guesses made so far. */
+export function wrongGuesses(state: GuessState): Guess[] {
+  return state.guesses.filter((g) => g.answer === null);
+}
+
 /** How many wrong guesses have been used. Duplicates, unknown and empty guesses aren't recorded, so they don't count. */
 export function wrongGuessCount(state: GuessState): number {
-  return state.guesses.filter((g) => g.answer === null).length;
+  return wrongGuesses(state).length;
+}
+
+/**
+ * Fills in clues the guesses don't have yet, which happens when the country list loads after a round was restored.
+ * `replayed` must come from `restoreGuessState`: a solved round's saved order differs from the order played, and a
+ * clue depends on which answers had been found at that point.
+ */
+export function withLateClues(state: GuessState, replayed: () => Guess[]): GuessState {
+  const lacksClue = (guess: Guess) => guess.answer === null && !guess.clue;
+  if (!state.guesses.some(lacksClue)) {
+    return state;
+  }
+  const known = replayed();
+  const guesses = state.guesses.map((guess) => {
+    const clue = lacksClue(guess) ? known.find((k) => k.text === guess.text)?.clue : undefined;
+    return clue ? { ...guess, clue } : guess;
+  });
+  return { ...state, guesses };
 }
 
 export function guessesLeft(state: GuessState, guessLimit: number): number {
@@ -125,7 +153,7 @@ export function restoreGuessState(
   }
   // The hints that counted are the server's. Where the replay knows what was found at a hint, use it.
   const foundAtHint: string[][] = Array.from({ length: hintsUsed }, (_, i) => state.foundAtHint[i] ?? []);
-  if (answerState === GAVE_UP || answerState === OUT_OF_GUESSES) {
+  if (isRevealed(answerState)) {
     // The answers found before giving up show as found, and the rest as revealed.
     return {
       state: {
@@ -138,10 +166,9 @@ export function restoreGuessState(
       },
     };
   }
-  const wrong = state.guesses.filter((g) => g.answer === null);
   return {
     state: {
-      guesses: [...wrong, ...allFound(config.answers)],
+      guesses: [...wrongGuesses(state), ...allFound(config.answers)],
       gaveUp: false,
       outOfGuesses: false,
       over: true,
@@ -168,8 +195,9 @@ export function guessReducer(state: GuessState, action: GuessAction, config: Gue
       if (state.over || state.hintsUsed >= config.hintsTotal) {
         return { state };
       }
-      const found = state.guesses.flatMap((g) => (g.answer === null ? [] : [g.answer]));
-      return { state: { ...state, hintsUsed: state.hintsUsed + 1, foundAtHint: [...state.foundAtHint, found] } };
+      return {
+        state: { ...state, hintsUsed: state.hintsUsed + 1, foundAtHint: [...state.foundAtHint, foundAnswers(state)] },
+      };
   }
 }
 
@@ -200,7 +228,7 @@ function applyGuess(state: GuessState, text: string, config: GuessConfig): Guess
 
   let clue: GuessClue | undefined;
   if (matched === null && config.clueFor) {
-    const found = state.guesses.flatMap((g) => (g.answer === null ? [] : [g.answer]));
+    const found = foundAnswers(state);
     const unfound = config.answers.map((a) => a.name).filter((name) => !found.includes(name));
     clue = config.clueFor(trimmed, unfound) ?? undefined;
   }
@@ -221,7 +249,7 @@ function applyGuess(state: GuessState, text: string, config: GuessConfig): Guess
     return { state: { ...state, guesses }, result: { kind: "wrong", guess: trimmed, guessesLeft: left, clue } };
   }
 
-  const remaining = config.answerCount - guesses.filter((g) => g.answer !== null).length;
+  const remaining = config.answerCount - foundAnswers({ ...state, guesses }).length;
   if (remaining <= 0) {
     return {
       state: { ...state, guesses, over: true },

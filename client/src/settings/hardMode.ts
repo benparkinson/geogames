@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 
 // Stored name kept from when this was called Hardcore mode.
 const KEY = "gg-hardcore";
-const CHANGE_EVENT = "gg-hardcore-change";
+const CHANGE_EVENT = "gg-hard-mode-change";
 
 /** Used only when localStorage is blocked: the setting then lasts until the page is reloaded. */
 let fallback = false;
@@ -43,6 +43,6 @@ function subscribe(onChange: () => void): () => void {
  * scoring and the server are unaffected. Off by default, and kept in this browser's localStorage.
  */
 export function useHardMode(): [boolean, (on: boolean) => void] {
-  const hardcore = useSyncExternalStore(subscribe, read, () => false);
-  return [hardcore, write];
+  const hardMode = useSyncExternalStore(subscribe, read, () => false);
+  return [hardMode, write];
 }
