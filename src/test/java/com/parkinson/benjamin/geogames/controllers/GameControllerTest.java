@@ -384,7 +384,9 @@ class GameControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.detail")
-                .value("A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
+                .value(
+                    "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not"
+                        + " 3"));
   }
 
   @Test

@@ -47,7 +47,6 @@ class RiverLoaderServiceTest {
           "Zambezi");
 
   @Test
-  @SuppressWarnings("unchecked")
   void theGeneratedRiverFilesAreComplete() {
     List<River> rivers =
         new RiverLoaderService(new JsonResourceReader(new PathMatchingResourcePatternResolver()))
@@ -73,12 +72,12 @@ class RiverLoaderServiceTest {
 
       GeoGeometry geometry = river.geoData().geometry();
       assertThat(geometry.type()).as("geometry of " + who).isEqualTo("MultiLineString");
-      List<List<List<Number>>> lines = (List<List<List<Number>>>) geometry.coordinates();
+      List<?> lines = geometry.coordinates();
       assertThat(lines).as("lines of " + who).isNotEmpty();
       assertThat(lines)
           .as("lines of " + who)
-          .allSatisfy(l -> assertThat(l).hasSizeGreaterThanOrEqualTo(2));
-      assertThat(lines.stream().mapToInt(List::size).sum())
+          .allSatisfy(l -> assertThat((List<?>) l).hasSizeGreaterThanOrEqualTo(2));
+      assertThat(lines.stream().mapToInt(line -> ((List<?>) line).size()).sum())
           .as("points of " + who)
           .isLessThanOrEqualTo(600);
     }
