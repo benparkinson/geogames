@@ -204,7 +204,7 @@ interface MapGameInputProps {
   gaveUp: boolean;
   /** The round ended because the guesses ran out (`gaveUp` is true too). */
   outOfGuesses: boolean;
-  /** Wrong guesses left; Infinity when the round has no limit. */
+  /** Wrong guesses left. */
   guessesLeft: number;
   round: Round;
   wrongGuesses: Guess[];

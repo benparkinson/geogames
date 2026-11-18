@@ -32,7 +32,7 @@ export interface Round {
   answerState: AnswerState;
   /** How many hints this game type offers (from the backend). */
   hintCount: number;
-  /** Wrong guesses allowed this round, from the backend. Infinity means no limit. */
+  /** Wrong guesses allowed this round, from the backend. */
   guessLimit: number;
   /** The hints the server has recorded for this round. 0 until the round is answered. */
   hintsUsed: number;

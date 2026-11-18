@@ -3,11 +3,8 @@ import { Circle, CircleFill } from "react-bootstrap-icons";
 /** More allowed guesses than this are shown as text only, because a long row of dots is noise. */
 const MAX_DOTS = 10;
 
-/** How many wrong guesses the player has left. Renders nothing when there is no limit. */
-export default function GuessesLeft({ left, limit }: { left: number; limit: number }): React.JSX.Element | null {
-  if (!Number.isFinite(limit)) {
-    return null;
-  }
+/** How many wrong guesses the player has left. */
+export default function GuessesLeft({ left, limit }: { left: number; limit: number }): React.JSX.Element {
   const last = left === 1;
   const label = last ? "1 guess left" : `${left} guesses left`;
   const text = last ? "Last guess!" : label;
