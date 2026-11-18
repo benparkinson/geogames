@@ -43,8 +43,8 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
   return (
     <div>
       <div className="d-flex flex-wrap align-items-center gap-2">
-        <Button variant="primary" onClick={copy}>Share</Button>
-        {canShare && <Button variant="secondary" onClick={share}>Share…</Button>}
+        <Button variant="primary" onClick={copy}><span aria-hidden="true">📋</span> Copy result</Button>
+        {canShare && <Button variant="secondary" onClick={share}><span aria-hidden="true">↗</span> Share</Button>}
         <span aria-live="polite" className="small gg-text-muted">{copied ? "Copied!" : ""}</span>
       </div>
       {manual && (
