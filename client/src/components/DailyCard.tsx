@@ -10,7 +10,7 @@ export default function DailyCard(): React.JSX.Element {
     ? `Done: ${todaysDaily.result.score} / ${todaysDaily.result.maxScore}`
     : todaysDaily
       ? "Continue"
-      : "Five rounds, one of each kind. The same for everyone today.";
+      : "Five different geography puzzles, the same for everyone today.";
 
   return (
     // A link, outside the radio group of games, so the arrow keys through the games don't reach it.
