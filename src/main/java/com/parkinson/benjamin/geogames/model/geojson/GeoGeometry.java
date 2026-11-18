@@ -19,11 +19,8 @@ public record GeoGeometry(
   public List<List<Number>> flattenedCoordinates() {
     if (this.type.equals(POLYGON) || this.type.equals(MULTI_LINE_STRING)) {
       return getPolygonCoordinates();
-    } else if (this.type.equals(MULTI_POLYGON)) {
-      return getMultiPolygonCoordinates();
-    } else {
-      return List.of();
     }
+    return getMultiPolygonCoordinates();
   }
 
   private List<List<Number>> getMultiPolygonCoordinates() {

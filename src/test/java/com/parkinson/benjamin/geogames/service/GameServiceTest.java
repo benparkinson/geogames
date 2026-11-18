@@ -97,7 +97,7 @@ class GameServiceTest {
         .thenAnswer(
             invocation -> {
               GameEntity game = invocation.getArgument(0);
-              game.setId(42L);
+              ReflectionTestUtils.setField(game, "id", 42L);
               return game;
             });
   }

@@ -80,10 +80,6 @@ public class GameEntity {
     return id;
   }
 
-  public void setId(long id) {
-    this.id = id;
-  }
-
   public UUID getPublicId() {
     return publicId;
   }
