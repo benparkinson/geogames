@@ -76,8 +76,8 @@ public class CountryShapeMain {
   }
 
   static int points(CountryShape shape) {
-    return CountryShapeBuilder.pointCount(shape.outline())
-        + CountryShapeBuilder.pointCount(shape.coast())
-        + CountryShapeBuilder.pointCount(shape.landBorders());
+    return shape.outline().geometry().positionCount()
+        + shape.coast().geometry().positionCount()
+        + shape.landBorders().geometry().positionCount();
   }
 }

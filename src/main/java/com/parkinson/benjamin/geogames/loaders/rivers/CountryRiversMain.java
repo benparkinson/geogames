@@ -411,8 +411,7 @@ public class CountryRiversMain {
     int largestPoints = 0;
     for (CountryRivers rivers : report.rivers().values()) {
       int points =
-          CountryShapeBuilder.pointCount(rivers.major())
-              + CountryShapeBuilder.pointCount(rivers.minor());
+          rivers.major().geometry().positionCount() + rivers.minor().geometry().positionCount();
       if (points > largestPoints) {
         largestPoints = points;
         largest = rivers;

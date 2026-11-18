@@ -490,23 +490,4 @@ public final class CountryShapeBuilder {
     }
     return GeoPoints.roundLine(joined);
   }
-
-  /** Every position in a Polygon, MultiPolygon or MultiLineString. */
-  public static int pointCount(GeoData data) {
-    return countPositions(data.geometry().coordinates());
-  }
-
-  private static int countPositions(List<?> list) {
-    if (list.isEmpty()) {
-      return 0;
-    }
-    if (list.get(0) instanceof Number) {
-      return 1;
-    }
-    int total = 0;
-    for (Object o : list) {
-      total += countPositions((List<?>) o);
-    }
-    return total;
-  }
 }

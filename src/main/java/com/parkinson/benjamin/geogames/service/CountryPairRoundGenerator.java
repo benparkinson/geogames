@@ -150,21 +150,17 @@ public class CountryPairRoundGenerator implements RoundGenerator {
 
   /** The box round every position of a MultiLineString. */
   private static Bounds boundsOf(GeoData lines) {
-    double west = Double.MAX_VALUE;
-    double south = Double.MAX_VALUE;
-    double east = -Double.MAX_VALUE;
-    double north = -Double.MAX_VALUE;
-    for (Object line : lines.geometry().coordinates()) {
-      for (Object point : (List<?>) line) {
-        List<?> position = (List<?>) point;
-        double lon = ((Number) position.get(0)).doubleValue();
-        double lat = ((Number) position.get(1)).doubleValue();
-        west = Math.min(west, lon);
-        east = Math.max(east, lon);
-        south = Math.min(south, lat);
-        north = Math.max(north, lat);
-      }
-    }
-    return new Bounds(west, south, east, north);
+    // west, south, east, north
+    double[] box = {Double.MAX_VALUE, Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    lines
+        .geometry()
+        .forEachPosition(
+            (lon, lat) -> {
+              box[0] = Math.min(box[0], lon);
+              box[1] = Math.min(box[1], lat);
+              box[2] = Math.max(box[2], lon);
+              box[3] = Math.max(box[3], lat);
+            });
+    return new Bounds(box[0], box[1], box[2], box[3]);
   }
 }
