@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
+import com.parkinson.benjamin.geogames.TestFixtures;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.time.Duration;
@@ -32,7 +33,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
     rounds.add(new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:Q1"));
     rounds.add(new GameRoundEntity(2, GameType.TRIPOINT, "tripoint:third"));
-    return new GameEntity(rounds, "TRIPOINT", null);
+    return TestFixtures.game(rounds);
   }
 
   private GameEntity saveAndReload(GameEntity game) {
@@ -270,7 +271,7 @@ class GameRepositoryTest {
       rounds.add(new GameRoundEntity(rounds.size(), type, "tripoint:x"));
     }
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT", null));
+    GameEntity reloaded = saveAndReload(TestFixtures.game(rounds));
 
     assertThat(sorted(reloaded).stream().map(GameRoundEntity::getGameType).toList())
         .containsExactly(GameType.values());
@@ -318,7 +319,7 @@ class GameRepositoryTest {
     rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:0"));
     rounds.add(new GameRoundEntity(1, GameType.TRIPOINT, "tripoint:1"));
 
-    GameEntity reloaded = saveAndReload(new GameEntity(rounds, "TRIPOINT", null));
+    GameEntity reloaded = saveAndReload(TestFixtures.game(rounds));
 
     assertThat(reloaded.getRounds().stream().map(GameRoundEntity::getRoundNumber).toList())
         .containsExactly(0, 1, 2);

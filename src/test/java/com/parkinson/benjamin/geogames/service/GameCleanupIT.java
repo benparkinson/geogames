@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.parkinson.benjamin.geogames.TestFixtures;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
@@ -9,8 +10,6 @@ import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,9 +30,7 @@ class GameCleanupIT {
   @Autowired private JdbcTemplate jdbc;
 
   private GameEntity game(String key) {
-    List<GameRoundEntity> rounds = new ArrayList<>();
-    rounds.add(new GameRoundEntity(0, GameType.TRIPOINT, key));
-    return new GameEntity(rounds, "TRIPOINT", null);
+    return TestFixtures.game(new GameRoundEntity(0, GameType.TRIPOINT, key));
   }
 
   @Test

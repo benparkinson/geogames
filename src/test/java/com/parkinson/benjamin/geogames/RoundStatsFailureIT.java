@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.jayway.jsonpath.JsonPath;
 import com.parkinson.benjamin.geogames.service.stats.RoundStatsStore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +27,7 @@ class RoundStatsFailureIT {
   @Test
   void answeringStillWorksWhenTheStoreThrows() throws Exception {
     doThrow(new IllegalStateException("db down")).when(store).insert(any());
-    String body =
-        mockMvc
-            .perform(
-                post("/api/games")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"gameType\":\"RIVERS_BY_SHAPE\",\"numberOfRounds\":1}"))
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
-    String id = JsonPath.read(body, "$.id");
+    String id = TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1);
 
     mockMvc
         .perform(
