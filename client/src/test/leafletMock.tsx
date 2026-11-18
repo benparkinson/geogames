@@ -54,9 +54,11 @@ export function TileLayer({ url, attribution }: { url: string; attribution?: str
 export function GeoJSON({
   data,
   pathOptions,
+  interactive,
   children,
 }: Children & {
   data: { properties?: { name?: string } };
+  interactive?: boolean;
   pathOptions?: { color?: string; dashArray?: string; fill?: boolean };
 }) {
   return (
@@ -66,6 +68,7 @@ export function GeoJSON({
       data-first-point={firstPoint(data)}
       data-color={pathOptions?.color ?? ""}
       data-dash={pathOptions?.dashArray ?? ""}
+      data-interactive={String(interactive ?? true)}
     >
       {children}
     </div>
