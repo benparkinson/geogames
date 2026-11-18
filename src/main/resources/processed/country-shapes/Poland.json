@@ -5,7 +5,7 @@
   "landBorderKm" : 2447.0,
   "areaKm2" : 312093,
   "neighbours" : [ {
-    "name" : "Czech Republic",
+    "name" : "Czechia",
     "km" : 598.0,
     "mainland" : true,
     "lines" : [ 5 ]

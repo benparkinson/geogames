@@ -37,6 +37,13 @@ class KnownPlaceNamesTest {
   }
 
   @Test
+  void findsACountrysCurrentNameFromAnOldName() {
+    assertThat(names.currentCountryName("Ivory Coast")).contains("Côte d'Ivoire");
+    assertThat(names.currentCountryName("Chad")).contains("Chad");
+    assertThat(names.currentCountryName("Atlantis")).isEmpty();
+  }
+
+  @Test
   void resolvesAnAliasToItsOwnSpelling() {
     assertThat(names.resolve(PlaceKind.COUNTRIES, "ivory coast")).contains("Ivory Coast");
   }

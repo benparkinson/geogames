@@ -1,10 +1,10 @@
 {
-  "name" : "Aland",
-  "additionalNames" : [ "Aland Islands", "Åland Islands", "Åland" ],
+  "name" : "Åland",
+  "additionalNames" : [ "Åland Islands" ],
   "geoData" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Aland"
+      "name" : "Åland"
     },
     "geometry" : {
       "type" : "MultiPolygon",
