@@ -621,17 +621,6 @@ class GameServiceTest {
   }
 
   @Test
-  void aGameWithoutAPlayIdPublishesNothing() {
-    GameEntity game = game(round(0, AnswerState.UNANSWERED));
-    ReflectionTestUtils.setField(game, "playId", null);
-    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
-
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
-
-    verify(events, never()).publishEvent(any(Object.class));
-  }
-
-  @Test
   void submitAnswerRefusesToChangeAnAnsweredRound() {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
@@ -800,6 +789,14 @@ class GameServiceTest {
         .hasMessageContaining("at least one round");
     assertThatThrownBy(() -> new GameEntity(null, "TRIPOINT"))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void aGameCannotBeMadeWithoutAMode() {
+    assertThatThrownBy(
+            () -> new GameEntity(new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))), null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("mode");
   }
 
   // ------------------------------------------------------------ recordGuess

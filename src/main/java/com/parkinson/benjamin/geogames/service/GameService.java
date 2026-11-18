@@ -170,12 +170,9 @@ public class GameService {
 
   /**
    * Tells the usage statistics a round was answered. The event is handled after this transaction
-   * commits. A game made before the statistics existed has no play id and is skipped.
+   * commits.
    */
   private void publishRoundAnswered(GameEntity game, GameRoundEntity round) {
-    if (game.getPlayId() == null) {
-      return;
-    }
     events.publishEvent(
         new RoundAnswered(
             game.getPlayId(),

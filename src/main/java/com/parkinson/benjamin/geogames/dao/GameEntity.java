@@ -47,14 +47,13 @@ public class GameEntity {
 
   /**
    * Random per game, shared by the rows the usage statistics record for its rounds. It is not the
-   * public id, which is in URLs and request logs, and it is never sent to a client or logged. Null
-   * for a game created before the statistics existed.
+   * public id, which is in URLs and request logs, and it is never sent to a client or logged.
    */
-  @Column(updatable = false)
+  @Column(nullable = false, updatable = false)
   private UUID playId;
 
-  /** What the player asked for: a {@code GameType} name, or {@code RANDOM}. Null for old games. */
-  @Column(updatable = false)
+  /** What the player asked for: a {@code GameType} name, or {@code RANDOM}. */
+  @Column(nullable = false, updatable = false)
   private String gameMode;
 
   public GameEntity() {}
@@ -67,6 +66,9 @@ public class GameEntity {
   public GameEntity(List<GameRoundEntity> rounds, String gameMode) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
+    }
+    if (gameMode == null) {
+      throw new IllegalArgumentException("A game needs a mode");
     }
     this.rounds = rounds;
     this.createdAt = Instant.now().truncatedTo(ChronoUnit.HOURS);
