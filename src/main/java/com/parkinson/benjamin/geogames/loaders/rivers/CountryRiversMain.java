@@ -17,9 +17,7 @@ import com.parkinson.benjamin.geogames.model.CountryRivers;
 import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -111,7 +109,7 @@ public class CountryRiversMain {
     CountryLocator locator = new CountryLocator(countries, MIN_SHORE_KM);
     Map<String, Double> tolerances = new HashMap<>();
     for (Country country : countries) {
-      if (!"Antarctica".equals(country.name())) {
+      if (!Geo.ANTARCTICA.equals(country.name())) {
         tolerances.put(country.name(), CountryShapeBuilder.tolerance(country));
       }
     }
@@ -120,7 +118,7 @@ public class CountryRiversMain {
     RiverClipper clipper = new RiverClipper(locator);
     Map<String, List<Run>> runsByCountry = new TreeMap<>();
     Map<Integer, Double> kmByScalerank = new TreeMap<>();
-    for (JsonNode feature : read(riversFile).path("features")) {
+    for (JsonNode feature : GeoJson.readTree(riversFile).path("features")) {
       JsonNode props = feature.path("properties");
       int scalerank = props.path("scalerank").asInt(99);
       int rivernum = props.path("rivernum").asInt(-1);
@@ -136,7 +134,7 @@ public class CountryRiversMain {
 
     // Lakes, whole, given to every country on their shore.
     Map<String, List<Lake>> lakesByCountry = new TreeMap<>();
-    for (JsonNode feature : read(lakesFile).path("features")) {
+    for (JsonNode feature : GeoJson.readTree(lakesFile).path("features")) {
       List<List<List<double[]>>> raw = polygons(feature.path("geometry"));
       if (raw.isEmpty() || LakeGeometry.areaKm2(raw) < MIN_LAKE_KM2) {
         continue;
@@ -333,8 +331,7 @@ public class CountryRiversMain {
     for (Kept k : kept) {
       lines.add(toLine(k.run().points()));
     }
-    return new GeoData(
-        "Feature", new GeoProperties(name), new GeoGeometry("MultiLineString", lines));
+    return GeoData.feature(name, new GeoGeometry("MultiLineString", lines));
   }
 
   private static GeoData lakeData(String name, List<Lake> lakes) {
@@ -348,8 +345,7 @@ public class CountryRiversMain {
         polygons.add(rings);
       }
     }
-    return new GeoData(
-        "Feature", new GeoProperties(name), new GeoGeometry("MultiPolygon", polygons));
+    return GeoData.feature(name, new GeoGeometry("MultiPolygon", polygons));
   }
 
   private static List<List<Double>> toLine(List<double[]> points) {
@@ -361,12 +357,6 @@ public class CountryRiversMain {
   }
 
   // ---- reading ----
-
-  private static JsonNode read(Path file) throws IOException {
-    try (InputStream in = Files.newInputStream(file)) {
-      return GeoJson.lenientReader().readTree(in);
-    }
-  }
 
   private static List<List<double[]>> lines(JsonNode geometry) {
     List<List<double[]>> lines = new ArrayList<>();

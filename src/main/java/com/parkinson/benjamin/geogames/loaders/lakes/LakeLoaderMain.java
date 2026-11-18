@@ -8,7 +8,6 @@ import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
 import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthReader;
 import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -76,8 +75,9 @@ public class LakeLoaderMain {
       Path naturalEarth, Path wikidataFile, Path overridesFile, Path countriesDir, Path outDir)
       throws IOException {
     Map<String, NaturalEarthFeature> groups = new NaturalEarthReader().read(naturalEarth, Set.of());
-    Map<String, WikidataEntry> wikidata = readJson(wikidataFile, new TypeReference<>() {});
-    Map<String, LakeOverride> overrides = readJson(overridesFile, new TypeReference<>() {});
+    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
+    Map<String, LakeOverride> overrides =
+        GeoJson.readValue(overridesFile, new TypeReference<>() {});
 
     LakeAssembler.Assembly assembly = new LakeAssembler().assemble(groups, wikidata, overrides);
     FeatureSelector.Selection<LakeCandidate> selection =
@@ -158,12 +158,6 @@ public class LakeLoaderMain {
           countries.get(c.qid()),
           c.aliases(),
           c.fromOverride() ? " [override]" : "");
-    }
-  }
-
-  private static <T> T readJson(Path file, TypeReference<T> type) throws IOException {
-    try (InputStream in = Files.newInputStream(file)) {
-      return GeoJson.lenientReader().readValue(in, type);
     }
   }
 }

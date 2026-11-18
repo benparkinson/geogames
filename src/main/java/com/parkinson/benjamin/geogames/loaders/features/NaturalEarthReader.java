@@ -2,8 +2,6 @@ package com.parkinson.benjamin.geogames.loaders.features;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,9 +15,7 @@ public class NaturalEarthReader {
 
   public Map<String, NaturalEarthFeature> read(Path file, Set<String> skippedClasses)
       throws IOException {
-    try (InputStream in = Files.newInputStream(file)) {
-      return group(GeoJson.lenientReader().readTree(in), skippedClasses);
-    }
+    return group(GeoJson.readTree(file), skippedClasses);
   }
 
   /**

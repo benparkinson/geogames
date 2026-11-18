@@ -5,6 +5,7 @@ import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.countries.ProcessedCountryReader;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
+import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
@@ -224,7 +225,7 @@ public class CityLoaderMain {
     Map<String, String> byName = new HashMap<>();
     // Antarctica has no shape, so the games can't use it; its research stations are dropped.
     List<Country> countries =
-        allCountries.stream().filter(c -> !"Antarctica".equals(c.name())).toList();
+        allCountries.stream().filter(c -> !Geo.ANTARCTICA.equals(c.name())).toList();
     for (Country country : countries) {
       for (String alias :
           country.additionalNames() == null ? List.<String>of() : country.additionalNames()) {

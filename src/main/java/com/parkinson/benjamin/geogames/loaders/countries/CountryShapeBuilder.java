@@ -8,7 +8,6 @@ import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.CountryShape.Neighbour;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,7 +30,6 @@ import java.util.TreeSet;
  */
 public final class CountryShapeBuilder {
 
-  static final String ANTARCTICA = "Antarctica";
   static final double SEAM_LON = 179.9999;
   static final double MIN_TOLERANCE = 0.002;
   static final double MAX_TOLERANCE = 0.02;
@@ -80,7 +78,7 @@ public final class CountryShapeBuilder {
   public static List<CountryShape> build(List<Country> countries) {
     List<Source> sources =
         countries.stream()
-            .filter(country -> !ANTARCTICA.equals(country.name()))
+            .filter(country -> !Geo.ANTARCTICA.equals(country.name()))
             .map(CountryShapeBuilder::read)
             .toList();
 
@@ -362,13 +360,9 @@ public final class CountryShapeBuilder {
         info.areaKm2(),
         neighbours,
         info.focus(),
-        feature(source.name(), outlineGeometry),
-        feature(source.name(), new GeoGeometry("MultiLineString", coastLines)),
-        feature(source.name(), new GeoGeometry("MultiLineString", borderLines)));
-  }
-
-  private static GeoData feature(String name, GeoGeometry geometry) {
-    return new GeoData("Feature", new GeoProperties(name), geometry);
+        GeoData.feature(source.name(), outlineGeometry),
+        GeoData.feature(source.name(), new GeoGeometry("MultiLineString", coastLines)),
+        GeoData.feature(source.name(), new GeoGeometry("MultiLineString", borderLines)));
   }
 
   private static List<List<Double>> toLine(List<double[]> points) {

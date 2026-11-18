@@ -6,7 +6,6 @@ import com.parkinson.benjamin.geogames.loaders.features.Slugs;
 import com.parkinson.benjamin.geogames.model.Lake;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +52,7 @@ public class LakeWriter {
         polygons.size() == 1
             ? new GeoGeometry("Polygon", polygons.get(0))
             : new GeoGeometry("MultiPolygon", polygons);
-    GeoData geoData = new GeoData("Feature", new GeoProperties(candidate.name()), geometry);
+    GeoData geoData = GeoData.feature(candidate.name(), geometry);
     return new Lake(
         candidate.qid(),
         candidate.name(),

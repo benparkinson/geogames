@@ -10,7 +10,6 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -121,10 +120,8 @@ public class CountryPairRoundGenerator implements RoundGenerator {
     for (int index : neighbour.lines()) {
       picked.add(lines.get(index));
     }
-    return new GeoData(
-        "Feature",
-        new GeoProperties(first.name() + "|" + secondName),
-        new GeoGeometry("MultiLineString", picked));
+    return GeoData.feature(
+        first.name() + "|" + secondName, new GeoGeometry("MultiLineString", picked));
   }
 
   /** The mainland neighbours of either country, except the pair, each once, in name order. */

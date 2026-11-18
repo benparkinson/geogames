@@ -14,7 +14,6 @@ import java.util.Map;
 public class CountryLocator {
 
   static final double SAMPLE_KM = 2;
-  private static final String SKIPPED = "Antarctica";
 
   /**
    * @param countries names sorted by km inside the country (longest first, ties by name), keeping
@@ -57,7 +56,7 @@ public class CountryLocator {
   public CountryLocator(List<Country> countries, double minKm) {
     this.minKm = minKm;
     for (Country country : countries) {
-      if (SKIPPED.equals(country.name())) {
+      if (Geo.ANTARCTICA.equals(country.name())) {
         continue;
       }
       List<Part> parts = new ArrayList<>();

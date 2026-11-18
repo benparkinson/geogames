@@ -7,6 +7,9 @@ public final class Geo {
 
   public static final double EARTH_RADIUS_KM = 6371.0088;
 
+  /** The one country with no shape: the games and the loaders skip it. */
+  public static final String ANTARCTICA = "Antarctica";
+
   private Geo() {}
 
   public static double haversineKm(double[] a, double[] b) {

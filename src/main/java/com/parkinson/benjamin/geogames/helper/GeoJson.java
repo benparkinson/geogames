@@ -1,6 +1,12 @@
 package com.parkinson.benjamin.geogames.helper;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.ObjectWriter;
@@ -22,6 +28,20 @@ public final class GeoJson {
           .writerWithDefaultPrettyPrinter();
 
   private GeoJson() {}
+
+  /** Reads a JSON file into the given type, ignoring properties we don't model. */
+  public static <T> T readValue(Path file, TypeReference<T> type) throws IOException {
+    try (InputStream in = Files.newInputStream(file)) {
+      return LENIENT_READER.readValue(in, type);
+    }
+  }
+
+  /** Reads a JSON file into a tree, such as a raw Natural Earth export. */
+  public static JsonNode readTree(Path file) throws IOException {
+    try (InputStream in = Files.newInputStream(file)) {
+      return LENIENT_READER.readTree(in);
+    }
+  }
 
   /** Reads JSON files that may hold extra properties we don't model, such as raw exports. */
   public static ObjectMapper lenientReader() {

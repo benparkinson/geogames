@@ -6,7 +6,6 @@ import com.parkinson.benjamin.geogames.loaders.features.Slugs;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
-import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,10 +43,7 @@ public class RiverWriter {
       coordinates.add(points);
     }
     GeoData geoData =
-        new GeoData(
-            "Feature",
-            new GeoProperties(candidate.name()),
-            new GeoGeometry("MultiLineString", coordinates));
+        GeoData.feature(candidate.name(), new GeoGeometry("MultiLineString", coordinates));
     return new River(
         candidate.qid(),
         candidate.name(),
