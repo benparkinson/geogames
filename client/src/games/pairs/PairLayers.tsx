@@ -1,5 +1,6 @@
 import { GeoJSON } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
+import { boundsToLatLng } from "../../map/boundsToLatLng";
 import { hiddenBorderOptions, mergedShapeOptions } from "../../map/constants";
 import { AnswerOutline } from "../countries/CountryLayers";
 import type { Bounds } from "../countries/model";
@@ -14,13 +15,7 @@ export function pairId(round: CountryPairRound): string {
 /** Fits the map to `bounds`, and again whenever `id` changes. */
 export function BoundsFit({ bounds, id }: { bounds: Bounds; id: string }): React.JSX.Element {
   return (
-    <FitBounds
-      id={id}
-      bounds={[
-        [bounds.south, bounds.west],
-        [bounds.north, bounds.east],
-      ]}
-    />
+    <FitBounds id={id} bounds={boundsToLatLng(bounds)} />
   );
 }
 

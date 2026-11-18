@@ -1,8 +1,7 @@
-import { GeoJSON, MapContainer, ScaleControl } from "react-leaflet";
+import { GeoJSON, ScaleControl } from "react-leaflet";
 import { FitBounds } from "../../map/FitBounds";
+import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
-import { MapCredits } from "../../map/MapCredits";
-import { MapResizer } from "../../map/MapResizer";
 import { RevealTiles } from "../../map/RevealTiles";
 import { answerPathOptions } from "../../map/constants";
 import { LakeRound } from "./model";
@@ -16,14 +15,12 @@ const LAKE_MAX_FIT_ZOOM = 11;
  */
 function LakeShapesMap({ data: { lake }, gaveUp, gameOver }: MapProps<LakeRound>): React.JSX.Element {
   return (
-    <MapContainer zoom={3} minZoom={2} maxZoom={12} center={[0, 0]}>
+    <GameMap maxZoom={12}>
       <RevealTiles show={gameOver} />
       <GeoJSON pathOptions={{ ...answerPathOptions(gaveUp), fillOpacity: 0.35 }} data={lake.geoData} key={lake.id + (gaveUp ? "gaveUp" : "")} />
       <FitBounds data={lake.geoData} id={lake.id} maxZoom={LAKE_MAX_FIT_ZOOM} />
       <ScaleControl position="bottomleft" imperial={false} />
-      <MapCredits />
-      <MapResizer />
-    </MapContainer>
+    </GameMap>
   );
 }
 

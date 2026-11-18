@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueOutlineOptions, hiddenBorderOptions, mergedShapeOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
+import { drawnLayers, drawnTileUrls, addedAttributions, fakeMap } from "../../test/leafletMock";
 import { makeCountryPairRoundData } from "../../test/fixtures";
 import MergedCountriesMap from "./MergedCountriesMap";
 import type { CountryPairRound } from "./model";
@@ -24,6 +24,12 @@ const points = () => drawnLayers().map((layer) => layer.point);
 beforeEach(() => vi.clearAllMocks());
 
 describe("MergedCountriesMap", () => {
+  it("credits Natural Earth", () => {
+    renderMap();
+
+    expect(addedAttributions().join(" ")).toContain("Natural Earth");
+  });
+
   it("draws both countries in the same colour and nothing else while playing", () => {
     renderMap();
 

@@ -1,5 +1,4 @@
-import { MapContainer } from "react-leaflet";
-import { MapResizer } from "../../map/MapResizer";
+import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
 import { AnswerOutline, HintLines } from "./CountryLayers";
@@ -15,15 +14,14 @@ import { CountryCitiesRound } from "./model";
 function CountryCitiesMap({ data: { country, cities }, gameOver, gaveUp, hintsUsed }: MapProps<CountryCitiesRound>): React.JSX.Element {
   const hasCoast = country.coast.geometry.coordinates.length > 0;
   return (
-    <MapContainer zoom={3} minZoom={2} maxZoom={10} center={[0, 0]}>
+    <GameMap>
       <RevealTiles show={gameOver} />
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} labelled={false} />}
       {!gameOver && hintsUsed >= 2 && hasCoast && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       <CityDots cities={cities} labelled={gameOver} />
       {(gameOver || hintsUsed >= 1) && <CapitalDots cities={cities} labelled={gameOver} />}
       <CitiesFit country={country} cities={cities} />
-      <MapResizer />
-    </MapContainer>
+    </GameMap>
   );
 }
 
