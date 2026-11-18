@@ -7,15 +7,15 @@ import { renderWithClient } from "../../test/render";
 import { makeRiverGame } from "./RiverGame";
 import { continentHint, textHints } from "./riverHints";
 
-const CAPTION = "Shape only. The relief map appears when you answer.";
+const CAPTION = "The line is the river's course, with no map behind it.";
 
 const RiverGame = makeRiverGame({
   MapComponent: ({ gameOver, gaveUp }: { gameOver: boolean; gaveUp: boolean }) => (
     <div data-testid="map" data-game-over={String(gameOver)} data-gave-up={String(gaveUp)} />
   ),
-  prompt: "Name this river from its shape.",
+  prompt: "Which river is this?",
   blankMap: true,
-  mapCaption: CAPTION,
+  mapKey: CAPTION,
   hints: (river) => textHints(river, continentHint),
 });
 
@@ -43,7 +43,7 @@ describe("makeRiverGame with the shape configuration", () => {
   it("asks for the river's name", async () => {
     await renderRiver();
 
-    expect(screen.getByText("Name this river from its shape.")).toBeInTheDocument();
+    expect(screen.getByText("Which river is this?")).toBeInTheDocument();
   });
 
   it.each(["Danube", "danube", "  DANUBE "])("accepts %j", async (text) => {

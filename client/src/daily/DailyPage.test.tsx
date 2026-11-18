@@ -30,6 +30,17 @@ function posts(fetchMock: ReturnType<typeof mockFetch>) {
   return callsTo(fetchMock).filter((c) => c.method === "POST");
 }
 
+describe("DailyPage intro", () => {
+  it("says what each round shows", async () => {
+    mockFetch([{ url: API + "/health", body: "ok" }]);
+    renderWithClient(<DailyPage />);
+
+    expect(await screen.findByText(/Five different geography puzzles/)).toHaveTextContent(
+      "Each round tells you what to name and what the map shows. Hints help, but they lower your score.",
+    );
+  });
+});
+
 describe("DailyPage with no game for today", () => {
   it("offers to play and creates nothing until it is clicked", async () => {
     const fetchMock = mockFetch([

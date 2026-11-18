@@ -40,7 +40,10 @@ function Intro(): React.JSX.Element {
   return (
     <PageShell>
       <h1 className="h3 mb-1">Daily challenge</h1>
-      <p className="mb-3">Five rounds, one of each kind, the same for everyone today.</p>
+      <p className="mb-3">
+        Five different geography puzzles, the same for everyone today. Each round tells you what to name and what the
+        map shows. Hints help, but they lower your score.
+      </p>
       <div className="mb-3">
         <HardModeToggle />
       </div>

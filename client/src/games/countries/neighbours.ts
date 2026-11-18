@@ -15,8 +15,8 @@ export default defineGame({
   hasClues: true,
   Component: makeCountryGame<CountryShapeRound>({
     MapComponent: NeighboursMapWrapper,
-    prompt: "Name the missing country.",
-    mapCaption: "Only its neighbours are shown. The country is the gap.",
+    prompt: "Which country is missing?",
+    mapKey: "The shaded countries are its neighbours. The flag marks the gap.",
     hints: (round) =>
       hintsFrom(
         round.country.coastKm === 0

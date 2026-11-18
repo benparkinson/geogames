@@ -26,11 +26,11 @@ async function renderLake(data = makeLakeRoundData()) {
 const input = () => screen.getByLabelText("Lake name…");
 
 describe("LakeGame", () => {
-  it("shows the prompt and the caption", async () => {
+  it("shows the prompt and the map key", async () => {
     await renderLake();
 
-    expect(screen.getByText("Name this lake from its shape.")).toBeInTheDocument();
-    expect(screen.getByText("Shape only. The scale bar shows its size.")).toBeInTheDocument();
+    expect(screen.getByText("Which lake is this?")).toBeInTheDocument();
+    expect(screen.getByText("The shape is the lake's outline. The scale bar shows its size.")).toBeInTheDocument();
   });
 
   it("offers three hints in order, each with text", async () => {

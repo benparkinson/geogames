@@ -13,9 +13,9 @@ export default defineGame({
   extraDifficult: true,
   Component: makeRiverGame({
     MapComponent: RiverShapesMapWrapper,
-    prompt: "Name this river from its shape.",
+    prompt: "Which river is this?",
     blankMap: true,
-    mapCaption: "Shape only. The relief map appears when you answer.",
+    mapKey: "The line is the river's course, with no map behind it.",
     hints: (river) => textHints(river, continentHint, countryCountHint, firstLetterHint),
   }),
   answerNames: (round) => [round.river.name],

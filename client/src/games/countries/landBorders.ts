@@ -15,8 +15,8 @@ export default defineGame({
   hasClues: true,
   Component: makeCountryGame<CountryShapeRound>({
     MapComponent: LandBordersMapWrapper,
-    prompt: "Name the country with these land borders.",
-    mapCaption: "Land borders only. The coastline is hidden.",
+    prompt: "Which country has these land borders?",
+    mapKey: "The solid lines are its borders with other countries. Its coast isn't drawn at first.",
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(

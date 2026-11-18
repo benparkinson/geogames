@@ -12,8 +12,8 @@ vi.mock("next/router", () => ({ useRouter: () => ({ push: vi.fn(), query: {} }) 
 vi.mock("../tripoint/TripointMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 vi.mock("../rivers/RiverShapesMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 
-const TRIPOINT_PROMPT = "Name the 3 countries that meet at the flag.";
-const RIVER_PROMPT = "Name this river from its shape.";
+const TRIPOINT_PROMPT = "Which 3 countries meet at this flag?";
+const RIVER_PROMPT = "Which river is this?";
 
 let client: QueryClient;
 
@@ -206,6 +206,21 @@ describe("GameRoundPage playing", () => {
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
     expect(roundGets(fetchMock, 1).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: "Round 2: current" })).toBeInTheDocument();
+  });
+
+  it("names the round after its type when a mixed game moves to a round of another type", async () => {
+    fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"]);
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(TRIPOINT_PROMPT);
+    expect(screen.getByText("Tripoints")).toBeInTheDocument();
+
+    await solveTripoint(user);
+    await user.click(await screen.findByRole("button", { name: /Next round/ }));
+
+    await screen.findByText(RIVER_PROMPT);
+    expect(screen.getByText("River Shapes")).toBeInTheDocument();
+    expect(screen.queryByText("Tripoints")).not.toBeInTheDocument();
   });
 
   it("prefetches the next round after the answer, so Next round needs no further fetch", async () => {

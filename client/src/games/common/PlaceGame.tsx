@@ -12,7 +12,7 @@ const PLACE_TEXT: Record<PlaceKind, { inputPlaceholder: string; answerNoun: stri
 
 interface PlaceGameProps<T> extends Pick<
   MapGameProps<T>,
-  "MapComponent" | "answers" | "prompt" | "hints" | "blankMap" | "mapCaption"
+  "MapComponent" | "answers" | "prompt" | "hints" | "blankMap" | "mapKey"
 > {
   kind: PlaceKind;
   game: GameComponentProps<T>;

@@ -1,3 +1,4 @@
+import { Globe } from "react-bootstrap-icons";
 import { vi } from "vitest";
 import type {
   DailyGameResponse,
@@ -16,6 +17,7 @@ import type { TripointModel } from "../games/tripoint/model";
 
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
   return {
+    kind: { title: "Test Game", Icon: Globe },
     nextRound: vi.fn(),
     goToRound: vi.fn(),
     showSummary: vi.fn(),

@@ -38,7 +38,7 @@ describe("River Countries", () => {
 
   it("asks for the river and blanks the map until the round ends", async () => {
     renderGame();
-    expect(screen.getByText("Name the river that flows through all of these countries.")).toBeInTheDocument();
+    expect(screen.getByText("Which river flows through all of these countries?")).toBeInTheDocument();
     expect(document.querySelector(".game-map--blank")).not.toBeNull();
 
     await userEvent.setup().type(input(), "Danube{Enter}");
