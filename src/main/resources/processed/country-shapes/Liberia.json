@@ -5,7 +5,7 @@
   "landBorderKm" : 1281.0,
   "areaKm2" : 95710,
   "neighbours" : [ {
-    "name" : "Ivory Coast",
+    "name" : "Côte d'Ivoire",
     "km" : 567.0,
     "mainland" : true,
     "lines" : [ 0 ]

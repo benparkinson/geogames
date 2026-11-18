@@ -185,11 +185,17 @@
   "riverKm" : 858,
   "lakeCount" : 0
 }, {
-  "name" : "Czech Republic",
-  "file" : "CzechRepublic.json",
+  "name" : "Czechia",
+  "file" : "Czechia.json",
   "riverCount" : 4,
   "riverKm" : 899,
   "lakeCount" : 0
+}, {
+  "name" : "Côte d'Ivoire",
+  "file" : "CotedIvoire.json",
+  "riverCount" : 8,
+  "riverKm" : 2969,
+  "lakeCount" : 2
 }, {
   "name" : "Democratic Republic of the Congo",
   "file" : "DemocraticRepublicoftheCongo.json",
@@ -305,8 +311,8 @@
   "riverKm" : 1458,
   "lakeCount" : 0
 }, {
-  "name" : "Guinea Bissau",
-  "file" : "GuineaBissau.json",
+  "name" : "Guinea-Bissau",
+  "file" : "Guinea-Bissau.json",
   "riverCount" : 1,
   "riverKm" : 223,
   "lakeCount" : 0
@@ -376,12 +382,6 @@
   "riverCount" : 9,
   "riverKm" : 1663,
   "lakeCount" : 3
-}, {
-  "name" : "Ivory Coast",
-  "file" : "IvoryCoast.json",
-  "riverCount" : 8,
-  "riverKm" : 2969,
-  "lakeCount" : 2
 }, {
   "name" : "Japan",
   "file" : "Japan.json",
@@ -653,8 +653,8 @@
   "riverKm" : 723,
   "lakeCount" : 0
 }, {
-  "name" : "Republic of Congo",
-  "file" : "RepublicofCongo.json",
+  "name" : "Republic of the Congo",
+  "file" : "RepublicoftheCongo.json",
   "riverCount" : 12,
   "riverKm" : 3173,
   "lakeCount" : 0
@@ -797,17 +797,17 @@
   "riverKm" : 288,
   "lakeCount" : 0
 }, {
-  "name" : "Turkey",
-  "file" : "Turkey.json",
-  "riverCount" : 12,
-  "riverKm" : 4856,
-  "lakeCount" : 7
-}, {
   "name" : "Turkmenistan",
   "file" : "Turkmenistan.json",
   "riverCount" : 4,
   "riverKm" : 1205,
   "lakeCount" : 1
+}, {
+  "name" : "Türkiye",
+  "file" : "Turkiye.json",
+  "riverCount" : 12,
+  "riverKm" : 4856,
+  "lakeCount" : 7
 }, {
   "name" : "Uganda",
   "file" : "Uganda.json",

@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.helper.PlaceNames;
+import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.PlaceKind;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.EnumMap;
@@ -21,6 +22,7 @@ public class KnownPlaceNames {
   private final RiverLoaderService rivers;
   private final LakeLoaderService lakes;
   private final Map<PlaceKind, Map<String, String>> byKind = new EnumMap<>(PlaceKind.class);
+  private Map<String, String> currentCountryNames;
 
   public KnownPlaceNames(
       CountryLoaderService countries, RiverLoaderService rivers, LakeLoaderService lakes) {
@@ -35,6 +37,27 @@ public class KnownPlaceNames {
       return Optional.empty();
     }
     return Optional.ofNullable(lookup(kind).get(PlaceNames.normalise(guess)));
+  }
+
+  /**
+   * The name a country goes by now, given that name or any alias. A renamed country keeps its old
+   * name as an alias, so this finds it from a round stored before the rename.
+   */
+  public synchronized Optional<String> currentCountryName(String name) {
+    if (currentCountryNames == null) {
+      Map<String, String> byName = new HashMap<>();
+      List<CountryName> all = countries.loadCountryNames();
+      all.forEach(c -> byName.putIfAbsent(PlaceNames.normalise(c.name()), c.name()));
+      for (CountryName country : all) {
+        if (country.additionalNames() != null) {
+          country
+              .additionalNames()
+              .forEach(alias -> byName.putIfAbsent(PlaceNames.normalise(alias), country.name()));
+        }
+      }
+      currentCountryNames = byName;
+    }
+    return Optional.ofNullable(currentCountryNames.get(PlaceNames.normalise(name)));
   }
 
   private synchronized Map<String, String> lookup(PlaceKind kind) {

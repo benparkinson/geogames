@@ -75,7 +75,7 @@
     "mainland" : true,
     "lines" : [ 11 ]
   }, {
-    "name" : "Hong Kong S.A.R.",
+    "name" : "Hong Kong",
     "km" : 18.0,
     "mainland" : true,
     "lines" : [ 1 ]

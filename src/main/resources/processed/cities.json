@@ -200,15 +200,6 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Aland",
-  "cities" : [ {
-    "name" : "Mariehamn",
-    "lon" : 19.949,
-    "lat" : 60.097,
-    "population" : 10682,
-    "capital" : true
-  } ]
-}, {
   "country" : "Albania",
   "cities" : [ {
     "name" : "Tirana",
@@ -1586,6 +1577,21 @@
     "lon" : 45.5564,
     "lat" : 40.9053,
     "population" : 0,
+    "capital" : false
+  } ]
+}, {
+  "country" : "Bahamas",
+  "cities" : [ {
+    "name" : "Nassau",
+    "lon" : -77.35,
+    "lat" : 25.0834,
+    "population" : 227940,
+    "capital" : true
+  }, {
+    "name" : "Freeport",
+    "lon" : -78.7,
+    "lat" : 26.5333,
+    "population" : 25383,
     "capital" : false
   } ]
 }, {
@@ -3050,6 +3056,21 @@
     "capital" : false
   } ]
 }, {
+  "country" : "Cabo Verde",
+  "cities" : [ {
+    "name" : "Praia",
+    "lon" : -23.5167,
+    "lat" : 14.9167,
+    "population" : 113364,
+    "capital" : true
+  }, {
+    "name" : "Mindelo",
+    "lon" : -25.0,
+    "lat" : 16.8838,
+    "population" : 70611,
+    "capital" : false
+  } ]
+}, {
   "country" : "Cambodia",
   "cities" : [ {
     "name" : "Phnom Penh",
@@ -3596,21 +3617,6 @@
     "lon" : -66.6333,
     "lat" : 45.95,
     "population" : 52337,
-    "capital" : false
-  } ]
-}, {
-  "country" : "Cape Verde",
-  "cities" : [ {
-    "name" : "Praia",
-    "lon" : -23.5167,
-    "lat" : 14.9167,
-    "population" : 113364,
-    "capital" : true
-  }, {
-    "name" : "Mindelo",
-    "lon" : -25.0,
-    "lat" : 16.8838,
-    "population" : 70611,
     "capital" : false
   } ]
 }, {
@@ -4949,7 +4955,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Czech Republic",
+  "country" : "Czechia",
   "cities" : [ {
     "name" : "Prague",
     "lon" : 14.4229,
@@ -5021,6 +5027,159 @@
     "lon" : 15.5833,
     "lat" : 49.4004,
     "population" : 53921,
+    "capital" : false
+  } ]
+}, {
+  "country" : "Côte d'Ivoire",
+  "cities" : [ {
+    "name" : "Abidjan",
+    "lon" : -4.0202,
+    "lat" : 5.3231,
+    "population" : 3802000,
+    "capital" : false
+  }, {
+    "name" : "Bouaké",
+    "lon" : -5.03,
+    "lat" : 7.69,
+    "population" : 567481,
+    "capital" : false
+  }, {
+    "name" : "Daloa",
+    "lon" : -6.45,
+    "lat" : 6.89,
+    "population" : 255168,
+    "capital" : false
+  }, {
+    "name" : "San-Pedro",
+    "lon" : -6.64,
+    "lat" : 4.7704,
+    "population" : 210273,
+    "capital" : false
+  }, {
+    "name" : "Yamoussoukro",
+    "lon" : -5.2755,
+    "lat" : 6.8184,
+    "population" : 206499,
+    "capital" : true
+  }, {
+    "name" : "Korhogo",
+    "lon" : -5.64,
+    "lat" : 9.46,
+    "population" : 177711,
+    "capital" : false
+  }, {
+    "name" : "Man",
+    "lon" : -7.55,
+    "lat" : 7.4004,
+    "population" : 146974,
+    "capital" : false
+  }, {
+    "name" : "Divo",
+    "lon" : -5.36,
+    "lat" : 5.839,
+    "population" : 127867,
+    "capital" : false
+  }, {
+    "name" : "Gagnoa",
+    "lon" : -5.88,
+    "lat" : 6.1504,
+    "population" : 123184,
+    "capital" : false
+  }, {
+    "name" : "Soubré",
+    "lon" : -6.61,
+    "lat" : 5.7904,
+    "population" : 108933,
+    "capital" : false
+  }, {
+    "name" : "Abengourou",
+    "lon" : -3.49,
+    "lat" : 6.7304,
+    "population" : 104020,
+    "capital" : false
+  }, {
+    "name" : "Agboville",
+    "lon" : -4.28,
+    "lat" : 5.9403,
+    "population" : 81770,
+    "capital" : false
+  }, {
+    "name" : "Grand Bassam",
+    "lon" : -3.75,
+    "lat" : 5.2004,
+    "population" : 73772,
+    "capital" : false
+  }, {
+    "name" : "Dabou",
+    "lon" : -4.3899,
+    "lat" : 5.3204,
+    "population" : 72913,
+    "capital" : false
+  }, {
+    "name" : "Dimbokro",
+    "lon" : -4.71,
+    "lat" : 6.6505,
+    "population" : 67349,
+    "capital" : false
+  }, {
+    "name" : "Ferkessédougou",
+    "lon" : -5.2,
+    "lat" : 9.6004,
+    "population" : 62008,
+    "capital" : false
+  }, {
+    "name" : "Bouaflé",
+    "lon" : -5.748,
+    "lat" : 6.978,
+    "population" : 60962,
+    "capital" : false
+  }, {
+    "name" : "Bondoukou",
+    "lon" : -2.8,
+    "lat" : 8.0304,
+    "population" : 58297,
+    "capital" : false
+  }, {
+    "name" : "Séguéla",
+    "lon" : -6.67,
+    "lat" : 7.9504,
+    "population" : 51157,
+    "capital" : false
+  }, {
+    "name" : "Odienné",
+    "lon" : -7.58,
+    "lat" : 9.5104,
+    "population" : 49857,
+    "capital" : false
+  }, {
+    "name" : "Guiglo",
+    "lon" : -7.49,
+    "lat" : 6.5505,
+    "population" : 39134,
+    "capital" : false
+  }, {
+    "name" : "Toumodi",
+    "lon" : -5.019,
+    "lat" : 6.552,
+    "population" : 39005,
+    "capital" : false
+  }, {
+    "name" : "Sassandra",
+    "lon" : -6.0833,
+    "lat" : 4.9504,
+    "population" : 38411,
+    "capital" : false
+  }, {
+    "name" : "Aboisso",
+    "lon" : -3.2,
+    "lat" : 5.4667,
+    "population" : 37654,
+    "capital" : false
+  }, {
+    "name" : "Touba",
+    "lon" : -7.684,
+    "lat" : 8.28,
+    "population" : 27504,
     "capital" : false
   } ]
 }, {
@@ -5571,15 +5730,6 @@
     "lat" : 18.717,
     "population" : 795,
     "capital" : false
-  } ]
-}, {
-  "country" : "East Timor",
-  "cities" : [ {
-    "name" : "Dili",
-    "lon" : 125.5795,
-    "lat" : -8.5594,
-    "population" : 234331,
-    "capital" : true
   } ]
 }, {
   "country" : "Ecuador",
@@ -6263,6 +6413,51 @@
     "lon" : 23.5414,
     "lat" : 58.9431,
     "population" : 11805,
+    "capital" : false
+  } ]
+}, {
+  "country" : "Eswatini",
+  "cities" : [ {
+    "name" : "Manzini",
+    "lon" : 31.388,
+    "lat" : -26.495,
+    "population" : 110537,
+    "capital" : false
+  }, {
+    "name" : "Mbabane",
+    "lon" : 31.1333,
+    "lat" : -26.3167,
+    "population" : 90138,
+    "capital" : true
+  }, {
+    "name" : "Lobamba",
+    "lon" : 31.2,
+    "lat" : -26.4667,
+    "population" : 9782,
+    "capital" : false
+  }, {
+    "name" : "Siteki",
+    "lon" : 31.952,
+    "lat" : -26.455,
+    "population" : 6152,
+    "capital" : false
+  }, {
+    "name" : "Piggs Peak",
+    "lon" : 31.247,
+    "lat" : -25.961,
+    "population" : 5750,
+    "capital" : false
+  }, {
+    "name" : "Golela",
+    "lon" : 31.9,
+    "lat" : -27.2962,
+    "population" : 3695,
+    "capital" : false
+  }, {
+    "name" : "Hlatikulu",
+    "lon" : 31.3101,
+    "lat" : -26.9608,
+    "population" : 2748,
     "capital" : false
   } ]
 }, {
@@ -8162,7 +8357,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Guinea Bissau",
+  "country" : "Guinea-Bissau",
   "cities" : [ {
     "name" : "Bissau",
     "lon" : -15.5984,
@@ -8450,7 +8645,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Hong Kong S.A.R.",
+  "country" : "Hong Kong",
   "cities" : [ {
     "name" : "Hong Kong",
     "lon" : 114.1831,
@@ -9920,159 +10115,6 @@
     "lon" : 13.4999,
     "lat" : 43.6004,
     "population" : 100507,
-    "capital" : false
-  } ]
-}, {
-  "country" : "Ivory Coast",
-  "cities" : [ {
-    "name" : "Abidjan",
-    "lon" : -4.0202,
-    "lat" : 5.3231,
-    "population" : 3802000,
-    "capital" : false
-  }, {
-    "name" : "Bouaké",
-    "lon" : -5.03,
-    "lat" : 7.69,
-    "population" : 567481,
-    "capital" : false
-  }, {
-    "name" : "Daloa",
-    "lon" : -6.45,
-    "lat" : 6.89,
-    "population" : 255168,
-    "capital" : false
-  }, {
-    "name" : "San-Pedro",
-    "lon" : -6.64,
-    "lat" : 4.7704,
-    "population" : 210273,
-    "capital" : false
-  }, {
-    "name" : "Yamoussoukro",
-    "lon" : -5.2755,
-    "lat" : 6.8184,
-    "population" : 206499,
-    "capital" : true
-  }, {
-    "name" : "Korhogo",
-    "lon" : -5.64,
-    "lat" : 9.46,
-    "population" : 177711,
-    "capital" : false
-  }, {
-    "name" : "Man",
-    "lon" : -7.55,
-    "lat" : 7.4004,
-    "population" : 146974,
-    "capital" : false
-  }, {
-    "name" : "Divo",
-    "lon" : -5.36,
-    "lat" : 5.839,
-    "population" : 127867,
-    "capital" : false
-  }, {
-    "name" : "Gagnoa",
-    "lon" : -5.88,
-    "lat" : 6.1504,
-    "population" : 123184,
-    "capital" : false
-  }, {
-    "name" : "Soubré",
-    "lon" : -6.61,
-    "lat" : 5.7904,
-    "population" : 108933,
-    "capital" : false
-  }, {
-    "name" : "Abengourou",
-    "lon" : -3.49,
-    "lat" : 6.7304,
-    "population" : 104020,
-    "capital" : false
-  }, {
-    "name" : "Agboville",
-    "lon" : -4.28,
-    "lat" : 5.9403,
-    "population" : 81770,
-    "capital" : false
-  }, {
-    "name" : "Grand Bassam",
-    "lon" : -3.75,
-    "lat" : 5.2004,
-    "population" : 73772,
-    "capital" : false
-  }, {
-    "name" : "Dabou",
-    "lon" : -4.3899,
-    "lat" : 5.3204,
-    "population" : 72913,
-    "capital" : false
-  }, {
-    "name" : "Dimbokro",
-    "lon" : -4.71,
-    "lat" : 6.6505,
-    "population" : 67349,
-    "capital" : false
-  }, {
-    "name" : "Ferkessédougou",
-    "lon" : -5.2,
-    "lat" : 9.6004,
-    "population" : 62008,
-    "capital" : false
-  }, {
-    "name" : "Bouaflé",
-    "lon" : -5.748,
-    "lat" : 6.978,
-    "population" : 60962,
-    "capital" : false
-  }, {
-    "name" : "Bondoukou",
-    "lon" : -2.8,
-    "lat" : 8.0304,
-    "population" : 58297,
-    "capital" : false
-  }, {
-    "name" : "Séguéla",
-    "lon" : -6.67,
-    "lat" : 7.9504,
-    "population" : 51157,
-    "capital" : false
-  }, {
-    "name" : "Odienné",
-    "lon" : -7.58,
-    "lat" : 9.5104,
-    "population" : 49857,
-    "capital" : false
-  }, {
-    "name" : "Guiglo",
-    "lon" : -7.49,
-    "lat" : 6.5505,
-    "population" : 39134,
-    "capital" : false
-  }, {
-    "name" : "Toumodi",
-    "lon" : -5.019,
-    "lat" : 6.552,
-    "population" : 39005,
-    "capital" : false
-  }, {
-    "name" : "Sassandra",
-    "lon" : -6.0833,
-    "lat" : 4.9504,
-    "population" : 38411,
-    "capital" : false
-  }, {
-    "name" : "Aboisso",
-    "lon" : -3.2,
-    "lat" : 5.4667,
-    "population" : 37654,
-    "capital" : false
-  }, {
-    "name" : "Touba",
-    "lon" : -7.684,
-    "lat" : 8.28,
-    "population" : 27504,
     "capital" : false
   } ]
 }, {
@@ -11642,7 +11684,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Macao S.A.R",
+  "country" : "Macao",
   "cities" : [ {
     "name" : "Macau",
     "lon" : 113.5444,
@@ -16637,7 +16679,7 @@
     "capital" : true
   } ]
 }, {
-  "country" : "Republic of Congo",
+  "country" : "Republic of the Congo",
   "cities" : [ {
     "name" : "Brazzaville",
     "lon" : 15.2827,
@@ -17340,21 +17382,6 @@
     "lat" : 43.9361,
     "population" : 29579,
     "capital" : true
-  } ]
-}, {
-  "country" : "Sao Tome and Principe",
-  "cities" : [ {
-    "name" : "São Tomé",
-    "lon" : 6.7297,
-    "lat" : 0.3375,
-    "population" : 88219,
-    "capital" : true
-  }, {
-    "name" : "Santo António",
-    "lon" : 7.412,
-    "lat" : 1.645,
-    "population" : 1156,
-    "capital" : false
   } ]
 }, {
   "country" : "Saudi Arabia",
@@ -18233,7 +18260,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "South Georgia and South Sandwich Islands",
+  "country" : "South Georgia and the South Sandwich Islands",
   "cities" : [ {
     "name" : "Grytviken",
     "lon" : -36.508,
@@ -19082,51 +19109,6 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Swaziland",
-  "cities" : [ {
-    "name" : "Manzini",
-    "lon" : 31.388,
-    "lat" : -26.495,
-    "population" : 110537,
-    "capital" : false
-  }, {
-    "name" : "Mbabane",
-    "lon" : 31.1333,
-    "lat" : -26.3167,
-    "population" : 90138,
-    "capital" : true
-  }, {
-    "name" : "Lobamba",
-    "lon" : 31.2,
-    "lat" : -26.4667,
-    "population" : 9782,
-    "capital" : false
-  }, {
-    "name" : "Siteki",
-    "lon" : 31.952,
-    "lat" : -26.455,
-    "population" : 6152,
-    "capital" : false
-  }, {
-    "name" : "Piggs Peak",
-    "lon" : 31.247,
-    "lat" : -25.961,
-    "population" : 5750,
-    "capital" : false
-  }, {
-    "name" : "Golela",
-    "lon" : 31.9,
-    "lat" : -27.2962,
-    "population" : 3695,
-    "capital" : false
-  }, {
-    "name" : "Hlatikulu",
-    "lon" : 31.3101,
-    "lat" : -26.9608,
-    "population" : 2748,
-    "capital" : false
-  } ]
-}, {
   "country" : "Sweden",
   "cities" : [ {
     "name" : "Stockholm",
@@ -19631,6 +19613,21 @@
     "lon" : 35.8236,
     "lat" : 33.1257,
     "population" : 4318,
+    "capital" : false
+  } ]
+}, {
+  "country" : "São Tomé and Príncipe",
+  "cities" : [ {
+    "name" : "São Tomé",
+    "lon" : 6.7297,
+    "lat" : 0.3375,
+    "population" : 88219,
+    "capital" : true
+  }, {
+    "name" : "Santo António",
+    "lon" : 7.412,
+    "lat" : 1.645,
+    "population" : 1156,
     "capital" : false
   } ]
 }, {
@@ -20330,19 +20327,13 @@
     "capital" : false
   } ]
 }, {
-  "country" : "The Bahamas",
+  "country" : "Timor-Leste",
   "cities" : [ {
-    "name" : "Nassau",
-    "lon" : -77.35,
-    "lat" : 25.0834,
-    "population" : 227940,
+    "name" : "Dili",
+    "lon" : 125.5795,
+    "lat" : -8.5594,
+    "population" : 234331,
     "capital" : true
-  }, {
-    "name" : "Freeport",
-    "lon" : -78.7,
-    "lat" : 26.5333,
-    "population" : 25383,
-    "capital" : false
   } ]
 }, {
   "country" : "Togo",
@@ -20579,7 +20570,106 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Turkey",
+  "country" : "Turkmenistan",
+  "cities" : [ {
+    "name" : "Ashgabat",
+    "lon" : 58.3833,
+    "lat" : 37.95,
+    "population" : 727700,
+    "capital" : true
+  }, {
+    "name" : "Türkmenabat",
+    "lon" : 63.58,
+    "lat" : 39.11,
+    "population" : 234817,
+    "capital" : false
+  }, {
+    "name" : "Daşoguz",
+    "lon" : 59.965,
+    "lat" : 41.84,
+    "population" : 201424,
+    "capital" : false
+  }, {
+    "name" : "Mary",
+    "lon" : 61.8333,
+    "lat" : 37.6,
+    "population" : 178708,
+    "capital" : false
+  }, {
+    "name" : "Balkanabat",
+    "lon" : 54.3649,
+    "lat" : 39.5124,
+    "population" : 110827,
+    "capital" : false
+  }, {
+    "name" : "Türkmenbaşy",
+    "lon" : 52.9697,
+    "lat" : 40.023,
+    "population" : 68292,
+    "capital" : false
+  }, {
+    "name" : "Tejen",
+    "lon" : 60.496,
+    "lat" : 37.3786,
+    "population" : 67294,
+    "capital" : false
+  }, {
+    "name" : "Serdar",
+    "lon" : 56.2778,
+    "lat" : 38.9755,
+    "population" : 48458,
+    "capital" : false
+  }, {
+    "name" : "Buzmeyin",
+    "lon" : 58.21,
+    "lat" : 38.0517,
+    "population" : 40813,
+    "capital" : false
+  }, {
+    "name" : "Kaka",
+    "lon" : 59.6,
+    "lat" : 37.3503,
+    "population" : 38381,
+    "capital" : false
+  }, {
+    "name" : "Atamyrat",
+    "lon" : 65.1997,
+    "lat" : 37.8248,
+    "population" : 33242,
+    "capital" : false
+  }, {
+    "name" : "Koneurgench",
+    "lon" : 59.1667,
+    "lat" : 42.3167,
+    "population" : 31400,
+    "capital" : false
+  }, {
+    "name" : "Celeken",
+    "lon" : 53.1226,
+    "lat" : 39.4362,
+    "population" : 1206,
+    "capital" : false
+  } ]
+}, {
+  "country" : "Turks and Caicos Islands",
+  "cities" : [ {
+    "name" : "Grand Turk",
+    "lon" : -71.136,
+    "lat" : 21.4664,
+    "population" : 5801,
+    "capital" : true
+  } ]
+}, {
+  "country" : "Tuvalu",
+  "cities" : [ {
+    "name" : "Funafuti",
+    "lon" : 179.2166,
+    "lat" : -8.5167,
+    "population" : 4749,
+    "capital" : true
+  } ]
+}, {
+  "country" : "Türkiye",
   "cities" : [ {
     "name" : "Istanbul",
     "lon" : 28.9743,
@@ -20820,105 +20910,6 @@
     "lat" : 41.0004,
     "population" : 155117,
     "capital" : false
-  } ]
-}, {
-  "country" : "Turkmenistan",
-  "cities" : [ {
-    "name" : "Ashgabat",
-    "lon" : 58.3833,
-    "lat" : 37.95,
-    "population" : 727700,
-    "capital" : true
-  }, {
-    "name" : "Türkmenabat",
-    "lon" : 63.58,
-    "lat" : 39.11,
-    "population" : 234817,
-    "capital" : false
-  }, {
-    "name" : "Daşoguz",
-    "lon" : 59.965,
-    "lat" : 41.84,
-    "population" : 201424,
-    "capital" : false
-  }, {
-    "name" : "Mary",
-    "lon" : 61.8333,
-    "lat" : 37.6,
-    "population" : 178708,
-    "capital" : false
-  }, {
-    "name" : "Balkanabat",
-    "lon" : 54.3649,
-    "lat" : 39.5124,
-    "population" : 110827,
-    "capital" : false
-  }, {
-    "name" : "Türkmenbaşy",
-    "lon" : 52.9697,
-    "lat" : 40.023,
-    "population" : 68292,
-    "capital" : false
-  }, {
-    "name" : "Tejen",
-    "lon" : 60.496,
-    "lat" : 37.3786,
-    "population" : 67294,
-    "capital" : false
-  }, {
-    "name" : "Serdar",
-    "lon" : 56.2778,
-    "lat" : 38.9755,
-    "population" : 48458,
-    "capital" : false
-  }, {
-    "name" : "Buzmeyin",
-    "lon" : 58.21,
-    "lat" : 38.0517,
-    "population" : 40813,
-    "capital" : false
-  }, {
-    "name" : "Kaka",
-    "lon" : 59.6,
-    "lat" : 37.3503,
-    "population" : 38381,
-    "capital" : false
-  }, {
-    "name" : "Atamyrat",
-    "lon" : 65.1997,
-    "lat" : 37.8248,
-    "population" : 33242,
-    "capital" : false
-  }, {
-    "name" : "Koneurgench",
-    "lon" : 59.1667,
-    "lat" : 42.3167,
-    "population" : 31400,
-    "capital" : false
-  }, {
-    "name" : "Celeken",
-    "lon" : 53.1226,
-    "lat" : 39.4362,
-    "population" : 1206,
-    "capital" : false
-  } ]
-}, {
-  "country" : "Turks and Caicos Islands",
-  "cities" : [ {
-    "name" : "Grand Turk",
-    "lon" : -71.136,
-    "lat" : 21.4664,
-    "population" : 5801,
-    "capital" : true
-  } ]
-}, {
-  "country" : "Tuvalu",
-  "cities" : [ {
-    "name" : "Funafuti",
-    "lon" : 179.2166,
-    "lat" : -8.5167,
-    "population" : 4749,
-    "capital" : true
   } ]
 }, {
   "country" : "Uganda",
@@ -22340,7 +22331,7 @@
     "capital" : false
   } ]
 }, {
-  "country" : "Vatican",
+  "country" : "Vatican City",
   "cities" : [ {
     "name" : "Vatican City",
     "lon" : 12.4534,
@@ -23295,5 +23286,14 @@
     "lat" : -20.4795,
     "population" : 2148,
     "capital" : false
+  } ]
+}, {
+  "country" : "Åland",
+  "cities" : [ {
+    "name" : "Mariehamn",
+    "lon" : 19.949,
+    "lat" : 60.097,
+    "population" : 10682,
+    "capital" : true
   } ]
 } ]

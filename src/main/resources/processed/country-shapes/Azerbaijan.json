@@ -25,7 +25,7 @@
     "mainland" : true,
     "lines" : [ 5 ]
   }, {
-    "name" : "Turkey",
+    "name" : "Türkiye",
     "km" : 8.0,
     "mainland" : false,
     "lines" : [ 1 ]

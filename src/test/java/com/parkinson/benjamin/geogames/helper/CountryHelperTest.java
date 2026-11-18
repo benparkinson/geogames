@@ -19,7 +19,11 @@ class CountryHelperTest {
     "France, France.json",
     "United States of America, UnitedStatesofAmerica.json",
     "St. Lucia, StLucia.json",
-    "Curaçao, Curaçao.json"
+    "Curaçao, Curacao.json",
+    "Åland, Aland.json",
+    "Türkiye, Turkiye.json",
+    "'Côte d''Ivoire', CotedIvoire.json",
+    "Timor-Leste, Timor-Leste.json"
   })
   void convertsCountryNameToFileName(String name, String expected) {
     assertThat(CountryHelper.convertCountryNameToFileName(name)).isEqualTo(expected);

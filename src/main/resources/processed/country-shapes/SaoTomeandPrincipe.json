@@ -1,6 +1,6 @@
 {
-  "name" : "Sao Tome and Principe",
-  "additionalNames" : [ ],
+  "name" : "São Tomé and Príncipe",
+  "additionalNames" : [ "São Tomé" ],
   "coastKm" : 185.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 885,
@@ -14,7 +14,7 @@
   "outline" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Sao Tome and Principe"
+      "name" : "São Tomé and Príncipe"
     },
     "geometry" : {
       "type" : "MultiPolygon",
@@ -24,7 +24,7 @@
   "coast" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Sao Tome and Principe"
+      "name" : "São Tomé and Príncipe"
     },
     "geometry" : {
       "type" : "MultiLineString",
@@ -34,7 +34,7 @@
   "landBorders" : {
     "type" : "Feature",
     "properties" : {
-      "name" : "Sao Tome and Principe"
+      "name" : "São Tomé and Príncipe"
     },
     "geometry" : {
       "type" : "MultiLineString",

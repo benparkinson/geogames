@@ -371,6 +371,7 @@
                   <mainClass>com.parkinson.benjamin.geogames.loaders.countries.CountryLoaderMain</mainClass>
                   <arguments>
                     <argument>geodata/countries/countries.geo.json</argument>
+                    <argument>geodata/countries/officialNames.json</argument>
                     <argument>geodata/countries/additionalNames.json</argument>
                     <argument>geodata/countries/excludedNames.json</argument>
                     <argument>target/regen/countries</argument>

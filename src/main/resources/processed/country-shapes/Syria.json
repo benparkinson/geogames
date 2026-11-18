@@ -5,7 +5,7 @@
   "landBorderKm" : 2097.0,
   "areaKm2" : 185952,
   "neighbours" : [ {
-    "name" : "Turkey",
+    "name" : "Türkiye",
     "km" : 775.0,
     "mainland" : true,
     "lines" : [ 4 ]
