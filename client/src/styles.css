@@ -164,6 +164,20 @@ code {
   background: var(--gg-color-surface);
   transition: box-shadow var(--gg-duration);
 }
+.daily-hero {
+  border-radius: var(--gg-radius-lg);
+  background: var(--gg-color-accent);
+  color: var(--gg-color-on-accent);
+  box-shadow: var(--gg-shadow-hover);
+}
+.daily-hero:hover,
+.daily-hero:focus-visible {
+  color: var(--gg-color-on-accent);
+  filter: brightness(1.08);
+}
+.daily-hero__status {
+  opacity: 0.9;
+}
 .game-card--selected {
   border: 2px solid var(--gg-color-accent);
   background: var(--gg-color-accent-subtle);

@@ -16,12 +16,12 @@ import type { AnyGameModule } from "./types";
 /** Every type of game, in home page order. To add a game, build its module and add it here. */
 export const GAME_MODULES: AnyGameModule[] = [
   tripoint,
-  countriesByNeighbours,
-  landBorders,
-  mergedCountries,
   cities,
-  countryRivers,
+  mergedCountries,
+  countriesByNeighbours,
   riverCountries,
+  landBorders,
+  countryRivers,
   coastline,
   riverShapes,
   lakeShapes,
