@@ -2,11 +2,14 @@ package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.api.DailyGameRequest;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
+import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +31,23 @@ public class DailyGameController {
       @RequestBody(required = false) DailyGameRequest request) {
     Optional<LocalDate> date = Optional.empty();
     if (request != null && request.date() != null) {
-      try {
-        date = Optional.of(LocalDate.parse(request.date()));
-      } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException("date must be YYYY-MM-DD");
-      }
+      date = Optional.of(parseDate(request.date()));
     }
     return ResponseEntity.ok(
         dailyChallengeService.createDailyGame(date, request == null ? null : request.hardMode()));
+  }
+
+  /** One day's totals: the average, and how many finished in each tenth of the score range. */
+  @GetMapping("/daily-scores/{date}")
+  public DailyScoreResponse dailyScore(@PathVariable String date) {
+    return dailyChallengeService.score(parseDate(date));
+  }
+
+  private static LocalDate parseDate(String text) {
+    try {
+      return LocalDate.parse(text);
+    } catch (DateTimeParseException e) {
+      throw new IllegalArgumentException("date must be YYYY-MM-DD");
+    }
   }
 }

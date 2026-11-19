@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
 import com.parkinson.benjamin.geogames.api.GameTypeResponse;
 import com.parkinson.benjamin.geogames.api.RecordedGuess;
@@ -12,6 +13,7 @@ import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
@@ -40,6 +42,7 @@ public class GameService {
   private final ApplicationEventPublisher events;
   private final RoundRules rules;
   private final KnownPlaceNames placeNames;
+  private final DailyScoreStore dailyScores;
 
   public GameService(
       GameRepository gameRepository,
@@ -48,7 +51,8 @@ public class GameService {
       ObjectMapper objectMapper,
       Random random,
       ApplicationEventPublisher events,
-      KnownPlaceNames placeNames) {
+      KnownPlaceNames placeNames,
+      DailyScoreStore dailyScores) {
     this.gameRepository = gameRepository;
     this.generators = generators;
     this.objectMapper = objectMapper;
@@ -56,6 +60,7 @@ public class GameService {
     this.events = events;
     this.rules = rules;
     this.placeNames = placeNames;
+    this.dailyScores = dailyScores;
   }
 
   @Transactional
@@ -75,19 +80,20 @@ public class GameService {
     return createGame(
         gameData.stream().map(PinnedRound::of).toList(),
         selection.isRandom() ? "RANDOM" : selection.type().name(),
-        hardMode);
+        hardMode,
+        null);
   }
 
   /** Makes a game from rounds that were chosen earlier (a daily challenge's pinned rounds). */
   @Transactional
   public GameCreationResponse createGame(
-      List<PinnedRound> rounds, String gameMode, Boolean hardMode) {
+      List<PinnedRound> rounds, String gameMode, Boolean hardMode, LocalDate dailyDate) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
     return new GameCreationResponse(
-        gameRepository.save(new GameEntity(entities, gameMode, hardMode)).getPublicId());
+        gameRepository.save(new GameEntity(entities, gameMode, hardMode, dailyDate)).getPublicId());
   }
 
   @Transactional(readOnly = true)
@@ -169,8 +175,18 @@ public class GameService {
     if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
       gameRepository.save(game);
       publishRoundAnswered(game, round);
+      // Counted here, in this transaction, so a rolled-back answer rolls the count back too. This
+      // is the first answer to the round, so a repeat never gets here.
+      if (game.getDailyDate() != null && allAnswered(game)) {
+        GameResult result = GameResults.of(game);
+        dailyScores.recordFinished(game.getDailyDate(), result.score(), result.maxScore());
+      }
     }
     return toAnswerResponse(game, round);
+  }
+
+  private static boolean allAnswered(GameEntity game) {
+    return game.getRounds().stream().noneMatch(r -> r.getAnswerState() == AnswerState.UNANSWERED);
   }
 
   /**

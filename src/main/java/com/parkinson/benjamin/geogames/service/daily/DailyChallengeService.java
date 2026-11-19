@@ -1,6 +1,8 @@
 package com.parkinson.benjamin.geogames.service.daily;
 
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
+import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
+import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Service;
  * game); the rounds are the same for everyone on that date.
  *
  * <p>Not {@code @Transactional}: {@link DailyChallengeStore} must commit its own insert, and the
- * game is created in its own transaction by {@link GameService#createGame(List, String, Boolean)}.
+ * game is created in its own transaction by {@link GameService#createGame(List, String, Boolean, LocalDate)}.
  */
 @Service
 public class DailyChallengeService {
@@ -29,13 +31,19 @@ public class DailyChallengeService {
   private final DailyRoundPicker picker;
   private final DailyChallengeStore store;
   private final GameService gameService;
+  private final DailyScoreStore scores;
 
   public DailyChallengeService(
-      Clock clock, DailyRoundPicker picker, DailyChallengeStore store, GameService gameService) {
+      Clock clock,
+      DailyRoundPicker picker,
+      DailyChallengeStore store,
+      GameService gameService,
+      DailyScoreStore scores) {
     this.clock = clock;
     this.picker = picker;
     this.store = store;
     this.gameService = gameService;
+    this.scores = scores;
   }
 
   /**
@@ -45,18 +53,46 @@ public class DailyChallengeService {
    * @throws IllegalArgumentException if the date is out of range
    */
   public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Boolean hardMode) {
+    LocalDate date = validDate(requested, false);
+    List<PinnedRound> rounds =
+        store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
+    // The totals row must exist before any game for the date can finish.
+    scores.ensureDay(date);
+    UUID id = gameService.createGame(rounds, GAME_MODE, hardMode, date).id();
+    return new DailyGameResponse(id, date, number(date));
+  }
+
+  /**
+   * The day's totals: zeros when no game has finished. The date is checked like a new game's.
+   *
+   * @throws IllegalArgumentException if the date is out of range
+   */
+  public DailyScoreResponse score(LocalDate requested) {
+    LocalDate date = validDate(Optional.of(requested), true);
+    DailyScore score = scores.find(date);
+    Double average =
+        score.players() == 0
+            ? null
+            : Math.round(10.0 * score.scoreTotal() / score.players()) / 10.0;
+    return new DailyScoreResponse(
+        date,
+        score.players(),
+        average,
+        DailyRoundPicker.DAILY_ROUNDS * Scoring.MAX_ROUND_POINTS,
+        score.buckets());
+  }
+
+  private LocalDate validDate(Optional<LocalDate> requested, boolean pastAllowed) {
     LocalDate today = LocalDate.now(clock);
     LocalDate date = requested.orElse(today);
-    if (Math.abs(ChronoUnit.DAYS.between(today, date)) > 1) {
+    if (Math.abs(ChronoUnit.DAYS.between(today, date)) > 1
+        && !(pastAllowed && date.isBefore(today))) {
       throw new IllegalArgumentException("That date is too far from today: " + date);
     }
     if (date.isBefore(DAILY_EPOCH)) {
       throw new IllegalArgumentException("There is no daily challenge before " + DAILY_EPOCH);
     }
-    List<PinnedRound> rounds =
-        store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
-    UUID id = gameService.createGame(rounds, GAME_MODE, hardMode).id();
-    return new DailyGameResponse(id, date, number(date));
+    return date;
   }
 
   static long number(LocalDate date) {
