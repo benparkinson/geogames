@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import GameLayout from "./GameLayout";
 
 describe("GameLayout", () => {
@@ -21,5 +21,26 @@ describe("GameLayout", () => {
     render(<GameLayout topBar="t" map="m" panel="p" />);
 
     expect(screen.getByRole("main").className).toBe("game-map");
+  });
+});
+
+describe("GameLayout with the keyboard open", () => {
+  it("fits the screen to the visual viewport and marks it compact", () => {
+    const listeners: Array<() => void> = [];
+    const viewport = {
+      height: 300,
+      addEventListener: (_: string, l: () => void) => listeners.push(l),
+      removeEventListener: () => {},
+    };
+    vi.stubGlobal("visualViewport", viewport);
+    window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;
+    Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
+
+    const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);
+
+    const screenEl = container.firstElementChild as HTMLElement;
+    expect(screenEl).toHaveClass("game-screen--keyboard");
+    expect(screenEl.style.height).toBe("300px");
+    vi.unstubAllGlobals();
   });
 });

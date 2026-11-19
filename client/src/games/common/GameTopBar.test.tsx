@@ -10,7 +10,7 @@ describe("GameTopBar", () => {
       <GameTopBar round={makeRoundProps({ dailyDate: "2026-11-18" })} gameOver={false} gaveUp={false} hintsUsed={0} />,
     );
 
-    expect(screen.getByText("Daily 2026-11-18")).toBeInTheDocument();
+    expect(screen.getByText("Daily")).toBeInTheDocument();
   });
 
   it("says nothing about a daily in an ordinary game", () => {

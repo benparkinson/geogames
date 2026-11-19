@@ -50,7 +50,7 @@ export default function RoundActions({
   const hintTitle = hintsLeft > 0 ? `${hints.description} (−${nextHintCost} pts)` : "No hints left";
 
   return (
-    <div className="d-flex flex-wrap gap-2 mb-2">
+    <div className="round-actions d-flex flex-wrap gap-2">
       <span title={hintTitle}>
         <Button variant="hint" onClick={onHint} disabled={hintsLeft <= 0}>
           <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)

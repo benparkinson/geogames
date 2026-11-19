@@ -16,6 +16,11 @@ export default function AnswerSlots({
   // After giving up, the slots after the found answers show the answers that weren't found.
   const revealed = gaveUp ? allAnswers.filter((a) => !found.includes(a)) : [];
 
+  // With one answer, the empty "?" slot says nothing the question doesn't: don't spend a row on it.
+  if (answerCount === 1 && found.length === 0 && revealed.length === 0) {
+    return <></>;
+  }
+
   return (
     <div className="d-flex gap-2 flex-wrap mb-2" role="group" aria-label={label}>
       {Array.from({ length: answerCount }, (_v, i) => {
