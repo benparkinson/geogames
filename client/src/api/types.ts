@@ -21,6 +21,20 @@ export interface RecordedGuess {
   correct: boolean;
 }
 
+/** The JSON of GET /api/daily-scores/{date}: one day's totals for the daily challenge. */
+export interface DailyScore {
+  /** The challenge date, `YYYY-MM-DD`. */
+  date: string;
+  /** Finished games counted. */
+  players: number;
+  /** The mean score to one decimal place; null when `players` is 0. */
+  averageScore: number | null;
+  /** The best possible score. */
+  maxScore: number;
+  /** 11 counts: tenths of `maxScore`, the last one a perfect score. */
+  buckets: number[];
+}
+
 /** The JSON of POST /api/daily-games: a new game made from the day's rounds. */
 export interface DailyGameResponse {
   id: string;

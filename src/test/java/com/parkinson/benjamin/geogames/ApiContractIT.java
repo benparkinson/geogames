@@ -143,6 +143,20 @@ class ApiContractIT {
                     .content("{\"answerState\":\"CORRECT\",\"hintsUsed\":0,\"wrongGuesses\":0}"))));
   }
 
+  /** Finishes a daily game first, so {@code averageScore} is a number and not null. */
+  private Object dailyScoreShape() throws Exception {
+    JsonNode daily =
+        objectMapper.readTree(
+            body(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}")));
+    for (int round = 0; round < 5; round++) {
+      body(
+          post("/api/games/%s/rounds/%d/answers".formatted(daily.get("id").asString(), round))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0}"));
+    }
+    return endpointShape("/api/daily-scores/" + daily.get("date").asString());
+  }
+
   private Object endpointShape(String path) throws Exception {
     return JsonShape.of(objectMapper.readTree(body(get(path))));
   }
@@ -161,6 +175,7 @@ class ApiContractIT {
                     post("/api/daily-games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}")))));
+    endpoints.put("GET /api/daily-scores/{date}", dailyScoreShape());
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 
     endpoints.put("POST /api/games/{id}/rounds/{round}/guesses", guessShape());

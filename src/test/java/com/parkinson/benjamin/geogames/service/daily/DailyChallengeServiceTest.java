@@ -29,13 +29,15 @@ class DailyChallengeServiceTest {
 
   private final DailyChallengeStore store = mock(DailyChallengeStore.class);
   private final GameService games = mock(GameService.class);
+  private final DailyScoreStore scores = mock(DailyScoreStore.class);
   private final UUID gameId = UUID.randomUUID();
 
   private DailyChallengeService service(LocalDate utcToday) {
     Clock clock = Clock.fixed(utcToday.atTime(23, 59).toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
     when(store.findOrCreate(any(), any())).thenReturn(ROUNDS);
-    when(games.createGame(ROUNDS, "DAILY", null)).thenReturn(new GameCreationResponse(gameId));
-    return new DailyChallengeService(clock, mock(DailyRoundPicker.class), store, games);
+    when(games.createGame(eq(ROUNDS), eq("DAILY"), any(), any()))
+        .thenReturn(new GameCreationResponse(gameId));
+    return new DailyChallengeService(clock, mock(DailyRoundPicker.class), store, games, scores);
   }
 
   private static DailyGameResponse createDailyGame(
@@ -101,6 +103,51 @@ class DailyChallengeServiceTest {
     createDailyGame(service, Optional.empty());
 
     org.mockito.Mockito.verify(store).findOrCreate(eq(TODAY), anySupplier());
+  }
+
+  @Test
+  void aDailyGameEnsuresTheDaysRowAndPassesTheDateToTheGame() {
+    DailyChallengeService service = service(TODAY);
+    createDailyGame(service, Optional.of(TODAY.minusDays(1)));
+
+    org.mockito.Mockito.verify(scores).ensureDay(TODAY.minusDays(1));
+    org.mockito.Mockito.verify(games).createGame(ROUNDS, "DAILY", null, TODAY.minusDays(1));
+  }
+
+  @Test
+  void aDayWithNoFinishedGamesHasZerosAndNoAverage() {
+    DailyChallengeService service = service(TODAY);
+    when(scores.find(TODAY)).thenReturn(DailyScore.empty());
+
+    var response = service.score(TODAY);
+
+    assertThat(response.players()).isZero();
+    assertThat(response.averageScore()).isNull();
+    assertThat(response.maxScore()).isEqualTo(500);
+    assertThat(response.buckets()).hasSize(11).containsOnly(0);
+  }
+
+  @Test
+  void theAverageIsRoundedToOneDecimalPlace() {
+    DailyChallengeService service = service(TODAY);
+    List<Integer> buckets = new java.util.ArrayList<>(DailyScore.empty().buckets());
+    when(scores.find(TODAY)).thenReturn(new DailyScore(3, 1000, buckets));
+
+    assertThat(service.score(TODAY).averageScore()).isEqualTo(333.3);
+  }
+
+  @Test
+  void scoreDatesAreValidatedLikeNewGamesExceptThatThePastIsAllowed() {
+    DailyChallengeService service = service(TODAY);
+    when(scores.find(any())).thenReturn(DailyScore.empty());
+
+    assertThat(service.score(TODAY.plusDays(1)).date()).isEqualTo(TODAY.plusDays(1));
+    assertThat(service.score(DailyChallengeService.DAILY_EPOCH).date())
+        .isEqualTo(DailyChallengeService.DAILY_EPOCH);
+    assertThatThrownBy(() -> service.score(TODAY.plusDays(2)))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> service.score(DailyChallengeService.DAILY_EPOCH.minusDays(1)))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   private static Supplier<List<PinnedRound>> anySupplier() {
