@@ -62,7 +62,7 @@ export default function GameSummary({
   const mixed = gameType === RANDOM_OPTION.type;
   const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
   return (
-    <PageShell wide topBarEnd={<KofiBadge />}>
+    <PageShell wide compactFooter topBarEnd={<KofiBadge />}>
       {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
       <h1 className="h3 mb-1">
         {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}

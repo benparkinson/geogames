@@ -25,7 +25,7 @@ describe("ShareButton", () => {
     await userEvent.click(screen.getByRole("button", { name: "Copy result" }));
 
     expect(writeText).toHaveBeenCalledWith("the text");
-    await waitFor(() => expect(screen.getByText("Copied!")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Copied" })).toBeInTheDocument());
     expect(screen.queryByRole("textbox")).toBeNull();
   });
 
@@ -38,7 +38,7 @@ describe("ShareButton", () => {
     const box = await screen.findByRole("textbox", { name: "Copy this text" });
     expect(box).toHaveValue("the text");
     expect(box).toHaveAttribute("readonly");
-    expect(screen.queryByText("Copied!")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Copied" })).toBeNull();
   });
 
   it("shows the text to copy by hand when there is no clipboard", async () => {
@@ -84,7 +84,7 @@ describe("ShareButton", () => {
     expect(box.selectionEnd - box.selectionStart).toBe("the text".length);
   });
 
-  it("stops saying Copied! after a few seconds", async () => {
+  it("stops saying Copied after a few seconds", async () => {
     vi.useFakeTimers();
     try {
       setClipboard(vi.fn().mockResolvedValue(undefined));
@@ -94,12 +94,12 @@ describe("ShareButton", () => {
       await act(async () => {
         await Promise.resolve();
       });
-      expect(screen.getByText("Copied!")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Copied" })).toBeInTheDocument();
       act(() => {
         vi.advanceTimersByTime(5000);
       });
 
-      expect(screen.queryByText("Copied!")).toBeNull();
+      expect(screen.queryByRole("button", { name: "Copied" })).toBeNull();
     } finally {
       vi.useRealTimers();
     }
