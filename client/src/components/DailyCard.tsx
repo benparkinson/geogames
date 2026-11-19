@@ -14,11 +14,11 @@ export default function DailyCard(): React.JSX.Element {
 
   return (
     // A link, outside the radio group of games, so the arrow keys through the games don't reach it.
-    <Link href="/daily" className="game-card d-block w-100 text-start text-decoration-none p-3 mb-4">
-      <div className="fw-bold">
+    <Link href="/daily" className="daily-hero d-block w-100 text-start text-decoration-none p-4 mb-4">
+      <div className="h4 fw-bold mb-1">
         <CalendarCheck aria-hidden="true" /> Daily challenge
       </div>
-      <div className="small gg-text-muted">{dailyStatus}</div>
+      <div className="daily-hero__status">{dailyStatus}</div>
     </Link>
   );
 }

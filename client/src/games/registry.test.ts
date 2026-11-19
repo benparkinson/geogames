@@ -14,12 +14,12 @@ describe("GAME_MODULES", () => {
   it("uses the names the backend understands", () => {
     expect(GAME_MODULES.map((m) => m.type)).toEqual([
       "TRIPOINT",
-      "COUNTRIES_BY_NEIGHBOURS",
-      "COUNTRIES_BY_LAND_BORDERS",
-      "MERGED_COUNTRIES",
       "COUNTRIES_BY_CITIES",
-      "COUNTRIES_BY_RIVERS",
+      "MERGED_COUNTRIES",
+      "COUNTRIES_BY_NEIGHBOURS",
       "RIVERS_BY_COUNTRIES",
+      "COUNTRIES_BY_LAND_BORDERS",
+      "COUNTRIES_BY_RIVERS",
       "COUNTRIES_BY_COASTLINE",
       "RIVERS_BY_SHAPE",
       "LAKES_BY_SHAPE",
@@ -102,12 +102,12 @@ describe("MENU_OPTIONS", () => {
   it("offers the standard games, then a mix of every game, then the extra difficult games", () => {
     expect(MENU_OPTIONS.map((o) => o.type)).toEqual([
       "TRIPOINT",
-      "COUNTRIES_BY_NEIGHBOURS",
-      "COUNTRIES_BY_LAND_BORDERS",
-      "MERGED_COUNTRIES",
       "COUNTRIES_BY_CITIES",
-      "COUNTRIES_BY_RIVERS",
+      "MERGED_COUNTRIES",
+      "COUNTRIES_BY_NEIGHBOURS",
       "RIVERS_BY_COUNTRIES",
+      "COUNTRIES_BY_LAND_BORDERS",
+      "COUNTRIES_BY_RIVERS",
       "COUNTRIES_BY_COASTLINE",
       "RANDOM",
       "RIVERS_BY_SHAPE",

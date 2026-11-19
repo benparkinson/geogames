@@ -4,7 +4,7 @@ import { Button } from "../ui";
 const COPIED_MS = 4000;
 
 /**
- * Copies the share text. `navigator.clipboard` needs a secure context and a click, so it is called straight from
+ * Copies the share text; the button briefly says Copied. `navigator.clipboard` needs a secure context and a click, so it is called straight from
  * the handler. If it is missing or refuses, the text is shown selected so the player can copy it by hand.
  */
 export default function ShareButton({ text }: { text: string }): React.JSX.Element {
@@ -44,16 +44,21 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
     <div>
       <div className="d-flex flex-wrap align-items-center gap-2">
         <Button variant="primary" onClick={copy}>
-          <span aria-hidden="true">📋</span> Copy result
+          {/* Both labels share one grid cell, so the button keeps the wider width while the other is hidden. */}
+          <span style={{ display: "inline-grid" }}>
+            <span style={{ gridArea: "1 / 1", visibility: copied ? "hidden" : "visible" }}>
+              <span aria-hidden="true">📋</span> Copy result
+            </span>
+            <span style={{ gridArea: "1 / 1", visibility: copied ? "visible" : "hidden" }}>
+              <span aria-hidden="true">✅</span> Copied
+            </span>
+          </span>
         </Button>
         {canShare && (
           <Button variant="secondary" onClick={share}>
             <span aria-hidden="true">↗</span> Share
           </Button>
         )}
-        <span aria-live="polite" className="small gg-text-muted">
-          {copied ? "Copied!" : ""}
-        </span>
       </div>
       {manual && (
         <div className="mt-2">

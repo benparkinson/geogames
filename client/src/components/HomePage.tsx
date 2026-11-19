@@ -25,7 +25,8 @@ function HomePage(): React.JSX.Element {
       <div className="home-layout">
         <section className="home-main">
           <DailyCard />
-          <h2 className="h5">Choose a game</h2>
+          <h2 className="h5">Practice mode</h2>
+          <p className="small gg-text-muted">Pick any game to practise.</p>
           <GameCardGrid selected={selected} onSelect={setSelected} />
         </section>
 

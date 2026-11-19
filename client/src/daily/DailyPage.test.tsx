@@ -35,8 +35,8 @@ describe("DailyPage intro", () => {
     mockFetch([{ url: API + "/health", body: "ok" }]);
     renderWithClient(<DailyPage />);
 
-    expect(await screen.findByText(/Five different geography puzzles/)).toHaveTextContent(
-      "Each round tells you what to name and what the map shows. Hints help, but they lower your score.",
+    expect(await screen.findByText(/Five geography puzzles from a variety of game modes/)).toHaveTextContent(
+      "Wrong answers don't lower your score, but hints do.",
     );
   });
 });
