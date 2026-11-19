@@ -44,7 +44,7 @@ function Intro(): React.JSX.Element {
     <PageShell>
       <h1 className="h3 mb-1">Daily challenge</h1>
       <p className="mb-3">
-        Five geography puzzles from a variety of game modes. Wrong answers don't lower your score, but hints do.
+        Five geography puzzles from a variety of game modes. Wrong answers don&apos;t lower your score, but hints do.
       </p>
       <div className="mb-3">
         <HardModeToggle />

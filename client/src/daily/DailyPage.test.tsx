@@ -110,12 +110,12 @@ describe("DailyPage with no game for today", () => {
     try {
       mockFetch([
         { url: API + "/health", body: "ok" },
-        { method: "POST", url: API + "/api/daily-games", body: () => new Promise(() => { }) },
+        { method: "POST", url: API + "/api/daily-games", body: () => new Promise(() => {}) },
       ]);
       // A body function that never resolves isn't supported by the router, so stub fetch for the POST.
       const base = globalThis.fetch;
       vi.stubGlobal("fetch", (input: RequestInfo | URL, init?: RequestInit) =>
-        init?.method === "POST" ? new Promise(() => { }) : base(input, init),
+        init?.method === "POST" ? new Promise(() => {}) : base(input, init),
       );
       renderWithClient(<DailyPage />);
       const { fireEvent } = await import("@testing-library/react");
