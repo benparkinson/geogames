@@ -123,7 +123,7 @@ describe("GameRoundPage game types", () => {
       </QueryClientProvider>,
     );
 
-    expect(await screen.findByText("Daily 2026-11-18")).toBeInTheDocument();
+    expect(await screen.findByText("Daily")).toBeInTheDocument();
     expect(title()).toBe("Daily 2026-11-18 | GeoGauntlet");
   });
 

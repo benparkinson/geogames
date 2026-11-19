@@ -34,9 +34,9 @@ export default function GameTopBar({
     }
   }
 
-  // A daily's date label or the finished game's Results button crowds the bar: on a phone the round dots then
-  // move to a row of their own rather than being clipped.
-  const crowded = round.gameCompleted || round.dailyDate !== undefined;
+  // The finished game's Results button crowds the bar: on a phone the round dots then move to a row of their own
+  // rather than being clipped.
+  const crowded = round.gameCompleted;
   // The finished game's text is longer and has a Results button beside it: on a phone, drop the words so the bar
   // still fits the screen instead of widening the page.
   const scoreText = round.gameCompleted ? (
@@ -59,7 +59,7 @@ export default function GameTopBar({
         <ThemeToggle />
       </div>
       <div className="top-bar__rounds d-flex align-items-center gap-2 small gg-text-muted overflow-hidden">
-        {round.dailyDate !== undefined && <span className="fw-semibold text-nowrap">Daily {round.dailyDate}</span>}
+        {round.dailyDate !== undefined && <span className="fw-semibold text-nowrap">Daily</span>}
         <span className="d-none d-sm-inline text-nowrap">
           Round {round.currentRound + 1} of {round.totalRoundCount}
         </span>

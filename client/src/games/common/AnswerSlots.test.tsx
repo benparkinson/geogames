@@ -49,3 +49,21 @@ describe("AnswerSlots", () => {
     expect(screen.getAllByLabelText("Not found yet")).toHaveLength(2);
   });
 });
+
+describe("AnswerSlots with a single answer", () => {
+  it("takes no room until there is something to show", () => {
+    const { container } = render(<AnswerSlots answerCount={1} found={[]} gaveUp={false} allAnswers={["France"]} />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("shows the answer once it is found or revealed", () => {
+    const { rerender } = render(
+      <AnswerSlots answerCount={1} found={["France"]} gaveUp={false} allAnswers={["France"]} />,
+    );
+    expect(screen.getByText("France")).toBeInTheDocument();
+
+    rerender(<AnswerSlots answerCount={1} found={[]} gaveUp allAnswers={["France"]} />);
+    expect(screen.getByText("France")).toBeInTheDocument();
+  });
+});
