@@ -18,24 +18,21 @@ function useVisualViewport(): { height: number | null; keyboardOpen: boolean } {
     if (!viewport) {
       return;
     }
-    function update() {
-      if (!viewport) {
-        return;
-      }
-      const keyboardOpen = viewport.height < window.innerHeight * KEYBOARD_RATIO;
+    function update(visible: VisualViewport) {
+      const keyboardOpen = visible.height < window.innerHeight * KEYBOARD_RATIO;
+      const height = keyboardOpen ? visible.height : null;
       setState((previous) =>
-        previous.keyboardOpen === keyboardOpen && previous.height === (keyboardOpen ? viewport.height : null)
-          ? previous
-          : { height: keyboardOpen ? viewport.height : null, keyboardOpen },
+        previous.height === height && previous.keyboardOpen === keyboardOpen ? previous : { height, keyboardOpen },
       );
       if (keyboardOpen) {
         // The browser scrolls the page to bring the focused input into view; the screen already fits.
         window.scrollTo(0, 0);
       }
     }
-    update();
-    viewport.addEventListener("resize", update);
-    return () => viewport.removeEventListener("resize", update);
+    const onResize = () => update(viewport);
+    onResize();
+    viewport.addEventListener("resize", onResize);
+    return () => viewport.removeEventListener("resize", onResize);
   }, []);
 
   return state;
