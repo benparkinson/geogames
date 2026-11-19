@@ -92,9 +92,9 @@ describe("HomePage choosing a game", () => {
     await user.keyboard("{ArrowRight}");
 
     expect(
-      within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Gaps"),
+      within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Cities"),
     ).toBeInTheDocument();
-    expect(card(/Country Gaps/)).toHaveFocus();
+    expect(card(/Country Cities/)).toHaveFocus();
   });
 
   it("keeps the start panel before the Ko-fi link in the tab order", async () => {
@@ -131,12 +131,12 @@ describe("HomePage choosing a game", () => {
     card(/Tripoints/).focus();
 
     const order = [
-      /Country Gaps/,
-      /Land Borders/,
-      /Merged Countries/,
       /Country Cities/,
-      /Country Rivers/,
+      /Merged Countries/,
+      /Country Gaps/,
       /River Countries/,
+      /Land Borders/,
+      /Country Rivers/,
       /Coastlines/,
       /Mixed/,
       /River Shapes/,
