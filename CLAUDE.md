@@ -41,6 +41,13 @@ Full builds:
 
 `main` is protected: changes must go through a pull request and the required `test` status check, so pushes to `main` are rejected. Never commit to or push `main`. Create a feature branch first, push that, and open a PR.
 
+**Keep PRs easy to review.** Prefer several focused PRs to one large one, and plan the split before starting. A feature that crosses layers splits along the points where each part can merge and deploy alone, usually:
+1. The backend: the schema, the API field, `api-shapes.json` and the client fixture the contract test then needs. New fields start optional, so the current client keeps working.
+2. Separate backend concerns, such as usage statistics, with their own migration.
+3. The frontend, which uses the new field.
+
+Each PR passes CI by itself and leaves the product working. Put refactors and test-helper changes in their own PR, ahead of the feature that needs them. Don't split a change whose parts make no sense apart, or one that is already small. If a PR still ends up large, say why in its description.
+
 ## CI
 
 `.github/workflows/ci.yml` runs one job per kind of failure, so a red check names what broke: `lint-backend` (Spotless), `lint-frontend` (ESLint, Prettier, `npm run lint:rules`, `tsc` for `client/` and `e2e/`, and `scripts/check-versions.sh` and `scripts/check-no-skipped-tests.sh`), `unit-backend` (Surefire and the JaCoCo gate, no Node), `unit-frontend` (Vitest and its coverage thresholds), `build` (the bundled jar, built with `NEXT_PUBLIC_API_URL=http://localhost:8080`), `integration` (the `*IT` classes against the built frontend), `contract-frontend`, `e2e` (Playwright against the jar), `docker` (builds the production `Dockerfile` image, runs it with `--memory=512m` in the `prod` profile against a Postgres 17 container, calls the API, checks the game is in Postgres and fails if the container logged an `ERROR` or `OutOfMemoryError`) and `data` (`scripts/check-processed-data.sh`). `test` is the aggregate: it needs all of them and fails unless each succeeded, and it is the one required status check on `main`, so keep its id and name. Pull requests cancel superseded runs; every other run has its own concurrency group, so each push to `main` gets its own run (a shared group keeps one pending run and cancels the rest). CI also runs every Monday morning and on demand (`workflow_dispatch`), with no push: it finds breakage that arrives without a commit (the runner image, the floating Docker base tags Render also builds from, Playwright's system packages). `smoke-production.yml` is the only workflow that touches the network (it calls the deployed services, on demand and daily) and never runs on a PR. Nothing run on a PR may reach the internet, and no test may hit the network.

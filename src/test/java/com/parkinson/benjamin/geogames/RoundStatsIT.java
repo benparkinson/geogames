@@ -5,7 +5,6 @@ import static org.awaitility.Awaitility.await;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.jayway.jsonpath.JsonPath;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -27,24 +26,7 @@ class RoundStatsIT {
   @Autowired private JdbcClient jdbc;
 
   private String createGame(String type, int rounds) throws Exception {
-    return createGame(type, rounds, "");
-  }
-
-  /** {@code extra} is more JSON members, such as {@code ,"hardMode":true}. */
-  private String createGame(String type, int rounds, String extra) throws Exception {
-    String body =
-        mockMvc
-            .perform(
-                post("/api/games")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        "{\"gameType\":\"%s\",\"numberOfRounds\":%d%s}"
-                            .formatted(type, rounds, extra)))
-            .andExpect(status().isOk())
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
-    return JsonPath.read(body, "$.id");
+    return TestFixtures.createGame(mockMvc, type, rounds);
   }
 
   private void answer(String gameId, int round, String json) throws Exception {
@@ -135,7 +117,7 @@ class RoundStatsIT {
 
   @Test
   void hardModeIsRecordedPerGameAndNullWhenNotSent() throws Exception {
-    String hard = createGame("RIVERS_BY_SHAPE", 1, ",\"hardMode\":true");
+    String hard = TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1, ",\"hardMode\":true");
     String unknown = createGame("RIVERS_BY_SHAPE", 1);
     answer(hard, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");
     answer(unknown, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");

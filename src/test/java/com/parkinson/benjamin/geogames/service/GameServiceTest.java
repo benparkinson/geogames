@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static com.parkinson.benjamin.geogames.TestFixtures.game;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -173,8 +174,8 @@ class GameServiceTest {
     return entity;
   }
 
-  private static GameEntity game(GameRoundEntity... rounds) {
-    return new GameEntity(new ArrayList<>(List.of(rounds)), "TRIPOINT", null);
+  private GameCreationResponse createGame(String gameType, int rounds) {
+    return service.createGame(gameType, rounds, false);
   }
 
   private static Country square(String name) {
@@ -238,7 +239,7 @@ class GameServiceTest {
   @ParameterizedTest
   @ValueSource(ints = {0, 11, -1, 100})
   void rejectsRoundCountsOutsideOneToTen(int rounds) {
-    assertThatThrownBy(() -> service.createGame("TRIPOINT", rounds, false))
+    assertThatThrownBy(() -> createGame("TRIPOINT", rounds))
         .isInstanceOf(IllegalArgumentException.class);
     verify(gameRepository, never()).save(any());
   }
@@ -248,22 +249,20 @@ class GameServiceTest {
   void acceptsBoundaryRoundCounts(int rounds) {
     when(tripointGenerator.generate(eq(rounds), eq(Set.of()), any())).thenReturn(tripoints(rounds));
 
-    assertThat(service.createGame("TRIPOINT", rounds, false)).isNotNull();
+    assertThat(createGame("TRIPOINT", rounds)).isNotNull();
     assertThat(savedGame().getRounds()).hasSize(rounds);
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"FOO", "tripoint", ""})
   void rejectsUnknownGameTypes(String type) {
-    assertThatThrownBy(() -> service.createGame(type, 3, false))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> createGame(type, 3)).isInstanceOf(IllegalArgumentException.class);
     verify(gameRepository, never()).save(any());
   }
 
   @Test
   void rejectsNullGameType() {
-    assertThatThrownBy(() -> service.createGame(null, 3, false))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> createGame(null, 3)).isInstanceOf(IllegalArgumentException.class);
     verify(gameRepository, never()).save(any());
   }
 
@@ -271,7 +270,7 @@ class GameServiceTest {
   void createsTripointRounds() {
     when(tripointGenerator.generate(eq(3), eq(Set.of()), any())).thenReturn(tripoints(3));
 
-    GameCreationResponse response = service.createGame("TRIPOINT", 3, false);
+    GameCreationResponse response = createGame("TRIPOINT", 3);
 
     assertThat(response).isEqualTo(new GameCreationResponse(savedGame().getPublicId()));
     verify(tripointGenerator, times(1)).generate(eq(3), eq(Set.of()), any());
@@ -389,7 +388,7 @@ class GameServiceTest {
   void createsRiverRounds() {
     when(riverGenerator.generate(eq(2), eq(Set.of()), any())).thenReturn(rivers(2));
 
-    service.createGame("RIVERS_BY_SHAPE", 2, false);
+    createGame("RIVERS_BY_SHAPE", 2);
 
     verify(riverGenerator).generate(eq(2), eq(Set.of()), any());
     verify(tripointGenerator, never()).generate(anyInt(), any(), any());
@@ -407,14 +406,14 @@ class GameServiceTest {
 
   @Test
   void aSingleTypeGameRecordsItsTypeAsTheMode() {
-    service.createGame("RIVERS_BY_SHAPE", 1, false);
+    createGame("RIVERS_BY_SHAPE", 1);
 
     assertThat(savedGame().getGameMode()).isEqualTo("RIVERS_BY_SHAPE");
   }
 
   @Test
   void aMixedGameRecordsRandomAsTheMode() {
-    service.createGame("RANDOM", 3, false);
+    createGame("RANDOM", 3);
 
     assertThat(savedGame().getGameMode()).isEqualTo("RANDOM");
   }
@@ -424,7 +423,7 @@ class GameServiceTest {
     int total = 6;
     service = allGeneratorsService(new Random());
 
-    service.createGame("RANDOM", total, false);
+    createGame("RANDOM", total);
 
     Map<GameType, Integer> requested = new EnumMap<>(GameType.class);
     for (GameType type : GameType.values()) {
@@ -470,7 +469,7 @@ class GameServiceTest {
         .thenThrow(
             new IllegalArgumentException("Can't give you 3 tripoints, I only know about 2!"));
 
-    assertThatThrownBy(() -> service.createGame("TRIPOINT", 3, false))
+    assertThatThrownBy(() -> createGame("TRIPOINT", 3))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("tripoints");
     verify(gameRepository, never()).save(any());
@@ -516,7 +515,7 @@ class GameServiceTest {
     }
     service = allGeneratorsService(new Random(7));
 
-    service.createGame("RANDOM", 10, false);
+    createGame("RANDOM", 10);
 
     assertThat(returnedSoFar).hasSize(10);
   }

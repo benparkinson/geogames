@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.jayway.jsonpath.JsonPath;
 import java.time.Duration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
@@ -83,17 +82,7 @@ class PostgresMigrationIT {
                 .single())
         .isGreaterThanOrEqualTo(2);
 
-    String body =
-        mockMvc
-            .perform(
-                post("/api/games")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"gameType\":\"RIVERS_BY_SHAPE\",\"numberOfRounds\":2}"))
-            .andExpect(status().isOk())
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
-    String id = JsonPath.read(body, "$.id");
+    String id = TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 2);
 
     mockMvc.perform(get("/api/games/%s/rounds/0".formatted(id))).andExpect(status().isOk());
     mockMvc

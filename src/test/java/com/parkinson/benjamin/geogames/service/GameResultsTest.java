@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import static com.parkinson.benjamin.geogames.TestFixtures.game;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.parkinson.benjamin.geogames.api.GameResult;
@@ -8,8 +9,6 @@ import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GameResultsTest {
@@ -25,10 +24,6 @@ class GameResultsTest {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
     entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
     return entity;
-  }
-
-  private static GameEntity game(GameRoundEntity... rounds) {
-    return new GameEntity(new ArrayList<>(List.of(rounds)), "TRIPOINT", null);
   }
 
   @Test
