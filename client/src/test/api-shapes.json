@@ -10,6 +10,15 @@
         "name" : "string"
       }
     },
+    "GET /api/daily-scores/{date}" : {
+      "averageScore" : "number",
+      "buckets" : {
+        "array" : "number"
+      },
+      "date" : "string",
+      "maxScore" : "number",
+      "players" : "number"
+    },
     "GET /api/lakes" : {
       "array" : {
         "additionalNames" : {

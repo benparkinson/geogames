@@ -40,6 +40,7 @@ import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
+import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -79,6 +80,7 @@ class GameServiceTest {
   private final Map<GameType, RoundGenerator> generators = new EnumMap<>(GameType.class);
   private GameService service;
   private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
+  private final DailyScoreStore dailyScores = mock(DailyScoreStore.class);
   private final KnownPlaceNames names = testNames();
 
   @BeforeEach
@@ -143,7 +145,8 @@ class GameServiceTest {
         objectMapper,
         random,
         events,
-        names);
+        names,
+        dailyScores);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -158,7 +161,8 @@ class GameServiceTest {
         objectMapper,
         random,
         events,
-        names);
+        names,
+        dailyScores);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -488,7 +492,8 @@ class GameServiceTest {
               objectMapper,
               new Random(7),
               events,
-              names)
+              names,
+              dailyScores)
           .createGame("RANDOM", 10, false);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
@@ -845,6 +850,65 @@ class GameServiceTest {
                     new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))), null, null))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mode");
+  }
+
+  // ------------------------------------------------------- daily scores
+
+  private static final LocalDate DAILY_DATE = LocalDate.of(2026, 11, 20);
+
+  private GameEntity dailyGame(GameRoundEntity... rounds) {
+    GameEntity game = new GameEntity(new ArrayList<>(List.of(rounds)), "DAILY", null, DAILY_DATE);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+    return game;
+  }
+
+  @Test
+  void aDailyGameIsCountedOnTheAnswerThatFinishesIt() {
+    dailyGame(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED));
+
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+
+    verify(dailyScores).recordFinished(DAILY_DATE, 100, 200);
+  }
+
+  @Test
+  void repeatingTheFinalAnswerDoesNotCountAgain() {
+    dailyGame(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED));
+
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+
+    verify(dailyScores, times(1)).recordFinished(any(), anyInt(), anyInt());
+  }
+
+  @Test
+  void anUnfinishedDailyGameIsNotCounted() {
+    dailyGame(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+
+    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+  }
+
+  @Test
+  void aGameThatIsNotDailyIsNeverCounted() {
+    when(gameRepository.findByPublicId(GAME_ID))
+        .thenReturn(Optional.of(game(round(0, AnswerState.UNANSWERED))));
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+
+    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+  }
+
+  @Test
+  void aDailyGameFinishedByGivingUpOrRunningOutOfGuessesIsCounted() {
+    dailyGame(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
+    int limit = GameType.TRIPOINT.guessLimit();
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+
+    verify(dailyScores).recordFinished(DAILY_DATE, 0, 200);
   }
 
   // ------------------------------------------------------------ recordGuess

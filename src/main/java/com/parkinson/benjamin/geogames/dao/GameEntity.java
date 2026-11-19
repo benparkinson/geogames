@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -64,15 +65,29 @@ public class GameEntity {
   @Column(updatable = false)
   private Boolean hardMode;
 
+  /**
+   * The date of the daily challenge this game was made from, set when it is created and never
+   * changed. Null for every other game. It is the challenge's date, not when it was played.
+   */
+  @Column(updatable = false)
+  private LocalDate dailyDate;
+
   public GameEntity() {}
+
+  /** A game that is not a daily challenge. */
+  public GameEntity(List<GameRoundEntity> rounds, String gameMode, Boolean hardMode) {
+    this(rounds, gameMode, hardMode, null);
+  }
 
   /**
    * A game always has at least one round, so its result is never "finished" with nothing played.
    *
    * @param gameMode what was requested: a {@code GameType} name, or {@code RANDOM}
    * @param hardMode whether Hard mode is on, or null if unknown
+   * @param dailyDate the challenge's date for a daily game, or null
    */
-  public GameEntity(List<GameRoundEntity> rounds, String gameMode, Boolean hardMode) {
+  public GameEntity(
+      List<GameRoundEntity> rounds, String gameMode, Boolean hardMode, LocalDate dailyDate) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -86,6 +101,12 @@ public class GameEntity {
     this.playId = UUID.randomUUID();
     this.gameMode = gameMode;
     this.hardMode = hardMode;
+    this.dailyDate = dailyDate;
+  }
+
+  /** The daily challenge's date, or null for a game that isn't one. */
+  public LocalDate getDailyDate() {
+    return dailyDate;
   }
 
   public long getId() {

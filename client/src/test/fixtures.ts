@@ -2,6 +2,7 @@ import { Globe } from "react-bootstrap-icons";
 import { vi } from "vitest";
 import type {
   DailyGameResponse,
+  DailyScore,
   GameRoundResponse,
   RoundAnswerResponse,
   RoundGuessesResponse,
@@ -423,6 +424,18 @@ export function makeGuessesResponse(overrides: Partial<RoundGuessesResponse> = {
 /** What POST /api/games/{id}/rounds/{round}/hints returns: for each hint, how many guesses came before it. */
 export function makeHintsResponse(overrides: Partial<RoundHintsResponse> = {}): RoundHintsResponse {
   return { hintsTakenAt: [0, 1], ...overrides };
+}
+
+/** What GET /api/daily-scores/{date} returns. */
+export function makeDailyScore(overrides: Partial<DailyScore> = {}): DailyScore {
+  return {
+    date: "2026-11-18",
+    players: 4,
+    averageScore: 312.5,
+    maxScore: 500,
+    buckets: [0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1],
+    ...overrides,
+  };
 }
 
 /** What POST /api/daily-games returns. */

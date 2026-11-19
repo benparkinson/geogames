@@ -48,8 +48,10 @@ function PrivacyPage(): React.JSX.Element {
         </p>
         <p>
           Everyone who plays the daily challenge on a date gets the same rounds. The server stores which rounds those
-          are for each date, and nothing about who played them. Copying your result writes to your clipboard only when
-          you click Copy result.
+          are for each date, and nothing about who played them. When you finish the daily challenge, your score is added
+          to that day&apos;s anonymous totals: the number of players, the sum of their scores, and how many scored in
+          each tenth of the range. Nothing in the totals links back to a game or a player, and they are kept
+          indefinitely. Copying your result writes to your clipboard only when you click Copy result.
         </p>
 
         <h2 className="h5">Who else receives data</h2>
