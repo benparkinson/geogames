@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import type { RoundOutcome } from "../games/common/outcome";
 import { createLocalStore } from "../settings/localStore";
 
 const store = createLocalStore("gg-daily", "gg-daily-change");
@@ -8,8 +9,16 @@ export interface DailyInfo {
   date: string;
 }
 
-/** How one round ended, as the share text shows it. "hints" means some points but not perfect (hints used, or only some answers found). */
-export type RoundOutcome = "perfect" | "hints" | "revealed";
+export type { RoundOutcome };
+
+/** Entries stored by an earlier version of the site used these keys; they are read as the nearest outcome. */
+const LEGACY_OUTCOMES: Record<string, RoundOutcome> = { perfect: "correct", revealed: "missed" };
+
+function currentOutcome(value: unknown): RoundOutcome | null {
+  if (typeof value !== "string") return null;
+  if (value === "firstGuess" || value === "correct" || value === "hints" || value === "missed") return value;
+  return LEGACY_OUTCOMES[value] ?? null;
+}
 
 export interface DailyResult {
   score: number;
@@ -35,11 +44,11 @@ export interface DailyEntry {
 let cachedRaw: string | null = null;
 let cachedEntry: DailyEntry | null = null;
 
-function isOutcome(value: unknown): value is RoundOutcome {
-  return value === "perfect" || value === "hints" || value === "revealed";
+function isOutcome(value: unknown): boolean {
+  return currentOutcome(value) !== null;
 }
 
-function isResult(value: unknown): value is DailyResult {
+function isResult(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const r = value as Record<string, unknown>;
   return (
@@ -66,7 +75,12 @@ function parse(raw: string | null): DailyEntry | null {
     ) {
       return null;
     }
-    return value as DailyEntry;
+    const entry = value as unknown as DailyEntry;
+    if (entry.result) {
+      const rounds = entry.result.rounds.map((r) => currentOutcome(r) as RoundOutcome);
+      return { ...entry, result: { ...entry.result, rounds } };
+    }
+    return entry;
   } catch {
     return null;
   }

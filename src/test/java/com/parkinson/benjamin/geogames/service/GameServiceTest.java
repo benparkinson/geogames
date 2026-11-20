@@ -579,7 +579,9 @@ class GameServiceTest {
                 0,
                 0,
                 List.of(0, 0),
-                List.of(0, 0)));
+                List.of(0, 0),
+                List.of(false, false),
+                0));
     assertThat(result.hintsUsed()).isZero();
     assertThat(result.points()).isZero();
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPerfect, roundPoints } from "./scoring";
+import { roundPoints } from "./scoring";
 
 // The same table is in the backend's ScoringTest. Keep them identical.
 const table: [hintCount: number, hintsUsed: number, correct: number, gaveUp: number][] = [
@@ -54,13 +54,4 @@ describe("roundPoints", () => {
       expect(roundPoints("UNANSWERED", hintsUsed, hintCount)).toBe(0);
     },
   );
-});
-
-describe("isPerfect", () => {
-  it("is a correct answer without hints", () => {
-    expect(isPerfect("CORRECT", 0)).toBe(true);
-    expect(isPerfect("CORRECT", 1)).toBe(false);
-    expect(isPerfect("GAVE_UP", 0)).toBe(false);
-    expect(isPerfect("UNANSWERED", 0)).toBe(false);
-  });
 });
