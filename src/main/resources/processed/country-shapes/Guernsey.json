@@ -1,6 +1,7 @@
 {
   "name" : "Guernsey",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 62.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 62,

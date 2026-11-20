@@ -1,6 +1,7 @@
 {
   "name" : "Portugal",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 2121.0,
   "landBorderKm" : 1064.0,
   "areaKm2" : 87865,

@@ -139,7 +139,12 @@ describe("MapGame guessing", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 2,
+    });
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("button", { name: /Next round/ })).toBeInTheDocument();
@@ -163,7 +168,12 @@ describe("MapGame guessing", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 1 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 1,
+      answersFound: 2,
+    });
   });
 
   it("ignores guesses after the round is over", async () => {
@@ -174,6 +184,22 @@ describe("MapGame guessing", () => {
 });
 
 describe("MapGame giving up", () => {
+  it("reports how many answers were found, and scores their share, when giving up part way", async () => {
+    const user = userEvent.setup();
+    const { submitAnswer } = renderGame();
+
+    await guess(user, "France");
+    await reveal(user);
+
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "GAVE_UP",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 1,
+    });
+    expect(screen.getByText("Answer revealed · 1 of 2 found · +50")).toBeInTheDocument();
+  });
+
   it("reports the wrong guesses made before giving up", async () => {
     const user = userEvent.setup();
     const { submitAnswer } = renderGame();
@@ -183,7 +209,12 @@ describe("MapGame giving up", () => {
     await guess(user, "Peru");
     await reveal(user);
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0, wrongGuesses: 2 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "GAVE_UP",
+      hintsUsed: 0,
+      wrongGuesses: 2,
+      answersFound: 0,
+    });
   });
 
   it("reports GAVE_UP once and reveals the answers that weren't found", async () => {
@@ -192,7 +223,12 @@ describe("MapGame giving up", () => {
     await reveal(userEvent.setup());
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "GAVE_UP",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 0,
+    });
     expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
@@ -224,7 +260,7 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -234,8 +270,7 @@ describe("MapGame resuming a finished round", () => {
       hints: { description: "A clue", text: (index) => `Hint number ${index}` },
     });
 
-    expect(screen.getByText("Correct! +67")).toBeInTheDocument();
-    expect(screen.getByText("2 hints used")).toBeInTheDocument();
+    expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
     expect(screen.getByText("Hint number 0").closest("ul")).toHaveClass("round-hints");
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
@@ -255,6 +290,48 @@ describe("MapGame resuming a finished round", () => {
   });
 });
 
+describe("MapGame continent line", () => {
+  it("shows the continent from the start of an Easy round, before any hint", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Europe"] }) });
+
+    const line = screen.getByText("Continent: Europe");
+    expect(line.closest("ul")).toHaveClass("round-hints");
+    expect(line.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("names both continents of a country that spans two", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Asia", "Europe"] }) });
+
+    expect(screen.getByText("Continents: Asia / Europe")).toBeInTheDocument();
+  });
+
+  it("shows nothing in a Normal round", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "NORMAL", continents: [] }) });
+
+    expect(screen.queryByText(/^Continents?:/)).not.toBeInTheDocument();
+    expect(document.querySelector(".round-hints")).toBeNull();
+  });
+
+  it("is the first item of the list, above the hints taken", async () => {
+    const user = userEvent.setup();
+    renderGame({
+      round: makeRoundProps({ difficulty: "EASY", continents: ["Africa"], hintCount: 1 }),
+      hints: { description: "A clue", text: () => "First letter: K" },
+    });
+
+    await user.click(screen.getByRole("button", { name: /Hint/ }));
+
+    const items = [...document.querySelectorAll(".round-hints li")].map((li) => li.textContent?.trim());
+    expect(items).toEqual(["Continent: Africa", "First letter: K"]);
+  });
+
+  it("keeps showing the continent once the round is over", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Oceania"], answerState: "GAVE_UP" }) });
+
+    expect(screen.getByText("Continent: Oceania")).toBeInTheDocument();
+  });
+});
+
 describe("MapGame hint button", () => {
   it("offers no hint button once the round is over", async () => {
     renderGame({
@@ -268,7 +345,9 @@ describe("MapGame hint button", () => {
 
 describe("MapGame hints", () => {
   function hintConfig() {
-    const text = vi.fn<(hintIndex: number) => string | null>((index) => (index === 0 ? "Continent: Europe" : null));
+    const text = vi.fn<(hintIndex: number, foundAtHint: string[][]) => string | null>((index) =>
+      index === 0 ? "Continent: Europe" : null,
+    );
     const hints: HintConfig = { description: "A clue", text };
     return { hints, text };
   }
@@ -279,11 +358,11 @@ describe("MapGame hints", () => {
     renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(text).toHaveBeenLastCalledWith(0);
+    expect(text).toHaveBeenLastCalledWith(0, [[]]);
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(text).toHaveBeenLastCalledWith(1);
+    expect(text).toHaveBeenLastCalledWith(1, [[], []]);
   });
 
   it("uses up a hint even when it has no text, and stops when none are left", async () => {
@@ -355,7 +434,12 @@ describe("MapGame hints", () => {
     await guess(user, "Spain");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 1, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 1,
+      wrongGuesses: 0,
+      answersFound: 2,
+    });
   });
 
   it("reports the hints used when the player gives up", async () => {
@@ -369,7 +453,12 @@ describe("MapGame hints", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     await reveal(user);
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "GAVE_UP",
+      hintsUsed: 2,
+      wrongGuesses: 0,
+      answersFound: 0,
+    });
   });
 
   it("shows what the round is worth, 100 then 83, 67 and 50 for three hints", async () => {
@@ -450,7 +539,7 @@ describe("MapGame panel", () => {
   it("shows the round result instead of the form when the round is over", () => {
     renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
-    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
   });
@@ -478,8 +567,13 @@ describe("MapGame guess limit", () => {
     await guess(user, "Peru");
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0, wrongGuesses: 2 });
-    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "OUT_OF_GUESSES",
+      hintsUsed: 0,
+      wrongGuesses: 2,
+      answersFound: 1,
+    });
+    expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
@@ -512,27 +606,27 @@ describe("MapGame clues", () => {
 
   it("shows the clue on the chip when the round is not in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "NORMAL" }) });
 
     await guess(user, "Italy");
 
     expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
   });
 
-  it("shows no Hard mode switch during a round", async () => {
+  it("shows no difficulty control during a round", async () => {
     const user = userEvent.setup();
     renderGame({ clueFor });
 
     await guess(user, "Italy");
 
-    expect(screen.queryByRole("group", { name: "Hard mode" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Difficulty" })).not.toBeInTheDocument();
     expect(screen.queryByRole("radio", { name: "On" })).not.toBeInTheDocument();
   });
 
   it("still shows clues when the preference is on but the round is not in Hard mode", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+    localStorage.setItem("gg-difficulty", "hard");
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "NORMAL" }) });
 
     await guess(user, "Italy");
 
@@ -551,7 +645,7 @@ describe("MapGame clues", () => {
 
   it("shows no clue when the round is in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: true }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "HARD" }) });
 
     await guess(user, "Italy");
 
@@ -696,7 +790,12 @@ describe("MapGame resuming an unfinished round", () => {
     const { submitAnswer } = renderGame({ round });
 
     expect(submitAnswer).toHaveBeenCalledTimes(1);
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "OUT_OF_GUESSES", hintsUsed: 0, wrongGuesses: 5 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "OUT_OF_GUESSES",
+      hintsUsed: 0,
+      wrongGuesses: 5,
+      answersFound: 0,
+    });
   });
 
   it("does not send an answer again for a round the server has answered", () => {
@@ -743,6 +842,25 @@ describe("MapGame saving hints", () => {
     await guess(user, "France");
 
     expect(order).toEqual(["hint", "guess", "answer"]);
+  });
+
+  it("says first guess for a single-answer round won straight away", async () => {
+    renderGame({ answerCount: 1, answers: [ANSWERS[0]] });
+
+    await guess(userEvent.setup(), "France");
+
+    expect(screen.getByText("First guess! +100")).toBeInTheDocument();
+  });
+
+  it("says correct for a single-answer round won after a wrong guess", async () => {
+    renderGame({ answerCount: 1, answers: [ANSWERS[0]] });
+    const user = userEvent.setup();
+
+    await guess(user, "Italy");
+    await guess(user, "France");
+
+    expect(screen.getByText("Correct! +100")).toBeInTheDocument();
+    expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
   });
 
   it("shows the hints taken before a refresh, and what the round is now worth", () => {

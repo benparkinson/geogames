@@ -1,6 +1,7 @@
 {
   "name" : "Bosnia and Herzegovina",
   "additionalNames" : [ "Bosnia", "Bosnia-Herzegovina" ],
+  "continents" : [ "Europe" ],
   "coastKm" : 18.0,
   "landBorderKm" : 1295.0,
   "areaKm2" : 51722,

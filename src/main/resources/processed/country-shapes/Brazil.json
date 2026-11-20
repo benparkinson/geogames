@@ -1,6 +1,7 @@
 {
   "name" : "Brazil",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 18713.0,
   "landBorderKm" : 12324.0,
   "areaKm2" : 8450170,

@@ -1,6 +1,7 @@
 {
   "name" : "Estonia",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 1486.0,
   "landBorderKm" : 539.0,
   "areaKm2" : 41403,

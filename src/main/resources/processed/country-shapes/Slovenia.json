@@ -1,6 +1,7 @@
 {
   "name" : "Slovenia",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 27.0,
   "landBorderKm" : 910.0,
   "areaKm2" : 20277,

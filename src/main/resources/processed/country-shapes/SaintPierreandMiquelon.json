@@ -1,6 +1,7 @@
 {
   "name" : "Saint Pierre and Miquelon",
   "additionalNames" : [ "St Pierre and Miquelon", "St. Pierre and Miquelon" ],
+  "continents" : [ "North America" ],
   "coastKm" : 134.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 212,

@@ -12,6 +12,7 @@ import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
@@ -43,6 +44,7 @@ public class GameService {
   private final RoundRules rules;
   private final KnownPlaceNames placeNames;
   private final DailyScoreStore dailyScores;
+  private final RoundContinents roundContinents;
 
   public GameService(
       GameRepository gameRepository,
@@ -52,7 +54,8 @@ public class GameService {
       Random random,
       ApplicationEventPublisher events,
       KnownPlaceNames placeNames,
-      DailyScoreStore dailyScores) {
+      DailyScoreStore dailyScores,
+      RoundContinents roundContinents) {
     this.gameRepository = gameRepository;
     this.generators = generators;
     this.objectMapper = objectMapper;
@@ -61,10 +64,12 @@ public class GameService {
     this.rules = rules;
     this.placeNames = placeNames;
     this.dailyScores = dailyScores;
+    this.roundContinents = roundContinents;
   }
 
   @Transactional
-  public GameCreationResponse createGame(String gameType, int numberOfRounds, Boolean hardMode) {
+  public GameCreationResponse createGame(
+      String gameType, int numberOfRounds, Difficulty difficulty) {
     if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
       throw new IllegalArgumentException(
           "Number of rounds must be between 1 and %d, was %d!"
@@ -80,20 +85,22 @@ public class GameService {
     return createGame(
         gameData.stream().map(PinnedRound::of).toList(),
         selection.isRandom() ? "RANDOM" : selection.type().name(),
-        hardMode,
+        difficulty,
         null);
   }
 
   /** Makes a game from rounds that were chosen earlier (a daily challenge's pinned rounds). */
   @Transactional
   public GameCreationResponse createGame(
-      List<PinnedRound> rounds, String gameMode, Boolean hardMode, LocalDate dailyDate) {
+      List<PinnedRound> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
     return new GameCreationResponse(
-        gameRepository.save(new GameEntity(entities, gameMode, hardMode, dailyDate)).getPublicId());
+        gameRepository
+            .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
+            .getPublicId());
   }
 
   @Transactional(readOnly = true)
@@ -115,7 +122,7 @@ public class GameService {
         gameId,
         round,
         (game, r) -> {
-          if (rules.addGuess(r, guess, correct)) {
+          if (rules.addGuess(r, game.difficulty(), guess, correct)) {
             gameRepository.save(game);
           }
           return new RoundGuessesResponse(recordedGuesses(r));
@@ -135,7 +142,7 @@ public class GameService {
         gameId,
         round,
         (game, r) -> {
-          if (rules.addHint(r, hint, guessesBefore)) {
+          if (rules.addHint(r, game.difficulty(), hint, guessesBefore)) {
             gameRepository.save(game);
           }
           return new RoundHintsResponse(List.copyOf(r.getHintsTakenAt()));
@@ -150,13 +157,20 @@ public class GameService {
 
   @Transactional
   public Optional<RoundAnswerResponse> submitAnswer(
-      UUID gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      UUID gameId,
+      int round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
 
     return withRound(
-        gameId, round, (game, r) -> answer(game, r, answerState, hintsUsed, wrongGuesses));
+        gameId,
+        round,
+        (game, r) -> answer(game, r, answerState, hintsUsed, wrongGuesses, answersFound));
   }
 
   private RoundAnswerResponse answer(
@@ -164,25 +178,48 @@ public class GameService {
       GameRoundEntity round,
       AnswerState answerState,
       int hintsUsed,
-      Integer wrongGuesses) {
+      Integer wrongGuesses,
+      Integer answersFound) {
     // Wrong guesses aren't checked against the stored guesses: a guess request lost on the
     // network would otherwise block a real answer.
-    rules.validateAnswer(round, answerState, hintsUsed, wrongGuesses);
+    rules.validateAnswer(
+        round, game.difficulty(), answerState, hintsUsed, wrongGuesses, answersFound);
     // The hints that count are at least those recorded, so a client can't report fewer. More is
     // accepted, because a hint request may have been lost. This is worked out before the repeat
     // check, so a retry is still a no-op.
     int effectiveHints = Math.max(hintsUsed, round.getHintsTakenAt().size());
-    if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
+    Integer effectiveFound = effectiveAnswersFound(round, answerState, answersFound);
+    if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses, effectiveFound)) {
       gameRepository.save(game);
       publishRoundAnswered(game, round);
       // Counted here, in this transaction, so a rolled-back answer rolls the count back too. This
       // is the first answer to the round, so a repeat never gets here.
       if (game.getDailyDate() != null && allAnswered(game)) {
         GameResult result = GameResults.of(game);
-        dailyScores.recordFinished(game.getDailyDate(), result.score(), result.maxScore());
+        dailyScores.recordFinished(
+            game.getDailyDate(), game.difficulty(), result.score(), result.maxScore());
       }
     }
     return toAnswerResponse(game, round);
+  }
+
+  /**
+   * The answers found that count: all of them for a correct round, otherwise the larger of what
+   * the client reported and the correct guesses recorded (a guess request may have been lost, and
+   * the client checks answers anyway), below the answer count. Null if the client didn't say and no
+   * correct guess was recorded. Worked out before the repeat check, so a retry is still a no-op.
+   */
+  private static Integer effectiveAnswersFound(
+      GameRoundEntity round, AnswerState answerState, Integer reported) {
+    int answerCount = round.getGameType().answerCount();
+    if (answerState == AnswerState.CORRECT) {
+      return answerCount;
+    }
+    int recorded = (int) round.getGuesses().stream().filter(g -> g.isCorrect()).count();
+    if (reported == null && recorded == 0) {
+      return null;
+    }
+    return Math.min(Math.max(reported == null ? 0 : reported, recorded), answerCount - 1);
   }
 
   private static boolean allAnswered(GameEntity game) {
@@ -205,8 +242,10 @@ public class GameService {
             round.getAnswerState(),
             round.getHintsUsed(),
             round.getWrongGuesses(),
+            round.getAnswersFound(),
             LocalDate.now(ZoneOffset.UTC),
-            game.getHardMode()));
+            game.getHardMode(),
+            game.getDifficulty()));
   }
 
   private <T> Optional<T> withRound(
@@ -224,16 +263,18 @@ public class GameService {
     String roundKey = placeNames.currentRoundKey(round.getRoundKey());
     GameData data = generators.rebuild(round.getGameType(), roundKey);
     return new GameRound(
-        GameTypeResponse.from(round.getGameType()),
+        GameTypeResponse.from(round.getGameType(), game.difficulty()),
         objectMapper.writeValueAsString(data),
         game.getRounds().size(),
         round.getAnswerState(),
         round.getHintsUsed(),
-        GameResults.pointsFor(round),
+        GameResults.pointsFor(round, game.difficulty()),
         GameResults.of(game),
         recordedGuesses(round),
         List.copyOf(round.getHintsTakenAt()),
-        game.isHardMode());
+        game.isHardMode(),
+        game.difficulty().name(),
+        game.difficulty() == Difficulty.EASY ? roundContinents.of(data) : List.of());
   }
 
   /** The answer's response has no round data, so it needs no rebuild and no serialising. */
@@ -241,7 +282,7 @@ public class GameService {
     return new RoundAnswerResponse(
         round.getAnswerState(),
         round.getHintsUsed(),
-        GameResults.pointsFor(round),
+        GameResults.pointsFor(round, game.difficulty()),
         GameResults.of(game));
   }
 }

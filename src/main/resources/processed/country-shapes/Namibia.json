@@ -1,6 +1,7 @@
 {
   "name" : "Namibia",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1510.0,
   "landBorderKm" : 3864.0,
   "areaKm2" : 824824,

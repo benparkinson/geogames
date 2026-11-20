@@ -1,6 +1,7 @@
 {
   "name" : "Senegal",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1256.0,
   "landBorderKm" : 2492.0,
   "areaKm2" : 196943,

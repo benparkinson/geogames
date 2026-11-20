@@ -1,6 +1,7 @@
 {
   "name" : "Fiji",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 2557.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 10929,

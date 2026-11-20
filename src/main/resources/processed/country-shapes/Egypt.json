@@ -1,6 +1,7 @@
 {
   "name" : "Egypt",
   "additionalNames" : [ ],
+  "continents" : [ "Africa", "Asia" ],
   "coastKm" : 3793.0,
   "landBorderKm" : 2590.0,
   "areaKm2" : 1002700,

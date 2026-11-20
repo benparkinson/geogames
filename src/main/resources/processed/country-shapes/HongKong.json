@@ -1,6 +1,7 @@
 {
   "name" : "Hong Kong",
   "additionalNames" : [ "Hong Kong S.A.R.", "Hong Kong SAR" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 436.0,
   "landBorderKm" : 18.0,
   "areaKm2" : 795,

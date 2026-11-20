@@ -1,6 +1,7 @@
 {
   "name" : "Macao",
   "additionalNames" : [ "Macao S.A.R", "Macau", "Macao SAR", "Macau SAR" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 47.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 35,

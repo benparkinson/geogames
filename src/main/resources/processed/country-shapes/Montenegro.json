@@ -1,6 +1,7 @@
 {
   "name" : "Montenegro",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 167.0,
   "landBorderKm" : 582.0,
   "areaKm2" : 13704,

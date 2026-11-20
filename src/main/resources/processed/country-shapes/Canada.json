@@ -1,6 +1,7 @@
 {
   "name" : "Canada",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 136806.0,
   "landBorderKm" : 7908.0,
   "areaKm2" : 8098753,

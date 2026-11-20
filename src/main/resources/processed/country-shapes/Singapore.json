@@ -1,6 +1,7 @@
 {
   "name" : "Singapore",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 97.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 513,

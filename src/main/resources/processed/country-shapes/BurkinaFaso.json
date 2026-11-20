@@ -1,6 +1,7 @@
 {
   "name" : "Burkina Faso",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 3277.0,
   "areaKm2" : 273827,

@@ -1,6 +1,7 @@
 {
   "name" : "Northern Cyprus",
   "additionalNames" : [ "Turkish Republic of Northern Cyprus", "TRNC" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 510.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 3314,

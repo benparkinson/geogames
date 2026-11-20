@@ -1,6 +1,7 @@
 {
   "name" : "Democratic Republic of the Congo",
   "additionalNames" : [ "DRC", "DR Congo", "Democratic Republic of Congo", "Congo-Kinshasa", "Congo Kinshasa", "Zaire" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 211.0,
   "landBorderKm" : 9502.0,
   "areaKm2" : 2335304,

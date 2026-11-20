@@ -47,12 +47,12 @@ describe("River Countries", () => {
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "true");
   });
 
-  it("first hint puts the flags on the map, second gives the first letter", async () => {
+  it("first hint marks the start and end on the map, second gives the first letter", async () => {
     const user = userEvent.setup();
     renderGame();
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Start and end flags are on the map")).toBeInTheDocument();
+    expect(screen.getByText("The start and end are marked on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints-used", "1");
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));

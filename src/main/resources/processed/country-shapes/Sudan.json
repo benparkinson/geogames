@@ -1,6 +1,7 @@
 {
   "name" : "Sudan",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 735.0,
   "landBorderKm" : 6542.0,
   "areaKm2" : 1863991,

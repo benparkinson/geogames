@@ -1,6 +1,7 @@
 {
   "name" : "Tuvalu",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 78.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 9,

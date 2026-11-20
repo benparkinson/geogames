@@ -1,6 +1,7 @@
 {
   "name" : "Turks and Caicos Islands",
   "additionalNames" : [ "Turks and Caicos" ],
+  "continents" : [ "North America" ],
   "coastKm" : 371.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 135,

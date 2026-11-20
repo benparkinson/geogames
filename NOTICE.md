@@ -8,5 +8,5 @@ These files belong to others and keep their own terms:
 
 - `geodata/` and `src/main/resources/processed/` hold data from Natural Earth (public domain) and Wikidata (CC0).
 - `src/main/resources/processed/tripoints.json` is derived from Wikipedia's list of tripoints and is under CC BY-SA 4.0.
-- `client/public/flag.png` and `client/public/globe.png` are Flaticon icons (by Earthz Stocker and Freepik) under Flaticon's licence.
+- `client/public/globe.png` is a Flaticon icon (by Freepik) under Flaticon's licence.
 - Third-party packages keep their own licences. The built site lists them in `third-party-licenses.txt`.

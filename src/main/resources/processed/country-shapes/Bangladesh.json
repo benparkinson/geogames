@@ -1,6 +1,7 @@
 {
   "name" : "Bangladesh",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 3146.0,
   "landBorderKm" : 2570.0,
   "areaKm2" : 134080,

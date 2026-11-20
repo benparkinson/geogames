@@ -1,6 +1,7 @@
 {
   "name" : "Mongolia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 7278.0,
   "areaKm2" : 1560553,

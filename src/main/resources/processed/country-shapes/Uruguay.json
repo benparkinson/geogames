@@ -1,6 +1,7 @@
 {
   "name" : "Uruguay",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 868.0,
   "landBorderKm" : 1097.0,
   "areaKm2" : 177442,

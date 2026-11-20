@@ -4,6 +4,7 @@ import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.helper.PlaceNames;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class RoundRules {
   }
 
   /** @return whether the round changed */
-  boolean addHint(GameRoundEntity round, int hint, int guessesBefore) {
+  boolean addHint(GameRoundEntity round, Difficulty difficulty, int hint, int guessesBefore) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {
       throw new RoundClosedException(round.getRoundNumber());
     }
@@ -38,7 +39,7 @@ public class RoundRules {
       throw new IllegalArgumentException(
           "Hint %d can't be taken before hint %d".formatted(hint, taken));
     }
-    int hintCount = round.getGameType().hintCount();
+    int hintCount = round.getGameType().hintCount(difficulty);
     if (hint >= hintCount) {
       throw new IllegalArgumentException(
           "A round of %s has %d hints".formatted(round.getGameType(), hintCount));
@@ -53,7 +54,7 @@ public class RoundRules {
   }
 
   /** @return whether the round changed */
-  boolean addGuess(GameRoundEntity round, String guess, boolean correct) {
+  boolean addGuess(GameRoundEntity round, Difficulty difficulty, String guess, boolean correct) {
     if (round.getAnswerState() != AnswerState.UNANSWERED) {
       throw new RoundClosedException(round.getRoundNumber());
     }
@@ -75,7 +76,7 @@ public class RoundRules {
       return false;
     }
     long same = round.getGuesses().stream().filter(g -> g.isCorrect() == correct).count();
-    int limit = correct ? type.answerCount() : type.guessLimit();
+    int limit = correct ? type.answerCount() : type.guessLimit(difficulty);
     if (same >= limit) {
       throw new IllegalArgumentException(
           "A round of %s allows %d %s guesses"
@@ -85,15 +86,53 @@ public class RoundRules {
     return true;
   }
 
-  /** Checks the hints and wrong guesses an answer reports against what the round's type allows. */
+  /**
+   * Checks the hints, wrong guesses and answers found an answer reports against what the round's
+   * type allows at the game's difficulty.
+   */
   void validateAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
-    validateHintsUsed(round, hintsUsed);
-    validateWrongGuesses(round, answerState, wrongGuesses);
+      GameRoundEntity round,
+      Difficulty difficulty,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
+    validateHintsUsed(round, difficulty, hintsUsed);
+    validateWrongGuesses(round, difficulty, answerState, wrongGuesses);
+    validateAnswersFound(round, answerState, answersFound);
   }
 
-  private static void validateHintsUsed(GameRoundEntity round, int hintsUsed) {
-    int hintCount = round.getGameType().hintCount();
+  /**
+   * Checks the reported answers found: a correct round found all of them, and any other answer
+   * found fewer. A null (not reported) is always accepted.
+   */
+  private static void validateAnswersFound(
+      GameRoundEntity round, AnswerState answerState, Integer answersFound) {
+    if (answersFound == null) {
+      return;
+    }
+    GameType type = round.getGameType();
+    int count = type.answerCount();
+    if (answersFound < 0 || answersFound > count) {
+      throw new IllegalArgumentException(
+          "A round of %s has %d answers, so %d can't have been found"
+              .formatted(type, count, answersFound));
+    }
+    if (answerState == AnswerState.CORRECT && answersFound != count) {
+      throw new IllegalArgumentException(
+          "A correct round of %s has all %d answers found, not %d"
+              .formatted(type, count, answersFound));
+    }
+    if (answerState != AnswerState.CORRECT && answersFound == count) {
+      throw new IllegalArgumentException(
+          "A round of %s with all %d answers found is correct, so it can't be %s"
+              .formatted(type, count, answerState));
+    }
+  }
+
+  private static void validateHintsUsed(
+      GameRoundEntity round, Difficulty difficulty, int hintsUsed) {
+    int hintCount = round.getGameType().hintCount(difficulty);
     if (hintsUsed < 0 || hintsUsed > hintCount) {
       throw new IllegalArgumentException(
           "A round of %s has %d hints, so %d can't have been used"
@@ -107,12 +146,12 @@ public class RoundRules {
    * always accepted.
    */
   private static void validateWrongGuesses(
-      GameRoundEntity round, AnswerState answerState, Integer wrongGuesses) {
+      GameRoundEntity round, Difficulty difficulty, AnswerState answerState, Integer wrongGuesses) {
     if (wrongGuesses == null) {
       return;
     }
     GameType type = round.getGameType();
-    int limit = type.guessLimit();
+    int limit = type.guessLimit(difficulty);
     if (wrongGuesses < 0 || wrongGuesses > limit) {
       throw new IllegalArgumentException(
           "A round of %s allows %d wrong guesses, so %d is not possible"
@@ -139,12 +178,18 @@ public class RoundRules {
    * @return whether the round changed
    */
   boolean recordAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      GameRoundEntity round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
     AnswerState current = round.getAnswerState();
     if (current != AnswerState.UNANSWERED) {
       if (current == answerState
           && round.getHintsUsed() == hintsUsed
-          && Objects.equals(round.getWrongGuesses(), wrongGuesses)) {
+          && Objects.equals(round.getWrongGuesses(), wrongGuesses)
+          && (Objects.equals(round.getAnswersFound(), answersFound)
+              || (current == AnswerState.CORRECT && round.getAnswersFound() == null))) {
         return false;
       }
       throw new RoundAlreadyAnsweredException(
@@ -152,11 +197,13 @@ public class RoundRules {
           current,
           round.getHintsUsed(),
           round.getWrongGuesses(),
+          round.getAnswersFound(),
           answerState,
           hintsUsed,
-          wrongGuesses);
+          wrongGuesses,
+          answersFound);
     }
-    round.recordAnswer(answerState, hintsUsed, wrongGuesses);
+    round.recordAnswer(answerState, hintsUsed, wrongGuesses, answersFound);
     return true;
   }
 }

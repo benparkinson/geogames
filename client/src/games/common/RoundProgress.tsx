@@ -1,24 +1,23 @@
-import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
-import { AnswerState, CORRECT_ANSWER, isRevealed, OUT_OF_GUESSES, UNANSWERED } from "./Model";
-import { MAX_ROUND_POINTS } from "./scoring";
+import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
+import { CORRECT_ANSWER, OUT_OF_GUESSES, UNANSWERED } from "./Model";
+import { OUTCOME_STYLES, RoundOutcome } from "./outcome";
 
 export default function RoundProgress({
   states,
   points,
+  outcomes,
   currentRound,
   goToRound,
 }: {
   states: string[];
   /** The points of each round, in the same order as `states`. */
   points: number[];
+  /** How each round ended (see `roundOutcome`), null while unanswered, in the same order as `states`. */
+  outcomes: (RoundOutcome | null)[];
   currentRound: number;
   goToRound: (round: number) => void;
 }): React.JSX.Element {
   const firstUnanswered = states.findIndex((s) => s === UNANSWERED);
-
-  function isPerfectRound(i: number): boolean {
-    return states[i] === CORRECT_ANSWER && points[i] === MAX_ROUND_POINTS;
-  }
 
   function canVisit(i: number): boolean {
     return i === currentRound || states[i] !== UNANSWERED || i === firstUnanswered;
@@ -27,26 +26,42 @@ export default function RoundProgress({
   function describe(i: number): string {
     const n = i + 1;
     if (i === currentRound) return `Round ${n}: current`;
-    if (isPerfectRound(i)) return `Round ${n}: perfect`;
-    if (states[i] === CORRECT_ANSWER) return `Round ${n}: correct, ${points[i]} points`;
-    if (states[i] === OUT_OF_GUESSES) return `Round ${n}: out of guesses`;
-    if (isRevealed(states[i] as AnswerState)) return `Round ${n}: revealed`;
-    return `Round ${n}: not played`;
+    const revealed = states[i] === OUT_OF_GUESSES ? "out of guesses" : "revealed";
+    switch (outcomes[i]) {
+      case "firstGuess":
+        return `Round ${n}: first guess`;
+      case "correct":
+        return `Round ${n}: correct`;
+      case "hints":
+        return states[i] === CORRECT_ANSWER
+          ? `Round ${n}: correct with hints, ${points[i]} points`
+          : `Round ${n}: ${revealed}, ${points[i]} points`;
+      case "missed":
+        return `Round ${n}: ${revealed}`;
+      default:
+        return `Round ${n}: not played`;
+    }
   }
 
   function dotClass(i: number): string {
-    const state = states[i];
+    const outcome = outcomes[i];
     let cls = "round-dot";
-    if (isPerfectRound(i)) cls += " round-dot--perfect";
-    else if (state === CORRECT_ANSWER) cls += " round-dot--correct";
-    else if (isRevealed(state as AnswerState)) cls += " round-dot--revealed";
+    if (outcome) cls += " " + OUTCOME_STYLES[outcome].dotClass;
     if (i === currentRound) cls += " round-dot--current";
     return cls;
   }
 
+  function icon(i: number): React.ReactNode {
+    const outcome = outcomes[i];
+    if (outcome === "firstGuess") return <StarFill aria-hidden="true" />;
+    if (outcome === null || outcome === undefined) return i + 1;
+    if (states[i] === CORRECT_ANSWER) return <CheckLg aria-hidden="true" />;
+    return states[i] === OUT_OF_GUESSES ? <XLg aria-hidden="true" /> : <EyeFill aria-hidden="true" />;
+  }
+
   return (
     <nav aria-label="Rounds" className="round-progress">
-      {states.map((state, i) => {
+      {states.map((_state, i) => {
         const label = describe(i);
         const visitable = canVisit(i);
         return (
@@ -60,15 +75,7 @@ export default function RoundProgress({
               disabled={!visitable}
               onClick={() => goToRound(i)}
             >
-              {isPerfectRound(i) ? (
-                <StarFill aria-hidden="true" />
-              ) : state === CORRECT_ANSWER ? (
-                <CheckLg aria-hidden="true" />
-              ) : isRevealed(state as AnswerState) ? (
-                <EyeFill aria-hidden="true" />
-              ) : (
-                i + 1
-              )}
+              {icon(i)}
             </button>
           </span>
         );

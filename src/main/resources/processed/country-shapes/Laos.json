@@ -1,6 +1,7 @@
 {
   "name" : "Laos",
   "additionalNames" : [ "Lao PDR", "LPDR" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 4396.0,
   "areaKm2" : 228827,

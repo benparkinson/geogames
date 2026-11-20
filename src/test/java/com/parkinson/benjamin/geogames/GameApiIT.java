@@ -110,6 +110,88 @@ class GameApiIT {
   }
 
   @Test
+  void anEasyGameReturnsTheDoubledLimitsAndTheContinent() throws Exception {
+    String id =
+        TestFixtures.createGame(mockMvc, "COUNTRIES_BY_COASTLINE", 2, ",\"difficulty\":\"EASY\"");
+
+    for (int round = 0; round < 2; round++) {
+      String json = getRound(id, round);
+      assertThat((String) JsonPath.read(json, "$.difficulty")).isEqualTo("EASY");
+      assertThat((Boolean) JsonPath.read(json, "$.hardMode")).isFalse();
+      assertThat((int) JsonPath.read(json, "$.gameType.guessLimit")).isEqualTo(10);
+      assertThat((int) JsonPath.read(json, "$.gameType.hintCount")).isEqualTo(3);
+      assertThat((List<?>) JsonPath.read(json, "$.continents")).isNotEmpty().hasSizeLessThan(3);
+    }
+  }
+
+  @Test
+  void anEasyLakeGameHasOneHintFewerAndShowsItsContinent() throws Exception {
+    String id = TestFixtures.createGame(mockMvc, "LAKES_BY_SHAPE", 1, ",\"difficulty\":\"EASY\"");
+
+    String json = getRound(id, 0);
+
+    assertThat((int) JsonPath.read(json, "$.gameType.hintCount")).isEqualTo(2);
+    assertThat((List<?>) JsonPath.read(json, "$.continents")).hasSize(1);
+  }
+
+  @Test
+  void everyGameTypeShowsAContinentInAnEasyGame() throws Exception {
+    for (GameType type : GameType.values()) {
+      String id = TestFixtures.createGame(mockMvc, type.name(), 1, ",\"difficulty\":\"EASY\"");
+
+      assertThat((List<?>) JsonPath.read(getRound(id, 0), "$.continents"))
+          .as(type.name())
+          .isNotEmpty();
+    }
+  }
+
+  @Test
+  void aNormalGameHasNoContinentsAndTheNormalLimits() throws Exception {
+    String id = TestFixtures.createGame(mockMvc, "LAKES_BY_SHAPE", 1, ",\"difficulty\":\"NORMAL\"");
+
+    String json = getRound(id, 0);
+
+    assertThat((String) JsonPath.read(json, "$.difficulty")).isEqualTo("NORMAL");
+    assertThat((List<?>) JsonPath.read(json, "$.continents")).isEmpty();
+    assertThat((int) JsonPath.read(json, "$.gameType.guessLimit")).isEqualTo(5);
+    assertThat((int) JsonPath.read(json, "$.gameType.hintCount")).isEqualTo(3);
+  }
+
+  @Test
+  void anOldRequestWithOnlyHardModeIsHard() throws Exception {
+    String id = TestFixtures.createGame(mockMvc, "TRIPOINT", 1, ",\"hardMode\":true");
+
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.difficulty")).isEqualTo("HARD");
+  }
+
+  @Test
+  void aRequestWithNeitherReadsAsNormal() throws Exception {
+    String id = createGame("TRIPOINT", 1);
+
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.difficulty")).isEqualTo("NORMAL");
+  }
+
+  @Test
+  void aBadDifficultyIsA400() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":1,\"difficulty\":\"EXTREME\"}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void anEasyGameAllowsTenWrongGuessesInTheAnswer() throws Exception {
+    String id = TestFixtures.createGame(mockMvc, "TRIPOINT", 1, ",\"difficulty\":\"EASY\"");
+
+    String result = answer(id, 0, "OUT_OF_GUESSES", 0, 10);
+
+    assertThat((String) JsonPath.read(result, "$.answerState")).isEqualTo("OUT_OF_GUESSES");
+  }
+
+  @Test
   void playsAFullTripointGame() throws Exception {
     String id = createGame("TRIPOINT", 3);
     assertThat(id).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
@@ -158,6 +240,23 @@ class GameApiIT {
         .containsExactly(0, 0, 1);
     List<String> states = JsonPath.read(finished, "$.gameResult.roundAnswerStates");
     assertThat(states).containsExactly("CORRECT", "GAVE_UP", "CORRECT");
+    assertThat((List<Boolean>) JsonPath.read(finished, "$.gameResult.roundFirstGuess"))
+        .containsExactly(true, false, false);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.firstGuessRounds")).isEqualTo(1);
+  }
+
+  @Test
+  void aWinAfterAWrongGuessIsNotAFirstGuess() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 2);
+
+    answer(id, 0, "CORRECT", 0, 0);
+    String result = answer(id, 1, "CORRECT", 0, 2);
+
+    assertThat((List<Boolean>) JsonPath.read(result, "$.gameResult.roundFirstGuess"))
+        .containsExactly(true, false);
+    assertThat((int) JsonPath.read(result, "$.gameResult.firstGuessRounds")).isEqualTo(1);
+    // both rounds score the same: the outcome is only a label
+    assertThat((int) JsonPath.read(result, "$.gameResult.score")).isEqualTo(200);
   }
 
   @Test
@@ -728,7 +827,38 @@ class GameApiIT {
     assertThat((int) JsonPath.read(result, "$.points"))
         .isEqualTo(
             com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount));
+                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount, 1, 1));
     assertThat(postHint(id, 0, 1, 0)).isEqualTo(409);
+  }
+
+  private int postAnswerWithFound(String id, String state, int found) throws Exception {
+    return mockMvc
+        .perform(
+            post("/api/games/%s/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"answerState\":\"%s\",\"hintsUsed\":0,\"wrongGuesses\":0,\"answersFound\":%d}"
+                        .formatted(state, found)))
+        .andReturn()
+        .getResponse()
+        .getStatus();
+  }
+
+  @Test
+  void aTripointGivenUpAfterTwoCorrectGuessesEarnsTwoThirds() throws Exception {
+    String id = createGame("TRIPOINT", 1);
+
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 3)).isEqualTo(400);
+    assertThat(postAnswerWithFound(id, "CORRECT", 2)).isEqualTo(400);
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 2)).isEqualTo(200);
+
+    String round = getRound(id, 0);
+    assertThat((String) JsonPath.read(round, "$.answerState")).isEqualTo("GAVE_UP");
+    assertThat((int) JsonPath.read(round, "$.points")).isEqualTo(67);
+    assertThat((int) JsonPath.read(round, "$.gameResult.score")).isEqualTo(67);
+    assertThat((int) JsonPath.read(round, "$.gameResult.roundsCorrect")).isZero();
+    // A retry is harmless; a different count is a conflict.
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 2)).isEqualTo(200);
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 1)).isEqualTo(409);
   }
 }

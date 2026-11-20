@@ -1,6 +1,7 @@
 {
   "name" : "American Samoa",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 117.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 132,

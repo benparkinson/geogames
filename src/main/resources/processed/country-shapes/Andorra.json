@@ -1,6 +1,7 @@
 {
   "name" : "Andorra",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 96.0,
   "areaKm2" : 451,

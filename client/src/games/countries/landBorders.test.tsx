@@ -61,6 +61,11 @@ describe("Land Borders", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "holland{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 1,
+    });
   });
 });

@@ -1,6 +1,7 @@
 {
   "name" : "Faroe Islands",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 733.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 367,

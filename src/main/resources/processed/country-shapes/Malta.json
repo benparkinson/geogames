@@ -1,6 +1,7 @@
 {
   "name" : "Malta",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 108.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 261,

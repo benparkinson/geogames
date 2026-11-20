@@ -1,6 +1,7 @@
 {
   "name" : "Germany",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 2658.0,
   "landBorderKm" : 3011.0,
   "areaKm2" : 354548,

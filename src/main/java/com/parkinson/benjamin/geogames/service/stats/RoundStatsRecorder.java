@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service.stats;
 
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.model.stats.RoundResult;
 import org.slf4j.Logger;
@@ -31,7 +32,9 @@ public class RoundStatsRecorder {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void record(RoundAnswered event) {
     try {
-      int hintCount = event.gameType().hintCount();
+      // The rules the round was played under: an Easy round has its own hint count and guess limit.
+      Difficulty played = Difficulty.orNormal(event.difficulty());
+      int hintCount = event.gameType().hintCount(played);
       store.insert(
           new RoundResult(
               event.answeredOn(),
@@ -45,9 +48,15 @@ public class RoundStatsRecorder {
               event.hintsUsed(),
               event.wrongGuesses(),
               hintCount,
-              event.gameType().guessLimit(),
-              Scoring.roundPoints(event.answerState(), event.hintsUsed(), hintCount),
-              event.hardMode()));
+              event.gameType().guessLimit(played),
+              Scoring.roundPoints(
+                  event.answerState(),
+                  event.hintsUsed(),
+                  hintCount,
+                  event.answersFound() == null ? 0 : event.answersFound(),
+                  event.gameType().answerCount()),
+              event.hardMode(),
+              event.difficulty()));
     } catch (Exception e) {
       // The message only: never the play id, and a stack trace adds nothing for a dropped row.
       log.warn("Dropped a round statistics row: {}", e.toString());

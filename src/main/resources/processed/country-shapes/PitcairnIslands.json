@@ -1,6 +1,7 @@
 {
   "name" : "Pitcairn Islands",
   "additionalNames" : [ "Pitcairn" ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 41.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 39,

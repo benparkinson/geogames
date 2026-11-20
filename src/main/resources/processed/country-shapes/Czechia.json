@@ -1,6 +1,7 @@
 {
   "name" : "Czechia",
   "additionalNames" : [ "Czech Republic", "Czech Rep." ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1726.0,
   "areaKm2" : 78497,

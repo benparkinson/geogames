@@ -1,6 +1,7 @@
 {
   "name" : "North Macedonia",
   "additionalNames" : [ "Macedonia", "Former Yugoslav Republic of Macedonia", "FYROM" ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 719.0,
   "areaKm2" : 25349,

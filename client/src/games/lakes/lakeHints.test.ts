@@ -24,11 +24,18 @@ describe("lakeHints", () => {
   it("offers the three hints in order, each with text", () => {
     const { text } = lakeHints(lake);
 
-    expect([0, 1, 2].map((i) => text?.(i))).toEqual([
+    expect([0, 1, 2].map((i) => text?.(i, []))).toEqual([
       "Continent: Asia",
       "Lies in 1 country",
       "Starts with “B” (after “Lake”)",
     ]);
-    expect(text?.(3)).toBeNull();
+    expect(text?.(3, [])).toBeNull();
+  });
+
+  it("leaves the continent out when the round already shows it", () => {
+    const { text, description } = lakeHints(lake, true);
+
+    expect([0, 1, 2].map((i) => text?.(i, []))).toEqual(["Lies in 1 country", "Starts with “B” (after “Lake”)", null]);
+    expect(description).toBe("Shows 2 clues, one at a time");
   });
 });

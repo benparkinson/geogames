@@ -1,6 +1,7 @@
 {
   "name" : "Taiwan",
   "additionalNames" : [ "Republic of China", "ROC" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 1273.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 35940,

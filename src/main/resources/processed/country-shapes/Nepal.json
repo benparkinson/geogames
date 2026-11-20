@@ -1,6 +1,7 @@
 {
   "name" : "Nepal",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2597.0,
   "areaKm2" : 147324,

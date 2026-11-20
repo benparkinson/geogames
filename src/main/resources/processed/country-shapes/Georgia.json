@@ -1,6 +1,7 @@
 {
   "name" : "Georgia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia", "Europe" ],
   "coastKm" : 308.0,
   "landBorderKm" : 1401.0,
   "areaKm2" : 69462,

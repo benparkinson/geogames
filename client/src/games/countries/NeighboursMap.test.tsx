@@ -88,7 +88,7 @@ describe("NeighboursMap", () => {
   });
 });
 
-describe("NeighboursMap flag", () => {
+describe("NeighboursMap pin", () => {
   it("marks the centre of the country's focus box while playing", () => {
     renderMap();
 

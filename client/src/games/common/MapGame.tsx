@@ -1,4 +1,4 @@
-import { Lightbulb } from "react-bootstrap-icons";
+import { Globe, Lightbulb } from "react-bootstrap-icons";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
 import AnswerSlots from "./AnswerSlots";
@@ -15,6 +15,11 @@ import RoundStatus from "./RoundStatus";
 import { roundPoints } from "./scoring";
 import { useRoundGuesses } from "./useRoundGuesses";
 import WrongGuessList from "./WrongGuessList";
+
+/** "Continent: Europe", or "Continents: Europe / Asia" for a country that spans two. */
+function continentText(continents: string[]): string {
+  return `${continents.length === 1 ? "Continent" : "Continents"}: ${continents.join(" / ")}`;
+}
 
 function MapGame<Type>({
   data,
@@ -44,7 +49,7 @@ function MapGame<Type>({
   const wrong = wrongGuesses(state);
 
   // Derived, so a reopened round shows the hints that were used.
-  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i)).filter(
+  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i, state.foundAtHint)).filter(
     (text): text is string => !!text,
   );
 
@@ -63,8 +68,13 @@ function MapGame<Type>({
   const panel = (
     <>
       <RoundBrief title={round.kind.title} Icon={round.kind.Icon} question={prompt} />
-      {hintTexts.length > 0 && (
+      {(round.continents.length > 0 || hintTexts.length > 0) && (
         <ul className="round-hints">
+          {round.continents.length > 0 && (
+            <li>
+              <Globe aria-hidden="true" /> {continentText(round.continents)}
+            </li>
+          )}
           {hintTexts.map((text, index) => (
             <li key={index}>
               <Lightbulb aria-hidden="true" /> {text}
@@ -81,13 +91,16 @@ function MapGame<Type>({
       <div>
         {gameOver ? (
           <>
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!round.hardMode} />}
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
             <RoundResult
               gaveUp={gaveUp}
               outOfGuesses={outOfGuesses}
               round={round}
               hintsUsed={hintsUsed}
               hintCount={round.hintCount}
+              wrongGuesses={wrong.length}
+              answersFound={foundAnswers(state).length}
+              answerCount={answerCount}
             />
           </>
         ) : (
@@ -97,7 +110,7 @@ function MapGame<Type>({
               guessLimit={round.guessLimit}
               points={roundPoints(CORRECT_ANSWER, hintsUsed, round.hintCount)}
             />
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={!round.hardMode} />}
+            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
             <GuessForm
               submitGuess={submitGuess}
               inputPlaceholder={inputPlaceholder}
@@ -126,6 +139,9 @@ function MapGame<Type>({
           gaveUp={gaveUp}
           outOfGuesses={outOfGuesses}
           hintsUsed={hintsUsed}
+          wrongGuesses={wrong.length}
+          answersFound={foundAnswers(state).length}
+          answerCount={answerCount}
         />
       }
       map={map}

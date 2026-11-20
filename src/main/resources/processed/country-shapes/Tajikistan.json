@@ -1,6 +1,7 @@
 {
   "name" : "Tajikistan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 3529.0,
   "areaKm2" : 141987,

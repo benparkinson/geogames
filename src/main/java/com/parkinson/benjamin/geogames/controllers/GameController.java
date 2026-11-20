@@ -9,6 +9,7 @@ import com.parkinson.benjamin.geogames.api.GameRoundHintRequest;
 import com.parkinson.benjamin.geogames.api.RoundAnswerResponse;
 import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,10 @@ public class GameController {
   public ResponseEntity<GameCreationResponse> createGame(@RequestBody GameCreationRequest request) {
 
     return ResponseEntity.ok(
-        gameService.createGame(request.gameType(), request.numberOfRounds(), request.hardMode()));
+        gameService.createGame(
+            request.gameType(),
+            request.numberOfRounds(),
+            Difficulty.resolve(request.difficulty(), request.hardMode())));
   }
 
   @GetMapping("/games/{gameId}/rounds/{round}")
@@ -61,7 +65,8 @@ public class GameController {
                         round,
                         answer.answerState(),
                         answer.hintsUsedOrZero(),
-                        answer.wrongGuesses())));
+                        answer.wrongGuesses(),
+                        answer.answersFound())));
   }
 
   @PostMapping("/games/{gameId}/rounds/{round}/guesses")
