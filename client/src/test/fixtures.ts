@@ -267,6 +267,8 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     guesses: [],
     hintsTakenAt: [],
     hardMode: false,
+    difficulty: "NORMAL",
+    continents: [],
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,

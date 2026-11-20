@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -50,7 +51,7 @@ class DailyGameControllerTest {
   @Test
   void hardModeIsPassedToTheService() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
-    when(dailyService.createDailyGame(Optional.empty(), true))
+    when(dailyService.createDailyGame(Optional.empty(), Difficulty.HARD))
         .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
 
     mockMvc

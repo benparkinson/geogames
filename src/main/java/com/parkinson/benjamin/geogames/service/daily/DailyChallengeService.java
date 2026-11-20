@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.service.daily;
 
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.time.Clock;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
  * game); the rounds are the same for everyone on that date.
  *
  * <p>Not {@code @Transactional}: {@link DailyChallengeStore} must commit its own insert, and the
- * game is created in its own transaction by {@link GameService#createGame(List, String, Boolean, LocalDate)}.
+ * game is created in its own transaction by {@link GameService#createGame(List, String, Difficulty, LocalDate)}.
  */
 @Service
 public class DailyChallengeService {
@@ -49,16 +50,16 @@ public class DailyChallengeService {
   /**
    * @param requested the player's local date, or empty for the server's UTC date. Accepted within
    *     one day of the server's UTC date, which covers every time zone (UTC-12 to UTC+14).
-   * @param hardMode whether Hard mode is on for the game, or null if the client did not say
+   * @param difficulty how the game is played, or null if the client did not say
    * @throws IllegalArgumentException if the date is out of range
    */
-  public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Boolean hardMode) {
+  public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Difficulty difficulty) {
     LocalDate date = validDate(requested, false);
     List<PinnedRound> rounds =
         store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
     // The totals row must exist before any game for the date can finish.
     scores.ensureDay(date);
-    UUID id = gameService.createGame(rounds, GAME_MODE, hardMode, date).id();
+    UUID id = gameService.createGame(rounds, GAME_MODE, difficulty, date).id();
     return new DailyGameResponse(id, date, number(date));
   }
 

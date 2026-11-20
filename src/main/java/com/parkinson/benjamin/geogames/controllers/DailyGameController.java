@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.controllers;
 import com.parkinson.benjamin.geogames.api.DailyGameRequest;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -33,8 +34,9 @@ public class DailyGameController {
     if (request != null && request.date() != null) {
       date = Optional.of(parseDate(request.date()));
     }
-    return ResponseEntity.ok(
-        dailyChallengeService.createDailyGame(date, request == null ? null : request.hardMode()));
+    Difficulty difficulty =
+        request == null ? null : Difficulty.resolve(request.difficulty(), request.hardMode());
+    return ResponseEntity.ok(dailyChallengeService.createDailyGame(date, difficulty));
   }
 
   /** One day's totals: the average, and how many finished in each tenth of the score range. */

@@ -13,6 +13,10 @@ export interface GameRoundResponse {
   hintsTakenAt: number[];
   /** Hard mode was chosen when the game was created and never changes. */
   hardMode: boolean;
+  /** EASY, NORMAL or HARD. Optional until the client reads it. */
+  difficulty?: "EASY" | "NORMAL" | "HARD";
+  /** The continents to show from the start of the round: empty unless the game is Easy. */
+  continents?: string[];
 }
 
 /** A guess the server has stored for a round: a known place name as the name lists spell it. */
