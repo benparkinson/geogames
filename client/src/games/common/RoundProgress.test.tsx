@@ -1,14 +1,36 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { RoundOutcome } from "./outcome";
 import RoundProgress from "./RoundProgress";
 
 const states = ["CORRECT", "GAVE_UP", "UNANSWERED", "UNANSWERED"];
 const points = [83, 0, 0, 0];
+const outcomes: (RoundOutcome | null)[] = ["hints", "missed", null, null];
 
 function renderProgress(goToRound = vi.fn(), currentRound = 2) {
-  render(<RoundProgress states={states} points={points} currentRound={currentRound} goToRound={goToRound} />);
+  render(
+    <RoundProgress
+      states={states}
+      points={points}
+      outcomes={outcomes}
+      currentRound={currentRound}
+      goToRound={goToRound}
+    />,
+  );
   return goToRound;
+}
+
+function renderOne(state: string, outcome: RoundOutcome, pts: number) {
+  render(
+    <RoundProgress
+      states={[state, "UNANSWERED"]}
+      points={[pts, 0]}
+      outcomes={[outcome, null]}
+      currentRound={1}
+      goToRound={vi.fn()}
+    />,
+  );
 }
 
 describe("RoundProgress", () => {
@@ -21,7 +43,7 @@ describe("RoundProgress", () => {
   it("labels each round by its status", () => {
     renderProgress();
 
-    expect(screen.getByRole("button", { name: "Round 1: correct, 83 points" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 1: correct with hints, 83 points" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 2: revealed" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 3: current" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 4: not played" })).toBeInTheDocument();
@@ -67,68 +89,73 @@ describe("RoundProgress", () => {
     expect(goToRound).not.toHaveBeenCalled();
   });
 
-  it("shows a perfect round with a star and its own style", () => {
-    render(
-      <RoundProgress
-        states={["CORRECT", "CORRECT", "GAVE_UP"]}
-        points={[100, 67, 0]}
-        currentRound={2}
-        goToRound={vi.fn()}
-      />,
-    );
+  it("shows a first guess as a green star", () => {
+    renderOne("CORRECT", "firstGuess", 100);
 
-    const perfect = screen.getByRole("button", { name: "Round 1: perfect" });
-    expect(perfect).toHaveClass("round-dot--perfect");
-    expect(perfect).not.toHaveClass("round-dot--correct");
-    expect(perfect.querySelector("svg")).not.toBeNull();
-    const hinted = screen.getByRole("button", { name: "Round 2: correct, 67 points" });
-    expect(hinted).toHaveClass("round-dot--correct");
-    expect(hinted).not.toHaveClass("round-dot--perfect");
+    const dot = screen.getByRole("button", { name: "Round 1: first guess" });
+    expect(dot).toHaveClass("round-dot--first-guess");
+    expect(dot).not.toHaveClass("round-dot--correct");
+    expect(dot.querySelector("svg.bi-star-fill")).not.toBeNull();
   });
 
-  it("does not call a revealed round perfect", () => {
-    render(<RoundProgress states={["GAVE_UP"]} points={[0]} currentRound={0} goToRound={vi.fn()} />);
+  it("shows a correct round worth 100 points but not a first guess as a green check, not a star", () => {
+    renderOne("CORRECT", "correct", 100);
 
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
+    const dot = screen.getByRole("button", { name: "Round 1: correct" });
+    expect(dot).toHaveClass("round-dot--correct");
+    expect(dot).not.toHaveClass("round-dot--first-guess");
+    expect(dot.querySelector("svg.bi-check-lg")).not.toBeNull();
+    expect(dot.querySelector("svg.bi-star-fill")).toBeNull();
   });
 
-  it("treats a round that ran out of guesses as revealed", () => {
-    render(
-      <RoundProgress states={["OUT_OF_GUESSES", "UNANSWERED"]} points={[0, 0]} currentRound={1} goToRound={vi.fn()} />,
-    );
+  it("shows a correct round with hints as a yellow check", () => {
+    renderOne("CORRECT", "hints", 67);
+
+    const dot = screen.getByRole("button", { name: "Round 1: correct with hints, 67 points" });
+    expect(dot).toHaveClass("round-dot--hints");
+    expect(dot.querySelector("svg.bi-check-lg")).not.toBeNull();
+  });
+
+  it("shows a given up round with no points as a red eye", () => {
+    renderOne("GAVE_UP", "missed", 0);
+
+    const dot = screen.getByRole("button", { name: "Round 1: revealed" });
+    expect(dot).toHaveClass("round-dot--missed");
+    expect(dot.querySelector("svg.bi-eye-fill")).not.toBeNull();
+  });
+
+  it("shows a round that ran out of guesses as a red cross", () => {
+    renderOne("OUT_OF_GUESSES", "missed", 0);
 
     const dot = screen.getByRole("button", { name: "Round 1: out of guesses" });
-    expect(dot).toHaveClass("round-dot--revealed");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expect(dot).toHaveClass("round-dot--missed");
+    expect(dot.querySelector("svg.bi-x-lg")).not.toBeNull();
   });
 
-  it("styles correct and revealed rounds", () => {
-    renderProgress(vi.fn(), 3);
-
-    expect(screen.getByRole("button", { name: "Round 1: correct, 83 points" })).toHaveClass("round-dot--correct");
-    expect(screen.getByRole("button", { name: "Round 2: revealed" })).toHaveClass("round-dot--revealed");
-    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveClass("round-dot--current");
-  });
-
-  it("shows a revealed round with points as partly correct", () => {
+  it("shows a revealed round with points as yellow, keeping its eye or cross", () => {
     render(
       <RoundProgress
-        states={["GAVE_UP", "OUT_OF_GUESSES", "GAVE_UP"]}
+        states={["GAVE_UP", "OUT_OF_GUESSES", "UNANSWERED"]}
         points={[67, 25, 0]}
+        outcomes={["hints", "hints", null]}
         currentRound={2}
         goToRound={vi.fn()}
       />,
     );
 
-    const partly = screen.getByRole("button", { name: "Round 1: partly correct, 67 points" });
-    expect(partly).toHaveClass("round-dot--correct");
-    expect(partly).not.toHaveClass("round-dot--revealed");
-    expect(screen.getByRole("button", { name: "Round 2: partly correct, 25 points" })).toBeInTheDocument();
+    const gaveUp = screen.getByRole("button", { name: "Round 1: revealed, 67 points" });
+    expect(gaveUp).toHaveClass("round-dot--hints");
+    expect(gaveUp).not.toHaveClass("round-dot--missed");
+    expect(gaveUp.querySelector("svg.bi-eye-fill")).not.toBeNull();
+    const outOfGuesses = screen.getByRole("button", { name: "Round 2: out of guesses, 25 points" });
+    expect(outOfGuesses).toHaveClass("round-dot--hints");
+    expect(outOfGuesses.querySelector("svg.bi-x-lg")).not.toBeNull();
   });
 
-  it("keeps a revealed round with no points as revealed", () => {
-    render(<RoundProgress states={["GAVE_UP", "UNANSWERED"]} points={[0, 0]} currentRound={1} goToRound={vi.fn()} />);
+  it("shows the number of an unanswered round, and the ring on the current one", () => {
+    renderProgress(vi.fn(), 3);
 
-    expect(screen.getByRole("button", { name: "Round 1: revealed" })).toHaveClass("round-dot--revealed");
+    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveClass("round-dot--current");
+    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveTextContent("4");
   });
 });
