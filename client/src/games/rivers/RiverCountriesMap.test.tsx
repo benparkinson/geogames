@@ -57,7 +57,7 @@ describe("RiverCountriesMap", () => {
     expect(drawnMarkers()).toHaveLength(2);
   });
 
-  it("draws the river, the flags and the relief map once the round is over", () => {
+  it("draws the river, the end pins and the relief map once the round is over", () => {
     renderMap({ gameOver: true });
 
     const river = drawnLayers().filter((layer) => layer.point === RIVER_POINT);

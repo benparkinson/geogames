@@ -12,7 +12,7 @@ vi.mock("next/router", () => ({ useRouter: () => ({ push: vi.fn(), query: {} }) 
 vi.mock("../tripoint/TripointMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 vi.mock("../rivers/RiverShapesMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 
-const TRIPOINT_PROMPT = "Which 3 countries meet at this flag?";
+const TRIPOINT_PROMPT = "Which 3 countries meet at this point?";
 const RIVER_PROMPT = "Which river is this?";
 
 let client: QueryClient;

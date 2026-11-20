@@ -13,7 +13,7 @@ describe("SiteFooter", () => {
     expect(href("Wikidata")).toBe("https://www.wikidata.org/");
     expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
     expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
-    expect(href("Earthz Stocker")).toContain("flaticon.com");
+    expect(footer().queryByRole("link", { name: "Earthz Stocker" })).not.toBeInTheDocument();
     expect(href("Freepik")).toContain("flaticon.com");
     expect(href("Software licences")).toBe("/third-party-licenses.txt");
     expect(footer().queryByText(/OpenStreetMap/)).not.toBeInTheDocument();

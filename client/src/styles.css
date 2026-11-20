@@ -375,14 +375,20 @@ code {
   font-size: 0.7rem;
 }
 
-/* Flag markers drawn with an inline SVG (see map/flagIcons.ts). */
-.map-flag {
+/* Map pins drawn with an inline SVG (see map/markerIcons.ts). */
+.map-marker {
   background: none;
   border: 0;
-  filter: var(--gg-shadow-flag);
+  filter: var(--gg-shadow-marker);
 }
 
 /* Clicking a map shape focuses its SVG path, which draws a square outline. Hover labels are all we want. */
 .leaflet-interactive:focus {
   outline: none;
+}
+/* At least the visible screen. Plain 100vh is the tallest a mobile viewport gets (address bar hidden), so a page
+sized to it always scrolls on a phone; dvh follows the visible height. */
+.page-full-height {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
