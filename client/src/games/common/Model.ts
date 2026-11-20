@@ -1,5 +1,5 @@
 import type { Icon } from "react-bootstrap-icons";
-import type { RecordedGuess } from "../../api/types";
+import type { Difficulty, RecordedGuess } from "../../api/types";
 
 export type AnswerState = "UNANSWERED" | "CORRECT" | "GAVE_UP" | "OUT_OF_GUESSES";
 export type GameState = "CREATED" | "IN_PROGRESS" | "FINISHED";
@@ -61,8 +61,10 @@ export interface Round {
   guessLimit: number;
   /** Whether the game gives distance clues: the game module's `hasClues`. */
   hasClues: boolean;
-  /** Hard mode: fixed when the game was created, from the server. Hides the distance and direction clues. */
-  hardMode: boolean;
+  /** Fixed when the game was created, from the server. Hard hides the distance and direction clues. */
+  difficulty: Difficulty;
+  /** The continents to show from the start of the round: empty unless the game is Easy. */
+  continents: string[];
   /** The hints the server has recorded for this round. 0 until the round is answered. */
   hintsUsed: number;
   /** The guesses the server has recorded for this round, in order. */

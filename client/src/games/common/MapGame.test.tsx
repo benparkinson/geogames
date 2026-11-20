@@ -291,6 +291,48 @@ describe("MapGame resuming a finished round", () => {
   });
 });
 
+describe("MapGame continent line", () => {
+  it("shows the continent from the start of an Easy round, before any hint", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Europe"] }) });
+
+    const line = screen.getByText("Continent: Europe");
+    expect(line.closest("ul")).toHaveClass("round-hints");
+    expect(line.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("names both continents of a country that spans two", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Asia", "Europe"] }) });
+
+    expect(screen.getByText("Continents: Asia / Europe")).toBeInTheDocument();
+  });
+
+  it("shows nothing in a Normal round", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "NORMAL", continents: [] }) });
+
+    expect(screen.queryByText(/^Continents?:/)).not.toBeInTheDocument();
+    expect(document.querySelector(".round-hints")).toBeNull();
+  });
+
+  it("is the first item of the list, above the hints taken", async () => {
+    const user = userEvent.setup();
+    renderGame({
+      round: makeRoundProps({ difficulty: "EASY", continents: ["Africa"], hintCount: 1 }),
+      hints: { description: "A clue", text: () => "First letter: K" },
+    });
+
+    await user.click(screen.getByRole("button", { name: /Hint/ }));
+
+    const items = [...document.querySelectorAll(".round-hints li")].map((li) => li.textContent?.trim());
+    expect(items).toEqual(["Continent: Africa", "First letter: K"]);
+  });
+
+  it("keeps showing the continent once the round is over", () => {
+    renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Oceania"], answerState: "GAVE_UP" }) });
+
+    expect(screen.getByText("Continent: Oceania")).toBeInTheDocument();
+  });
+});
+
 describe("MapGame hint button", () => {
   it("offers no hint button once the round is over", async () => {
     renderGame({
@@ -565,27 +607,27 @@ describe("MapGame clues", () => {
 
   it("shows the clue on the chip when the round is not in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "NORMAL" }) });
 
     await guess(user, "Italy");
 
     expect(screen.getByText(/1,240 km$/)).toBeInTheDocument();
   });
 
-  it("shows no Hard mode switch during a round", async () => {
+  it("shows no difficulty control during a round", async () => {
     const user = userEvent.setup();
     renderGame({ clueFor });
 
     await guess(user, "Italy");
 
-    expect(screen.queryByRole("group", { name: "Hard mode" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Difficulty" })).not.toBeInTheDocument();
     expect(screen.queryByRole("radio", { name: "On" })).not.toBeInTheDocument();
   });
 
   it("still shows clues when the preference is on but the round is not in Hard mode", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+    localStorage.setItem("gg-difficulty", "hard");
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: false }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "NORMAL" }) });
 
     await guess(user, "Italy");
 
@@ -604,7 +646,7 @@ describe("MapGame clues", () => {
 
   it("shows no clue when the round is in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame({ clueFor, round: makeRoundProps({ hardMode: true }) });
+    renderGame({ clueFor, round: makeRoundProps({ difficulty: "HARD" }) });
 
     await guess(user, "Italy");
 

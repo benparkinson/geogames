@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import type { Difficulty } from "../api/types";
 import { createLocalStore } from "../settings/localStore";
 
 const store = createLocalStore("gg-daily", "gg-daily-change");
@@ -24,9 +25,8 @@ export interface DailyEntry {
   date: string;
   number: number;
   gameId: string;
-  /** Hard mode was chosen for this game. */
-  // Stored name kept from when this was called Hardcore mode.
-  hardcore: boolean;
+  /** The difficulty chosen for this game. */
+  difficulty: Difficulty;
   /** Set once the game is finished. */
   result?: DailyResult;
 }
@@ -50,6 +50,17 @@ function isResult(value: unknown): value is DailyResult {
   );
 }
 
+function isDifficulty(value: unknown): value is Difficulty {
+  return value === "EASY" || value === "NORMAL" || value === "HARD";
+}
+
+/** The difficulty of an entry: its own, or for one saved before there was a difficulty, from Hard mode. */
+function difficultyOf(e: Record<string, unknown>): Difficulty | null {
+  if (isDifficulty(e.difficulty)) return e.difficulty;
+  if (typeof e.hardcore === "boolean") return e.hardcore ? "HARD" : "NORMAL";
+  return null;
+}
+
 function parse(raw: string | null): DailyEntry | null {
   if (raw === null) return null;
   try {
@@ -61,12 +72,15 @@ function parse(raw: string | null): DailyEntry | null {
       typeof e.date !== "string" ||
       typeof e.number !== "number" ||
       typeof e.gameId !== "string" ||
-      typeof e.hardcore !== "boolean" ||
       (e.result !== undefined && !isResult(e.result))
     ) {
       return null;
     }
-    return value as DailyEntry;
+    const difficulty = difficultyOf(e);
+    if (difficulty === null) return null;
+    const entry: DailyEntry = { v: 1, date: e.date, number: e.number, gameId: e.gameId, difficulty };
+    if (e.result !== undefined) entry.result = e.result as DailyResult;
+    return entry;
   } catch {
     return null;
   }

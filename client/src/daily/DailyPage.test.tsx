@@ -19,11 +19,11 @@ vi.mock("../games/common/GameRoundPage", () => ({
 const API = "http://localhost:8080";
 const ROUND_0 = API + "/api/games/g1/rounds/0";
 const SCORE = {
-  url: API + `/api/daily-scores/${localDateString()}`,
+  url: API + `/api/daily-scores/${localDateString()}?difficulty=NORMAL`,
   body: makeDailyScore({ date: localDateString() }),
 };
 const today = localDateString();
-const entry: DailyEntry = { v: 1, date: today, number: 2, gameId: "g1", hardcore: false };
+const entry: DailyEntry = { v: 1, date: today, number: 2, gameId: "g1", difficulty: "NORMAL" };
 
 const unfinished = makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]);
 const finishedGame = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
@@ -58,12 +58,17 @@ describe("DailyPage with no game for today", () => {
 
     await userEvent.click(play);
 
-    await waitFor(() => expect(readDaily()).toEqual({ v: 1, date: today, number: 7, gameId: "g1", hardcore: false }));
-    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, hardMode: false }]);
+    await waitFor(() =>
+      expect(readDaily()).toEqual({ v: 1, date: today, number: 7, gameId: "g1", difficulty: "NORMAL" }),
+    );
+    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, difficulty: "NORMAL" }]);
   });
 
-  it("records that Hard mode was on when the game started", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+  it.each([
+    ["easy", "EASY"],
+    ["hard", "HARD"],
+  ])("records the %s difficulty the game started with", async (stored, difficulty) => {
+    localStorage.setItem("gg-difficulty", stored);
     const fetchMock = mockFetch([
       { url: API + "/health", body: "ok" },
       { method: "POST", url: API + "/api/daily-games", body: makeDailyGameResponse({ id: "g1" }) },
@@ -72,8 +77,8 @@ describe("DailyPage with no game for today", () => {
 
     await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
 
-    await waitFor(() => expect(readDaily()?.hardcore).toBe(true));
-    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, hardMode: true }]);
+    await waitFor(() => expect(readDaily()?.difficulty).toBe(difficulty));
+    expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, difficulty }]);
   });
 
   it("says when the server can't be reached", async () => {
@@ -178,12 +183,12 @@ describe("DailyPage with a game for today", () => {
     await waitFor(() => expect(readDaily()?.result?.rounds).toEqual(["hints", "perfect"]));
   });
 
-  it("stores the server's Hard mode with the result, and the finished page shares it", async () => {
+  it("stores the server's difficulty with the result, and the finished page shares it", async () => {
     writeDaily(entry);
-    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], hardMode: true } }, SCORE]);
+    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], difficulty: "HARD", hardMode: true } }, SCORE]);
     const { unmount } = renderWithClient(<DailyPage />);
 
-    await waitFor(() => expect(readDaily()?.hardcore).toBe(true));
+    await waitFor(() => expect(readDaily()?.difficulty).toBe("HARD"));
     expect(readDaily()?.result).toBeDefined();
     unmount();
 
@@ -191,14 +196,14 @@ describe("DailyPage with a game for today", () => {
     expect(await screen.findByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
   });
 
-  it("does not turn Hard mode on from the preference alone", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+  it("does not take the difficulty from the preference alone", async () => {
+    localStorage.setItem("gg-difficulty", "hard");
     writeDaily(entry);
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
     renderWithClient(<DailyPage />);
 
     await waitFor(() => expect(readDaily()?.result).toBeDefined());
-    expect(readDaily()?.hardcore).toBe(false);
+    expect(readDaily()?.difficulty).toBe("NORMAL");
   });
 
   it("shows a finished entry's result without fetching the game", async () => {
@@ -207,16 +212,17 @@ describe("DailyPage with a game for today", () => {
       maxScore: 500,
       rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] as const,
     };
-    writeDaily({ ...entry, number: 42, hardcore: true, result: { ...result, rounds: [...result.rounds] } });
-    const fetchMock = mockFetch([SCORE]);
+    writeDaily({ ...entry, number: 42, difficulty: "HARD", result: { ...result, rounds: [...result.rounds] } });
+    const hardScore = { ...SCORE, url: SCORE.url.replace("NORMAL", "HARD") };
+    const fetchMock = mockFetch([hardScore]);
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
     expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
     expect(screen.getByLabelText("Your result")).toHaveTextContent("🟩🟨🟩🟥🟩");
     expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
-    // Only the optional comparison is fetched, never the game.
-    expect(callsTo(fetchMock).map((c) => c.url)).toEqual([SCORE.url]);
+    // Only the optional comparison is fetched, from the game's own league, never the game.
+    expect(callsTo(fetchMock).map((c) => c.url)).toEqual([hardScore.url]);
   });
 
   it("opens the rounds of a finished entry", async () => {
