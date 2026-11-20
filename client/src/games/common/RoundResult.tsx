@@ -1,4 +1,5 @@
-import { Button, Notice } from "../../ui";
+import { useEffect, useRef } from "react";
+import { Button, Notice, Spinner } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { finalAnswerState, isPartlyCorrect, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
@@ -64,29 +65,57 @@ export default function RoundResult({
             Try again
           </Button>
         </>
-      ) : round.hasNextRound ? (
-        <Button
-          variant="primary"
-          size="lg"
-          block
-          autoFocus
-          disabled={round.answerSave === "saving"}
-          onClick={round.nextRound}
-        >
-          Next round <ArrowRight aria-hidden="true" />
-        </Button>
       ) : (
-        <Button
-          variant="primary"
-          size="lg"
-          block
-          autoFocus
-          disabled={round.answerSave === "saving"}
-          onClick={round.showSummary}
+        <ContinueButton
+          saving={round.answerSave === "saving"}
+          onClick={round.hasNextRound ? round.nextRound : round.showSummary}
         >
-          See results
-        </Button>
+          {round.hasNextRound ? (
+            <>
+              Next round <ArrowRight aria-hidden="true" />
+            </>
+          ) : (
+            "See results"
+          )}
+        </ContinueButton>
       )}
     </div>
+  );
+}
+
+/** The button that leaves the round. It shows a spinner while the answer is saving, and takes focus once it is ready, so Enter works again. */
+function ContinueButton({
+  saving,
+  onClick,
+  children,
+}: {
+  saving: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}): React.JSX.Element {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!saving) {
+      ref.current?.focus();
+    }
+  }, [saving]);
+  return (
+    <Button
+      ref={ref}
+      variant="primary"
+      size="lg"
+      block
+      className="position-relative"
+      disabled={saving}
+      aria-busy={saving}
+      onClick={onClick}
+    >
+      <span className={saving ? "gg-btn__label--hidden" : undefined}>{children}</span>
+      {saving && (
+        <span className="gg-btn__overlay">
+          <Spinner size="sm" />
+        </span>
+      )}
+    </Button>
   );
 }
