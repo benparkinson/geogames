@@ -33,8 +33,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 3,
   });
-  await expect(page.getByText("Correct! +83")).toBeVisible();
-  await expect(page.getByText("1 hint used")).toBeVisible();
+  await expect(page.getByText("Correct with a hint · +83")).toBeVisible();
   await page.getByRole("button", { name: "Next round" }).click();
 
   // Round 2: find one of the three, then give up. The button asks for a second click.
@@ -92,7 +91,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
 
   // The summary.
   await expect(page.getByRole("heading", { name: "You scored 116 / 300" })).toBeVisible();
-  await expect(page.getByText("1 with hints · 1 partly correct · 1 revealed")).toBeVisible();
+  await expect(page.getByText("2 with hints · 1 missed")).toBeVisible();
   const rounds = page.locator(".gg-list__item");
   await expect(rounds).toHaveCount(3);
   await expect(rounds.nth(0)).toContainText("1 hint");

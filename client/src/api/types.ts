@@ -77,6 +77,9 @@ export interface GameResultResponse {
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
   roundHintsUsed: number[];
+  /** Per round: correct with no hints and no wrong guess. */
+  roundFirstGuess: boolean[];
+  firstGuessRounds: number;
 }
 
 export interface GameTypeModel {
@@ -100,5 +103,6 @@ export interface GameRoundView {
   hintsTakenAt: number[];
   /** Hard mode: fixed when the game was created, so the distance clues stay hidden for all of it. */
   hardMode: boolean;
-  gameResult: Omit<GameResultResponse, "roundsUnanswered">;
+  /** The app doesn't read `perfectRounds`: the server still sends it for the deployed client. */
+  gameResult: Omit<GameResultResponse, "roundsUnanswered" | "perfectRounds">;
 }
