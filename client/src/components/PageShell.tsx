@@ -20,7 +20,7 @@ export default function PageShell({
   compactFooter?: boolean;
 }): React.JSX.Element {
   return (
-    <div className="min-vh-100 page-bg d-flex flex-column">
+    <div className="page-full-height page-bg d-flex flex-column">
       {topBarEnd ? (
         <div className="px-3 py-2 d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
@@ -35,9 +35,9 @@ export default function PageShell({
           <ThemeToggle />
         </div>
       )}
-      <div className={"gg-card" + (wide ? " gg-card--wide" : "") + " mx-auto my-4 p-3"}>{children}</div>
+      <div className={"gg-card" + (wide ? " gg-card--wide" : "") + " mx-auto my-3 p-3"}>{children}</div>
       {compactFooter ? (
-        <footer className="small gg-text-muted text-center mt-auto pt-3 pb-3">
+        <footer className="small gg-text-muted text-center mt-auto pt-2 pb-3">
           <Link href="/privacy">Credits and privacy</Link>
         </footer>
       ) : (

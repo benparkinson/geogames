@@ -41,10 +41,11 @@ function buildRound(
     points: data.points,
     score: data.gameResult.score,
     maxScore: data.gameResult.maxScore,
-    perfectRounds: data.gameResult.perfectRounds,
     gameCompleted: data.gameResult.gameState === FINISHED,
     roundAnswerStates: data.gameResult.roundAnswerStates,
     roundPoints: data.gameResult.roundPoints,
+    roundHintsUsed: data.gameResult.roundHintsUsed,
+    roundFirstGuess: data.gameResult.roundFirstGuess,
     dailyDate,
   };
 }

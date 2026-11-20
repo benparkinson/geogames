@@ -78,7 +78,9 @@ class GameControllerTest {
             0,
             0,
             List.of(0, 0, 0),
-            List.of(0, 0, 0)),
+            List.of(0, 0, 0),
+            List.of(false, false, false),
+            0),
         List.of(),
         List.of(),
         false,
@@ -160,7 +162,9 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
         .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
-        .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3));
+        .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3))
+        .andExpect(jsonPath("$.gameResult.roundFirstGuess.length()").value(3))
+        .andExpect(jsonPath("$.gameResult.firstGuessRounds").value(0));
   }
 
   @Test

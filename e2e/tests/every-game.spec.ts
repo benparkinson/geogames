@@ -21,7 +21,7 @@ const GAMES = [
 const ROUNDS = 3;
 
 for (const { type, title } of GAMES) {
-  test(`${type}: play a perfect game from the home page`, async ({ page, api }) => {
+  test(`${type}: play every round right first time`, async ({ page, api }) => {
     const id = await startGame(page, title, ROUNDS);
     await expect(page.locator(".leaflet-container")).toBeVisible();
 
@@ -33,7 +33,7 @@ for (const { type, title } of GAMES) {
       for (const answer of answers) {
         await guess(page, answer.name);
       }
-      await expect(page.getByText("Perfect! +100")).toBeVisible();
+      await expect(page.getByText(answers.length > 1 ? "No wrong guesses! +100" : "First guess! +100")).toBeVisible();
 
       await page.getByRole("button", { name: round < ROUNDS - 1 ? "Next round" : "See results" }).click();
     }
