@@ -4,11 +4,30 @@ import { AnswerState, CORRECT_ANSWER } from "./Model";
 export const MAX_ROUND_POINTS = 100;
 export const MAX_HINT_PENALTY = 50;
 
-/** The points a round earns: 100 if perfect, less for each hint, 0 unless correct. */
-export function roundPoints(answerState: AnswerState, hintsUsed: number, hintCount: number): number {
-  if (answerState !== CORRECT_ANSWER) {
+/**
+ * The points a round earns: a correct round earns 100 less the hint penalty. A revealed round
+ * (gave up, or out of guesses) earns the share of that which was found, `answersFound` of
+ * `answerCount` answers, rounded half up; with none found that is 0. An unanswered round earns 0.
+ */
+export function roundPoints(
+  answerState: AnswerState,
+  hintsUsed: number,
+  hintCount: number,
+  answersFound = 0,
+  answerCount = 1,
+): number {
+  if (answerState === "UNANSWERED") {
     return 0;
   }
+  const full = fullPoints(hintsUsed, hintCount);
+  if (answerState === CORRECT_ANSWER) {
+    return full;
+  }
+  // round_half_up(full * answersFound / answerCount), in integers
+  return Math.floor((2 * full * answersFound + answerCount) / (2 * answerCount));
+}
+
+function fullPoints(hintsUsed: number, hintCount: number): number {
   if (hintCount === 0) {
     return MAX_ROUND_POINTS;
   }
