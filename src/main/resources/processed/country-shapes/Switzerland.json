@@ -1,6 +1,7 @@
 {
   "name" : "Switzerland",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1477.0,
   "areaKm2" : 41323,

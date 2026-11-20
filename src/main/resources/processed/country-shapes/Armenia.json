@@ -1,6 +1,7 @@
 {
   "name" : "Armenia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1207.0,
   "areaKm2" : 29520,

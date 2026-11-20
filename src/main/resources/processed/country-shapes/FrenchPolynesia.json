@@ -1,6 +1,7 @@
 {
   "name" : "French Polynesia",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 2197.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 1039,

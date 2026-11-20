@@ -1,6 +1,7 @@
 {
   "name" : "Palau",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 275.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 353,

@@ -1,6 +1,7 @@
 {
   "name" : "Marshall Islands",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 406.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 41,

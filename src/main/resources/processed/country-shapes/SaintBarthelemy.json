@@ -1,6 +1,7 @@
 {
   "name" : "Saint Barthélemy",
   "additionalNames" : [ "St Barthélemy", "Saint Barts", "St Barts" ],
+  "continents" : [ "North America" ],
   "coastKm" : 21.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 25,

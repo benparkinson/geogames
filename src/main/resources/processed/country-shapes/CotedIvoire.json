@@ -1,6 +1,7 @@
 {
   "name" : "Côte d'Ivoire",
   "additionalNames" : [ "Ivory Coast" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1273.0,
   "landBorderKm" : 2743.0,
   "areaKm2" : 321974,

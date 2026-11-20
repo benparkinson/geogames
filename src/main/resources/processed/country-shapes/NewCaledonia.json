@@ -1,6 +1,7 @@
 {
   "name" : "New Caledonia",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 1887.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 16589,

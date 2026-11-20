@@ -1,6 +1,7 @@
 {
   "name" : "Vietnam",
   "additionalNames" : [ "Viet Nam" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 5778.0,
   "landBorderKm" : 3771.0,
   "areaKm2" : 327901,

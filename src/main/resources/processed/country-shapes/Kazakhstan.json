@@ -1,6 +1,7 @@
 {
   "name" : "Kazakhstan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia", "Europe" ],
   "coastKm" : 2379.0,
   "landBorderKm" : 11716.0,
   "areaKm2" : 2705955,

@@ -1,6 +1,7 @@
 {
   "name" : "Guinea",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 879.0,
   "landBorderKm" : 3167.0,
   "areaKm2" : 245290,

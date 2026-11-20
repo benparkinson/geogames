@@ -1,6 +1,7 @@
 {
   "name" : "São Tomé and Príncipe",
   "additionalNames" : [ "São Tomé" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 185.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 885,

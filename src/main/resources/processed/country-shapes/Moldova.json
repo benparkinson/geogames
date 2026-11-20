@@ -1,6 +1,7 @@
 {
   "name" : "Moldova",
   "additionalNames" : [ "Republic of Moldova" ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1323.0,
   "areaKm2" : 33116,

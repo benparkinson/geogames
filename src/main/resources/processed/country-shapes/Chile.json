@@ -1,6 +1,7 @@
 {
   "name" : "Chile",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 31294.0,
   "landBorderKm" : 6022.0,
   "areaKm2" : 648414,

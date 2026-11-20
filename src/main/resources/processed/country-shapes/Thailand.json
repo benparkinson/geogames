@@ -1,6 +1,7 @@
 {
   "name" : "Thailand",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 3874.0,
   "landBorderKm" : 4555.0,
   "areaKm2" : 514337,

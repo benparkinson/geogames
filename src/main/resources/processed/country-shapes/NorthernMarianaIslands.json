@@ -1,6 +1,7 @@
 {
   "name" : "Northern Mariana Islands",
   "additionalNames" : [ "Northern Marianas" ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 316.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 133,

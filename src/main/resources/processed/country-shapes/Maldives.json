@@ -1,6 +1,7 @@
 {
   "name" : "Maldives",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 520.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 35,

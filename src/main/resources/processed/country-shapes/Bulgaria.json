@@ -1,6 +1,7 @@
 {
   "name" : "Bulgaria",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 338.0,
   "landBorderKm" : 1626.0,
   "areaKm2" : 112568,

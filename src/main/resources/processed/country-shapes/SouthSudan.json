@@ -1,6 +1,7 @@
 {
   "name" : "South Sudan",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 4832.0,
   "areaKm2" : 629530,

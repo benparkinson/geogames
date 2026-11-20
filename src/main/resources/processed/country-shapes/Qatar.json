@@ -1,6 +1,7 @@
 {
   "name" : "Qatar",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 543.0,
   "landBorderKm" : 53.0,
   "areaKm2" : 11173,

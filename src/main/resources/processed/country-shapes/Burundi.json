@@ -1,6 +1,7 @@
 {
   "name" : "Burundi",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 898.0,
   "areaKm2" : 27161,

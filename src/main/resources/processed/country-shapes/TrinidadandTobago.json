@@ -1,6 +1,7 @@
 {
   "name" : "Trinidad and Tobago",
   "additionalNames" : [ "Trinidad" ],
+  "continents" : [ "North America" ],
   "coastKm" : 513.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 4852,

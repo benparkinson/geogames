@@ -1,6 +1,7 @@
 {
   "name" : "Greenland",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 43724.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 2096050,

@@ -1,6 +1,7 @@
 {
   "name" : "Anguilla",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 54.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 81,

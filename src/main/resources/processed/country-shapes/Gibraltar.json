@@ -1,6 +1,7 @@
 {
   "name" : "Gibraltar",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 7.0,
   "landBorderKm" : 2.0,
   "areaKm2" : 4,

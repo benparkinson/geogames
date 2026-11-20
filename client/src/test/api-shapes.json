@@ -141,6 +141,9 @@
               "type" : "string"
             },
             "coastKm" : "number",
+            "continents" : {
+              "array" : "string"
+            },
             "focus" : {
               "east" : "number",
               "north" : "number",
@@ -267,6 +270,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -364,6 +370,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -464,6 +473,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -576,6 +588,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -688,6 +703,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -886,6 +904,9 @@
               "type" : "string"
             },
             "coastKm" : "number",
+            "continents" : {
+              "array" : "string"
+            },
             "focus" : {
               "east" : "number",
               "north" : "number",

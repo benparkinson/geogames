@@ -161,6 +161,7 @@ export function makeCountryShapeData(overrides: Partial<CountryShape> = {}): Cou
   return {
     name: "Netherlands",
     additionalNames: ["Holland"],
+    continents: ["Europe"],
     coastKm: 451,
     landBorderKm: 1027,
     areaKm2: 41_000,

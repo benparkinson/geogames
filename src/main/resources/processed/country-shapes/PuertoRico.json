@@ -1,6 +1,7 @@
 {
   "name" : "Puerto Rico",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 653.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 8808,

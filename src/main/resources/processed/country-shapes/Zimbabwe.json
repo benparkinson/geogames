@@ -1,6 +1,7 @@
 {
   "name" : "Zimbabwe",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2901.0,
   "areaKm2" : 390529,

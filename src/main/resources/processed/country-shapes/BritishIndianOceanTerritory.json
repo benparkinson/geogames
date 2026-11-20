@@ -1,6 +1,7 @@
 {
   "name" : "British Indian Ocean Territory",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 130.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 32,

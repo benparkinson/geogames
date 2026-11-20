@@ -1,6 +1,7 @@
 {
   "name" : "Nigeria",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 2189.0,
   "landBorderKm" : 3861.0,
   "areaKm2" : 910920,

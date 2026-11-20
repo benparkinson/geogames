@@ -1,6 +1,7 @@
 {
   "name" : "Bhutan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1020.0,
   "areaKm2" : 40432,

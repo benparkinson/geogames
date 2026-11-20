@@ -1,6 +1,7 @@
 {
   "name" : "Austria",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2076.0,
   "areaKm2" : 83756,

@@ -1,6 +1,7 @@
 {
   "name" : "Grenada",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 114.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 314,

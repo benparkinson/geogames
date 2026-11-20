@@ -1,6 +1,7 @@
 {
   "name" : "Gabon",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1896.0,
   "landBorderKm" : 2236.0,
   "areaKm2" : 261007,

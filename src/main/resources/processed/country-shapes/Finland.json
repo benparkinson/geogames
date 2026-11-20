@@ -1,6 +1,7 @@
 {
   "name" : "Finland",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 3593.0,
   "landBorderKm" : 2379.0,
   "areaKm2" : 329278,

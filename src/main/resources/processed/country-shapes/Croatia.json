@@ -1,6 +1,7 @@
 {
   "name" : "Croatia",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 2727.0,
   "landBorderKm" : 1719.0,
   "areaKm2" : 51430,

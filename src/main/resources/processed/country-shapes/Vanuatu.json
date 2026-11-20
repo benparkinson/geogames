@@ -1,6 +1,7 @@
 {
   "name" : "Vanuatu",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 2267.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 4093,

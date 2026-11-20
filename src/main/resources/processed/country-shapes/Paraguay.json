@@ -1,6 +1,7 @@
 {
   "name" : "Paraguay",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 0.0,
   "landBorderKm" : 3488.0,
   "areaKm2" : 400858,

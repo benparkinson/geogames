@@ -1,6 +1,7 @@
 {
   "name" : "Sint Maarten",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 14.0,
   "landBorderKm" : 10.0,
   "areaKm2" : 23,
