@@ -30,7 +30,7 @@ const points = () => drawnLayers().map((layer) => layer.point);
 beforeEach(() => vi.clearAllMocks());
 
 describe("TripointMap", () => {
-  it("shows the relief map and a flag on the tripoint but no borders at first", () => {
+  it("shows the relief map and a pin on the tripoint but no borders at first", () => {
     renderMap();
 
     expect(drawnTileUrls()).toEqual([RELIEF_TILE_URL]);
