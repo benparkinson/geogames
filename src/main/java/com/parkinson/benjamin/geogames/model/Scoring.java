@@ -11,15 +11,34 @@ public final class Scoring {
 
   private Scoring() {}
 
-  /** The points a round earns: 100 if perfect, less for each hint, 0 unless correct. */
-  public static int roundPoints(AnswerState answerState, int hintsUsed, int hintCount) {
+  /**
+   * The points a round earns. A correct round earns 100 less the hint penalty. A revealed round
+   * ({@code GAVE_UP} or {@code OUT_OF_GUESSES}) earns the share of that which was found, {@code
+   * answersFound} of {@code answerCount} answers, rounded half up; with none found that is 0. An
+   * unanswered round earns 0.
+   */
+  public static int roundPoints(
+      AnswerState answerState, int hintsUsed, int hintCount, int answersFound, int answerCount) {
     if (hintsUsed < 0 || hintCount < 0 || hintsUsed > hintCount) {
       throw new IllegalArgumentException(
           "%d hints used is not possible with %d hints".formatted(hintsUsed, hintCount));
     }
-    if (answerState != AnswerState.CORRECT) {
+    if (answerCount < 1 || answersFound < 0 || answersFound > answerCount) {
+      throw new IllegalArgumentException(
+          "%d answers found is not possible with %d answers".formatted(answersFound, answerCount));
+    }
+    if (answerState == AnswerState.UNANSWERED) {
       return 0;
     }
+    int full = fullPoints(hintsUsed, hintCount);
+    if (answerState == AnswerState.CORRECT) {
+      return full;
+    }
+    // round_half_up(full * answersFound / answerCount), in integers
+    return (2 * full * answersFound + answerCount) / (2 * answerCount);
+  }
+
+  private static int fullPoints(int hintsUsed, int hintCount) {
     if (hintCount == 0) {
       return MAX_ROUND_POINTS;
     }

@@ -61,7 +61,8 @@ public class GameController {
                         round,
                         answer.answerState(),
                         answer.hintsUsedOrZero(),
-                        answer.wrongGuesses())));
+                        answer.wrongGuesses(),
+                        answer.answersFound())));
   }
 
   @PostMapping("/games/{gameId}/rounds/{round}/guesses")

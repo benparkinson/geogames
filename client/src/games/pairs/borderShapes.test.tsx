@@ -64,7 +64,12 @@ describe("Border Shapes", () => {
     expect(submitAnswer).not.toHaveBeenCalled();
     await user.type(screen.getByPlaceholderText("Country name…"), "belgium{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 2,
+    });
   });
 
   it("says how far the nearest country you still need is after a wrong guess", async () => {

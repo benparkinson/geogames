@@ -26,9 +26,20 @@ describe("resultFromGame", () => {
   });
 
   it("counts a given up round as revealed, and treats a missing hint count as none", () => {
-    expect(resultFromGame({ ...base, roundAnswerStates: ["GAVE_UP", "CORRECT"], roundHintsUsed: [2] }).rounds).toEqual([
-      "revealed",
-      "perfect",
-    ]);
+    expect(
+      resultFromGame({ ...base, roundPoints: [0, 100], roundAnswerStates: ["GAVE_UP", "CORRECT"], roundHintsUsed: [2] })
+        .rounds,
+    ).toEqual(["revealed", "perfect"]);
+  });
+
+  it("counts a revealed round that earned points as having some, and one that earned none as revealed", () => {
+    expect(
+      resultFromGame({
+        ...base,
+        roundPoints: [67, 0, 25],
+        roundAnswerStates: ["GAVE_UP", "GAVE_UP", "OUT_OF_GUESSES"],
+        roundHintsUsed: [0, 0, 1],
+      }).rounds,
+    ).toEqual(["hints", "revealed", "hints"]);
   });
 });

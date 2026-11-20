@@ -21,5 +21,6 @@ public record RoundAnswered(
     AnswerState answerState,
     int hintsUsed,
     Integer wrongGuesses,
+    Integer answersFound,
     LocalDate answeredOn,
     Boolean hardMode) {}
