@@ -323,13 +323,17 @@ export interface RoundSpec {
   river?: boolean;
   answerState: AnswerState;
   hintsUsed?: number;
+  /** For a revealed round: how many of its answers were found (a tripoint has 3, a river 1). */
+  answersFound?: number;
 }
 
 /** The server's responses for a whole game, each carrying the same complete result. */
 export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
   const hintCounts = specs.map(() => 3);
   const hintsUsed = specs.map((spec) => spec.hintsUsed ?? 0);
-  const points = specs.map((spec, i) => roundPoints(spec.answerState, hintsUsed[i], hintCounts[i]));
+  const points = specs.map((spec, i) =>
+    roundPoints(spec.answerState, hintsUsed[i], hintCounts[i], spec.answersFound ?? 0, spec.river ? 1 : 3),
+  );
   const unanswered = specs.filter((spec) => spec.answerState === "UNANSWERED").length;
   const gameResult = {
     gameState: unanswered === 0 ? "FINISHED" : unanswered === specs.length ? "CREATED" : "IN_PROGRESS",

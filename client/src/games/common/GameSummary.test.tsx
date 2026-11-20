@@ -350,3 +350,28 @@ describe("GameSummary", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Couldn't start a new game. Try again.");
   });
 });
+
+describe("GameSummary with partly correct rounds", () => {
+  const partly = makeGameRounds([
+    { answerState: "CORRECT" },
+    { answerState: "GAVE_UP", answersFound: 2 },
+    { river: true, answerState: "GAVE_UP" },
+  ]);
+
+  it("counts a revealed round with points as partly correct, apart from the revealed ones", async () => {
+    mockFetch([roundsRoute(partly)]);
+    renderSummary();
+
+    expect(await screen.findByText("1 perfect · 1 partly correct · 1 revealed")).toBeInTheDocument();
+    expect(screen.getByText("You scored 167 / 300")).toBeInTheDocument();
+  });
+
+  it("shows the partly correct round as a gain, not as revealed", async () => {
+    mockFetch([roundsRoute(partly)]);
+    renderSummary();
+
+    const row = (await screen.findByText("+67")).closest("button")!;
+    expect(row.querySelector(".gg-text-correct")).not.toBeNull();
+    expect(row.querySelector(".gg-text-revealed")).toBeNull();
+  });
+});

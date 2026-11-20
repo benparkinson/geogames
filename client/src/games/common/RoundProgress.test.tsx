@@ -109,4 +109,26 @@ describe("RoundProgress", () => {
     expect(screen.getByRole("button", { name: "Round 2: revealed" })).toHaveClass("round-dot--revealed");
     expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveClass("round-dot--current");
   });
+
+  it("shows a revealed round with points as partly correct", () => {
+    render(
+      <RoundProgress
+        states={["GAVE_UP", "OUT_OF_GUESSES", "GAVE_UP"]}
+        points={[67, 25, 0]}
+        currentRound={2}
+        goToRound={vi.fn()}
+      />,
+    );
+
+    const partly = screen.getByRole("button", { name: "Round 1: partly correct, 67 points" });
+    expect(partly).toHaveClass("round-dot--correct");
+    expect(partly).not.toHaveClass("round-dot--revealed");
+    expect(screen.getByRole("button", { name: "Round 2: partly correct, 25 points" })).toBeInTheDocument();
+  });
+
+  it("keeps a revealed round with no points as revealed", () => {
+    render(<RoundProgress states={["GAVE_UP", "UNANSWERED"]} points={[0, 0]} currentRound={1} goToRound={vi.fn()} />);
+
+    expect(screen.getByRole("button", { name: "Round 1: revealed" })).toHaveClass("round-dot--revealed");
+  });
 });
