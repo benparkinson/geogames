@@ -3,7 +3,7 @@ import { shuffle } from "../../helper/shuffle";
 import PlaceGame from "../common/PlaceGame";
 import type { GameComponentProps } from "../types";
 import TripointMapWrapper from "./TripointMapWrapper";
-import type { TripointModel, TripointRoundData } from "./model";
+import { tripointHintText, type TripointModel, type TripointRoundData } from "./model";
 
 export default function TripointGame(props: GameComponentProps<TripointModel>): React.JSX.Element {
   // Hints reveal country outlines in this order. It is picked once per round and never changes.
@@ -19,7 +19,10 @@ export default function TripointGame(props: GameComponentProps<TripointModel>): 
       MapComponent={TripointMapWrapper}
       answers={props.data.countries}
       prompt={`Which ${props.answerCount} countries meet at this flag?`}
-      hints={{ description: "Shows the outline of a country you haven't named yet" }}
+      hints={{
+        description: "Shows the outline of a country you haven't named yet",
+        text: (index, foundAtHint) => tripointHintText(data.hintOrder, index, foundAtHint),
+      }}
     />
   );
 }
