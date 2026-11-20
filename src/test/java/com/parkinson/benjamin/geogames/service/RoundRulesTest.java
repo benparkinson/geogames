@@ -18,13 +18,13 @@ class RoundRulesTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     return entity;
   }
 
   private static GameRoundEntity guessRound(GameType type, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     return entity;
   }
 
@@ -33,14 +33,14 @@ class RoundRulesTest {
   /** Answers a fresh TRIPOINT round (guess limit 5) and returns it. */
   private GameRoundEntity submitToFreshRound(AnswerState state, Integer wrongGuesses) {
     GameRoundEntity round = round(0, AnswerState.UNANSWERED);
-    rules.validateAnswer(round, state, 0, wrongGuesses);
-    rules.recordAnswer(round, state, 0, wrongGuesses);
+    rules.validateAnswer(round, state, 0, wrongGuesses, null);
+    rules.recordAnswer(round, state, 0, wrongGuesses, null);
     return round;
   }
 
   private GameRoundEntity expectRejected(AnswerState state, Integer wrongGuesses, String message) {
     GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
-    assertThatThrownBy(() -> rules.validateAnswer(stored, state, 0, wrongGuesses))
+    assertThatThrownBy(() -> rules.validateAnswer(stored, state, 0, wrongGuesses, null))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(message);
     assertThat(stored.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
@@ -101,17 +101,17 @@ class RoundRulesTest {
   @Test
   void sameAnswerWithSameWrongGuessesIsANoOp() {
     GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2);
+    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2, null);
 
-    assertThat(rules.recordAnswer(answered, AnswerState.CORRECT, 0, 2)).isFalse();
+    assertThat(rules.recordAnswer(answered, AnswerState.CORRECT, 0, 2, null)).isFalse();
   }
 
   @Test
   void sameAnswerWithDifferentWrongGuessesIsAConflict() {
     GameRoundEntity answered = round(0, AnswerState.CORRECT);
-    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2);
+    answered.recordAnswer(answered.getAnswerState(), answered.getHintsUsed(), 2, null);
 
-    assertThatThrownBy(() -> rules.recordAnswer(answered, AnswerState.CORRECT, 0, 3))
+    assertThatThrownBy(() -> rules.recordAnswer(answered, AnswerState.CORRECT, 0, 3, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class)
         .hasMessageContaining("2 wrong guesses")
         .hasMessageContaining("3 wrong guesses");
@@ -123,9 +123,9 @@ class RoundRulesTest {
   void unreportedWrongGuessesOnlyMatchUnreported() {
     GameRoundEntity unreported = round(0, AnswerState.CORRECT);
 
-    assertThat(rules.recordAnswer(unreported, AnswerState.CORRECT, 0, null)).isFalse();
+    assertThat(rules.recordAnswer(unreported, AnswerState.CORRECT, 0, null, null)).isFalse();
 
-    assertThatThrownBy(() -> rules.recordAnswer(unreported, AnswerState.CORRECT, 0, 0))
+    assertThatThrownBy(() -> rules.recordAnswer(unreported, AnswerState.CORRECT, 0, 0, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class)
         .hasMessageContaining("unreported");
   }
@@ -243,5 +243,62 @@ class RoundRulesTest {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.GAVE_UP);
 
     assertThatThrownBy(() -> rules.addHint(entity, 0, 0)).isInstanceOf(RoundClosedException.class);
+  }
+
+  // ------------------------------------------------------ answers found
+
+  @Test
+  void answersFoundMustBeWithinTheAnswerCount() {
+    GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, -1))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("3 answers");
+    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 4))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("3 answers");
+  }
+
+  @Test
+  void aCorrectRoundMustHaveFoundEveryAnswer() {
+    GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.CORRECT, 0, null, 2))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("all 3 answers");
+    rules.validateAnswer(stored, AnswerState.CORRECT, 0, null, 3);
+  }
+
+  @Test
+  void aRevealedRoundMustHaveFoundFewerThanEveryAnswer() {
+    GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 3))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("can't be GAVE_UP");
+    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.OUT_OF_GUESSES, 0, 5, 3))
+        .isInstanceOf(IllegalArgumentException.class);
+    rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 2);
+    rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, null);
+  }
+
+  @Test
+  void aRepeatedAnswerMustRepeatTheAnswersFound() {
+    GameRoundEntity answered = round(0, AnswerState.UNANSWERED);
+    rules.recordAnswer(answered, AnswerState.GAVE_UP, 0, null, 2);
+
+    assertThat(rules.recordAnswer(answered, AnswerState.GAVE_UP, 0, null, 2)).isFalse();
+    assertThatThrownBy(() -> rules.recordAnswer(answered, AnswerState.GAVE_UP, 0, null, 1))
+        .isInstanceOf(RoundAlreadyAnsweredException.class)
+        .hasMessageContaining("2 answers found")
+        .hasMessageContaining("1 answers found");
+  }
+
+  @Test
+  void aCorrectRoundAnsweredBeforePartialCreditStillAcceptsARetry() {
+    GameRoundEntity legacy = round(0, AnswerState.CORRECT);
+
+    assertThat(legacy.getAnswersFound()).isNull();
+    assertThat(rules.recordAnswer(legacy, AnswerState.CORRECT, 0, null, 3)).isFalse();
   }
 }

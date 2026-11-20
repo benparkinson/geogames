@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { localDateString } from "../api/daily";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { makeDailyGameResponse, makeGameRounds } from "../test/fixtures";
+import { makeDailyGameResponse, makeDailyScore, makeGameRounds } from "../test/fixtures";
 import { renderWithClient } from "../test/render";
 import DailyPage from "./DailyPage";
 import { DailyEntry, readDaily, resetDailyStorageForTests, writeDaily } from "./dailyStorage";
@@ -18,6 +18,10 @@ vi.mock("../games/common/GameRoundPage", () => ({
 
 const API = "http://localhost:8080";
 const ROUND_0 = API + "/api/games/g1/rounds/0";
+const SCORE = {
+  url: API + `/api/daily-scores/${localDateString()}`,
+  body: makeDailyScore({ date: localDateString() }),
+};
 const today = localDateString();
 const entry: DailyEntry = { v: 1, date: today, number: 2, gameId: "g1", hardcore: false };
 
@@ -176,7 +180,7 @@ describe("DailyPage with a game for today", () => {
 
   it("stores the server's Hard mode with the result, and the finished page shares it", async () => {
     writeDaily(entry);
-    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], hardMode: true } }]);
+    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], hardMode: true } }, SCORE]);
     const { unmount } = renderWithClient(<DailyPage />);
 
     await waitFor(() => expect(readDaily()?.hardcore).toBe(true));
@@ -197,26 +201,27 @@ describe("DailyPage with a game for today", () => {
     expect(readDaily()?.hardcore).toBe(false);
   });
 
-  it("shows a finished entry's result without fetching anything", async () => {
+  it("shows a finished entry's result without fetching the game", async () => {
     const result = {
       score: 430,
       maxScore: 500,
       rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] as const,
     };
     writeDaily({ ...entry, number: 42, hardcore: true, result: { ...result, rounds: [...result.rounds] } });
-    const fetchMock = mockFetch([]);
+    const fetchMock = mockFetch([SCORE]);
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
     expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
     expect(screen.getByLabelText("Your result")).toHaveTextContent("🟩🟨🟩🟥🟩");
     expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
-    expect(fetchMock).not.toHaveBeenCalled();
+    // Only the optional comparison is fetched, never the game.
+    expect(callsTo(fetchMock).map((c) => c.url)).toEqual([SCORE.url]);
   });
 
   it("opens the rounds of a finished entry", async () => {
     writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["perfect", "revealed"] } });
-    mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
+    mockFetch([{ url: ROUND_0, body: finishedGame[0] }, SCORE]);
     renderWithClient(<DailyPage />);
 
     await userEvent.click(await screen.findByRole("button", { name: "See the rounds" }));
@@ -226,12 +231,22 @@ describe("DailyPage with a game for today", () => {
 
   it("keeps a finished entry's result even if the game has been deleted", async () => {
     writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["perfect", "revealed"] } });
-    mockFetch([{ url: ROUND_0, status: 404 }]);
+    mockFetch([{ url: ROUND_0, status: 404 }, SCORE]);
     renderWithClient(<DailyPage />);
 
     await userEvent.click(await screen.findByRole("button", { name: "See the rounds" }));
     await screen.findByText(`game g1 (daily ${today})`);
 
     expect(readDaily()?.result).toBeDefined();
+  });
+});
+
+describe("DailyPage finished view", () => {
+  it("shows the day's average", async () => {
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["perfect", "revealed"] } });
+    mockFetch([SCORE]);
+    renderWithClient(<DailyPage />);
+
+    expect(await screen.findByText(/Today.s average: 312\.5/)).toBeInTheDocument();
   });
 });

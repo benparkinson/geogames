@@ -17,6 +17,8 @@ import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * One round of a game. Not final, so Hibernate can make lazy proxies of it, and it has no {@code
@@ -54,6 +56,13 @@ public class GameRoundEntity {
    * didn't report it.
    */
   private Integer wrongGuesses;
+
+  /**
+   * How many of the round's answers were found. Null for a round answered before partial credit
+   * existed, or by a client that didn't say (and recorded no correct guess), or not answered yet.
+   */
+  @JdbcTypeCode(SqlTypes.SMALLINT)
+  private Integer answersFound;
 
   /**
    * The guesses made so far, in order. A change to this collection bumps the round's version, so
@@ -118,8 +127,14 @@ public class GameRoundEntity {
     return wrongGuesses;
   }
 
+  public Integer getAnswersFound() {
+    return answersFound;
+  }
+
   /** Records the answer; the caller checks the answer is allowed. */
-  public void recordAnswer(AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+  public void recordAnswer(
+      AnswerState answerState, int hintsUsed, Integer wrongGuesses, Integer answersFound) {
+    this.answersFound = answersFound;
     this.answerState = answerState;
     this.hintsUsed = hintsUsed;
     this.wrongGuesses = wrongGuesses;

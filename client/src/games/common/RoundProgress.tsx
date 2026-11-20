@@ -1,5 +1,5 @@
 import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
-import { AnswerState, CORRECT_ANSWER, isRevealed, OUT_OF_GUESSES, UNANSWERED } from "./Model";
+import { AnswerState, CORRECT_ANSWER, isPartlyCorrect, isRevealed, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 import { MAX_ROUND_POINTS } from "./scoring";
 
 export default function RoundProgress({
@@ -20,6 +20,10 @@ export default function RoundProgress({
     return states[i] === CORRECT_ANSWER && points[i] === MAX_ROUND_POINTS;
   }
 
+  function isPartial(i: number): boolean {
+    return isPartlyCorrect(states[i] as AnswerState, points[i] ?? 0);
+  }
+
   function canVisit(i: number): boolean {
     return i === currentRound || states[i] !== UNANSWERED || i === firstUnanswered;
   }
@@ -29,6 +33,7 @@ export default function RoundProgress({
     if (i === currentRound) return `Round ${n}: current`;
     if (isPerfectRound(i)) return `Round ${n}: perfect`;
     if (states[i] === CORRECT_ANSWER) return `Round ${n}: correct, ${points[i]} points`;
+    if (isPartial(i)) return `Round ${n}: partly correct, ${points[i]} points`;
     if (states[i] === OUT_OF_GUESSES) return `Round ${n}: out of guesses`;
     if (isRevealed(states[i] as AnswerState)) return `Round ${n}: revealed`;
     return `Round ${n}: not played`;
@@ -38,7 +43,7 @@ export default function RoundProgress({
     const state = states[i];
     let cls = "round-dot";
     if (isPerfectRound(i)) cls += " round-dot--perfect";
-    else if (state === CORRECT_ANSWER) cls += " round-dot--correct";
+    else if (state === CORRECT_ANSWER || isPartial(i)) cls += " round-dot--correct";
     else if (isRevealed(state as AnswerState)) cls += " round-dot--revealed";
     if (i === currentRound) cls += " round-dot--current";
     return cls;
@@ -62,7 +67,7 @@ export default function RoundProgress({
             >
               {isPerfectRound(i) ? (
                 <StarFill aria-hidden="true" />
-              ) : state === CORRECT_ANSWER ? (
+              ) : state === CORRECT_ANSWER || isPartial(i) ? (
                 <CheckLg aria-hidden="true" />
               ) : isRevealed(state as AnswerState) ? (
                 <EyeFill aria-hidden="true" />

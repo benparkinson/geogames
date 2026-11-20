@@ -8,7 +8,7 @@ export interface DailyInfo {
   date: string;
 }
 
-/** How one round ended, as the share text shows it. */
+/** How one round ended, as the share text shows it. "hints" means some points but not perfect (hints used, or only some answers found). */
 export type RoundOutcome = "perfect" | "hints" | "revealed";
 
 export interface DailyResult {

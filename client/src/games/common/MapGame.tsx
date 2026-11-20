@@ -44,7 +44,7 @@ function MapGame<Type>({
   const wrong = wrongGuesses(state);
 
   // Derived, so a reopened round shows the hints that were used.
-  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i)).filter(
+  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i, state.foundAtHint)).filter(
     (text): text is string => !!text,
   );
 
@@ -88,6 +88,8 @@ function MapGame<Type>({
               round={round}
               hintsUsed={hintsUsed}
               hintCount={round.hintCount}
+              answersFound={foundAnswers(state).length}
+              answerCount={answerCount}
             />
           </>
         ) : (
@@ -126,6 +128,8 @@ function MapGame<Type>({
           gaveUp={gaveUp}
           outOfGuesses={outOfGuesses}
           hintsUsed={hintsUsed}
+          answersFound={foundAnswers(state).length}
+          answerCount={answerCount}
         />
       }
       map={map}

@@ -7,7 +7,8 @@ import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
-import { isRevealed } from "./Model";
+import { isPartlyCorrect, isRevealed } from "./Model";
+import DailyComparison from "../../daily/DailyComparison";
 import ShareButton from "../../daily/ShareButton";
 import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
@@ -46,13 +47,15 @@ export default function GameSummary({
   }
 
   // Every round carries the whole game's result.
-  const { score, maxScore, perfectRounds, roundsCorrect, roundAnswerStates } = all[0].gameResult;
+  const { score, maxScore, perfectRounds, roundsCorrect, roundAnswerStates, roundPoints } = all[0].gameResult;
   const withHints = roundsCorrect - perfectRounds;
-  const revealed = roundAnswerStates.filter(isRevealed).length;
+  const partly = roundAnswerStates.filter((state, i) => isPartlyCorrect(state, roundPoints[i] ?? 0)).length;
+  const revealed = roundAnswerStates.filter(isRevealed).length - partly;
   const perfectGame = perfectRounds === totalRoundCount;
   const breakdown = [
     perfectRounds > 0 && `${perfectRounds} perfect`,
     withHints > 0 && `${withHints} with hints`,
+    partly > 0 && `${partly} partly correct`,
     revealed > 0 && `${revealed} revealed`,
   ].filter(Boolean);
   const outcomes = breakdown.length > 0 ? breakdown : ["0 perfect"];
@@ -75,6 +78,7 @@ export default function GameSummary({
         )}
       </h1>
       <p className="gg-text-muted mb-3">{summaryLine}</p>
+      {daily && <DailyComparison date={daily.date} score={score} />}
 
       <div className="gg-list mb-3">
         {all.map((r, i) => (

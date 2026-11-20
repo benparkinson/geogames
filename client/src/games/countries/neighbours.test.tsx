@@ -69,7 +69,12 @@ describe("Country Gaps", () => {
 
     await user.type(screen.getByPlaceholderText("Country name…"), "Holland{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 1,
+    });
   });
 
   it("tells a wrong guess how far and which way the answer is", async () => {
