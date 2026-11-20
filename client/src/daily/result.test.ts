@@ -4,7 +4,14 @@ import { resultFromGame } from "./result";
 
 const base: Pick<
   GameRoundView["gameResult"],
-  "gameState" | "score" | "maxScore" | "roundsCorrect" | "perfectRounds" | "roundPoints"
+  | "gameState"
+  | "score"
+  | "maxScore"
+  | "roundsCorrect"
+  | "perfectRounds"
+  | "roundPoints"
+  | "roundFirstGuess"
+  | "firstGuessRounds"
 > = {
   gameState: "FINISHED",
   score: 233,
@@ -12,6 +19,8 @@ const base: Pick<
   roundsCorrect: 3,
   perfectRounds: 1,
   roundPoints: [100, 83, 50, 0],
+  roundFirstGuess: [true, false, false, false],
+  firstGuessRounds: 1,
 };
 
 describe("resultFromGame", () => {

@@ -276,6 +276,8 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
       perfectRounds: 0,
       roundPoints: [0, 0, 0],
       roundHintsUsed: [0, 0, 0],
+      roundFirstGuess: [false, false, false],
+      firstGuessRounds: 0,
     },
     ...overrides,
   };
@@ -296,6 +298,8 @@ export function makeAnswerResponse(overrides: Partial<RoundAnswerResponse> = {})
       perfectRounds: 1,
       roundPoints: [100, 0, 0],
       roundHintsUsed: [0, 0, 0],
+      roundFirstGuess: [true, false, false],
+      firstGuessRounds: 1,
     },
   });
   return { answerState, hintsUsed, points, gameResult, ...overrides };
@@ -345,6 +349,8 @@ export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
     perfectRounds: specs.filter((spec, i) => spec.answerState === "CORRECT" && hintsUsed[i] === 0).length,
     roundPoints: points,
     roundHintsUsed: hintsUsed,
+    roundFirstGuess: specs.map(() => false),
+    firstGuessRounds: 0,
   } as GameRoundResponse["gameResult"];
   return specs.map((spec, i) => {
     const make = spec.river ? makeRiverRound : makeRound;

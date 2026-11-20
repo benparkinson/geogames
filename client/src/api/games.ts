@@ -32,6 +32,8 @@ function toGameResultView(result: GameResultResponse): GameRoundView["gameResult
     roundAnswerStates: result.roundAnswerStates,
     roundPoints: result.roundPoints,
     roundHintsUsed: result.roundHintsUsed,
+    roundFirstGuess: result.roundFirstGuess,
+    firstGuessRounds: result.firstGuessRounds,
   };
 }
 

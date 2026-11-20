@@ -73,6 +73,9 @@ export interface GameResultResponse {
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
   roundHintsUsed: number[];
+  /** Per round: correct with no hints and no wrong guess. */
+  roundFirstGuess: boolean[];
+  firstGuessRounds: number;
 }
 
 export interface GameTypeModel {
