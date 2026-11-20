@@ -11,6 +11,7 @@ import HardModeToggle from "../components/HardModeToggle";
 import { useHardMode } from "../settings/hardMode";
 import { Button, Notice, Spinner } from "../ui";
 import { useDelayedFlag } from "../ui/useDelayedFlag";
+import DailyComparison from "./DailyComparison";
 import ShareButton from "./ShareButton";
 import { clearDaily, DailyEntry, entryFor, readDaily, useDailyEntry, writeDaily } from "./dailyStorage";
 import { resultFromGame } from "./result";
@@ -82,6 +83,7 @@ function Finished({
       <p className="mb-3">
         You scored {entry.result.score} / {entry.result.maxScore}
       </p>
+      <DailyComparison date={entry.date} score={entry.result.score} />
       <pre className="mb-3" aria-label="Your result">
         {text}
       </pre>

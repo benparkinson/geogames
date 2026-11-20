@@ -15,6 +15,11 @@ export function isRevealed(state: AnswerState): boolean {
   return state === GAVE_UP || state === OUT_OF_GUESSES;
 }
 
+/** A round that ended revealed but earned points: some of its answers were found. */
+export function isPartlyCorrect(state: AnswerState, points: number): boolean {
+  return isRevealed(state) && points > 0;
+}
+
 /** How a round that has just ended was answered: out of guesses, given up, or solved. */
 export function finalAnswerState(
   gaveUp: boolean,
@@ -29,6 +34,8 @@ export interface RoundAnswer {
   hintsUsed: number;
   /** Wrong guesses that counted against the guess limit, as `wrongGuessCount` in `guessReducer` counts them. */
   wrongGuesses: number;
+  /** How many of the round's answers were found: all of them for `CORRECT`, fewer for a revealed round. */
+  answersFound: number;
 }
 
 export interface Round {

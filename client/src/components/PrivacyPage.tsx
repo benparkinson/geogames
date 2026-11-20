@@ -27,8 +27,8 @@ function PrivacyPage(): React.JSX.Element {
         <h2 className="h5">What we store</h2>
         <p>
           There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the questions
-          asked, the guesses made (only names from our lists), the hints taken, whether Hard mode is on and how each
-          round ended. It is deleted after 24 hours.
+          asked, the guesses made (only names from our lists), the hints taken, whether Hard mode is on, how each round
+          ended and how many of its answers you found. It is deleted after 24 hours.
         </p>
 
         <h2 className="h5">Anonymous statistics</h2>
@@ -59,6 +59,10 @@ function PrivacyPage(): React.JSX.Element {
           Loading any web page sends your IP address to the server that hosts it.{" "}
           <a href="https://render.com/privacy">Render</a> (render.com, a United States company) hosts this site, its map
           images and its game server, so it receives yours.
+        </p>
+        <p>
+          While the site is open it occasionally fetches a small file from the same server to check whether a newer
+          version has been published. The request contains nothing about you.
         </p>
         <p>The &quot;Buy me a coffee&quot; link opens Ko-fi. Nothing is sent to Ko-fi unless you click it.</p>
 

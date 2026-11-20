@@ -31,6 +31,7 @@ class RoundStatsRecorderTest {
         AnswerState.CORRECT,
         1,
         wrongGuesses,
+        null,
         LocalDate.of(2026, 11, 9),
         true);
   }
@@ -65,7 +66,7 @@ class RoundStatsRecorderTest {
                 type.hintCount(),
                 type.guessLimit(),
                 com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-                    AnswerState.CORRECT, 1, type.hintCount()),
+                    AnswerState.CORRECT, 1, type.hintCount(), 1, type.answerCount()),
                 true));
     assertThat(row.points()).isBetween(1, 99);
   }

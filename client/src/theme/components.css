@@ -348,6 +348,75 @@
   opacity: 1;
 }
 
+.gg-toast {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.5rem 0.75rem;
+  color: var(--gg-color-text);
+  background: var(--gg-color-surface);
+  border: 1px solid var(--gg-color-border);
+  border-radius: var(--gg-radius-lg);
+  box-shadow: var(--gg-shadow-floating-side);
+  animation: gg-toast-in var(--gg-duration-slow) ease-out;
+}
+@keyframes gg-toast-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gg-toast {
+    animation: none;
+  }
+}
+
+/* ---- Daily challenge: score distribution ---- */
+.gg-daily-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  height: 5.5rem;
+  padding-bottom: 1.1rem;
+}
+.gg-daily-chart__column {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.gg-daily-chart__bar {
+  background: var(--gg-color-surface-muted);
+  border: 1px solid var(--gg-color-border);
+  border-radius: 2px 2px 0 0;
+}
+.gg-daily-chart__bar[data-mine="true"] {
+  background: var(--gg-color-accent);
+  border-color: var(--gg-color-accent);
+}
+.gg-daily-chart__label {
+  position: absolute;
+  bottom: -1.1rem;
+  left: 50%;
+  font-size: 0.65rem;
+  color: var(--gg-color-text-muted);
+  transform: translateX(-50%);
+}
+/* Every other label is hidden on a narrow screen, where eleven would overlap. */
+@media (max-width: 480px) {
+  .gg-daily-chart__label[data-sparse="true"] {
+    display: none;
+  }
+}
+
 /* A button whose label is replaced by a spinner while it waits, keeping its size and name. */
 .gg-btn__label--hidden {
   visibility: hidden;

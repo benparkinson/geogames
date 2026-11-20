@@ -88,6 +88,8 @@ function MapGame<Type>({
               round={round}
               hintsUsed={hintsUsed}
               hintCount={round.hintCount}
+              answersFound={foundAnswers(state).length}
+              answerCount={answerCount}
             />
           </>
         ) : (
@@ -126,6 +128,8 @@ function MapGame<Type>({
           gaveUp={gaveUp}
           outOfGuesses={outOfGuesses}
           hintsUsed={hintsUsed}
+          answersFound={foundAnswers(state).length}
+          answerCount={answerCount}
         />
       }
       map={map}

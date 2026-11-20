@@ -728,7 +728,38 @@ class GameApiIT {
     assertThat((int) JsonPath.read(result, "$.points"))
         .isEqualTo(
             com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount));
+                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount, 1, 1));
     assertThat(postHint(id, 0, 1, 0)).isEqualTo(409);
+  }
+
+  private int postAnswerWithFound(String id, String state, int found) throws Exception {
+    return mockMvc
+        .perform(
+            post("/api/games/%s/rounds/0/answers".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"answerState\":\"%s\",\"hintsUsed\":0,\"wrongGuesses\":0,\"answersFound\":%d}"
+                        .formatted(state, found)))
+        .andReturn()
+        .getResponse()
+        .getStatus();
+  }
+
+  @Test
+  void aTripointGivenUpAfterTwoCorrectGuessesEarnsTwoThirds() throws Exception {
+    String id = createGame("TRIPOINT", 1);
+
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 3)).isEqualTo(400);
+    assertThat(postAnswerWithFound(id, "CORRECT", 2)).isEqualTo(400);
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 2)).isEqualTo(200);
+
+    String round = getRound(id, 0);
+    assertThat((String) JsonPath.read(round, "$.answerState")).isEqualTo("GAVE_UP");
+    assertThat((int) JsonPath.read(round, "$.points")).isEqualTo(67);
+    assertThat((int) JsonPath.read(round, "$.gameResult.score")).isEqualTo(67);
+    assertThat((int) JsonPath.read(round, "$.gameResult.roundsCorrect")).isZero();
+    // A retry is harmless; a different count is a conflict.
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 2)).isEqualTo(200);
+    assertThat(postAnswerWithFound(id, "GAVE_UP", 1)).isEqualTo(409);
   }
 }

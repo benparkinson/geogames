@@ -71,7 +71,12 @@ describe("Tripoint guessing", () => {
     expect(submitAnswer).not.toHaveBeenCalled();
 
     await guess(user, "GERMANY");
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 3,
+    });
   });
 
   it("treats a country that is not part of the tripoint as wrong", async () => {

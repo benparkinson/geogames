@@ -11,6 +11,8 @@ export default function GameTopBar({
   gaveUp,
   outOfGuesses = false,
   hintsUsed,
+  answersFound = 0,
+  answerCount = 1,
 }: {
   round: Round;
   gameOver: boolean;
@@ -18,6 +20,9 @@ export default function GameTopBar({
   /** The round ended because the guesses ran out (`gaveUp` is true too). */
   outOfGuesses?: boolean;
   hintsUsed: number;
+  /** How many of the round's answers were found, for the points of a round that was given up. */
+  answersFound?: number;
+  answerCount?: number;
 }): React.JSX.Element {
   // Reflect the local state of the current round straight away, without waiting for the server.
   const states = round.roundAnswerStates.slice();
@@ -25,7 +30,7 @@ export default function GameTopBar({
   let score = round.score;
   if (gameOver) {
     const answerState = finalAnswerState(gaveUp, outOfGuesses);
-    const localPoints = roundPoints(answerState, hintsUsed, round.hintCount);
+    const localPoints = roundPoints(answerState, hintsUsed, round.hintCount, answersFound, answerCount);
     states[round.currentRound] = answerState;
     points[round.currentRound] = localPoints;
     if (round.answerState === UNANSWERED) {
