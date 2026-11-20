@@ -1,6 +1,7 @@
 {
   "name" : "Cabo Verde",
   "additionalNames" : [ "Cape Verde" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 807.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 965,

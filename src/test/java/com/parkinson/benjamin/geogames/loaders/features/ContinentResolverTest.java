@@ -21,11 +21,10 @@ class ContinentResolverTest {
   }
 
   @Test
-  void oceaniaMapsToAustralia() {
-    assertThat(ContinentResolver.resolve(null, List.of("Oceania"), List.of()))
-        .contains("Australia");
-    assertThat(ContinentResolver.map("Insular Oceania")).contains("Australia");
-    assertThat(ContinentResolver.map("Australian continent")).contains("Australia");
+  void oceaniaMapsToOceania() {
+    assertThat(ContinentResolver.resolve(null, List.of("Oceania"), List.of())).contains("Oceania");
+    assertThat(ContinentResolver.map("Insular Oceania")).contains("Oceania");
+    assertThat(ContinentResolver.map("Australian continent")).contains("Oceania");
   }
 
   @Test

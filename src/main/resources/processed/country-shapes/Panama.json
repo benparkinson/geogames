@@ -1,6 +1,7 @@
 {
   "name" : "Panama",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 3380.0,
   "landBorderKm" : 559.0,
   "areaKm2" : 73687,

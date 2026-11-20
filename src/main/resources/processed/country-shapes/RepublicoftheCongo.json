@@ -1,6 +1,7 @@
 {
   "name" : "Republic of the Congo",
   "additionalNames" : [ "Republic of Congo", "The Republic of the Congo", "Congo-Brazzaville", "Congo Brazzaville", "Congo Republic", "Congo" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 176.0,
   "landBorderKm" : 4222.0,
   "areaKm2" : 346429,

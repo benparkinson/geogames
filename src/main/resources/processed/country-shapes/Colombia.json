@@ -1,6 +1,7 @@
 {
   "name" : "Colombia",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 3556.0,
   "landBorderKm" : 5535.0,
   "areaKm2" : 1139520,

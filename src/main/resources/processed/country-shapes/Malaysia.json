@@ -1,6 +1,7 @@
 {
   "name" : "Malaysia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 5270.0,
   "landBorderKm" : 2332.0,
   "areaKm2" : 195828,

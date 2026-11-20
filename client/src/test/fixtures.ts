@@ -31,7 +31,8 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     hintCount: 3,
     guessLimit: 5,
     hasClues: false,
-    hardMode: false,
+    difficulty: "NORMAL",
+    continents: [],
     hintsUsed: 0,
     guesses: [],
     hintsTakenAt: [],
@@ -162,6 +163,7 @@ export function makeCountryShapeData(overrides: Partial<CountryShape> = {}): Cou
   return {
     name: "Netherlands",
     additionalNames: ["Holland"],
+    continents: ["Europe"],
     coastKm: 451,
     landBorderKm: 1027,
     areaKm2: 41_000,
@@ -267,6 +269,8 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     guesses: [],
     hintsTakenAt: [],
     hardMode: false,
+    difficulty: "NORMAL",
+    continents: [],
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,
@@ -443,6 +447,7 @@ export function makeHintsResponse(overrides: Partial<RoundHintsResponse> = {}): 
 export function makeDailyScore(overrides: Partial<DailyScore> = {}): DailyScore {
   return {
     date: "2026-11-18",
+    difficulty: "NORMAL",
     players: 4,
     averageScore: 312.5,
     maxScore: 500,

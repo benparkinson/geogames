@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames.service.stats;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.stats.RoundResult;
 import java.time.LocalDate;
 import java.util.List;
@@ -59,7 +60,8 @@ class RoundStatsStoreTest {
         hintCount,
         5,
         83,
-        hardMode);
+        hardMode,
+        hardMode == null ? null : hardMode ? Difficulty.HARD : Difficulty.NORMAL);
   }
 
   private static RoundResult row(String roundKey, Integer wrongGuesses) {
@@ -111,6 +113,39 @@ class RoundStatsStoreTest {
     assertThat(hard.get("hard_mode")).isEqualTo(true);
     assertThat(rowFor("river:B").get("hard_mode")).isEqualTo(false);
     assertThat(rowFor("river:C").get("hard_mode")).isNull();
+  }
+
+  @Test
+  void difficultyIsReadBackAsEachNameOrNull() {
+    for (Difficulty difficulty : Difficulty.values()) {
+      store.insert(rowWith("river:" + difficulty, difficulty));
+    }
+    store.insert(rowWith("river:unknown", null));
+
+    for (Difficulty difficulty : Difficulty.values()) {
+      assertThat(rowFor("river:" + difficulty).get("difficulty")).isEqualTo(difficulty.name());
+    }
+    assertThat(rowFor("river:unknown").get("difficulty")).isNull();
+  }
+
+  private static RoundResult rowWith(String roundKey, Difficulty difficulty) {
+    RoundResult base = row(UUID.randomUUID(), 0, roundKey, 0, 3, null);
+    return new RoundResult(
+        base.answeredOn(),
+        base.playId(),
+        base.gameMode(),
+        base.roundsInGame(),
+        base.roundNumber(),
+        base.gameType(),
+        base.roundKey(),
+        base.answerState(),
+        base.hintsUsed(),
+        base.wrongGuesses(),
+        base.hintCount(),
+        base.guessLimit(),
+        base.points(),
+        null,
+        difficulty);
   }
 
   private Map<String, Object> rowFor(String roundKey) {
@@ -242,7 +277,9 @@ class RoundStatsStoreTest {
             "playId",
             playId,
             "hardMode",
-            true);
+            true,
+            "difficulty",
+            "HARD");
     jdbc.sql(RoundStatsStore.GAME_INSERT).params(params).update();
     int existing =
         jdbc.sql(RoundStatsStore.GAME_SELECT).param("playId", playId).query(Integer.class).single();

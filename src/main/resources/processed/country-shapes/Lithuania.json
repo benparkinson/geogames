@@ -1,6 +1,7 @@
 {
   "name" : "Lithuania",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 212.0,
   "landBorderKm" : 1202.0,
   "areaKm2" : 64509,

@@ -8,6 +8,7 @@ import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import org.junit.jupiter.api.Test;
@@ -168,6 +169,6 @@ class GameResultsTest {
     GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
     partial.recordAnswer(AnswerState.OUT_OF_GUESSES, 1, 5, 1);
 
-    assertThat(GameResults.pointsFor(partial)).isEqualTo(28);
+    assertThat(GameResults.pointsFor(partial, Difficulty.NORMAL)).isEqualTo(28);
   }
 }

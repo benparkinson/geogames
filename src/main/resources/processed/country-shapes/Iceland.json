@@ -1,6 +1,7 @@
 {
   "name" : "Iceland",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 5195.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 101695,

@@ -1,6 +1,7 @@
 {
   "name" : "United States Minor Outlying Islands",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 83.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 7,

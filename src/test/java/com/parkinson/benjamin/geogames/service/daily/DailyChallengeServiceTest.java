@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
 import java.time.Clock;
@@ -110,16 +111,16 @@ class DailyChallengeServiceTest {
     DailyChallengeService service = service(TODAY);
     createDailyGame(service, Optional.of(TODAY.minusDays(1)));
 
-    org.mockito.Mockito.verify(scores).ensureDay(TODAY.minusDays(1));
+    org.mockito.Mockito.verify(scores).ensureDay(TODAY.minusDays(1), null);
     org.mockito.Mockito.verify(games).createGame(ROUNDS, "DAILY", null, TODAY.minusDays(1));
   }
 
   @Test
   void aDayWithNoFinishedGamesHasZerosAndNoAverage() {
     DailyChallengeService service = service(TODAY);
-    when(scores.find(TODAY)).thenReturn(DailyScore.empty());
+    when(scores.find(TODAY, Difficulty.NORMAL)).thenReturn(DailyScore.empty());
 
-    var response = service.score(TODAY);
+    var response = service.score(TODAY, Difficulty.NORMAL);
 
     assertThat(response.players()).isZero();
     assertThat(response.averageScore()).isNull();
@@ -131,22 +132,24 @@ class DailyChallengeServiceTest {
   void theAverageIsRoundedToOneDecimalPlace() {
     DailyChallengeService service = service(TODAY);
     List<Integer> buckets = new java.util.ArrayList<>(DailyScore.empty().buckets());
-    when(scores.find(TODAY)).thenReturn(new DailyScore(3, 1000, buckets));
+    when(scores.find(TODAY, Difficulty.NORMAL)).thenReturn(new DailyScore(3, 1000, buckets));
 
-    assertThat(service.score(TODAY).averageScore()).isEqualTo(333.3);
+    assertThat(service.score(TODAY, Difficulty.NORMAL).averageScore()).isEqualTo(333.3);
   }
 
   @Test
   void scoreDatesAreValidatedLikeNewGamesExceptThatThePastIsAllowed() {
     DailyChallengeService service = service(TODAY);
-    when(scores.find(any())).thenReturn(DailyScore.empty());
+    when(scores.find(any(), any())).thenReturn(DailyScore.empty());
 
-    assertThat(service.score(TODAY.plusDays(1)).date()).isEqualTo(TODAY.plusDays(1));
-    assertThat(service.score(DailyChallengeService.DAILY_EPOCH).date())
+    assertThat(service.score(TODAY.plusDays(1), Difficulty.NORMAL).date())
+        .isEqualTo(TODAY.plusDays(1));
+    assertThat(service.score(DailyChallengeService.DAILY_EPOCH, Difficulty.NORMAL).date())
         .isEqualTo(DailyChallengeService.DAILY_EPOCH);
-    assertThatThrownBy(() -> service.score(TODAY.plusDays(2)))
+    assertThatThrownBy(() -> service.score(TODAY.plusDays(2), Difficulty.NORMAL))
         .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> service.score(DailyChallengeService.DAILY_EPOCH.minusDays(1)))
+    assertThatThrownBy(
+            () -> service.score(DailyChallengeService.DAILY_EPOCH.minusDays(1), Difficulty.NORMAL))
         .isInstanceOf(IllegalArgumentException.class);
   }
 

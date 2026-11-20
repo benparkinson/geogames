@@ -1,6 +1,7 @@
 {
   "name" : "Sierra Leone",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 975.0,
   "landBorderKm" : 877.0,
   "areaKm2" : 71287,

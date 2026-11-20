@@ -16,6 +16,7 @@
         "array" : "number"
       },
       "date" : "string",
+      "difficulty" : "string",
       "maxScore" : "number",
       "players" : "number"
     },
@@ -86,6 +87,10 @@
   "rounds" : {
     "BORDERS_BY_SHAPE" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -149,6 +154,9 @@
               "type" : "string"
             },
             "coastKm" : "number",
+            "continents" : {
+              "array" : "string"
+            },
             "focus" : {
               "east" : "number",
               "north" : "number",
@@ -215,6 +223,10 @@
     },
     "COUNTRIES_BY_CITIES" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -279,6 +291,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -325,6 +340,10 @@
     },
     "COUNTRIES_BY_COASTLINE" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -380,6 +399,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -429,6 +451,10 @@
     },
     "COUNTRIES_BY_LAND_BORDERS" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -484,6 +510,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -545,6 +574,10 @@
     },
     "COUNTRIES_BY_NEIGHBOURS" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -600,6 +633,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -661,6 +697,10 @@
     },
     "COUNTRIES_BY_RIVERS" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -716,6 +756,9 @@
             "type" : "string"
           },
           "coastKm" : "number",
+          "continents" : {
+            "array" : "string"
+          },
           "focus" : {
             "east" : "number",
             "north" : "number",
@@ -792,6 +835,10 @@
     },
     "LAKES_BY_SHAPE" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -859,6 +906,10 @@
     },
     "MERGED_COUNTRIES" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -922,6 +973,9 @@
               "type" : "string"
             },
             "coastKm" : "number",
+            "continents" : {
+              "array" : "string"
+            },
             "focus" : {
               "east" : "number",
               "north" : "number",
@@ -1000,6 +1054,10 @@
     },
     "RIVERS_BY_COUNTRIES" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -1093,6 +1151,10 @@
     },
     "RIVERS_BY_SHAPE" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",
@@ -1171,6 +1233,10 @@
     },
     "TRIPOINT" : {
       "answerState" : "string",
+      "continents" : {
+        "array" : "empty"
+      },
+      "difficulty" : "string",
       "gameResult" : {
         "firstGuessRounds" : "number",
         "gameState" : "string",

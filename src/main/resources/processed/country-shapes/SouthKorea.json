@@ -1,6 +1,7 @@
 {
   "name" : "South Korea",
   "additionalNames" : [ "Republic of Korea", "Korea, South" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 4860.0,
   "landBorderKm" : 204.0,
   "areaKm2" : 93694,

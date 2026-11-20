@@ -1,6 +1,7 @@
 {
   "name" : "Lesotho",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 785.0,
   "areaKm2" : 30143,

@@ -388,6 +388,7 @@
                   <mainClass>com.parkinson.benjamin.geogames.loaders.countries.CountryShapeMain</mainClass>
                   <arguments>
                     <argument>target/regen/countries</argument>
+                    <argument>geodata/countries/continents.json</argument>
                     <argument>target/regen/country-shapes</argument>
                   </arguments>
                 </configuration>

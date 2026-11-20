@@ -1,6 +1,7 @@
 {
   "name" : "India",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 11115.0,
   "landBorderKm" : 10594.0,
   "areaKm2" : 3151400,

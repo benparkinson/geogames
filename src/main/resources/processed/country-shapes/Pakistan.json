@@ -1,6 +1,7 @@
 {
   "name" : "Pakistan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 1513.0,
   "landBorderKm" : 6071.0,
   "areaKm2" : 873900,

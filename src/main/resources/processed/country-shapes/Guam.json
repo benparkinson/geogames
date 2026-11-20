@@ -1,6 +1,7 @@
 {
   "name" : "Guam",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 129.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 566,

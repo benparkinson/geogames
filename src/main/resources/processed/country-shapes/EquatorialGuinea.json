@@ -1,6 +1,7 @@
 {
   "name" : "Equatorial Guinea",
   "additionalNames" : [ "Eq. Guinea" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 495.0,
   "landBorderKm" : 489.0,
   "areaKm2" : 24782,

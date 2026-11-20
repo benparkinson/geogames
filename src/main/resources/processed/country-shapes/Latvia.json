@@ -1,6 +1,7 @@
 {
   "name" : "Latvia",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 523.0,
   "landBorderKm" : 1037.0,
   "areaKm2" : 64259,

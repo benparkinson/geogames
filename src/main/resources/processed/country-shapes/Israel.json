@@ -1,6 +1,7 @@
 {
   "name" : "Israel",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 200.0,
   "landBorderKm" : 1033.0,
   "areaKm2" : 21919,

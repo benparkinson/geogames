@@ -1,6 +1,7 @@
 {
   "name" : "Costa Rica",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 1452.0,
   "landBorderKm" : 575.0,
   "areaKm2" : 51295,

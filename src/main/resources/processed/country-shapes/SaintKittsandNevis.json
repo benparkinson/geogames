@@ -1,6 +1,7 @@
 {
   "name" : "Saint Kitts and Nevis",
   "additionalNames" : [ "St Kitts and Nevis", "St. Kitts and Nevis", "Saint Kitts", "St Kitts", "St Kitts & Nevis" ],
+  "continents" : [ "North America" ],
   "coastKm" : 107.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 176,

@@ -1,6 +1,7 @@
 {
   "name" : "Benin",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 121.0,
   "landBorderKm" : 1881.0,
   "areaKm2" : 116590,

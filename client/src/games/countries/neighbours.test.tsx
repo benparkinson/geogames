@@ -12,13 +12,17 @@ vi.mock("./NeighboursMapWrapper", () => ({
   ),
 }));
 
-function renderGame(data = makeCountryShapeRoundData(), submitAnswer = vi.fn(), hardMode = false) {
+function renderGame(
+  data = makeCountryShapeRoundData(),
+  submitAnswer = vi.fn(),
+  difficulty: "NORMAL" | "HARD" = "NORMAL",
+) {
   const Component = neighbours.Component;
   mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
   renderWithClient(
     <Component
       data={data}
-      round={makeRoundProps({ hintCount: 3, hasClues: true, hardMode })}
+      round={makeRoundProps({ hintCount: 3, hasClues: true, difficulty })}
       answerCount={1}
       submitAnswer={submitAnswer}
     />,
@@ -89,7 +93,7 @@ describe("Country Gaps", () => {
 
   it("gives no clue in Hard mode", async () => {
     const user = userEvent.setup();
-    renderGame(makeCountryShapeRoundData(), vi.fn(), true);
+    renderGame(makeCountryShapeRoundData(), vi.fn(), "HARD");
     await screen.findByRole("button", { name: /Hint/ });
 
     await user.type(screen.getByPlaceholderText("Country name…"), "France{Enter}");

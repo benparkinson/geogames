@@ -1,6 +1,7 @@
 {
   "name" : "Niue",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 63.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 221,

@@ -1,6 +1,7 @@
 {
   "name" : "Spain",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 5003.0,
   "landBorderKm" : 1705.0,
   "areaKm2" : 493684,

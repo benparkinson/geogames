@@ -1,6 +1,7 @@
 {
   "name" : "Heard Island and McDonald Islands",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 110.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 393,

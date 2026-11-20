@@ -1,6 +1,7 @@
 {
   "name" : "Comoros",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 343.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 1029,

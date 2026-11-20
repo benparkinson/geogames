@@ -1,6 +1,7 @@
 {
   "name" : "New Zealand",
   "additionalNames" : [ "NZ", "Aotearoa" ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 10005.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 150038,

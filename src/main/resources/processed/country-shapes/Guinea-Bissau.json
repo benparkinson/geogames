@@ -1,6 +1,7 @@
 {
   "name" : "Guinea-Bissau",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1919.0,
   "landBorderKm" : 689.0,
   "areaKm2" : 31479,

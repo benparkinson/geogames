@@ -1,6 +1,7 @@
 {
   "name" : "Oman",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 2290.0,
   "landBorderKm" : 1517.0,
   "areaKm2" : 309680,

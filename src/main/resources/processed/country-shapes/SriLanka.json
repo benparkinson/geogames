@@ -1,6 +1,7 @@
 {
   "name" : "Sri Lanka",
   "additionalNames" : [ "Ceylon" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 1987.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 66247,

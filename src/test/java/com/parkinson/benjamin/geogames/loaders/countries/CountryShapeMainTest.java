@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.loaders.countries;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.parkinson.benjamin.geogames.helper.GeoJson;
 import com.parkinson.benjamin.geogames.loaders.CapturedOutput;
@@ -23,10 +24,13 @@ class CountryShapeMainTest {
   @TempDir Path out;
 
   private Path countries;
+  private Path continents;
 
   @BeforeEach
   void locateFixtures() throws URISyntaxException {
     countries = Path.of(getClass().getResource("/fixtures/loaders/country-shapes").toURI());
+    continents =
+        Path.of(getClass().getResource("/fixtures/loaders/country-shapes-continents.json").toURI());
   }
 
   private static CountryShape find(CountryShapeMain.Report report, String name) {
@@ -58,7 +62,7 @@ class CountryShapeMainTest {
 
   @Test
   void writesOneFilePerCountryAndCountsTheBytes() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     assertThat(fileNames(out)).containsExactly("Alpha.json", "Beta.json", "GammaIsland.json");
     long size = 0;
@@ -71,7 +75,7 @@ class CountryShapeMainTest {
 
   @Test
   void neighboursAreTheCountriesSharingAnEdge() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     assertThat(find(report, "Alpha").neighbours())
         .singleElement()
@@ -88,7 +92,7 @@ class CountryShapeMainTest {
 
   @Test
   void aCountryWithNoNeighbourHasNoLandBorderAndAllCoast() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     CountryShape island = find(report, "Gamma Island");
     assertThat(island.landBorderKm()).isZero();
@@ -98,7 +102,7 @@ class CountryShapeMainTest {
 
   @Test
   void theSharedEdgeIsALandBorderAndTheRestIsCoast() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     CountryShape alpha = find(report, "Alpha");
     assertThat(alpha.landBorderKm()).isBetween(1100.0, 1120.0); // 10 degrees of longitude line
@@ -108,7 +112,7 @@ class CountryShapeMainTest {
 
   @Test
   void theSharedBorderIsIdenticalOnBothSides() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     Set<String> alphaSide = points(find(report, "Alpha").landBorders().geometry().coordinates());
     Set<String> betaSide = points(find(report, "Beta").landBorders().geometry().coordinates());
@@ -118,7 +122,7 @@ class CountryShapeMainTest {
 
   @Test
   void focusIsTheBoundingBoxOfTheCountry() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     assertThat(find(report, "Alpha").focus()).isEqualTo(new Bounds(0, 0, 10, 10));
     assertThat(find(report, "Gamma Island").focus()).isEqualTo(new Bounds(30, 0, 32, 2));
@@ -126,7 +130,7 @@ class CountryShapeMainTest {
 
   @Test
   void eachFileReadsBackAsTheShapeInTheReport() throws IOException {
-    CountryShapeMain.Report report = CountryShapeMain.run(countries, out);
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
 
     CountryShape read =
         GeoJson.lenientReader().readValue(out.resolve("Beta.json").toFile(), CountryShape.class);
@@ -142,8 +146,8 @@ class CountryShapeMainTest {
     Files.writeString(nested.resolve("Old.json"), "{}");
     Files.writeString(nested.resolve("notes.txt"), "keep");
 
-    CountryShapeMain.run(countries, nested);
-    CountryShapeMain.run(countries, out.resolve("fresh"));
+    CountryShapeMain.run(countries, continents, nested);
+    CountryShapeMain.run(countries, continents, out.resolve("fresh"));
 
     assertThat(fileNames(nested)).doesNotContain("Old.json").contains("notes.txt");
     assertThat(fileNames(out.resolve("fresh"))).hasSize(3);
@@ -154,8 +158,8 @@ class CountryShapeMainTest {
     Path first = out.resolve("first");
     Path second = out.resolve("second");
 
-    CountryShapeMain.run(countries, first);
-    CountryShapeMain.run(countries, second);
+    CountryShapeMain.run(countries, continents, first);
+    CountryShapeMain.run(countries, continents, second);
 
     for (String name : fileNames(first)) {
       assertThat(Files.readAllBytes(first.resolve(name)))
@@ -167,7 +171,9 @@ class CountryShapeMainTest {
   void mainPrintsTheSummary() throws Exception {
     String printed =
         CapturedOutput.of(
-            () -> CountryShapeMain.main(new String[] {countries.toString(), out.toString()}));
+            () ->
+                CountryShapeMain.main(
+                    new String[] {countries.toString(), continents.toString(), out.toString()}));
 
     assertThat(printed)
         .startsWith("Written: 3\nNo coast: 0\nNo land border: 1\n")
@@ -179,5 +185,58 @@ class CountryShapeMainTest {
         .contains("  Alpha: ")
         .contains("  Gamma Island: ")
         .contains("Total bytes: ");
+  }
+
+  @Test
+  void eachShapeCarriesItsContinentsInTheOrderGiven() throws IOException {
+    CountryShapeMain.Report report = CountryShapeMain.run(countries, continents, out);
+
+    assertThat(find(report, "Alpha").continents()).containsExactly("Europe");
+    assertThat(find(report, "Beta").continents()).containsExactly("Europe", "Asia");
+    assertThat(find(report, "Gamma Island").continents()).containsExactly("Oceania");
+  }
+
+  private void assertRejected(String json, String message) throws IOException {
+    Path bad = out.resolve("bad-continents.json");
+    Files.writeString(bad, json);
+    assertThatThrownBy(() -> CountryShapeMain.run(countries, bad, out.resolve("o")))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining(message);
+  }
+
+  @Test
+  void aShapeWithNoEntryFails() throws IOException {
+    assertRejected(
+        "{\"Alpha\": [\"Europe\"], \"Beta\": [\"Asia\"]}", "no continents for Gamma Island");
+  }
+
+  @Test
+  void anEntryMatchingNoShapeFails() throws IOException {
+    assertRejected(
+        "{\"Alpha\": [\"Europe\"], \"Beta\": [\"Asia\"], \"Gamma Island\": [\"Oceania\"],"
+            + " \"Delta\": [\"Asia\"]}",
+        "Delta, which matches no country shape");
+  }
+
+  @Test
+  void anEmptyValueFails() throws IOException {
+    assertRejected(
+        "{\"Alpha\": [], \"Beta\": [\"Asia\"], \"Gamma Island\": [\"Oceania\"]}",
+        "Alpha needs one or two continents");
+  }
+
+  @Test
+  void moreThanTwoContinentsFails() throws IOException {
+    assertRejected(
+        "{\"Alpha\": [\"Asia\", \"Europe\", \"Africa\"], \"Beta\": [\"Asia\"],"
+            + " \"Gamma Island\": [\"Oceania\"]}",
+        "Alpha needs one or two continents");
+  }
+
+  @Test
+  void anUnknownContinentFails() throws IOException {
+    assertRejected(
+        "{\"Alpha\": [\"Australia\"], \"Beta\": [\"Asia\"], \"Gamma Island\": [\"Oceania\"]}",
+        "Alpha has an unknown continent");
   }
 }

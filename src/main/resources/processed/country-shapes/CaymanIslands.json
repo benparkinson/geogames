@@ -1,6 +1,7 @@
 {
   "name" : "Cayman Islands",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 182.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 223,

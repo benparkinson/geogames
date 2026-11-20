@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
@@ -29,6 +30,7 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -81,6 +83,7 @@ class GameServiceTest {
   private GameService service;
   private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
   private final DailyScoreStore dailyScores = mock(DailyScoreStore.class);
+  private final RoundContinents roundContinents = mock(RoundContinents.class);
   private final KnownPlaceNames names = testNames();
 
   @BeforeEach
@@ -146,7 +149,8 @@ class GameServiceTest {
         random,
         events,
         names,
-        dailyScores);
+        dailyScores,
+        roundContinents);
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -162,7 +166,8 @@ class GameServiceTest {
         random,
         events,
         names,
-        dailyScores);
+        dailyScores,
+        roundContinents);
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -179,7 +184,7 @@ class GameServiceTest {
   }
 
   private GameCreationResponse createGame(String gameType, int rounds) {
-    return service.createGame(gameType, rounds, false);
+    return service.createGame(gameType, rounds, Difficulty.NORMAL);
   }
 
   private static Country square(String name) {
@@ -311,7 +316,7 @@ class GameServiceTest {
   void hardModeReachesTheEntityAndTheRoundResponse() {
     when(tripointGenerator.generate(eq(1), eq(Set.of()), any())).thenReturn(tripoints(1));
 
-    service.createGame("TRIPOINT", 1, true);
+    service.createGame("TRIPOINT", 1, Difficulty.HARD);
 
     GameEntity saved = savedGame();
     assertThat(saved.getHardMode()).isTrue();
@@ -336,11 +341,56 @@ class GameServiceTest {
     assertThat(((RoundAnswered) captor.getValue()).hardMode()).isNull();
   }
 
+  private GameRound readRound(Difficulty difficulty, GameType type, String key) {
+    GameRoundEntity entity = new GameRoundEntity(0, type, key);
+    GameEntity game = new GameEntity(new ArrayList<>(List.of(entity)), type.name(), difficulty);
+    when(generators.get(type).rebuild(key)).thenReturn(rivers(1, type).get(0));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+    return service.getGameRound(GAME_ID, 0).orElseThrow();
+  }
+
+  @Test
+  void anEasyRoundCarriesTheEffectiveLimitsAndItsContinents() {
+    when(roundContinents.of(any())).thenReturn(List.of("Europe", "Asia"));
+
+    GameRound result = readRound(Difficulty.EASY, GameType.LAKES_BY_SHAPE, "lake:Q1");
+
+    assertThat(result.difficulty()).isEqualTo("EASY");
+    assertThat(result.hardMode()).isFalse();
+    assertThat(result.continents()).containsExactly("Europe", "Asia");
+    assertThat(result.gameType().guessLimit()).isEqualTo(10);
+    assertThat(result.gameType().hintCount()).isEqualTo(2);
+  }
+
+  @Test
+  void aNormalOrUnknownRoundHasNoContinentsAndTheNormalLimits() {
+    GameRound normal = readRound(Difficulty.NORMAL, GameType.LAKES_BY_SHAPE, "lake:Q1");
+    GameRound unknown = readRound(null, GameType.LAKES_BY_SHAPE, "lake:Q1");
+
+    for (GameRound result : List.of(normal, unknown)) {
+      assertThat(result.difficulty()).isEqualTo("NORMAL");
+      assertThat(result.continents()).isEmpty();
+      assertThat(result.gameType().guessLimit()).isEqualTo(5);
+      assertThat(result.gameType().hintCount()).isEqualTo(3);
+    }
+    verifyNoInteractions(roundContinents);
+  }
+
+  @Test
+  void aHardRoundIsHardInBothFields() {
+    GameRound result = readRound(Difficulty.HARD, GameType.RIVERS_BY_SHAPE, "river:Q1");
+
+    assertThat(result.difficulty()).isEqualTo("HARD");
+    assertThat(result.hardMode()).isTrue();
+  }
+
   @Test
   void theHardModeOfTheGameIsInTheEvent() {
     GameEntity game =
         new GameEntity(
-            new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))), "TRIPOINT", true);
+            new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))),
+            "TRIPOINT",
+            Difficulty.HARD);
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
@@ -493,8 +543,9 @@ class GameServiceTest {
               new Random(7),
               events,
               names,
-              dailyScores)
-          .createGame("RANDOM", 10, false);
+              dailyScores,
+              mock(RoundContinents.class))
+          .createGame("RANDOM", 10, Difficulty.NORMAL);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
       mixes.add(captor.getValue().getRounds().stream().map(GameRoundEntity::getGameType).toList());
@@ -564,7 +615,8 @@ class GameServiceTest {
 
     GameRound result = service.getGameRound(GAME_ID, 1).orElseThrow();
 
-    assertThat(result.gameType()).isEqualTo(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE));
+    assertThat(result.gameType())
+        .isEqualTo(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE, Difficulty.NORMAL));
     assertThat(result.jsonBlob()).isEqualTo(objectMapper.writeValueAsString(rivers(1).get(0)));
     assertThat(result.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(result.totalRoundCount()).isEqualTo(2);
@@ -649,6 +701,7 @@ class GameServiceTest {
                 2,
                 1,
                 LocalDate.now(ZoneOffset.UTC),
+                null,
                 null));
   }
 
@@ -872,7 +925,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, 100, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 100, 200);
   }
 
   @Test
@@ -882,7 +935,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores, times(1)).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, times(1)).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -891,7 +944,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
-    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, never()).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -901,7 +954,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
-    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, never()).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -912,7 +965,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit, null);
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, 0, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 0, 200);
   }
 
   // ------------------------------------------------------------ recordGuess
