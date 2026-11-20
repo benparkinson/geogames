@@ -386,3 +386,9 @@ code {
 .leaflet-interactive:focus {
   outline: none;
 }
+/* At least the visible screen. Plain 100vh is the tallest a mobile viewport gets (address bar hidden), so a page
+sized to it always scrolls on a phone; dvh follows the visible height. */
+.page-full-height {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
