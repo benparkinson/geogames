@@ -1,4 +1,4 @@
-import { FlagFill } from "react-bootstrap-icons";
+import { GeoAltFill } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import TripointGame from "./TripointGame";
 
@@ -7,7 +7,7 @@ export default defineGame({
   title: "Tripoints",
   singular: "Tripoint",
   description: "Name the three countries that meet at a point.",
-  Icon: FlagFill,
+  Icon: GeoAltFill,
   Component: TripointGame,
   answerNames: (tripoint) => tripoint.countries.map((country) => country.name),
 });

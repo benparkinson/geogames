@@ -374,11 +374,11 @@ code {
   font-size: 0.7rem;
 }
 
-/* Flag markers drawn with an inline SVG (see map/flagIcons.ts). */
-.map-flag {
+/* Map pins drawn with an inline SVG (see map/markerIcons.ts). */
+.map-marker {
   background: none;
   border: 0;
-  filter: var(--gg-shadow-flag);
+  filter: var(--gg-shadow-marker);
 }
 
 /* Clicking a map shape focuses its SVG path, which draws a square outline. Hover labels are all we want. */

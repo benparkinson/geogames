@@ -18,7 +18,7 @@ export default function TripointGame(props: GameComponentProps<TripointModel>): 
       game={{ ...props, data }}
       MapComponent={TripointMapWrapper}
       answers={props.data.countries}
-      prompt={`Which ${props.answerCount} countries meet at this flag?`}
+      prompt={`Which ${props.answerCount} countries meet at this point?`}
       hints={{
         description: "Shows the outline of a country you haven't named yet",
         text: (index, foundAtHint) => tripointHintText(data.hintOrder, index, foundAtHint),

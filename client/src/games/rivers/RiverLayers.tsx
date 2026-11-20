@@ -1,5 +1,5 @@
 import { GeoJSON, Marker, Tooltip } from "react-leaflet";
-import { endFlagIcon, startFlagIcon } from "../../map/flagIcons";
+import { mouthIcon, sourceIcon } from "../../map/markerIcons";
 import { answerPathOptions, clueOutlineOptions } from "../../map/constants";
 import type { Country } from "../common/country";
 import type { River } from "./model";
@@ -11,14 +11,14 @@ export function RiverLine({ river, gaveUp }: { river: River; gaveUp: boolean }):
   );
 }
 
-/** A green flag where the river starts and a red one where it ends. */
-export function EndFlags({ river }: { river: River }): React.JSX.Element {
+/** A green pin where the river starts and a red one where it ends. */
+export function EndPins({ river }: { river: River }): React.JSX.Element {
   return (
     <>
-      <Marker icon={startFlagIcon} position={[river.source.latitude, river.source.longitude]}>
+      <Marker icon={sourceIcon} position={[river.source.latitude, river.source.longitude]}>
         <Tooltip>Start</Tooltip>
       </Marker>
-      <Marker icon={endFlagIcon} position={[river.mouth.latitude, river.mouth.longitude]}>
+      <Marker icon={mouthIcon} position={[river.mouth.latitude, river.mouth.longitude]}>
         <Tooltip>End</Tooltip>
       </Marker>
     </>
