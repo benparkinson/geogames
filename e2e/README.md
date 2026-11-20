@@ -28,7 +28,7 @@ Useful options: `--project=desktop` or `--project=mobile` (Pixel 7), `--headed`,
 | `every-game.spec.ts` | Every game type, and the mix, played start to finish with the right answers. |
 | `full-game.spec.ts` | A Tripoint game with a hint, a reveal and running out of guesses, and its score. |
 | `daily.spec.ts` | The daily challenge: play, share, reload with no new game, and a second player gets the same rounds. |
-| `guessing.spec.ts` | Unknown names, wrong guesses, aliases, distance clues and Hard mode. |
+| `guessing.spec.ts` | Unknown names, wrong guesses, aliases, distance clues and the Easy and Hard difficulties. |
 | `deep-link.spec.ts` | Reloading a game page. Marked `test.fail()`: it is a known bug (see the comment in the file). |
 
 `fixtures.ts` gives every test the internet block and the page-error check, plus `api` to read the correct answers from the backend.

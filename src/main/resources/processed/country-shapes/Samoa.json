@@ -1,6 +1,7 @@
 {
   "name" : "Samoa",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 342.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 1652,

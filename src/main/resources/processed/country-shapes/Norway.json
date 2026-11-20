@@ -1,6 +1,7 @@
 {
   "name" : "Norway",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 27417.0,
   "landBorderKm" : 2430.0,
   "areaKm2" : 300338,

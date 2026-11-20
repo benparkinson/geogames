@@ -1,5 +1,8 @@
 import type { AnswerState, GameState } from "../games/common/Model";
 
+/** How a game is played, chosen when it is created and never changed. */
+export type Difficulty = "EASY" | "NORMAL" | "HARD";
+
 /** The JSON of GET /api/games/{id}/rounds/{round}, exactly as the server sends it. */
 export interface GameRoundResponse {
   jsonBlob: string;
@@ -11,8 +14,12 @@ export interface GameRoundResponse {
   gameResult: GameResultResponse;
   guesses: RecordedGuess[];
   hintsTakenAt: number[];
-  /** Hard mode was chosen when the game was created and never changes. */
+  /** Kept by the server for old clients (whether the difficulty is HARD). Not read. */
   hardMode: boolean;
+  /** Chosen when the game was created and never changes. */
+  difficulty: Difficulty;
+  /** The continents to show from the start of the round: empty unless the game is Easy. */
+  continents: string[];
 }
 
 /** A guess the server has stored for a round: a known place name as the name lists spell it. */
@@ -25,6 +32,8 @@ export interface RecordedGuess {
 export interface DailyScore {
   /** The challenge date, `YYYY-MM-DD`. */
   date: string;
+  /** The league the totals are for. */
+  difficulty: Difficulty;
   /** Finished games counted. */
   players: number;
   /** The mean score to one decimal place; null when `players` is 0. */
@@ -97,8 +106,10 @@ export interface GameRoundView {
   points: number;
   guesses: RecordedGuess[];
   hintsTakenAt: number[];
-  /** Hard mode: fixed when the game was created, so the distance clues stay hidden for all of it. */
-  hardMode: boolean;
+  /** Fixed when the game was created: Hard hides the distance clues for all of it, Easy shows the continent. */
+  difficulty: Difficulty;
+  /** The continents to show from the start of the round: empty unless the game is Easy. */
+  continents: string[];
   /** The app doesn't read `perfectRounds`: the server still sends it for the deployed client. */
   gameResult: Omit<GameResultResponse, "roundsUnanswered" | "perfectRounds">;
 }

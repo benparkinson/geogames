@@ -1,6 +1,7 @@
 {
   "name" : "Cambodia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 795.0,
   "landBorderKm" : 2066.0,
   "areaKm2" : 181491,

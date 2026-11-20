@@ -1,6 +1,7 @@
 {
   "name" : "Hungary",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1668.0,
   "areaKm2" : 92947,

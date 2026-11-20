@@ -1,6 +1,7 @@
 {
   "name" : "Botswana",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 3757.0,
   "areaKm2" : 580515,

@@ -1,6 +1,7 @@
 {
   "name" : "Dominican Republic",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 1293.0,
   "landBorderKm" : 261.0,
   "areaKm2" : 48430,

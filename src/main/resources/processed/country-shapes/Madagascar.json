@@ -1,6 +1,7 @@
 {
   "name" : "Madagascar",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 5444.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 594251,

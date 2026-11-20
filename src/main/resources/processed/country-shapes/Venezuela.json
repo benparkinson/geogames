@@ -1,6 +1,7 @@
 {
   "name" : "Venezuela",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 5478.0,
   "landBorderKm" : 4345.0,
   "areaKm2" : 912995,

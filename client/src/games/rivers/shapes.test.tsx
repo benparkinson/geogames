@@ -39,4 +39,27 @@ describe("River Shapes", () => {
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
+
+  it("offers two hints in Easy, where the continent is already shown, so the first is the countries", async () => {
+    const user = userEvent.setup();
+    const Component = shapes.Component;
+    mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
+    renderWithClient(
+      <Component
+        data={makeRiverRoundData()}
+        round={makeRoundProps({ hintCount: 2, difficulty: "EASY", continents: ["Europe"] })}
+        answerCount={1}
+        submitAnswer={vi.fn()}
+      />,
+    );
+    // The continent is shown from the start, as the first line of the list, and not as a hint.
+    expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    expect(screen.getByText("Flows through 3 countries")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
+  });
 });

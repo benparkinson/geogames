@@ -44,8 +44,9 @@ public class RoundStatsStore {
       "insert into stat_round_key (round_key) values (:roundKey)";
   static final String GAME_SELECT = "select id from stat_game where play_id = :playId";
   static final String GAME_INSERT =
-      "insert into stat_game (played_on, game_mode_id, rounds_in_game, play_id, hard_mode)"
-          + " values (:playedOn, :modeId, :roundsInGame, :playId, :hardMode)";
+      "insert into stat_game (played_on, game_mode_id, rounds_in_game, play_id, hard_mode,"
+          + " difficulty) values (:playedOn, :modeId, :roundsInGame, :playId, :hardMode,"
+          + " :difficulty)";
 
   private final JdbcClient jdbc;
   private final Map<String, Integer> modes = new ConcurrentHashMap<>();
@@ -120,12 +121,20 @@ public class RoundStatsStore {
         GAME_SELECT,
         GAME_INSERT,
         Map.of(
-            "playedOn", row.answeredOn(),
-            "modeId", modeId,
-            "roundsInGame", row.roundsInGame(),
-            "playId", row.playId(),
+            "playedOn",
+            row.answeredOn(),
+            "modeId",
+            modeId,
+            "roundsInGame",
+            row.roundsInGame(),
+            "playId",
+            row.playId(),
             // Map.of rejects null; SqlParameterValue is never null and types a null for Postgres.
-            "hardMode", new SqlParameterValue(Types.BOOLEAN, row.hardMode())));
+            "hardMode",
+            new SqlParameterValue(Types.BOOLEAN, row.hardMode()),
+            "difficulty",
+            new SqlParameterValue(
+                Types.VARCHAR, row.difficulty() == null ? null : row.difficulty().name())));
   }
 
   private int findOrCreate(String select, String insert, Map<String, Object> params) {

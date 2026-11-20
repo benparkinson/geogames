@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /** Maps Wikidata continent labels onto the six continents the game knows. */
 public final class ContinentResolver {
 
-  private static final Set<String> AUSTRALIA =
+  private static final Set<String> OCEANIA =
       Set.of("Oceania", "Insular Oceania", "Australia", "Australian continent");
   private static final Set<String> PASS_THROUGH =
       Set.of("Africa", "Asia", "Europe", "North America", "South America");
@@ -17,8 +17,8 @@ public final class ContinentResolver {
 
   /** The game's continent for a label, or empty for anything else (Antarctica, Eurasia, ...). */
   public static Optional<String> map(String label) {
-    if (AUSTRALIA.contains(label)) {
-      return Optional.of("Australia");
+    if (OCEANIA.contains(label)) {
+      return Optional.of("Oceania");
     }
     return PASS_THROUGH.contains(label) ? Optional.of(label) : Optional.empty();
   }

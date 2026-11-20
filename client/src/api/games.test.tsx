@@ -354,12 +354,12 @@ describe("useCreateGame", () => {
     ]);
     const { result } = renderHook(() => useCreateGame(), { wrapper: clientWrapper() });
 
-    act(() => result.current.createGame("TRIPOINT", 5, true));
+    act(() => result.current.createGame("TRIPOINT", 5, "EASY"));
 
     await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const [call] = callsTo(fetchMock);
     expect(call.method).toBe("POST");
-    expect(call.body).toEqual({ gameType: "TRIPOINT", numberOfRounds: 5, hardMode: true });
+    expect(call.body).toEqual({ gameType: "TRIPOINT", numberOfRounds: 5, difficulty: "EASY" });
     expect(new Headers(call.init?.headers).get("Content-Type")).toBe("application/json");
   });
 
@@ -372,7 +372,7 @@ describe("useCreateGame", () => {
     const { result } = renderHook(() => useCreateGame(), { wrapper: clientWrapper() });
     expect(result.current.isLoading).toBe(false);
 
-    act(() => result.current.createGame("RANDOM", 3, false));
+    act(() => result.current.createGame("RANDOM", 3, "NORMAL"));
     await waitFor(() => expect(result.current.isLoading).toBe(true));
 
     await act(async () =>
@@ -386,7 +386,7 @@ describe("useCreateGame", () => {
     mockFetch([{ method: "POST", url: /\/api\/games$/, status: 500, body: {} }]);
     const { result } = renderHook(() => useCreateGame(), { wrapper: clientWrapper() });
 
-    act(() => result.current.createGame("TRIPOINT", 5, false));
+    act(() => result.current.createGame("TRIPOINT", 5, "NORMAL"));
 
     await waitFor(() => expect(result.current.error).toBeTruthy());
     expect(String(result.current.error)).toContain("Failed to create game (500)");

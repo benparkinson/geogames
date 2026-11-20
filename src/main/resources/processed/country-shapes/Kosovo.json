@@ -1,6 +1,7 @@
 {
   "name" : "Kosovo",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 559.0,
   "areaKm2" : 10895,

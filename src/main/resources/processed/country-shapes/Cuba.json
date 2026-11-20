@@ -1,6 +1,7 @@
 {
   "name" : "Cuba",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 5734.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 106026,

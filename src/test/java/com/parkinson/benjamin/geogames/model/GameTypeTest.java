@@ -105,4 +105,25 @@ class GameTypeTest {
         .containsExactly(
             GameType.RIVERS_BY_SHAPE, GameType.LAKES_BY_SHAPE, GameType.BORDERS_BY_SHAPE);
   }
+
+  @Test
+  void easyDoublesTheGuessLimitOfEveryType() {
+    for (GameType type : GameType.values()) {
+      assertThat(type.guessLimit(Difficulty.EASY)).isEqualTo(type.guessLimit() * 2);
+      assertThat(type.guessLimit(Difficulty.NORMAL)).isEqualTo(type.guessLimit());
+      assertThat(type.guessLimit(Difficulty.HARD)).isEqualTo(type.guessLimit());
+    }
+  }
+
+  @Test
+  void easyDropsTheContinentHintOfRiverAndLakeShapesOnly() {
+    for (GameType type : GameType.values()) {
+      boolean dropsOne = type == GameType.RIVERS_BY_SHAPE || type == GameType.LAKES_BY_SHAPE;
+      assertThat(type.hintCount(Difficulty.EASY))
+          .as(type.name())
+          .isEqualTo(dropsOne ? type.hintCount() - 1 : type.hintCount());
+      assertThat(type.hintCount(Difficulty.NORMAL)).isEqualTo(type.hintCount());
+      assertThat(type.hintCount(Difficulty.HARD)).isEqualTo(type.hintCount());
+    }
+  }
 }

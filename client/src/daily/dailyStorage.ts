@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import type { Difficulty } from "../api/types";
 import type { RoundOutcome } from "../games/common/outcome";
 import { createLocalStore } from "../settings/localStore";
 
@@ -33,9 +34,8 @@ export interface DailyEntry {
   date: string;
   number: number;
   gameId: string;
-  /** Hard mode was chosen for this game. */
-  // Stored name kept from when this was called Hardcore mode.
-  hardcore: boolean;
+  /** The difficulty chosen for this game. */
+  difficulty: Difficulty;
   /** Set once the game is finished. */
   result?: DailyResult;
 }
@@ -59,6 +59,17 @@ function isResult(value: unknown): boolean {
   );
 }
 
+function isDifficulty(value: unknown): value is Difficulty {
+  return value === "EASY" || value === "NORMAL" || value === "HARD";
+}
+
+/** The difficulty of an entry: its own, or for one saved before there was a difficulty, from Hard mode. */
+function difficultyOf(e: Record<string, unknown>): Difficulty | null {
+  if (isDifficulty(e.difficulty)) return e.difficulty;
+  if (typeof e.hardcore === "boolean") return e.hardcore ? "HARD" : "NORMAL";
+  return null;
+}
+
 function parse(raw: string | null): DailyEntry | null {
   if (raw === null) return null;
   try {
@@ -70,15 +81,16 @@ function parse(raw: string | null): DailyEntry | null {
       typeof e.date !== "string" ||
       typeof e.number !== "number" ||
       typeof e.gameId !== "string" ||
-      typeof e.hardcore !== "boolean" ||
       (e.result !== undefined && !isResult(e.result))
     ) {
       return null;
     }
-    const entry = value as unknown as DailyEntry;
-    if (entry.result) {
-      const rounds = entry.result.rounds.map((r) => currentOutcome(r) as RoundOutcome);
-      return { ...entry, result: { ...entry.result, rounds } };
+    const difficulty = difficultyOf(e);
+    if (difficulty === null) return null;
+    const entry: DailyEntry = { v: 1, date: e.date, number: e.number, gameId: e.gameId, difficulty };
+    if (e.result !== undefined) {
+      const result = e.result as DailyResult;
+      entry.result = { ...result, rounds: result.rounds.map((r) => currentOutcome(r) as RoundOutcome) };
     }
     return entry;
   } catch {

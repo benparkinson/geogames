@@ -1,6 +1,7 @@
 {
   "name" : "Tunisia",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1387.0,
   "landBorderKm" : 1367.0,
   "areaKm2" : 155999,

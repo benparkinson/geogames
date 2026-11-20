@@ -5,10 +5,10 @@ import { makeDailyScore } from "../test/fixtures";
 import { renderWithClient } from "../test/render";
 import DailyComparison from "./DailyComparison";
 
-const URL = "http://localhost:8080/api/daily-scores/2026-11-18";
+const URL = "http://localhost:8080/api/daily-scores/2026-11-18?difficulty=NORMAL";
 
-function renderComparison(score = 450) {
-  return renderWithClient(<DailyComparison date="2026-11-18" score={score} />);
+function renderComparison(score = 450, difficulty: "EASY" | "NORMAL" | "HARD" = "NORMAL") {
+  return renderWithClient(<DailyComparison date="2026-11-18" difficulty={difficulty} score={score} />);
 }
 
 async function expectNothing(fetchMock: ReturnType<typeof mockFetch>) {
@@ -48,6 +48,20 @@ describe("DailyComparison", () => {
     // Bucket 9 of 11: one of three players is in it or above.
     expect(screen.getByText("Top 34%")).toBeInTheDocument();
     expect(screen.getByRole("img")).toHaveAttribute("aria-label", expect.stringContaining("Your band: 450–499."));
+  });
+
+  it("asks for the player's own league and names it unless it is Normal", async () => {
+    const league = (difficulty: string) => `http://localhost:8080/api/daily-scores/2026-11-18?difficulty=${difficulty}`;
+    mockFetch([
+      { url: league("EASY"), body: makeDailyScore({ difficulty: "EASY", players: 5, averageScore: 400 }) },
+      { url: league("HARD"), body: makeDailyScore({ difficulty: "HARD", players: 5, averageScore: 200 }) },
+    ]);
+    const easy = renderComparison(450, "EASY");
+    expect(await screen.findByText("Today's average (Easy players): 400.0 / 500")).toBeInTheDocument();
+    easy.unmount();
+
+    renderComparison(450, "HARD");
+    expect(await screen.findByText("Today's average (Hard mode players): 200.0 / 500")).toBeInTheDocument();
   });
 
   it("highlights the player's bar only", async () => {

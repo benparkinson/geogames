@@ -1,6 +1,7 @@
 {
   "name" : "Algeria",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1202.0,
   "landBorderKm" : 6156.0,
   "areaKm2" : 2312302,

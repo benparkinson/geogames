@@ -21,7 +21,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 class RiverLoaderServiceTest {
 
   private static final Set<String> CONTINENTS =
-      Set.of("Africa", "Asia", "Europe", "North America", "South America", "Australia");
+      Set.of("Africa", "Asia", "Europe", "North America", "South America", "Oceania");
 
   // The hand-picked rivers that the continent quotas keep (not the Yenisei).
   private static final List<String> ORIGINAL_RIVERS =

@@ -1,8 +1,11 @@
 package com.parkinson.benjamin.geogames.dao;
 
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -58,12 +61,21 @@ public class GameEntity {
   private String gameMode;
 
   /**
-   * Hard mode (no distance or direction clues), chosen when the game was created and never changed.
-   * Null means unknown: the game was created before this column existed, or by a client that did
-   * not send it. It reads as false in the API.
+   * The old Hard mode switch, kept because the previous version of the app still reads and writes
+   * it during a deploy: true for HARD, false for EASY and NORMAL, null for unknown. Set from {@link
+   * #difficulty} when the game is created and never changed.
    */
   @Column(updatable = false)
   private Boolean hardMode;
+
+  /**
+   * How the game is played, chosen when it was created and never changed. Null means unknown: the
+   * game was created before this column existed, or by a client that sent neither a difficulty nor
+   * Hard mode. It reads as NORMAL in the API.
+   */
+  @Column(updatable = false)
+  @Enumerated(EnumType.STRING)
+  private Difficulty difficulty;
 
   /**
    * The date of the daily challenge this game was made from, set when it is created and never
@@ -75,19 +87,19 @@ public class GameEntity {
   public GameEntity() {}
 
   /** A game that is not a daily challenge. */
-  public GameEntity(List<GameRoundEntity> rounds, String gameMode, Boolean hardMode) {
-    this(rounds, gameMode, hardMode, null);
+  public GameEntity(List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty) {
+    this(rounds, gameMode, difficulty, null);
   }
 
   /**
    * A game always has at least one round, so its result is never "finished" with nothing played.
    *
    * @param gameMode what was requested: a {@code GameType} name, or {@code RANDOM}
-   * @param hardMode whether Hard mode is on, or null if unknown
+   * @param difficulty how the game is played, or null if unknown
    * @param dailyDate the challenge's date for a daily game, or null
    */
   public GameEntity(
-      List<GameRoundEntity> rounds, String gameMode, Boolean hardMode, LocalDate dailyDate) {
+      List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -100,7 +112,8 @@ public class GameEntity {
     this.publicId = UUID.randomUUID();
     this.playId = UUID.randomUUID();
     this.gameMode = gameMode;
-    this.hardMode = hardMode;
+    this.difficulty = difficulty;
+    this.hardMode = difficulty == null ? null : difficulty == Difficulty.HARD;
     this.dailyDate = dailyDate;
   }
 
@@ -126,13 +139,23 @@ public class GameEntity {
   }
 
   /** For statistics: null when unknown. */
+  public Difficulty getDifficulty() {
+    return difficulty;
+  }
+
+  /** For statistics (until they record the difficulty): null when unknown. */
   public Boolean getHardMode() {
     return hardMode;
   }
 
-  /** For the API: unknown reads as false. */
+  /** For the rules and the API: unknown reads as NORMAL. */
+  public Difficulty difficulty() {
+    return Difficulty.orNormal(difficulty);
+  }
+
+  /** For the API: whether the game is HARD. */
   public boolean isHardMode() {
-    return Boolean.TRUE.equals(hardMode);
+    return difficulty() == Difficulty.HARD;
   }
 
   public List<GameRoundEntity> getRounds() {

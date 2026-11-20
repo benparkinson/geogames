@@ -1,6 +1,7 @@
 {
   "name" : "Kiribati",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 1166.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 438,

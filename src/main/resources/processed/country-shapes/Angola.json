@@ -1,6 +1,7 @@
 {
   "name" : "Angola",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1891.0,
   "landBorderKm" : 4894.0,
   "areaKm2" : 1242624,

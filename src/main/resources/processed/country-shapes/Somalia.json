@@ -1,6 +1,7 @@
 {
   "name" : "Somalia",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 2444.0,
   "landBorderKm" : 1940.0,
   "areaKm2" : 473872,

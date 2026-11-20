@@ -1,6 +1,7 @@
 {
   "name" : "Türkiye",
   "additionalNames" : [ "Turkey" ],
+  "continents" : [ "Asia", "Europe" ],
   "coastKm" : 5855.0,
   "landBorderKm" : 2385.0,
   "areaKm2" : 755609,

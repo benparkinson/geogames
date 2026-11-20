@@ -1,6 +1,7 @@
 {
   "name" : "Isle of Man",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 120.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 572,

@@ -1,6 +1,7 @@
 {
   "name" : "Bahrain",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 136.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 586,

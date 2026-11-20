@@ -1,6 +1,7 @@
 {
   "name" : "Nauru",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 20.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 29,

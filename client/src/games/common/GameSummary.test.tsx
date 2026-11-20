@@ -23,7 +23,9 @@ const mixed = makeGameRounds([
   { answerState: "CORRECT", hintsUsed: 1 },
 ]);
 
-const hard = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, hardMode: true }));
+const hard = (rounds: GameRoundResponse[]) =>
+  rounds.map((r) => ({ ...r, hardMode: true, difficulty: "HARD" as const }));
+const easy = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "EASY" as const }));
 
 afterEach(() => {
   localStorage.clear();
@@ -43,7 +45,10 @@ describe("GameSummary for a daily challenge", () => {
     { answerState: "CORRECT", firstGuess: true },
     { river: true, answerState: "GAVE_UP" },
   ]);
-  const scoresRoute: Route = { url: "http://localhost:8080/api/daily-scores/2026-11-18", body: makeDailyScore() };
+  const scoresRoute: Route = {
+    url: "http://localhost:8080/api/daily-scores/2026-11-18?difficulty=NORMAL",
+    body: makeDailyScore(),
+  };
 
   function renderDaily() {
     return renderWithClient(<GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />);
@@ -73,7 +78,7 @@ describe("GameSummary for a daily challenge", () => {
         callsTo(fetchMock)
           .filter((c) => c.method === "POST")
           .map((c) => c.body),
-      ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5, hardMode: false }]),
+      ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5, difficulty: "NORMAL" }]),
     );
   });
 
@@ -91,7 +96,7 @@ describe("GameSummary for a daily challenge", () => {
       expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
         gameType: "RANDOM",
         numberOfRounds: 5,
-        hardMode: true,
+        difficulty: "HARD",
       }),
     );
   });
@@ -107,9 +112,26 @@ describe("GameSummary for a daily challenge", () => {
     expect((await copiedText(hard(done))).value).toContain("Daily 2026-11-18 · Hard mode");
   });
 
-  it("leaves Hard mode out of a normal daily's copied text, even with the preference on", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+  it("puts Easy in the copied title of an easy daily", async () => {
+    expect((await copiedText(easy(done))).value).toContain("Daily 2026-11-18 · Easy");
+  });
+
+  it("leaves the difficulty out of a normal daily's copied text, even with the preference on", async () => {
+    localStorage.setItem("gg-difficulty", "hard");
     expect((await copiedText(done)).value).not.toContain("Hard mode");
+  });
+
+  it("compares an easy daily with the Easy league", async () => {
+    mockFetch([
+      roundsRoute(easy(done)),
+      {
+        url: "http://localhost:8080/api/daily-scores/2026-11-18?difficulty=EASY",
+        body: makeDailyScore({ difficulty: "EASY", players: 4, averageScore: 300 }),
+      },
+    ]);
+    renderDaily();
+
+    expect(await screen.findByText(/Today's average \(Easy players\)/)).toBeInTheDocument();
   });
 
   it("ends the breakdown with Hard mode for a hard daily", async () => {
@@ -195,6 +217,27 @@ describe("GameSummary", () => {
     expect(screen.queryByText(/· Hard mode$/)).not.toBeInTheDocument();
   });
 
+  it("ends the breakdown with Easy for an easy game", async () => {
+    mockFetch([roundsRoute(easy(mixed))]);
+    renderSummary();
+
+    expect(await screen.findByText("1 first guess · 1 with hints · 1 missed · Easy")).toBeInTheDocument();
+  });
+
+  it("plays an easy game again as Easy", async () => {
+    const fetchMock = mockFetch([
+      roundsRoute(easy(mixed)),
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
+    ]);
+    renderSummary();
+    await screen.findByText("You scored 183 / 300");
+
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+
+    await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
+    expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toMatchObject({ difficulty: "EASY" });
+  });
+
   it("shows 0 correct with Hard mode for a hard game with no answered rounds", async () => {
     mockFetch([roundsRoute(hard(makeGameRounds([{ answerState: "UNANSWERED" }])))]);
     renderSummary(vi.fn(), 1);
@@ -202,8 +245,8 @@ describe("GameSummary", () => {
     expect(await screen.findByText("0 correct · Hard mode")).toBeInTheDocument();
   });
 
-  it("plays again with the game's Hard mode, not the preference", async () => {
-    localStorage.setItem("gg-hardcore", "on");
+  it("plays again with the game's difficulty, not the preference", async () => {
+    localStorage.setItem("gg-difficulty", "hard");
     const fetchMock = mockFetch([
       roundsRoute(mixed),
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
@@ -217,7 +260,7 @@ describe("GameSummary", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RANDOM",
       numberOfRounds: 3,
-      hardMode: false,
+      difficulty: "NORMAL",
     });
   });
 
@@ -362,7 +405,7 @@ describe("GameSummary", () => {
 
     await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const post = callsTo(fetchMock).find((c) => c.method === "POST")!;
-    expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3, hardMode: false });
+    expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3, difficulty: "NORMAL" });
   });
 
   it("plays again with the same type when every round shared it", async () => {
@@ -383,7 +426,7 @@ describe("GameSummary", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RIVERS_BY_SHAPE",
       numberOfRounds: 2,
-      hardMode: false,
+      difficulty: "NORMAL",
     });
   });
 

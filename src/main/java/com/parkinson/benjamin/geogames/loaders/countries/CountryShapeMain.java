@@ -10,10 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
- * Usage: CountryShapeMain &lt;processedCountriesDir&gt; &lt;outDir&gt;
+ * Usage: CountryShapeMain &lt;processedCountriesDir&gt; &lt;continents.json&gt; &lt;outDir&gt;
  *
  * <p>Builds the simplified display shapes with their coast, land borders and neighbours, and writes
  * one file per country. Clears the {@code *.json} files in outDir first.
@@ -29,15 +31,21 @@ public class CountryShapeMain {
   public record Report(List<CountryShape> shapes, long bytes) {}
 
   public static void main(String[] args) throws IOException {
-    Report report = run(Path.of(args[0]), Path.of(args[1]));
+    Report report = run(Path.of(args[0]), Path.of(args[1]), Path.of(args[2]));
     printSummary(report.shapes(), report.bytes());
   }
 
   /** Does everything {@code main} does except print. */
-  static Report run(Path processedCountriesDir, Path outDir) throws IOException {
-    List<CountryShape> shapes =
+  static Report run(Path processedCountriesDir, Path continentsFile, Path outDir)
+      throws IOException {
+    List<CountryShape> built =
         CountryShapeBuilder.build(
             new ProcessedCountryReader().readCountries(processedCountriesDir));
+    Map<String, List<String>> continents =
+        CountryContinents.read(
+            continentsFile, built.stream().map(CountryShape::name).collect(Collectors.toSet()));
+    List<CountryShape> shapes =
+        built.stream().map(s -> s.withContinents(continents.get(s.name()))).toList();
 
     Files.createDirectories(outDir);
     new CountryWriter().clearOutput(outDir);

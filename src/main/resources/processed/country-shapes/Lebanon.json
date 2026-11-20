@@ -1,6 +1,7 @@
 {
   "name" : "Lebanon",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 227.0,
   "landBorderKm" : 390.0,
   "areaKm2" : 10003,

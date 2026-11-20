@@ -1,6 +1,7 @@
 {
   "name" : "Gambia",
   "additionalNames" : [ "The Gambia" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 497.0,
   "landBorderKm" : 731.0,
   "areaKm2" : 10541,

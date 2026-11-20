@@ -41,11 +41,11 @@ describe("useCreateDailyGame", () => {
     const fetchMock = stubFetch({ status: 200, body: response });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate({ date: "2026-11-18", hardMode: true });
+    result.current.mutate({ date: "2026-11-18", difficulty: "EASY" });
 
     await waitFor(() => expect(result.current.data).toEqual(response));
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ date: "2026-11-18", hardMode: true });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ date: "2026-11-18", difficulty: "EASY" });
   });
 
   it("asks again with no date after a 400", async () => {
@@ -53,17 +53,17 @@ describe("useCreateDailyGame", () => {
     const fetchMock = stubFetch({ status: 400 }, { status: 200, body: response });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate({ date: "2031-01-01", hardMode: true });
+    result.current.mutate({ date: "2031-01-01", difficulty: "HARD" });
 
     await waitFor(() => expect(result.current.data).toEqual(response));
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ hardMode: true });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ difficulty: "HARD" });
   });
 
   it("does not retry other errors", async () => {
     const fetchMock = stubFetch({ status: 500 });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
-    result.current.mutate({ date: "2026-11-18", hardMode: false });
+    result.current.mutate({ date: "2026-11-18", difficulty: "NORMAL" });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -74,9 +74,26 @@ describe("useDailyScore", () => {
   it("fetches the day's totals", async () => {
     const score = makeDailyScore();
     const fetchMock = stubFetch({ status: 200, body: score });
-    const { result } = renderHook(() => useDailyScore("2026-11-18"), { wrapper: clientWrapper() });
+    const { result } = renderHook(() => useDailyScore("2026-11-18", "NORMAL"), { wrapper: clientWrapper() });
 
     await waitFor(() => expect(result.current.data).toEqual(score));
-    expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8080/api/daily-scores/2026-11-18");
+    expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8080/api/daily-scores/2026-11-18?difficulty=NORMAL");
+  });
+
+  it("asks for the league of the game's difficulty, and keeps the leagues apart", async () => {
+    const fetchMock = stubFetch(
+      { status: 200, body: makeDailyScore({ difficulty: "EASY" }) },
+      { status: 200, body: makeDailyScore({ difficulty: "HARD" }) },
+    );
+    const wrapper = clientWrapper();
+    const easy = renderHook(() => useDailyScore("2026-11-18", "EASY"), { wrapper });
+    await waitFor(() => expect(easy.result.current.data?.difficulty).toBe("EASY"));
+    const hard = renderHook(() => useDailyScore("2026-11-18", "HARD"), { wrapper });
+    await waitFor(() => expect(hard.result.current.data?.difficulty).toBe("HARD"));
+
+    expect(fetchMock.mock.calls.map((c) => c[0])).toEqual([
+      "http://localhost:8080/api/daily-scores/2026-11-18?difficulty=EASY",
+      "http://localhost:8080/api/daily-scores/2026-11-18?difficulty=HARD",
+    ]);
   });
 });

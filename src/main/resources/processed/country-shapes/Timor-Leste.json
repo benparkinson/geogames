@@ -1,6 +1,7 @@
 {
   "name" : "Timor-Leste",
   "additionalNames" : [ "East Timor", "Timor" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 702.0,
   "landBorderKm" : 209.0,
   "areaKm2" : 14252,

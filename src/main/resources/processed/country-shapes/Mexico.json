@@ -1,6 +1,7 @@
 {
   "name" : "Mexico",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 15569.0,
   "landBorderKm" : 3690.0,
   "areaKm2" : 1956544,

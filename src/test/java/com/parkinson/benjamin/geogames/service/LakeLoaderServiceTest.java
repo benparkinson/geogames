@@ -20,7 +20,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 class LakeLoaderServiceTest {
 
   private static final Set<String> CONTINENTS =
-      Set.of("Africa", "Asia", "Europe", "North America", "South America", "Australia");
+      Set.of("Africa", "Asia", "Europe", "North America", "South America", "Oceania");
 
   private static Lake lake(String id, String name, List<String> aliases) {
     GeoData geoData =

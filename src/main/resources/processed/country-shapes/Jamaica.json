@@ -1,6 +1,7 @@
 {
   "name" : "Jamaica",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 641.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 11068,

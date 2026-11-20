@@ -1,6 +1,7 @@
 {
   "name" : "South Africa",
   "additionalNames" : [ "RSA" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 3067.0,
   "landBorderKm" : 4486.0,
   "areaKm2" : 1221129,

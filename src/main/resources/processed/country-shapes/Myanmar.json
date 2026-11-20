@@ -1,6 +1,7 @@
 {
   "name" : "Myanmar",
   "additionalNames" : [ "Burma" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 6325.0,
   "landBorderKm" : 5221.0,
   "areaKm2" : 660148,

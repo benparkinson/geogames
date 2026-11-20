@@ -1,6 +1,7 @@
 {
   "name" : "Suriname",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 608.0,
   "landBorderKm" : 1447.0,
   "areaKm2" : 145764,

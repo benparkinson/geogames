@@ -1,6 +1,7 @@
 {
   "name" : "Luxembourg",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 263.0,
   "areaKm2" : 2600,

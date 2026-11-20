@@ -1,6 +1,7 @@
 {
   "name" : "Ireland",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 3453.0,
   "landBorderKm" : 369.0,
   "areaKm2" : 68893,

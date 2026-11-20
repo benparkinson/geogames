@@ -6,7 +6,7 @@ import { shareText } from "./shareText";
 
 /**
  * The spoiler-free text to share for a finished daily challenge, or null for any other game, or while the result
- * isn't known yet. Hard mode is the game's own setting.
+ * isn't known yet. The difficulty is the game's own setting.
  */
 export function useDailyShareText(daily: DailyInfo | undefined, round: GameRoundView | undefined): string | null {
   if (!daily || round?.gameResult.gameState !== FINISHED) {
@@ -15,7 +15,7 @@ export function useDailyShareText(daily: DailyInfo | undefined, round: GameRound
   return shareText(
     {
       date: daily.date,
-      hardMode: round.hardMode,
+      difficulty: round.difficulty,
       result: resultFromGame(round.gameResult),
     },
     window.location.origin,

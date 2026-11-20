@@ -1,6 +1,7 @@
 {
   "name" : "Eritrea",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1422.0,
   "landBorderKm" : 1600.0,
   "areaKm2" : 122196,

@@ -1,6 +1,7 @@
 {
   "name" : "Sweden",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 6537.0,
   "landBorderKm" : 2071.0,
   "areaKm2" : 437938,

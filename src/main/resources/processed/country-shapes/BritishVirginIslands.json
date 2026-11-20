@@ -1,6 +1,7 @@
 {
   "name" : "British Virgin Islands",
   "additionalNames" : [ "BVI" ],
+  "continents" : [ "North America" ],
   "coastKm" : 147.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 64,

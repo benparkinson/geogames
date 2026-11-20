@@ -1,6 +1,7 @@
 {
   "name" : "Vatican City",
   "additionalNames" : [ "Vatican", "Holy See", "The Vatican" ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 0,

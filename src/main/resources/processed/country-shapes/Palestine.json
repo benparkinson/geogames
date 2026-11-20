@@ -1,6 +1,7 @@
 {
   "name" : "Palestine",
   "additionalNames" : [ "State of Palestine", "Palestinian Territories", "West Bank and Gaza" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 41.0,
   "landBorderKm" : 471.0,
   "areaKm2" : 5950,

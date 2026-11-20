@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -33,14 +34,15 @@ class RoundRulesTest {
   /** Answers a fresh TRIPOINT round (guess limit 5) and returns it. */
   private GameRoundEntity submitToFreshRound(AnswerState state, Integer wrongGuesses) {
     GameRoundEntity round = round(0, AnswerState.UNANSWERED);
-    rules.validateAnswer(round, state, 0, wrongGuesses, null);
+    rules.validateAnswer(round, Difficulty.NORMAL, state, 0, wrongGuesses, null);
     rules.recordAnswer(round, state, 0, wrongGuesses, null);
     return round;
   }
 
   private GameRoundEntity expectRejected(AnswerState state, Integer wrongGuesses, String message) {
     GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
-    assertThatThrownBy(() -> rules.validateAnswer(stored, state, 0, wrongGuesses, null))
+    assertThatThrownBy(
+            () -> rules.validateAnswer(stored, Difficulty.NORMAL, state, 0, wrongGuesses, null))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(message);
     assertThat(stored.getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
@@ -137,7 +139,7 @@ class RoundRulesTest {
   void anUnknownOrBlankGuessIsRejected(String guess) {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.addGuess(entity, guess, false))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, guess, false))
         .isInstanceOf(IllegalArgumentException.class);
     assertThat(entity.getGuesses()).isEmpty();
   }
@@ -146,9 +148,9 @@ class RoundRulesTest {
   void aNullOrTooLongGuessIsRejected() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.addGuess(entity, null, false))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, null, false))
         .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> rules.addGuess(entity, "a".repeat(256), false))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, "a".repeat(256), false))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -160,10 +162,10 @@ class RoundRulesTest {
     assertThat(lakes.size()).isGreaterThan(limit);
 
     for (int i = 0; i < limit; i++) {
-      rules.addGuess(entity, lakes.get(i), false);
+      rules.addGuess(entity, Difficulty.NORMAL, lakes.get(i), false);
     }
 
-    assertThatThrownBy(() -> rules.addGuess(entity, lakes.get(limit), false))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, lakes.get(limit), false))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("wrong");
   }
@@ -173,7 +175,7 @@ class RoundRulesTest {
     GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
     entity.addGuess(new RoundGuess("Rhine", true));
 
-    assertThatThrownBy(() -> rules.addGuess(entity, "Rhein", true))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, "Rhein", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("correct");
   }
@@ -182,7 +184,7 @@ class RoundRulesTest {
   void aGuessOnAnAnsweredRoundIsAConflict() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.CORRECT);
 
-    assertThatThrownBy(() -> rules.addGuess(entity, "France", false))
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, "France", false))
         .isInstanceOf(RoundClosedException.class);
   }
 
@@ -190,8 +192,8 @@ class RoundRulesTest {
   void aRiverRoundAcceptsARiverAndRejectsACountry() {
     GameRoundEntity entity = guessRound(GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED);
 
-    rules.addGuess(entity, "rhein", false);
-    assertThatThrownBy(() -> rules.addGuess(entity, "France", false))
+    rules.addGuess(entity, Difficulty.NORMAL, "rhein", false);
+    assertThatThrownBy(() -> rules.addGuess(entity, Difficulty.NORMAL, "France", false))
         .isInstanceOf(IllegalArgumentException.class);
 
     assertThat(entity.getGuesses()).extracting(RoundGuess::getGuess).containsExactly("Rhein");
@@ -202,10 +204,10 @@ class RoundRulesTest {
   @Test
   void hintsAreRecordedInOrderWithTheGuessCountAtTheTime() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-    rules.addGuess(entity, "France", false);
+    rules.addGuess(entity, Difficulty.NORMAL, "France", false);
 
-    rules.addHint(entity, 0, 0);
-    rules.addHint(entity, 1, 1);
+    rules.addHint(entity, Difficulty.NORMAL, 0, 0);
+    rules.addHint(entity, Difficulty.NORMAL, 1, 1);
 
     assertThat(entity.getHintsTakenAt()).containsExactly(0, 1);
   }
@@ -214,15 +216,15 @@ class RoundRulesTest {
   void aSkippedHintAHintPastTheCountAndANegativeCountAreRejected() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.addHint(entity, 1, 0))
+    assertThatThrownBy(() -> rules.addHint(entity, Difficulty.NORMAL, 1, 0))
         .isInstanceOf(IllegalArgumentException.class);
-    assertThatThrownBy(() -> rules.addHint(entity, 0, -1))
+    assertThatThrownBy(() -> rules.addHint(entity, Difficulty.NORMAL, 0, -1))
         .isInstanceOf(IllegalArgumentException.class);
     for (int i = 0; i < GameType.TRIPOINT.hintCount(); i++) {
-      rules.addHint(entity, i, 0);
+      rules.addHint(entity, Difficulty.NORMAL, i, 0);
     }
     int past = GameType.TRIPOINT.hintCount();
-    assertThatThrownBy(() -> rules.addHint(entity, past, 0))
+    assertThatThrownBy(() -> rules.addHint(entity, Difficulty.NORMAL, past, 0))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("hints");
     assertThat(entity.getHintsTakenAt()).hasSize(past);
@@ -231,9 +233,9 @@ class RoundRulesTest {
   @Test
   void aGuessCountLargerThanTheStoredGuessesIsClamped() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
-    rules.addGuess(entity, "France", false);
+    rules.addGuess(entity, Difficulty.NORMAL, "France", false);
 
-    rules.addHint(entity, 0, 4);
+    rules.addHint(entity, Difficulty.NORMAL, 0, 4);
 
     assertThat(entity.getHintsTakenAt()).containsExactly(1);
   }
@@ -242,7 +244,8 @@ class RoundRulesTest {
   void aHintOnAnAnsweredRoundIsAConflict() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.GAVE_UP);
 
-    assertThatThrownBy(() -> rules.addHint(entity, 0, 0)).isInstanceOf(RoundClosedException.class);
+    assertThatThrownBy(() -> rules.addHint(entity, Difficulty.NORMAL, 0, 0))
+        .isInstanceOf(RoundClosedException.class);
   }
 
   // ------------------------------------------------------ answers found
@@ -251,10 +254,12 @@ class RoundRulesTest {
   void answersFoundMustBeWithinTheAnswerCount() {
     GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, -1))
+    assertThatThrownBy(
+            () -> rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.GAVE_UP, 0, null, -1))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("3 answers");
-    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 4))
+    assertThatThrownBy(
+            () -> rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.GAVE_UP, 0, null, 4))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("3 answers");
   }
@@ -263,23 +268,28 @@ class RoundRulesTest {
   void aCorrectRoundMustHaveFoundEveryAnswer() {
     GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.CORRECT, 0, null, 2))
+    assertThatThrownBy(
+            () -> rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.CORRECT, 0, null, 2))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("all 3 answers");
-    rules.validateAnswer(stored, AnswerState.CORRECT, 0, null, 3);
+    rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.CORRECT, 0, null, 3);
   }
 
   @Test
   void aRevealedRoundMustHaveFoundFewerThanEveryAnswer() {
     GameRoundEntity stored = round(0, AnswerState.UNANSWERED);
 
-    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 3))
+    assertThatThrownBy(
+            () -> rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.GAVE_UP, 0, null, 3))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("can't be GAVE_UP");
-    assertThatThrownBy(() -> rules.validateAnswer(stored, AnswerState.OUT_OF_GUESSES, 0, 5, 3))
+    assertThatThrownBy(
+            () ->
+                rules.validateAnswer(
+                    stored, Difficulty.NORMAL, AnswerState.OUT_OF_GUESSES, 0, 5, 3))
         .isInstanceOf(IllegalArgumentException.class);
-    rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, 2);
-    rules.validateAnswer(stored, AnswerState.GAVE_UP, 0, null, null);
+    rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.GAVE_UP, 0, null, 2);
+    rules.validateAnswer(stored, Difficulty.NORMAL, AnswerState.GAVE_UP, 0, null, null);
   }
 
   @Test
