@@ -18,27 +18,39 @@ describe("RoundResult", () => {
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
-  it("celebrates a perfect answer", () => {
+  it("celebrates a first guess", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} />);
 
-    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.getByText("First guess! +100")).toHaveClass("gg-text-correct");
     expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Answer revealed/)).not.toBeInTheDocument();
   });
 
-  it("scores a correct answer with hints and says how many were used", () => {
-    render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={1} hintCount={3} />);
+  it("says no wrong guesses for a first guess in a game with several answers", () => {
+    render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} answerCount={3} />);
 
-    expect(screen.getByText("Correct! +83")).toBeInTheDocument();
-    expect(screen.getByText("1 hint used")).toBeInTheDocument();
-    expect(screen.queryByText(/Perfect/)).not.toBeInTheDocument();
+    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
   });
 
-  it("pluralises the hints used", () => {
+  it("calls a win after a wrong guess correct, not a first guess", () => {
+    render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} wrongGuesses={1} />);
+
+    expect(screen.getByText("Correct! +100")).toHaveClass("gg-text-correct");
+    expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
+  });
+
+  it("scores a correct answer with a hint in yellow, without a separate hints line", () => {
+    render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={1} hintCount={3} />);
+
+    expect(screen.getByText("Correct with a hint · +83")).toHaveClass("gg-text-hints");
+    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
+  });
+
+  it("pluralises the hints", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={2} hintCount={3} />);
 
-    expect(screen.getByText("Correct! +67")).toBeInTheDocument();
-    expect(screen.getByText("2 hints used")).toBeInTheDocument();
+    expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
   });
 
   it("says the answer was revealed, for no points, after giving up", () => {
@@ -81,7 +93,8 @@ describe("RoundResult", () => {
       <RoundResult gaveUp round={makeRoundProps()} hintsUsed={1} hintCount={3} answersFound={2} answerCount={3} />,
     );
 
-    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toBeInTheDocument();
+    // Giving up with some answers found is not penalised: yellow, like a win with hints.
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toHaveClass("gg-text-hints");
     expect(screen.getByText("1 hint used")).toBeInTheDocument();
   });
 
@@ -101,11 +114,20 @@ describe("RoundResult", () => {
     expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
   });
 
-  it("keeps the red text when nothing was found", () => {
+  it("has no hints line for a round given up with some found and no hints taken", () => {
+    render(
+      <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={2} answerCount={3} />,
+    );
+
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +67")).toBeInTheDocument();
+    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
+  });
+
+  it("shows red text when nothing was found", () => {
     render(
       <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={0} answerCount={3} />,
     );
 
-    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
+    expect(screen.getByText("Answer revealed · 0 pts")).toHaveClass("gg-text-missed");
   });
 });

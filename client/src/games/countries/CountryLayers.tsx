@@ -1,5 +1,5 @@
 import { GeoJSON, Marker, Tooltip } from "react-leaflet";
-import { targetFlagIcon } from "../../map/flagIcons";
+import { targetIcon } from "../../map/markerIcons";
 import { FitBounds } from "../../map/FitBounds";
 import { boundsToLatLng } from "../../map/boundsToLatLng";
 import {
@@ -19,15 +19,15 @@ export function FocusFit({ country }: { country: CountryShape }): React.JSX.Elem
 }
 
 /**
- * A flag in the middle of the country's largest part, so a gap between the neighbours can't be
+ * A pin in the middle of the country's largest part, so a gap between the neighbours can't be
  * mistaken for another one. It carries no name and draws no border, so the answer isn't given away.
  */
-export function CountryFlag({ country }: { country: CountryShape }): React.JSX.Element {
+export function CountryPin({ country }: { country: CountryShape }): React.JSX.Element {
   const { south, west, north, east } = country.focus;
   return (
     <Marker
-      key={`${country.name}/flag`}
-      icon={targetFlagIcon}
+      key={`${country.name}/pin`}
+      icon={targetIcon}
       position={[(south + north) / 2, (west + east) / 2]}
       interactive={false}
     />

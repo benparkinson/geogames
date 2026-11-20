@@ -5,7 +5,7 @@ export const MAX_ROUND_POINTS = 100;
 export const MAX_HINT_PENALTY = 50;
 
 /**
- * The points a round earns: a correct round earns 100 less the hint penalty. A revealed round
+ * The points a round earns: a correct round earns 100 if correct without hints, less the hint penalty otherwise. A revealed round
  * (gave up, or out of guesses) earns the share of that which was found, `answersFound` of
  * `answerCount` answers, rounded half up; with none found that is 0. An unanswered round earns 0.
  */
@@ -34,9 +34,4 @@ function fullPoints(hintsUsed: number, hintCount: number): number {
   // round_half_up(MAX_HINT_PENALTY * hintsUsed / hintCount), in integers
   const penalty = Math.floor((2 * MAX_HINT_PENALTY * hintsUsed + hintCount) / (2 * hintCount));
   return MAX_ROUND_POINTS - penalty;
-}
-
-/** Correct without a single hint. */
-export function isPerfect(answerState: AnswerState, hintsUsed: number): boolean {
-  return answerState === CORRECT_ANSWER && hintsUsed === 0;
 }

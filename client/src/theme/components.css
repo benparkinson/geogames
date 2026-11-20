@@ -204,11 +204,11 @@
 .gg-text-correct {
   color: var(--gg-color-correct);
 }
-.gg-text-revealed {
-  color: var(--gg-color-revealed);
+.gg-text-hints {
+  color: var(--gg-color-hints-text);
 }
-.gg-text-perfect {
-  color: var(--gg-color-perfect);
+.gg-text-missed {
+  color: var(--gg-color-missed-text);
 }
 .gg-text-hint {
   color: var(--gg-color-hint);
