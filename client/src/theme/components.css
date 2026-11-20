@@ -348,6 +348,35 @@
   opacity: 1;
 }
 
+.gg-toast {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.5rem 0.75rem;
+  color: var(--gg-color-text);
+  background: var(--gg-color-surface);
+  border: 1px solid var(--gg-color-border);
+  border-radius: var(--gg-radius-lg);
+  box-shadow: var(--gg-shadow-floating-side);
+  animation: gg-toast-in var(--gg-duration-slow) ease-out;
+}
+@keyframes gg-toast-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gg-toast {
+    animation: none;
+  }
+}
+
 /* ---- Daily challenge: score distribution ---- */
 .gg-daily-chart {
   display: flex;
