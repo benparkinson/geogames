@@ -29,7 +29,8 @@ export function buttonClass({
     .join(" ");
 }
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & Omit<ButtonStyleOptions, "className">;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  Omit<ButtonStyleOptions, "className"> & { ref?: React.Ref<HTMLButtonElement> };
 
 export function Button({
   variant,
