@@ -2,7 +2,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
-import { makeGameRounds } from "../../test/fixtures";
+import { makeDailyScore, makeGameRounds } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
 import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";
@@ -40,13 +40,14 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
 describe("GameSummary for a daily challenge", () => {
   const daily = { date: "2026-11-18" };
   const done = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
+  const scoresRoute: Route = { url: "http://localhost:8080/api/daily-scores/2026-11-18", body: makeDailyScore() };
 
   function renderDaily() {
     return renderWithClient(<GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />);
   }
 
   it("offers Copy result and a Mixed game instead of Play again", async () => {
-    mockFetch([roundsRoute(done)]);
+    mockFetch([roundsRoute(done), scoresRoute]);
     renderDaily();
 
     expect(await screen.findByRole("button", { name: "Copy result" })).toBeInTheDocument();
@@ -57,6 +58,7 @@ describe("GameSummary for a daily challenge", () => {
   it("starts a five round Mixed game", async () => {
     const fetchMock = mockFetch([
       roundsRoute(done),
+      scoresRoute,
       { method: "POST", url: "http://localhost:8080/api/games", body: { id: "new" } },
     ]);
     renderDaily();
@@ -75,6 +77,7 @@ describe("GameSummary for a daily challenge", () => {
   it("starts the Mixed game in Hard mode after a hard daily, whatever the preference", async () => {
     const fetchMock = mockFetch([
       roundsRoute(hard(done)),
+      scoresRoute,
       { method: "POST", url: "http://localhost:8080/api/games", body: { id: "new" } },
     ]);
     renderDaily();
@@ -91,7 +94,7 @@ describe("GameSummary for a daily challenge", () => {
   });
 
   async function copiedText(rounds: GameRoundResponse[]) {
-    mockFetch([roundsRoute(rounds)]);
+    mockFetch([roundsRoute(rounds), scoresRoute]);
     renderDaily();
     await userEvent.click(await screen.findByRole("button", { name: "Copy result" }));
     return (await screen.findByRole("textbox", { name: "Copy this text" })) as HTMLTextAreaElement;
@@ -107,18 +110,33 @@ describe("GameSummary for a daily challenge", () => {
   });
 
   it("ends the breakdown with Hard mode for a hard daily", async () => {
-    mockFetch([roundsRoute(hard(done))]);
+    mockFetch([roundsRoute(hard(done)), scoresRoute]);
     renderDaily();
 
     expect(await screen.findByText("1 perfect · 1 revealed · Hard mode")).toBeInTheDocument();
   });
 
   it("has no Copy result button until the game is finished", async () => {
-    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }])), scoresRoute]);
     renderDaily();
 
     expect(await screen.findByText(/You scored/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Copy result" })).not.toBeInTheDocument();
+  });
+
+  it("shows the day's average from three players", async () => {
+    mockFetch([roundsRoute(done), scoresRoute]);
+    renderDaily();
+
+    expect(await screen.findByText("Today's average: 312.5 / 500")).toBeInTheDocument();
+  });
+
+  it("makes no daily-scores request for a game that is not the daily", async () => {
+    const fetchMock = mockFetch([roundsRoute(mixed), scoresRoute]);
+    renderSummary();
+
+    await screen.findByText(/You scored/);
+    expect(callsTo(fetchMock).filter((c) => c.url.includes("daily-scores"))).toEqual([]);
   });
 });
 
