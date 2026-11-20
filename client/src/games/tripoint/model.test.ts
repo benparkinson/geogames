@@ -1,7 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { hintedCountries } from "./model";
+import { hintedCountries, tripointHintText } from "./model";
 
 const order = ["A", "B", "C"];
+
+describe("tripointHintText", () => {
+  it("says a missing country is outlined", () => {
+    expect(tripointHintText(order, 0, [[]])).toBe("A missing country is outlined on the map");
+  });
+
+  it("is still about a missing country when an earlier one was already found", () => {
+    expect(tripointHintText(order, 0, [["A"]])).toBe("A missing country is outlined on the map");
+  });
+
+  it("names the country when the player had already found it", () => {
+    expect(
+      tripointHintText(order, 1, [
+        ["B", "C"],
+        ["A", "B", "C"],
+      ]),
+    ).toBe("Outlined on the map: B, which you've already found");
+  });
+
+  it("has no text once every country is outlined", () => {
+    expect(tripointHintText(["A"], 1, [[], []])).toBeNull();
+  });
+});
 
 describe("hintedCountries", () => {
   it("outlines nothing with no hints", () => {

@@ -35,8 +35,8 @@ describe("riverHints", () => {
     const hints = textHints(river, continentHint, firstLetterHint);
 
     expect(hints.description).toContain("2 clues");
-    expect(hints.text?.(0)).toBe("Continent: Europe");
-    expect(hints.text?.(1)).toBe("Starts with “D”");
-    expect(hints.text?.(2)).toBeNull();
+    expect(hints.text?.(0, [])).toBe("Continent: Europe");
+    expect(hints.text?.(1, [])).toBe("Starts with “D”");
+    expect(hints.text?.(2, [])).toBeNull();
   });
 });

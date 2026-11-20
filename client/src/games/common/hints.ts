@@ -1,8 +1,11 @@
 /** What a game's hints say. How many there are comes from the backend: `round.hintCount`. */
 export interface HintConfig {
   description: string;
-  /** Text to show for the hint at this index. Leave it out for hints that only change the map. */
-  text?: (hintIndex: number) => string | null;
+  /**
+   * Text to show for the hint at this index. Leave it out for hints that only change the map.
+   * `foundAtHint[i]` is what the player had found when hint `i` was taken, for a hint that depends on it.
+   */
+  text?: (hintIndex: number, foundAtHint: string[][]) => string | null;
 }
 
 /**

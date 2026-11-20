@@ -304,7 +304,9 @@ describe("MapGame hint button", () => {
 
 describe("MapGame hints", () => {
   function hintConfig() {
-    const text = vi.fn<(hintIndex: number) => string | null>((index) => (index === 0 ? "Continent: Europe" : null));
+    const text = vi.fn<(hintIndex: number, foundAtHint: string[][]) => string | null>((index) =>
+      index === 0 ? "Continent: Europe" : null,
+    );
     const hints: HintConfig = { description: "A clue", text };
     return { hints, text };
   }
@@ -315,11 +317,11 @@ describe("MapGame hints", () => {
     renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(text).toHaveBeenLastCalledWith(0);
+    expect(text).toHaveBeenLastCalledWith(0, [[]]);
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(text).toHaveBeenLastCalledWith(1);
+    expect(text).toHaveBeenLastCalledWith(1, [[], []]);
   });
 
   it("uses up a hint even when it has no text, and stops when none are left", async () => {
