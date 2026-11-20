@@ -46,11 +46,15 @@
     "POST /api/games/{id}/rounds/{round}/answers" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -83,11 +87,15 @@
     "BORDERS_BY_SHAPE" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -211,11 +219,15 @@
     "COUNTRIES_BY_CITIES" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -320,11 +332,15 @@
     "COUNTRIES_BY_COASTLINE" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -423,11 +439,15 @@
     "COUNTRIES_BY_LAND_BORDERS" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -538,11 +558,15 @@
     "COUNTRIES_BY_NEIGHBOURS" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -653,11 +677,15 @@
     "COUNTRIES_BY_RIVERS" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -783,11 +811,15 @@
     "LAKES_BY_SHAPE" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -846,11 +878,15 @@
     "MERGED_COUNTRIES" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -986,11 +1022,15 @@
     "RIVERS_BY_COUNTRIES" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -1075,11 +1115,15 @@
     "RIVERS_BY_SHAPE" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -1149,11 +1193,15 @@
     "TRIPOINT" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"

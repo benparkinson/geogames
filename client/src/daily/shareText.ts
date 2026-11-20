@@ -1,10 +1,5 @@
-import type { DailyResult, RoundOutcome } from "./dailyStorage";
-
-const SQUARES: Record<RoundOutcome, string> = {
-  perfect: "🟩",
-  hints: "🟨",
-  revealed: "🟥",
-};
+import { OUTCOME_STYLES } from "../games/common/outcome";
+import type { DailyResult } from "./dailyStorage";
 
 /**
  * The spoiler-free text a player copies: the score and one square per round, in order. No answers, game types
@@ -15,7 +10,7 @@ export function shareText(daily: { date: string; hardMode: boolean; result: Dail
   return [
     title,
     `${daily.result.score} / ${daily.result.maxScore}`,
-    daily.result.rounds.map((r) => SQUARES[r]).join(""),
+    daily.result.rounds.map((r) => OUTCOME_STYLES[r].emoji).join(""),
     `${origin}/daily`,
   ].join("\n");
 }

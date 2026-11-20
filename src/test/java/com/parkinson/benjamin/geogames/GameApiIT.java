@@ -158,6 +158,23 @@ class GameApiIT {
         .containsExactly(0, 0, 1);
     List<String> states = JsonPath.read(finished, "$.gameResult.roundAnswerStates");
     assertThat(states).containsExactly("CORRECT", "GAVE_UP", "CORRECT");
+    assertThat((List<Boolean>) JsonPath.read(finished, "$.gameResult.roundFirstGuess"))
+        .containsExactly(true, false, false);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.firstGuessRounds")).isEqualTo(1);
+  }
+
+  @Test
+  void aWinAfterAWrongGuessIsNotAFirstGuess() throws Exception {
+    String id = createGame("RIVERS_BY_SHAPE", 2);
+
+    answer(id, 0, "CORRECT", 0, 0);
+    String result = answer(id, 1, "CORRECT", 0, 2);
+
+    assertThat((List<Boolean>) JsonPath.read(result, "$.gameResult.roundFirstGuess"))
+        .containsExactly(true, false);
+    assertThat((int) JsonPath.read(result, "$.gameResult.firstGuessRounds")).isEqualTo(1);
+    // both rounds score the same: the outcome is only a label
+    assertThat((int) JsonPath.read(result, "$.gameResult.score")).isEqualTo(200);
   }
 
   @Test
