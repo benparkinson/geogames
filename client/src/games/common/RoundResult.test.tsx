@@ -5,6 +5,19 @@ import { makeRoundProps } from "../../test/fixtures";
 import RoundResult from "./RoundResult";
 
 describe("RoundResult", () => {
+  it("shows a spinner on a disabled next button while saving, then focuses it", () => {
+    const props = makeRoundProps({ answerSave: "saving" });
+    const { rerender } = render(<RoundResult gaveUp={false} round={props} hintsUsed={0} hintCount={3} />);
+
+    expect(screen.getByRole("button")).toBeDisabled();
+    expect(screen.getByRole("status")).toBeInTheDocument();
+
+    rerender(<RoundResult gaveUp={false} round={{ ...props, answerSave: "saved" }} hintsUsed={0} hintCount={3} />);
+
+    expect(screen.getByRole("button", { name: /Next round/ })).toHaveFocus();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
   it("celebrates a perfect answer", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} />);
 
