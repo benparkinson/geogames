@@ -176,4 +176,39 @@ class DailyScoreIT {
     mockMvc.perform(get("/api/daily-scores/2999-01-01")).andExpect(status().isBadRequest());
     mockMvc.perform(get("/api/daily-scores/2001-01-01")).andExpect(status().isBadRequest());
   }
+
+  @Test
+  void aPartlyAnsweredRoundAddsItsPartialScoreToTheTotals() throws Exception {
+    String id = createDaily();
+    int expected = 0;
+    for (int round = 0; round < 5; round++) {
+      JsonNode type =
+          objectMapper
+              .readTree(
+                  mockMvc
+                      .perform(get("/api/games/%s/rounds/%d".formatted(id, round)))
+                      .andExpect(status().isOk())
+                      .andReturn()
+                      .getResponse()
+                      .getContentAsString())
+              .get("gameType");
+      int answerCount = type.get("answerCount").asInt();
+      int found = answerCount - 1;
+      expected +=
+          com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
+              AnswerState.GAVE_UP, 0, type.get("hintCount").asInt(), found, answerCount);
+      mockMvc
+          .perform(
+              post("/api/games/%s/rounds/%d/answers".formatted(id, round))
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(
+                      "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0,\"answersFound\":%d}"
+                          .formatted(found)))
+          .andExpect(status().isOk());
+    }
+
+    JsonNode score = score();
+    assertThat(score.get("players").asInt()).isEqualTo(1);
+    assertThat(score.get("averageScore").asDouble()).isEqualTo((double) expected);
+  }
 }

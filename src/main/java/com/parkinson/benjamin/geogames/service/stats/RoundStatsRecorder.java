@@ -46,7 +46,12 @@ public class RoundStatsRecorder {
               event.wrongGuesses(),
               hintCount,
               event.gameType().guessLimit(),
-              Scoring.roundPoints(event.answerState(), event.hintsUsed(), hintCount),
+              Scoring.roundPoints(
+                  event.answerState(),
+                  event.hintsUsed(),
+                  hintCount,
+                  event.answersFound() == null ? 0 : event.answersFound(),
+                  event.gameType().answerCount()),
               event.hardMode()));
     } catch (Exception e) {
       // The message only: never the play id, and a stack trace adds nothing for a dropped row.

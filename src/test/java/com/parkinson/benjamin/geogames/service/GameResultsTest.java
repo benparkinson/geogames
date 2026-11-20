@@ -15,14 +15,14 @@ class GameResultsTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses(), null);
     return entity;
   }
 
@@ -95,5 +95,28 @@ class GameResultsTest {
 
     assertThat(result.score()).isZero();
     assertThat(result.maxScore()).isEqualTo(200);
+  }
+
+  @Test
+  void aRevealedRoundScoresItsShareOfTheAnswersFound() {
+    GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
+    partial.recordAnswer(AnswerState.GAVE_UP, 0, null, 2);
+    GameRoundEntity none = new GameRoundEntity(1, GameType.TRIPOINT, "{}");
+    none.recordAnswer(AnswerState.GAVE_UP, 0, null, null);
+
+    GameResult result = GameResults.of(game(partial, none));
+
+    assertThat(result.roundPoints()).containsExactly(67, 0);
+    assertThat(result.score()).isEqualTo(67);
+    assertThat(result.roundsCorrect()).isZero();
+    assertThat(result.perfectRounds()).isZero();
+  }
+
+  @Test
+  void partialCreditTakesTheHintsIntoAccount() {
+    GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
+    partial.recordAnswer(AnswerState.OUT_OF_GUESSES, 1, 5, 1);
+
+    assertThat(GameResults.pointsFor(partial)).isEqualTo(28);
   }
 }

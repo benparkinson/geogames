@@ -154,7 +154,7 @@ class GameRepositoryTest {
         .createNativeQuery("update game_round_entity set version = version + 1 where id = ?1")
         .setParameter(1, round.getId())
         .executeUpdate();
-    round.recordAnswer(AnswerState.GAVE_UP, round.getHintsUsed(), round.getWrongGuesses());
+    round.recordAnswer(AnswerState.GAVE_UP, round.getHintsUsed(), round.getWrongGuesses(), null);
 
     assertThatThrownBy(() -> entityManager.flush())
         .isInstanceOfAny(
@@ -170,7 +170,8 @@ class GameRepositoryTest {
         .recordAnswer(
             AnswerState.OUT_OF_GUESSES,
             game.getRounds().get(1).getHintsUsed(),
-            game.getRounds().get(1).getWrongGuesses());
+            game.getRounds().get(1).getWrongGuesses(),
+            null);
     entityManager.flush();
 
     Object stored =
@@ -223,13 +224,15 @@ class GameRepositoryTest {
         .recordAnswer(
             AnswerState.GAVE_UP,
             sorted(reloaded).get(1).getHintsUsed(),
-            sorted(reloaded).get(1).getWrongGuesses());
+            sorted(reloaded).get(1).getWrongGuesses(),
+            null);
     sorted(reloaded)
         .get(2)
         .recordAnswer(
             AnswerState.CORRECT,
             sorted(reloaded).get(2).getHintsUsed(),
-            sorted(reloaded).get(2).getWrongGuesses());
+            sorted(reloaded).get(2).getWrongGuesses(),
+            null);
 
     GameEntity again = saveAndReload(reloaded);
 
