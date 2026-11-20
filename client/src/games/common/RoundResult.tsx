@@ -1,6 +1,6 @@
 import { Button, Notice } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
-import { finalAnswerState, Round } from "./Model";
+import { finalAnswerState, isPartlyCorrect, Round } from "./Model";
 import { isPerfect, roundPoints } from "./scoring";
 
 export default function RoundResult({
@@ -9,6 +9,8 @@ export default function RoundResult({
   round,
   hintsUsed,
   hintCount,
+  answersFound = 0,
+  answerCount = 1,
 }: {
   gaveUp: boolean;
   /** The round ended because the guesses ran out (`gaveUp` is true too). */
@@ -16,21 +18,29 @@ export default function RoundResult({
   round: Round;
   hintsUsed: number;
   hintCount: number;
+  /** How many of the round's answers were found, and how many it has: a revealed round scores their share. */
+  answersFound?: number;
+  answerCount?: number;
 }): React.JSX.Element {
   const answerState = finalAnswerState(gaveUp, outOfGuesses);
-  const points = roundPoints(answerState, hintsUsed, hintCount);
+  const points = roundPoints(answerState, hintsUsed, hintCount, answersFound, answerCount);
   const perfect = isPerfect(answerState, hintsUsed);
+  const partial = isPartlyCorrect(answerState, points);
+  const found = `${answersFound} of ${answerCount} found`;
 
   return (
     <div className="round-result mb-3">
-      <div className={"mb-2 fw-semibold " + (gaveUp ? "gg-text-revealed" : "gg-text-correct")} aria-live="polite">
+      <div
+        className={"mb-2 fw-semibold " + (gaveUp && !partial ? "gg-text-revealed" : "gg-text-correct")}
+        aria-live="polite"
+      >
         {outOfGuesses ? (
           <>
-            <XCircleFill aria-hidden="true" /> Out of guesses · 0 pts
+            <XCircleFill aria-hidden="true" /> Out of guesses · {partial ? `${found} · +${points}` : "0 pts"}
           </>
         ) : gaveUp ? (
           <>
-            <EyeFill aria-hidden="true" /> Answer revealed · 0 pts
+            <EyeFill aria-hidden="true" /> Answer revealed · {partial ? `${found} · +${points}` : "0 pts"}
           </>
         ) : perfect ? (
           <>
@@ -41,7 +51,7 @@ export default function RoundResult({
             <CheckCircleFill aria-hidden="true" /> Correct! +{points}
           </>
         )}
-        {!gaveUp && !perfect && (
+        {(!gaveUp || partial) && !perfect && (
           <div className="small fw-normal gg-text-muted">
             {hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}
           </div>

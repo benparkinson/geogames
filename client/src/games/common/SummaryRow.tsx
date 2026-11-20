@@ -1,7 +1,7 @@
 import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
 import { GameRoundView } from "../../api/types";
 import { findGameModule } from "../registry";
-import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
+import { CORRECT_ANSWER, isPartlyCorrect, OUT_OF_GUESSES } from "./Model";
 import { isPerfect } from "./scoring";
 
 function roundLabel(round: GameRoundView): string {
@@ -27,6 +27,7 @@ export default function SummaryRow({
   onOpen: () => void;
 }): React.JSX.Element {
   const isCorrect = round.answerState === CORRECT_ANSWER;
+  const partial = isPartlyCorrect(round.answerState, round.points);
   const perfect = isPerfect(round.answerState, round.hintsUsed);
   return (
     <button
@@ -61,10 +62,10 @@ export default function SummaryRow({
           </>
         )}
       </span>
-      <span className={"text-nowrap " + (isCorrect ? "gg-text-correct" : "gg-text-revealed")}>
+      <span className={"text-nowrap " + (isCorrect || partial ? "gg-text-correct" : "gg-text-revealed")}>
         {perfect ? (
           <StarFill aria-hidden="true" />
-        ) : isCorrect ? (
+        ) : isCorrect || partial ? (
           <CheckLg aria-hidden="true" />
         ) : (
           <EyeFill aria-hidden="true" />

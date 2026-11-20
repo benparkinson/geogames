@@ -128,7 +128,7 @@ describe("useSubmitAnswer", () => {
     });
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("UNANSWERED"));
 
-    act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0, answersFound: 0 }));
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
     const view = result.current.round.data!;
@@ -146,7 +146,7 @@ describe("useSubmitAnswer", () => {
     });
     const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);
-    expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0 });
+    expect(posts[0].body).toEqual({ answerState: "GAVE_UP", hintsUsed: 2, wrongGuesses: 0, answersFound: 0 });
     expect(roundGets(fetchMock, 0)).toHaveLength(1);
   });
 
@@ -159,7 +159,7 @@ describe("useSubmitAnswer", () => {
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
     const before = result.current.r1.data!;
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 2, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 2, wrongGuesses: 0, answersFound: 1 }));
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
     const after = result.current.r1.data!;
@@ -179,7 +179,7 @@ describe("useSubmitAnswer", () => {
     await waitFor(() => expect(result.current.r0.data).toBeDefined());
     expect(roundGets(fetchMock, 1)).toHaveLength(0);
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0, answersFound: 1 }));
 
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));
   });
@@ -191,7 +191,7 @@ describe("useSubmitAnswer", () => {
     });
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0, answersFound: 1 }));
 
     await waitFor(() => expect(result.current.submit.isSuccess).toBe(true));
     expect(roundGets(fetchMock, 2)).toHaveLength(0);
@@ -205,7 +205,7 @@ describe("useSubmitAnswer", () => {
     );
     await waitFor(() => expect(result.current.r1.data).toBeDefined());
 
-    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 }));
+    act(() => result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0, answersFound: 1 }));
 
     await waitFor(() => expect(result.current.submit.isError).toBe(true));
     await waitFor(() => expect(roundGets(fetchMock, 0)).toHaveLength(2));
@@ -268,7 +268,7 @@ describe("useRecordGuess", () => {
 
     act(() => {
       result.current.record.mutate({ text: "France", correct: true });
-      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0, answersFound: 1 });
     });
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));
@@ -333,7 +333,7 @@ describe("useRecordHint", () => {
     act(() => {
       result.current.hint.mutate({ hint: 0, guessesBefore: 0 });
       result.current.guess.mutate({ text: "France", correct: true });
-      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 1, wrongGuesses: 0 });
+      result.current.submit.mutate({ answerState: "CORRECT", hintsUsed: 1, wrongGuesses: 0, answersFound: 1 });
     });
 
     await waitFor(() => expect(result.current.round.data?.answerState).toBe("CORRECT"));

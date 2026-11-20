@@ -62,4 +62,37 @@ describe("RoundResult", () => {
     expect(round.showSummary).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("button", { name: /Next round/ })).not.toBeInTheDocument();
   });
+
+  it("scores the share found of a round given up, and says how many were found", () => {
+    render(
+      <RoundResult gaveUp round={makeRoundProps()} hintsUsed={1} hintCount={3} answersFound={2} answerCount={3} />,
+    );
+
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toBeInTheDocument();
+    expect(screen.getByText("1 hint used")).toBeInTheDocument();
+  });
+
+  it("scores the share found of a round that ran out of guesses", () => {
+    render(
+      <RoundResult
+        gaveUp
+        outOfGuesses
+        round={makeRoundProps()}
+        hintsUsed={0}
+        hintCount={3}
+        answersFound={1}
+        answerCount={2}
+      />,
+    );
+
+    expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
+  });
+
+  it("keeps the red text when nothing was found", () => {
+    render(
+      <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={0} answerCount={3} />,
+    );
+
+    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
+  });
 });
