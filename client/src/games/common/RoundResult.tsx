@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Button, Notice, Spinner } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { finalAnswerState, Round } from "./Model";
-import { OUTCOME_STYLES, roundOutcome } from "./outcome";
+import { OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
 import { roundPoints } from "./scoring";
 
 export default function RoundResult({
@@ -29,7 +29,7 @@ export default function RoundResult({
 }): React.JSX.Element {
   const answerState = finalAnswerState(gaveUp, outOfGuesses);
   const points = roundPoints(answerState, hintsUsed, hintCount, answersFound, answerCount);
-  const outcome = roundOutcome(answerState, hintsUsed, wrongGuesses === 0, points) ?? "correct";
+  const outcome = roundOutcome(answerState, hintsUsed, wrongGuesses === 0, points) as RoundOutcome;
   const partial = gaveUp && points > 0;
   const found = `${answersFound} of ${answerCount} found`;
 

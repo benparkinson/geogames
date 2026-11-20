@@ -58,6 +58,7 @@ describe("readDaily and writeDaily", () => {
     ["the wrong version", JSON.stringify({ ...entry, v: 2 })],
     ["a missing field", JSON.stringify({ v: 1, date: "2026-11-18" })],
     ["a bad result", JSON.stringify({ ...entry, result: { score: 1, maxScore: 2, rounds: ["gold"] } })],
+    ["a non-text outcome", JSON.stringify({ ...entry, result: { score: 1, maxScore: 2, rounds: [5] } })],
     ["a result that isn't an object", JSON.stringify({ ...entry, result: 5 })],
   ])("ignores %s", (_name, raw) => {
     localStorage.setItem("gg-daily", raw);

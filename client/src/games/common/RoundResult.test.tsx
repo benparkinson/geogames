@@ -114,6 +114,15 @@ describe("RoundResult", () => {
     expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
   });
 
+  it("has no hints line for a round given up with some found and no hints taken", () => {
+    render(
+      <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={2} answerCount={3} />,
+    );
+
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +67")).toBeInTheDocument();
+    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
+  });
+
   it("shows red text when nothing was found", () => {
     render(
       <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={0} answerCount={3} />,

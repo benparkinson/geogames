@@ -29,7 +29,7 @@ export default function SummaryRow({
   const outcome = roundOutcome(
     round.answerState,
     round.hintsUsed,
-    round.gameResult.roundFirstGuess[index] ?? false,
+    round.gameResult.roundFirstGuess[index],
     round.points,
   );
   return (

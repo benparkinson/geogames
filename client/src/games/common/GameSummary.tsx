@@ -50,7 +50,7 @@ export default function GameSummary({
   const { score, maxScore, roundAnswerStates, roundPoints, roundHintsUsed, roundFirstGuess } = all[0].gameResult;
   const counts: Record<RoundOutcome, number> = { firstGuess: 0, correct: 0, hints: 0, missed: 0 };
   roundAnswerStates.forEach((state, i) => {
-    const outcome = roundOutcome(state, roundHintsUsed[i] ?? 0, roundFirstGuess[i] ?? false, roundPoints[i] ?? 0);
+    const outcome = roundOutcome(state, roundHintsUsed[i], roundFirstGuess[i], roundPoints[i]);
     if (outcome) counts[outcome]++;
   });
   // A whole game with no hints and no wrong guesses, against full marks reached after some wrong guesses.

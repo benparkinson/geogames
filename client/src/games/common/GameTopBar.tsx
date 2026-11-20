@@ -32,7 +32,7 @@ export default function GameTopBar({
   const states = round.roundAnswerStates.slice();
   const points = round.roundPoints.slice();
   const outcomes = states.map((state, i) =>
-    roundOutcome(state, round.roundHintsUsed[i] ?? 0, round.roundFirstGuess[i] ?? false, points[i] ?? 0),
+    roundOutcome(state, round.roundHintsUsed[i], round.roundFirstGuess[i], points[i]),
   );
   let score = round.score;
   if (gameOver) {
