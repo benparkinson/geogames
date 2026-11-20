@@ -699,6 +699,7 @@ class GameServiceTest {
                 2,
                 1,
                 LocalDate.now(ZoneOffset.UTC),
+                null,
                 null));
   }
 

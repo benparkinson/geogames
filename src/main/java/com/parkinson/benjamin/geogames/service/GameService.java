@@ -243,7 +243,8 @@ public class GameService {
             round.getWrongGuesses(),
             round.getAnswersFound(),
             LocalDate.now(ZoneOffset.UTC),
-            game.getHardMode()));
+            game.getHardMode(),
+            game.getDifficulty()));
   }
 
   private <T> Optional<T> withRound(

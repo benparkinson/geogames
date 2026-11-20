@@ -129,6 +129,28 @@ class RoundStatsIT {
   }
 
   @Test
+  void difficultyIsRecordedPerGameWithTheLimitsItWasPlayedUnder() throws Exception {
+    String easy =
+        TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1, ",\"difficulty\":\"EASY\"");
+    String normal =
+        TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1, ",\"difficulty\":\"NORMAL\"");
+    String unknown = createGame("RIVERS_BY_SHAPE", 1);
+    for (String id : List.of(easy, normal, unknown)) {
+      answer(id, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");
+      await().atMost(Duration.ofSeconds(10)).until(() -> rowsOf(id).size() == 1);
+    }
+
+    Map<String, Object> easyRow = rowsOf(easy).get(0);
+    assertThat(easyRow.get("difficulty")).isEqualTo("EASY");
+    assertThat(easyRow.get("hard_mode")).isEqualTo(false);
+    assertThat(((Number) easyRow.get("hint_count")).intValue()).isEqualTo(2);
+    assertThat(((Number) easyRow.get("guess_limit")).intValue()).isEqualTo(10);
+    assertThat(rowsOf(normal).get(0).get("difficulty")).isEqualTo("NORMAL");
+    assertThat(((Number) rowsOf(normal).get(0).get("guess_limit")).intValue()).isEqualTo(5);
+    assertThat(rowsOf(unknown).get(0).get("difficulty")).isNull();
+  }
+
+  @Test
   void theStatsRowHasTheHintsTheServerSaw() throws Exception {
     String id = createGame("RIVERS_BY_SHAPE", 1);
     mockMvc

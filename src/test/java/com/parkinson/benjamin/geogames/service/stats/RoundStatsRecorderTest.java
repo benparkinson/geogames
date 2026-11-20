@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.stats.RoundResult;
 import java.time.LocalDate;
@@ -21,6 +22,10 @@ class RoundStatsRecorderTest {
   private final RoundStatsRecorder recorder = new RoundStatsRecorder(store);
 
   private static RoundAnswered event(Integer wrongGuesses) {
+    return event(wrongGuesses, Difficulty.HARD);
+  }
+
+  private static RoundAnswered event(Integer wrongGuesses, Difficulty difficulty) {
     return new RoundAnswered(
         UUID.randomUUID(),
         "RANDOM",
@@ -33,7 +38,8 @@ class RoundStatsRecorderTest {
         wrongGuesses,
         null,
         LocalDate.of(2026, 11, 9),
-        true);
+        true,
+        difficulty);
   }
 
   private RoundResult recorded() {
@@ -67,8 +73,31 @@ class RoundStatsRecorderTest {
                 type.guessLimit(),
                 com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
                     AnswerState.CORRECT, 1, type.hintCount(), 1, type.answerCount()),
-                true));
+                true,
+                Difficulty.HARD));
     assertThat(row.points()).isBetween(1, 99);
+  }
+
+  @Test
+  void anEasyRoundIsRecordedWithTheLimitsItWasPlayedUnder() {
+    recorder.record(event(2, Difficulty.EASY));
+
+    RoundResult row = recorded();
+    assertThat(row.difficulty()).isEqualTo(Difficulty.EASY);
+    // A river by shape has no continent hint in Easy, so its two hints share the 50 points.
+    assertThat(row.hintCount()).isEqualTo(2);
+    assertThat(row.guessLimit()).isEqualTo(10);
+    assertThat(row.points()).isEqualTo(75);
+  }
+
+  @Test
+  void anUnknownDifficultyIsRecordedAsNullAndPlayedAsNormal() {
+    recorder.record(event(2, null));
+
+    RoundResult row = recorded();
+    assertThat(row.difficulty()).isNull();
+    assertThat(row.hintCount()).isEqualTo(3);
+    assertThat(row.guessLimit()).isEqualTo(5);
   }
 
   @Test
