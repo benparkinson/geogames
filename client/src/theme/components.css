@@ -387,3 +387,16 @@
     display: none;
   }
 }
+
+/* A button whose label is replaced by a spinner while it waits, keeping its size and name. */
+.gg-btn__label--hidden {
+  visibility: hidden;
+}
+
+.gg-btn__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
