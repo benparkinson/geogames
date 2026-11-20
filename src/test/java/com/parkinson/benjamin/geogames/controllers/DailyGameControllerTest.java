@@ -78,8 +78,9 @@ class DailyGameControllerTest {
   @Test
   void theScoreEndpointReturnsTheDaysTotals() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
-    when(dailyService.score(date))
-        .thenReturn(new DailyScoreResponse(date, 0, null, 500, Collections.nCopies(11, 0)));
+    when(dailyService.score(date, Difficulty.NORMAL))
+        .thenReturn(
+            new DailyScoreResponse(date, "NORMAL", 0, null, 500, Collections.nCopies(11, 0)));
 
     mockMvc
         .perform(get("/api/daily-scores/2026-11-20"))
@@ -95,7 +96,7 @@ class DailyGameControllerTest {
   void aBadScoreDateIsABadRequest() throws Exception {
     mockMvc.perform(get("/api/daily-scores/yesterday")).andExpect(status().isBadRequest());
 
-    when(dailyService.score(LocalDate.of(2001, 1, 1)))
+    when(dailyService.score(LocalDate.of(2001, 1, 1), Difficulty.NORMAL))
         .thenThrow(new IllegalArgumentException("too early"));
     mockMvc.perform(get("/api/daily-scores/2001-01-01")).andExpect(status().isBadRequest());
   }

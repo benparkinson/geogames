@@ -58,25 +58,27 @@ public class DailyChallengeService {
     List<PinnedRound> rounds =
         store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
     // The totals row must exist before any game for the date can finish.
-    scores.ensureDay(date);
+    scores.ensureDay(date, difficulty);
     UUID id = gameService.createGame(rounds, GAME_MODE, difficulty, date).id();
     return new DailyGameResponse(id, date, number(date));
   }
 
   /**
-   * The day's totals: zeros when no game has finished. The date is checked like a new game's.
+   * The day's totals for one league: zeros when no game has finished. The date is checked like a
+   * new game's.
    *
    * @throws IllegalArgumentException if the date is out of range
    */
-  public DailyScoreResponse score(LocalDate requested) {
+  public DailyScoreResponse score(LocalDate requested, Difficulty difficulty) {
     LocalDate date = validDate(Optional.of(requested), true);
-    DailyScore score = scores.find(date);
+    DailyScore score = scores.find(date, difficulty);
     Double average =
         score.players() == 0
             ? null
             : Math.round(10.0 * score.scoreTotal() / score.players()) / 10.0;
     return new DailyScoreResponse(
         date,
+        difficulty.name(),
         score.players(),
         average,
         DailyRoundPicker.DAILY_ROUNDS * Scoring.MAX_ROUND_POINTS,

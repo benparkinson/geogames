@@ -29,6 +29,8 @@ export interface RecordedGuess {
 export interface DailyScore {
   /** The challenge date, `YYYY-MM-DD`. */
   date: string;
+  /** The league the totals are for. Optional until the client asks for one. */
+  difficulty?: "EASY" | "NORMAL" | "HARD";
   /** Finished games counted. */
   players: number;
   /** The mean score to one decimal place; null when `players` is 0. */

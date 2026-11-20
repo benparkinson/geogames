@@ -923,7 +923,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, 100, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 100, 200);
   }
 
   @Test
@@ -933,7 +933,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores, times(1)).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, times(1)).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -942,7 +942,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
-    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, never()).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -952,7 +952,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
-    verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
+    verify(dailyScores, never()).recordFinished(any(), any(), anyInt(), anyInt());
   }
 
   @Test
@@ -963,7 +963,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit, null);
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, 0, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 0, 200);
   }
 
   // ------------------------------------------------------------ recordGuess

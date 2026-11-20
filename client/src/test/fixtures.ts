@@ -437,6 +437,7 @@ export function makeHintsResponse(overrides: Partial<RoundHintsResponse> = {}): 
 export function makeDailyScore(overrides: Partial<DailyScore> = {}): DailyScore {
   return {
     date: "2026-11-18",
+    difficulty: "NORMAL",
     players: 4,
     averageScore: 312.5,
     maxScore: 500,

@@ -196,7 +196,8 @@ public class GameService {
       // is the first answer to the round, so a repeat never gets here.
       if (game.getDailyDate() != null && allAnswered(game)) {
         GameResult result = GameResults.of(game);
-        dailyScores.recordFinished(game.getDailyDate(), result.score(), result.maxScore());
+        dailyScores.recordFinished(
+            game.getDailyDate(), game.difficulty(), result.score(), result.maxScore());
       }
     }
     return toAnswerResponse(game, round);

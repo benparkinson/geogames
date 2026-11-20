@@ -16,6 +16,7 @@
         "array" : "number"
       },
       "date" : "string",
+      "difficulty" : "string",
       "maxScore" : "number",
       "players" : "number"
     },
