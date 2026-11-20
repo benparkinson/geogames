@@ -1,6 +1,7 @@
 {
   "name" : "Ukraine",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 2896.0,
   "landBorderKm" : 4389.0,
   "areaKm2" : 597037,

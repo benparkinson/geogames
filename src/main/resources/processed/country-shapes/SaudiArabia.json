@@ -1,6 +1,7 @@
 {
   "name" : "Saudi Arabia",
   "additionalNames" : [ "KSA" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 4024.0,
   "landBorderKm" : 4151.0,
   "areaKm2" : 1925083,

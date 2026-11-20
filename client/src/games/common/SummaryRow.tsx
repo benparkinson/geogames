@@ -1,8 +1,8 @@
-import { CheckLg, EyeFill, StarFill } from "react-bootstrap-icons";
+import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import { GameRoundView } from "../../api/types";
 import { findGameModule } from "../registry";
-import { CORRECT_ANSWER, isPartlyCorrect, OUT_OF_GUESSES } from "./Model";
-import { isPerfect } from "./scoring";
+import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
+import { OUTCOME_STYLES, roundOutcome } from "./outcome";
 
 function roundLabel(round: GameRoundView): string {
   return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
@@ -26,9 +26,12 @@ export default function SummaryRow({
   mixed: boolean;
   onOpen: () => void;
 }): React.JSX.Element {
-  const isCorrect = round.answerState === CORRECT_ANSWER;
-  const partial = isPartlyCorrect(round.answerState, round.points);
-  const perfect = isPerfect(round.answerState, round.hintsUsed);
+  const outcome = roundOutcome(
+    round.answerState,
+    round.hintsUsed,
+    round.gameResult.roundFirstGuess[index],
+    round.points,
+  );
   return (
     <button
       type="button"
@@ -62,11 +65,13 @@ export default function SummaryRow({
           </>
         )}
       </span>
-      <span className={"text-nowrap " + (isCorrect || partial ? "gg-text-correct" : "gg-text-revealed")}>
-        {perfect ? (
+      <span className={"text-nowrap " + OUTCOME_STYLES[outcome ?? "missed"].textClass}>
+        {outcome === "firstGuess" ? (
           <StarFill aria-hidden="true" />
-        ) : isCorrect || partial ? (
+        ) : round.answerState === CORRECT_ANSWER ? (
           <CheckLg aria-hidden="true" />
+        ) : round.answerState === OUT_OF_GUESSES ? (
+          <XLg aria-hidden="true" />
         ) : (
           <EyeFill aria-hidden="true" />
         )}{" "}

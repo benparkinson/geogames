@@ -4,6 +4,7 @@ import { RoundAnswer } from "../games/common/Model";
 import { fetchJson, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
 import {
+  Difficulty,
   GameResultResponse,
   GameRoundResponse,
   GameRoundView,
@@ -28,10 +29,11 @@ function toGameResultView(result: GameResultResponse): GameRoundView["gameResult
     score: result.score,
     maxScore: result.maxScore,
     roundsCorrect: result.roundsCorrect,
-    perfectRounds: result.perfectRounds,
     roundAnswerStates: result.roundAnswerStates,
     roundPoints: result.roundPoints,
     roundHintsUsed: result.roundHintsUsed,
+    roundFirstGuess: result.roundFirstGuess,
+    firstGuessRounds: result.firstGuessRounds,
   };
 }
 
@@ -45,7 +47,8 @@ export function toRoundView(response: GameRoundResponse): GameRoundView {
     points: response.points,
     guesses: response.guesses,
     hintsTakenAt: response.hintsTakenAt,
-    hardMode: response.hardMode,
+    difficulty: response.difficulty,
+    continents: response.continents,
     gameResult: toGameResultView(response.gameResult),
   };
 }
@@ -169,13 +172,13 @@ function patchRounds(queryClient: QueryClient, gameId: string, round: number, re
 }
 
 export function useCreateGame(): {
-  createGame: (gameType: string, numberOfRounds: number, hardMode: boolean) => void;
+  createGame: (gameType: string, numberOfRounds: number, difficulty: Difficulty) => void;
   isLoading: boolean;
   error: unknown;
 } {
   const router = useRouter();
   const { mutate, isPending, error } = useMutation({
-    mutationFn: (request: { gameType: string; numberOfRounds: number; hardMode: boolean }) =>
+    mutationFn: (request: { gameType: string; numberOfRounds: number; difficulty: Difficulty }) =>
       postJson<{ id: string }>("/api/games", "create game", request),
     onSuccess: (data) => {
       router.push("/games/" + data.id);
@@ -183,7 +186,7 @@ export function useCreateGame(): {
   });
 
   return {
-    createGame: (gameType, numberOfRounds, hardMode) => mutate({ gameType, numberOfRounds, hardMode }),
+    createGame: (gameType, numberOfRounds, difficulty) => mutate({ gameType, numberOfRounds, difficulty }),
     isLoading: isPending,
     error,
   };

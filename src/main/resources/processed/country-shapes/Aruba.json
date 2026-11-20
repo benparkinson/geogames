@@ -1,6 +1,7 @@
 {
   "name" : "Aruba",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 72.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 170,

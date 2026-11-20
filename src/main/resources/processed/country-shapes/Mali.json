@@ -1,6 +1,7 @@
 {
   "name" : "Mali",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 7254.0,
   "areaKm2" : 1256813,

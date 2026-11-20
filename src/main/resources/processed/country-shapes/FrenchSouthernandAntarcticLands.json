@@ -1,6 +1,7 @@
 {
   "name" : "French Southern and Antarctic Lands",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1552.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 6566,

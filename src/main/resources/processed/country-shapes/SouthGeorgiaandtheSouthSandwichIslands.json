@@ -1,6 +1,7 @@
 {
   "name" : "South Georgia and the South Sandwich Islands",
   "additionalNames" : [ "South Georgia and South Sandwich Islands", "South Georgia" ],
+  "continents" : [ "South America" ],
   "coastKm" : 930.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 3594,

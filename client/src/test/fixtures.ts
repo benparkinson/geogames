@@ -31,7 +31,8 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     hintCount: 3,
     guessLimit: 5,
     hasClues: false,
-    hardMode: false,
+    difficulty: "NORMAL",
+    continents: [],
     hintsUsed: 0,
     guesses: [],
     hintsTakenAt: [],
@@ -40,10 +41,11 @@ export function makeRoundProps(overrides: Partial<Round> = {}): Round {
     points: 0,
     score: 0,
     maxScore: 300,
-    perfectRounds: 0,
     gameCompleted: false,
     roundAnswerStates: ["UNANSWERED", "UNANSWERED", "UNANSWERED"],
     roundPoints: [0, 0, 0],
+    roundHintsUsed: [0, 0, 0],
+    roundFirstGuess: [false, false, false],
     ...overrides,
   };
 }
@@ -161,6 +163,7 @@ export function makeCountryShapeData(overrides: Partial<CountryShape> = {}): Cou
   return {
     name: "Netherlands",
     additionalNames: ["Holland"],
+    continents: ["Europe"],
     coastKm: 451,
     landBorderKm: 1027,
     areaKm2: 41_000,
@@ -266,6 +269,8 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
     guesses: [],
     hintsTakenAt: [],
     hardMode: false,
+    difficulty: "NORMAL",
+    continents: [],
     gameResult: {
       gameState: "CREATED",
       roundsUnanswered: 3,
@@ -276,6 +281,8 @@ export function makeRound(overrides: Partial<GameRoundResponse> = {}): GameRound
       perfectRounds: 0,
       roundPoints: [0, 0, 0],
       roundHintsUsed: [0, 0, 0],
+      roundFirstGuess: [false, false, false],
+      firstGuessRounds: 0,
     },
     ...overrides,
   };
@@ -296,6 +303,8 @@ export function makeAnswerResponse(overrides: Partial<RoundAnswerResponse> = {})
       perfectRounds: 1,
       roundPoints: [100, 0, 0],
       roundHintsUsed: [0, 0, 0],
+      roundFirstGuess: [true, false, false],
+      firstGuessRounds: 1,
     },
   });
   return { answerState, hintsUsed, points, gameResult, ...overrides };
@@ -325,6 +334,8 @@ export interface RoundSpec {
   hintsUsed?: number;
   /** For a revealed round: how many of its answers were found (a tripoint has 3, a river 1). */
   answersFound?: number;
+  /** Correct with no hints and no wrong guess. */
+  firstGuess?: boolean;
 }
 
 /** The server's responses for a whole game, each carrying the same complete result. */
@@ -345,6 +356,8 @@ export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
     perfectRounds: specs.filter((spec, i) => spec.answerState === "CORRECT" && hintsUsed[i] === 0).length,
     roundPoints: points,
     roundHintsUsed: hintsUsed,
+    roundFirstGuess: specs.map((spec) => spec.firstGuess ?? false),
+    firstGuessRounds: specs.filter((spec) => spec.firstGuess).length,
   } as GameRoundResponse["gameResult"];
   return specs.map((spec, i) => {
     const make = spec.river ? makeRiverRound : makeRound;
@@ -434,6 +447,7 @@ export function makeHintsResponse(overrides: Partial<RoundHintsResponse> = {}): 
 export function makeDailyScore(overrides: Partial<DailyScore> = {}): DailyScore {
   return {
     date: "2026-11-18",
+    difficulty: "NORMAL",
     players: 4,
     averageScore: 312.5,
     maxScore: 500,

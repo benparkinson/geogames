@@ -1,6 +1,7 @@
 {
   "name" : "Yemen",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 2539.0,
   "landBorderKm" : 1514.0,
   "areaKm2" : 450510,

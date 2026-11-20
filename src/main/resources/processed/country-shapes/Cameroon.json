@@ -1,6 +1,7 @@
 {
   "name" : "Cameroon",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 789.0,
   "landBorderKm" : 4309.0,
   "areaKm2" : 466331,

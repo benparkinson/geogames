@@ -1,6 +1,7 @@
 {
   "name" : "Curaçao",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 132.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 465,

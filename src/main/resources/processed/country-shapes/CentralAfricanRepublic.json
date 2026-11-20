@@ -1,6 +1,7 @@
 {
   "name" : "Central African Republic",
   "additionalNames" : [ "Central African Rep.", "CAR" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 4944.0,
   "areaKm2" : 620644,

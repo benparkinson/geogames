@@ -1,6 +1,7 @@
 {
   "name" : "Norfolk Island",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 31.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 41,

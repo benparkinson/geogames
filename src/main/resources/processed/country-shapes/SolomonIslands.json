@@ -1,6 +1,7 @@
 {
   "name" : "Solomon Islands",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 4498.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 5369,

@@ -1,6 +1,7 @@
 {
   "name" : "Montserrat",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 42.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 100,

@@ -57,16 +57,16 @@ describe("hintsFrom", () => {
     const hints = hintsFrom("Shows clues", "Nepal", mapHint("A"), mapHint("B"), firstLetterHint);
 
     expect(hints.description).toBe("Shows clues");
-    expect(hints.text?.(0)).toBe("A");
-    expect(hints.text?.(1)).toBe("B");
-    expect(hints.text?.(2)).toBe("Starts with “N”");
-    expect(hints.text?.(3)).toBeNull();
+    expect(hints.text?.(0, [])).toBe("A");
+    expect(hints.text?.(1, [])).toBe("B");
+    expect(hints.text?.(2, [])).toBe("Starts with “N”");
+    expect(hints.text?.(3, [])).toBeNull();
   });
 
   it("gives nothing for a builder with nothing to say", () => {
     const hints = hintsFrom("Shows a clue", " ", firstLetterHint);
 
-    expect(hints.text?.(0)).toBeNull();
+    expect(hints.text?.(0, [])).toBeNull();
   });
 });
 

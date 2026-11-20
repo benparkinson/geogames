@@ -1,6 +1,7 @@
 {
   "name" : "Honduras",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 1507.0,
   "landBorderKm" : 1309.0,
   "areaKm2" : 112311,

@@ -1,6 +1,7 @@
 {
   "name" : "Denmark",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 4372.0,
   "landBorderKm" : 56.0,
   "areaKm2" : 28489,

@@ -1,6 +1,7 @@
 {
   "name" : "Serbia",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 1891.0,
   "areaKm2" : 77416,

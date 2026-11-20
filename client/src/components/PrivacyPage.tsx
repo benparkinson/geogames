@@ -8,7 +8,7 @@ export const CONTACT_EMAIL = "privacy@example.com";
 
 function PrivacyPage(): React.JSX.Element {
   return (
-    <div className="min-vh-100 page-bg d-flex flex-column">
+    <div className="page-full-height page-bg d-flex flex-column">
       <div className="px-3 py-2 d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
           <HomeLink />
@@ -27,31 +27,31 @@ function PrivacyPage(): React.JSX.Element {
         <h2 className="h5">What we store</h2>
         <p>
           There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the questions
-          asked, the guesses made (only names from our lists), the hints taken, whether Hard mode is on, how each round
-          ended and how many of its answers you found. It is deleted after 24 hours.
+          asked, the guesses made (only names from our lists), the hints taken, the difficulty (Easy, Normal or Hard),
+          how each round ended and how many of its answers you found. It is deleted after 24 hours.
         </p>
 
         <h2 className="h5">Anonymous statistics</h2>
         <p>
           For each answered round we keep the date, the game type, the question, the result, and the hints and wrong
-          guesses used, and whether Hard mode was on. Nothing in it identifies a person or a device, so it is kept
-          indefinitely.
+          guesses used, and the difficulty. Nothing in it identifies a person or a device, so it is kept indefinitely.
         </p>
 
         <h2 className="h5">On your device</h2>
         <p>
-          Your browser keeps up to three items in its local storage: <code>gg-theme</code>, <code>gg-hardcore</code>{" "}
-          (your Hard mode setting) and <code>gg-daily</code>. The first two are set only if you use their switch (the
-          light/dark toggle and Hard mode). The third is set only when you play the daily challenge: it holds
-          today&apos;s game id, whether Hard mode was on and, once you finish, your score and how each round ended. It
-          is replaced the next day and never sent anywhere. Clearing site data removes all three.
+          Your browser keeps up to three items in its local storage: <code>gg-theme</code>, <code>gg-difficulty</code>{" "}
+          (your difficulty setting) and <code>gg-daily</code>. The first two are set only if you use their control (the
+          light/dark toggle and the difficulty). The third is set only when you play the daily challenge: it holds
+          today&apos;s game id, its difficulty and, once you finish, your score and how each round ended. It is replaced
+          the next day and never sent anywhere. Clearing site data removes all three.
         </p>
         <p>
           Everyone who plays the daily challenge on a date gets the same rounds. The server stores which rounds those
           are for each date, and nothing about who played them. When you finish the daily challenge, your score is added
-          to that day&apos;s anonymous totals: the number of players, the sum of their scores, and how many scored in
-          each tenth of the range. Nothing in the totals links back to a game or a player, and they are kept
-          indefinitely. Copying your result writes to your clipboard only when you click Copy result.
+          to that day&apos;s anonymous totals for your difficulty (Easy, Normal or Hard): the number of players, the sum
+          of their scores, and how many scored in each tenth of the range. Nothing in the totals links back to a game or
+          a player, and they are kept indefinitely. Copying your result writes to your clipboard only when you click
+          Copy result.
         </p>
 
         <h2 className="h5">Who else receives data</h2>

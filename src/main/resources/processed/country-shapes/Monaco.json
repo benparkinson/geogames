@@ -1,6 +1,7 @@
 {
   "name" : "Monaco",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 7.0,
   "landBorderKm" : 10.0,
   "areaKm2" : 19,

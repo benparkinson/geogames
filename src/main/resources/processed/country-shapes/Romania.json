@@ -1,6 +1,7 @@
 {
   "name" : "Romania",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 469.0,
   "landBorderKm" : 2341.0,
   "areaKm2" : 235806,

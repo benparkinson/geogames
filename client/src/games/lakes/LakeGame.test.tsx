@@ -13,11 +13,11 @@ vi.mock("./LakeShapesMapWrapper", () => ({
 }));
 
 /** Renders the game and waits for the lake names to load. */
-async function renderLake(data = makeLakeRoundData()) {
+async function renderLake(data = makeLakeRoundData(), round = makeRoundProps({ hintCount: 3 })) {
   const submitAnswer = vi.fn();
   mockFetch([{ url: /\/api\/lakes$/, body: lakeNames }]);
   const { client } = renderWithClient(
-    <LakeGame data={data} round={makeRoundProps({ hintCount: 3 })} answerCount={1} submitAnswer={submitAnswer} />,
+    <LakeGame data={data} round={round} answerCount={1} submitAnswer={submitAnswer} />,
   );
   await waitFor(() => expect(client.getQueryData(["placeNames", "lakes"])).toBeDefined());
   return { submitAnswer };
@@ -43,6 +43,19 @@ describe("LakeGame", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+  });
+
+  it("offers two hints in Easy, where the continent is already shown", async () => {
+    const user = userEvent.setup();
+    await renderLake(makeLakeRoundData(), makeRoundProps({ hintCount: 2, difficulty: "EASY", continents: ["Asia"] }));
+    expect(screen.getByText("Continent: Asia")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    expect(screen.getByText("Lies in 1 country")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
   });
 
   it("says a lake shared by several countries has shores in them, counted", async () => {

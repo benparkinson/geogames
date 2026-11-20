@@ -27,6 +27,7 @@ import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.GameService;
@@ -62,7 +63,7 @@ class GameControllerTest {
 
   private static GameRound round() {
     return new GameRound(
-        GameTypeResponse.from(GameType.TRIPOINT),
+        GameTypeResponse.from(GameType.TRIPOINT, Difficulty.NORMAL),
         "{\"countries\":[]}",
         3,
         AnswerState.UNANSWERED,
@@ -77,10 +78,14 @@ class GameControllerTest {
             0,
             0,
             List.of(0, 0, 0),
-            List.of(0, 0, 0)),
+            List.of(0, 0, 0),
+            List.of(false, false, false),
+            0),
         List.of(),
         List.of(),
-        false);
+        false,
+        "NORMAL",
+        List.of());
   }
 
   // ------------------------------------------------------------ create game
@@ -102,7 +107,8 @@ class GameControllerTest {
 
   @Test
   void hardModeIsPassedToTheService() throws Exception {
-    when(gameService.createGame("TRIPOINT", 3, true)).thenReturn(new GameCreationResponse(GAME_ID));
+    when(gameService.createGame("TRIPOINT", 3, Difficulty.HARD))
+        .thenReturn(new GameCreationResponse(GAME_ID));
 
     mockMvc
         .perform(
@@ -111,7 +117,7 @@ class GameControllerTest {
                 .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"hardMode\":true}"))
         .andExpect(status().isOk());
 
-    verify(gameService).createGame("TRIPOINT", 3, true);
+    verify(gameService).createGame("TRIPOINT", 3, Difficulty.HARD);
   }
 
   @Test
@@ -156,7 +162,9 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
         .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
-        .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3));
+        .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3))
+        .andExpect(jsonPath("$.gameResult.roundFirstGuess.length()").value(3))
+        .andExpect(jsonPath("$.gameResult.firstGuessRounds").value(0));
   }
 
   @Test

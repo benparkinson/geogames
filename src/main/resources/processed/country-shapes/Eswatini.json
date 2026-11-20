@@ -1,6 +1,7 @@
 {
   "name" : "Eswatini",
   "additionalNames" : [ "Swaziland" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 537.0,
   "areaKm2" : 17143,

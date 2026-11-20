@@ -41,7 +41,7 @@ public class RiverLoaderMain {
           "Africa", 9,
           "North America", 6,
           "South America", 8,
-          "Australia", 3);
+          "Oceania", 3);
 
   private static final double LOW_CONFIDENCE = 0.6;
 

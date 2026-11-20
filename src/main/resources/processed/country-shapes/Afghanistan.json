@@ -1,6 +1,7 @@
 {
   "name" : "Afghanistan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 5224.0,
   "areaKm2" : 642392,

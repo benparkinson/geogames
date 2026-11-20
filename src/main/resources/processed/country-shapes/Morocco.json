@@ -1,6 +1,7 @@
 {
   "name" : "Morocco",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 2712.0,
   "landBorderKm" : 2906.0,
   "areaKm2" : 592429,

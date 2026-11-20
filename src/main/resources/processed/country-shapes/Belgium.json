@@ -1,6 +1,7 @@
 {
   "name" : "Belgium",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 95.0,
   "landBorderKm" : 1049.0,
   "areaKm2" : 30561,

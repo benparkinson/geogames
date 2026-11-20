@@ -37,7 +37,7 @@ public class LakeLoaderMain {
           "Africa", 8,
           "North America", 10,
           "South America", 5,
-          "Australia", 3);
+          "Oceania", 3);
 
   /** Lakes are smaller than rivers, so a country needs less shore to count. */
   static final double MIN_SHORE_KM = 5;

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useCreateGame } from "../api/games";
-import { useHardMode } from "../settings/hardMode";
+import { useDifficulty } from "../settings/difficulty";
 import { MenuOption, ROUND_OPTIONS } from "../games/registry";
 import { Button, Notice, Spinner, ToggleGroup } from "../ui";
 import { useDelayedFlag } from "../ui/useDelayedFlag";
-import HardModeToggle from "./HardModeToggle";
+import DifficultyToggle from "./DifficultyToggle";
 
-/** The chosen game with its round count, Hard mode switch and start button. It creates the game. */
+/** The chosen game with its round count, Difficulty control and start button. It creates the game. */
 export default function StartPanel({ option }: { option: MenuOption }): React.JSX.Element {
   const { createGame, isLoading, error } = useCreateGame();
-  const [hardMode] = useHardMode();
+  const [difficulty] = useDifficulty();
   const [rounds, setRounds] = useState(5);
   const slow = useDelayedFlag(isLoading, 3000);
 
@@ -33,15 +33,16 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
             options={ROUND_OPTIONS.map((n) => ({ value: n, label: n }))}
           />
         </div>
-        {option.hasClues && (
-          <div className="w-100">
-            <HardModeToggle />
-          </div>
-        )}
+        <div className="w-100">
+          <DifficultyToggle />
+        </div>
         <Button
           variant="primary"
           className="home-start-button flex-grow-1"
-          onClick={() => createGame(option.type, rounds, !!option.hasClues && hardMode)}
+          // Hard only means something for a game with clues, so any other game starts as Normal.
+          onClick={() =>
+            createGame(option.type, rounds, difficulty === "HARD" && !option.hasClues ? "NORMAL" : difficulty)
+          }
           disabled={isLoading}
         >
           {isLoading ? (

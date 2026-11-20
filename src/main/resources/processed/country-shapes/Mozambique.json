@@ -1,6 +1,7 @@
 {
   "name" : "Mozambique",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 3844.0,
   "landBorderKm" : 4409.0,
   "areaKm2" : 790725,

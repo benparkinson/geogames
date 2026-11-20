@@ -1,6 +1,7 @@
 {
   "name" : "Uganda",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2440.0,
   "areaKm2" : 242936,

@@ -74,7 +74,8 @@ describe("HomePage choosing a game", () => {
     await user.click(card(/River Shapes/));
     const panel = screen.getByRole("complementary", { name: "Start a game" });
     expect(within(panel).getByText("River Shapes")).toBeInTheDocument();
-    expect(within(panel).getAllByRole("radio")).toHaveLength(3);
+    // The three round counts and the three difficulties.
+    expect(within(panel).getAllByRole("radio")).toHaveLength(6);
     expect(within(panel).getByRole("button", { name: "Start game" })).toBeInTheDocument();
 
     await user.click(card(/Lake Shapes/));
@@ -219,7 +220,7 @@ describe("HomePage starting a game", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "RANDOM",
       numberOfRounds: 10,
-      hardMode: false,
+      difficulty: "NORMAL",
     });
   });
 
@@ -238,7 +239,7 @@ describe("HomePage starting a game", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
       gameType: "TRIPOINT",
       numberOfRounds: 5,
-      hardMode: false,
+      difficulty: "NORMAL",
     });
   });
 
@@ -309,47 +310,44 @@ describe("HomePage starting a game", () => {
   });
 });
 
-describe("HomePage Hard mode", () => {
-  it("has a switch that turns Hard mode on and off", async () => {
+describe("HomePage difficulty", () => {
+  it("has a control that chooses Easy, Normal or Hard and remembers it", async () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
     await user.click(card(/Country Gaps/));
 
-    const group = screen.getByRole("group", { name: "Hard mode" });
-    expect(within(group).getByRole("radio", { name: "Off" })).toBeChecked();
+    const group = screen.getByRole("group", { name: "Difficulty" });
+    expect(within(group).getByRole("radio", { name: "Normal" })).toBeChecked();
 
-    await user.click(within(group).getByRole("radio", { name: "On" }));
-    expect(within(group).getByRole("radio", { name: "On" })).toBeChecked();
-    expect(localStorage.getItem("gg-hardcore")).toBe("on");
+    await user.click(within(group).getByRole("radio", { name: "Easy" }));
+    expect(within(group).getByRole("radio", { name: "Easy" })).toBeChecked();
+    expect(localStorage.getItem("gg-difficulty")).toBe("easy");
+    expect(screen.getByText("The continent is shown and you get twice the guesses.")).toBeInTheDocument();
 
-    await user.click(within(group).getByRole("radio", { name: "Off" }));
-    expect(localStorage.getItem("gg-hardcore")).toBeNull();
+    await user.click(within(group).getByRole("radio", { name: "Hard" }));
+    expect(localStorage.getItem("gg-difficulty")).toBe("hard");
+
+    await user.click(within(group).getByRole("radio", { name: "Normal" }));
+    expect(localStorage.getItem("gg-difficulty")).toBeNull();
   });
 
-  it("shows the switch only for games with distance clues", async () => {
+  it("shows the control for every game", async () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
-    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Difficulty" })).toBeNull();
 
-    await user.click(card(/Tripoints/));
-    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
-
-    await user.click(card(/Mixed/));
-    expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
-
-    await user.click(card(/River Shapes/));
-    expect(screen.queryByRole("group", { name: "Hard mode" })).toBeNull();
-
-    await user.click(card(/Merged Countries/));
-    expect(screen.getByRole("group", { name: "Hard mode" })).toBeInTheDocument();
+    for (const game of [/Tripoints/, /Mixed/, /River Shapes/, /Merged Countries/]) {
+      await user.click(card(game));
+      expect(screen.getByRole("group", { name: "Difficulty" })).toBeInTheDocument();
+    }
   });
 });
 
-describe("HomePage Hard mode when starting", () => {
-  async function startWithPreferenceOn(game: RegExp) {
-    localStorage.setItem("gg-hardcore", "on");
+describe("HomePage difficulty when starting", () => {
+  async function startWith(stored: string | null, game: RegExp) {
+    if (stored !== null) localStorage.setItem("gg-difficulty", stored);
     const fetchMock = mockFetch([
       { url: HEALTH, body: "ok" },
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
@@ -359,24 +357,38 @@ describe("HomePage Hard mode when starting", () => {
     await user.click(card(game));
     await user.click(startButton());
     await waitFor(() => expect(router.push).toHaveBeenCalled());
-    return callsTo(fetchMock).find((c) => c.method === "POST")!.body as { hardMode: boolean };
+    return callsTo(fetchMock).find((c) => c.method === "POST")!.body as { difficulty: string };
   }
 
-  it("sends true for a game with clues when the preference is on", async () => {
-    expect((await startWithPreferenceOn(/Country Gaps/)).hardMode).toBe(true);
+  it("sends Hard for a game with clues", async () => {
+    expect((await startWith("hard", /Country Gaps/)).difficulty).toBe("HARD");
   });
 
-  it("sends true for a Mixed game when the preference is on", async () => {
-    expect((await startWithPreferenceOn(/Mixed/)).hardMode).toBe(true);
+  it("sends Hard for a Mixed game", async () => {
+    expect((await startWith("hard", /Mixed/)).difficulty).toBe("HARD");
   });
 
-  it("sends false for a game without clues even when the preference is on", async () => {
-    expect((await startWithPreferenceOn(/Tripoints/)).hardMode).toBe(false);
+  it("sends Normal for a game without clues when Hard is chosen", async () => {
+    expect((await startWith("hard", /Tripoints/)).difficulty).toBe("NORMAL");
+  });
+
+  it("sends Easy for a game without clues", async () => {
+    expect((await startWith("easy", /Tripoints/)).difficulty).toBe("EASY");
+  });
+
+  it("sends Easy for a game with clues", async () => {
+    expect((await startWith("easy", /Country Gaps/)).difficulty).toBe("EASY");
+  });
+
+  it("treats an old Hard mode preference as Hard", async () => {
+    localStorage.setItem("gg-hardcore", "on");
+
+    expect((await startWith(null, /Country Gaps/)).difficulty).toBe("HARD");
   });
 });
 
 describe("HomePage daily challenge card", () => {
-  const entry = { v: 1 as const, date: localDateString(), number: 2, gameId: "g1", hardcore: false };
+  const entry = { v: 1 as const, date: localDateString(), number: 2, gameId: "g1", difficulty: "NORMAL" as const };
 
   beforeEach(resetDailyStorageForTests);
 
@@ -402,7 +414,11 @@ describe("HomePage daily challenge card", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     writeDaily({
       ...entry,
-      result: { score: 430, maxScore: 500, rounds: ["perfect", "perfect", "perfect", "perfect", "perfect"] },
+      result: {
+        score: 430,
+        maxScore: 500,
+        rounds: ["firstGuess", "firstGuess", "firstGuess", "firstGuess", "firstGuess"],
+      },
     });
     renderHome();
 

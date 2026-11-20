@@ -3,7 +3,9 @@ package com.parkinson.benjamin.geogames.service;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
+import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.Scoring;
 import java.util.ArrayList;
@@ -15,14 +17,25 @@ final class GameResults {
 
   private GameResults() {}
 
-  static int pointsFor(GameRoundEntity round) {
+  static int pointsFor(GameRoundEntity round, Difficulty difficulty) {
     Integer found = round.getAnswersFound();
     return Scoring.roundPoints(
         round.getAnswerState(),
         round.getHintsUsed(),
-        round.getGameType().hintCount(),
+        round.getGameType().hintCount(difficulty),
         found == null ? 0 : found,
         round.getGameType().answerCount());
+  }
+
+  /**
+   * A first guess: correct, no hints, no wrong guess reported ({@code null}, from an older client,
+   * never counts) and none recorded. {@code hintsUsed} is already the effective count.
+   */
+  static boolean isFirstGuess(GameRoundEntity round) {
+    return round.getAnswerState() == AnswerState.CORRECT
+        && round.getHintsUsed() == 0
+        && Integer.valueOf(0).equals(round.getWrongGuesses())
+        && round.getGuesses().stream().allMatch(RoundGuess::isCorrect);
   }
 
   static GameResult of(GameEntity game) {
@@ -36,14 +49,21 @@ final class GameResults {
     int roundsUnanswered = 0;
     int roundsCorrect = 0;
     int perfectRounds = 0;
+    int firstGuessRounds = 0;
+    List<Boolean> roundFirstGuess = new ArrayList<>(rounds.size());
     int score = 0;
     for (GameRoundEntity round : rounds) {
       AnswerState state = round.getAnswerState();
-      int points = pointsFor(round);
+      int points = pointsFor(round, game.difficulty());
       roundAnswerStates.add(state);
       roundPoints.add(points);
       roundHintsUsed.add(round.getHintsUsed());
       score += points;
+      boolean firstGuess = isFirstGuess(round);
+      roundFirstGuess.add(firstGuess);
+      if (firstGuess) {
+        firstGuessRounds++;
+      }
       if (state == AnswerState.UNANSWERED) {
         roundsUnanswered++;
       } else if (state == AnswerState.CORRECT) {
@@ -70,6 +90,8 @@ final class GameResults {
         roundsCorrect,
         perfectRounds,
         roundPoints,
-        roundHintsUsed);
+        roundHintsUsed,
+        roundFirstGuess,
+        firstGuessRounds);
   }
 }

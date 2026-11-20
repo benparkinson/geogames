@@ -1,6 +1,7 @@
 {
   "name" : "Jordan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 27.0,
   "landBorderKm" : 1656.0,
   "areaKm2" : 88940,

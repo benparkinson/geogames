@@ -1,4 +1,6 @@
 import { useSyncExternalStore } from "react";
+import type { Difficulty } from "../api/types";
+import type { RoundOutcome } from "../games/common/outcome";
 import { createLocalStore } from "../settings/localStore";
 
 const store = createLocalStore("gg-daily", "gg-daily-change");
@@ -8,8 +10,16 @@ export interface DailyInfo {
   date: string;
 }
 
-/** How one round ended, as the share text shows it. "hints" means some points but not perfect (hints used, or only some answers found). */
-export type RoundOutcome = "perfect" | "hints" | "revealed";
+export type { RoundOutcome };
+
+/** Entries stored by an earlier version of the site used these keys; they are read as the nearest outcome. */
+const LEGACY_OUTCOMES: Record<string, RoundOutcome> = { perfect: "correct", revealed: "missed" };
+
+function currentOutcome(value: unknown): RoundOutcome | null {
+  if (typeof value !== "string") return null;
+  if (value === "firstGuess" || value === "correct" || value === "hints" || value === "missed") return value;
+  return LEGACY_OUTCOMES[value] ?? null;
+}
 
 export interface DailyResult {
   score: number;
@@ -24,9 +34,8 @@ export interface DailyEntry {
   date: string;
   number: number;
   gameId: string;
-  /** Hard mode was chosen for this game. */
-  // Stored name kept from when this was called Hardcore mode.
-  hardcore: boolean;
+  /** The difficulty chosen for this game. */
+  difficulty: Difficulty;
   /** Set once the game is finished. */
   result?: DailyResult;
 }
@@ -35,11 +44,11 @@ export interface DailyEntry {
 let cachedRaw: string | null = null;
 let cachedEntry: DailyEntry | null = null;
 
-function isOutcome(value: unknown): value is RoundOutcome {
-  return value === "perfect" || value === "hints" || value === "revealed";
+function isOutcome(value: unknown): boolean {
+  return currentOutcome(value) !== null;
 }
 
-function isResult(value: unknown): value is DailyResult {
+function isResult(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const r = value as Record<string, unknown>;
   return (
@@ -48,6 +57,17 @@ function isResult(value: unknown): value is DailyResult {
     Array.isArray(r.rounds) &&
     r.rounds.every(isOutcome)
   );
+}
+
+function isDifficulty(value: unknown): value is Difficulty {
+  return value === "EASY" || value === "NORMAL" || value === "HARD";
+}
+
+/** The difficulty of an entry: its own, or for one saved before there was a difficulty, from Hard mode. */
+function difficultyOf(e: Record<string, unknown>): Difficulty | null {
+  if (isDifficulty(e.difficulty)) return e.difficulty;
+  if (typeof e.hardcore === "boolean") return e.hardcore ? "HARD" : "NORMAL";
+  return null;
 }
 
 function parse(raw: string | null): DailyEntry | null {
@@ -61,12 +81,18 @@ function parse(raw: string | null): DailyEntry | null {
       typeof e.date !== "string" ||
       typeof e.number !== "number" ||
       typeof e.gameId !== "string" ||
-      typeof e.hardcore !== "boolean" ||
       (e.result !== undefined && !isResult(e.result))
     ) {
       return null;
     }
-    return value as DailyEntry;
+    const difficulty = difficultyOf(e);
+    if (difficulty === null) return null;
+    const entry: DailyEntry = { v: 1, date: e.date, number: e.number, gameId: e.gameId, difficulty };
+    if (e.result !== undefined) {
+      const result = e.result as DailyResult;
+      entry.result = { ...result, rounds: result.rounds.map((r) => currentOutcome(r) as RoundOutcome) };
+    }
+    return entry;
   } catch {
     return null;
   }

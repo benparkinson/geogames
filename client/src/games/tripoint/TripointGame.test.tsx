@@ -56,7 +56,7 @@ describe("Tripoint guessing", () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
     renderTripoint();
 
-    expect(screen.getByText("Which 3 countries meet at this flag?")).toBeInTheDocument();
+    expect(screen.getByText("Which 3 countries meet at this point?")).toBeInTheDocument();
   });
 
   it("accepts names, any case, and aliases, and reports CORRECT after the third", async () => {
@@ -171,6 +171,31 @@ describe("Tripoint hints", () => {
       "Germany",
     ]);
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+  });
+
+  it("says in the panel that a missing country is outlined", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    renderTripoint();
+
+    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+
+    expect(screen.getByText("A missing country is outlined on the map")).toBeInTheDocument();
+  });
+
+  it("names the outlined country once the player has found the rest", async () => {
+    mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const user = userEvent.setup();
+    renderTripoint();
+    await guess(user, "Belgium");
+    await guess(user, "Netherlands");
+
+    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    expect(screen.getByText("A missing country is outlined on the map")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    expect(screen.getByText("Outlined on the map: Belgium, which you've already found")).toBeInTheDocument();
   });
 
   it("never shows the same country twice", async () => {

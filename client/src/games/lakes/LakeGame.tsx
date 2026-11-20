@@ -13,7 +13,7 @@ export default function LakeGame(game: GameComponentProps<LakeRound>): React.JSX
       answers={[game.data.lake]}
       blankMap
       prompt="Which lake is this?"
-      hints={lakeHints(game.data.lake)}
+      hints={lakeHints(game.data.lake, game.round.continents.length > 0)}
     />
   );
 }

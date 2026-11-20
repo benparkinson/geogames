@@ -1,6 +1,7 @@
 {
   "name" : "Mauritania",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1012.0,
   "landBorderKm" : 4896.0,
   "areaKm2" : 1039133,

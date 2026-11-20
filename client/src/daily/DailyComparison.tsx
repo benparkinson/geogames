@@ -1,5 +1,9 @@
 import { useDailyScore } from "../api/daily";
+import type { Difficulty } from "../api/types";
 import { MIN_PLAYERS, scoreBucket, topPercent } from "./dailyScore";
+
+/** Who the average is of, when it isn't the Normal league. */
+const LEAGUE_NAMES: Record<Difficulty, string> = { EASY: " (Easy players)", NORMAL: "", HARD: " (Hard mode players)" };
 
 /** The lower bound of each of the 11 bands; the last is a perfect score. */
 function bandLabel(bucket: number, maxScore: number): string {
@@ -17,17 +21,27 @@ function bandRange(bucket: number, maxScore: number): string {
  * How the player did against everyone who finished the day's challenge: the average, a rough "Top X%" and the
  * distribution of scores. It is an extra, so it renders nothing while loading, on an error and below `MIN_PLAYERS`.
  */
-export default function DailyComparison({ date, score }: { date: string; score: number }): React.JSX.Element {
-  const { data } = useDailyScore(date);
+export default function DailyComparison({
+  date,
+  difficulty,
+  score,
+}: {
+  date: string;
+  difficulty: Difficulty;
+  score: number;
+}): React.JSX.Element {
+  const { data } = useDailyScore(date, difficulty);
   const shown = data !== undefined && data.averageScore !== null && data.players >= MIN_PLAYERS;
-  return <div aria-live="polite">{shown && <Comparison data={data} score={score} />}</div>;
+  return <div aria-live="polite">{shown && <Comparison data={data} difficulty={difficulty} score={score} />}</div>;
 }
 
 function Comparison({
   data,
+  difficulty,
   score,
 }: {
   data: NonNullable<ReturnType<typeof useDailyScore>["data"]>;
+  difficulty: Difficulty;
   score: number;
 }): React.JSX.Element {
   const { buckets, players, maxScore, averageScore } = data;
@@ -41,7 +55,7 @@ function Comparison({
   return (
     <div className="gg-daily-comparison mb-3">
       <p className="mb-1">
-        Today&apos;s average: {averageScore!.toFixed(1)} / {maxScore}
+        Today&apos;s average{LEAGUE_NAMES[difficulty]}: {averageScore!.toFixed(1)} / {maxScore}
       </p>
       <p className="mb-2">Top {topPercent(buckets, mine, players)}%</p>
       <div role="img" aria-label={alt}>

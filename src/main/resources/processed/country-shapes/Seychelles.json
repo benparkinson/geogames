@@ -1,6 +1,7 @@
 {
   "name" : "Seychelles",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 391.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 165,

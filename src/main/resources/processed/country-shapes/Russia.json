@@ -1,6 +1,7 @@
 {
   "name" : "Russia",
   "additionalNames" : [ "Russian Federation" ],
+  "continents" : [ "Europe", "Asia" ],
   "coastKm" : 74406.0,
   "landBorderKm" : 18829.0,
   "areaKm2" : 16440153,

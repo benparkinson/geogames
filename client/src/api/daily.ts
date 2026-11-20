@@ -1,13 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchJson, hasStatus, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
-import type { DailyGameResponse, DailyScore } from "./types";
+import type { DailyGameResponse, DailyScore, Difficulty } from "./types";
 
-/** The day's totals for the daily challenge. They go stale after a minute as others finish; no polling. */
-export function useDailyScore(date: string) {
+/**
+ * The day's totals for one difficulty league of the daily challenge. They go stale after a minute as others finish;
+ * no polling.
+ */
+export function useDailyScore(date: string, difficulty: Difficulty) {
   return useQuery({
-    queryKey: queryKeys.dailyScore(date),
-    queryFn: () => fetchJson<DailyScore>(`/api/daily-scores/${date}`, "load daily scores"),
+    queryKey: queryKeys.dailyScore(date, difficulty),
+    queryFn: () => fetchJson<DailyScore>(`/api/daily-scores/${date}?difficulty=${difficulty}`, "load daily scores"),
     staleTime: 60_000,
   });
 }
@@ -29,15 +32,15 @@ export function localDateString(now: Date = new Date()): string {
  */
 export function useCreateDailyGame() {
   return useMutation({
-    mutationFn: async ({ date, hardMode }: { date: string; hardMode: boolean }): Promise<DailyGameResponse> => {
+    mutationFn: async ({ date, difficulty }: { date: string; difficulty: Difficulty }): Promise<DailyGameResponse> => {
       try {
         return await postJson<DailyGameResponse>("/api/daily-games", "create daily game", {
           date,
-          hardMode,
+          difficulty,
         });
       } catch (error) {
         if (!hasStatus(error, 400)) throw error;
-        return postJson<DailyGameResponse>("/api/daily-games", "create daily game", { hardMode });
+        return postJson<DailyGameResponse>("/api/daily-games", "create daily game", { difficulty });
       }
     },
   });

@@ -1,6 +1,7 @@
 {
   "name" : "Togo",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 50.0,
   "landBorderKm" : 1607.0,
   "areaKm2" : 57102,

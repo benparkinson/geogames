@@ -1,6 +1,7 @@
 {
   "name" : "Poland",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 677.0,
   "landBorderKm" : 2447.0,
   "areaKm2" : 312093,

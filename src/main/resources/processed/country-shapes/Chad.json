@@ -1,6 +1,7 @@
 {
   "name" : "Chad",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 5799.0,
   "areaKm2" : 1270723,

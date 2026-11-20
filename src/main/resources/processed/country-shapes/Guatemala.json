@@ -1,6 +1,7 @@
 {
   "name" : "Guatemala",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 405.0,
   "landBorderKm" : 1526.0,
   "areaKm2" : 109194,

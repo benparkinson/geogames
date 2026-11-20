@@ -1,6 +1,7 @@
 {
   "name" : "Ecuador",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 2595.0,
   "landBorderKm" : 1816.0,
   "areaKm2" : 247273,

@@ -1,6 +1,7 @@
 {
   "name" : "Dominica",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 128.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 733,

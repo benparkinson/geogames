@@ -1,6 +1,7 @@
 {
   "name" : "Cyprus",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 487.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 5198,

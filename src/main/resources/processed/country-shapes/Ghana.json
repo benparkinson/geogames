@@ -1,6 +1,7 @@
 {
   "name" : "Ghana",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 588.0,
   "landBorderKm" : 1996.0,
   "areaKm2" : 239676,

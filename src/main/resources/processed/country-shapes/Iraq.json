@@ -1,6 +1,7 @@
 {
   "name" : "Iraq",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 91.0,
   "landBorderKm" : 3394.0,
   "areaKm2" : 437585,

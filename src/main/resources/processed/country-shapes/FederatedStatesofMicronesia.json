@@ -1,6 +1,7 @@
 {
   "name" : "Federated States of Micronesia",
   "additionalNames" : [ "Micronesia", "FSM" ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 345.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 342,

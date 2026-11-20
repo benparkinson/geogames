@@ -1,6 +1,7 @@
 {
   "name" : "Indonesia",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 52476.0,
   "landBorderKm" : 2459.0,
   "areaKm2" : 532278,

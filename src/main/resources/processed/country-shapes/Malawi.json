@@ -1,6 +1,7 @@
 {
   "name" : "Malawi",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2723.0,
   "areaKm2" : 119648,

@@ -1,6 +1,7 @@
 {
   "name" : "Japan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 15488.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 229123,

@@ -11,8 +11,11 @@ export interface RiverVariant {
   prompt: string;
   /** Show a grey map instead of the real one while playing. */
   blankMap?: boolean;
-  /** What the marks on the map are. */
-  hints: (river: River) => HintConfig;
+  /**
+   * The hints. `continentShown` is true when the round shows the continent from the start (Easy), so a hint that
+   * repeats it is left out: the server's hint count is one fewer then.
+   */
+  hints: (river: River, continentShown: boolean) => HintConfig;
 }
 
 /** Builds the game component for one river variant. */
@@ -26,7 +29,7 @@ export function makeRiverGame(variant: RiverVariant) {
         answers={[game.data.river]}
         blankMap={variant.blankMap}
         prompt={variant.prompt}
-        hints={variant.hints(game.data.river)}
+        hints={variant.hints(game.data.river, game.round.continents.length > 0)}
       />
     );
   }

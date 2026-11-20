@@ -1,6 +1,7 @@
 {
   "name" : "Mauritius",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 250.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 1907,

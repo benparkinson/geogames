@@ -21,6 +21,8 @@ export interface Neighbour {
 export interface CountryShape {
   name: string;
   additionalNames: string[];
+  /** One or two continent names; the client ignores them. */
+  continents: string[];
   coastKm: number;
   landBorderKm: number;
   /** Area of the largest part, in km². */

@@ -1,6 +1,7 @@
 {
   "name" : "Haiti",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 1474.0,
   "landBorderKm" : 261.0,
   "areaKm2" : 26018,

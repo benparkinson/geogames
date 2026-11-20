@@ -17,7 +17,13 @@ export const countryCountHint = (lake: Lake): string => {
 
 export const firstLetterHint = (lake: Lake): string | null => firstLetter(lake.name);
 
-/** The three hints of the lake game, revealed in order. */
-export function lakeHints(lake: Lake): HintConfig {
-  return hintsFrom(cluesDescription(3), lake, continentHint, countryCountHint, firstLetterHint);
+/**
+ * The hints of the lake game, revealed in order: three, or two when the round already shows the continent (Easy), so
+ * the first hint doesn't repeat it.
+ */
+export function lakeHints(lake: Lake, continentShown = false): HintConfig {
+  const builders = continentShown
+    ? [countryCountHint, firstLetterHint]
+    : [continentHint, countryCountHint, firstLetterHint];
+  return hintsFrom(cluesDescription(builders.length), lake, ...builders);
 }

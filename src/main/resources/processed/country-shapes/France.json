@@ -1,6 +1,7 @@
 {
   "name" : "France",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 6283.0,
   "landBorderKm" : 3310.0,
   "areaKm2" : 537330,

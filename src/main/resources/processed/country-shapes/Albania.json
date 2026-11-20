@@ -1,6 +1,7 @@
 {
   "name" : "Albania",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 456.0,
   "landBorderKm" : 634.0,
   "areaKm2" : 28298,

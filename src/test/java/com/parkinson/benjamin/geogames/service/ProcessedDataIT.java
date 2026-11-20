@@ -629,4 +629,17 @@ public class ProcessedDataIT {
                     shape.neighbours().stream().anyMatch(CountryShape.Neighbour::mainland),
                     shape.name() + " has no mainland neighbours to show"));
   }
+
+  @Test
+  void everyCountryShapeHasOneOrTwoOfTheSixContinents() {
+    Set<String> continents =
+        Set.of("Africa", "Asia", "Europe", "North America", "South America", "Oceania");
+    for (CountryShape shape : shapeService.loadShapes()) {
+      assertTrue(
+          shape.continents().size() >= 1 && shape.continents().size() <= 2,
+          shape.name() + " has " + shape.continents());
+      assertTrue(
+          continents.containsAll(shape.continents()), shape.name() + " " + shape.continents());
+    }
+  }
 }

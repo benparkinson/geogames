@@ -1,6 +1,7 @@
 {
   "name" : "Western Sahara",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 75.0,
   "landBorderKm" : 2914.0,
   "areaKm2" : 90696,

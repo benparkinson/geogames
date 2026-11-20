@@ -7,7 +7,7 @@ import { localDateString } from "../api/daily";
 // The page is pre-rendered at build time, where there is no date and no localStorage to read.
 describe("the daily page on the server", () => {
   it("renders a spinner whatever is stored, so the build bakes in no date and no game", () => {
-    writeDaily({ v: 1, date: localDateString(), number: 9, gameId: "g1", hardcore: true });
+    writeDaily({ v: 1, date: localDateString(), number: 9, gameId: "g1", difficulty: "HARD" });
 
     const html = renderToString(<DailyPage />);
 

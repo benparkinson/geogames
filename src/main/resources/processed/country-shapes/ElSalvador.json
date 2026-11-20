@@ -1,6 +1,7 @@
 {
   "name" : "El Salvador",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 457.0,
   "landBorderKm" : 477.0,
   "areaKm2" : 20591,

@@ -1,6 +1,7 @@
 {
   "name" : "Peru",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 2648.0,
   "landBorderKm" : 5439.0,
   "areaKm2" : 1295067,

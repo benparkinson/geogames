@@ -1,6 +1,7 @@
 {
   "name" : "Bolivia",
   "additionalNames" : [ "Plurinational State of Bolivia" ],
+  "continents" : [ "South America" ],
   "coastKm" : 0.0,
   "landBorderKm" : 5912.0,
   "areaKm2" : 1090454,
