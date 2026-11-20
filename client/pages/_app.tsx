@@ -3,6 +3,7 @@ import Head from "next/head";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "../src/api/queryClient";
+import { UpdateNotice } from "../src/components/UpdateNotice";
 import "bootstrap/dist/css/bootstrap.css";
 import "leaflet/dist/leaflet.css";
 import "../src/theme/tokens.css";
@@ -21,6 +22,7 @@ export default function MyApp({ Component, pageProps }: AppProps): React.JSX.Ele
       </Head>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
+        <UpdateNotice />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>

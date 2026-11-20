@@ -1,6 +1,7 @@
 {
   "name" : "Antigua and Barbuda",
   "additionalNames" : [ "Antigua" ],
+  "continents" : [ "North America" ],
   "coastKm" : 178.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 283,

@@ -1,6 +1,7 @@
 {
   "name" : "Belarus",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 0.0,
   "landBorderKm" : 2733.0,
   "areaKm2" : 206632,

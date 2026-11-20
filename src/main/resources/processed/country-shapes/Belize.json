@@ -1,6 +1,7 @@
 {
   "name" : "Belize",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 785.0,
   "landBorderKm" : 405.0,
   "areaKm2" : 22083,

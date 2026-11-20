@@ -1,6 +1,7 @@
 {
   "name" : "Greece",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 9477.0,
   "landBorderKm" : 1020.0,
   "areaKm2" : 106604,

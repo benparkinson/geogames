@@ -10,23 +10,27 @@ public class RoundAlreadyAnsweredException extends RuntimeException {
       AnswerState current,
       int currentHintsUsed,
       Integer currentWrongGuesses,
+      Integer currentAnswersFound,
       AnswerState requested,
       int requestedHintsUsed,
-      Integer requestedWrongGuesses) {
+      Integer requestedWrongGuesses,
+      Integer requestedAnswersFound) {
     super(
-        ("Round %d was already answered %s with %d hints and %s wrong guesses and can't be changed"
-                + " to %s with %d hints and %s wrong guesses")
+        ("Round %d was already answered %s with %d hints, %s wrong guesses and %s answers found and"
+                + " can't be changed to %s with %d hints, %s wrong guesses and %s answers found")
             .formatted(
                 roundNumber,
                 current,
                 currentHintsUsed,
                 describe(currentWrongGuesses),
+                describe(currentAnswersFound),
                 requested,
                 requestedHintsUsed,
-                describe(requestedWrongGuesses)));
+                describe(requestedWrongGuesses),
+                describe(requestedAnswersFound)));
   }
 
-  private static String describe(Integer wrongGuesses) {
-    return wrongGuesses == null ? "unreported" : wrongGuesses.toString();
+  private static String describe(Integer count) {
+    return count == null ? "unreported" : count.toString();
   }
 }

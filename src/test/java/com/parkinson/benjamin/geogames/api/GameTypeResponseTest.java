@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
@@ -12,7 +13,7 @@ class GameTypeResponseTest {
   @Test
   void describesEveryGameType() {
     for (GameType type : GameType.values()) {
-      GameTypeResponse response = GameTypeResponse.from(type);
+      GameTypeResponse response = GameTypeResponse.from(type, Difficulty.NORMAL);
 
       assertThat(response.name()).isEqualTo(type.name());
       assertThat(response.answerCount()).isEqualTo(type.answerCount());
@@ -25,9 +26,13 @@ class GameTypeResponseTest {
   void serialisesToTheNameAndCountsObjectTheFrontendReads() {
     ObjectMapper objectMapper = JsonMapper.builder().build();
 
-    assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.TRIPOINT)))
+    assertThat(
+            objectMapper.writeValueAsString(
+                GameTypeResponse.from(GameType.TRIPOINT, Difficulty.NORMAL)))
         .isEqualTo("{\"name\":\"TRIPOINT\",\"answerCount\":3,\"hintCount\":3,\"guessLimit\":5}");
-    assertThat(objectMapper.writeValueAsString(GameTypeResponse.from(GameType.RIVERS_BY_SHAPE)))
+    assertThat(
+            objectMapper.writeValueAsString(
+                GameTypeResponse.from(GameType.RIVERS_BY_SHAPE, Difficulty.NORMAL)))
         .isEqualTo(
             "{\"name\":\"RIVERS_BY_SHAPE\",\"answerCount\":1,\"hintCount\":3,\"guessLimit\":5}");
   }

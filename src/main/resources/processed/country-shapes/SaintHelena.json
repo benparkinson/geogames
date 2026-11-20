@@ -1,6 +1,7 @@
 {
   "name" : "Saint Helena",
   "additionalNames" : [ "St Helena", "St. Helena" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 153.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 125,

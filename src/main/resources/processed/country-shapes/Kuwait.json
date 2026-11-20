@@ -1,6 +1,7 @@
 {
   "name" : "Kuwait",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 483.0,
   "landBorderKm" : 422.0,
   "areaKm2" : 16704,

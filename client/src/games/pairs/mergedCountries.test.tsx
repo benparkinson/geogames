@@ -61,6 +61,11 @@ describe("Merged Countries", () => {
     await user.type(screen.getByPlaceholderText("Country name…"), "belgium{Enter}");
     await user.type(screen.getByPlaceholderText("Country name…"), "netherlands{Enter}");
 
-    expect(submitAnswer).toHaveBeenCalledWith({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+    expect(submitAnswer).toHaveBeenCalledWith({
+      answerState: "CORRECT",
+      hintsUsed: 0,
+      wrongGuesses: 0,
+      answersFound: 2,
+    });
   });
 });

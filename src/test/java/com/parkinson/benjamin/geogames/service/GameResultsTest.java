@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.dao.GameEntity;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
+import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
+import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import org.junit.jupiter.api.Test;
@@ -15,14 +17,14 @@ class GameResultsTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses(), null);
     return entity;
   }
 
@@ -95,5 +97,78 @@ class GameResultsTest {
 
     assertThat(result.score()).isZero();
     assertThat(result.maxScore()).isEqualTo(200);
+  }
+
+  @Test
+  void aRevealedRoundScoresItsShareOfTheAnswersFound() {
+    GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
+    partial.recordAnswer(AnswerState.GAVE_UP, 0, null, 2);
+    GameRoundEntity none = new GameRoundEntity(1, GameType.TRIPOINT, "{}");
+    none.recordAnswer(AnswerState.GAVE_UP, 0, null, null);
+
+    GameResult result = GameResults.of(game(partial, none));
+
+    assertThat(result.roundPoints()).containsExactly(67, 0);
+    assertThat(result.score()).isEqualTo(67);
+    assertThat(result.roundsCorrect()).isZero();
+    assertThat(result.perfectRounds()).isZero();
+  }
+
+  private static GameRoundEntity answered(
+      AnswerState state, int hintsUsed, Integer wrongGuesses, boolean... recordedGuesses) {
+    GameRoundEntity entity = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
+    for (boolean correct : recordedGuesses) {
+      entity.addGuess(new RoundGuess("Peru", correct));
+    }
+    entity.recordAnswer(state, hintsUsed, wrongGuesses, null);
+    return entity;
+  }
+
+  @Test
+  void aCorrectRoundWithNoHintsAndNoWrongGuessIsAFirstGuess() {
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 0, 0, true, true))).isTrue();
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 0, 0))).isTrue();
+  }
+
+  @Test
+  void aRoundIsNotAFirstGuessWithAHintAWrongGuessOrAnUnknownCount() {
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 1, 0))).isFalse();
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 0, 1))).isFalse();
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 0, null))).isFalse();
+  }
+
+  @Test
+  void aRecordedWrongGuessMeansNotFirstGuessWhateverWasReported() {
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.CORRECT, 0, 0, false, true)))
+        .isFalse();
+  }
+
+  @Test
+  void aMissedRoundIsNeverAFirstGuess() {
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.GAVE_UP, 0, 0))).isFalse();
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.OUT_OF_GUESSES, 0, 0))).isFalse();
+    assertThat(GameResults.isFirstGuess(answered(AnswerState.UNANSWERED, 0, 0))).isFalse();
+  }
+
+  @Test
+  void firstGuessRoundsAreListedInRoundOrderAndCounted() {
+    GameRoundEntity first = answered(AnswerState.CORRECT, 0, 0);
+    GameRoundEntity second = new GameRoundEntity(1, GameType.TRIPOINT, "{}");
+    second.recordAnswer(AnswerState.CORRECT, 0, 2, null);
+    GameRoundEntity third = new GameRoundEntity(2, GameType.TRIPOINT, "{}");
+    third.recordAnswer(AnswerState.GAVE_UP, 0, 0, null);
+
+    GameResult result = GameResults.of(game(third, first, second));
+
+    assertThat(result.roundFirstGuess()).containsExactly(true, false, false);
+    assertThat(result.firstGuessRounds()).isEqualTo(1);
+  }
+
+  @Test
+  void partialCreditTakesTheHintsIntoAccount() {
+    GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
+    partial.recordAnswer(AnswerState.OUT_OF_GUESSES, 1, 5, 1);
+
+    assertThat(GameResults.pointsFor(partial, Difficulty.NORMAL)).isEqualTo(28);
   }
 }

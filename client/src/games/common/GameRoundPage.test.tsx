@@ -12,7 +12,7 @@ vi.mock("next/router", () => ({ useRouter: () => ({ push: vi.fn(), query: {} }) 
 vi.mock("../tripoint/TripointMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 vi.mock("../rivers/RiverShapesMapWrapper", () => ({ default: () => <div data-testid="map" /> }));
 
-const TRIPOINT_PROMPT = "Which 3 countries meet at this flag?";
+const TRIPOINT_PROMPT = "Which 3 countries meet at this point?";
 const RIVER_PROMPT = "Which river is this?";
 
 let client: QueryClient;
@@ -229,7 +229,7 @@ describe("GameRoundPage playing", () => {
       const posts = callsTo(fetchMock).filter((c) => c.method === "POST" && c.url.endsWith("/answers"));
       expect(posts).toHaveLength(1);
       expect(posts[0].url).toBe("http://localhost:8080/api/games/g1/rounds/0/answers");
-      expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0 });
+      expect(posts[0].body).toEqual({ answerState: "CORRECT", hintsUsed: 0, wrongGuesses: 0, answersFound: 3 });
     });
     // The next round is prefetched once the answer is patched in; the answered round is not fetched again.
     await waitFor(() => expect(roundGets(fetchMock, 1)).toHaveLength(1));

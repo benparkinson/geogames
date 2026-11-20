@@ -1,6 +1,7 @@
 {
   "name" : "Philippines",
   "additionalNames" : [ "The Philippines" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 17320.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 105881,

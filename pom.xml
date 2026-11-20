@@ -356,7 +356,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.6.4</version>
+            <version>3.7.0</version>
             <configuration>
               <cleanupDaemonThreads>false</cleanupDaemonThreads>
             </configuration>
@@ -388,6 +388,7 @@
                   <mainClass>com.parkinson.benjamin.geogames.loaders.countries.CountryShapeMain</mainClass>
                   <arguments>
                     <argument>target/regen/countries</argument>
+                    <argument>geodata/countries/continents.json</argument>
                     <argument>target/regen/country-shapes</argument>
                   </arguments>
                 </configuration>

@@ -1,6 +1,7 @@
 {
   "name" : "Wallis and Futuna",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 79.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 76,

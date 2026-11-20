@@ -1,6 +1,7 @@
 {
   "name" : "Libya",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1780.0,
   "landBorderKm" : 4297.0,
   "areaKm2" : 1626531,

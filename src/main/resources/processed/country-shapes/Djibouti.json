@@ -1,6 +1,7 @@
 {
   "name" : "Djibouti",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 319.0,
   "landBorderKm" : 506.0,
   "areaKm2" : 21934,

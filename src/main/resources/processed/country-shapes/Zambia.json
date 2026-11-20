@@ -1,6 +1,7 @@
 {
   "name" : "Zambia",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 5612.0,
   "areaKm2" : 754730,

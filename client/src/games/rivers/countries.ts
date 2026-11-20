@@ -19,7 +19,7 @@ export default defineGame({
       hintsFrom(
         "Shows where the river starts and ends, then its first letter",
         river,
-        mapHint("Start and end flags are on the map"),
+        mapHint("The start and end are marked on the map"),
         firstLetterHint,
       ),
   }),

@@ -4,3 +4,4 @@ export { Notice } from "./Notice";
 export { Spinner } from "./Spinner";
 export { ToggleGroup } from "./ToggleGroup";
 export { Chip } from "./Chip";
+export { Toast } from "./Toast";

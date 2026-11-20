@@ -1,6 +1,7 @@
 {
   "name" : "Australia",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 33897.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 7613489,

@@ -1,6 +1,7 @@
 {
   "name" : "Saint Martin",
   "additionalNames" : [ "St Martin", "St. Martin" ],
+  "continents" : [ "North America" ],
   "coastKm" : 32.0,
   "landBorderKm" : 10.0,
   "areaKm2" : 69,

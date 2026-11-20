@@ -1,6 +1,7 @@
 {
   "name" : "Niger",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 5594.0,
   "areaKm2" : 1185161,

@@ -1,6 +1,7 @@
 {
   "name" : "Tanzania",
   "additionalNames" : [ "United Republic of Tanzania" ],
+  "continents" : [ "Africa" ],
   "coastKm" : 1909.0,
   "landBorderKm" : 3757.0,
   "areaKm2" : 942554,

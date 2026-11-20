@@ -7,10 +7,11 @@ import { FINISHED } from "../games/common/Model";
 import GameRoundPage from "../games/common/GameRoundPage";
 import PageShell from "../components/PageShell";
 import LoadingSpinner from "../components/LoadingSpinner";
-import HardModeToggle from "../components/HardModeToggle";
-import { useHardMode } from "../settings/hardMode";
+import DifficultyToggle from "../components/DifficultyToggle";
+import { useDifficulty } from "../settings/difficulty";
 import { Button, Notice, Spinner } from "../ui";
 import { useDelayedFlag } from "../ui/useDelayedFlag";
+import DailyComparison from "./DailyComparison";
 import ShareButton from "./ShareButton";
 import { clearDaily, DailyEntry, entryFor, readDaily, useDailyEntry, writeDaily } from "./dailyStorage";
 import { resultFromGame } from "./result";
@@ -19,7 +20,7 @@ import { useToday } from "./useToday";
 
 function Intro(): React.JSX.Element {
   const { mutate, isPending, error } = useCreateDailyGame();
-  const [hardMode] = useHardMode();
+  const [difficulty] = useDifficulty();
   const slow = useDelayedFlag(isPending, 3000);
   // Start waking a cold server while the player reads.
   useWakeServer();
@@ -31,10 +32,10 @@ function Intro(): React.JSX.Element {
     // Another tab may have started the game since this page loaded.
     if (entryFor(readDaily(), date)) return;
     mutate(
-      { date, hardMode },
+      { date, difficulty },
       {
         onSuccess: (game) => {
-          writeDaily({ v: 1, date, number: game.number, gameId: game.id, hardcore: hardMode });
+          writeDaily({ v: 1, date, number: game.number, gameId: game.id, difficulty });
         },
       },
     );
@@ -47,7 +48,7 @@ function Intro(): React.JSX.Element {
         Five geography puzzles from a variety of game modes. Wrong answers don&apos;t lower your score, but hints do.
       </p>
       <div className="mb-3">
-        <HardModeToggle />
+        <DifficultyToggle />
       </div>
       <Button variant="primary" onClick={play} disabled={isPending}>
         {isPending ? (
@@ -75,13 +76,17 @@ function Finished({
   entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
   onOpenGame: () => void;
 }): React.JSX.Element {
-  const text = shareText({ date: entry.date, hardMode: entry.hardcore, result: entry.result }, window.location.origin);
+  const text = shareText(
+    { date: entry.date, difficulty: entry.difficulty, result: entry.result },
+    window.location.origin,
+  );
   return (
     <PageShell>
       <h1 className="h3 mb-1">Daily {entry.date}</h1>
       <p className="mb-3">
         You scored {entry.result.score} / {entry.result.maxScore}
       </p>
+      <DailyComparison date={entry.date} difficulty={entry.difficulty} score={entry.result.score} />
       <pre className="mb-3" aria-label="Your result">
         {text}
       </pre>
@@ -96,7 +101,7 @@ function Finished({
 }
 
 /**
- * Shows the player's game and keeps their entry up to date: the result and the game's Hard mode setting once it is
+ * Shows the player's game and keeps their entry up to date: the result and the game's difficulty once it is
  * finished, and no entry if the server has deleted the game.
  */
 function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void }): React.JSX.Element {
@@ -108,7 +113,7 @@ function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void
   useEffect(() => {
     // One write: the result and the setting together, so two writes from one stale entry can't overwrite each other.
     if (game?.gameResult.gameState === FINISHED && !hasResult) {
-      writeDaily({ ...entry, hardcore: game.hardMode, result: resultFromGame(game.gameResult) });
+      writeDaily({ ...entry, difficulty: game.difficulty, result: resultFromGame(game.gameResult) });
       onFinished();
     }
   }, [game, hasResult, entry, onFinished]);

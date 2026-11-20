@@ -1,6 +1,7 @@
 {
   "name" : "Azerbaijan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia", "Europe" ],
   "coastKm" : 725.0,
   "landBorderKm" : 1926.0,
   "areaKm2" : 81298,

@@ -1,6 +1,7 @@
 {
   "name" : "Brunei",
   "additionalNames" : [ "Brunei Darussalam" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 185.0,
   "landBorderKm" : 400.0,
   "areaKm2" : 4437,

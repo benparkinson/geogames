@@ -1,5 +1,5 @@
 import type { Icon } from "react-bootstrap-icons";
-import type { RecordedGuess } from "../../api/types";
+import type { Difficulty, RecordedGuess } from "../../api/types";
 
 export type AnswerState = "UNANSWERED" | "CORRECT" | "GAVE_UP" | "OUT_OF_GUESSES";
 export type GameState = "CREATED" | "IN_PROGRESS" | "FINISHED";
@@ -29,6 +29,8 @@ export interface RoundAnswer {
   hintsUsed: number;
   /** Wrong guesses that counted against the guess limit, as `wrongGuessCount` in `guessReducer` counts them. */
   wrongGuesses: number;
+  /** How many of the round's answers were found: all of them for `CORRECT`, fewer for a revealed round. */
+  answersFound: number;
 }
 
 export interface Round {
@@ -54,8 +56,10 @@ export interface Round {
   guessLimit: number;
   /** Whether the game gives distance clues: the game module's `hasClues`. */
   hasClues: boolean;
-  /** Hard mode: fixed when the game was created, from the server. Hides the distance and direction clues. */
-  hardMode: boolean;
+  /** Fixed when the game was created, from the server. Hard hides the distance and direction clues. */
+  difficulty: Difficulty;
+  /** The continents to show from the start of the round: empty unless the game is Easy. */
+  continents: string[];
   /** The hints the server has recorded for this round. 0 until the round is answered. */
   hintsUsed: number;
   /** The guesses the server has recorded for this round, in order. */
@@ -71,10 +75,13 @@ export interface Round {
   /** The game's points so far, as the server last saw them. */
   score: number;
   maxScore: number;
-  perfectRounds: number;
   gameCompleted: boolean;
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
+  /** The hints charged for each round. */
+  roundHintsUsed: number[];
+  /** For each round: correct with no hints and no wrong guess. */
+  roundFirstGuess: boolean[];
   /** Set when this round is part of a daily challenge: the title shows "Daily <date>". */
   dailyDate?: string;
 }

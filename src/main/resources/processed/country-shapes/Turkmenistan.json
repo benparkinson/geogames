@@ -1,6 +1,7 @@
 {
   "name" : "Turkmenistan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 1886.0,
   "landBorderKm" : 3647.0,
   "areaKm2" : 470334,

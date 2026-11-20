@@ -119,7 +119,7 @@ class FeatureSelectorTest {
             new RiverOverride(
                 null,
                 "Murray River",
-                "Australia",
+                "Oceania",
                 List.of("Murray"),
                 null,
                 null,
@@ -135,7 +135,7 @@ class FeatureSelectorTest {
         .satisfies(
             c -> {
               assertThat(c.name()).isEqualTo("Murray River");
-              assertThat(c.continent()).isEqualTo("Australia");
+              assertThat(c.continent()).isEqualTo("Oceania");
               assertThat(c.aliases()).containsExactly("Murray");
             });
   }

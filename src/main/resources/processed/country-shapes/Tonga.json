@@ -1,6 +1,7 @@
 {
   "name" : "Tonga",
   "additionalNames" : [ ],
+  "continents" : [ "Oceania" ],
   "coastKm" : 346.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 258,

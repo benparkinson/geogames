@@ -1,6 +1,7 @@
 {
   "name" : "Falkland Islands",
   "additionalNames" : [ "Falklands" ],
+  "continents" : [ "South America" ],
   "coastKm" : 2384.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 6279,

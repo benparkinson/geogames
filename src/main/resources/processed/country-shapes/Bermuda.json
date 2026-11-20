@@ -1,6 +1,7 @@
 {
   "name" : "Bermuda",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 102.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 60,

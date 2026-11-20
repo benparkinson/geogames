@@ -1,6 +1,7 @@
 {
   "name" : "Kenya",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 824.0,
   "landBorderKm" : 3296.0,
   "areaKm2" : 588147,

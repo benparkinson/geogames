@@ -1,6 +1,7 @@
 {
   "name" : "Uzbekistan",
   "additionalNames" : [ ],
+  "continents" : [ "Asia" ],
   "coastKm" : 0.0,
   "landBorderKm" : 6080.0,
   "areaKm2" : 446723,

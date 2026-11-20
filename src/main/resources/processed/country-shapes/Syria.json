@@ -1,6 +1,7 @@
 {
   "name" : "Syria",
   "additionalNames" : [ "Syrian Arab Republic" ],
+  "continents" : [ "Asia" ],
   "coastKm" : 176.0,
   "landBorderKm" : 2097.0,
   "areaKm2" : 185952,

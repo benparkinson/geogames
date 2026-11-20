@@ -1,6 +1,7 @@
 {
   "name" : "Rwanda",
   "additionalNames" : [ ],
+  "continents" : [ "Africa" ],
   "coastKm" : 0.0,
   "landBorderKm" : 824.0,
   "areaKm2" : 25418,

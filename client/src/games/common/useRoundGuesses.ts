@@ -3,6 +3,7 @@ import { AnswerCandidate } from "./answers";
 import {
   GuessAction,
   GuessConfig,
+  foundAnswers,
   GuessResult,
   guessReducer,
   GuessState,
@@ -10,7 +11,7 @@ import {
   withLateClues,
   wrongGuessCount,
 } from "./guessReducer";
-import { Round, RoundAnswer, UNANSWERED } from "./Model";
+import { CORRECT_ANSWER, Round, RoundAnswer, UNANSWERED } from "./Model";
 
 /**
  * The state of one round's guesses and hints, and what the player can do to it. It is restored from what the server
@@ -36,6 +37,9 @@ export function useRoundGuesses({
   giveUp: () => void;
   takeHint: () => void;
 } {
+  /** All the answers for a correct round, otherwise the ones found so far. */
+  const answersFoundAt = (finished: RoundAnswer["answerState"], at: GuessState) =>
+    finished === CORRECT_ANSWER ? answerCount : foundAnswers(at).length;
   const config: GuessConfig = {
     answers,
     answerCount,
@@ -69,6 +73,7 @@ export function useRoundGuesses({
         answerState: restored.finished,
         hintsUsed: restored.state.hintsUsed,
         wrongGuesses: wrongGuessCount(restored.state),
+        answersFound: answersFoundAt(restored.finished, restored.state),
       });
     }
   });
@@ -90,6 +95,7 @@ export function useRoundGuesses({
         answerState: outcome.finished,
         hintsUsed: outcome.state.hintsUsed,
         wrongGuesses: wrongGuessCount(outcome.state),
+        answersFound: answersFoundAt(outcome.finished, outcome.state),
       });
     }
     return outcome;

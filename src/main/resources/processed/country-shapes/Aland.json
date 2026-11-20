@@ -1,6 +1,7 @@
 {
   "name" : "Åland",
   "additionalNames" : [ "Åland Islands" ],
+  "continents" : [ "Europe" ],
   "coastKm" : 595.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 584,

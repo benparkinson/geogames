@@ -1,6 +1,7 @@
 {
   "name" : "Italy",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 6020.0,
   "landBorderKm" : 1540.0,
   "areaKm2" : 250368,

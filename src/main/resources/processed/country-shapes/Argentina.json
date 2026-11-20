@@ -1,6 +1,7 @@
 {
   "name" : "Argentina",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 5912.0,
   "landBorderKm" : 8684.0,
   "areaKm2" : 2762953,

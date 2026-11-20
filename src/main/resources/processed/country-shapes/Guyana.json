@@ -1,6 +1,7 @@
 {
   "name" : "Guyana",
   "additionalNames" : [ ],
+  "continents" : [ "South America" ],
   "coastKm" : 825.0,
   "landBorderKm" : 2363.0,
   "areaKm2" : 212076,

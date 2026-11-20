@@ -1,6 +1,7 @@
 {
   "name" : "Nicaragua",
   "additionalNames" : [ ],
+  "continents" : [ "North America" ],
   "coastKm" : 1373.0,
   "landBorderKm" : 1056.0,
   "areaKm2" : 129124,

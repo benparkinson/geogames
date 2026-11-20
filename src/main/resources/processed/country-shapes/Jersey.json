@@ -1,6 +1,7 @@
 {
   "name" : "Jersey",
   "additionalNames" : [ ],
+  "continents" : [ "Europe" ],
   "coastKm" : 54.0,
   "landBorderKm" : 0.0,
   "areaKm2" : 119,
