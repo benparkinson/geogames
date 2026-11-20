@@ -15,9 +15,9 @@
     "react-leaflet": "^5.0.0"
   },
   "scripts": {
-    "dev": "node scripts/third-party-licenses.mjs && next dev",
+    "dev": "node scripts/write-build-info.mjs && node scripts/third-party-licenses.mjs && next dev",
     "start": "next start",
-    "build": "node scripts/third-party-licenses.mjs && next build",
+    "build": "node scripts/write-build-info.mjs && node scripts/third-party-licenses.mjs && next build",
     "licenses": "node scripts/third-party-licenses.mjs",
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings 0 && prettier --check . && node scripts/check-theme.mjs",

@@ -60,6 +60,10 @@ function PrivacyPage(): React.JSX.Element {
           <a href="https://render.com/privacy">Render</a> (render.com, a United States company) hosts this site, its map
           images and its game server, so it receives yours.
         </p>
+        <p>
+          While the site is open it occasionally fetches a small file from the same server to check whether a newer
+          version has been published. The request contains nothing about you.
+        </p>
         <p>The &quot;Buy me a coffee&quot; link opens Ko-fi. Nothing is sent to Ko-fi unless you click it.</p>
 
         <h2 className="h5">Why this is allowed</h2>
