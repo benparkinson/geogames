@@ -260,7 +260,7 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -270,8 +270,7 @@ describe("MapGame resuming a finished round", () => {
       hints: { description: "A clue", text: (index) => `Hint number ${index}` },
     });
 
-    expect(screen.getByText("Correct! +67")).toBeInTheDocument();
-    expect(screen.getByText("2 hints used")).toBeInTheDocument();
+    expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
     expect(screen.getByText("Hint number 0").closest("ul")).toHaveClass("round-hints");
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
@@ -496,7 +495,7 @@ describe("MapGame panel", () => {
   it("shows the round result instead of the form when the round is over", () => {
     renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
-    expect(screen.getByText("Perfect! +100")).toBeInTheDocument();
+    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
   });
@@ -799,6 +798,25 @@ describe("MapGame saving hints", () => {
     await guess(user, "France");
 
     expect(order).toEqual(["hint", "guess", "answer"]);
+  });
+
+  it("says first guess for a single-answer round won straight away", async () => {
+    renderGame({ answerCount: 1, answers: [ANSWERS[0]] });
+
+    await guess(userEvent.setup(), "France");
+
+    expect(screen.getByText("First guess! +100")).toBeInTheDocument();
+  });
+
+  it("says correct for a single-answer round won after a wrong guess", async () => {
+    renderGame({ answerCount: 1, answers: [ANSWERS[0]] });
+    const user = userEvent.setup();
+
+    await guess(user, "Italy");
+    await guess(user, "France");
+
+    expect(screen.getByText("Correct! +100")).toBeInTheDocument();
+    expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
   });
 
   it("shows the hints taken before a refresh, and what the round is now worth", () => {

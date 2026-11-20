@@ -28,7 +28,6 @@ function toGameResultView(result: GameResultResponse): GameRoundView["gameResult
     score: result.score,
     maxScore: result.maxScore,
     roundsCorrect: result.roundsCorrect,
-    perfectRounds: result.perfectRounds,
     roundAnswerStates: result.roundAnswerStates,
     roundPoints: result.roundPoints,
     roundHintsUsed: result.roundHintsUsed,

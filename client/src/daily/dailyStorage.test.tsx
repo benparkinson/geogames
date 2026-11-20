@@ -14,7 +14,7 @@ const entry: DailyEntry = { v: 1, date: "2026-11-18", number: 2, gameId: "g1", h
 const finished: DailyEntry = {
   ...entry,
   hardcore: true,
-  result: { score: 430, maxScore: 500, rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] },
+  result: { score: 430, maxScore: 500, rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"] },
 };
 
 beforeEach(resetDailyStorageForTests);
@@ -32,6 +32,13 @@ describe("readDaily and writeDaily", () => {
     writeDaily(finished);
     expect(readDaily()).toEqual(finished);
     expect(JSON.parse(localStorage.getItem("gg-daily")!)).toEqual(finished);
+  });
+
+  it("still loads an entry stored with the old outcome keys, mapped to the new ones", () => {
+    const old = { ...entry, result: { score: 300, maxScore: 500, rounds: ["perfect", "hints", "revealed"] } };
+    localStorage.setItem("gg-daily", JSON.stringify(old));
+
+    expect(readDaily()?.result?.rounds).toEqual(["correct", "hints", "missed"]);
   });
 
   it("keeps only the latest entry, and clearDaily removes it", () => {
