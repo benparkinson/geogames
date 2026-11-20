@@ -66,7 +66,7 @@ describe("GameTopBar", () => {
     );
 
     expect(screen.getByText("Score 100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--missed");
   });
 
   it("does not count an already answered round twice", () => {
@@ -95,24 +95,49 @@ describe("GameTopBar", () => {
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
   });
 
-  it("shows the current round as perfect straight away when the player has just won without hints", () => {
+  it("shows the current round as a first guess straight away when the player has just won with no hints and no wrong guess", () => {
     render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={0} />);
 
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--perfect");
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--first-guess");
   });
 
   it("shows the current round as correct straight away when the player won with a hint", () => {
     render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={1} />);
 
     const dot = screen.getByRole("button", { name: "Round 1: current" });
+    expect(dot).toHaveClass("round-dot--hints");
+    expect(dot).not.toHaveClass("round-dot--first-guess");
+  });
+
+  it("shows the current round as correct, not a first guess, when the player won after a wrong guess", () => {
+    render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={0} wrongGuesses={1} />);
+
+    const dot = screen.getByRole("button", { name: "Round 1: current" });
     expect(dot).toHaveClass("round-dot--correct");
-    expect(dot).not.toHaveClass("round-dot--perfect");
+    expect(dot).not.toHaveClass("round-dot--first-guess");
+  });
+
+  it("shows a round given up with some answers found as with hints, not missed", () => {
+    render(
+      <GameTopBar
+        round={makeRoundProps()}
+        gameOver={true}
+        gaveUp={true}
+        hintsUsed={0}
+        answersFound={2}
+        answerCount={3}
+      />,
+    );
+
+    const dot = screen.getByRole("button", { name: "Round 1: current" });
+    expect(dot).toHaveClass("round-dot--hints");
+    expect(dot).not.toHaveClass("round-dot--missed");
   });
 
   it("shows the current round as revealed straight away when the player gave up", () => {
     render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={true} hintsUsed={0} />);
 
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--revealed");
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--missed");
   });
 
   it("leaves the current round unmarked while it is still being played", () => {
@@ -120,8 +145,8 @@ describe("GameTopBar", () => {
 
     const dot = screen.getByRole("button", { name: "Round 1: current" });
     expect(dot).not.toHaveClass("round-dot--correct");
-    expect(dot).not.toHaveClass("round-dot--perfect");
-    expect(dot).not.toHaveClass("round-dot--revealed");
+    expect(dot).not.toHaveClass("round-dot--first-guess");
+    expect(dot).not.toHaveClass("round-dot--missed");
   });
 
   it("does not mutate the round it was given", () => {

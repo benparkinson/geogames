@@ -1,13 +1,8 @@
 import type { Difficulty } from "../api/types";
-import type { DailyResult, RoundOutcome } from "./dailyStorage";
+import { OUTCOME_STYLES } from "../games/common/outcome";
+import type { DailyResult } from "./dailyStorage";
 
 const TITLE_SUFFIX: Record<Difficulty, string> = { EASY: " · Easy", NORMAL: "", HARD: " · Hard mode" };
-
-const SQUARES: Record<RoundOutcome, string> = {
-  perfect: "🟩",
-  hints: "🟨",
-  revealed: "🟥",
-};
 
 /**
  * The spoiler-free text a player copies: the score and one square per round, in order. No answers, game types
@@ -21,7 +16,7 @@ export function shareText(
   return [
     title,
     `${daily.result.score} / ${daily.result.maxScore}`,
-    daily.result.rounds.map((r) => SQUARES[r]).join(""),
+    daily.result.rounds.map((r) => OUTCOME_STYLES[r].emoji).join(""),
     `${origin}/daily`,
   ].join("\n");
 }

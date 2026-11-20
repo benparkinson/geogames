@@ -56,7 +56,7 @@ describe("Tripoint guessing", () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
     renderTripoint();
 
-    expect(screen.getByText("Which 3 countries meet at this flag?")).toBeInTheDocument();
+    expect(screen.getByText("Which 3 countries meet at this point?")).toBeInTheDocument();
   });
 
   it("accepts names, any case, and aliases, and reports CORRECT after the third", async () => {

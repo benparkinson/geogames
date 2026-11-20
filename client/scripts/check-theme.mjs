@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 // Leaflet styles these from JavaScript, on the relief map or the blank map, and they don't follow light/dark.
 const COLOUR_LITERAL_EXCEPTIONS = [
   "src/map/constants.ts", // answer, revealed and clue colours for Leaflet layers
-  "src/map/flagIcons.ts", // flag marker SVGs
+  "src/map/markerIcons.ts", // map pin SVGs
 ];
 const TOKENS_FILE = "src/theme/tokens.css";
 

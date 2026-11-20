@@ -77,6 +77,8 @@ describe("toRoundView", () => {
           perfectRounds: 1,
           roundPoints: [100, 83, 0],
           roundHintsUsed: [0, 1, 0],
+          roundFirstGuess: [true, false, false],
+          firstGuessRounds: 1,
         },
       }),
     );
@@ -89,10 +91,11 @@ describe("toRoundView", () => {
       score: 183,
       maxScore: 300,
       roundsCorrect: 2,
-      perfectRounds: 1,
       roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
       roundPoints: [100, 83, 0],
       roundHintsUsed: [0, 1, 0],
+      roundFirstGuess: [true, false, false],
+      firstGuessRounds: 1,
     });
   });
 });
@@ -139,10 +142,11 @@ describe("useSubmitAnswer", () => {
       score: answered.gameResult.score,
       maxScore: answered.gameResult.maxScore,
       roundsCorrect: answered.gameResult.roundsCorrect,
-      perfectRounds: answered.gameResult.perfectRounds,
       roundAnswerStates: answered.gameResult.roundAnswerStates,
       roundPoints: answered.gameResult.roundPoints,
       roundHintsUsed: answered.gameResult.roundHintsUsed,
+      roundFirstGuess: answered.gameResult.roundFirstGuess,
+      firstGuessRounds: answered.gameResult.firstGuessRounds,
     });
     const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
     expect(posts).toHaveLength(1);

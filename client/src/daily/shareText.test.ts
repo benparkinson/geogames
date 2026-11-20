@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { shareText } from "./shareText";
 
-const result = { score: 430, maxScore: 500, rounds: ["perfect", "hints", "perfect", "revealed", "perfect"] as const };
+const result = {
+  score: 430,
+  maxScore: 500,
+  rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"] as const,
+};
 
 describe("shareText", () => {
   it("is the title, the score, one square per round and the link", () => {
@@ -10,7 +14,7 @@ describe("shareText", () => {
         { date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } },
         "https://example.org",
       ),
-    ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n🟩🟨🟩🟥🟩\nhttps://example.org/daily");
+    ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n⭐🟨🟩🟥⭐\nhttps://example.org/daily");
   });
 
   it("marks Easy and Hard mode in the title, and Normal not at all", () => {
@@ -32,7 +36,7 @@ describe("shareText", () => {
       {
         date: "2026-11-18",
         difficulty: "NORMAL",
-        result: { score: 0, maxScore: 500, rounds: ["revealed", "revealed", "revealed", "revealed", "revealed"] },
+        result: { score: 0, maxScore: 500, rounds: ["missed", "missed", "missed", "missed", "missed"] },
       },
       "https://a.b",
     );

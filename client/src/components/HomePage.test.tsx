@@ -414,7 +414,11 @@ describe("HomePage daily challenge card", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     writeDaily({
       ...entry,
-      result: { score: 430, maxScore: 500, rounds: ["perfect", "perfect", "perfect", "perfect", "perfect"] },
+      result: {
+        score: 430,
+        maxScore: 500,
+        rounds: ["firstGuess", "firstGuess", "firstGuess", "firstGuess", "firstGuess"],
+      },
     });
     renderHome();
 

@@ -98,6 +98,7 @@ function MapGame<Type>({
               round={round}
               hintsUsed={hintsUsed}
               hintCount={round.hintCount}
+              wrongGuesses={wrong.length}
               answersFound={foundAnswers(state).length}
               answerCount={answerCount}
             />
@@ -138,6 +139,7 @@ function MapGame<Type>({
           gaveUp={gaveUp}
           outOfGuesses={outOfGuesses}
           hintsUsed={hintsUsed}
+          wrongGuesses={wrong.length}
           answersFound={foundAnswers(state).length}
           answerCount={answerCount}
         />

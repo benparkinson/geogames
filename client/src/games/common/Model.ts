@@ -15,11 +15,6 @@ export function isRevealed(state: AnswerState): boolean {
   return state === GAVE_UP || state === OUT_OF_GUESSES;
 }
 
-/** A round that ended revealed but earned points: some of its answers were found. */
-export function isPartlyCorrect(state: AnswerState, points: number): boolean {
-  return isRevealed(state) && points > 0;
-}
-
 /** How a round that has just ended was answered: out of guesses, given up, or solved. */
 export function finalAnswerState(
   gaveUp: boolean,
@@ -80,10 +75,13 @@ export interface Round {
   /** The game's points so far, as the server last saw them. */
   score: number;
   maxScore: number;
-  perfectRounds: number;
   gameCompleted: boolean;
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
+  /** The hints charged for each round. */
+  roundHintsUsed: number[];
+  /** For each round: correct with no hints and no wrong guess. */
+  roundFirstGuess: boolean[];
   /** Set when this round is part of a daily challenge: the title shows "Daily <date>". */
   dailyDate?: string;
 }

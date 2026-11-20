@@ -20,6 +20,5 @@ test("a refresh keeps a hint taken, and its cost", async ({ page, api }) => {
   for (const answer of answers) {
     await guess(page, answer.name);
   }
-  await expect(page.getByText("Correct! +83")).toBeVisible();
-  await expect(page.getByText("1 hint used")).toBeVisible();
+  await expect(page.getByText("Correct with a hint · +83")).toBeVisible();
 });

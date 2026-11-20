@@ -47,11 +47,15 @@
     "POST /api/games/{id}/rounds/{round}/answers" : {
       "answerState" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -88,11 +92,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -220,11 +228,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -333,11 +345,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -440,11 +456,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -559,11 +579,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -678,11 +702,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -812,11 +840,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -879,11 +911,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -1023,11 +1059,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -1116,11 +1156,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"
@@ -1194,11 +1238,15 @@
       },
       "difficulty" : "string",
       "gameResult" : {
+        "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
         "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
+        },
+        "roundFirstGuess" : {
+          "array" : "boolean"
         },
         "roundHintsUsed" : {
           "array" : "number"

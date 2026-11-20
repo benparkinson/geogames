@@ -82,6 +82,9 @@ export interface GameResultResponse {
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
   roundHintsUsed: number[];
+  /** Per round: correct with no hints and no wrong guess. */
+  roundFirstGuess: boolean[];
+  firstGuessRounds: number;
 }
 
 export interface GameTypeModel {
@@ -107,5 +110,6 @@ export interface GameRoundView {
   difficulty: Difficulty;
   /** The continents to show from the start of the round: empty unless the game is Easy. */
   continents: string[];
-  gameResult: Omit<GameResultResponse, "roundsUnanswered">;
+  /** The app doesn't read `perfectRounds`: the server still sends it for the deployed client. */
+  gameResult: Omit<GameResultResponse, "roundsUnanswered" | "perfectRounds">;
 }
