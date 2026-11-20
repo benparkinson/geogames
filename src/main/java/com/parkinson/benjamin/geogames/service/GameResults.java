@@ -16,8 +16,13 @@ final class GameResults {
   private GameResults() {}
 
   static int pointsFor(GameRoundEntity round) {
+    Integer found = round.getAnswersFound();
     return Scoring.roundPoints(
-        round.getAnswerState(), round.getHintsUsed(), round.getGameType().hintCount());
+        round.getAnswerState(),
+        round.getHintsUsed(),
+        round.getGameType().hintCount(),
+        found == null ? 0 : found,
+        round.getGameType().answerCount());
   }
 
   static GameResult of(GameEntity game) {

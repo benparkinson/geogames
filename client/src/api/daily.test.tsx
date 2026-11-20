@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { localDateString, useCreateDailyGame } from "./daily";
-import { makeDailyGameResponse } from "../test/fixtures";
+import { localDateString, useCreateDailyGame, useDailyScore } from "./daily";
+import { makeDailyGameResponse, makeDailyScore } from "../test/fixtures";
 import { clientWrapper } from "../test/render";
 
 afterEach(() => {
@@ -67,5 +67,16 @@ describe("useCreateDailyGame", () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("useDailyScore", () => {
+  it("fetches the day's totals", async () => {
+    const score = makeDailyScore();
+    const fetchMock = stubFetch({ status: 200, body: score });
+    const { result } = renderHook(() => useDailyScore("2026-11-18"), { wrapper: clientWrapper() });
+
+    await waitFor(() => expect(result.current.data).toEqual(score));
+    expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8080/api/daily-scores/2026-11-18");
   });
 });

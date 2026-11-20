@@ -167,14 +167,14 @@ class GameServiceTest {
 
   private static GameRoundEntity round(int index, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(index, GameType.TRIPOINT, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     return entity;
   }
 
   private static GameRoundEntity hintedRound(
       int index, GameType type, AnswerState state, int hintsUsed) {
     GameRoundEntity entity = new GameRoundEntity(index, type, "{}");
-    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses());
+    entity.recordAnswer(state, hintsUsed, entity.getWrongGuesses(), null);
     return entity;
   }
 
@@ -330,7 +330,7 @@ class GameServiceTest {
 
     assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().hardMode()).isFalse();
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     verify(events).publishEvent(captor.capture());
     assertThat(((RoundAnswered) captor.getValue()).hardMode()).isNull();
@@ -343,7 +343,7 @@ class GameServiceTest {
             new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))), "TRIPOINT", true);
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     verify(events).publishEvent(captor.capture());
@@ -357,7 +357,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
 
     RoundAnswerResponse result =
-        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
 
     assertThat(result.answerState()).isEqualTo(AnswerState.GAVE_UP);
     verify(riverGenerator, never()).rebuild(any());
@@ -385,7 +385,7 @@ class GameServiceTest {
 
     assertThatThrownBy(() -> service.getGameRound(GAME_ID, 0))
         .isInstanceOf(RoundDataMissingException.class);
-    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null)).isPresent();
+    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null)).isPresent();
   }
 
   @Test
@@ -558,7 +558,7 @@ class GameServiceTest {
   void getGameRoundReturnsTheRequestedRound() {
     GameRoundEntity first = new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:first");
     GameRoundEntity second = new GameRoundEntity(1, GameType.RIVERS_BY_SHAPE, "river:second");
-    second.recordAnswer(AnswerState.GAVE_UP, second.getHintsUsed(), second.getWrongGuesses());
+    second.recordAnswer(AnswerState.GAVE_UP, second.getHintsUsed(), second.getWrongGuesses(), null);
     when(riverGenerator.rebuild("river:second")).thenReturn(rivers(1).get(0));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(first, second)));
 
@@ -592,8 +592,8 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(OTHER_ID))
         .thenReturn(Optional.of(game(round(0, AnswerState.UNANSWERED))));
 
-    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null)).isEmpty();
-    assertThat(service.submitAnswer(OTHER_ID, 5, AnswerState.CORRECT, 0, null)).isEmpty();
+    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null)).isEmpty();
+    assertThat(service.submitAnswer(OTHER_ID, 5, AnswerState.CORRECT, 0, null, null)).isEmpty();
     verify(gameRepository, never()).save(any());
   }
 
@@ -603,7 +603,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse afterFirst =
-        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
 
     assertThat(afterFirst.answerState()).isEqualTo(AnswerState.CORRECT);
     assertThat(afterFirst.gameResult().gameState()).isEqualTo(GameState.IN_PROGRESS);
@@ -612,7 +612,7 @@ class GameServiceTest {
     verify(gameRepository, times(1)).save(game);
 
     RoundAnswerResponse afterSecond =
-        service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
 
     assertThat(afterSecond.gameResult().gameState()).isEqualTo(GameState.FINISHED);
     assertThat(afterSecond.gameResult().score()).isEqualTo(100);
@@ -629,7 +629,7 @@ class GameServiceTest {
             hintedRound(1, GameType.RIVERS_BY_SHAPE, AnswerState.UNANSWERED, 0));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    service.submitAnswer(GAME_ID, 1, AnswerState.CORRECT, 1, 2);
+    service.submitAnswer(GAME_ID, 1, AnswerState.CORRECT, 1, 2, null);
 
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     verify(events).publishEvent(captor.capture());
@@ -645,6 +645,7 @@ class GameServiceTest {
                 AnswerState.CORRECT,
                 1,
                 2,
+                1,
                 LocalDate.now(ZoneOffset.UTC),
                 null));
   }
@@ -653,9 +654,9 @@ class GameServiceTest {
   void anIdenticalRepeatPublishesNothing() {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
     verify(events, times(1)).publishEvent(any(Object.class));
   }
@@ -665,7 +666,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class);
 
     verify(events, never()).publishEvent(any(Object.class));
@@ -676,7 +677,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class)
         .hasMessageContaining("CORRECT")
         .hasMessageContaining("GAVE_UP");
@@ -691,7 +692,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse again =
-        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
 
     assertThat(again.answerState()).isEqualTo(AnswerState.GAVE_UP);
     assertThat(again.gameResult().gameState()).isEqualTo(GameState.FINISHED);
@@ -703,7 +704,8 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.CORRECT));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.UNANSWERED, 0, null))
+    assertThatThrownBy(
+            () -> service.submitAnswer(GAME_ID, 0, AnswerState.UNANSWERED, 0, null, null))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("UNANSWERED");
 
@@ -717,7 +719,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse result =
-        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 1, null, null).orElseThrow();
 
     assertThat(game.getRounds().get(0).getHintsUsed()).isEqualTo(1);
     assertThat(result.hintsUsed()).isEqualTo(1);
@@ -730,7 +732,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 4, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 4, null, null))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("3 hints")
         .hasMessageContaining("4");
@@ -745,7 +747,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.UNANSWERED));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, -1, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, -1, null, null))
         .isInstanceOf(IllegalArgumentException.class);
 
     assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
@@ -757,7 +759,7 @@ class GameServiceTest {
     GameEntity game = game(hintedRound(0, GameType.TRIPOINT, AnswerState.CORRECT, 1));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class)
         .hasMessageContaining("1 hints")
         .hasMessageContaining("0 hints");
@@ -772,7 +774,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse again =
-        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null, null).orElseThrow();
 
     assertThat(again.points()).isEqualTo(67);
     verify(gameRepository, never()).save(any());
@@ -784,7 +786,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse result =
-        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 3, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 3, null, null).orElseThrow();
 
     assertThat(result.hintsUsed()).isEqualTo(3);
     assertThat(result.points()).isZero();
@@ -797,7 +799,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse result =
-        service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 1, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 1, null, null).orElseThrow();
 
     assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
     assertThat(result.answerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
@@ -814,7 +816,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     RoundAnswerResponse again =
-        service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, null, null).orElseThrow();
 
     assertThat(again.answerState()).isEqualTo(AnswerState.OUT_OF_GUESSES);
     verify(gameRepository, never()).save(any());
@@ -825,7 +827,7 @@ class GameServiceTest {
     GameEntity game = game(round(0, AnswerState.OUT_OF_GUESSES));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null))
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null))
         .isInstanceOf(RoundAlreadyAnsweredException.class)
         .hasMessageContaining("OUT_OF_GUESSES");
 
@@ -866,7 +868,7 @@ class GameServiceTest {
   void aDailyGameIsCountedOnTheAnswerThatFinishesIt() {
     dailyGame(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED));
 
-    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
     verify(dailyScores).recordFinished(DAILY_DATE, 100, 200);
   }
@@ -875,8 +877,8 @@ class GameServiceTest {
   void repeatingTheFinalAnswerDoesNotCountAgain() {
     dailyGame(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED));
 
-    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
-    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
     verify(dailyScores, times(1)).recordFinished(any(), anyInt(), anyInt());
   }
@@ -885,7 +887,7 @@ class GameServiceTest {
   void anUnfinishedDailyGameIsNotCounted() {
     dailyGame(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
     verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
   }
@@ -895,7 +897,7 @@ class GameServiceTest {
     when(gameRepository.findByPublicId(GAME_ID))
         .thenReturn(Optional.of(game(round(0, AnswerState.UNANSWERED))));
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
     verify(dailyScores, never()).recordFinished(any(), anyInt(), anyInt());
   }
@@ -905,8 +907,8 @@ class GameServiceTest {
     dailyGame(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED));
     int limit = GameType.TRIPOINT.guessLimit();
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit);
-    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
     verify(dailyScores).recordFinished(DAILY_DATE, 0, 200);
   }
@@ -915,7 +917,7 @@ class GameServiceTest {
 
   private GameRoundEntity guessRound(GameType type, AnswerState state) {
     GameRoundEntity entity = new GameRoundEntity(0, type, "{}");
-    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses());
+    entity.recordAnswer(state, entity.getHintsUsed(), entity.getWrongGuesses(), null);
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game(entity)));
     return entity;
   }
@@ -1018,12 +1020,18 @@ class GameServiceTest {
     entity.addHint(0);
 
     RoundAnswerResponse result =
-        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
 
     assertThat(entity.getHintsUsed()).isEqualTo(2);
     assertThat(result.hintsUsed()).isEqualTo(2);
     assertThat(result.points())
-        .isEqualTo(Scoring.roundPoints(AnswerState.CORRECT, 2, GameType.TRIPOINT.hintCount()));
+        .isEqualTo(
+            Scoring.roundPoints(
+                AnswerState.CORRECT,
+                2,
+                GameType.TRIPOINT.hintCount(),
+                3,
+                GameType.TRIPOINT.answerCount()));
     ArgumentCaptor<RoundAnswered> event = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(event.capture());
     assertThat(event.getValue().hintsUsed()).isEqualTo(2);
@@ -1033,10 +1041,10 @@ class GameServiceTest {
   void aRepeatOfThatAnswerIsANoOp() {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
     entity.addHint(0);
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
 
     RoundAnswerResponse again =
-        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null).orElseThrow();
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
 
     assertThat(again.hintsUsed()).isEqualTo(1);
     verify(events, times(1)).publishEvent(any(Object.class));
@@ -1047,8 +1055,100 @@ class GameServiceTest {
     GameRoundEntity entity = guessRound(GameType.TRIPOINT, AnswerState.UNANSWERED);
     entity.addHint(0);
 
-    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null);
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null, null);
 
     assertThat(entity.getHintsUsed()).isEqualTo(2);
+  }
+
+  @Test
+  void aPartlyAnsweredTripointScoresItsShare() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2).orElseThrow();
+
+    assertThat(result.points()).isEqualTo(67);
+    assertThat(game.getRounds().get(0).getAnswersFound()).isEqualTo(2);
+    ArgumentCaptor<RoundAnswered> event = ArgumentCaptor.forClass(RoundAnswered.class);
+    verify(events).publishEvent(event.capture());
+    assertThat(event.getValue().answersFound()).isEqualTo(2);
+  }
+
+  @Test
+  void recordedCorrectGuessesCountWhenTheClientDoesNotReportAnyFound() {
+    GameRoundEntity unanswered = round(0, AnswerState.UNANSWERED);
+    unanswered.addGuess(new RoundGuess("A", true));
+    unanswered.addGuess(new RoundGuess("B", true));
+    unanswered.addGuess(new RoundGuess("X", false));
+    GameEntity game = game(unanswered);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
+
+    assertThat(result.points()).isEqualTo(67);
+    assertThat(unanswered.getAnswersFound()).isEqualTo(2);
+  }
+
+  @Test
+  void theLargerOfReportedAndRecordedAnswersFoundCounts() {
+    GameRoundEntity unanswered = round(0, AnswerState.UNANSWERED);
+    unanswered.addGuess(new RoundGuess("A", true));
+    GameEntity game = game(unanswered);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2).orElseThrow();
+
+    assertThat(result.points()).isEqualTo(67);
+  }
+
+  @Test
+  void aRevealedRoundWithNothingReportedOrRecordedStoresNoAnswersFound() {
+    GameRoundEntity unanswered = round(0, AnswerState.UNANSWERED);
+    GameEntity game = game(unanswered);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
+
+    assertThat(result.points()).isZero();
+    assertThat(unanswered.getAnswersFound()).isNull();
+  }
+
+  @Test
+  void aCorrectRoundStoresEveryAnswerFound() {
+    GameRoundEntity unanswered = round(0, AnswerState.UNANSWERED);
+    GameEntity game = game(unanswered);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    RoundAnswerResponse result =
+        service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
+
+    assertThat(result.points()).isEqualTo(100);
+    assertThat(unanswered.getAnswersFound()).isEqualTo(3);
+  }
+
+  @Test
+  void aRepeatedPartialAnswerIsANoOpAndAChangedOneIsAConflict() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2);
+
+    assertThat(service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2)).isPresent();
+    verify(gameRepository, times(1)).save(any());
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 1))
+        .isInstanceOf(RoundAlreadyAnsweredException.class);
+  }
+
+  @Test
+  void anImpossibleAnswersFoundIsRejected() {
+    GameEntity game = game(round(0, AnswerState.UNANSWERED));
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 3))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
   }
 }

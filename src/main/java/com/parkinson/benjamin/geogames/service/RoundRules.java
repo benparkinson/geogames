@@ -85,11 +85,47 @@ public class RoundRules {
     return true;
   }
 
-  /** Checks the hints and wrong guesses an answer reports against what the round's type allows. */
+  /**
+   * Checks the hints, wrong guesses and answers found an answer reports against what the round's
+   * type allows.
+   */
   void validateAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      GameRoundEntity round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
     validateHintsUsed(round, hintsUsed);
     validateWrongGuesses(round, answerState, wrongGuesses);
+    validateAnswersFound(round, answerState, answersFound);
+  }
+
+  /**
+   * Checks the reported answers found: a correct round found all of them, and any other answer
+   * found fewer. A null (not reported) is always accepted.
+   */
+  private static void validateAnswersFound(
+      GameRoundEntity round, AnswerState answerState, Integer answersFound) {
+    if (answersFound == null) {
+      return;
+    }
+    GameType type = round.getGameType();
+    int count = type.answerCount();
+    if (answersFound < 0 || answersFound > count) {
+      throw new IllegalArgumentException(
+          "A round of %s has %d answers, so %d can't have been found"
+              .formatted(type, count, answersFound));
+    }
+    if (answerState == AnswerState.CORRECT && answersFound != count) {
+      throw new IllegalArgumentException(
+          "A correct round of %s has all %d answers found, not %d"
+              .formatted(type, count, answersFound));
+    }
+    if (answerState != AnswerState.CORRECT && answersFound == count) {
+      throw new IllegalArgumentException(
+          "A round of %s with all %d answers found is correct, so it can't be %s"
+              .formatted(type, count, answerState));
+    }
   }
 
   private static void validateHintsUsed(GameRoundEntity round, int hintsUsed) {
@@ -139,12 +175,18 @@ public class RoundRules {
    * @return whether the round changed
    */
   boolean recordAnswer(
-      GameRoundEntity round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      GameRoundEntity round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
     AnswerState current = round.getAnswerState();
     if (current != AnswerState.UNANSWERED) {
       if (current == answerState
           && round.getHintsUsed() == hintsUsed
-          && Objects.equals(round.getWrongGuesses(), wrongGuesses)) {
+          && Objects.equals(round.getWrongGuesses(), wrongGuesses)
+          && (Objects.equals(round.getAnswersFound(), answersFound)
+              || (current == AnswerState.CORRECT && round.getAnswersFound() == null))) {
         return false;
       }
       throw new RoundAlreadyAnsweredException(
@@ -152,11 +194,13 @@ public class RoundRules {
           current,
           round.getHintsUsed(),
           round.getWrongGuesses(),
+          round.getAnswersFound(),
           answerState,
           hintsUsed,
-          wrongGuesses);
+          wrongGuesses,
+          answersFound);
     }
-    round.recordAnswer(answerState, hintsUsed, wrongGuesses);
+    round.recordAnswer(answerState, hintsUsed, wrongGuesses, answersFound);
     return true;
   }
 }

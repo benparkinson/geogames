@@ -8,6 +8,7 @@ import { roundQuery, useCreateGame } from "../../api/games";
 import { GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
 import { isRevealed } from "./Model";
+import DailyComparison from "../../daily/DailyComparison";
 import ShareButton from "../../daily/ShareButton";
 import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
@@ -75,6 +76,7 @@ export default function GameSummary({
         )}
       </h1>
       <p className="gg-text-muted mb-3">{summaryLine}</p>
+      {daily && <DailyComparison date={daily.date} score={score} />}
 
       <div className="gg-list mb-3">
         {all.map((r, i) => (

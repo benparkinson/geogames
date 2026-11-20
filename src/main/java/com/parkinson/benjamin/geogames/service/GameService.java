@@ -150,13 +150,20 @@ public class GameService {
 
   @Transactional
   public Optional<RoundAnswerResponse> submitAnswer(
-      UUID gameId, int round, AnswerState answerState, int hintsUsed, Integer wrongGuesses) {
+      UUID gameId,
+      int round,
+      AnswerState answerState,
+      int hintsUsed,
+      Integer wrongGuesses,
+      Integer answersFound) {
     if (answerState == AnswerState.UNANSWERED) {
       throw new IllegalArgumentException("A round can't be answered with " + answerState);
     }
 
     return withRound(
-        gameId, round, (game, r) -> answer(game, r, answerState, hintsUsed, wrongGuesses));
+        gameId,
+        round,
+        (game, r) -> answer(game, r, answerState, hintsUsed, wrongGuesses, answersFound));
   }
 
   private RoundAnswerResponse answer(
@@ -164,15 +171,17 @@ public class GameService {
       GameRoundEntity round,
       AnswerState answerState,
       int hintsUsed,
-      Integer wrongGuesses) {
+      Integer wrongGuesses,
+      Integer answersFound) {
     // Wrong guesses aren't checked against the stored guesses: a guess request lost on the
     // network would otherwise block a real answer.
-    rules.validateAnswer(round, answerState, hintsUsed, wrongGuesses);
+    rules.validateAnswer(round, answerState, hintsUsed, wrongGuesses, answersFound);
     // The hints that count are at least those recorded, so a client can't report fewer. More is
     // accepted, because a hint request may have been lost. This is worked out before the repeat
     // check, so a retry is still a no-op.
     int effectiveHints = Math.max(hintsUsed, round.getHintsTakenAt().size());
-    if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses)) {
+    Integer effectiveFound = effectiveAnswersFound(round, answerState, answersFound);
+    if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses, effectiveFound)) {
       gameRepository.save(game);
       publishRoundAnswered(game, round);
       // Counted here, in this transaction, so a rolled-back answer rolls the count back too. This
@@ -183,6 +192,25 @@ public class GameService {
       }
     }
     return toAnswerResponse(game, round);
+  }
+
+  /**
+   * The answers found that count: all of them for a correct round, otherwise the larger of what
+   * the client reported and the correct guesses recorded (a guess request may have been lost, and
+   * the client checks answers anyway), below the answer count. Null if the client didn't say and no
+   * correct guess was recorded. Worked out before the repeat check, so a retry is still a no-op.
+   */
+  private static Integer effectiveAnswersFound(
+      GameRoundEntity round, AnswerState answerState, Integer reported) {
+    int answerCount = round.getGameType().answerCount();
+    if (answerState == AnswerState.CORRECT) {
+      return answerCount;
+    }
+    int recorded = (int) round.getGuesses().stream().filter(g -> g.isCorrect()).count();
+    if (reported == null && recorded == 0) {
+      return null;
+    }
+    return Math.min(Math.max(reported == null ? 0 : reported, recorded), answerCount - 1);
   }
 
   private static boolean allAnswered(GameEntity game) {
@@ -205,6 +233,7 @@ public class GameService {
             round.getAnswerState(),
             round.getHintsUsed(),
             round.getWrongGuesses(),
+            round.getAnswersFound(),
             LocalDate.now(ZoneOffset.UTC),
             game.getHardMode()));
   }
