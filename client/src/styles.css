@@ -21,11 +21,29 @@ code {
     transform: translateX(6px);
   }
 }
+/* The same shake under a second name: swapping between the two classes replays
+   the animation without remounting the input (which would close a phone's keyboard). */
+@keyframes shake-again {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
 .shake {
   animation: shake 0.3s;
 }
+.shake-again {
+  animation: shake-again 0.3s;
+}
 @media (prefers-reduced-motion: reduce) {
-  .shake {
+  .shake,
+  .shake-again {
     animation: none;
   }
 }

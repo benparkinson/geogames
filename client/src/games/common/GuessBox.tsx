@@ -8,6 +8,7 @@ export function GuessBox({
   className,
   autoFocus,
   suggestions,
+  ref,
 }: GuessBoxProps): React.JSX.Element {
   const listId = useId();
 
@@ -29,6 +30,7 @@ export function GuessBox({
   return (
     <>
       <input
+        ref={ref}
         className={"answer-attempt gg-input" + (className ? " " + className : "")}
         type="text"
         autoComplete="off"
@@ -60,4 +62,5 @@ interface GuessBoxProps {
   className?: string;
   autoFocus?: boolean;
   suggestions?: string[];
+  ref?: React.Ref<HTMLInputElement>;
 }
