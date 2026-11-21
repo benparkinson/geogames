@@ -41,11 +41,11 @@ test("the home page offers every game and the round counts", async ({ page }) =>
 
 test("the privacy page opens from the footer and loads directly", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("contentinfo").getByRole("link", { name: "Privacy" }).click();
-  await expect(page.getByRole("heading", { name: "Privacy", level: 1 })).toBeVisible();
+  await page.getByRole("contentinfo").getByRole("link", { name: "Credits and privacy" }).click();
+  await expect(page.getByRole("heading", { name: "Credits and privacy", level: 1 })).toBeVisible();
 
   await page.goto("/privacy");
-  await expect(page.getByRole("heading", { name: "Privacy", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Credits and privacy", level: 1 })).toBeVisible();
 });
 
 test.describe("on a phone", () => {

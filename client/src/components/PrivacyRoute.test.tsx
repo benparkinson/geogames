@@ -7,6 +7,6 @@ describe("the /privacy route", () => {
   it("renders the privacy page", () => {
     render(<PrivacyRoute />);
 
-    expect(screen.getByRole("heading", { name: "Privacy", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Credits and privacy", level: 1 })).toBeInTheDocument();
   });
 });
