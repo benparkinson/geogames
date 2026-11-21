@@ -6,14 +6,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.service.RoundContinents;
+import com.parkinson.benjamin.geogames.service.daily.DailyHistory.PastDay;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +46,7 @@ class DailyChallengeIT {
   @Autowired private JdbcTemplate jdbc;
   @Autowired private DailyChallengeStore store;
   @Autowired private DailyRoundPicker picker;
+  @Autowired private RoundContinents roundContinents;
 
   private JsonNode createDaily(String body) throws Exception {
     return objectMapper.readTree(
@@ -83,7 +91,7 @@ class DailyChallengeIT {
   @Test
   void aStoredRowIsUsedEvenIfThePickerWouldNowChooseDifferently() throws Exception {
     LocalDate tomorrow = LocalDate.now(java.time.ZoneOffset.UTC).plusDays(1);
-    List<GameData> others = picker.pick(tomorrow.plusDays(40));
+    List<GameData> others = picker.pick(tomorrow.plusDays(40), DailyHistory.EMPTY);
     String json = objectMapper.writeValueAsString(others.stream().map(PinnedRound::of).toList());
     jdbc.update("delete from daily_challenge where challenge_date = ?", tomorrow);
     jdbc.update(
@@ -108,7 +116,8 @@ class DailyChallengeIT {
           () -> {
             go.await();
             return store.findOrCreate(
-                date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
+                date,
+                () -> picker.pick(date, DailyHistory.EMPTY).stream().map(PinnedRound::of).toList());
           };
       Future<List<PinnedRound>> a = pool.submit(task);
       Future<List<PinnedRound>> b = pool.submit(task);
@@ -139,14 +148,90 @@ class DailyChallengeIT {
   }
 
   @Test
+  void findBeforeReturnsOnlyStoredDaysInRangeNewestFirst() {
+    LocalDate date = LocalDate.of(2027, 3, 10);
+    List<PinnedRound> rounds = List.of(new PinnedRound(GameType.TRIPOINT, "tripoint:x"));
+    List<LocalDate> stored =
+        List.of(date.minusDays(5), date.minusDays(4), date.minusDays(2), date, date.plusDays(1));
+    try {
+      for (LocalDate day : stored) {
+        store.findOrCreate(day, () -> rounds);
+      }
+
+      assertThat(store.findBefore(date, 4).keySet())
+          .containsExactly(date.minusDays(2), date.minusDays(4));
+    } finally {
+      stored.forEach(
+          day -> jdbc.update("delete from daily_challenge where challenge_date = ?", day));
+    }
+  }
+
+  @Test
   void everyDayOfAYearPicksFiveRoundsFromTheRealData() {
     LocalDate start = LocalDate.of(2026, 11, 18);
+    List<PastDay> earlier = new ArrayList<>();
+    List<List<GameData>> days = new ArrayList<>();
+    int penalised = 0;
     for (int day = 0; day < 365; day++) {
-      List<GameData> rounds = picker.pick(start.plusDays(day));
+      LocalDate date = start.plusDays(day);
+      // Nearest first, as DailyHistoryLoader builds it, from the days generated here.
+      List<PastDay> recent = new ArrayList<>();
+      for (int back = 1;
+          back <= DailyHistoryLoader.LOOKBACK_DAYS && back <= earlier.size();
+          back++) {
+        PastDay past = earlier.get(earlier.size() - back);
+        recent.add(new PastDay(back, past.types(), past.subjects(), past.roundContinents()));
+      }
+      DailyHistory history = new DailyHistory(recent);
+
+      List<GameData> rounds = picker.pick(date, history);
 
       assertThat(rounds).hasSize(5);
       assertThat(rounds).extracting(GameData::gameType).doesNotHaveDuplicates();
       assertThat(rounds).extracting(GameData::subjectId).doesNotHaveDuplicates();
+      assertThat(rounds).extracting(GameData::gameType).noneMatch(GameType::extraDifficult);
+      if (!days.isEmpty()) {
+        Set<GameType> yesterday = typesOf(days.get(days.size() - 1));
+        assertThat(typesOf(rounds)).as("day %s", date).isNotEqualTo(yesterday);
+      }
+      if (day >= 1) {
+        // No type sits out two days in a row.
+        for (GameType type : pool()) {
+          boolean sat1 = !typesOf(days.get(days.size() - 1)).contains(type);
+          assertThat(sat1 && !typesOf(rounds).contains(type))
+              .as("%s sat out two days running on %s", type, date)
+              .isFalse();
+        }
+      }
+      Set<String> recentSubjects = new HashSet<>();
+      for (int back = 1; back <= 4 && back <= days.size(); back++) {
+        days.get(days.size() - back).forEach(r -> recentSubjects.add(r.subjectId()));
+      }
+      assertThat(rounds.stream().map(GameData::subjectId).filter(recentSubjects::contains))
+          .as("subject repeated within 4 days on %s", date)
+          .isEmpty();
+
+      if (picker.penaltyOf(rounds, history) > 0) {
+        penalised++;
+      }
+      days.add(rounds);
+      earlier.add(
+          new PastDay(
+              0,
+              typesOf(rounds),
+              rounds.stream().map(GameData::subjectId).collect(Collectors.toSet()),
+              rounds.stream()
+                  .map(round -> DailyRoundPicker.continentsOf(roundContinents, round))
+                  .toList()));
     }
+    System.out.println("Days with a nonzero continent penalty: " + penalised + " of 365");
+  }
+
+  private static List<GameType> pool() {
+    return Arrays.stream(GameType.values()).filter(type -> !type.extraDifficult()).toList();
+  }
+
+  private static Set<GameType> typesOf(List<GameData> rounds) {
+    return rounds.stream().map(GameData::gameType).collect(Collectors.toSet());
   }
 }
