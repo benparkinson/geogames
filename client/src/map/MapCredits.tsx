@@ -10,7 +10,7 @@ export function MapCredits({ extra }: { extra?: string }): null {
   const map = useMap();
 
   useEffect(() => {
-    const html = (extra ? extra + " | " : "") + 'Map data: Natural Earth | <a href="/privacy">Privacy</a>';
+    const html = (extra ? extra + " | " : "") + 'Map data: Natural Earth | <a href="/privacy">Credits and privacy</a>';
     map.attributionControl.addAttribution(html);
     return () => {
       map.attributionControl.removeAttribution(html);

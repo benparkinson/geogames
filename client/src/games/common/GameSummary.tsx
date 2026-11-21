@@ -69,7 +69,7 @@ export default function GameSummary({
   const mixed = gameType === RANDOM_OPTION.type;
   const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
   return (
-    <PageShell wide compactFooter topBarEnd={<KofiBadge />}>
+    <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
         <div className="gg-summary__head">
           {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}

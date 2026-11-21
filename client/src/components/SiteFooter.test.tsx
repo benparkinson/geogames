@@ -2,44 +2,13 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import SiteFooter from "./SiteFooter";
 
-const footer = () => within(screen.getByRole("contentinfo"));
-
 describe("SiteFooter", () => {
-  it("credits the data, imagery and icons, and links to the software licences", () => {
+  it("is one link to the credits and privacy page", () => {
     render(<SiteFooter />);
 
-    const href = (name: string) => footer().getByRole("link", { name }).getAttribute("href");
-    expect(href("Natural Earth")).toBe("https://www.naturalearthdata.com/");
-    expect(href("Wikidata")).toBe("https://www.wikidata.org/");
-    expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
-    expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
-    expect(footer().queryByRole("link", { name: "Earthz Stocker" })).not.toBeInTheDocument();
-    expect(href("Freepik")).toContain("flaticon.com");
-    expect(href("Software licences")).toBe("/third-party-licenses.txt");
-    expect(footer().queryByText(/OpenStreetMap/)).not.toBeInTheDocument();
-    expect(footer().queryByText(/Esri/)).not.toBeInTheDocument();
-    expect(footer().queryByText(/EOX/)).not.toBeInTheDocument();
-    expect(footer().getByText(/your light or dark mode choice/)).toBeInTheDocument();
-  });
-
-  it("says the tripoint positions were adjusted", () => {
-    render(<SiteFooter />);
-
-    expect(footer().getByText(/positions adjusted/)).toBeInTheDocument();
-  });
-
-  it("tells players that anonymous round results are recorded", () => {
-    render(<SiteFooter />);
-
-    expect(
-      footer().getByText(/We record anonymous round results \(no cookies, no personal data\)/),
-    ).toBeInTheDocument();
-  });
-
-  it("links to the privacy page", () => {
-    render(<SiteFooter />);
-
-    expect(footer().getByRole("link", { name: "Privacy" }).getAttribute("href")).toBe("/privacy");
+    const footer = within(screen.getByRole("contentinfo"));
+    expect(footer.getAllByRole("link")).toHaveLength(1);
+    expect(footer.getByRole("link", { name: "Credits and privacy" }).getAttribute("href")).toBe("/privacy");
   });
 
   it("takes its spacing from the page", () => {

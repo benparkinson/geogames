@@ -5,7 +5,7 @@ function PrivacyRoute(): React.JSX.Element {
   return (
     <>
       <Head>
-        <title>Privacy | GeoGauntlet</title>
+        <title>Credits and privacy | GeoGauntlet</title>
       </Head>
       <div id="root">
         <PrivacyPage />

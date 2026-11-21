@@ -7,7 +7,7 @@ const fakeMap = vi.hoisted(() => ({
 }));
 vi.mock("react-leaflet", () => ({ useMap: () => fakeMap }));
 
-const CREDITS = 'Map data: Natural Earth | <a href="/privacy">Privacy</a>';
+const CREDITS = 'Map data: Natural Earth | <a href="/privacy">Credits and privacy</a>';
 
 beforeEach(() => {
   fakeMap.attributionControl.addAttribution.mockClear();

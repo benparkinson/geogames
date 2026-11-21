@@ -21,14 +21,14 @@ describe("GameMap", () => {
   it("adds the standard credit", () => {
     render(<GameMap>{null}</GameMap>);
 
-    expect(addedAttributions()).toEqual(['Map data: Natural Earth | <a href="/privacy">Privacy</a>']);
+    expect(addedAttributions()).toEqual(['Map data: Natural Earth | <a href="/privacy">Credits and privacy</a>']);
   });
 
   it("puts its own credit before the standard one", () => {
     render(<GameMap credit="Tripoints: Wikipedia">{null}</GameMap>);
 
     expect(addedAttributions()).toEqual([
-      'Tripoints: Wikipedia | Map data: Natural Earth | <a href="/privacy">Privacy</a>',
+      'Tripoints: Wikipedia | Map data: Natural Earth | <a href="/privacy">Credits and privacy</a>',
     ]);
   });
 });
