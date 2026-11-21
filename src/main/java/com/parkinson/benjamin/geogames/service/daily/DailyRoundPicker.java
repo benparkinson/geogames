@@ -1,8 +1,11 @@
 package com.parkinson.benjamin.geogames.service.daily;
 
+import com.parkinson.benjamin.geogames.model.Continent;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.service.RoundContinents;
 import com.parkinson.benjamin.geogames.service.RoundGenerators;
+import com.parkinson.benjamin.geogames.service.daily.DailyHistory.PastDay;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,6 +14,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -18,21 +23,42 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 /**
- * Chooses the five rounds of a day's challenge from a seed made of the date: five different game
- * types (never the extra difficult ones), each about a different subject. The same date gives the
- * same rounds for the same code and data; {@link DailyChallengeStore} pins them so a deploy can't
- * change a day that has started.
+ * Chooses the five rounds of a day's challenge from a seed made of the date and the last few days:
+ * five different game types (never the extra difficult ones), each about a different subject. The
+ * same date and history give the same rounds for the same code and data; {@link
+ * DailyChallengeStore} pins them so a deploy can't change a day that has started.
+ *
+ * <p>The history comes from {@link DailyHistoryLoader} (the stored days, rebuilt, not stored
+ * again). Types are ranked by days since they were last used (looking back {@value #TYPE_DAYS}
+ * days), then by how often they were used, so a type that sat out yesterday plays today, none
+ * sits out two days running and the rest rotate. Subjects used in the last {@value #SUBJECT_DAYS}
+ * days are excluded.
+ * Continents are best effort: up to {@value #CONTINENT_ATTEMPTS} attempts at the rounds, keeping
+ * the first with no {@link #continentPenalty} or else the lowest.
  */
 @Service
 public class DailyRoundPicker {
 
   public static final int DAILY_ROUNDS = 5;
 
+  static final int CONTINENT_ATTEMPTS = 8;
+
+  /** Days of history whose subjects are excluded. The loader reads this far back. */
+  static final int SUBJECT_DAYS = 7;
+
+  /** Days of history the game type ranking looks at. */
+  static final int TYPE_DAYS = 4;
+
+  /** Days of history the continent score compares with. */
+  static final int CONTINENT_DAYS = 2;
+
   private final RoundGenerators generators;
+  private final RoundContinents continents;
   private final List<GameType> pool;
 
-  public DailyRoundPicker(RoundGenerators generators) {
+  public DailyRoundPicker(RoundGenerators generators, RoundContinents continents) {
     this.generators = generators;
+    this.continents = continents;
     this.pool = Arrays.stream(GameType.values()).filter(type -> !type.extraDifficult()).toList();
     if (pool.size() < DAILY_ROUNDS) {
       throw new IllegalStateException(
@@ -41,19 +67,103 @@ public class DailyRoundPicker {
     }
   }
 
-  public List<GameData> pick(LocalDate date) {
+  public List<GameData> pick(LocalDate date, DailyHistory history) {
     Random random = new Random(seedFor(date));
+    List<GameType> types = chooseTypes(history, random);
+    Set<String> recentSubjects = history.subjects(SUBJECT_DAYS);
+
+    List<GameData> best = null;
+    int bestPenalty = Integer.MAX_VALUE;
+    for (int attempt = 0; attempt < CONTINENT_ATTEMPTS; attempt++) {
+      List<GameData> rounds = generateRounds(types, recentSubjects, random);
+      int penalty = penaltyOf(rounds, history);
+      if (penalty == 0) {
+        return rounds;
+      }
+      if (penalty < bestPenalty) {
+        best = rounds;
+        bestPenalty = penalty;
+      }
+    }
+    return best;
+  }
+
+  /** The {@link #continentPenalty} of a day's rounds. */
+  int penaltyOf(List<GameData> rounds, DailyHistory history) {
+    return continentPenalty(
+        rounds.stream().map(round -> continentsOf(continents, round)).toList(), history);
+  }
+
+  private List<GameType> chooseTypes(DailyHistory history, Random random) {
     List<GameType> types = new ArrayList<>(pool);
     Collections.shuffle(types, random);
+    // Longest unused first, then least used lately. The sort is stable, so the shuffle breaks
+    // the ties that are left.
+    types.sort(
+        Comparator.comparingInt((GameType type) -> history.daysSinceUsed(type, TYPE_DAYS))
+            .reversed()
+            .thenComparingInt(type -> history.recentUses(type, TYPE_DAYS)));
+    List<GameType> chosen = new ArrayList<>(types.subList(0, DAILY_ROUNDS));
+    Collections.shuffle(chosen, random);
+    return chosen;
+  }
 
+  private List<GameData> generateRounds(
+      List<GameType> types, Set<String> recentSubjects, Random random) {
     List<GameData> rounds = new ArrayList<>(DAILY_ROUNDS);
-    Set<String> used = new HashSet<>();
-    for (GameType type : types.subList(0, DAILY_ROUNDS)) {
-      GameData round = generators.generate(type, 1, Set.copyOf(used), random).get(0);
-      used.add(round.subjectId());
+    Set<String> today = new HashSet<>();
+    for (GameType type : types) {
+      Set<String> excluded = new HashSet<>(recentSubjects);
+      excluded.addAll(today);
+      GameData round;
+      try {
+        round = generators.generate(type, 1, excluded, random).get(0);
+      } catch (IllegalArgumentException tooFewLeft) {
+        // Never expected with the real data: drop the history's exclusions, keep today's.
+        round = generators.generate(type, 1, Set.copyOf(today), random).get(0);
+      }
+      today.add(round.subjectId());
       rounds.add(round);
     }
     return rounds;
+  }
+
+  /** The round's continents; none if they can't be worked out, which never fails a day. */
+  static Set<Continent> continentsOf(RoundContinents continents, GameData data) {
+    Set<Continent> result = EnumSet.noneOf(Continent.class);
+    try {
+      continents.of(data).forEach(label -> result.add(Continent.fromLabel(label)));
+    } catch (RuntimeException e) {
+      result.clear();
+    }
+    return result;
+  }
+
+  /**
+   * How lopsided a day is, lower is better: 2 for each continent in four or more of today's
+   * rounds, and 1 for each continent that is in three or more rounds today and was in three or
+   * more on one of the last two days.
+   */
+  static int continentPenalty(List<Set<Continent>> today, DailyHistory history) {
+    int penalty = 0;
+    for (Continent continent : Continent.values()) {
+      int count = countOf(today, continent);
+      if (count >= 4) {
+        penalty += 2;
+      }
+      if (count >= 3) {
+        for (PastDay day : history.days()) {
+          if (day.daysAgo() <= CONTINENT_DAYS && countOf(day.roundContinents(), continent) >= 3) {
+            penalty++;
+          }
+        }
+      }
+    }
+    return penalty;
+  }
+
+  private static int countOf(List<Set<Continent>> rounds, Continent continent) {
+    return (int) rounds.stream().filter(set -> set.contains(continent)).count();
   }
 
   /**

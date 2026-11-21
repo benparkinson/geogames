@@ -31,6 +31,7 @@ public class DailyChallengeService {
   private final Clock clock;
   private final DailyRoundPicker picker;
   private final DailyChallengeStore store;
+  private final DailyHistoryLoader historyLoader;
   private final GameService gameService;
   private final DailyScoreStore scores;
 
@@ -38,11 +39,13 @@ public class DailyChallengeService {
       Clock clock,
       DailyRoundPicker picker,
       DailyChallengeStore store,
+      DailyHistoryLoader historyLoader,
       GameService gameService,
       DailyScoreStore scores) {
     this.clock = clock;
     this.picker = picker;
     this.store = store;
+    this.historyLoader = historyLoader;
     this.gameService = gameService;
     this.scores = scores;
   }
@@ -56,7 +59,10 @@ public class DailyChallengeService {
   public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Difficulty difficulty) {
     LocalDate date = validDate(requested, false);
     List<PinnedRound> rounds =
-        store.findOrCreate(date, () -> picker.pick(date).stream().map(PinnedRound::of).toList());
+        store.findOrCreate(
+            date,
+            () ->
+                picker.pick(date, historyLoader.load(date)).stream().map(PinnedRound::of).toList());
     // The totals row must exist before any game for the date can finish.
     scores.ensureDay(date, difficulty);
     UUID id = gameService.createGame(rounds, GAME_MODE, difficulty, date).id();

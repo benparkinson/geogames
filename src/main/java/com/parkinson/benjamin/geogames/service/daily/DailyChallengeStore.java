@@ -1,8 +1,11 @@
 package com.parkinson.benjamin.geogames.service.daily;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -36,6 +39,28 @@ public class DailyChallengeStore {
         .query(String.class)
         .optional()
         .map(json -> objectMapper.readValue(json, ROUNDS));
+  }
+
+  /**
+   * The pinned rounds of the stored days in [date - days, date), newest first. Missing days are
+   * absent.
+   */
+  public SortedMap<LocalDate, List<PinnedRound>> findBefore(LocalDate date, int days) {
+    SortedMap<LocalDate, List<PinnedRound>> found = new TreeMap<>(Comparator.reverseOrder());
+    jdbc.sql(
+            "select challenge_date, rounds from daily_challenge"
+                + " where challenge_date >= :from and challenge_date < :date")
+        .param("from", date.minusDays(days))
+        .param("date", date)
+        .query(
+            (rs, row) -> {
+              found.put(
+                  rs.getObject("challenge_date", LocalDate.class),
+                  objectMapper.readValue(rs.getString("rounds"), ROUNDS));
+              return row;
+            })
+        .list();
+    return found;
   }
 
   /**

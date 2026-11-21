@@ -38,7 +38,8 @@ class DailyChallengeServiceTest {
     when(store.findOrCreate(any(), any())).thenReturn(ROUNDS);
     when(games.createGame(eq(ROUNDS), eq("DAILY"), any(), any()))
         .thenReturn(new GameCreationResponse(gameId));
-    return new DailyChallengeService(clock, mock(DailyRoundPicker.class), store, games, scores);
+    return new DailyChallengeService(
+        clock, mock(DailyRoundPicker.class), store, mock(DailyHistoryLoader.class), games, scores);
   }
 
   private static DailyGameResponse createDailyGame(
