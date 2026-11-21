@@ -143,19 +143,49 @@ describe("GuessForm submitting", () => {
 });
 
 describe("GuessForm suggestions", () => {
-  it("passes suggestions to the guess box as a datalist", () => {
-    const { container } = renderForm({ suggestions: ["France", "Spain"] });
+  it("passes suggestions to the guess box", async () => {
+    renderForm({
+      suggestions: [
+        { name: "France", aliases: [] },
+        { name: "Spain", aliases: [] },
+      ],
+    });
 
-    const options = Array.from(container.querySelectorAll("datalist option")).map((o) => o.getAttribute("value"));
-    expect(options).toEqual(["France", "Spain"]);
-    // An input with a list attribute is exposed as a combobox rather than a textbox.
-    expect(screen.getByRole("combobox", { name: "Country…" })).toHaveAttribute("list");
+    await userEvent.setup().type(screen.getByRole("combobox", { name: "Country…" }), "s");
+
+    expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual(["Spain"]);
   });
 
-  it("renders no suggestions list when none are given", () => {
-    const { container } = renderForm();
+  it("fills the box with a picked suggestion without submitting", async () => {
+    const { props } = renderForm({ suggestions: [{ name: "France", aliases: [] }] });
+    const user = userEvent.setup();
 
-    expect(container.querySelector("datalist")).toBeNull();
-    expect(input()).not.toHaveAttribute("list");
+    await user.type(screen.getByRole("combobox"), "fra");
+    await user.click(screen.getByRole("option", { name: "France" }));
+
+    expect(screen.getByRole("combobox")).toHaveValue("France");
+    expect(props.submitGuess).not.toHaveBeenCalled();
+  });
+
+  it("closes the suggestions when the guess is submitted", async () => {
+    renderForm({
+      suggestions: [{ name: "France", aliases: [] }],
+      submitGuess: vi.fn<(guess: string) => GuessResult>(() => ({ kind: "unknown", guess: "fra" })),
+    });
+    const user = userEvent.setup();
+
+    await user.type(screen.getByRole("combobox"), "fra");
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Guess" }));
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("has no suggestion list when none are given", async () => {
+    renderForm();
+
+    await userEvent.setup().type(input(), "f");
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 });

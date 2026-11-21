@@ -27,11 +27,33 @@ describe("useGuessList", () => {
     expect(known("Danub")).toBe(false);
   });
 
-  it("suggests display names only, sorted and without duplicates", async () => {
+  it("suggests each name once with its aliases, sorted", async () => {
     mockFetch([{ url: /\/api\/rivers$/, body: [...riverNames.slice().reverse(), riverNames[0]] }]);
     const { result } = renderHook(() => useGuessList("rivers"), { wrapper: clientWrapper() });
 
-    await waitFor(() => expect(result.current.suggestions).toEqual(["Danube", "Thames"]));
+    await waitFor(() =>
+      expect(result.current.suggestions).toEqual([
+        { name: "Danube", aliases: ["Donau"] },
+        { name: "Thames", aliases: [] },
+      ]),
+    );
+  });
+
+  it("merges the aliases of places that share a name, and drops an alias equal to the name", async () => {
+    mockFetch([
+      {
+        url: /\/api\/rivers$/,
+        body: [
+          { name: "Rio Grande", additionalNames: ["Rio Bravo", "rio-grande"] },
+          { name: "Rio Grande", additionalNames: ["Rio Bravo", "Grande"] },
+        ],
+      },
+    ]);
+    const { result } = renderHook(() => useGuessList("rivers"), { wrapper: clientWrapper() });
+
+    await waitFor(() =>
+      expect(result.current.suggestions).toEqual([{ name: "Rio Grande", aliases: ["Rio Bravo", "Grande"] }]),
+    );
   });
 
   it("reads the list for the kind it was given", async () => {

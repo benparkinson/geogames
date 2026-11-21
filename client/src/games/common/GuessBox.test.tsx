@@ -1,7 +1,9 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { GuessBox } from "./GuessBox";
+import { useState } from "react";
+import { describe, expect, it, vi } from "vitest";
+import { GuessBox, placeList } from "./GuessBox";
+import type { Suggestion } from "./suggestions";
 
 describe("GuessBox", () => {
   it("uses its name as both label and placeholder", () => {
@@ -11,13 +13,14 @@ describe("GuessBox", () => {
     expect(input).toHaveAttribute("placeholder", "Country name…");
   });
 
-  it("reports typing through onChange", async () => {
+  it("reports typing through onChange as the new value", async () => {
     const onChange = vi.fn();
     render(<GuessBox value="" name="Guess" onChange={onChange} disabled={false} />);
 
     await userEvent.setup().type(screen.getByRole("textbox"), "a");
 
     expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith("a");
   });
 
   it("can be disabled", () => {
@@ -31,50 +34,231 @@ describe("GuessBox", () => {
 
     expect(screen.getByRole("textbox")).toHaveClass("gg-input", "shake");
   });
+});
 
-  it("links the input to a datalist with one option per suggestion", () => {
-    const { container } = render(
-      <GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} suggestions={["France", "Spain"]} />,
-    );
+const SUGGESTIONS: Suggestion[] = [
+  { name: "Nepal", aliases: [] },
+  { name: "Netherlands", aliases: ["Holland"] },
+  { name: "New Zealand", aliases: [] },
+  { name: "Niger", aliases: [] },
+  { name: "Nigeria", aliases: [] },
+  { name: "Nine Mile", aliases: [] },
+];
 
-    const datalist = container.querySelector("datalist");
-    expect(datalist).not.toBeNull();
-    // An input with a list attribute is exposed as a combobox rather than a textbox.
-    expect(screen.getByRole("combobox")).toHaveAttribute("list", datalist!.id);
-    expect(Array.from(datalist!.querySelectorAll("option")).map((o) => o.value)).toEqual(["France", "Spain"]);
+function Harness({
+  onChange = () => {},
+  onSubmit = () => {},
+  disabled,
+}: {
+  onChange?: (v: string) => void;
+  onSubmit?: () => void;
+  disabled?: boolean;
+}) {
+  const [value, setValue] = useState("");
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
+      <GuessBox
+        value={value}
+        name="Guess"
+        disabled={disabled}
+        suggestions={SUGGESTIONS}
+        onChange={(v) => {
+          setValue(v);
+          onChange(v);
+        }}
+      />
+      <button type="submit">Go</button>
+    </form>
+  );
+}
+
+const box = () => screen.getByRole("combobox");
+const optionNames = () => screen.getAllByRole("option").map((o) => o.textContent);
+
+describe("GuessBox suggestions", () => {
+  it("is a plain textbox with no list without suggestions", () => {
+    render(<GuessBox value="ne" name="Guess" onChange={vi.fn()} />);
+
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-expanded");
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
-  describe("focus after picking a suggestion", () => {
-    afterEach(() => vi.useRealTimers());
+  it("shows at most 5 options in rank order", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "n" } });
 
-    function type(inputType: string, value: string) {
-      vi.useFakeTimers();
-      render(<GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} suggestions={["France", "Spain"]} />);
-      const input = screen.getByRole("combobox");
-      fireEvent.input(input, { target: { value }, inputType });
-      act(() => {
-        vi.runAllTimers();
-      });
-      return input;
-    }
-
-    it("puts the focus back on the next tick when an option was picked from the list", () => {
-      expect(type("insertReplacementText", "France")).toHaveFocus();
-    });
-
-    it("leaves the focus alone when the player typed a suggestion letter by letter", () => {
-      expect(type("insertText", "France")).not.toHaveFocus();
-    });
-
-    it("leaves the focus alone when the text is not a suggestion", () => {
-      expect(type("insertReplacementText", "Fran")).not.toHaveFocus();
-    });
+    expect(optionNames()).toEqual(["Nepal", "Netherlands", "New Zealand", "Niger", "Nigeria"]);
   });
 
-  it("renders no datalist without suggestions", () => {
-    const { container } = render(<GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} />);
+  it("shows the alias that matched", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "hol" } });
 
-    expect(container.querySelector("datalist")).toBeNull();
-    expect(screen.getByRole("textbox")).not.toHaveAttribute("list");
+    expect(optionNames()).toEqual(["NetherlandsHolland"]);
+    expect(screen.getByText("Holland")).toHaveClass("gg-suggestion-alias");
+  });
+
+  it("offers longer names after an exact match", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "Niger" } });
+
+    expect(optionNames()).toEqual(["Niger", "Nigeria"]);
+  });
+
+  it("fills the box on click, closes the list, keeps the focus and does not submit", () => {
+    const onChange = vi.fn();
+    const onSubmit = vi.fn();
+    render(<Harness onChange={onChange} onSubmit={onSubmit} />);
+    box().focus();
+    fireEvent.change(box(), { target: { value: "ne" } });
+    const option = screen.getByRole("option", { name: "Netherlands" });
+
+    // Cancelled, so the tap doesn't take the focus from the box.
+    expect(fireEvent.mouseDown(option)).toBe(false);
+    fireEvent.click(option);
+
+    expect(onChange).toHaveBeenLastCalledWith("Netherlands");
+    expect(box()).toHaveValue("Netherlands");
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    expect(box()).toHaveFocus();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it("picks the highlighted option on Enter without letting the form submit", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    // jsdom has no layout, so the list opens down: ArrowDown goes away from the box.
+    fireEvent.keyDown(box(), { key: "ArrowDown" });
+    const handled = fireEvent.keyDown(box(), { key: "Enter" });
+
+    expect(handled).toBe(false);
+    expect(box()).toHaveValue("Nepal");
+  });
+
+  it("leaves Enter to the form when nothing is highlighted", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    expect(fireEvent.keyDown(box(), { key: "Enter" })).toBe(true);
+    expect(box()).toHaveValue("ne");
+  });
+
+  it("submits the form on Enter with nothing highlighted", async () => {
+    const onSubmit = vi.fn();
+    render(<Harness onSubmit={onSubmit} />);
+
+    await userEvent.setup().type(box(), "ne{Enter}");
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it("moves the highlight with the arrows, clearing it past the first option", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.keyDown(box(), { key: "ArrowDown" });
+    fireEvent.keyDown(box(), { key: "ArrowDown" });
+    expect(screen.getByRole("option", { name: "Netherlands" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.keyDown(box(), { key: "ArrowUp" });
+    fireEvent.keyDown(box(), { key: "ArrowUp" });
+
+    expect(screen.getAllByRole("option").every((o) => o.getAttribute("aria-selected") === "false")).toBe(true);
+    expect(box()).not.toHaveAttribute("aria-activedescendant");
+  });
+
+  it("keeps aria-expanded, aria-controls and aria-activedescendant in step with the list", () => {
+    render(<Harness />);
+    expect(box()).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.change(box(), { target: { value: "ne" } });
+    expect(box()).toHaveAttribute("aria-expanded", "true");
+    expect(box()).toHaveAttribute("aria-controls", screen.getByRole("listbox").id);
+    expect(box()).not.toHaveAttribute("aria-activedescendant");
+
+    fireEvent.keyDown(box(), { key: "ArrowDown" });
+    expect(box()).toHaveAttribute("aria-activedescendant", screen.getAllByRole("option")[0].id);
+  });
+
+  it("closes on Escape", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.keyDown(box(), { key: "Escape" });
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("closes on blur", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.blur(box());
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("closes when the form is submitted, and opens again when the player types", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.submit(box().closest("form")!);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+
+    fireEvent.change(box(), { target: { value: "nep" } });
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+  });
+
+  it("shows nothing when disabled", () => {
+    render(<Harness disabled />);
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("shows nothing for an empty value or no match", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.change(box(), { target: { value: "" } });
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+
+    fireEvent.change(box(), { target: { value: "zzz" } });
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("still forwards the ref to the input", () => {
+    const ref = { current: null as HTMLInputElement | null };
+    render(<GuessBox ref={ref} value="" name="Guess" onChange={vi.fn()} suggestions={SUGGESTIONS} />);
+
+    expect(ref.current).toBe(box());
+  });
+});
+
+describe("placeList", () => {
+  const rect = (top: number, height = 38) => ({ top, bottom: top + height, left: 10, width: 200 });
+
+  it("opens down when there is room below", () => {
+    const placed = placeList(rect(100), 800);
+
+    expect(placed).toMatchObject({ direction: "down", top: 142, left: 10, width: 200, maxHeight: 654 });
+  });
+
+  it("opens up when the keyboard leaves no room below", () => {
+    // A phone with the keyboard up: the visible viewport ends just under the box.
+    const placed = placeList(rect(300), 360, undefined, 800);
+
+    expect(placed).toMatchObject({ direction: "up", bottom: 504, maxHeight: 292 });
+  });
+
+  it("clamps the height to the larger side when neither fits", () => {
+    const placed = placeList(rect(100), 230);
+
+    expect(placed.direction).toBe("up");
+    expect(placed.maxHeight).toBe(92);
   });
 });
