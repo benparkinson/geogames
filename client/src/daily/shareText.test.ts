@@ -14,7 +14,7 @@ describe("shareText", () => {
         { date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } },
         "https://example.org",
       ),
-    ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n⭐🟨🟩🟥⭐\nhttps://example.org/daily");
+    ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n❇️🟨🟩🟥❇️\nhttps://example.org/daily");
   });
 
   it("marks Easy and Hard mode in the title, and Normal not at all", () => {

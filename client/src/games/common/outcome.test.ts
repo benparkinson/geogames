@@ -37,6 +37,6 @@ describe("OUTCOME_STYLES", () => {
   });
 
   it("uses the share squares of the plan", () => {
-    expect(OUTCOME_ORDER.map((o) => OUTCOME_STYLES[o].emoji).join("")).toBe("⭐🟩🟨🟥");
+    expect(OUTCOME_ORDER.map((o) => OUTCOME_STYLES[o].emoji).join("")).toBe("❇️🟩🟨🟥");
   });
 });

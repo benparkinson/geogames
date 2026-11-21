@@ -45,7 +45,7 @@ export const OUTCOME_STYLES: Record<RoundOutcome, OutcomeStyle> = {
     textClass: "gg-text-correct",
     singular: "first guess",
     plural: "first guesses",
-    emoji: "⭐",
+    emoji: "❇️",
   },
   correct: {
     dotClass: "round-dot--correct",

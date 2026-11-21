@@ -219,7 +219,7 @@ describe("DailyPage with a game for today", () => {
 
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
     expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
-    expect(screen.getByLabelText("Your result")).toHaveTextContent("⭐🟨🟩🟥⭐");
+    expect(screen.getByLabelText("Your result")).toHaveTextContent("❇️🟨🟩🟥❇️");
     expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
     // Only the optional comparison is fetched, from the game's own league, never the game.
     expect(callsTo(fetchMock).map((c) => c.url)).toEqual([hardScore.url]);
