@@ -1,18 +1,15 @@
-import {
-  cluesDescription,
-  countHint,
-  firstLetterHint as firstLetter,
-  hintsFrom,
-  type HintConfig,
-} from "../common/hints";
+import { cluesDescription, firstLetterHint as firstLetter, hintsFrom, type HintConfig } from "../common/hints";
 import type { Lake } from "./model";
 
 export const continentHint = (lake: Lake): string => `Continent: ${lake.continent}`;
 
-/** How many countries are on the shore: "Lies in" for one, "Shores in" for several. */
-export const countryCountHint = (lake: Lake): string => {
-  const n = lake.countries.length;
-  return countHint(n, "country", "countries", n === 1 ? "Lies in" : "Shores in");
+/** The country with the longest shoreline (`countries` is sorted longest first), or that it lies in one country. */
+export const mainCountryHint = (lake: Lake): string | null => {
+  const [main] = lake.countries;
+  if (!main) {
+    return null;
+  }
+  return lake.countries.length === 1 ? `Lies entirely in ${main}` : `Its longest shoreline is in ${main}`;
 };
 
 export const firstLetterHint = (lake: Lake): string | null => firstLetter(lake.name);
@@ -23,7 +20,7 @@ export const firstLetterHint = (lake: Lake): string | null => firstLetter(lake.n
  */
 export function lakeHints(lake: Lake, continentShown = false): HintConfig {
   const builders = continentShown
-    ? [countryCountHint, firstLetterHint]
-    : [continentHint, countryCountHint, firstLetterHint];
+    ? [mainCountryHint, firstLetterHint]
+    : [continentHint, mainCountryHint, firstLetterHint];
   return hintsFrom(cluesDescription(builders.length), lake, ...builders);
 }

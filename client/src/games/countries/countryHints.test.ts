@@ -1,30 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { makeCountryShapeData, makeCountryShapeRoundData } from "../../test/fixtures";
-import {
-  borderLengthHint,
-  capitalHint,
-  coastHint,
-  firstLetterHint,
-  lakesHint,
-  longestBorderHint,
-  neighbourCountHint,
-} from "./countryHints";
+import { capitalHint, coastHint, firstLetterHint, lakesHint, longestBorderHint, nameLengthHint } from "./countryHints";
 
 describe("country hint builders", () => {
   const round = makeCountryShapeRoundData();
-
-  it("counts only the mainland neighbours, not those of overseas territories", () => {
-    expect(neighbourCountHint(round)).toBe("Its mainland borders 2 countries");
-    const one = makeCountryShapeRoundData({
-      country: makeCountryShapeData({
-        neighbours: [
-          { name: "Spain", km: 1, mainland: true, lines: [] },
-          { name: "Brazil", km: 1, mainland: false, lines: [] },
-        ],
-      }),
-    });
-    expect(neighbourCountHint(one)).toBe("Its mainland borders 1 country");
-  });
 
   it("names the mainland neighbour with the longest border", () => {
     expect(longestBorderHint(round)).toBe("Longest border: Germany");
@@ -39,15 +18,22 @@ describe("country hint builders", () => {
     expect(longestBorderHint(overseasFirst)).toBe("Longest border: Spain");
   });
 
-  it("says how long the borders of a landlocked country are", () => {
-    expect(borderLengthHint(round)).toBe("No coastline. Its borders are 1,027 km long");
+  it("falls back to a neighbour overseas when there is no mainland one", () => {
+    const uk = makeCountryShapeRoundData({
+      country: makeCountryShapeData({ neighbours: [{ name: "Ireland", km: 499, mainland: false, lines: [] }] }),
+    });
+
+    expect(longestBorderHint(uk)).toBe("Longest border: Ireland");
+  });
+
+  it("says how long the name is", () => {
+    expect(nameLengthHint(round)).toBe("Its name has 11 letters");
   });
 
   it("has nothing to name for an island", () => {
     const island = makeCountryShapeRoundData({ country: makeCountryShapeData({ neighbours: [] }) });
 
     expect(longestBorderHint(island)).toBeNull();
-    expect(neighbourCountHint(island)).toBe("Its mainland borders 0 countries");
   });
 
   it("gives the first letter", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cluesDescription, countHint, firstLetter, firstLetterHint, hintsFrom, mapHint } from "./hints";
+import { cluesDescription, firstLetter, firstLetterHint, hintsFrom, mapHint, nameLengthHint } from "./hints";
 
 describe("firstLetterHint", () => {
   it("gives the upper-cased first letter", () => {
@@ -23,14 +23,26 @@ describe("firstLetterHint", () => {
   });
 });
 
-describe("countHint", () => {
-  it("uses the singular for one", () => {
-    expect(countHint(1, "country", "countries", "Borders")).toBe("Borders 1 country");
+describe("nameLengthHint", () => {
+  it("counts the letters of a one-word name", () => {
+    expect(nameLengthHint("Mali")).toBe("Its name has 4 letters");
+    expect(nameLengthHint("X")).toBe("Its name has 1 letter");
   });
 
-  it("uses the plural otherwise", () => {
-    expect(countHint(0, "country", "countries", "Borders")).toBe("Borders 0 countries");
-    expect(countHint(5, "country", "countries", "Borders")).toBe("Borders 5 countries");
+  it("counts each word of a longer name", () => {
+    expect(nameLengthHint("South Sudan")).toBe("Its name has 2 words: 5 and 5 letters");
+    expect(nameLengthHint("Bosnia and Herzegovina")).toBe("Its name has 3 words: 6, 3 and 11 letters");
+  });
+
+  it("splits on hyphens and counts letters only", () => {
+    expect(nameLengthHint("Guinea-Bissau")).toBe("Its name has 2 words: 6 and 6 letters");
+    expect(nameLengthHint("Côte d'Ivoire")).toBe("Its name has 2 words: 4 and 7 letters");
+    expect(nameLengthHint("Trinidad & Tobago")).toBe("Its name has 2 words: 8 and 6 letters");
+  });
+
+  it("gives nothing for a name with no letters", () => {
+    expect(nameLengthHint("")).toBeNull();
+    expect(nameLengthHint(" - ")).toBeNull();
   });
 });
 

@@ -1,6 +1,5 @@
 import {
   cluesDescription,
-  countHint,
   firstLetterHint as firstLetter,
   type HintBuilder,
   hintsFrom,
@@ -10,9 +9,14 @@ import type { River } from "./model";
 
 export const continentHint: HintBuilder<River> = (river) => `Continent: ${river.continent}`;
 
-/** How many countries the river flows through, without naming them. */
-export const countryCountHint: HintBuilder<River> = (river) =>
-  countHint(river.countries.length, "country", "countries", "Flows through");
+/** The country with the longest stretch of the river (`countries` is sorted longest first), or that it has only one. */
+export const mainCountryHint: HintBuilder<River> = (river) => {
+  const [main] = river.countries;
+  if (!main) {
+    return null;
+  }
+  return river.countries.length === 1 ? `Flows only through ${main}` : `Its longest stretch is in ${main}`;
+};
 
 export const firstLetterHint: HintBuilder<River> = (river) => firstLetter(river.name);
 

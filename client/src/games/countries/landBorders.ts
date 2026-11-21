@@ -19,10 +19,10 @@ export default defineGame({
     // The first two hints change the map; they only say so.
     hints: (round) =>
       hintsFrom(
-        "Shows its neighbours, then its coastline, then its first letter",
+        "Shows its coastline, then its neighbours, then its first letter",
         round,
-        mapHint("Its neighbours are on the map"),
         mapHint("Its coastline is on the map"),
+        mapHint("Its neighbours are on the map"),
         firstLetterHint,
       ),
   }),

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeRiverData } from "../../test/fixtures";
-import { continentHint, countryCountHint, firstLetterHint, textHints } from "./riverHints";
+import { continentHint, mainCountryHint, firstLetterHint, textHints } from "./riverHints";
 
 describe("riverHints", () => {
   const river = makeRiverData();
@@ -9,9 +9,10 @@ describe("riverHints", () => {
     expect(continentHint(river)).toBe("Continent: Europe");
   });
 
-  it("counts the countries it flows through without naming them", () => {
-    expect(countryCountHint(river)).toBe("Flows through 3 countries");
-    expect(countryCountHint({ ...river, countries: ["A"] })).toBe("Flows through 1 country");
+  it("names the country with the longest stretch, or the only one", () => {
+    expect(mainCountryHint(river)).toBe("Its longest stretch is in Romania");
+    expect(mainCountryHint({ ...river, countries: ["Russia"] })).toBe("Flows only through Russia");
+    expect(mainCountryHint({ ...river, countries: [] })).toBeNull();
   });
 
   it("gives the first letter", () => {
@@ -26,7 +27,7 @@ describe("riverHints", () => {
   it("describes as many clues as there are builders", () => {
     expect(textHints(river, continentHint).description).toBe("Shows a clue");
     expect(textHints(river, continentHint, firstLetterHint).description).toBe("Shows 2 clues, one at a time");
-    expect(textHints(river, continentHint, countryCountHint, firstLetterHint).description).toBe(
+    expect(textHints(river, continentHint, mainCountryHint, firstLetterHint).description).toBe(
       "Shows 3 clues, one at a time",
     );
   });

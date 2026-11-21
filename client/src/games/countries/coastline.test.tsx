@@ -38,16 +38,16 @@ describe("Coastlines", () => {
     expect(screen.getByText("Which country has this coastline?")).toBeInTheDocument();
   });
 
-  it("offers three hints: the neighbour count, the land borders on the map, then the first letter", async () => {
+  it("offers three hints: the land borders on the map, the longest border, then the first letter", async () => {
     const user = userEvent.setup();
     renderGame();
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    expect(screen.getByText("Its mainland borders 2 countries")).toBeInTheDocument();
+    expect(screen.getByText("Its land borders are on the map")).toBeInTheDocument();
+    expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Its land borders are on the map")).toBeInTheDocument();
-    expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
+    expect(screen.getByText("Longest border: Germany")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();

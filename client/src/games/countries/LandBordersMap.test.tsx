@@ -34,11 +34,12 @@ describe("LandBordersMap", () => {
     expect(drawnTileUrls()).toEqual([]);
   });
 
-  it("does not draw the country's outline or its coast while playing without the hint", () => {
-    renderMap({ hintsUsed: 1 });
+  it("does not draw the country's outline, its coast or its neighbours while playing without the hints", () => {
+    renderMap({ hintsUsed: 0 });
 
     expect(points()).not.toContain(OUTLINE);
     expect(points()).not.toContain(COAST);
+    expect(points()).not.toContain(NEIGHBOURS[0]);
   });
 
   it("never draws the country's outline while playing, whatever the hints", () => {
@@ -47,16 +48,16 @@ describe("LandBordersMap", () => {
     expect(points()).not.toContain(OUTLINE);
   });
 
-  it("adds the neighbours' outlines from the first hint", () => {
-    renderMap({ hintsUsed: 1 });
+  it("adds the neighbours' outlines from the second hint", () => {
+    renderMap({ hintsUsed: 2 });
 
     expect(points()).toEqual(expect.arrayContaining(NEIGHBOURS));
     const neighbour = drawnLayers().find((layer) => layer.point === NEIGHBOURS[0]);
     expect(neighbour?.color).toBe(clueOutlineOptions().color);
   });
 
-  it("adds the coastline as a dashed hint line at the second hint", () => {
-    renderMap({ hintsUsed: 2 });
+  it("adds the coastline as a dashed hint line from the first hint", () => {
+    renderMap({ hintsUsed: 1 });
 
     const coast = drawnLayers().find((layer) => layer.point === COAST);
     expect(coast?.dashed).toBe(true);

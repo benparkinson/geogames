@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeLakeData } from "../../test/fixtures";
-import { continentHint, countryCountHint, firstLetterHint, lakeHints } from "./lakeHints";
+import { continentHint, mainCountryHint, firstLetterHint, lakeHints } from "./lakeHints";
 
 describe("lakeHints", () => {
   const lake = makeLakeData();
@@ -9,12 +9,14 @@ describe("lakeHints", () => {
     expect(continentHint(lake)).toBe("Continent: Asia");
   });
 
-  it("says a lake with one country lies in it", () => {
-    expect(countryCountHint(lake)).toBe("Lies in 1 country");
+  it("says a lake with one country lies entirely in it", () => {
+    expect(mainCountryHint(lake)).toBe("Lies entirely in Russia");
   });
 
-  it("counts the countries on the shore of a bigger lake without naming them", () => {
-    expect(countryCountHint({ ...lake, countries: ["Kenya", "Tanzania", "Uganda"] })).toBe("Shores in 3 countries");
+  it("names the country with the longest shoreline of a bigger lake", () => {
+    expect(mainCountryHint({ ...lake, countries: ["Tanzania", "Kenya", "Uganda"] })).toBe(
+      "Its longest shoreline is in Tanzania",
+    );
   });
 
   it("gives the first letter", () => {
@@ -26,7 +28,7 @@ describe("lakeHints", () => {
 
     expect([0, 1, 2].map((i) => text?.(i, []))).toEqual([
       "Continent: Asia",
-      "Lies in 1 country",
+      "Lies entirely in Russia",
       "Starts with “B” (after “Lake”)",
     ]);
     expect(text?.(3, [])).toBeNull();
@@ -35,7 +37,11 @@ describe("lakeHints", () => {
   it("leaves the continent out when the round already shows it", () => {
     const { text, description } = lakeHints(lake, true);
 
-    expect([0, 1, 2].map((i) => text?.(i, []))).toEqual(["Lies in 1 country", "Starts with “B” (after “Lake”)", null]);
+    expect([0, 1, 2].map((i) => text?.(i, []))).toEqual([
+      "Lies entirely in Russia",
+      "Starts with “B” (after “Lake”)",
+      null,
+    ]);
     expect(description).toBe("Shows 2 clues, one at a time");
   });
 });
