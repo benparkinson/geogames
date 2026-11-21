@@ -10,9 +10,15 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoData;
  * @param major MultiLineString: its most important rivers
  * @param minor MultiLineString: its other rivers
  * @param lakes MultiPolygon: its lakes, with no polygons when it has none
+ * @param longestRiver the name of its longest named river, or null when it has none
  */
 public record CountryRiversRound(
-    GameType gameType, CountryShape country, GeoData major, GeoData minor, GeoData lakes)
+    GameType gameType,
+    CountryShape country,
+    GeoData major,
+    GeoData minor,
+    GeoData lakes,
+    String longestRiver)
     implements GameData {
 
   /** Shared with the country-shape games, so a mixed game never asks about one country twice. */

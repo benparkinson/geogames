@@ -29,5 +29,6 @@
       "type" : "MultiPolygon",
       "coordinates" : [ ]
     }
-  }
+  },
+  "longestRiver" : "Baram River"
 }

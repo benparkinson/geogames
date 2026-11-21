@@ -62,6 +62,22 @@ final class CountryRiversSummary {
             + (long) CountryRiversEligibility.MIN_RIVER_KM
             + " km): "
             + eligible.size());
+    long named = report.rivers().values().stream().filter(r -> r.longestRiver() != null).count();
+    long eligibleNamed =
+        eligible.stream().filter(e -> report.rivers().get(e.name()).longestRiver() != null).count();
+    System.out.println(
+        "Longest river named: "
+            + named
+            + " of "
+            + report.rivers().size()
+            + " countries, "
+            + eligibleNamed
+            + " of the "
+            + eligible.size()
+            + " eligible");
+    eligible.stream()
+        .filter(e -> report.rivers().get(e.name()).longestRiver() == null)
+        .forEach(e -> System.out.println("  Eligible with no named river: " + e.name()));
     eligible.forEach(
         e ->
             System.out.println(
@@ -73,6 +89,7 @@ final class CountryRiversSummary {
                     + e.riverKm()
                     + " km, "
                     + e.lakeCount()
-                    + " lakes"));
+                    + " lakes, longest river: "
+                    + report.rivers().get(e.name()).longestRiver()));
   }
 }

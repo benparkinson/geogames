@@ -28,9 +28,10 @@ public class RiverClipper {
    *
    * @param scalerank Natural Earth's importance of the river: lower is more important
    * @param rivernum Natural Earth's number for the river, shared by all its lines
+   * @param qid the river's Wikidata ID, or null when it has none
    * @param points {lon, lat}, at least two
    */
-  public record Run(int scalerank, int rivernum, List<double[]> points) {}
+  public record Run(int scalerank, int rivernum, String qid, List<double[]> points) {}
 
   private final CountryLocator locator;
 
@@ -42,7 +43,7 @@ public class RiverClipper {
    * The runs of this line in each country, keyed by country name (sorted). Consecutive segments in
    * the same country form a run, so a line that leaves a country and comes back gives it two.
    */
-  public Map<String, List<Run>> clip(int scalerank, int rivernum, List<double[]> line) {
+  public Map<String, List<Run>> clip(int scalerank, int rivernum, String qid, List<double[]> line) {
     Map<String, List<Run>> runs = new TreeMap<>();
     Map<String, List<double[]>> open = new LinkedHashMap<>();
     for (int i = 1; i < line.size(); i++) {
@@ -57,14 +58,14 @@ public class RiverClipper {
         }
       }
       for (String country : finished) {
-        close(runs, open.remove(country), country, scalerank, rivernum);
+        close(runs, open.remove(country), country, scalerank, rivernum, qid);
       }
       for (String country : countries) {
         open.computeIfAbsent(country, key -> new ArrayList<>(List.of(a))).add(b);
       }
     }
     for (Map.Entry<String, List<double[]>> entry : open.entrySet()) {
-      close(runs, entry.getValue(), entry.getKey(), scalerank, rivernum);
+      close(runs, entry.getValue(), entry.getKey(), scalerank, rivernum, qid);
     }
     return runs;
   }
@@ -74,9 +75,10 @@ public class RiverClipper {
       List<double[]> points,
       String country,
       int scalerank,
-      int rivernum) {
+      int rivernum,
+      String qid) {
     runs.computeIfAbsent(country, key -> new ArrayList<>())
-        .add(new Run(scalerank, rivernum, points));
+        .add(new Run(scalerank, rivernum, qid, points));
   }
 
   /** The countries the segment belongs to, sorted. */

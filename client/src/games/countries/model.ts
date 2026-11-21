@@ -78,4 +78,6 @@ export interface CountryRiversRound extends HasCountry {
   minor: LineGeoData;
   /** May have no polygons: a country with no large lake. */
   lakes: CountryGeoData;
+  /** The name of its longest named river, or null when it has none. */
+  longestRiver: string | null;
 }

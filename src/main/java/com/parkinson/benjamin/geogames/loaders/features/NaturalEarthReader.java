@@ -32,7 +32,7 @@ public class NaturalEarthReader {
 
     for (JsonNode feature : featureCollection.path("features")) {
       JsonNode props = feature.path("properties");
-      String qid = text(props.path("wikidataid"));
+      String qid = wikidataId(props);
       if (qid.isEmpty() || skippedClasses.contains(text(props.path("featurecla")))) {
         continue;
       }
@@ -65,6 +65,11 @@ public class NaturalEarthReader {
                 new NaturalEarthFeature(
                     qid, names.get(qid), namesEn.get(qid), parts, polygons.get(qid))));
     return result;
+  }
+
+  /** The feature's {@code wikidataid}; empty when it has none. */
+  public static String wikidataId(JsonNode properties) {
+    return text(properties.path("wikidataid"));
   }
 
   private static String text(JsonNode node) {

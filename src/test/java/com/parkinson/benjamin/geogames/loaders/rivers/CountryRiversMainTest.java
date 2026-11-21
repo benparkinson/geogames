@@ -25,6 +25,8 @@ class CountryRiversMainTest {
   @TempDir Path out;
 
   private Path rivers;
+  private Path wikidata;
+  private Path overrides;
   private Path lakes;
   private Path countries;
 
@@ -32,12 +34,14 @@ class CountryRiversMainTest {
   void locateFixtures() throws URISyntaxException {
     Path fixtures = Path.of(getClass().getResource("/fixtures/loaders/country-rivers").toURI());
     rivers = fixtures.resolve("rivers.geojson");
+    wikidata = fixtures.resolve("wikidata.json");
+    overrides = fixtures.resolve("overrides.json");
     lakes = fixtures.resolve("lakes.geojson");
     countries = Path.of(getClass().getResource("/fixtures/loaders/countries-processed").toURI());
   }
 
   private CountryRiversMain.Report run() throws IOException {
-    return CountryRiversMain.run(rivers, lakes, countries, out);
+    return CountryRiversMain.run(rivers, wikidata, overrides, lakes, countries, out);
   }
 
   private static int lineCount(com.parkinson.benjamin.geogames.model.geojson.GeoData data) {
@@ -49,7 +53,7 @@ class CountryRiversMainTest {
     for (int i = 0; i < points; i++) {
       list.add(new double[] {i, 0});
     }
-    return new Run(scalerank, rivernum, list);
+    return new Run(scalerank, rivernum, null, list);
   }
 
   @Test
@@ -133,6 +137,17 @@ class CountryRiversMainTest {
         GeoJson.lenientReader()
             .readValue(out.resolve("index.json").toFile(), CountryRiversIndexEntry[].class);
     assertThat(index).extracting(CountryRiversIndexEntry::name).containsExactly("Alpha", "Beta");
+  }
+
+  @Test
+  void namesTheLongestNamedRiverOfEachCountryAndWritesItToTheFile() throws IOException {
+    CountryRiversMain.Report report = run();
+
+    assertThat(report.rivers().get("Alpha").longestRiver()).isEqualTo("Crossing");
+    assertThat(report.rivers().get("Beta").longestRiver()).isEqualTo("Crossing");
+    CountryRivers alpha =
+        GeoJson.lenientReader().readValue(out.resolve("Alpha.json").toFile(), CountryRivers.class);
+    assertThat(alpha.longestRiver()).isEqualTo("Crossing");
   }
 
   @Test
@@ -227,7 +242,12 @@ class CountryRiversMainTest {
             () ->
                 CountryRiversMain.main(
                     new String[] {
-                      rivers.toString(), lakes.toString(), countries.toString(), out.toString()
+                      rivers.toString(),
+                      wikidata.toString(),
+                      overrides.toString(),
+                      lakes.toString(),
+                      countries.toString(),
+                      out.toString()
                     }));
 
     assertThat(output)

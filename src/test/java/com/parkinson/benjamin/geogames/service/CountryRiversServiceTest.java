@@ -33,8 +33,8 @@ class CountryRiversServiceTest {
         name,
         lines(name),
         lines(name),
-        new GeoData(
-            "Feature", new GeoProperties(name), new GeoGeometry("MultiPolygon", List.of())));
+        new GeoData("Feature", new GeoProperties(name), new GeoGeometry("MultiPolygon", List.of())),
+        null);
   }
 
   @BeforeEach

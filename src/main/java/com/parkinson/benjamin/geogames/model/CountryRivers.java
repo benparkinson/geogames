@@ -11,5 +11,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoData;
  * @param minor MultiLineString: the others
  * @param lakes MultiPolygon: the lakes on the country's shore (each whole, even if it is shared),
  *     no polygons when there are none
+ * @param longestRiver the name of the longest named river in the country, or null
  */
-public record CountryRivers(String name, GeoData major, GeoData minor, GeoData lakes) {}
+public record CountryRivers(
+    String name, GeoData major, GeoData minor, GeoData lakes, String longestRiver) {}
