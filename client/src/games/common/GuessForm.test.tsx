@@ -104,6 +104,42 @@ describe("GuessForm submitting", () => {
 
     expect(props.submitGuess).toHaveBeenCalledWith("Spain");
   });
+
+  it("keeps the focus in the box when the Guess button is pressed, so a phone keeps its keyboard", async () => {
+    const user = userEvent.setup();
+    renderForm({ submitGuess: vi.fn(() => ({ kind: "correct", remaining: 1 }) as GuessResult) });
+
+    await user.type(input(), "Spain");
+    await user.click(screen.getByRole("button", { name: "Guess" }));
+
+    expect(input()).toHaveFocus();
+  });
+
+  it("keeps the same box after wrong guesses, replaying the shake each time", async () => {
+    const user = userEvent.setup();
+    renderForm({ submitGuess: vi.fn(() => ({ kind: "wrong", guess: "x", guessesLeft: 2 }) as GuessResult) });
+    const box = input();
+
+    await user.type(box, "Spain{Enter}");
+    expect(box).toHaveClass("shake");
+    await user.type(box, "Italy{Enter}");
+
+    expect(input()).toBe(box);
+    expect(box).toHaveClass("shake-again");
+    expect(box).not.toHaveClass("shake");
+    expect(box).toHaveFocus();
+  });
+
+  it("puts the focus back in the box after a guess sent from the keyboard-focused button", async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.type(input(), "Spain");
+    screen.getByRole("button", { name: "Guess" }).focus();
+    await user.keyboard("{Enter}");
+
+    expect(input()).toHaveFocus();
+  });
 });
 
 describe("GuessForm suggestions", () => {

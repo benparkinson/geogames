@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../../ui";
 import { GuessBox } from "./GuessBox";
 import { feedbackText } from "./guessFeedback";
@@ -6,6 +6,12 @@ import { GuessResult } from "./guessReducer";
 
 function prefersPreciseInput(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches;
+}
+
+/** Alternates between two classes with the same animation, so each wrong guess replays the shake. */
+function shakeClass(shakeCount: number): string | undefined {
+  if (shakeCount === 0) return undefined;
+  return shakeCount % 2 === 1 ? "shake" : "shake-again";
 }
 
 /** The guess box and its button, and what the last guess earned. Only shown while the round is being played. */
@@ -23,6 +29,7 @@ export default function GuessForm({
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<GuessResult | null>(null);
   const [shakeCount, setShakeCount] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,6 +49,9 @@ export default function GuessForm({
         setGuess("");
         break;
     }
+    // Keep typing in the box after a guess, whichever way it was sent. Called
+    // during the submit, so a phone keeps (or reopens) its keyboard.
+    inputRef.current?.focus();
   }
 
   // Worked out from the result on every render.
@@ -52,16 +62,17 @@ export default function GuessForm({
       <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
         <div className="flex-grow-1">
           <GuessBox
-            key={shakeCount}
-            className={shakeCount > 0 ? "shake" : undefined}
-            autoFocus={shakeCount > 0 || prefersPreciseInput()}
+            ref={inputRef}
+            className={shakeClass(shakeCount)}
+            autoFocus={prefersPreciseInput()}
             value={guess}
             name={inputPlaceholder}
             onChange={(e) => setGuess(e.currentTarget.value)}
             suggestions={suggestions}
           />
         </div>
-        <Button type="submit" variant="primary">
+        {/* Pressing the button would take the focus from the box and close a phone's keyboard. */}
+        <Button type="submit" variant="primary" onMouseDown={(e) => e.preventDefault()}>
           Guess
         </Button>
       </form>
