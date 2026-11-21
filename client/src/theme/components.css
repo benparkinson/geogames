@@ -279,6 +279,37 @@
   width: 100%;
   max-width: 720px;
 }
+
+/* Results page: the score and the buttons beside the list of rounds on a desktop, so nothing needs scrolling. */
+.gg-summary__list {
+  margin-bottom: 1rem;
+}
+@media (min-width: 900px) {
+  .gg-card--wide {
+    max-width: 940px;
+  }
+  .gg-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 1.5rem;
+  }
+  .gg-summary__head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .gg-summary__actions {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+  }
+  .gg-summary__list {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    margin-bottom: 0;
+  }
+}
 .gg-list {
   display: flex;
   flex-direction: column;

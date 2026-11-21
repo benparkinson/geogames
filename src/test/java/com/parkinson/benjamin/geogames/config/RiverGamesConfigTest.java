@@ -42,7 +42,8 @@ class RiverGamesConfigTest {
                 river("B", POINT, POINT, List.of("X", "Y", "Z")),
                 river("C", null, null, List.of("X", "Y", "Z")),
                 river("D", POINT, POINT, null),
-                river("E", POINT, null, List.of("X", "Y"))));
+                river("E", POINT, null, List.of("X", "Y")),
+                river("Q2251", POINT, POINT, List.of("X", "Y"))));
     when(countries.loadDisplayCountry(anyString()))
         .thenAnswer(call -> new Country(call.getArgument(0), List.of(), null));
   }
@@ -63,26 +64,29 @@ class RiverGamesConfigTest {
     RoundGenerator generator = config.riversByShape(rivers);
 
     assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
-    assertThat(eligibleIds(generator, 5)).containsExactlyInAnyOrder("A", "B", "C", "D", "E");
+    assertThat(eligibleIds(generator, 6))
+        .containsExactlyInAnyOrder("A", "B", "C", "D", "E", "Q2251");
   }
 
   @Test
-  void riversByCountriesNeedsThreeOrMoreCountriesAndAttachesThem() {
+  void riversByCountriesNeedsTwoOrMoreCountriesAndAttachesThem() {
     RoundGenerator generator = config.riversByCountries(rivers, countries);
 
     assertThat(generator.gameType()).isSameAs(GameType.RIVERS_BY_COUNTRIES);
-    assertThat(eligibleIds(generator, 2)).containsExactlyInAnyOrder("B", "C");
-    assertThat(generator.generate(2, Set.of(), random))
+    assertThat(eligibleIds(generator, 3)).containsExactlyInAnyOrder("B", "C", "E");
+    assertThat(generator.generate(3, Set.of(), random))
         .allSatisfy(
-            round ->
-                assertThat(((RiverRound) round).countries())
-                    .extracting(Country::name)
-                    .containsExactly("X", "Y", "Z"));
+            round -> {
+              RiverRound riverRound = (RiverRound) round;
+              assertThat(riverRound.countries())
+                  .extracting(Country::name)
+                  .containsExactlyElementsOf(riverRound.river().countries());
+            });
   }
 
   @Test
   void riversByShapeAttachesNoCountries() {
-    assertThat(config.riversByShape(rivers).generate(5, Set.of(), random))
+    assertThat(config.riversByShape(rivers).generate(6, Set.of(), random))
         .allSatisfy(round -> assertThat(((RiverRound) round).countries()).isEmpty());
   }
 }

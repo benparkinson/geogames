@@ -10,6 +10,7 @@ import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryRiversEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
+import com.parkinson.benjamin.geogames.helper.RiverCountriesEligibility;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Bounds;
@@ -194,12 +195,20 @@ public class ProcessedDataIT {
   }
 
   @Test
-  public void enoughRiversCrossThreeCountriesForTheCountriesGame() {
+  public void enoughRiversForTheCountriesGame() {
     long eligible =
         new RiverLoaderService(reader)
-            .loadRivers().stream().filter(river -> river.countries().size() >= 3).count();
+            .loadRivers().stream().filter(RiverCountriesEligibility.riverCountries()).count();
 
-    assertTrue(eligible >= 10, "only " + eligible + " rivers cross three or more countries");
+    assertTrue(eligible >= 10, "only " + eligible + " rivers are eligible for River Countries");
+  }
+
+  @Test
+  public void everyExcludedRiverCountriesIdIsARealRiver() {
+    Set<String> ids = new HashSet<>();
+    new RiverLoaderService(reader).loadRivers().forEach(river -> ids.add(river.id()));
+
+    assertTrue(ids.containsAll(RiverCountriesEligibility.EXCLUDED));
   }
 
   @Test
