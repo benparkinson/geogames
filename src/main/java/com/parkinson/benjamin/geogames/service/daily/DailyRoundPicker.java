@@ -29,8 +29,10 @@ import org.springframework.stereotype.Service;
  * DailyChallengeStore} pins them so a deploy can't change a day that has started.
  *
  * <p>The history comes from {@link DailyHistoryLoader} (the stored days, rebuilt, not stored
- * again). Types are ranked by days since they were last used, so a type that sat out yesterday
- * plays today and none sits out two days running. Subjects used in the history are excluded.
+ * again). Types are ranked by days since they were last used (looking back {@value #TYPE_DAYS}
+ * days), then by how often they were used, so a type that sat out yesterday plays today, none
+ * sits out two days running and the rest rotate. Subjects used in the last {@value #SUBJECT_DAYS}
+ * days are excluded.
  * Continents are best effort: up to {@value #CONTINENT_ATTEMPTS} attempts at the rounds, keeping
  * the first with no {@link #continentPenalty} or else the lowest.
  */
@@ -41,8 +43,14 @@ public class DailyRoundPicker {
 
   static final int CONTINENT_ATTEMPTS = 8;
 
+  /** Days of history whose subjects are excluded. The loader reads this far back. */
+  static final int SUBJECT_DAYS = 7;
+
+  /** Days of history the game type ranking looks at. */
+  static final int TYPE_DAYS = 4;
+
   /** Days of history the continent score compares with. */
-  private static final int CONTINENT_DAYS = 2;
+  static final int CONTINENT_DAYS = 2;
 
   private final RoundGenerators generators;
   private final RoundContinents continents;
@@ -62,7 +70,7 @@ public class DailyRoundPicker {
   public List<GameData> pick(LocalDate date, DailyHistory history) {
     Random random = new Random(seedFor(date));
     List<GameType> types = chooseTypes(history, random);
-    Set<String> recentSubjects = history.subjects();
+    Set<String> recentSubjects = history.subjects(SUBJECT_DAYS);
 
     List<GameData> best = null;
     int bestPenalty = Integer.MAX_VALUE;
@@ -87,12 +95,14 @@ public class DailyRoundPicker {
   }
 
   private List<GameType> chooseTypes(DailyHistory history, Random random) {
-    int absent = DailyHistoryLoader.LOOKBACK_DAYS + 1;
     List<GameType> types = new ArrayList<>(pool);
     Collections.shuffle(types, random);
-    // The sort is stable, so the shuffle breaks ties.
+    // Longest unused first, then least used lately. The sort is stable, so the shuffle breaks
+    // the ties that are left.
     types.sort(
-        Comparator.comparingInt((GameType type) -> history.daysSinceUsed(type, absent)).reversed());
+        Comparator.comparingInt((GameType type) -> history.daysSinceUsed(type, TYPE_DAYS))
+            .reversed()
+            .thenComparingInt(type -> history.recentUses(type, TYPE_DAYS)));
     List<GameType> chosen = new ArrayList<>(types.subList(0, DAILY_ROUNDS));
     Collections.shuffle(chosen, random);
     return chosen;

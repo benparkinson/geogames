@@ -25,9 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DailyHistoryLoader {
 
-  /** How many days back the picker looks for types and subjects. */
-  static final int LOOKBACK_DAYS = 4;
-
   private final DailyChallengeStore store;
   private final RoundGenerators generators;
   private final RoundContinents continents;
@@ -43,7 +40,7 @@ public class DailyHistoryLoader {
   DailyHistory load(LocalDate date) {
     List<PastDay> days = new ArrayList<>();
     for (Map.Entry<LocalDate, List<PinnedRound>> entry :
-        store.findBefore(date, LOOKBACK_DAYS).entrySet()) {
+        store.findBefore(date, DailyRoundPicker.SUBJECT_DAYS).entrySet()) {
       int daysAgo = (int) ChronoUnit.DAYS.between(entry.getKey(), date);
       Set<GameType> types = EnumSet.noneOf(GameType.class);
       Set<String> subjects = new HashSet<>();

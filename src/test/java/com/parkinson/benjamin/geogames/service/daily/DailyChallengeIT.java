@@ -12,8 +12,10 @@ import com.parkinson.benjamin.geogames.service.daily.DailyHistory.PastDay;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -172,13 +174,13 @@ class DailyChallengeIT {
     List<PastDay> earlier = new ArrayList<>();
     List<List<GameData>> days = new ArrayList<>();
     int penalised = 0;
+    int longestRun = 0;
+    Map<GameType, Integer> runs = new EnumMap<>(GameType.class);
     for (int day = 0; day < 365; day++) {
       LocalDate date = start.plusDays(day);
       // Nearest first, as DailyHistoryLoader builds it, from the days generated here.
       List<PastDay> recent = new ArrayList<>();
-      for (int back = 1;
-          back <= DailyHistoryLoader.LOOKBACK_DAYS && back <= earlier.size();
-          back++) {
+      for (int back = 1; back <= DailyRoundPicker.SUBJECT_DAYS && back <= earlier.size(); back++) {
         PastDay past = earlier.get(earlier.size() - back);
         recent.add(new PastDay(back, past.types(), past.subjects(), past.roundContinents()));
       }
@@ -204,12 +206,18 @@ class DailyChallengeIT {
         }
       }
       Set<String> recentSubjects = new HashSet<>();
-      for (int back = 1; back <= 4 && back <= days.size(); back++) {
+      for (int back = 1; back <= DailyRoundPicker.SUBJECT_DAYS && back <= days.size(); back++) {
         days.get(days.size() - back).forEach(r -> recentSubjects.add(r.subjectId()));
       }
       assertThat(rounds.stream().map(GameData::subjectId).filter(recentSubjects::contains))
-          .as("subject repeated within 4 days on %s", date)
+          .as("subject repeated within 7 days on %s", date)
           .isEmpty();
+
+      for (GameType type : pool()) {
+        int run = typesOf(rounds).contains(type) ? runs.merge(type, 1, Integer::sum) : 0;
+        runs.put(type, run);
+        longestRun = Math.max(longestRun, run);
+      }
 
       if (picker.penaltyOf(rounds, history) > 0) {
         penalised++;
@@ -225,6 +233,7 @@ class DailyChallengeIT {
                   .toList()));
     }
     System.out.println("Days with a nonzero continent penalty: " + penalised + " of 365");
+    System.out.println("Longest run of consecutive days one type played: " + longestRun);
   }
 
   private static List<GameType> pool() {

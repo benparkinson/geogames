@@ -51,7 +51,7 @@ class DailyHistoryLoaderTest {
         List.of(
             new PinnedRound(GameType.TRIPOINT, "gone:1"),
             new PinnedRound(GameType.LAKES_BY_SHAPE, "lake:2")));
-    when(store.findBefore(DATE, DailyHistoryLoader.LOOKBACK_DAYS)).thenReturn(stored);
+    when(store.findBefore(DATE, DailyRoundPicker.SUBJECT_DAYS)).thenReturn(stored);
     RoundContinents continents = mock(RoundContinents.class);
     when(continents.of(any())).thenReturn(List.of("Europe"));
     RoundGenerators generators =

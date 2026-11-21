@@ -138,14 +138,53 @@ class DailyRoundPickerTest {
   }
 
   @Test
-  void aSubjectUsedFourDaysAgoIsExcluded() {
+  void aSubjectUsedSevenDaysAgoIsExcluded() {
     DailyHistory history =
-        new DailyHistory(List.of(day(4, Set.of(), Set.of("subject:7"), List.of())));
+        new DailyHistory(List.of(day(7, Set.of(), Set.of("subject:7"), List.of())));
 
     List<GameData> rounds = picker.pick(DATE, history);
 
     assertThat(exclusionsSeen).isNotEmpty().allMatch(excluded -> excluded.contains("subject:7"));
     assertThat(rounds).extracting(GameData::subjectId).doesNotContain("subject:7");
+  }
+
+  @Test
+  void aSubjectUsedEightDaysAgoIsNotExcluded() {
+    DailyHistory history =
+        new DailyHistory(List.of(day(8, Set.of(), Set.of("subject:7"), List.of())));
+
+    picker.pick(DATE, history);
+
+    assertThat(exclusionsSeen).isNotEmpty().noneMatch(excluded -> excluded.contains("subject:7"));
+  }
+
+  @Test
+  void leastRecentlyUsedTypesFillTheRemainingSlots() {
+    Set<GameType> yesterday = Set.copyOf(POOL.subList(0, 5));
+    Set<GameType> a = Set.of(POOL.get(0), POOL.get(1));
+    // A and B were also used on each of the 3 days before; C, D and E were not.
+    DailyHistory history =
+        new DailyHistory(
+            List.of(
+                day(1, yesterday, Set.of(), List.of()),
+                day(2, a, Set.of(), List.of()),
+                day(3, a, Set.of(), List.of()),
+                day(4, a, Set.of(), List.of())));
+
+    for (int d = 0; d < 20; d++) {
+      assertThat(picker.pick(DATE.plusDays(d), history))
+          .extracting(GameData::gameType)
+          .doesNotContain(POOL.get(0), POOL.get(1));
+    }
+  }
+
+  @Test
+  void aTypeUsedOnlyFiveDaysAgoCountsAsUnused() {
+    DailyHistory history = new DailyHistory(List.of(day(5, Set.copyOf(POOL), Set.of(), List.of())));
+
+    assertThat(history.daysSinceUsed(POOL.get(0), DailyRoundPicker.TYPE_DAYS))
+        .isEqualTo(DailyRoundPicker.TYPE_DAYS + 1);
+    assertThat(history.recentUses(POOL.get(0), DailyRoundPicker.TYPE_DAYS)).isZero();
   }
 
   @Test

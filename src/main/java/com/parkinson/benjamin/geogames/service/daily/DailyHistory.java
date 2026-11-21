@@ -21,19 +21,30 @@ record DailyHistory(List<PastDay> days) {
       Set<String> subjects,
       List<Set<Continent>> roundContinents) {}
 
-  /** Every subject used on any of the days. */
-  Set<String> subjects() {
+  /** Every subject used on the days up to {@code maxDaysAgo} days back. */
+  Set<String> subjects(int maxDaysAgo) {
     Set<String> all = new HashSet<>();
-    days.forEach(day -> all.addAll(day.subjects()));
+    days.stream()
+        .filter(day -> day.daysAgo() <= maxDaysAgo)
+        .forEach(day -> all.addAll(day.subjects()));
     return all;
   }
 
-  /** Days since the type was last used, or {@code absent} if no day in the history used it. */
-  int daysSinceUsed(GameType type, int absent) {
+  /**
+   * Days since the type was last used within the last {@code window} days, or {@code window + 1}
+   * if it wasn't.
+   */
+  int daysSinceUsed(GameType type, int window) {
     return days.stream()
-        .filter(day -> day.types().contains(type))
+        .filter(day -> day.daysAgo() <= window && day.types().contains(type))
         .mapToInt(PastDay::daysAgo)
         .min()
-        .orElse(absent);
+        .orElse(window + 1);
+  }
+
+  /** How many of the last {@code window} days used the type. */
+  int recentUses(GameType type, int window) {
+    return (int)
+        days.stream().filter(day -> day.daysAgo() <= window && day.types().contains(type)).count();
   }
 }
