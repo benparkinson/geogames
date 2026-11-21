@@ -70,61 +70,67 @@ export default function GameSummary({
   const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
-      {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
-      <h1 className="h3 mb-1">
-        {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
-        {perfectGame ? (
-          <>
-            <StarFill aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} / {maxScore}
-          </>
-        ) : fullMarks ? (
-          <>
-            <CheckLg aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
-          </>
-        ) : (
-          `You scored ${score} / ${maxScore}`
-        )}
-      </h1>
-      <p className="gg-text-muted mb-3">{summaryLine}</p>
-      {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
-
-      <div className="gg-list mb-3">
-        {all.map((r, i) => (
-          <SummaryRow key={i} round={r} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
-        ))}
-      </div>
-
-      {!!createError && (
-        <div className="gg-text-danger small mb-2" role="alert">
-          Couldn&apos;t start a new game. Try again.
+      <div className="gg-summary">
+        <div className="gg-summary__head">
+          {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
+          <h1 className="h3 mb-1">
+            {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
+            {perfectGame ? (
+              <>
+                <StarFill aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} / {maxScore}
+              </>
+            ) : fullMarks ? (
+              <>
+                <CheckLg aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
+              </>
+            ) : (
+              `You scored ${score} / ${maxScore}`
+            )}
+          </h1>
+          <p className="gg-text-muted mb-3">{summaryLine}</p>
+          {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
-      )}
-      {share !== null && (
-        <div className="mb-3">
-          <ShareButton text={share} />
+
+        <div className="gg-list gg-summary__list mb-3">
+          {all.map((r, i) => (
+            <SummaryRow key={i} round={r} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
+          ))}
         </div>
-      )}
-      <div className="d-flex gap-2">
-        {daily ? (
-          <Button
-            variant="secondary"
-            onClick={() => createGame(RANDOM_OPTION.type, 5, all[0].difficulty)}
-            disabled={creating}
-          >
-            {creating ? <Spinner size="sm" /> : "Play a Mixed game"}
-          </Button>
-        ) : (
-          <Button
-            variant="primary"
-            onClick={() => createGame(gameType, totalRoundCount, all[0].difficulty)}
-            disabled={creating}
-          >
-            {creating ? <Spinner size="sm" /> : "Play again"}
-          </Button>
-        )}
-        <Link href="/" className={buttonClass({ variant: "quiet" })}>
-          Home
-        </Link>
+
+        <div className="gg-summary__actions">
+          {!!createError && (
+            <div className="gg-text-danger small mb-2" role="alert">
+              Couldn&apos;t start a new game. Try again.
+            </div>
+          )}
+          {share !== null && (
+            <div className="mb-3">
+              <ShareButton text={share} />
+            </div>
+          )}
+          <div className="d-flex gap-2">
+            {daily ? (
+              <Button
+                variant="secondary"
+                onClick={() => createGame(RANDOM_OPTION.type, 5, all[0].difficulty)}
+                disabled={creating}
+              >
+                {creating ? <Spinner size="sm" /> : "Play a Mixed game"}
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                onClick={() => createGame(gameType, totalRoundCount, all[0].difficulty)}
+                disabled={creating}
+              >
+                {creating ? <Spinner size="sm" /> : "Play again"}
+              </Button>
+            )}
+            <Link href="/" className={buttonClass({ variant: "quiet" })}>
+              Home
+            </Link>
+          </div>
+        </div>
       </div>
     </PageShell>
   );
