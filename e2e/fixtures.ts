@@ -123,7 +123,7 @@ export async function guess(page: Page, text: string): Promise<void> {
   await page.getByRole("button", { name: "Guess", exact: true }).click();
 }
 
-/** The box a guess is typed into. It has a datalist of suggestions, so its role is combobox, not textbox. */
+/** The box a guess is typed into. It has a list of suggestions, so its role is combobox, not textbox. */
 export function answerBox(page: Page) {
   return page.locator("input.answer-attempt");
 }

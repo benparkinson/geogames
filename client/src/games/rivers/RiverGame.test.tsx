@@ -81,7 +81,9 @@ describe("makeRiverGame with the shape configuration", () => {
   it("suggests the rivers in the game, by display name", async () => {
     await renderRiver();
 
-    const options = Array.from(document.querySelectorAll("datalist option")).map((o) => o.getAttribute("value"));
+    await userEvent.setup().type(input(), "a");
+
+    const options = screen.getAllByRole("option").map((o) => o.textContent);
     expect(options).toEqual(["Danube", "Thames"]);
   });
 

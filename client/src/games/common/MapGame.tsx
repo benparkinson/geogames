@@ -13,6 +13,7 @@ import RoundBrief from "./RoundBrief";
 import RoundResult from "./RoundResult";
 import RoundStatus from "./RoundStatus";
 import { roundPoints } from "./scoring";
+import type { Suggestion } from "./suggestions";
 import { useRoundGuesses } from "./useRoundGuesses";
 import WrongGuessList from "./WrongGuessList";
 
@@ -164,7 +165,7 @@ export interface MapGameProps<Type> {
   answerNoun: string;
   /** Shows a grey map instead of the real one while the round is being played. */
   blankMap?: boolean;
-  suggestions?: string[];
+  suggestions?: Suggestion[];
   isKnownGuess?: (guess: string) => boolean;
   /** What the round's hints say. The round's `hintCount` (from the backend) says how many there are. */
   hints: HintConfig;
