@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.config;
 
+import com.parkinson.benjamin.geogames.helper.RiverCountriesEligibility;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
@@ -22,15 +23,13 @@ public class RiverGamesConfig {
         GameType.RIVERS_BY_SHAPE, rivers, river -> true, river -> List.of());
   }
 
-  /**
-   * Only rivers through three or more countries: one or two outlines are too easy or unguessable.
-   */
+  /** Only rivers through enough countries to name them: see {@link RiverCountriesEligibility}. */
   @Bean
   RoundGenerator riversByCountries(RiverLoaderService rivers, CountryShapeService shapes) {
     return new RiverRoundGenerator(
         GameType.RIVERS_BY_COUNTRIES,
         rivers,
-        river -> river.countries() != null && river.countries().size() >= 3,
+        RiverCountriesEligibility.riverCountries(),
         river -> river.countries().stream().map(shapes::loadDisplayCountry).toList());
   }
 }
