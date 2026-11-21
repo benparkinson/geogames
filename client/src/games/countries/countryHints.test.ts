@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { makeCountryShapeData, makeCountryShapeRoundData } from "../../test/fixtures";
-import { capitalHint, coastHint, firstLetterHint, lakesHint, longestBorderHint, nameLengthHint } from "./countryHints";
+import {
+  capitalHint,
+  coastHint,
+  firstLetterHint,
+  longestBorderHint,
+  longestRiverHint,
+  nameLengthHint,
+} from "./countryHints";
 
 describe("country hint builders", () => {
   const round = makeCountryShapeRoundData();
@@ -53,17 +60,15 @@ describe("coastHint", () => {
   });
 });
 
-describe("lakesHint", () => {
+describe("longestRiverHint", () => {
   const country = makeCountryShapeData();
-  const lakes = (coordinates: unknown[]) =>
-    ({ type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates } }) as never;
 
-  it("says the lakes are on the map", () => {
-    expect(lakesHint({ country, lakes: lakes([[[[0, 0]]]]) })).toBe("Its lakes are on the map");
+  it("names the longest river", () => {
+    expect(longestRiverHint({ country, longestRiver: "Danube" })).toBe("Its longest river is the Danube");
   });
 
-  it("says a country with none has no large lakes", () => {
-    expect(lakesHint({ country, lakes: lakes([]) })).toBe("It has no large lakes");
+  it("falls back to the length of the name when the country has no named river", () => {
+    expect(longestRiverHint({ country, longestRiver: null })).toBe("Its name has 11 letters");
   });
 });
 

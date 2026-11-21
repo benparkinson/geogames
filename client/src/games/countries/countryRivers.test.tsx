@@ -35,35 +35,35 @@ describe("Country Rivers", () => {
     expect(screen.getByText("Which country has these rivers?")).toBeInTheDocument();
   });
 
-  it("offers three hints: the lakes and the coastline on the map, then the first letter", async () => {
+  it("offers three hints: the longest river, the coastline on the map, then the first letter", async () => {
     const user = userEvent.setup();
     renderGame();
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    expect(screen.getByText("Its lakes are on the map")).toBeInTheDocument();
-    expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
+    expect(screen.getByText("Its longest river is the Rhine")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
+    expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
-  it("says so when a country has no large lakes or no coastline, which are clues in themselves", async () => {
+  it("gives the length of its name first when the country has no named river, and says it has no coastline", async () => {
     const user = userEvent.setup();
     renderGame(
       makeCountryRiversRoundData({
         country: makeCountryShapeData({ coastKm: 0 }),
-        lakes: { type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates: [] } } as never,
+        longestRiver: null,
       }),
     );
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    expect(screen.getByText("Its name has 11 letters")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
 
-    expect(screen.getByText("It has no large lakes")).toBeInTheDocument();
     expect(screen.getByText("It has no coastline")).toBeInTheDocument();
   });
 

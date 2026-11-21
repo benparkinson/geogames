@@ -1,5 +1,4 @@
 import { firstLetterHint as firstLetter, nameLengthHint as nameLength } from "../common/hints";
-import type { CountryGeoData } from "../common/country";
 import type { City, HasCountry } from "./model";
 
 /** A hint builder for a round with a country: the other rounds' builders only need what they use. */
@@ -28,6 +27,9 @@ export const coastHint: HintBuilder = ({ country }) =>
 export const capitalHint: HintBuilder<HasCountry & { cities: City[] }> = ({ cities }) =>
   cities.filter((city) => city.capital).length > 1 ? "Its capitals are highlighted" : "Its capital is highlighted";
 
-/** For the hint that draws the lakes. A country with none says so, which is itself a clue. */
-export const lakesHint: HintBuilder<HasCountry & { lakes: CountryGeoData }> = ({ lakes }) =>
-  lakes.geometry.coordinates.length > 0 ? "Its lakes are on the map" : "It has no large lakes";
+/**
+ * Names the country's longest river. The name helps even when the player doesn't know the river, because its language
+ * narrows the answer down. Falls back to the length of the country's name when it has no named river.
+ */
+export const longestRiverHint: HintBuilder<HasCountry & { longestRiver: string | null }> = (round) =>
+  round.longestRiver ? `Its longest river is the ${round.longestRiver}` : nameLengthHint(round);
