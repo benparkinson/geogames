@@ -121,7 +121,7 @@ class HttpServerIT {
             .expectBody(String.class)
             .returnResult()
             .getResponseBody();
-    assertThat(html).contains("Privacy");
+    assertThat(html).contains("Credits and privacy");
   }
 
   @Test

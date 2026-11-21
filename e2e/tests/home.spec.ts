@@ -59,7 +59,7 @@ test.describe("on a phone", () => {
     await expect(startButton).toBeInViewport();
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await expect(page.getByRole("link", { name: "Software licences" })).toBeInViewport();
+    await expect(page.getByRole("link", { name: "Credits and privacy" })).toBeInViewport();
     await expect(startButton).toBeInViewport();
   });
 });
