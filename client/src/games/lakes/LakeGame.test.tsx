@@ -103,7 +103,9 @@ describe("LakeGame", () => {
   it("suggests the lakes in the game", async () => {
     await renderLake();
 
-    const options = Array.from(document.querySelectorAll("datalist option")).map((o) => o.getAttribute("value"));
+    await userEvent.setup().type(input(), "lake");
+
+    const options = screen.getAllByRole("option").map((o) => o.textContent);
     expect(options).toEqual(["Lake Baikal", "Lake Victoria"]);
   });
 

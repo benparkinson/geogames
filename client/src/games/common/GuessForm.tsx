@@ -3,6 +3,7 @@ import { Button } from "../../ui";
 import { GuessBox } from "./GuessBox";
 import { feedbackText } from "./guessFeedback";
 import { GuessResult } from "./guessReducer";
+import type { Suggestion } from "./suggestions";
 
 function prefersPreciseInput(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches;
@@ -24,7 +25,7 @@ export default function GuessForm({
   submitGuess: (guess: string) => GuessResult;
   inputPlaceholder: string;
   answerNoun: string;
-  suggestions?: string[];
+  suggestions?: Suggestion[];
 }): React.JSX.Element {
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<GuessResult | null>(null);
@@ -67,7 +68,7 @@ export default function GuessForm({
             autoFocus={prefersPreciseInput()}
             value={guess}
             name={inputPlaceholder}
-            onChange={(e) => setGuess(e.currentTarget.value)}
+            onChange={setGuess}
             suggestions={suggestions}
           />
         </div>

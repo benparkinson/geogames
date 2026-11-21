@@ -44,7 +44,7 @@ function renderTripoint(tripoint = makeTripointData()) {
   return { ...view, tripoint, submitAnswer };
 }
 
-// Once the country list loads the input has a datalist, which makes its role "combobox".
+// Once the country list loads the input is a combobox, not a textbox.
 const input = () => screen.getByLabelText("Country name…");
 
 async function guess(user: ReturnType<typeof userEvent.setup>, text: string) {
