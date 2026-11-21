@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import PrivacyPage, { CONTACT_EMAIL, OWNER_NAME } from "./PrivacyPage";
 
 describe("PrivacyPage", () => {
-  it("has one Privacy heading", () => {
+  it("has one Credits and privacy heading", () => {
     render(<PrivacyPage />);
 
-    expect(screen.getByRole("heading", { name: "Privacy", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Credits and privacy", level: 1 })).toBeInTheDocument();
   });
 
   it("names who runs the site and how to reach them", () => {
@@ -32,9 +32,16 @@ describe("PrivacyPage", () => {
     expect(screen.getByText(/up to three items/)).toBeInTheDocument();
   });
 
-  it("shows the site footer", () => {
+  it("credits the data, imagery and icons, and links to the software licences", () => {
     render(<PrivacyPage />);
 
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+    const href = (name: string) => screen.getByRole("link", { name }).getAttribute("href");
+    expect(href("Natural Earth")).toBe("https://www.naturalearthdata.com/");
+    expect(href("Wikidata")).toBe("https://www.wikidata.org/");
+    expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
+    expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
+    expect(href("Freepik")).toContain("flaticon.com");
+    expect(href("Software licences")).toBe("/third-party-licenses.txt");
+    expect(screen.getByText(/positions adjusted/)).toBeInTheDocument();
   });
 });

@@ -1,5 +1,4 @@
 import HomeLink from "./HomeLink";
-import SiteFooter from "./SiteFooter";
 import ThemeToggle from "./ThemeToggle";
 
 // TODO: replace with the real contact address before the site goes live.
@@ -16,7 +15,19 @@ function PrivacyPage(): React.JSX.Element {
         </div>
       </div>
       <main className="gg-card mx-auto my-4 p-3">
-        <h1 className="h3 mb-3">Privacy</h1>
+        <h1 className="h3 mb-3">Credits and privacy</h1>
+
+        <h2 className="h5">Credits</h2>
+        <p>
+          Maps and relief: <a href="https://www.naturalearthdata.com/">Natural Earth</a> (public domain). Names:{" "}
+          <a href="https://www.wikidata.org/">Wikidata</a>. Tripoints:{" "}
+          <a href="https://en.wikipedia.org/wiki/List_of_tripoints">Wikipedia</a> (
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, positions adjusted). Globe icon:{" "}
+          <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">
+            Freepik
+          </a>{" "}
+          (Flaticon). <a href="/third-party-licenses.txt">Software licences</a>.
+        </p>
 
         <h2 className="h5">Who runs this site</h2>
         <p>
@@ -83,7 +94,6 @@ function PrivacyPage(): React.JSX.Element {
         <h2 className="h5">Changes</h2>
         <p className="mb-0">Last updated: 18 November 2026.</p>
       </main>
-      <SiteFooter className="mt-auto pt-4 pb-4" />
     </div>
   );
 }
