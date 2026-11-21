@@ -503,6 +503,26 @@ public class ProcessedDataIT {
   }
 
   @Test
+  public void mostCountriesOfTheRiversGameNameTheirLongestRiverWithoutGivingTheCountryAway() {
+    CountryRiversService service = new CountryRiversService(reader);
+    List<CountryRiversIndexEntry> eligible =
+        service.index().stream().filter(CountryRiversEligibility.countryRivers()).toList();
+    long named = 0;
+    for (CountryRiversIndexEntry entry : eligible) {
+      String river = service.load(entry.name()).longestRiver();
+      if (river == null) {
+        continue;
+      }
+      named++;
+      assertFalse(
+          river.toLowerCase().contains(entry.name().toLowerCase()),
+          river + " gives away " + entry.name());
+    }
+
+    assertTrue(named >= 60, "only " + named + " of " + eligible.size() + " have a longest river");
+  }
+
+  @Test
   public void countryAreasAreRoughlyRight() {
     CountryShapeService shapes = new CountryShapeService(reader);
 

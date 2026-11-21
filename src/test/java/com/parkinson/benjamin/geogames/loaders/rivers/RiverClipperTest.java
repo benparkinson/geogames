@@ -49,7 +49,8 @@ class RiverClipperTest {
 
   @Test
   void cutsALineAtTheBorderBetweenTwoCountries() {
-    Map<String, List<Run>> runs = clipper.clip(3, 7, line(1, 5, 2, 5, 3, 5, 4, 5, 7, 5, 8, 5));
+    Map<String, List<Run>> runs =
+        clipper.clip(3, 7, null, line(1, 5, 2, 5, 3, 5, 4, 5, 7, 5, 8, 5));
 
     assertThat(runs).containsOnlyKeys("A", "B");
     assertThat(runs.get("A")).hasSize(1);
@@ -59,7 +60,7 @@ class RiverClipperTest {
 
   @Test
   void aRunKeepsTheRiversScalerankAndNumber() {
-    Run run = clipper.clip(4, 99, line(1, 5, 2, 5)).get("A").get(0);
+    Run run = clipper.clip(4, 99, null, line(1, 5, 2, 5)).get("A").get(0);
 
     assertThat(run.scalerank()).isEqualTo(4);
     assertThat(run.rivernum()).isEqualTo(99);
@@ -67,7 +68,7 @@ class RiverClipperTest {
 
   @Test
   void aRiverAlongABorderBelongsToBothCountries() {
-    Map<String, List<Run>> runs = clipper.clip(5, 1, line(5, 1, 5, 3, 5, 6, 5, 9));
+    Map<String, List<Run>> runs = clipper.clip(5, 1, null, line(5, 1, 5, 3, 5, 6, 5, 9));
 
     assertThat(runs).containsOnlyKeys("A", "B");
     assertThat(runs.get("A").get(0).points()).hasSize(4);
@@ -78,7 +79,7 @@ class RiverClipperTest {
   void aLineThatLeavesACountryAndComesBackMakesTwoRuns() {
     // Out of A into open sea and back.
     Map<String, List<Run>> runs =
-        clipper.clip(5, 1, line(1, 5, 2, 5, 3, 5, -8, 5, -7, 5, 3.5, 5, 4, 5));
+        clipper.clip(5, 1, null, line(1, 5, 2, 5, 3, 5, -8, 5, -7, 5, 3.5, 5, 4, 5));
 
     assertThat(runs).containsOnlyKeys("A");
     assertThat(runs.get("A")).hasSize(2);
@@ -88,19 +89,19 @@ class RiverClipperTest {
 
   @Test
   void aLineInNoCountryHasNoRuns() {
-    assertThat(clipper.clip(5, 1, line(12, 5, 13, 5, 14, 5))).isEmpty();
+    assertThat(clipper.clip(5, 1, null, line(12, 5, 13, 5, 14, 5))).isEmpty();
   }
 
   @Test
   void aLineWithOnePointHasNoSegmentsAndNoRuns() {
-    assertThat(clipper.clip(5, 1, line(1, 5))).isEmpty();
+    assertThat(clipper.clip(5, 1, null, line(1, 5))).isEmpty();
   }
 
   @Test
   void aSegmentJustBesideACountryStillBelongsToIt() {
     // 0.02 degrees west of A, inside the 0.03 look-around: a river that runs on the wrong side of
     // a border drawn slightly differently.
-    Map<String, List<Run>> runs = clipper.clip(5, 1, line(-0.02, 2, -0.02, 4));
+    Map<String, List<Run>> runs = clipper.clip(5, 1, null, line(-0.02, 2, -0.02, 4));
 
     assertThat(runs).containsOnlyKeys("A");
   }

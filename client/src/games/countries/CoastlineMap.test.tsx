@@ -41,12 +41,12 @@ describe("CoastlineMap", () => {
     expect(points()).not.toContain("5,5");
   });
 
-  it("adds the land borders as a dashed hint line only at the second hint", () => {
-    const first = renderMap({ hintsUsed: 1 });
+  it("adds the land borders as a dashed hint line from the first hint", () => {
+    const none = renderMap({ hintsUsed: 0 });
     expect(points()).not.toContain(BORDERS);
-    first.unmount();
+    none.unmount();
 
-    renderMap({ hintsUsed: 2 });
+    renderMap({ hintsUsed: 1 });
 
     const borders = drawnLayers().find((layer) => layer.point === BORDERS);
     expect(borders?.dashed).toBe(true);

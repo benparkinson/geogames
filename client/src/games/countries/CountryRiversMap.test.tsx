@@ -42,7 +42,7 @@ describe("CountryRiversMap", () => {
   });
 
   it("draws the minor rivers thin and the major rivers over them on a blank map while playing", () => {
-    renderMap();
+    renderMap({}, makeCountryRiversRoundData({ lakes: noLakes as never }));
 
     expect(points()).toEqual([MINOR, MAJOR]);
     expect(drawnLayers()[0].color).toBe(minorRiverOptions().color);
@@ -62,8 +62,8 @@ describe("CountryRiversMap", () => {
     expect(fakeMap.fitBounds).toHaveBeenCalledTimes(1);
   });
 
-  it("draws the lakes under the rivers at the first hint", () => {
-    renderMap({ hintsUsed: 1 });
+  it("draws the lakes under the rivers from the start, with no hints", () => {
+    renderMap({ hintsUsed: 0 });
 
     expect(points()).toEqual([LAKES, MINOR, MAJOR]);
     expect(drawnLayers()[0].color).toBe(lakeFillOptions().color);
@@ -77,7 +77,7 @@ describe("CountryRiversMap", () => {
   });
 
   it("draws no lakes for a country without any", () => {
-    renderMap({ hintsUsed: 1 }, makeCountryRiversRoundData({ lakes: noLakes as never }));
+    renderMap({ hintsUsed: 0 }, makeCountryRiversRoundData({ lakes: noLakes as never }));
 
     expect(points()).toEqual([MINOR, MAJOR]);
   });

@@ -56,7 +56,12 @@ class RoundContinentsTest {
     assertThat(
             continents.of(
                 new CountryRiversRound(
-                    GameType.COUNTRIES_BY_RIVERS, shapes.loadShape("Peru"), null, null, null)))
+                    GameType.COUNTRIES_BY_RIVERS,
+                    shapes.loadShape("Peru"),
+                    null,
+                    null,
+                    null,
+                    null)))
         .containsExactly("South America");
   }
 

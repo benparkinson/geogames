@@ -6,7 +6,7 @@ import { CountryRiversRound } from "./model";
 
 /**
  * The rivers inside a country, clipped at its borders, with the major ones thicker, on a blank map.
- * The first hint adds its lakes and the second its coastline. Once the round is over the outline and
+ * Its lakes are drawn from the start and the second hint adds its coastline. Once the round is over the outline and
  * the relief map replace them.
  */
 function CountryRiversMap({
@@ -20,7 +20,7 @@ function CountryRiversMap({
   return (
     <GameMap>
       <RevealTiles show={gameOver} />
-      {!gameOver && hintsUsed >= 1 && hasLakes && <LakeFills data={lakes} id={`${country.name}/lakes`} />}
+      {!gameOver && hasLakes && <LakeFills data={lakes} id={`${country.name}/lakes`} />}
       {!gameOver && hintsUsed >= 2 && hasCoast && <HintLines data={country.coast} id={`${country.name}/coast`} />}
       {!gameOver && <RiverLines major={major} minor={minor} id={country.name} />}
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} />}

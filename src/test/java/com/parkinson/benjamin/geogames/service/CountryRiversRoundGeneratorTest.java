@@ -75,7 +75,8 @@ class CountryRiversRoundGeneratorTest {
                       e.name(),
                       data(e.name(), "MultiLineString"),
                       data(e.name(), "MultiLineString"),
-                      data(e.name(), "MultiPolygon")));
+                      data(e.name(), "MultiPolygon"),
+                      "The " + e.name() + " River"));
     }
     List<CountryShape> all = List.of(shape("A"), shape("B"), shape("Few"), shape("Short"));
     when(shapes.loadShapes()).thenReturn(all);

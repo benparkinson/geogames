@@ -10,6 +10,9 @@ import com.parkinson.benjamin.geogames.loaders.features.CountryLocator;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.loaders.features.GeoJsonCoordinates;
 import com.parkinson.benjamin.geogames.loaders.features.GeoPoints;
+import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthFeature;
+import com.parkinson.benjamin.geogames.loaders.features.NaturalEarthReader;
+import com.parkinson.benjamin.geogames.loaders.features.WikidataEntry;
 import com.parkinson.benjamin.geogames.loaders.lakes.LakeGeometry;
 import com.parkinson.benjamin.geogames.loaders.rivers.CountryLakes.Lake;
 import com.parkinson.benjamin.geogames.loaders.rivers.CountryRiverLimits.Kept;
@@ -28,17 +31,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.JsonNode;
 
 /**
- * Usage: CountryRiversMain &lt;rivers.geojson&gt; &lt;lakes.geojson&gt; &lt;countriesDir&gt;
- * &lt;outDir&gt;
+ * Usage: CountryRiversMain &lt;rivers.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
+ * &lt;lakes.geojson&gt; &lt;countriesDir&gt; &lt;outDir&gt;
  *
  * <p>Cuts every river of Natural Earth's rivers file at the country borders ({@link RiverClipper}),
  * simplifies each stretch, and writes one file per country with the rivers split into {@code major}
- * and {@code minor} by importance and the lakes on its shore, plus {@code index.json}, which lists
- * what is in each file. Offline and deterministic. Clears the {@code *.json} files in outDir first.
+ * and {@code minor} by importance, the lakes on its shore and the name of its longest named river
+ * ({@link CountryLongestRiver}), plus {@code index.json}, which lists what is in each file. The
+ * names come from {@link RiverAssembler} run over the whole file, with the same names, aliases and
+ * overrides as the river games but without {@link RiverLoaderMain}'s continent quotas. Offline and
+ * deterministic. Clears the {@code *.json} files in outDir first.
  *
  * <p>The app reads one country's file each time a round is built and holds none of them, so the
  * limits ({@link CountryRiverLimits#MAX_RIVER_POINTS}, {@link CountryLakes#MAX_LAKE_POINTS}) are
@@ -97,14 +105,35 @@ public class CountryRiversMain {
       long bytes) {}
 
   public static void main(String[] args) throws IOException {
-    Report report = run(Path.of(args[0]), Path.of(args[1]), Path.of(args[2]), Path.of(args[3]));
+    Report report =
+        run(
+            Path.of(args[0]),
+            Path.of(args[1]),
+            Path.of(args[2]),
+            Path.of(args[3]),
+            Path.of(args[4]),
+            Path.of(args[5]));
     CountryRiversSummary.printSummary(report);
   }
 
   /** Does everything {@code main} does except print. */
-  static Report run(Path riversFile, Path lakesFile, Path countriesDir, Path outDir)
+  static Report run(
+      Path riversFile,
+      Path wikidataFile,
+      Path overridesFile,
+      Path lakesFile,
+      Path countriesDir,
+      Path outDir)
       throws IOException {
     List<Country> countries = new ProcessedCountryReader().readCountries(countriesDir);
+    Map<String, List<String>> namesByCountry = new HashMap<>();
+    for (Country country : countries) {
+      List<String> names = new ArrayList<>();
+      names.add(country.name());
+      names.addAll(country.additionalNames());
+      namesByCountry.put(country.name(), names);
+    }
+    Map<String, RiverCandidate> candidates = namedRivers(riversFile, wikidataFile, overridesFile);
     CountryLocator locator = new CountryLocator(countries, MIN_SHORE_KM);
     Map<String, Double> tolerances = new HashMap<>();
     for (Country country : countries) {
@@ -134,6 +163,11 @@ public class CountryRiversMain {
               entry.getValue(),
               lakesByCountry.getOrDefault(name, List.of()),
               tolerances.get(name),
+              CountryLongestRiver.of(
+                      namesByCountry.getOrDefault(name, List.of(name)),
+                      entry.getValue(),
+                      candidates)
+                  .orElse(null),
               outDir);
       if (written.isEmpty()) {
         continue;
@@ -163,6 +197,26 @@ public class CountryRiversMain {
         bytes);
   }
 
+  /**
+   * Every river with a Wikidata ID, a name and at least {@link RiverAssembler#MIN_RIVER_KM}, by
+   * Wikidata ID. Built as {@link RiverLoaderMain} builds its candidates, but without picking the
+   * most famous: the 50-river limit belongs to the river games, whose files are all cached.
+   */
+  private static Map<String, RiverCandidate> namedRivers(
+      Path riversFile, Path wikidataFile, Path overridesFile) throws IOException {
+    Map<String, NaturalEarthFeature> groups =
+        new NaturalEarthReader().read(riversFile, Set.of("Canal"));
+    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
+    Map<String, RiverOverride> overrides =
+        GeoJson.readValue(overridesFile, new TypeReference<>() {});
+    Map<String, RiverCandidate> candidates = new HashMap<>();
+    for (RiverCandidate candidate :
+        new RiverAssembler().assemble(groups, wikidata, overrides).candidates()) {
+      candidates.put(candidate.qid(), candidate);
+    }
+    return candidates;
+  }
+
   /** Cuts every river of the source at the country borders. */
   private static Clipped clipRivers(Path riversFile, CountryLocator locator) throws IOException {
     RiverClipper clipper = new RiverClipper(locator);
@@ -172,10 +226,12 @@ public class CountryRiversMain {
       JsonNode props = feature.path("properties");
       int scalerank = props.path("scalerank").asInt(99);
       int rivernum = props.path("rivernum").asInt(-1);
+      String wikidataId = NaturalEarthReader.wikidataId(props);
+      String qid = wikidataId.isBlank() ? null : wikidataId;
       for (List<double[]> line : GeoJsonCoordinates.lines(feature.path("geometry"))) {
         kmByScalerank.merge(scalerank, Geo.lineKm(line), Double::sum);
         clipper
-            .clip(scalerank, rivernum, line)
+            .clip(scalerank, rivernum, qid, line)
             .forEach(
                 (country, runs) ->
                     runsByCountry.computeIfAbsent(country, key -> new ArrayList<>()).addAll(runs));
@@ -205,9 +261,17 @@ public class CountryRiversMain {
     return lakesByCountry;
   }
 
-  /** Writes one country's file, or nothing when no stretch of river is left after simplifying. */
+  /**
+   * Writes one country's file, or nothing when no stretch of river is left after simplifying.
+   * {@code longestRiver} is the name of its longest named river, or null.
+   */
   private static Optional<Written> writeCountry(
-      String name, List<Run> runs, List<Lake> countryLakes, double tolerance, Path outDir)
+      String name,
+      List<Run> runs,
+      List<Lake> countryLakes,
+      double tolerance,
+      String longestRiver,
+      Path outDir)
       throws IOException {
     List<Kept> kept = CountryRiverLimits.simplified(runs, tolerance);
     if (kept.isEmpty()) {
@@ -235,7 +299,8 @@ public class CountryRiversMain {
             name,
             lineData(name, major),
             lineData(name, minor),
-            CountryLakes.lakeData(name, keptLakes));
+            CountryLakes.lakeData(name, keptLakes),
+            longestRiver);
     String file = convertCountryNameToFileName(name);
     Path path = outDir.resolve(file);
     Files.writeString(path, GeoJson.prettyWriter().writeValueAsString(rivers) + "\n");

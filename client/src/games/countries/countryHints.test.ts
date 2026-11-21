@@ -1,30 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { makeCountryShapeData, makeCountryShapeRoundData } from "../../test/fixtures";
 import {
-  borderLengthHint,
   capitalHint,
   coastHint,
   firstLetterHint,
-  lakesHint,
   longestBorderHint,
-  neighbourCountHint,
+  longestRiverHint,
+  nameLengthHint,
 } from "./countryHints";
 
 describe("country hint builders", () => {
   const round = makeCountryShapeRoundData();
-
-  it("counts only the mainland neighbours, not those of overseas territories", () => {
-    expect(neighbourCountHint(round)).toBe("Its mainland borders 2 countries");
-    const one = makeCountryShapeRoundData({
-      country: makeCountryShapeData({
-        neighbours: [
-          { name: "Spain", km: 1, mainland: true, lines: [] },
-          { name: "Brazil", km: 1, mainland: false, lines: [] },
-        ],
-      }),
-    });
-    expect(neighbourCountHint(one)).toBe("Its mainland borders 1 country");
-  });
 
   it("names the mainland neighbour with the longest border", () => {
     expect(longestBorderHint(round)).toBe("Longest border: Germany");
@@ -39,15 +25,22 @@ describe("country hint builders", () => {
     expect(longestBorderHint(overseasFirst)).toBe("Longest border: Spain");
   });
 
-  it("says how long the borders of a landlocked country are", () => {
-    expect(borderLengthHint(round)).toBe("No coastline. Its borders are 1,027 km long");
+  it("falls back to a neighbour overseas when there is no mainland one", () => {
+    const uk = makeCountryShapeRoundData({
+      country: makeCountryShapeData({ neighbours: [{ name: "Ireland", km: 499, mainland: false, lines: [] }] }),
+    });
+
+    expect(longestBorderHint(uk)).toBe("Longest border: Ireland");
+  });
+
+  it("says how long the name is", () => {
+    expect(nameLengthHint(round)).toBe("Its name has 11 letters");
   });
 
   it("has nothing to name for an island", () => {
     const island = makeCountryShapeRoundData({ country: makeCountryShapeData({ neighbours: [] }) });
 
     expect(longestBorderHint(island)).toBeNull();
-    expect(neighbourCountHint(island)).toBe("Its mainland borders 0 countries");
   });
 
   it("gives the first letter", () => {
@@ -67,17 +60,15 @@ describe("coastHint", () => {
   });
 });
 
-describe("lakesHint", () => {
+describe("longestRiverHint", () => {
   const country = makeCountryShapeData();
-  const lakes = (coordinates: unknown[]) =>
-    ({ type: "MultiPolygon", properties: {}, geometry: { type: "MultiPolygon", coordinates } }) as never;
 
-  it("says the lakes are on the map", () => {
-    expect(lakesHint({ country, lakes: lakes([[[[0, 0]]]]) })).toBe("Its lakes are on the map");
+  it("names the longest river", () => {
+    expect(longestRiverHint({ country, longestRiver: "Danube" })).toBe("Its longest river is the Danube");
   });
 
-  it("says a country with none has no large lakes", () => {
-    expect(lakesHint({ country, lakes: lakes([]) })).toBe("It has no large lakes");
+  it("falls back to the length of the name when the country has no named river", () => {
+    expect(longestRiverHint({ country, longestRiver: null })).toBe("Its name has 11 letters");
   });
 });
 

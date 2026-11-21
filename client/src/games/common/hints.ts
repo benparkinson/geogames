@@ -55,9 +55,24 @@ export function firstLetter(name: string): { letter: string; prefix: string } | 
   return letter ? { letter, prefix: words.slice(0, skipped).join(" ") } : null;
 }
 
-/** For example `countHint(1, "country", "countries", "Borders")` is "Borders 1 country". */
-export function countHint(count: number, singular: string, plural: string, verb: string): string {
-  return `${verb} ${count} ${count === 1 ? singular : plural}`;
+/**
+ * The text of a hint that says how long a name is: "Its name has 4 letters", or "Its name has 2 words: 5 and 5
+ * letters". Counts letters only and splits words on whitespace and hyphens, so "Guinea-Bissau" is two words. Null for
+ * a name with no letters.
+ */
+export function nameLengthHint(name: string): string | null {
+  const lengths = name
+    .split(/[\s-]+/)
+    .map((word) => word.match(/\p{L}/gu)?.length ?? 0)
+    .filter((n) => n > 0);
+  if (lengths.length === 0) {
+    return null;
+  }
+  if (lengths.length === 1) {
+    return `Its name has ${lengths[0]} ${lengths[0] === 1 ? "letter" : "letters"}`;
+  }
+  const list = `${lengths.slice(0, -1).join(", ")} and ${lengths[lengths.length - 1]}`;
+  return `Its name has ${lengths.length} words: ${list} letters`;
 }
 
 /** Builds the text of one hint. Returns null when there is nothing to say. */

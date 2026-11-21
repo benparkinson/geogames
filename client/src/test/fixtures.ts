@@ -219,6 +219,7 @@ export function makeCountryRiversRoundData(overrides: Partial<CountryRiversRound
     major: lines(10),
     minor: lines(11),
     lakes: square(12),
+    longestRiver: "Rhine",
     ...overrides,
   } as unknown as CountryRiversRound;
 }

@@ -35,7 +35,7 @@ final class CountryRiverLimits {
       }
       double km = Geo.lineKm(points);
       if (km >= MIN_RUN_KM) {
-        kept.add(new Kept(new Run(run.scalerank(), run.rivernum(), points), km));
+        kept.add(new Kept(new Run(run.scalerank(), run.rivernum(), run.qid(), points), km));
       }
     }
     return kept;

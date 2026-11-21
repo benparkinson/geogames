@@ -57,6 +57,11 @@ public class CountryRiversRoundGenerator extends SubjectRoundGenerator<CountryRi
   GameData toRound(CountryRiversIndexEntry entry) {
     CountryRivers file = rivers.load(entry.name());
     return new CountryRiversRound(
-        gameType(), shapes.loadShape(entry.name()), file.major(), file.minor(), file.lakes());
+        gameType(),
+        shapes.loadShape(entry.name()),
+        file.major(),
+        file.minor(),
+        file.lakes(),
+        file.longestRiver());
   }
 }

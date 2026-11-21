@@ -809,6 +809,7 @@
           },
           "type" : "string"
         },
+        "longestRiver" : "string",
         "major" : {
           "geometry" : {
             "coordinates" : "coordinates",

@@ -58,13 +58,13 @@ describe("Country Gaps", () => {
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
-  it("gives the border length instead when the country has no coastline", async () => {
+  it("gives the length of its name instead when the country has no coastline", async () => {
     const user = userEvent.setup();
     renderGame(makeCountryShapeRoundData({ country: makeCountryShapeData({ coastKm: 0 }) }));
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
 
-    expect(screen.getByText("No coastline. Its borders are 1,027 km long")).toBeInTheDocument();
+    expect(screen.getByText("Its name has 11 letters")).toBeInTheDocument();
   });
 
   it("accepts a correct guess by an alias", async () => {

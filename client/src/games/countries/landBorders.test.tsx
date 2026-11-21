@@ -38,16 +38,16 @@ describe("Land Borders", () => {
     expect(screen.getByText("Which country has these land borders?")).toBeInTheDocument();
   });
 
-  it("offers three hints: the neighbours and the coastline on the map, then the first letter", async () => {
+  it("offers three hints: the coastline and the neighbours on the map, then the first letter", async () => {
     const user = userEvent.setup();
     renderGame();
 
     await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    expect(screen.getByText("Its neighbours are on the map")).toBeInTheDocument();
+    expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
+    expect(screen.getByText("Its neighbours are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
 
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
