@@ -19,8 +19,14 @@ describe("lakeHints", () => {
     );
   });
 
+  it("says how long the name is when the country shares it", () => {
+    expect(mainCountryHint({ ...lake, name: "Lake Nicaragua", additionalNames: [], countries: ["Nicaragua"] })).toBe(
+      "Its name has 2 words: 4 and 9 letters",
+    );
+  });
+
   it("gives the first letter", () => {
-    expect(firstLetterHint(lake)).toBe("Starts with “B” (after “Lake”)");
+    expect(firstLetterHint(lake)).toBe("Starts with “B”, not counting words like “Lake” or “River”");
   });
 
   it("offers the three hints in order, each with text", () => {
@@ -29,7 +35,7 @@ describe("lakeHints", () => {
     expect([0, 1, 2].map((i) => text?.(i, []))).toEqual([
       "Continent: Asia",
       "Lies entirely in Russia",
-      "Starts with “B” (after “Lake”)",
+      "Starts with “B”, not counting words like “Lake” or “River”",
     ]);
     expect(text?.(3, [])).toBeNull();
   });
@@ -39,7 +45,7 @@ describe("lakeHints", () => {
 
     expect([0, 1, 2].map((i) => text?.(i, []))).toEqual([
       "Lies entirely in Russia",
-      "Starts with “B” (after “Lake”)",
+      "Starts with “B”, not counting words like “Lake” or “River”",
       null,
     ]);
     expect(description).toBe("Shows 2 clues, one at a time");

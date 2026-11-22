@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { cluesDescription, firstLetter, firstLetterHint, hintsFrom, mapHint, nameLengthHint } from "./hints";
+import {
+  cluesDescription,
+  firstLetter,
+  firstLetterHint,
+  hintsFrom,
+  mapHint,
+  nameLengthHint,
+  revealsName,
+} from "./hints";
 
 describe("firstLetterHint", () => {
   it("gives the upper-cased first letter", () => {
@@ -8,9 +16,17 @@ describe("firstLetterHint", () => {
   });
 
   it("skips generic leading words and says so", () => {
-    expect(firstLetterHint("Lake Victoria")).toBe("Starts with “V” (after “Lake”)");
-    expect(firstLetterHint("Rio Grande")).toBe("Starts with “G” (after “Rio”)");
-    expect(firstLetterHint("Sea of Galilee")).toBe("Starts with “G” (after “Sea of”)");
+    const note = ", not counting words like “Lake” or “River”";
+    expect(firstLetterHint("Lake Victoria")).toBe(`Starts with “V”${note}`);
+    expect(firstLetterHint("Rio Negro")).toBe(`Starts with “N”${note}`);
+    expect(firstLetterHint("Sea of Galilee")).toBe(`Starts with “G”${note}`);
+  });
+
+  it("never shows the skipped words", () => {
+    for (const name of ["Rio Negro", "Lake Victoria", "Sea of Galilee"]) {
+      expect(firstLetterHint(name)).not.toMatch(/\b(Rio|Sea)\b|Lake Victoria/);
+    }
+    expect(firstLetterHint("Amazon")).toBe("Starts with “A”");
   });
 
   it("keeps a generic word when it is all there is, or part of a distinctive name", () => {
@@ -20,6 +36,21 @@ describe("firstLetterHint", () => {
 
   it("gives nothing for a blank name", () => {
     expect(firstLetterHint(" ")).toBeNull();
+  });
+});
+
+describe("revealsName", () => {
+  it("is true when a word of the place is a word of the answer", () => {
+    expect(revealsName("Niger", ["Nigeria"])).toBe(true);
+    expect(revealsName("Argentina", ["Lake Argentino"])).toBe(true);
+    expect(revealsName("Democratic Republic of the Congo", ["Congo"])).toBe(true);
+    expect(revealsName("Chad", ["Lake Chad", "Chad"])).toBe(true);
+  });
+
+  it("is false for unrelated names", () => {
+    expect(revealsName("Brazil", ["Rio Negro"])).toBe(false);
+    expect(revealsName("Mali", ["Niger"])).toBe(false);
+    expect(revealsName("Tanzania", ["Lake Victoria"])).toBe(false);
   });
 });
 

@@ -7,6 +7,7 @@ import {
   longestBorderHint,
   longestRiverHint,
   nameLengthHint,
+  namedLongestRiver,
 } from "./countryHints";
 
 describe("country hint builders", () => {
@@ -65,6 +66,13 @@ describe("longestRiverHint", () => {
 
   it("names the longest river", () => {
     expect(longestRiverHint({ country, longestRiver: "Danube" })).toBe("Its longest river is the Danube");
+  });
+
+  it("falls back to the length of the name when the river's name shows the country's", () => {
+    const nigeria = { ...country, name: "Nigeria", additionalNames: [] };
+    expect(longestRiverHint({ country: nigeria, longestRiver: "Niger" })).toBe("Its name has 7 letters");
+    expect(namedLongestRiver({ country: nigeria, longestRiver: "Niger" })).toBeNull();
+    expect(namedLongestRiver({ country, longestRiver: "Danube" })).toBe("Danube");
   });
 
   it("falls back to the length of the name when the country has no named river", () => {
