@@ -203,6 +203,35 @@ describe("GuessBox suggestions", () => {
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
+  // iOS Safari keeps the focus (and the keyboard) in the box when the player taps the map, so no blur comes.
+  it("closes when the player taps outside the box, even where the tap's propagation is stopped", () => {
+    render(
+      <>
+        <div data-testid="map" onPointerDown={(e) => e.stopPropagation()} />
+        <Harness />
+      </>,
+    );
+    box().focus();
+    fireEvent.change(box(), { target: { value: "ne" } });
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.pointerDown(screen.getByTestId("map"));
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    expect(box()).toHaveFocus();
+    expect(box()).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("stays open when the player taps the box or an option", () => {
+    render(<Harness />);
+    fireEvent.change(box(), { target: { value: "ne" } });
+
+    fireEvent.pointerDown(box());
+    fireEvent.pointerDown(screen.getByRole("option", { name: "Nepal" }));
+
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+  });
+
   it("closes when the form is submitted, and opens again when the player types", () => {
     render(<Harness />);
     fireEvent.change(box(), { target: { value: "ne" } });

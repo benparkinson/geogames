@@ -102,6 +102,21 @@ export function GuessBox({
     };
   }, [visible, input, matches.length]);
 
+  // iOS Safari keeps the focus (and the keyboard) in the box when the player taps a part of the page that can't take
+  // the focus, such as the map, so no blur closes the list. Close it on any press outside the box and the list,
+  // caught in the capture phase because Leaflet stops some presses from propagating.
+  useEffect(() => {
+    if (!visible) return;
+    const closeOutside = (e: PointerEvent) => {
+      const target = e.target as Node | null;
+      if (target && (input?.contains(target) || document.getElementById(listId)?.contains(target))) return;
+      setOpen(false);
+      setActive(null);
+    };
+    document.addEventListener("pointerdown", closeOutside, true);
+    return () => document.removeEventListener("pointerdown", closeOutside, true);
+  }, [visible, input, listId]);
+
   // The Guess button keeps the focus in the box, so the box never sees the submit: listen on the form.
   useEffect(() => {
     const form = input?.form;
