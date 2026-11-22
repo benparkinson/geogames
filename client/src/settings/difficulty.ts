@@ -36,7 +36,7 @@ function write(difficulty: Difficulty): void {
 }
 
 /**
- * The difficulty for the next game: Easy shows the continent and doubles the guesses, Normal is the game as it is,
+ * The difficulty for the next game: Easy shows the continent and gives more guesses, Normal is the game as it is,
  * Hard hides the distance and direction clues. Normal by default, and kept in this browser's localStorage. It is read
  * when a game starts; each game then keeps its own difficulty on the server (`GameRound.difficulty`).
  */

@@ -87,7 +87,7 @@ test("Hard difficulty, chosen on the home page, hides the distance clues", async
   await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
 });
 
-test("Easy difficulty shows the continent and gives twice the guesses", async ({ page, api }) => {
+test("Easy difficulty shows the continent and gives more guesses", async ({ page, api }) => {
   await page.goto("/");
   await page.getByRole("radio").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
   await page.getByRole("group", { name: "Difficulty" }).getByText("Easy", { exact: true }).click();
@@ -95,9 +95,9 @@ test("Easy difficulty shows the continent and gives twice the guesses", async ({
   const id = await startGame(page, "Country Gaps", 3);
   await expect(answerBox(page)).toBeVisible();
 
-  // The continent is there from the start, with no hint taken, and the lives are doubled.
+  // The continent is there from the start, with no hint taken, and the lives are increased.
   await expect(page.locator(".round-hints li").filter({ hasText: /Continents?: / })).toBeVisible();
-  await expect(page.getByRole("status", { name: "10 lives left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "8 lives left" })).toBeVisible();
 
   // A wrong guess costs one life, and still gets its distance clue (Easy is not Hard).
   await guess(page, await wrongCountry(api, id));

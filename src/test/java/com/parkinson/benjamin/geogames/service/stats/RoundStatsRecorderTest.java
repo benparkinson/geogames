@@ -86,7 +86,7 @@ class RoundStatsRecorderTest {
     assertThat(row.difficulty()).isEqualTo(Difficulty.EASY);
     // A river by shape has no continent hint in Easy, so its two hints share the 50 points.
     assertThat(row.hintCount()).isEqualTo(2);
-    assertThat(row.guessLimit()).isEqualTo(10);
+    assertThat(row.guessLimit()).isEqualTo(8);
     assertThat(row.points()).isEqualTo(75);
   }
 

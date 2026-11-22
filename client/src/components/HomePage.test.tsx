@@ -323,7 +323,7 @@ describe("HomePage difficulty", () => {
     await user.click(within(group).getByRole("radio", { name: "Easy" }));
     expect(within(group).getByRole("radio", { name: "Easy" })).toBeChecked();
     expect(localStorage.getItem("gg-difficulty")).toBe("easy");
-    expect(screen.getByText("The continent is shown and you get twice the guesses.")).toBeInTheDocument();
+    expect(screen.getByText("The continent is shown and you get more guesses.")).toBeInTheDocument();
 
     await user.click(within(group).getByRole("radio", { name: "Hard" }));
     expect(localStorage.getItem("gg-difficulty")).toBe("hard");

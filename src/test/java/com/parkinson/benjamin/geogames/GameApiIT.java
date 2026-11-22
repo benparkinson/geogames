@@ -118,7 +118,7 @@ class GameApiIT {
       String json = getRound(id, round);
       assertThat((String) JsonPath.read(json, "$.difficulty")).isEqualTo("EASY");
       assertThat((Boolean) JsonPath.read(json, "$.hardMode")).isFalse();
-      assertThat((int) JsonPath.read(json, "$.gameType.guessLimit")).isEqualTo(10);
+      assertThat((int) JsonPath.read(json, "$.gameType.guessLimit")).isEqualTo(8);
       assertThat((int) JsonPath.read(json, "$.gameType.hintCount")).isEqualTo(3);
       assertThat((List<?>) JsonPath.read(json, "$.continents")).isNotEmpty().hasSizeLessThan(3);
     }
@@ -183,10 +183,10 @@ class GameApiIT {
   }
 
   @Test
-  void anEasyGameAllowsTenWrongGuessesInTheAnswer() throws Exception {
+  void anEasyGameAllowsEightWrongGuessesInTheAnswer() throws Exception {
     String id = TestFixtures.createGame(mockMvc, "TRIPOINT", 1, ",\"difficulty\":\"EASY\"");
 
-    String result = answer(id, 0, "OUT_OF_GUESSES", 0, 10);
+    String result = answer(id, 0, "OUT_OF_GUESSES", 0, 8);
 
     assertThat((String) JsonPath.read(result, "$.answerState")).isEqualTo("OUT_OF_GUESSES");
   }
