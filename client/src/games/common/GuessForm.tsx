@@ -65,6 +65,7 @@ export default function GuessForm({
           <GuessBox
             ref={inputRef}
             className={shakeClass(shakeCount)}
+            shake={shakeCount === 0 ? undefined : shakeCount % 2 === 1 ? 1 : 2}
             autoFocus={prefersPreciseInput()}
             value={guess}
             name={inputPlaceholder}
@@ -78,7 +79,7 @@ export default function GuessForm({
         </Button>
       </form>
 
-      <div className="guess-feedback small" aria-live="polite">
+      <div className="guess-feedback small" data-testid="guess-feedback" aria-live="polite">
         {feedback}
       </div>
     </>

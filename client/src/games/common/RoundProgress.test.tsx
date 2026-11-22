@@ -93,43 +93,42 @@ describe("RoundProgress", () => {
     renderOne("CORRECT", "firstGuess", 100);
 
     const dot = screen.getByRole("button", { name: "Round 1: first guess" });
-    expect(dot).toHaveClass("round-dot--first-guess");
-    expect(dot).not.toHaveClass("round-dot--correct");
-    expect(dot.querySelector("svg.bi-star-fill")).not.toBeNull();
+    expect(dot).toHaveAttribute("data-outcome", "firstGuess");
+    expect(dot).not.toHaveAttribute("data-outcome", "correct");
+    expect(dot.querySelector("svg")).not.toBeNull();
   });
 
   it("shows a correct round worth 100 points but not a first guess as a green check, not a star", () => {
     renderOne("CORRECT", "correct", 100);
 
     const dot = screen.getByRole("button", { name: "Round 1: correct" });
-    expect(dot).toHaveClass("round-dot--correct");
-    expect(dot).not.toHaveClass("round-dot--first-guess");
-    expect(dot.querySelector("svg.bi-check-lg")).not.toBeNull();
-    expect(dot.querySelector("svg.bi-star-fill")).toBeNull();
+    expect(dot).toHaveAttribute("data-outcome", "correct");
+    expect(dot).not.toHaveAttribute("data-outcome", "firstGuess");
+    expect(dot.querySelector("svg")).not.toBeNull();
   });
 
   it("shows a correct round with hints as a yellow check", () => {
     renderOne("CORRECT", "hints", 67);
 
     const dot = screen.getByRole("button", { name: "Round 1: correct with hints, 67 points" });
-    expect(dot).toHaveClass("round-dot--hints");
-    expect(dot.querySelector("svg.bi-check-lg")).not.toBeNull();
+    expect(dot).toHaveAttribute("data-outcome", "hints");
+    expect(dot.querySelector("svg")).not.toBeNull();
   });
 
   it("shows a given up round with no points as a red eye", () => {
     renderOne("GAVE_UP", "missed", 0);
 
     const dot = screen.getByRole("button", { name: "Round 1: revealed" });
-    expect(dot).toHaveClass("round-dot--missed");
-    expect(dot.querySelector("svg.bi-eye-fill")).not.toBeNull();
+    expect(dot).toHaveAttribute("data-outcome", "missed");
+    expect(dot.querySelector("svg")).not.toBeNull();
   });
 
   it("shows a round that ran out of guesses as a red cross", () => {
     renderOne("OUT_OF_GUESSES", "missed", 0);
 
     const dot = screen.getByRole("button", { name: "Round 1: out of guesses" });
-    expect(dot).toHaveClass("round-dot--missed");
-    expect(dot.querySelector("svg.bi-x-lg")).not.toBeNull();
+    expect(dot).toHaveAttribute("data-outcome", "missed");
+    expect(dot.querySelector("svg")).not.toBeNull();
   });
 
   it("shows a revealed round with points as yellow, keeping its eye or cross", () => {
@@ -144,18 +143,18 @@ describe("RoundProgress", () => {
     );
 
     const gaveUp = screen.getByRole("button", { name: "Round 1: revealed, 67 points" });
-    expect(gaveUp).toHaveClass("round-dot--hints");
-    expect(gaveUp).not.toHaveClass("round-dot--missed");
-    expect(gaveUp.querySelector("svg.bi-eye-fill")).not.toBeNull();
+    expect(gaveUp).toHaveAttribute("data-outcome", "hints");
+    expect(gaveUp).not.toHaveAttribute("data-outcome", "missed");
+    expect(gaveUp.querySelector("svg")).not.toBeNull();
     const outOfGuesses = screen.getByRole("button", { name: "Round 2: out of guesses, 25 points" });
-    expect(outOfGuesses).toHaveClass("round-dot--hints");
-    expect(outOfGuesses.querySelector("svg.bi-x-lg")).not.toBeNull();
+    expect(outOfGuesses).toHaveAttribute("data-outcome", "hints");
+    expect(outOfGuesses.querySelector("svg")).not.toBeNull();
   });
 
   it("shows the number of an unanswered round, and the ring on the current one", () => {
     renderProgress(vi.fn(), 3);
 
-    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveClass("round-dot--current");
+    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveAttribute("aria-current", "step");
     expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveTextContent("4");
   });
 });

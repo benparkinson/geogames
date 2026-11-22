@@ -53,10 +53,16 @@ export default function GameLayout({
   return (
     <div
       className={"game-screen" + (keyboardOpen ? " game-screen--keyboard" : "")}
+      data-keyboard={keyboardOpen ? "open" : undefined}
       style={height === null ? undefined : { height }}
     >
       <header className="game-top">{topBar}</header>
-      <main className={"game-map" + (mapClassName ? " " + mapClassName : "")}>{map}</main>
+      <main
+        className={"game-map" + (mapClassName ? " " + mapClassName : "")}
+        data-blank-map={mapClassName ? "" : undefined}
+      >
+        {map}
+      </main>
       <aside className="game-panel">{panel}</aside>
     </div>
   );

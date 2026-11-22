@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Button, Notice, Spinner } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { finalAnswerState, Round } from "./Model";
-import { OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
+import { roundOutcome, RoundOutcome } from "./outcome";
 import { roundPoints } from "./scoring";
 
 export default function RoundResult({
@@ -35,7 +35,12 @@ export default function RoundResult({
 
   return (
     <div className="round-result mb-3">
-      <div className={"mb-2 fw-semibold " + OUTCOME_STYLES[outcome].textClass} aria-live="polite">
+      <div
+        className="mb-2 fw-semibold"
+        data-outcome={outcome}
+        data-result={outOfGuesses ? "outOfGuesses" : gaveUp ? "revealed" : undefined}
+        aria-live="polite"
+      >
         {outOfGuesses ? (
           <>
             <XCircleFill aria-hidden="true" /> Out of guesses · {partial ? `${found} · +${points}` : "0 pts"}

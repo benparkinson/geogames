@@ -460,8 +460,7 @@ describe("GameSummary with partly correct rounds", () => {
     mockFetch([roundsRoute(partly)]);
     renderSummary();
 
-    const row = (await screen.findByText("+67")).closest("button")!;
-    expect(row.querySelector(".gg-text-hints")).not.toBeNull();
-    expect(row.querySelector(".gg-text-missed")).toBeNull();
+    const row = await screen.findByText("+67");
+    expect(row.closest("[data-outcome]")).toHaveAttribute("data-outcome", "hints");
   });
 });

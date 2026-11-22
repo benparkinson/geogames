@@ -21,7 +21,7 @@ describe("RoundResult", () => {
   it("celebrates a first guess", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} />);
 
-    expect(screen.getByText("First guess! +100")).toHaveClass("gg-text-correct");
+    expect(screen.getByText("First guess! +100")).toHaveAttribute("data-outcome", "firstGuess");
     expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Answer revealed/)).not.toBeInTheDocument();
   });
@@ -35,14 +35,14 @@ describe("RoundResult", () => {
   it("calls a win after a wrong guess correct, not a first guess", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={0} hintCount={3} wrongGuesses={1} />);
 
-    expect(screen.getByText("Correct! +100")).toHaveClass("gg-text-correct");
+    expect(screen.getByText("Correct! +100")).toHaveAttribute("data-outcome", "correct");
     expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
   });
 
   it("scores a correct answer with a hint in yellow, without a separate hints line", () => {
     render(<RoundResult gaveUp={false} round={makeRoundProps()} hintsUsed={1} hintCount={3} />);
 
-    expect(screen.getByText("Correct with a hint · +83")).toHaveClass("gg-text-hints");
+    expect(screen.getByText("Correct with a hint · +83")).toHaveAttribute("data-outcome", "hints");
     expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
     expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
   });
@@ -94,7 +94,8 @@ describe("RoundResult", () => {
     );
 
     // Giving up with some answers found is not penalised: yellow, like a win with hints.
-    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toHaveClass("gg-text-hints");
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toHaveAttribute("data-outcome", "hints");
+    expect(screen.getByText("Answer revealed · 2 of 3 found · +55")).toHaveAttribute("data-result", "revealed");
     expect(screen.getByText("1 hint used")).toBeInTheDocument();
   });
 
@@ -111,7 +112,7 @@ describe("RoundResult", () => {
       />,
     );
 
-    expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
+    expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toHaveAttribute("data-result", "outOfGuesses");
   });
 
   it("has no hints line for a round given up with some found and no hints taken", () => {
@@ -128,6 +129,7 @@ describe("RoundResult", () => {
       <RoundResult gaveUp round={makeRoundProps()} hintsUsed={0} hintCount={3} answersFound={0} answerCount={3} />,
     );
 
-    expect(screen.getByText("Answer revealed · 0 pts")).toHaveClass("gg-text-missed");
+    expect(screen.getByText("Answer revealed · 0 pts")).toHaveAttribute("data-outcome", "missed");
+    expect(screen.getByText("Answer revealed · 0 pts")).not.toHaveAttribute("data-result", "outOfGuesses");
   });
 });

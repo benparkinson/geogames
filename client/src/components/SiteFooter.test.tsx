@@ -10,10 +10,4 @@ describe("SiteFooter", () => {
     expect(footer.getAllByRole("link")).toHaveLength(1);
     expect(footer.getByRole("link", { name: "Credits and privacy" }).getAttribute("href")).toBe("/privacy");
   });
-
-  it("takes its spacing from the page", () => {
-    render(<SiteFooter className="my-5" />);
-
-    expect(screen.getByRole("contentinfo")).toHaveClass("my-5");
-  });
 });

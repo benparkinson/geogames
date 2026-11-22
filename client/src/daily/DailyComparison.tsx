@@ -64,7 +64,7 @@ function Comparison({
             <div key={i} className="gg-daily-chart__column">
               <div
                 className="gg-daily-chart__bar"
-                data-mine={i === mine ? "true" : undefined}
+                data-mine={i === mine ? "true" : "false"}
                 style={{ height: `${Math.max(2, (100 * count) / tallest)}%` }}
               />
               <span className="gg-daily-chart__label" data-sparse={i % 2 === 1 && i !== 10 ? "true" : undefined}>

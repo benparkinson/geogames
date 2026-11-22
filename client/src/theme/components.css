@@ -204,12 +204,6 @@
 .gg-text-correct {
   color: var(--gg-color-correct);
 }
-.gg-text-hints {
-  color: var(--gg-color-hints-text);
-}
-.gg-text-missed {
-  color: var(--gg-color-missed-text);
-}
 .gg-text-hint {
   color: var(--gg-color-hint);
 }
@@ -218,6 +212,17 @@
 }
 .gg-text-danger {
   color: var(--gg-color-danger);
+}
+/* The colour of an outcome: a round banner or a results row's points. */
+[data-outcome="firstGuess"],
+[data-outcome="correct"] {
+  color: var(--gg-color-correct);
+}
+[data-outcome="hints"] {
+  color: var(--gg-color-hints-text);
+}
+[data-outcome="missed"] {
+  color: var(--gg-color-missed-text);
 }
 /* The hover rule keeps links this colour; plain `a:hover` would otherwise win. */
 .gg-text-default,

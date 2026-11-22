@@ -1,6 +1,6 @@
 import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import { CORRECT_ANSWER, OUT_OF_GUESSES, UNANSWERED } from "./Model";
-import { OUTCOME_STYLES, RoundOutcome } from "./outcome";
+import { RoundOutcome } from "./outcome";
 
 export default function RoundProgress({
   states,
@@ -43,14 +43,6 @@ export default function RoundProgress({
     }
   }
 
-  function dotClass(i: number): string {
-    const outcome = outcomes[i];
-    let cls = "round-dot";
-    if (outcome) cls += " " + OUTCOME_STYLES[outcome].dotClass;
-    if (i === currentRound) cls += " round-dot--current";
-    return cls;
-  }
-
   function icon(i: number): React.ReactNode {
     const outcome = outcomes[i];
     if (outcome === "firstGuess") return <StarFill aria-hidden="true" />;
@@ -68,7 +60,8 @@ export default function RoundProgress({
           <span key={i} title={visitable ? undefined : `Finish round ${i} first`}>
             <button
               type="button"
-              className={dotClass(i)}
+              className="round-dot"
+              data-outcome={outcomes[i] ?? undefined}
               aria-label={label}
               title={visitable ? label : undefined}
               aria-current={i === currentRound ? "step" : undefined}

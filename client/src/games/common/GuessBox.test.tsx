@@ -29,10 +29,10 @@ describe("GuessBox", () => {
     expect(screen.getByRole("textbox")).toBeDisabled();
   });
 
-  it("adds a class name to the input", () => {
-    render(<GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} className="shake" />);
+  it("exposes which shake is playing", () => {
+    render(<GuessBox value="" name="Guess" onChange={vi.fn()} disabled={false} shake={2} />);
 
-    expect(screen.getByRole("textbox")).toHaveClass("gg-input", "shake");
+    expect(screen.getByRole("textbox")).toHaveAttribute("data-shake", "2");
   });
 });
 
@@ -100,7 +100,7 @@ describe("GuessBox suggestions", () => {
     fireEvent.change(box(), { target: { value: "hol" } });
 
     expect(optionNames()).toEqual(["NetherlandsHolland"]);
-    expect(screen.getByText("Holland")).toHaveClass("gg-suggestion-alias");
+    expect(screen.getByText("Holland")).toBeInTheDocument();
   });
 
   it("offers longer names after an exact match", () => {

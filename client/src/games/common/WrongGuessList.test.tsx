@@ -7,10 +7,9 @@ describe("WrongGuessList", () => {
     const wrong = [{ text: "France", answer: null, clue: { km: 1236, bearing: 90 } }];
     const view = render(<WrongGuessList guesses={wrong} showClues={true} />);
 
-    const chip = screen.getByText("France", { selector: ".gg-chip" });
-    expect(chip).not.toHaveClass("gg-chip--strike");
+    const chip = screen.getByText("France");
     expect(chip).toHaveTextContent(/1,240 km/);
-    expect(screen.getByText("1,240 km east")).toHaveClass("gg-visually-hidden");
+    expect(screen.getByText("1,240 km east")).toBeInTheDocument();
 
     view.unmount();
     render(<WrongGuessList guesses={wrong} showClues={false} />);

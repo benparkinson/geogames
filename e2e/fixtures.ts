@@ -111,7 +111,7 @@ export async function startGame(page: Page, title: string, rounds = 3): Promise<
   await page.goto("/");
   await page.getByRole("radio").filter({ has: page.getByText(title, { exact: true }) }).click();
   // Click the visible label (the radio itself is hidden); Playwright waits for the start panel's slide-in to finish.
-  await page.locator(`label[for="rounds-${rounds}"]`).click();
+  await page.getByRole("group", { name: "Rounds" }).getByText(String(rounds), { exact: true }).click();
   await page.getByRole("button", { name: "Start game" }).click();
   await expect(page).toHaveURL(/\/games\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   return page.url().split("/").pop()!;
@@ -125,7 +125,7 @@ export async function guess(page: Page, text: string): Promise<void> {
 
 /** The box a guess is typed into. It has a list of suggestions, so its role is combobox, not textbox. */
 export function answerBox(page: Page) {
-  return page.locator("input.answer-attempt");
+  return page.getByRole("combobox");
 }
 
 /**

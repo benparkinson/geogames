@@ -2,7 +2,7 @@ import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import { GameRoundView } from "../../api/types";
 import { findGameModule } from "../registry";
 import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
-import { OUTCOME_STYLES, roundOutcome } from "./outcome";
+import { roundOutcome } from "./outcome";
 
 function roundLabel(round: GameRoundView): string {
   return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
@@ -65,7 +65,7 @@ export default function SummaryRow({
           </>
         )}
       </span>
-      <span className={"text-nowrap " + OUTCOME_STYLES[outcome ?? "missed"].textClass}>
+      <span className="text-nowrap" data-outcome={outcome ?? "missed"}>
         {outcome === "firstGuess" ? (
           <StarFill aria-hidden="true" />
         ) : round.answerState === CORRECT_ANSWER ? (

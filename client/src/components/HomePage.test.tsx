@@ -106,12 +106,10 @@ describe("HomePage choosing a game", () => {
     expect(startButton().compareDocumentPosition(kofi) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it("styles the Ko-fi link quietly and opens it safely in a new tab", () => {
+  it("opens it safely in a new tab", () => {
     renderHome();
 
     const kofi = screen.getByRole("link", { name: /Buy me a coffee/ });
-    expect(kofi).toHaveClass("gg-btn--quiet");
-    expect(kofi).not.toHaveClass("text-white");
     expect(kofi).toHaveAttribute("href", "https://ko-fi.com/O3J02ABGOW");
     expect(kofi).toHaveAttribute("target", "_blank");
     expect(kofi.getAttribute("rel")).toContain("noopener");

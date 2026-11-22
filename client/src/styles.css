@@ -163,23 +163,23 @@ code {
   font-size: 0.65rem;
   line-height: 1;
 }
-.round-dot--correct,
-.round-dot--first-guess {
+.round-dot[data-outcome="correct"],
+.round-dot[data-outcome="firstGuess"] {
   background: var(--gg-color-correct);
   border-color: var(--gg-color-correct);
   color: var(--gg-color-on-correct);
 }
-.round-dot--hints {
+.round-dot[data-outcome="hints"] {
   background: var(--gg-color-hints);
   border-color: var(--gg-color-hints);
   color: var(--gg-color-on-hints);
 }
-.round-dot--missed {
+.round-dot[data-outcome="missed"] {
   background: var(--gg-color-missed);
   border-color: var(--gg-color-missed);
   color: var(--gg-color-on-missed);
 }
-.round-dot--current {
+.round-dot[aria-current] {
   box-shadow: 0 0 0 2px var(--gg-color-accent);
 }
 .round-dot:disabled {

@@ -16,7 +16,7 @@ export default function WrongGuessList({
       <div className="gg-visually-hidden">Wrong guesses</div>
       <div className="d-flex flex-wrap gap-1">
         {guesses.map((a, i) => (
-          <Chip key={i} tone="neutral" className="guess-chip">
+          <Chip key={i} tone="neutral" className="guess-chip" data-testid="wrong-guess">
             <XLg aria-hidden="true" className="guess-chip__x" /> {a.text}
             {showClues && a.clue && <ClueBadge clue={a.clue} />}
           </Chip>
