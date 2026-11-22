@@ -358,7 +358,7 @@ class GameServiceTest {
     assertThat(result.difficulty()).isEqualTo("EASY");
     assertThat(result.hardMode()).isFalse();
     assertThat(result.continents()).containsExactly("Europe", "Asia");
-    assertThat(result.gameType().guessLimit()).isEqualTo(10);
+    assertThat(result.gameType().guessLimit()).isEqualTo(8);
     assertThat(result.gameType().hintCount()).isEqualTo(2);
   }
 

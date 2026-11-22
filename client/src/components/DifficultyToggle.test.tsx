@@ -28,7 +28,7 @@ describe("DifficultyToggle", () => {
     expect(screen.getByText("A distance and direction clue after each wrong guess.")).toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "Easy" }));
-    expect(screen.getByText("The continent is shown and you get twice the guesses.")).toBeInTheDocument();
+    expect(screen.getByText("The continent is shown and you get more guesses.")).toBeInTheDocument();
     expect(screen.queryByText("A distance and direction clue after each wrong guess.")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "Hard" }));

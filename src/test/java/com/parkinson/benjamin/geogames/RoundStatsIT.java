@@ -144,7 +144,7 @@ class RoundStatsIT {
     assertThat(easyRow.get("difficulty")).isEqualTo("EASY");
     assertThat(easyRow.get("hard_mode")).isEqualTo(false);
     assertThat(((Number) easyRow.get("hint_count")).intValue()).isEqualTo(2);
-    assertThat(((Number) easyRow.get("guess_limit")).intValue()).isEqualTo(10);
+    assertThat(((Number) easyRow.get("guess_limit")).intValue()).isEqualTo(8);
     assertThat(rowsOf(normal).get(0).get("difficulty")).isEqualTo("NORMAL");
     assertThat(((Number) rowsOf(normal).get(0).get("guess_limit")).intValue()).isEqualTo(5);
     assertThat(rowsOf(unknown).get(0).get("difficulty")).isNull();

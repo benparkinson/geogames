@@ -4,7 +4,7 @@ import type { Difficulty } from "../api/types";
 import { useDifficulty } from "../settings/difficulty";
 
 const DESCRIPTIONS: Record<Difficulty, string> = {
-  EASY: "The continent is shown and you get twice the guesses.",
+  EASY: "The continent is shown and you get more guesses.",
   NORMAL: "A distance and direction clue after each wrong guess.",
   HARD: "No distance or direction clues after a wrong guess.",
 };

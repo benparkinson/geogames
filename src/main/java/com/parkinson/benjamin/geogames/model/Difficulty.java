@@ -4,7 +4,7 @@ package com.parkinson.benjamin.geogames.model;
  * How a game is played, chosen when it is created and never changed. Stored by name.
  *
  * <ul>
- *   <li>{@code EASY}: the continent is shown and every {@link GameType#guessLimit()} doubles.
+ *   <li>{@code EASY}: the continent is shown and every {@link GameType#guessLimit()} gets extra guesses.
  *   <li>{@code NORMAL}: the game as it is.
  *   <li>{@code HARD}: no distance or direction clues after a wrong guess (the client's job).
  * </ul>

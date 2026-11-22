@@ -17,6 +17,9 @@ public enum GameType {
   COUNTRIES_BY_CITIES(1, 3, 5, PlaceKind.COUNTRIES, false),
   COUNTRIES_BY_RIVERS(1, 3, 5, PlaceKind.COUNTRIES, false);
 
+  /** The extra wrong guesses Easy allows on top of the Normal limit. */
+  static final int EASY_EXTRA_GUESSES = 3;
+
   private final int answerCount;
   private final int hintCount;
   private final int guessLimit;
@@ -80,9 +83,9 @@ public enum GameType {
     return difficulty == Difficulty.EASY && firstHintIsContinent ? hintCount - 1 : hintCount;
   }
 
-  /** The wrong guesses a game of this difficulty allows: twice as many in Easy. */
+  /** The wrong guesses a game of this difficulty allows: Easy adds {@link #EASY_EXTRA_GUESSES}. */
   public int guessLimit(Difficulty difficulty) {
-    return difficulty == Difficulty.EASY ? guessLimit * 2 : guessLimit;
+    return difficulty == Difficulty.EASY ? guessLimit + EASY_EXTRA_GUESSES : guessLimit;
   }
 
   /** Which list of names the player's guesses in a round of this type come from. */

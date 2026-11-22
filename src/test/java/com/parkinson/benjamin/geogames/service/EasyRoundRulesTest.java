@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
-/** The rules of an Easy game: twice the guesses, and no continent hint for rivers and lakes. */
+/** The rules of an Easy game: more guesses, and no continent hint for rivers and lakes. */
 class EasyRoundRulesTest {
 
   private static final List<String> COUNTRIES =
@@ -35,16 +35,16 @@ class EasyRoundRulesTest {
   }
 
   @Test
-  void anEasyRoundAcceptsTenWrongGuessesAndRejectsTheEleventh() {
+  void anEasyRoundAcceptsEightWrongGuessesAndRejectsTheNinth() {
     GameRoundEntity round = fresh(GameType.COUNTRIES_BY_COASTLINE);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 8; i++) {
       assertThat(rules.addGuess(round, Difficulty.EASY, COUNTRIES.get(i), false)).isTrue();
     }
 
-    assertThatThrownBy(() -> rules.addGuess(round, Difficulty.EASY, COUNTRIES.get(10), false))
+    assertThatThrownBy(() -> rules.addGuess(round, Difficulty.EASY, COUNTRIES.get(8), false))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("10 wrong");
+        .hasMessageContaining("8 wrong");
   }
 
   @Test
@@ -62,17 +62,17 @@ class EasyRoundRulesTest {
   void outOfGuessesNeedsExactlyTheEffectiveLimit() {
     GameRoundEntity round = fresh(GameType.COUNTRIES_BY_COASTLINE);
 
-    rules.validateAnswer(round, Difficulty.EASY, AnswerState.OUT_OF_GUESSES, 0, 10, null);
+    rules.validateAnswer(round, Difficulty.EASY, AnswerState.OUT_OF_GUESSES, 0, 8, null);
     assertThatThrownBy(
             () ->
                 rules.validateAnswer(
                     round, Difficulty.EASY, AnswerState.OUT_OF_GUESSES, 0, 5, null))
         .isInstanceOf(IllegalArgumentException.class);
     assertThatThrownBy(
-            () -> rules.validateAnswer(round, Difficulty.EASY, AnswerState.GAVE_UP, 0, 10, null))
+            () -> rules.validateAnswer(round, Difficulty.EASY, AnswerState.GAVE_UP, 0, 8, null))
         .isInstanceOf(IllegalArgumentException.class);
     assertThatThrownBy(
-            () -> rules.validateAnswer(round, Difficulty.EASY, AnswerState.GAVE_UP, 0, 11, null))
+            () -> rules.validateAnswer(round, Difficulty.EASY, AnswerState.GAVE_UP, 0, 9, null))
         .isInstanceOf(IllegalArgumentException.class);
     // Five wrong guesses is only a give-up in Easy, not the end of the round.
     rules.validateAnswer(round, Difficulty.EASY, AnswerState.GAVE_UP, 0, 5, null);

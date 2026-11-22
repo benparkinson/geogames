@@ -11,11 +11,11 @@ describe("GuessesLeft", () => {
     expect(container.querySelectorAll("svg")).toHaveLength(5);
   });
 
-  it("shows the doubled limit of an Easy round", () => {
-    render(<GuessesLeft left={10} limit={10} />);
+  it("shows the raised limit of an Easy round", () => {
+    render(<GuessesLeft left={8} limit={8} />);
 
-    expect(screen.getByRole("status", { name: "10 lives left" })).toBeInTheDocument();
-    expect(screen.getByText("10 of 10 lives left")).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "8 lives left" })).toBeInTheDocument();
+    expect(screen.getByText("8 of 8 lives left")).toBeInTheDocument();
   });
 
   it("explains that a wrong guess costs a life", () => {

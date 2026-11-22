@@ -107,9 +107,9 @@ class GameTypeTest {
   }
 
   @Test
-  void easyDoublesTheGuessLimitOfEveryType() {
+  void easyAddsThreeToTheGuessLimitOfEveryType() {
     for (GameType type : GameType.values()) {
-      assertThat(type.guessLimit(Difficulty.EASY)).isEqualTo(type.guessLimit() * 2);
+      assertThat(type.guessLimit(Difficulty.EASY)).isEqualTo(type.guessLimit() + 3);
       assertThat(type.guessLimit(Difficulty.NORMAL)).isEqualTo(type.guessLimit());
       assertThat(type.guessLimit(Difficulty.HARD)).isEqualTo(type.guessLimit());
     }
