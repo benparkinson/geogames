@@ -51,6 +51,7 @@ test("the daily: play, share, come back, and a second player gets the same round
   // 3. Reloading /daily works in the jar, shows the result, and creates no game.
   await page.reload();
   await expect(page.getByText("You scored 0 / 500")).toBeVisible();
+  await expect(page.getByText(/Next daily in [0-9]+:[0-9][0-9]:[0-9][0-9]/)).toBeVisible();
   expect(dailyPosts).toHaveLength(1);
 
   // 4. Finishing started a streak of one day, which the home page's daily link shows.
@@ -58,6 +59,7 @@ test("the daily: play, share, come back, and a second player gets the same round
   expect(JSON.parse(streak!).count).toBe(1);
   await page.goto("/");
   await expect(page.getByRole("link", { name: /Daily challenge/ })).toHaveAccessibleName(/1 day streak/);
+  await expect(page.getByRole("link", { name: /Daily challenge/ })).toHaveAccessibleName(/Next daily in [0-9]+:[0-9][0-9]:[0-9][0-9]/);
 
   // 5. Another player (empty storage) gets a game of their own with the same rounds.
   const other = await browser.newContext({ baseURL });

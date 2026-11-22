@@ -26,3 +26,18 @@ describe("the daily page on the server", () => {
     expect(html).not.toContain("data-streak");
   });
 });
+
+describe("the daily card on the server with a finished daily", () => {
+  it("renders no countdown", () => {
+    writeDaily({
+      v: 1,
+      date: localDateString(),
+      number: 9,
+      gameId: "g1",
+      difficulty: "NORMAL",
+      result: { score: 1, maxScore: 5, rounds: ["correct"] },
+    });
+
+    expect(renderToString(<DailyCard />)).not.toContain("data-countdown");
+  });
+});

@@ -1,6 +1,6 @@
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { localDateString } from "../api/daily";
 import { callsTo, mockFetch } from "../test/fetchMock";
 import { makeDailyGameResponse, makeDailyScore, makeGameRounds } from "../test/fixtures";
@@ -8,6 +8,7 @@ import { renderWithClient } from "../test/render";
 import DailyPage from "./DailyPage";
 import { DailyEntry, readDaily, resetDailyStorageForTests, writeDaily } from "./dailyStorage";
 import { previousDay, resetDailyStreakForTests } from "./dailyStreak";
+import { resetClockForTests } from "./useNowSeconds";
 
 vi.mock("../games/common/GameRoundPage", () => ({
   default: ({ gameId, daily }: { gameId: string; daily: { date: string } }) => (
@@ -311,5 +312,50 @@ describe("DailyPage finished view", () => {
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText(/Today.s average: 312\.5/)).toBeInTheDocument();
+  });
+});
+
+describe("DailyPage countdown", () => {
+  const rounds: DailyEntry["result"] = {
+    score: 430,
+    maxScore: 500,
+    rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"],
+  };
+  const finishedEntry: DailyEntry = { ...entry, date: localDateString(new Date(2026, 5, 10)), result: rounds };
+
+  beforeEach(() => {
+    resetClockForTests();
+    vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
+    vi.setSystemTime(new Date(2026, 5, 10, 23, 59, 58));
+  });
+
+  afterEach(() => {
+    resetClockForTests();
+    vi.useRealTimers();
+  });
+
+  it("shows the countdown on the finished screen, then a link to play the new day", () => {
+    writeDaily(finishedEntry);
+    mockFetch([]);
+    renderWithClient(<DailyPage />);
+
+    expect(screen.getByText("Next daily in 0:00:02")).toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    expect(screen.getByText(/Today's challenge is ready/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Play it" })).toHaveAttribute("href", "/daily");
+  });
+
+  it("keeps a game in progress at midnight", () => {
+    writeDaily({ ...finishedEntry, result: undefined });
+    mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
+    renderWithClient(<DailyPage />);
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(screen.getByText(`game g1 (daily ${finishedEntry.date})`)).toBeInTheDocument();
   });
 });

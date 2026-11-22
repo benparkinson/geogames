@@ -29,6 +29,8 @@ localStorage key `gg-daily` (`dailyStorage.ts`; it and `settings/difficulty.ts` 
 
 localStorage key `gg-daily-streak` (`dailyStreak.ts`: `{v, lastDate, count}`, shown on the home page's `DailyCard`) is written only when a daily is finished (never on opening a page; `clearDaily` leaves it), keyed by `entry.date`, not the finish date. It must stay on the privacy page.
 
+`DailyCard` and `DailyFinished` take the date from `useNowSeconds` (one shared 1 s clock, null on the server), so they roll over at midnight and show "Next daily in H:MM:SS"; `DailyPage` keeps `useToday` so a game in progress isn't dropped.
+
 ## Update notice
 
 A tab left open keeps its old bundle, so the site tells the player when a newer build is deployed. `scripts/write-build-info.mjs` (run by `npm run build` and `dev`) writes `public/version.json` (`{"buildId"}`, git-ignored; the id is `RENDER_GIT_COMMIT`, `GITHUB_SHA`, `git rev-parse HEAD`, else a random UUID), and `next.config.mjs` reads that file and inlines the id as `NEXT_PUBLIC_BUILD_ID`. `useUpdateAvailable` (`api/version.ts`) fetches `/version.json` from the page's own origin (not the API server) on load, on focus and every 15 minutes, and `components/UpdateNotice` (rendered in `pages/_app.tsx`) shows a `ui/Toast` with Refresh when the ids differ. The toast is not shown on `/games/[gameId]`: it would interrupt a round, and reloading that URL from the jar is a 404. Dismissal is kept in memory only. Checking is off unless `NODE_ENV === "production"` and the bundle has an id, so `next dev` and Vitest never fetch. Errors are ignored. The privacy page mentions the request.
