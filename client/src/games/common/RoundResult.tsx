@@ -1,59 +1,35 @@
 import { useEffect, useRef } from "react";
 import { Button, Notice, Spinner } from "../../ui";
 import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
-import { finalAnswerState, Round } from "./Model";
-import { roundOutcome, RoundOutcome } from "./outcome";
-import { roundPoints } from "./scoring";
+import { Round } from "./Model";
+import type { RoundView } from "./roundView";
 
-export default function RoundResult({
-  gaveUp,
-  outOfGuesses = false,
-  round,
-  hintsUsed,
-  hintCount,
-  wrongGuesses = 0,
-  answersFound = 0,
-  answerCount = 1,
-}: {
-  gaveUp: boolean;
-  /** The round ended because the guesses ran out (`gaveUp` is true too). */
-  outOfGuesses?: boolean;
-  round: Round;
-  hintsUsed: number;
-  hintCount: number;
-  /** Wrong guesses made this round: none and no hints makes a won round a first guess. */
-  wrongGuesses?: number;
-  /** How many of the round's answers were found, and how many it has: a revealed round scores their share. */
-  answersFound?: number;
-  answerCount?: number;
-}): React.JSX.Element {
-  const answerState = finalAnswerState(gaveUp, outOfGuesses);
-  const points = roundPoints(answerState, hintsUsed, hintCount, answersFound, answerCount);
-  const outcome = roundOutcome(answerState, hintsUsed, wrongGuesses === 0, points) as RoundOutcome;
-  const partial = gaveUp && points > 0;
+export default function RoundResult({ view, round }: { view: RoundView; round: Round }): React.JSX.Element {
+  const { result, outcome, points, hintsUsed, answersFound, answerCount } = view;
+  const partial = (result === "revealed" || result === "outOfGuesses") && points > 0;
   const found = `${answersFound} of ${answerCount} found`;
 
   return (
     <div className="round-result mb-3">
       <div
         className="mb-2 fw-semibold"
-        data-outcome={outcome}
-        data-result={outOfGuesses ? "outOfGuesses" : gaveUp ? "revealed" : undefined}
+        data-outcome={outcome ?? undefined}
+        data-result={result === "revealed" || result === "outOfGuesses" ? result : undefined}
         aria-live="polite"
       >
-        {outOfGuesses ? (
+        {result === "outOfGuesses" ? (
           <>
             <XCircleFill aria-hidden="true" /> Out of guesses · {partial ? `${found} · +${points}` : "0 pts"}
           </>
-        ) : gaveUp ? (
+        ) : result === "revealed" ? (
           <>
             <EyeFill aria-hidden="true" /> Answer revealed · {partial ? `${found} · +${points}` : "0 pts"}
           </>
-        ) : outcome === "firstGuess" ? (
+        ) : result === "firstGuess" ? (
           <>
             <StarFill aria-hidden="true" /> {answerCount > 1 ? "No wrong guesses!" : "First guess!"} +{points}
           </>
-        ) : outcome === "hints" ? (
+        ) : result === "hints" ? (
           <>
             <CheckCircleFill aria-hidden="true" /> Correct with {hintsUsed === 1 ? "a hint" : `${hintsUsed} hints`} · +
             {points}

@@ -8,6 +8,7 @@ export default function RoundStatus({
 }: {
   guessesLeft: number;
   guessLimit: number;
+  /** What the round is worth now (`RoundView.points` while playing). */
   points: number;
 }): React.JSX.Element {
   return (
