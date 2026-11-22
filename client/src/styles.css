@@ -204,7 +204,9 @@ code {
   transition: box-shadow var(--gg-duration);
 }
 .daily-hero {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
   width: 100%;
   margin-bottom: var(--gg-space-4);
   padding: var(--gg-space-4);
@@ -221,6 +223,23 @@ code {
   filter: brightness(1.08);
 }
 .daily-hero__status {
+  opacity: 0.9;
+}
+.daily-hero__main {
+  flex: 1;
+  min-width: 0;
+}
+.daily-hero__streak {
+  flex-shrink: 0;
+  text-align: center;
+}
+.daily-hero__streak-count {
+  font-size: var(--gg-font-size-h4);
+  font-weight: bold;
+  line-height: 1.1;
+}
+.daily-hero__streak-caption {
+  font-size: var(--gg-font-size-sm);
   opacity: 0.9;
 }
 .game-card--selected {

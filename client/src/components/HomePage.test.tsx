@@ -6,6 +6,7 @@ import { renderWithClient } from "../test/render";
 import HomePage from "./HomePage";
 import { localDateString } from "../api/daily";
 import { resetDailyStorageForTests, writeDaily } from "../daily/dailyStorage";
+import { previousDay, resetDailyStreakForTests } from "../daily/dailyStreak";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
 vi.mock("next/router", () => ({ useRouter: () => router }));
@@ -388,7 +389,10 @@ describe("HomePage difficulty when starting", () => {
 describe("HomePage daily challenge card", () => {
   const entry = { v: 1 as const, date: localDateString(), number: 2, gameId: "g1", difficulty: "NORMAL" as const };
 
-  beforeEach(resetDailyStorageForTests);
+  beforeEach(() => {
+    resetDailyStorageForTests();
+    resetDailyStreakForTests();
+  });
 
   it("links to /daily, outside the game cards, without creating a game", () => {
     const fetchMock = mockFetch([{ url: HEALTH, body: "ok" }]);
@@ -421,6 +425,38 @@ describe("HomePage daily challenge card", () => {
     renderHome();
 
     expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 430 / 500");
+  });
+
+  it.each([
+    ["today", 0],
+    ["yesterday", 1],
+  ])("shows a streak ending %s", (_, daysAgo) => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const lastDate = daysAgo === 0 ? localDateString() : previousDay(localDateString());
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
+    renderHome();
+
+    const link = screen.getByRole("link", { name: /Daily challenge/ });
+    const block = link.querySelector("[data-streak]");
+    expect(block).toHaveAttribute("data-streak", "4");
+    expect(block).toHaveTextContent("4");
+    expect(link).toHaveAccessibleName(/4 days in a row/);
+  });
+
+  it("shows no streak that ended two days ago", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const lastDate = previousDay(previousDay(localDateString()));
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+  });
+
+  it("shows no streak when none is stored", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
   });
 
   it("ignores a game from another day", () => {

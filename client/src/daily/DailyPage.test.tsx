@@ -7,6 +7,7 @@ import { makeDailyGameResponse, makeDailyScore, makeGameRounds } from "../test/f
 import { renderWithClient } from "../test/render";
 import DailyPage from "./DailyPage";
 import { DailyEntry, readDaily, resetDailyStorageForTests, writeDaily } from "./dailyStorage";
+import { previousDay, resetDailyStreakForTests } from "./dailyStreak";
 
 vi.mock("../games/common/GameRoundPage", () => ({
   default: ({ gameId, daily }: { gameId: string; daily: { date: string } }) => (
@@ -28,7 +29,15 @@ const entry: DailyEntry = { v: 1, date: today, number: 2, gameId: "g1", difficul
 const unfinished = makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]);
 const finishedGame = makeGameRounds([{ answerState: "CORRECT" }, { river: true, answerState: "GAVE_UP" }]);
 
-beforeEach(resetDailyStorageForTests);
+beforeEach(() => {
+  resetDailyStorageForTests();
+  resetDailyStreakForTests();
+});
+
+function storedStreak(): unknown {
+  const raw = localStorage.getItem("gg-daily-streak");
+  return raw === null ? null : JSON.parse(raw);
+}
 
 function posts(fetchMock: ReturnType<typeof mockFetch>) {
   return callsTo(fetchMock).filter((c) => c.method === "POST");
@@ -244,6 +253,54 @@ describe("DailyPage with a game for today", () => {
     await screen.findByText(`game g1 (daily ${today})`);
 
     expect(readDaily()?.result).toBeDefined();
+  });
+});
+
+describe("DailyPage streak", () => {
+  it("is not written by opening the intro", async () => {
+    mockFetch([{ url: API + "/health", body: "ok" }]);
+    renderWithClient(<DailyPage />);
+
+    await screen.findByRole("button", { name: "Play today's challenge" });
+    expect(storedStreak()).toBeNull();
+  });
+
+  it("is not written for a game in progress", async () => {
+    writeDaily(entry);
+    mockFetch([{ url: ROUND_0, body: unfinished[0] }]);
+    renderWithClient(<DailyPage />);
+
+    await screen.findByText(`game g1 (daily ${today})`);
+    expect(storedStreak()).toBeNull();
+  });
+
+  it("starts at 1 when a daily is finished, keyed by the entry's date", async () => {
+    writeDaily(entry);
+    mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
+    renderWithClient(<DailyPage />);
+
+    await waitFor(() => expect(storedStreak()).toEqual({ v: 1, lastDate: entry.date, count: 1 }));
+  });
+
+  it("adds a day to a streak that ended yesterday", async () => {
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: previousDay(today), count: 3 }));
+    writeDaily(entry);
+    mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
+    renderWithClient(<DailyPage />);
+
+    await waitFor(() => expect(storedStreak()).toEqual({ v: 1, lastDate: today, count: 4 }));
+  });
+
+  it("does not count an already finished daily again", async () => {
+    const stored = JSON.stringify({ v: 1, lastDate: previousDay(today), count: 3 });
+    localStorage.setItem("gg-daily-streak", stored);
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["firstGuess", "missed"] } });
+    mockFetch([{ url: ROUND_0, body: finishedGame[0] }, SCORE]);
+    renderWithClient(<DailyPage />);
+
+    await userEvent.click(await screen.findByRole("button", { name: "See the rounds" }));
+    await screen.findByText(`game g1 (daily ${today})`);
+    expect(localStorage.getItem("gg-daily-streak")).toBe(stored);
   });
 });
 

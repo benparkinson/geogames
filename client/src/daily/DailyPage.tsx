@@ -7,6 +7,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import DailyIntro from "./DailyIntro";
 import DailyFinished from "./DailyFinished";
 import { clearDaily, DailyEntry, entryFor, useDailyEntry, writeDaily } from "./dailyStorage";
+import { recordFinished } from "./dailyStreak";
 import { resultFromGame } from "./result";
 import { useToday } from "./useToday";
 
@@ -24,6 +25,7 @@ function Game({ entry, onFinished }: { entry: DailyEntry; onFinished: () => void
     // One write: the result and the setting together, so two writes from one stale entry can't overwrite each other.
     if (game?.gameResult.gameState === FINISHED && !hasResult) {
       writeDaily({ ...entry, difficulty: game.difficulty, result: resultFromGame(game.gameResult) });
+      recordFinished(entry.date);
       onFinished();
     }
   }, [game, hasResult, entry, onFinished]);
