@@ -10,7 +10,8 @@ import java.util.List;
  * <p>{@code mainPieceOnly} keeps only the river's main connected piece and drops lines that are
  * detached from it (see {@link RiverGeometry#mainPiece}), for rivers where Natural Earth tags a
  * far-off stretch with the same QID. {@code reverseFlow} swaps the computed source and mouth, for
- * rivers digitised upstream. {@code source} and {@code mouth} replace the computed ends outright.
+ * rivers digitised upstream. {@code unlinkNames} lists Natural Earth feature names under this QID
+ * that are another river: they lose the QID (see {@link RiverQids}). {@code source} and {@code mouth} replace the computed ends outright.
  */
 public record RiverOverride(
     Boolean exclude,
@@ -20,6 +21,7 @@ public record RiverOverride(
     List<String> addAliases,
     List<String> removeAliases,
     Boolean mainPieceOnly,
+    List<String> unlinkNames,
     Boolean reverseFlow,
     Coordinate source,
     Coordinate mouth)

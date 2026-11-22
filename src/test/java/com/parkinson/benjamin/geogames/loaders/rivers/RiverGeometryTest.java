@@ -161,4 +161,13 @@ class RiverGeometryTest {
 
     assertThat(RiverGeometry.mainPiece(List.of(a, b, far))).containsExactly(far);
   }
+
+  @Test
+  void mainPieceKeepsALineWhoseEndTouchesTheMiddleOfTheMainLine() {
+    List<double[]> main = List.of(new double[] {0, 0}, new double[] {2, 0}, new double[] {4, 0});
+    // Starts on main's middle (2, 0), like the Hooghly leaving the Ganges.
+    List<double[]> branch = line(2, 0, 2, -1);
+
+    assertThat(RiverGeometry.mainPiece(List.of(main, branch))).containsExactly(main, branch);
+  }
 }

@@ -28,7 +28,8 @@ class FeatureSelectorTest {
   }
 
   private static RiverOverride override(boolean exclude, String name, String continent) {
-    return new RiverOverride(exclude, name, continent, null, null, null, null, null, null, null);
+    return new RiverOverride(
+        exclude, name, continent, null, null, null, null, null, null, null, null);
   }
 
   private static Assembly assemble(
@@ -121,6 +122,7 @@ class FeatureSelectorTest {
                 "Murray River",
                 "Oceania",
                 List.of("Murray"),
+                null,
                 null,
                 null,
                 null,
