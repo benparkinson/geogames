@@ -7,9 +7,9 @@ export default function LoadingSpinner({
   fullPage?: boolean;
   className?: string;
 }): React.JSX.Element {
-  const size = fullPage ? "min-vh-100" : "h-100";
+  const size = fullPage ? "gg-loading--full-page" : "gg-loading--fill";
   return (
-    <div className={`d-flex ${size} justify-content-center align-items-center${className ? " " + className : ""}`}>
+    <div className={`gg-loading ${size}${className ? " " + className : ""}`}>
       <Spinner />
     </div>
   );

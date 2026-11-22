@@ -13,11 +13,11 @@ export default function DailyIntro(): React.JSX.Element {
 
   return (
     <PageShell>
-      <h1 className="h3 mb-1">Daily challenge</h1>
-      <p className="mb-3">
+      <h1 className="gg-daily__title">Daily challenge</h1>
+      <p className="gg-daily__text">
         Five geography puzzles from a variety of game modes. Wrong answers don&apos;t lower your score, but hints do.
       </p>
-      <div className="mb-3">
+      <div className="gg-daily__block">
         <DifficultyToggle />
       </div>
       <Button variant="primary" onClick={play} disabled={isPending}>
@@ -29,11 +29,9 @@ export default function DailyIntro(): React.JSX.Element {
           "Play today's challenge"
         )}
       </Button>
-      <div aria-live="polite" className="mt-2">
-        {isPending && slow && <p className="gg-text-muted mb-0">Waking up the server…</p>}
-        {!!error && !isPending && (
-          <Notice className="mb-0">Couldn&apos;t start. The server may be down. Try again.</Notice>
-        )}
+      <div aria-live="polite" className="gg-daily__status">
+        {isPending && slow && <p className="gg-text-muted">Waking up the server…</p>}
+        {!!error && !isPending && <Notice>Couldn&apos;t start. The server may be down. Try again.</Notice>}
       </div>
     </PageShell>
   );

@@ -18,15 +18,15 @@ export default function DailyFinished({
   );
   return (
     <PageShell>
-      <h1 className="h3 mb-1">Daily {entry.date}</h1>
-      <p className="mb-3">
+      <h1 className="gg-daily__title">Daily {entry.date}</h1>
+      <p className="gg-daily__text">
         You scored {entry.result.score} / {entry.result.maxScore}
       </p>
       <DailyComparison date={entry.date} difficulty={entry.difficulty} score={entry.result.score} />
-      <pre className="mb-3" aria-label="Your result">
+      <pre className="gg-daily__block" aria-label="Your result">
         {text}
       </pre>
-      <div className="d-flex flex-wrap gap-2">
+      <div className="gg-daily__actions">
         <ShareButton text={text} />
         <Button variant="secondary" onClick={onOpenGame}>
           See the rounds

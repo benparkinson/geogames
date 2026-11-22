@@ -17,8 +17,8 @@ export default function DifficultyToggle(): React.JSX.Element {
   const description = DESCRIPTIONS[difficulty];
 
   return (
-    <div className="d-flex flex-wrap align-items-center gap-2" title={description}>
-      <span id={labelId} className="fw-semibold">
+    <div className="gg-difficulty" title={description}>
+      <span id={labelId} className="gg-label">
         Difficulty
       </span>
       <ToggleGroup
@@ -33,7 +33,7 @@ export default function DifficultyToggle(): React.JSX.Element {
           { value: "HARD", label: "Hard" },
         ]}
       />
-      <span className="small gg-text-muted">{description}</span>
+      <span className="gg-difficulty__description gg-text-muted">{description}</span>
     </div>
   );
 }

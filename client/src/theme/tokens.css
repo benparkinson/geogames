@@ -109,6 +109,32 @@
 
   /* ---- Layout ---- */
   --gg-panel-width: 360px;
+  /* Media queries can't use variables. The breakpoints in use are 480, 576, 900, 992 and 1200px. */
+
+  /* ---- Spacing (Bootstrap's spacers 1 to 5) ---- */
+  --gg-space-1: 0.25rem;
+  --gg-space-2: 0.5rem;
+  --gg-space-3: 1rem;
+  --gg-space-4: 1.5rem;
+  --gg-space-5: 3rem;
+
+  /* ---- Type sizes and weights (the ones Bootstrap had) ---- */
+  --gg-font-size-sm: 0.875em;
+  --gg-font-size-lead: 1.25rem;
+  --gg-font-size-h6: 1rem;
+  --gg-font-size-h5: 1.25rem;
+  --gg-font-size-h4: calc(1.275rem + 0.3vw);
+  --gg-font-size-h3: calc(1.3rem + 0.6vw);
+  --gg-font-weight-semibold: 600;
+  --gg-font-weight-bold: 700;
+}
+
+/* h3 and h4 stop growing with the viewport from 1200px. */
+@media (min-width: 1200px) {
+  :root {
+    --gg-font-size-h4: 1.5rem;
+    --gg-font-size-h3: 1.75rem;
+  }
 }
 
 [data-bs-theme="dark"] {

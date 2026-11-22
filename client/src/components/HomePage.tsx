@@ -14,26 +14,26 @@ function HomePage(): React.JSX.Element {
   useWakeServer();
 
   return (
-    <div className={"min-vh-100 py-4 page-bg" + (selectedOption ? " home--selected" : "")}>
+    <div className={"home page-bg" + (selectedOption ? " home--selected" : "")}>
       <header className="home-header">
-        <div className="d-flex justify-content-end">
+        <div className="home-header__toolbar">
           <ThemeToggle />
         </div>
-        <h1 className="text-center mt-3">GeoGauntlet</h1>
-        <p className="lead text-center mb-4">Quick but challenging geography puzzles.</p>
+        <h1 className="home-header__title">GeoGauntlet</h1>
+        <p className="home-header__tagline">Quick but challenging geography puzzles.</p>
       </header>
       <div className="home-layout">
         <section className="home-main">
           <DailyCard />
-          <h2 className="h5">Practice mode</h2>
-          <p className="small gg-text-muted">Pick any game to practise.</p>
+          <h2 className="home-main__heading">Practice mode</h2>
+          <p className="home-main__note gg-text-muted">Pick any game to practise.</p>
           <GameCardGrid selected={selected} onSelect={setSelected} />
         </section>
 
         {selectedOption && <StartPanel option={selectedOption} />}
 
         <div className="home-after">
-          <div className="text-center mt-4">
+          <div className="home-after__kofi">
             <KofiBadge />
           </div>
 

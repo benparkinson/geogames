@@ -42,7 +42,7 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
 
   return (
     <div>
-      <div className="d-flex flex-wrap align-items-center gap-2">
+      <div className="gg-share__row">
         <Button variant="primary" onClick={copy}>
           {/* Both labels share one grid cell, so the button keeps the wider width while the other is hidden. */}
           <span style={{ display: "inline-grid" }}>
@@ -61,8 +61,8 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
         )}
       </div>
       {manual && (
-        <div className="mt-2">
-          <label htmlFor="daily-share-text" className="small gg-text-muted">
+        <div className="gg-share__manual">
+          <label htmlFor="daily-share-text" className="gg-share__label gg-text-muted">
             Copy this text
           </label>
           <textarea
@@ -70,7 +70,7 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
             ref={textarea}
             readOnly
             rows={5}
-            className="gg-input w-100"
+            className="gg-input gg-share__text"
             value={text}
             onFocus={(e) => e.currentTarget.select()}
           />
