@@ -26,7 +26,10 @@ function PrivacyPage(): React.JSX.Element {
           <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">
             Freepik
           </a>{" "}
-          (Flaticon). <a href="/third-party-licenses.txt">Software licences</a>.
+          (Flaticon). Fonts: <a href="https://fontsource.org/fonts/archivo">Archivo</a> and{" "}
+          <a href="https://fontsource.org/fonts/ibm-plex-mono">IBM Plex Mono</a> (
+          <a href="https://openfontlicense.org/">SIL Open Font Licence 1.1</a>), served from this site.{" "}
+          <a href="/third-party-licenses.txt">Software licences</a>.
         </p>
 
         <h2 className="gg-page__section">Who runs this site</h2>

@@ -7,7 +7,7 @@
   --gg-btn-bg: transparent;
   --gg-btn-fg: var(--gg-btn-color);
   --gg-btn-border: var(--gg-btn-color);
-  --gg-btn-ring: color-mix(in srgb, var(--gg-btn-color) 50%, transparent);
+  --gg-btn-ring: var(--gg-color-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +39,9 @@
 }
 .gg-btn:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 0.25rem var(--gg-btn-ring);
+  box-shadow:
+    0 0 0 2px var(--gg-color-page-bg),
+    0 0 0 4px var(--gg-btn-ring);
 }
 .gg-btn:disabled,
 .gg-btn[aria-disabled="true"] {
@@ -47,39 +49,60 @@
   pointer-events: none;
 }
 
+/* Primary is the one filled button on a screen: ink with paper text. The others are underlined text actions. */
 .gg-btn--primary {
   --gg-btn-color: var(--gg-color-accent);
   --gg-btn-fg-hover: var(--gg-color-on-accent);
 }
-.gg-btn--secondary {
-  --gg-btn-color: var(--gg-color-accent);
-  --gg-btn-fg-hover: var(--gg-color-on-accent);
-}
-.gg-btn--hint {
-  --gg-btn-color: var(--gg-color-hint);
-  --gg-btn-fg-hover: var(--gg-color-on-hint);
+.gg-btn--secondary,
+.gg-btn--hint,
+.gg-btn--danger,
+.gg-btn--quiet {
+  --gg-btn-color: var(--gg-color-text);
+  padding-inline: 0.25rem;
+  border-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 .gg-btn--danger {
-  --gg-btn-color: var(--gg-color-danger);
-  --gg-btn-fg-hover: var(--gg-color-on-danger);
+  --gg-btn-color: var(--gg-color-danger-text);
 }
 .gg-btn--quiet {
-  --gg-btn-color: var(--gg-color-neutral);
-  --gg-btn-fg-hover: var(--gg-color-on-neutral);
+  --gg-btn-color: var(--gg-color-text-muted);
+}
+.gg-btn--secondary,
+.gg-btn--hint,
+.gg-btn--danger,
+.gg-btn--quiet {
+  --gg-btn-border: transparent;
+  --gg-btn-ring: var(--gg-color-accent);
+}
+.gg-btn--secondary:hover,
+.gg-btn--secondary:active,
+.gg-btn--hint:hover,
+.gg-btn--hint:active,
+.gg-btn--danger:hover,
+.gg-btn--danger:active,
+.gg-btn--quiet:hover,
+.gg-btn--quiet:active {
+  --gg-btn-bg: var(--gg-color-surface-muted);
+  --gg-btn-fg: var(--gg-btn-color);
+  --gg-btn-border: transparent;
 }
 
-/* Primary is solid: darker on hover and press. These come after the generic hover rule and win by specificity. */
 .gg-btn.gg-btn--primary {
   --gg-btn-bg: var(--gg-btn-color);
   --gg-btn-fg: var(--gg-btn-fg-hover);
+  --gg-btn-border: var(--gg-btn-color);
+  font-weight: var(--gg-font-weight-semibold);
 }
 .gg-btn.gg-btn--primary:hover {
-  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 85%, black);
-  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 80%, black);
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 85%, var(--gg-color-page-bg));
+  --gg-btn-border: var(--gg-btn-bg);
 }
 .gg-btn.gg-btn--primary:active {
-  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 80%, black);
-  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 75%, black);
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 70%, var(--gg-color-page-bg));
+  --gg-btn-border: var(--gg-btn-bg);
 }
 
 .gg-btn--sm {
@@ -123,14 +146,30 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.gg-toggle__input:checked + .gg-btn {
-  --gg-btn-bg: var(--gg-btn-color);
-  --gg-btn-fg: var(--gg-btn-fg-hover);
-  --gg-btn-border: var(--gg-btn-color);
+.gg-toggle > .gg-btn {
+  --gg-btn-color: var(--gg-color-accent);
+  --gg-btn-fg: var(--gg-color-text);
+  --gg-btn-border: var(--gg-color-rule);
+  --gg-btn-bg: var(--gg-color-surface);
+  padding-inline: 0.75rem;
+  text-decoration: none;
+}
+.gg-toggle > .gg-btn:hover {
+  --gg-btn-bg: var(--gg-color-surface-active);
+  --gg-btn-fg: var(--gg-color-text);
+  --gg-btn-border: var(--gg-color-rule);
+}
+.gg-toggle__input:checked + .gg-btn,
+.gg-toggle__input:checked + .gg-btn:hover {
+  --gg-btn-bg: var(--gg-color-accent);
+  --gg-btn-fg: var(--gg-color-on-accent);
+  --gg-btn-border: var(--gg-color-accent);
 }
 .gg-toggle__input:focus-visible + .gg-btn {
   z-index: 1;
-  box-shadow: 0 0 0 0.25rem var(--gg-btn-ring);
+  box-shadow:
+    0 0 0 2px var(--gg-color-page-bg),
+    0 0 0 4px var(--gg-btn-ring);
 }
 .gg-toggle__input:disabled + .gg-btn {
   opacity: 0.65;
@@ -168,11 +207,12 @@
 .gg-notice {
   --gg-notice-fg: var(--gg-color-text);
   --gg-notice-bg: var(--gg-color-surface-muted);
-  --gg-notice-border: var(--gg-color-border);
+  --gg-notice-border: var(--gg-color-rule);
   padding: 1rem;
   color: var(--gg-notice-fg);
   background: var(--gg-notice-bg);
   border: 1px solid var(--gg-notice-border);
+  border-left-width: 4px;
   border-radius: var(--gg-radius);
 }
 .gg-notice--danger {
@@ -232,9 +272,10 @@
 
 /* ---- Chip ---- */
 .gg-chip {
-  --gg-chip-bg: var(--gg-color-surface-muted);
-  --gg-chip-fg: var(--gg-color-text-muted);
-  --gg-chip-border: transparent;
+  --gg-chip-bg: transparent;
+  --gg-chip-fg: var(--gg-color-text);
+  --gg-chip-border: var(--gg-color-rule);
+  font-family: var(--gg-font-mono);
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: 1rem;
@@ -254,13 +295,15 @@
 .gg-chip--correct {
   --gg-chip-bg: var(--gg-color-correct);
   --gg-chip-fg: var(--gg-color-on-correct);
+  --gg-chip-border: var(--gg-color-correct);
 }
 .gg-chip--revealed {
   --gg-chip-bg: var(--gg-color-revealed);
   --gg-chip-fg: var(--gg-color-on-revealed);
+  --gg-chip-border: var(--gg-color-revealed);
 }
 .gg-chip--neutral {
-  --gg-chip-border: var(--gg-color-border);
+  --gg-chip-border: var(--gg-color-rule-light);
 }
 .answer-slot-empty {
   border: 2px dashed var(--gg-color-border);
@@ -275,7 +318,7 @@
   max-width: 560px;
   color: var(--gg-color-text);
   background: var(--gg-color-surface);
-  border: 1px solid var(--gg-color-border-translucent);
+  border: 2px solid var(--gg-color-rule);
   border-radius: var(--gg-radius);
 }
 
@@ -440,7 +483,7 @@
   padding: 0.5rem 0.75rem;
   color: var(--gg-color-text);
   background: var(--gg-color-surface);
-  border: 1px solid var(--gg-color-border);
+  border: 2px solid var(--gg-color-rule);
   border-radius: var(--gg-radius-lg);
   box-shadow: var(--gg-shadow-floating-side);
   animation: gg-toast-in var(--gg-duration-slow) ease-out;
