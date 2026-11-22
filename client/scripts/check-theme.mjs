@@ -1,7 +1,7 @@
-// Keeps the theme in one place (docs/plans/theme.md). Fails, naming file and line, when:
+// Keeps the theme in one place. Fails, naming file and line, when:
 //  - a .css file other than theme/tokens.css contains a colour literal;
 //  - a .ts/.tsx file imports react-bootstrap or has an inline style with a colour;
-//  - a className uses a Bootstrap colour or component class that src/ui and theme/components.css replace.
+//  - a className uses a Bootstrap colour, component or utility class (Bootstrap is gone).
 //
 // Run from client/: node scripts/check-theme.mjs (also the end of `npm run lint`).
 import { readdirSync, readFileSync } from "node:fs";
@@ -89,7 +89,7 @@ function main() {
   }
   if (failures.length > 0) {
     console.error(failures.join("\n"));
-    console.error(`\ncheck-theme: ${failures.length} problem(s). See docs/plans/theme.md.`);
+    console.error(`\ncheck-theme: ${failures.length} problem(s).`);
     process.exit(1);
   }
 }

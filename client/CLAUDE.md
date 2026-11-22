@@ -1,6 +1,6 @@
 # Frontend (`client/`)
 
-Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (Bootstrap CSS for layout utilities only; see Theme in the root `CLAUDE.md`). Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
+Next.js 16, React 19, TypeScript, TanStack Query, react-leaflet (plain CSS with tokens; see Theme in the root `CLAUDE.md`). Use the Node that Maven installed (`target/node`, v24) for npm commands: the system Node may be older than Next 16 supports. `bash scripts/check-frontend.sh` (repo root) runs lint, `lint:rules`, `tsc` and Vitest with that Node and prints only a summary.
 
 ## Commands
 

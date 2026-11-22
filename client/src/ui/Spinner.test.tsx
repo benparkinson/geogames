@@ -29,10 +29,10 @@ describe("Spinner", () => {
 
 describe("Notice", () => {
   it("is an alert in the danger tone by default", () => {
-    render(<Notice className="mb-0">Oops</Notice>);
+    render(<Notice className="extra">Oops</Notice>);
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Oops");
-    expect(alert).toHaveClass("gg-notice", "gg-notice--danger", "mb-0");
+    expect(alert).toHaveClass("gg-notice", "gg-notice--danger", "extra");
   });
 });

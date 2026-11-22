@@ -8,7 +8,7 @@ const themeScript = `
     var stored = null;
     try { stored = localStorage.getItem("gg-theme"); } catch (e) {}
     var theme = stored === "dark" || stored === "light" ? stored : query.matches ? "dark" : "light";
-    document.documentElement.setAttribute("data-bs-theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }
   apply();
   query.addEventListener("change", apply);

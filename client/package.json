@@ -6,7 +6,6 @@
   "dependencies": {
     "@tanstack/react-query": "^5.108.0",
     "@tanstack/react-query-devtools": "^5.108.0",
-    "bootstrap": "^5.3.9",
     "leaflet": "^1.9.4",
     "next": "^16.4.6",
     "react": "^19.3.1",
