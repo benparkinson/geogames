@@ -58,3 +58,29 @@ describe("summariseGame", () => {
     expect(row.outcome).toBe("missed");
   });
 });
+
+describe("summariseGame totals", () => {
+  it("counts solved rounds, wrong guesses and hints", () => {
+    const s = summary([
+      { answerState: "CORRECT", firstGuess: true },
+      { answerState: "CORRECT", hintsUsed: 2, wrongGuesses: ["France", "Spain"] },
+      { river: true, answerState: "GAVE_UP", hintsUsed: 1, wrongGuesses: ["Rhine"] },
+    ]);
+    expect(s.solved).toBe(2);
+    expect(s.wrongGuesses).toBe(3);
+    expect(s.hintsUsed).toBe(3);
+  });
+
+  it("is zero for a game with nothing solved, no wrong guesses and no hints", () => {
+    const s = summary([{ answerState: "GAVE_UP" }]);
+    expect([s.solved, s.wrongGuesses, s.hintsUsed]).toEqual([0, 0, 0]);
+  });
+
+  it("lists each round's wrong guesses in order, leaving out correct ones", () => {
+    const rounds = makeGameRounds([
+      { answerState: "CORRECT", wrongGuesses: ["France", "Spain"] },
+      { answerState: "CORRECT" },
+    ]).map((r, i) => toRoundView(i === 0 ? { ...r, guesses: [...r.guesses, { text: "Belgium", correct: true }] } : r));
+    expect(summariseGame(rounds).rows.map((r) => r.wrongGuessNames)).toEqual([["France", "Spain"], []]);
+  });
+});

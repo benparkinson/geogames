@@ -321,36 +321,6 @@
   max-width: 720px;
 }
 
-/* Results page: the score and the buttons beside the list of rounds on a desktop, so nothing needs scrolling. */
-.gg-summary__list {
-  margin-bottom: 1rem;
-}
-@media (min-width: 900px) {
-  .gg-card--wide {
-    max-width: 940px;
-  }
-  .gg-summary {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 1.5rem;
-  }
-  .gg-summary__head {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .gg-summary__actions {
-    grid-column: 1;
-    grid-row: 2;
-    align-self: end;
-  }
-  .gg-summary__list {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: start;
-    margin-bottom: 0;
-  }
-}
 .gg-list {
   display: flex;
   flex-direction: column;
@@ -1115,44 +1085,159 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-4);
 }
 
-.gg-summary__title {
+/* ---- Results page: the score and the actions on the left, the round table on the right ---- */
+.gg-summary__head,
+.gg-summary__list {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-summary__meta {
   margin-bottom: var(--gg-space-1);
+  font-size: var(--gg-font-size-sm);
+}
+.gg-summary__score {
+  margin-bottom: var(--gg-space-1);
+  font-family: var(--gg-font-display);
+  font-size: 4.5rem;
+  font-stretch: 65%;
+  font-weight: 800;
+  line-height: 1;
+}
+.gg-summary__max {
+  font-size: var(--gg-font-size-h5);
+  font-stretch: 100%;
+  font-weight: 400;
 }
 .gg-summary__heading {
-  margin-bottom: var(--gg-space-1);
+  margin-bottom: var(--gg-space-3);
   font-size: var(--gg-font-size-h3);
+}
+.gg-mark {
+  padding: 0 0.3em;
+  color: var(--gg-color-on-hint);
+  background: var(--gg-color-hint);
+}
+.gg-summary__stats {
+  padding-left: 0;
+  margin-bottom: var(--gg-space-2);
+  list-style: none;
+  border-top: 2px solid var(--gg-color-rule);
+}
+.gg-summary__stats li {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--gg-space-1) 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
 }
 .gg-summary__line {
   margin-bottom: var(--gg-space-3);
+  font-size: var(--gg-font-size-sm);
 }
 .gg-summary__error {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
 }
-.gg-summary__share {
-  margin-bottom: var(--gg-space-3);
-}
 .gg-summary__buttons {
   display: flex;
-  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gg-space-3);
+}
+.gg-summary__table-heading {
+  padding-bottom: var(--gg-space-1);
+  margin-bottom: 0;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: var(--gg-font-size-h4);
+  font-weight: var(--gg-font-weight-display);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
 .gg-summary__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gg-space-4);
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--gg-space-2);
+  width: 100%;
+  padding: var(--gg-space-2) 0;
+  font: inherit;
+  color: inherit;
   text-align: start;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+button.gg-summary__row:hover,
+button.gg-summary__row:focus-visible {
+  background: var(--gg-color-surface-hover);
+}
+.gg-summary__row--head {
+  padding: var(--gg-space-1) 0;
+  font-size: var(--gg-font-size-sm);
+  color: var(--gg-color-text-muted);
+  border-bottom-color: var(--gg-color-rule);
+}
+.gg-summary__answers {
+  display: flex;
+  flex-direction: column;
 }
 .gg-summary__note {
   font-size: var(--gg-font-size-sm);
 }
+.gg-summary__wrong {
+  display: none;
+  font-size: var(--gg-font-size-sm);
+}
 .gg-summary__points {
+  text-align: end;
   white-space: nowrap;
 }
-/* After .gg-list, which zeroes the margin. On a desktop the list sits in its own column instead. */
+.gg-summary__points[data-missed] {
+  color: var(--gg-color-missed-text);
+}
+.gg-summary__row[data-outcome="missed"] .gg-summary__names {
+  color: var(--gg-color-missed-text);
+}
 @media (max-width: 899.98px) {
+  .gg-summary__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gg-space-1) var(--gg-space-3);
+    border-bottom: 1px solid var(--gg-color-rule-light);
+  }
+  .gg-summary__stats li {
+    gap: var(--gg-space-1);
+    border-bottom: 0;
+  }
+}
+@media (min-width: 900px) {
+  .gg-card--wide {
+    max-width: 940px;
+  }
+  .gg-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--gg-space-5);
+  }
+  .gg-summary__head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .gg-summary__actions {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+  }
   .gg-summary__list {
-    margin-bottom: var(--gg-space-3);
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    margin-bottom: 0;
+  }
+  .gg-summary__row {
+    grid-template-columns: 2rem minmax(0, 1fr) 9rem auto;
+  }
+  .gg-summary__wrong {
+    display: block;
   }
 }
 

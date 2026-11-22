@@ -30,6 +30,8 @@ export interface SummaryRowView {
   hintsUsed: number;
   outOfGuesses: boolean;
   points: number;
+  /** The round's recorded guesses that were not answers, in the order they were made. */
+  wrongGuessNames: string[];
 }
 
 export interface GameSummaryView {
@@ -43,6 +45,10 @@ export interface GameSummaryView {
   mixed: boolean;
   gameTitle: string | null;
   difficulty: Difficulty;
+  /** Rounds answered correctly, with or without hints. */
+  solved: number;
+  wrongGuesses: number;
+  hintsUsed: number;
   rows: SummaryRowView[];
 }
 
@@ -84,6 +90,7 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
       hintsUsed: round.hintsUsed,
       outOfGuesses: round.answerState === OUT_OF_GUESSES,
       points: round.points,
+      wrongGuessNames: round.guesses.filter((g) => !g.correct).map((g) => g.text),
     };
   });
   return {
@@ -95,6 +102,9 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
     mixed,
     gameTitle: mixed ? null : (findGameModule(type)?.title ?? type),
     difficulty,
+    solved: roundAnswerStates.filter((state) => state === CORRECT_ANSWER).length,
+    wrongGuesses: rows.reduce((sum, row) => sum + row.wrongGuessNames.length, 0),
+    hintsUsed: rows.reduce((sum, row) => sum + row.hintsUsed, 0),
     rows,
   };
 }

@@ -315,7 +315,7 @@ describe("GameRoundPage playing", () => {
     fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
     renderPage();
 
-    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your result" })).toBeInTheDocument();
     expect(screen.queryByText(TRIPOINT_PROMPT)).not.toBeInTheDocument();
   });
 
@@ -336,26 +336,26 @@ describe("GameRoundPage results", () => {
     fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
     const user = userEvent.setup();
     renderPage();
-    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your result" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
+    await user.click(screen.getByRole("button", { name: /Belgium/ }));
 
     expect(await screen.findByText(TRIPOINT_PROMPT)).toBeInTheDocument();
-    expect(screen.queryByText(/You scored/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your result" })).not.toBeInTheDocument();
   });
 
   it("returns to the results from a round with See results", async () => {
     fakeServer(["TRIPOINT", "RIVERS_BY_SHAPE"], ["CORRECT", "GAVE_UP"]);
     const user = userEvent.setup();
     renderPage();
-    await screen.findByText("You scored 100 / 200");
+    await screen.findByRole("heading", { name: "Your result" });
 
-    await user.click(screen.getByRole("button", { name: /1\. Tripoint/ }));
+    await user.click(screen.getByRole("button", { name: /Belgium/ }));
     await screen.findByText(TRIPOINT_PROMPT);
     await user.click(screen.getByRole("button", { name: "Round 2: revealed" }));
     await screen.findByText(RIVER_PROMPT);
     await user.click(screen.getByRole("button", { name: "See results" }));
 
-    expect(await screen.findByText("You scored 100 / 200")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your result" })).toBeInTheDocument();
   });
 });

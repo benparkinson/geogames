@@ -43,7 +43,8 @@ for (const { type, title } of GAMES) {
     }
 
     await expect(
-      page.getByRole("heading", { name: `Perfect game! ${ROUNDS * 100} / ${ROUNDS * 100}` }),
+      page.getByRole("heading", { name: "Perfect game!" }),
     ).toBeVisible();
+    await expect(page.getByText(`/ ${ROUNDS * 100}`)).toBeVisible();
   });
 }

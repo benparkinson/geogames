@@ -90,7 +90,9 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
   await page.getByRole("button", { name: "See results" }).click();
 
   // The summary.
-  await expect(page.getByRole("heading", { name: "You scored 116 / 300" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your result" })).toBeVisible();
+  await expect(page.getByText("116", { exact: true })).toBeVisible();
+  await expect(page.getByText("/ 300")).toBeVisible();
   await expect(page.getByText("2 with hints · 1 missed")).toBeVisible();
   const rounds = page.getByRole("button").filter({ hasText: /\+\d+/ });
   await expect(rounds).toHaveCount(3);
