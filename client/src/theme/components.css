@@ -934,3 +934,33 @@
     margin-bottom: var(--gg-space-3);
   }
 }
+
+/* Leaflet's own controls: squared, white, with an ink border. */
+.leaflet-bar,
+.leaflet-touch .leaflet-bar {
+  border: 1px solid var(--gg-color-rule);
+  border-radius: var(--gg-radius);
+  box-shadow: none;
+}
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  background-color: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  border-bottom: 1px solid var(--gg-color-rule);
+  border-radius: 0;
+}
+.leaflet-bar a:last-child {
+  border-bottom: 0;
+}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus-visible {
+  background-color: var(--gg-color-surface-hover);
+}
+.leaflet-control-scale-line {
+  background: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  border: 1px solid var(--gg-color-rule);
+  border-top: 0;
+  border-radius: 0;
+  font-family: var(--gg-font-mono);
+}

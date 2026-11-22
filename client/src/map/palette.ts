@@ -5,27 +5,27 @@
  */
 export const MAP_PALETTE = {
   /** The answer's outline while playing. */
-  answer: "LightGoldenRodYellow",
+  answer: "#1a1a1a",
   /** The answer's outline once the player gave up. */
-  revealed: "darkred",
+  revealed: "#d9481c",
   /** Clues, hint lines, minor rivers and lakes. */
-  clue: "#4a6fa5",
+  clue: "#1d5c63",
   /** The merged shape of two countries. */
-  merged: "#2f7a6b",
+  merged: "#1d5c63",
   /** The border a hint draws over the merged shape. */
-  hiddenBorder: "#f4f1de",
+  hiddenBorder: "#f7f7f4",
   /** City dots. */
-  city: "#4a6fa5",
+  city: "#1d5c63",
   /** The capital's dot. */
-  capital: "#d9822b",
+  capital: "#d9481c",
   /** The capital's outline and every pin's outline and glyph. */
   white: "#ffffff",
   /** Pin: where a river starts. */
-  sourcePin: "#1e9e4a",
+  sourcePin: "#1d5c63",
   /** Pin: where a river ends. */
-  mouthPin: "#d62828",
+  mouthPin: "#d9481c",
   /** Pin: the country to find in Country Gaps. */
-  targetPin: "#1d6fd6",
+  targetPin: "#1a1a1a",
   /** Pin: the tripoint. */
-  tripointPin: "#7a3e9d",
+  tripointPin: "#d9481c",
 } as const;
