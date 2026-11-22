@@ -79,7 +79,8 @@
       "Ganga",
       "Padma"
     ],
-    "continent": "Asia"
+    "continent": "Asia",
+    "mainPieceOnly": true
   },
   "Q5413": {
     "name": "Yangtze",
@@ -234,6 +235,11 @@
   },
   "Q115456": {
     "continent": "Asia"
+  },
+  "Q118771": {
+    "unlinkNames": [
+      "Guainía"
+    ]
   },
   "Q124653": {
     "continent": "Asia"
