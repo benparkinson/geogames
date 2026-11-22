@@ -101,7 +101,7 @@ test("Easy difficulty shows the continent and gives more guesses", async ({ page
 
   // A wrong guess costs one life, and still gets its distance clue (Easy is not Hard).
   await guess(page, await wrongCountry(api, id));
-  await expect(page.getByRole("status", { name: "9 lives left" })).toBeVisible();
+  await expect(page.getByRole("status", { name: "7 lives left" })).toBeVisible();
   await expect(page.locator(".guess-chip").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
 });
 
