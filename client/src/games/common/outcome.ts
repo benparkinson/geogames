@@ -26,12 +26,8 @@ export function roundOutcome(
   return firstGuess ? "firstGuess" : "correct";
 }
 
-/** What every view shares about an outcome, so no component chooses its own. Icons stay in the components. */
+/** What every view shares about an outcome, so no component chooses its own. Icons stay in the components; colours come from `[data-outcome]` in the CSS. */
 export interface OutcomeStyle {
-  /** The round tracker dot's class. */
-  dotClass: string;
-  /** The text colour class. */
-  textClass: string;
   /** The results summary noun for one round and for several. */
   singular: string;
   plural: string;
@@ -41,29 +37,21 @@ export interface OutcomeStyle {
 
 export const OUTCOME_STYLES: Record<RoundOutcome, OutcomeStyle> = {
   firstGuess: {
-    dotClass: "round-dot--first-guess",
-    textClass: "gg-text-correct",
     singular: "first guess",
     plural: "first guesses",
     emoji: "❇️",
   },
   correct: {
-    dotClass: "round-dot--correct",
-    textClass: "gg-text-correct",
     singular: "correct",
     plural: "correct",
     emoji: "🟩",
   },
   hints: {
-    dotClass: "round-dot--hints",
-    textClass: "gg-text-hints",
     singular: "with hints",
     plural: "with hints",
     emoji: "🟨",
   },
   missed: {
-    dotClass: "round-dot--missed",
-    textClass: "gg-text-missed",
     singular: "missed",
     plural: "missed",
     emoji: "🟥",

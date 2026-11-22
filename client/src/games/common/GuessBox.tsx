@@ -57,6 +57,7 @@ export function GuessBox({
   onChange,
   disabled,
   className,
+  shake,
   autoFocus,
   suggestions,
   ref,
@@ -164,6 +165,7 @@ export function GuessBox({
     <>
       <input
         ref={setRefs}
+        data-shake={shake}
         className={"answer-attempt gg-input" + (className ? " " + className : "")}
         type="text"
         autoComplete="off"
@@ -230,6 +232,8 @@ interface GuessBoxProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   className?: string;
+  /** Which of the two alternating shake animations is playing, so a test (and a redesign) can tell. */
+  shake?: 1 | 2;
   autoFocus?: boolean;
   suggestions?: Suggestion[];
   ref?: React.Ref<HTMLInputElement>;

@@ -5,12 +5,12 @@ type Theme = "light" | "dark";
 
 function subscribe(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-bs-theme"] });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   return () => observer.disconnect();
 }
 
 function currentTheme(): Theme {
-  return document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
 }
 
 /** Small button that switches between light and dark. The choice is remembered in localStorage. */
@@ -20,7 +20,7 @@ export default function ThemeToggle(): React.JSX.Element {
 
   function toggle(): void {
     const next: Theme = currentTheme() === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-bs-theme", next);
+    document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem("gg-theme", next);
     } catch {

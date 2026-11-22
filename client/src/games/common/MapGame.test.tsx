@@ -75,7 +75,7 @@ describe("MapGame fresh round", () => {
   it("can blank the map by itself", () => {
     renderGame({ blankMap: true });
 
-    expect(document.querySelector(".game-map--blank")).not.toBeNull();
+    expect(screen.getByRole("main")).toHaveAttribute("data-blank-map");
   });
 });
 
@@ -271,7 +271,7 @@ describe("MapGame resuming a finished round", () => {
     });
 
     expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
-    expect(screen.getByText("Hint number 0").closest("ul")).toHaveClass("round-hints");
+    expect(screen.getByText("Hint number 0").closest("ul")).toBe(screen.getByRole("list"));
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
     expect(screen.queryByText("Hint number 2")).not.toBeInTheDocument();
@@ -295,7 +295,7 @@ describe("MapGame continent line", () => {
     renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Europe"] }) });
 
     const line = screen.getByText("Continent: Europe");
-    expect(line.closest("ul")).toHaveClass("round-hints");
+    expect(line.closest("ul")).toBe(screen.getByRole("list"));
     expect(line.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 
@@ -309,7 +309,7 @@ describe("MapGame continent line", () => {
     renderGame({ round: makeRoundProps({ difficulty: "NORMAL", continents: [] }) });
 
     expect(screen.queryByText(/^Continents?:/)).not.toBeInTheDocument();
-    expect(document.querySelector(".round-hints")).toBeNull();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
   it("is the first item of the list, above the hints taken", async () => {
@@ -321,7 +321,7 @@ describe("MapGame continent line", () => {
 
     await user.click(screen.getByRole("button", { name: /Hint/ }));
 
-    const items = [...document.querySelectorAll(".round-hints li")].map((li) => li.textContent?.trim());
+    const items = screen.getAllByRole("listitem").map((li) => li.textContent?.trim());
     expect(items).toEqual(["Continent: Africa", "First letter: K"]);
   });
 
@@ -497,7 +497,7 @@ describe("MapGame panel", () => {
   it("shows the lives left and the value together in the status row, not in the button row", () => {
     renderGame({ round: makeRoundProps({ guesses: [saved("Italy"), saved("Peru")] }) });
 
-    const row = document.querySelector(".round-status") as HTMLElement;
+    const row = screen.getByTestId("round-status");
     expect(row).toContainElement(screen.getByRole("status", { name: "3 lives left" }));
     expect(row).toHaveTextContent(/Worth \d+ pts/);
     const reveal = screen.getByRole("button", { name: /Reveal answer/ });
@@ -522,8 +522,8 @@ describe("MapGame panel", () => {
   it("has no status row or feedback line once the round is over", () => {
     renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
-    expect(document.querySelector(".round-status")).toBeNull();
-    expect(document.querySelector(".guess-feedback")).toBeNull();
+    expect(screen.queryByTestId("round-status")).toBeNull();
+    expect(screen.queryByTestId("guess-feedback")).toBeNull();
   });
 
   it("shows no feedback once the round is over", async () => {
@@ -533,7 +533,7 @@ describe("MapGame panel", () => {
     await guess(user, "France");
     await guess(user, "Spain");
 
-    expect(document.querySelector(".guess-feedback")).toBeNull();
+    expect(screen.queryByTestId("guess-feedback")).toBeNull();
   });
 
   it("shows the round result instead of the form when the round is over", () => {

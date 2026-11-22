@@ -1,5 +1,5 @@
-import { CheckLg, EyeFill } from "react-bootstrap-icons";
 import { Chip } from "../../ui";
+import { FoundIcon, RevealIcon } from "../../ui/icons";
 
 export default function AnswerSlots({
   answerCount,
@@ -22,12 +22,12 @@ export default function AnswerSlots({
   }
 
   return (
-    <div className="d-flex gap-2 flex-wrap mb-2" role="group" aria-label={label}>
+    <div className="gg-slots" role="group" aria-label={label}>
       {Array.from({ length: answerCount }, (_v, i) => {
         if (i < found.length) {
           return (
             <Chip key={i} tone="correct" className="slot--filled">
-              {found[i]} <CheckLg aria-hidden="true" />
+              {found[i]} <FoundIcon aria-hidden="true" />
             </Chip>
           );
         }
@@ -35,13 +35,13 @@ export default function AnswerSlots({
         if (revealedAnswer) {
           return (
             <Chip key={i} tone="revealed" className="slot--filled" title="Revealed">
-              {revealedAnswer} <EyeFill aria-hidden="true" />
-              <span className="visually-hidden"> (revealed)</span>
+              {revealedAnswer} <RevealIcon aria-hidden="true" />
+              <span className="gg-visually-hidden"> (revealed)</span>
             </Chip>
           );
         }
         return (
-          <span key={i} className="answer-slot-empty px-3 gg-text-muted fs-6" aria-label="Not found yet">
+          <span key={i} className="answer-slot-empty gg-slots__empty gg-text-muted" aria-label="Not found yet">
             ?
           </span>
         );

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { EyeFill, Lightbulb } from "react-bootstrap-icons";
 import { Button } from "../../ui";
 import { HintConfig } from "./hints";
 import { CORRECT_ANSWER } from "./Model";
 import { roundPoints } from "./scoring";
+import { RevealIcon, HintIcon } from "../../ui/icons";
 
 /** The hint and reveal buttons. Revealing asks for a second tap, which lapses after a few seconds. */
 export default function RoundActions({
@@ -50,14 +50,14 @@ export default function RoundActions({
   const hintTitle = hintsLeft > 0 ? `${hints.description} (−${nextHintCost} pts)` : "No hints left";
 
   return (
-    <div className="round-actions d-flex flex-wrap gap-2">
+    <div className="round-actions">
       <span title={hintTitle}>
         <Button variant="hint" onClick={onHint} disabled={hintsLeft <= 0}>
-          <Lightbulb aria-hidden="true" /> Hint ({hintsLeft} left)
+          <HintIcon aria-hidden="true" /> Hint ({hintsLeft} left)
         </Button>
       </span>
       <Button variant="danger" onClick={handleRevealClick}>
-        <EyeFill aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
+        <RevealIcon aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
       </Button>
     </div>
   );

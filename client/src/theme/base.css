@@ -1,0 +1,101 @@
+/* A small reset of our own. Colours, fonts and sizes come from tokens.css. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  font-family: var(--gg-font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: var(--gg-space-2);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--gg-space-3);
+}
+
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: var(--gg-space-3);
+  padding-left: 2rem;
+}
+
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--gg-color-link);
+}
+
+a:hover {
+  color: var(--gg-color-link-hover);
+}
+
+img,
+svg {
+  vertical-align: middle;
+}
+
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  border-radius: 0;
+}
+
+button:not(:disabled),
+[role="button"] {
+  cursor: pointer;
+}
+
+label {
+  display: inline-block;
+}
+
+pre,
+code {
+  font-family: var(--gg-font-mono);
+  font-size: 0.875em;
+}
+
+pre {
+  display: block;
+  margin-top: 0;
+  margin-bottom: var(--gg-space-3);
+  overflow: auto;
+}
+
+[hidden] {
+  display: none !important;
+}

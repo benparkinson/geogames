@@ -14,7 +14,7 @@ describe("GameLayout", () => {
   it("appends an extra class to the map region", () => {
     render(<GameLayout topBar="t" map="m" panel="p" mapClassName="game-map--blank" />);
 
-    expect(screen.getByRole("main")).toHaveClass("game-map", "game-map--blank");
+    expect(screen.getByRole("main")).toHaveAttribute("data-blank-map");
   });
 
   it("uses only the base class without an extra one", () => {
@@ -49,7 +49,7 @@ describe("GameLayout and the on-screen keyboard", () => {
     const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);
 
     const screenEl = container.firstElementChild as HTMLElement;
-    expect(screenEl).toHaveClass("game-screen--keyboard");
+    expect(screenEl).toHaveAttribute("data-keyboard", "open");
     expect(screenEl.style.height).toBe("300px");
   });
 
@@ -59,11 +59,11 @@ describe("GameLayout and the on-screen keyboard", () => {
     const screenEl = container.firstElementChild as HTMLElement;
 
     act(() => resize());
-    expect(screenEl).toHaveClass("game-screen--keyboard");
+    expect(screenEl).toHaveAttribute("data-keyboard", "open");
 
     viewport.height = 800;
     act(() => resize());
-    expect(screenEl).not.toHaveClass("game-screen--keyboard");
+    expect(screenEl).not.toHaveAttribute("data-keyboard");
     expect(screenEl.style.height).toBe("");
 
     unmount();
@@ -74,7 +74,6 @@ describe("GameLayout and the on-screen keyboard", () => {
     vi.stubGlobal("visualViewport", null);
     const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);
 
-    expect(container.firstElementChild).toHaveClass("game-screen");
-    expect(container.firstElementChild).not.toHaveClass("game-screen--keyboard");
+    expect(container.firstElementChild).not.toHaveAttribute("data-keyboard");
   });
 });

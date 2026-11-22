@@ -5,17 +5,17 @@ import ThemeToggle from "./ThemeToggle";
 
 describe("ThemeToggle", () => {
   beforeEach(() => {
-    document.documentElement.setAttribute("data-bs-theme", "light");
+    document.documentElement.setAttribute("data-theme", "light");
     localStorage.clear();
   });
   afterEach(() => {
-    document.documentElement.removeAttribute("data-bs-theme");
+    document.documentElement.removeAttribute("data-theme");
   });
 
   it("switches to dark and remembers it", async () => {
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole("button", { name: "Switch to dark mode" }));
-    expect(document.documentElement.getAttribute("data-bs-theme")).toBe("dark");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
     expect(localStorage.getItem("gg-theme")).toBe("dark");
     expect(await screen.findByRole("button", { name: "Switch to light mode" })).toBeTruthy();
   });
@@ -26,14 +26,14 @@ describe("ThemeToggle", () => {
     });
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole("button", { name: "Switch to dark mode" }));
-    expect(document.documentElement.getAttribute("data-bs-theme")).toBe("dark");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
     setItem.mockRestore();
   });
 
   it("stops watching the page theme when unmounted", () => {
     const { unmount } = render(<ThemeToggle />);
     unmount();
-    document.documentElement.setAttribute("data-bs-theme", "dark");
+    document.documentElement.setAttribute("data-theme", "dark");
     expect(screen.queryByRole("button")).toBeNull();
   });
 
@@ -42,10 +42,10 @@ describe("ThemeToggle", () => {
   });
 
   it("switches back to light", () => {
-    document.documentElement.setAttribute("data-bs-theme", "dark");
+    document.documentElement.setAttribute("data-theme", "dark");
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole("button", { name: "Switch to light mode" }));
-    expect(document.documentElement.getAttribute("data-bs-theme")).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
     expect(localStorage.getItem("gg-theme")).toBe("light");
   });
 });

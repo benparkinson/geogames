@@ -3,7 +3,7 @@ import { FitBounds } from "../../map/FitBounds";
 import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
-import { answerPathOptions } from "../../map/constants";
+import { answerFillOptions } from "../../map/constants";
 import { LakeRound } from "./model";
 
 /** Zoom in further than for rivers: lakes are small. */
@@ -17,11 +17,7 @@ function LakeShapesMap({ data: { lake }, gaveUp, gameOver }: MapProps<LakeRound>
   return (
     <GameMap maxZoom={12}>
       <RevealTiles show={gameOver} />
-      <GeoJSON
-        pathOptions={{ ...answerPathOptions(gaveUp), fillOpacity: 0.35 }}
-        data={lake.geoData}
-        key={lake.id + (gaveUp ? "gaveUp" : "")}
-      />
+      <GeoJSON pathOptions={answerFillOptions(gaveUp)} data={lake.geoData} key={lake.id + (gaveUp ? "gaveUp" : "")} />
       <FitBounds data={lake.geoData} id={lake.id} maxZoom={LAKE_MAX_FIT_ZOOM} />
       <ScaleControl position="bottomleft" imperial={false} />
     </GameMap>

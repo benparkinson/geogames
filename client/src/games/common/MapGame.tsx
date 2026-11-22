@@ -1,26 +1,14 @@
-import { Globe, Lightbulb } from "react-bootstrap-icons";
 import { MapProps } from "../../map/MapProps";
 import { AnswerCandidate } from "./answers";
-import AnswerSlots from "./AnswerSlots";
 import GameLayout from "./GameLayout";
 import GameTopBar from "./GameTopBar";
-import GuessForm from "./GuessForm";
-import { foundAnswers, GuessClue, guessesLeft, wrongGuesses } from "./guessReducer";
+import type { GuessClue } from "./guessReducer";
 import type { HintConfig } from "./hints";
-import { CORRECT_ANSWER, Round, RoundAnswer } from "./Model";
-import RoundActions from "./RoundActions";
-import RoundBrief from "./RoundBrief";
-import RoundResult from "./RoundResult";
-import RoundStatus from "./RoundStatus";
-import { roundPoints } from "./scoring";
+import { Round, RoundAnswer } from "./Model";
+import RoundPanel from "./RoundPanel";
+import { liveProgress, roundView } from "./roundView";
 import type { Suggestion } from "./suggestions";
 import { useRoundGuesses } from "./useRoundGuesses";
-import WrongGuessList from "./WrongGuessList";
-
-/** "Continent: Europe", or "Continents: Europe / Asia" for a country that spans two. */
-function continentText(continents: string[]): string {
-  return `${continents.length === 1 ? "Continent" : "Continents"}: ${continents.join(" / ")}`;
-}
 
 function MapGame<Type>({
   data,
@@ -46,105 +34,39 @@ function MapGame<Type>({
     clueFor,
     submitAnswer,
   });
-  const { gaveUp, outOfGuesses, over: gameOver, hintsUsed } = state;
-  const wrong = wrongGuesses(state);
-
-  // Derived, so a reopened round shows the hints that were used.
-  const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i, state.foundAtHint)).filter(
-    (text): text is string => !!text,
-  );
+  const { gaveUp, over: gameOver, hintsUsed } = state;
+  const view = roundView(round, state, answerCount, hints);
 
   const map = (
-    <>
-      <MapComponent
-        data={data}
-        gameOver={gameOver}
-        gaveUp={gaveUp}
-        hintsUsed={hintsUsed}
-        foundAtHint={state.foundAtHint}
-      />
-    </>
+    <MapComponent
+      data={data}
+      gameOver={gameOver}
+      gaveUp={gaveUp}
+      hintsUsed={hintsUsed}
+      foundAtHint={state.foundAtHint}
+    />
   );
 
   const panel = (
-    <>
-      <RoundBrief title={round.kind.title} Icon={round.kind.Icon} question={prompt} />
-      {(round.continents.length > 0 || hintTexts.length > 0) && (
-        <ul className="round-hints">
-          {round.continents.length > 0 && (
-            <li>
-              <Globe aria-hidden="true" /> {continentText(round.continents)}
-            </li>
-          )}
-          {hintTexts.map((text, index) => (
-            <li key={index}>
-              <Lightbulb aria-hidden="true" /> {text}
-            </li>
-          ))}
-        </ul>
-      )}
-      <AnswerSlots
-        answerCount={answerCount}
-        found={foundAnswers(state)}
-        gaveUp={gaveUp}
-        allAnswers={answers.map((a) => a.name)}
-      />
-      <div>
-        {gameOver ? (
-          <>
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
-            <RoundResult
-              gaveUp={gaveUp}
-              outOfGuesses={outOfGuesses}
-              round={round}
-              hintsUsed={hintsUsed}
-              hintCount={round.hintCount}
-              wrongGuesses={wrong.length}
-              answersFound={foundAnswers(state).length}
-              answerCount={answerCount}
-            />
-          </>
-        ) : (
-          <>
-            <RoundStatus
-              guessesLeft={guessesLeft(state, round.guessLimit)}
-              guessLimit={round.guessLimit}
-              points={roundPoints(CORRECT_ANSWER, hintsUsed, round.hintCount)}
-            />
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
-            <GuessForm
-              submitGuess={submitGuess}
-              inputPlaceholder={inputPlaceholder}
-              answerNoun={answerNoun}
-              suggestions={suggestions}
-            />
-            <RoundActions
-              hints={hints}
-              hintCount={round.hintCount}
-              hintsUsed={hintsUsed}
-              onHint={takeHint}
-              onGiveUp={giveUp}
-            />
-          </>
-        )}
-      </div>
-    </>
+    <RoundPanel
+      round={round}
+      state={state}
+      view={view}
+      prompt={prompt}
+      inputPlaceholder={inputPlaceholder}
+      answerNoun={answerNoun}
+      suggestions={suggestions}
+      allAnswers={answers.map((a) => a.name)}
+      hints={hints}
+      submitGuess={submitGuess}
+      giveUp={giveUp}
+      takeHint={takeHint}
+    />
   );
 
   return (
     <GameLayout
-      topBar={
-        <GameTopBar
-          round={round}
-          gameOver={gameOver}
-          gaveUp={gaveUp}
-          outOfGuesses={outOfGuesses}
-          hintsUsed={hintsUsed}
-          wrongGuesses={wrong.length}
-          answersFound={foundAnswers(state).length}
-          answerCount={answerCount}
-        />
-      }
+      topBar={<GameTopBar round={round} progress={liveProgress(round, view)} />}
       map={map}
       panel={panel}
       mapClassName={blankMap && !gameOver ? "game-map--blank" : undefined}

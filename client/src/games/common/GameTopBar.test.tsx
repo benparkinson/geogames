@@ -3,160 +3,78 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
 import GameTopBar from "./GameTopBar";
+import type { LiveProgress } from "./roundView";
+
+type TestRound = ReturnType<typeof makeRoundProps>;
+
+function progressOf(round: TestRound, overrides: Partial<LiveProgress> = {}): LiveProgress {
+  return {
+    states: round.roundAnswerStates,
+    points: round.roundPoints,
+    outcomes: round.roundAnswerStates.map(() => null),
+    score: round.score,
+    ...overrides,
+  };
+}
+
+function renderBar(overrides: Partial<TestRound> = {}, progress: Partial<LiveProgress> = {}): TestRound {
+  const round = makeRoundProps(overrides);
+  render(<GameTopBar round={round} progress={progressOf(round, progress)} />);
+  return round;
+}
 
 describe("GameTopBar", () => {
   it("names a daily challenge", () => {
-    render(
-      <GameTopBar round={makeRoundProps({ dailyDate: "2026-11-18" })} gameOver={false} gaveUp={false} hintsUsed={0} />,
-    );
+    renderBar({ dailyDate: "2026-11-18" });
 
     expect(screen.getByText("Daily")).toBeInTheDocument();
   });
 
   it("says nothing about a daily in an ordinary game", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    renderBar();
 
     expect(screen.queryByText(/Daily/)).not.toBeInTheDocument();
   });
 
   it("shows the running score mid-game", () => {
-    render(<GameTopBar round={makeRoundProps({ score: 183 })} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    renderBar({}, { score: 183 });
 
     expect(screen.getByText("Score 183")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Results" })).not.toBeInTheDocument();
   });
 
   it("shows the final score out of the maximum and a results button when the game is complete", async () => {
-    const round = makeRoundProps({
-      score: 183,
-      maxScore: 300,
-      totalRoundCount: 3,
-      gameCompleted: true,
-      answerState: "CORRECT",
-    });
-    render(<GameTopBar round={round} gameOver={true} gaveUp={false} hintsUsed={1} />);
+    const round = renderBar({ maxScore: 300, totalRoundCount: 3, gameCompleted: true }, { score: 183 });
 
     expect(screen.getByText("Final score 183 / 300")).toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole("button", { name: "Results" }));
     expect(round.showSummary).toHaveBeenCalledTimes(1);
   });
 
-  it("adds a round just finished here to the score before the server's copy is refetched", () => {
-    render(<GameTopBar round={makeRoundProps({ score: 100 })} gameOver={true} gaveUp={false} hintsUsed={1} />);
-
-    // A tripoint round (3 hints) answered with one hint is worth 83.
-    expect(screen.getByText("Score 183")).toBeInTheDocument();
-  });
-
-  it("adds nothing for a round revealed here", () => {
-    render(<GameTopBar round={makeRoundProps({ score: 100 })} gameOver={true} gaveUp={true} hintsUsed={2} />);
-
-    expect(screen.getByText("Score 100")).toBeInTheDocument();
-  });
-
-  it("marks a round that ran out of guesses here, for no points", () => {
-    render(
-      <GameTopBar
-        round={makeRoundProps({ score: 100 })}
-        gameOver={true}
-        gaveUp={true}
-        outOfGuesses={true}
-        hintsUsed={1}
-      />,
-    );
-
-    expect(screen.getByText("Score 100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--missed");
-  });
-
-  it("does not count an already answered round twice", () => {
-    const round = makeRoundProps({ score: 183, answerState: "CORRECT", hintsUsed: 1, points: 83 });
-    render(<GameTopBar round={round} gameOver={true} gaveUp={false} hintsUsed={1} />);
-
-    expect(screen.getByText("Score 183")).toBeInTheDocument();
-  });
-
   it("shows which round is being played", () => {
-    render(
-      <GameTopBar
-        round={makeRoundProps({ currentRound: 1, totalRoundCount: 3 })}
-        gameOver={false}
-        gaveUp={false}
-        hintsUsed={0}
-      />,
-    );
+    renderBar({ currentRound: 1, totalRoundCount: 3 });
 
     expect(screen.getByText("Round 2 of 3")).toBeInTheDocument();
   });
 
   it("links home", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    renderBar();
 
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
   });
 
-  it("shows the current round as a first guess straight away when the player has just won with no hints and no wrong guess", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={0} />);
+  it("draws each round's outcome from the progress it is given", () => {
+    const round = makeRoundProps();
+    const outcomes = round.roundAnswerStates.map(() => null) as LiveProgress["outcomes"];
+    outcomes[round.currentRound] = "missed";
+    render(<GameTopBar round={round} progress={progressOf(round, { outcomes })} />);
 
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--first-guess");
-  });
-
-  it("shows the current round as correct straight away when the player won with a hint", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={1} />);
-
-    const dot = screen.getByRole("button", { name: "Round 1: current" });
-    expect(dot).toHaveClass("round-dot--hints");
-    expect(dot).not.toHaveClass("round-dot--first-guess");
-  });
-
-  it("shows the current round as correct, not a first guess, when the player won after a wrong guess", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={false} hintsUsed={0} wrongGuesses={1} />);
-
-    const dot = screen.getByRole("button", { name: "Round 1: current" });
-    expect(dot).toHaveClass("round-dot--correct");
-    expect(dot).not.toHaveClass("round-dot--first-guess");
-  });
-
-  it("shows a round given up with some answers found as with hints, not missed", () => {
-    render(
-      <GameTopBar
-        round={makeRoundProps()}
-        gameOver={true}
-        gaveUp={true}
-        hintsUsed={0}
-        answersFound={2}
-        answerCount={3}
-      />,
-    );
-
-    const dot = screen.getByRole("button", { name: "Round 1: current" });
-    expect(dot).toHaveClass("round-dot--hints");
-    expect(dot).not.toHaveClass("round-dot--missed");
-  });
-
-  it("shows the current round as revealed straight away when the player gave up", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={true} gaveUp={true} hintsUsed={0} />);
-
-    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveClass("round-dot--missed");
+    expect(screen.getByRole("button", { name: "Round 1: current" })).toHaveAttribute("data-outcome", "missed");
   });
 
   it("leaves the current round unmarked while it is still being played", () => {
-    render(<GameTopBar round={makeRoundProps()} gameOver={false} gaveUp={false} hintsUsed={0} />);
+    renderBar();
 
-    const dot = screen.getByRole("button", { name: "Round 1: current" });
-    expect(dot).not.toHaveClass("round-dot--correct");
-    expect(dot).not.toHaveClass("round-dot--first-guess");
-    expect(dot).not.toHaveClass("round-dot--missed");
-  });
-
-  it("does not mutate the round it was given", () => {
-    const round = makeRoundProps();
-    const states = [...round.roundAnswerStates];
-    const points = [...round.roundPoints];
-
-    render(<GameTopBar round={round} gameOver={true} gaveUp={true} hintsUsed={0} />);
-
-    expect(round.roundAnswerStates).toEqual(states);
-    expect(round.roundPoints).toEqual(points);
+    expect(screen.getByRole("button", { name: "Round 1: current" })).not.toHaveAttribute("data-outcome");
   });
 });

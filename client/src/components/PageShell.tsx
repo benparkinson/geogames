@@ -16,23 +16,16 @@ export default function PageShell({
   wide?: boolean;
 }): React.JSX.Element {
   return (
-    <div className="page-full-height page-bg d-flex flex-column">
-      {topBarEnd ? (
-        <div className="px-3 py-2 d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center gap-2">
-            <HomeLink />
-            <ThemeToggle />
-          </div>
-          {topBarEnd}
-        </div>
-      ) : (
-        <div className="px-3 py-2 d-flex align-items-center gap-2">
+    <div className="gg-page page-full-height page-bg">
+      <div className="gg-page__bar">
+        <div className="gg-page__bar-start">
           <HomeLink />
           <ThemeToggle />
         </div>
-      )}
-      <div className={"gg-card" + (wide ? " gg-card--wide" : "") + " mx-auto my-3 p-3"}>{children}</div>
-      <SiteFooter className="mt-auto pt-2 pb-3" />
+        {topBarEnd}
+      </div>
+      <div className={"gg-card gg-page__card" + (wide ? " gg-card--wide" : "")}>{children}</div>
+      <SiteFooter pinned />
     </div>
   );
 }

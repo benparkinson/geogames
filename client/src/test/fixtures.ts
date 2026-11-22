@@ -1,4 +1,3 @@
-import { Globe } from "react-bootstrap-icons";
 import { vi } from "vitest";
 import type {
   DailyGameResponse,
@@ -15,10 +14,11 @@ import type { CountryPairRound } from "../games/pairs/model";
 import type { Lake, LakeRound } from "../games/lakes/model";
 import type { River, RiverRound } from "../games/rivers/model";
 import type { TripointModel } from "../games/tripoint/model";
+import { ContinentIcon } from "../ui/icons";
 
 export function makeRoundProps(overrides: Partial<Round> = {}): Round {
   return {
-    kind: { title: "Test Game", Icon: Globe },
+    kind: { title: "Test Game", Icon: ContinentIcon },
     answerSave: "saved",
     retryAnswer: vi.fn(),
     nextRound: vi.fn(),

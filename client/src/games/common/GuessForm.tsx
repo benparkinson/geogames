@@ -60,11 +60,12 @@ export default function GuessForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="d-flex gap-2 mb-2">
-        <div className="flex-grow-1">
+      <form onSubmit={handleSubmit} className="gg-guess-form">
+        <div className="gg-guess-form__box">
           <GuessBox
             ref={inputRef}
             className={shakeClass(shakeCount)}
+            shake={shakeCount === 0 ? undefined : shakeCount % 2 === 1 ? 1 : 2}
             autoFocus={prefersPreciseInput()}
             value={guess}
             name={inputPlaceholder}
@@ -78,7 +79,7 @@ export default function GuessForm({
         </Button>
       </form>
 
-      <div className="guess-feedback small" aria-live="polite">
+      <div className="guess-feedback" data-testid="guess-feedback" aria-live="polite">
         {feedback}
       </div>
     </>

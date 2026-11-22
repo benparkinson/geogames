@@ -39,11 +39,11 @@ describe("River Countries", () => {
   it("asks for the river and blanks the map until the round ends", async () => {
     renderGame();
     expect(screen.getByText("Which river flows through all of these countries?")).toBeInTheDocument();
-    expect(document.querySelector(".game-map--blank")).not.toBeNull();
+    expect(screen.getByRole("main")).toHaveAttribute("data-blank-map");
 
     await userEvent.setup().type(input(), "Danube{Enter}");
 
-    expect(document.querySelector(".game-map--blank")).toBeNull();
+    expect(screen.getByRole("main")).not.toHaveAttribute("data-blank-map");
     expect(screen.getByTestId("map")).toHaveAttribute("data-game-over", "true");
   });
 

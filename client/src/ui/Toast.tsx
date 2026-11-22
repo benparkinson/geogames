@@ -1,5 +1,5 @@
-import { X } from "react-bootstrap-icons";
 import { Button } from "./Button";
+import { CloseIcon } from "./icons";
 
 /** A small message fixed at the top of the screen, with an optional action and a close button. */
 export function Toast({
@@ -16,7 +16,7 @@ export function Toast({
       <span>{children}</span>
       {action}
       <Button variant="quiet" size="sm" aria-label="Dismiss" onClick={onDismiss}>
-        <X aria-hidden="true" />
+        <CloseIcon aria-hidden="true" />
       </Button>
     </div>
   );

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
-import type { Icon } from "react-bootstrap-icons";
 import type { Round, RoundAnswer } from "./common/Model";
+import type { IconComponent } from "../ui/icons";
 
 export interface GameComponentProps<T> {
   /** This round's data: the parsed jsonBlob of the server's round. */
@@ -25,7 +25,7 @@ export interface GameModule<T> {
   singular: string;
   /** The home page card text. */
   description: string;
-  Icon: Icon;
+  Icon: IconComponent;
   /** Shown in the home page's "Extra difficult" section, after the other games. */
   extraDifficult?: boolean;
   /** Wrong guesses get a distance and direction clue, so Hard mode matters (see `clueFor`). */

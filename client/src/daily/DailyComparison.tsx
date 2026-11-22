@@ -53,18 +53,18 @@ function Comparison({
     buckets.map((count, i) => `${bandRange(i, maxScore)}: ${percentOf(count)}%`).join(", ") +
     `. Your band: ${bandRange(mine, maxScore)}.`;
   return (
-    <div className="gg-daily-comparison mb-3">
-      <p className="mb-1">
+    <div className="gg-daily-comparison">
+      <p className="gg-daily-comparison__average">
         Today&apos;s average{LEAGUE_NAMES[difficulty]}: {averageScore!.toFixed(1)} / {maxScore}
       </p>
-      <p className="mb-2">Top {topPercent(buckets, mine, players)}%</p>
+      <p className="gg-daily-comparison__top">Top {topPercent(buckets, mine, players)}%</p>
       <div role="img" aria-label={alt}>
         <div className="gg-daily-chart" aria-hidden="true">
           {buckets.map((count, i) => (
             <div key={i} className="gg-daily-chart__column">
               <div
                 className="gg-daily-chart__bar"
-                data-mine={i === mine ? "true" : undefined}
+                data-mine={i === mine ? "true" : "false"}
                 style={{ height: `${Math.max(2, (100 * count) / tallest)}%` }}
               />
               <span className="gg-daily-chart__label" data-sparse={i % 2 === 1 && i !== 10 ? "true" : undefined}>

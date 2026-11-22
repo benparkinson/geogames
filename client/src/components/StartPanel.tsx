@@ -15,13 +15,13 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
 
   return (
     <aside className="home-start" aria-label="Start a game">
-      <div className="d-flex flex-wrap align-items-center gap-2">
-        <div className="d-flex align-items-center gap-2 w-100">
+      <div className="home-start__row">
+        <div className="home-start__title">
           <option.Icon size={20} aria-hidden="true" />
-          <span className="fw-bold">{option.title}</span>
+          <span>{option.title}</span>
         </div>
-        <div className="d-flex align-items-center gap-2">
-          <span id="rounds-label" className="fw-semibold">
+        <div className="home-start__rounds">
+          <span id="rounds-label" className="gg-label">
             Rounds
           </span>
           <ToggleGroup
@@ -33,12 +33,12 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
             options={ROUND_OPTIONS.map((n) => ({ value: n, label: n }))}
           />
         </div>
-        <div className="w-100">
+        <div className="home-start__difficulty">
           <DifficultyToggle />
         </div>
         <Button
           variant="primary"
-          className="home-start-button flex-grow-1"
+          className="home-start-button"
           // Hard only means something for a game with clues, so any other game starts as Normal.
           onClick={() =>
             createGame(option.type, rounds, difficulty === "HARD" && !option.hasClues ? "NORMAL" : difficulty)
@@ -54,13 +54,11 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
           )}
         </Button>
       </div>
-      <div aria-live="polite" className="mt-2">
+      <div aria-live="polite" className="home-start__status">
         {isLoading && slow && (
-          <p className="gg-text-muted mb-0">Waking up the server. The first game can take up to a minute.</p>
+          <p className="gg-text-muted">Waking up the server. The first game can take up to a minute.</p>
         )}
-        {!!error && !isLoading && (
-          <Notice className="mb-0">Couldn&apos;t start a game. The server may be down. Try again.</Notice>
-        )}
+        {!!error && !isLoading && <Notice>Couldn&apos;t start a game. The server may be down. Try again.</Notice>}
       </div>
     </aside>
   );

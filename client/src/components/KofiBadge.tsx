@@ -1,5 +1,5 @@
-import { CupHotFill } from "react-bootstrap-icons";
 import { buttonClass } from "../ui";
+import { SupportIcon } from "../ui/icons";
 
 /**
  * A small "Buy me a coffee" link, styled as a quiet outline button so it doesn't compete with
@@ -15,7 +15,7 @@ export default function KofiBadge(): React.JSX.Element {
       rel="noopener noreferrer"
       className={buttonClass({ variant: "quiet", size: "sm", pill: true })}
     >
-      <CupHotFill aria-hidden="true" className="kofi-icon" /> Buy me a coffee
+      <SupportIcon aria-hidden="true" className="kofi-icon" /> Buy me a coffee
     </a>
   );
 }

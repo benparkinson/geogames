@@ -1,9 +1,9 @@
-import type { Icon } from "react-bootstrap-icons";
+import type { IconComponent } from "../../ui/icons";
 
 interface RoundBriefProps {
   /** What kind of round this is: the game's name. */
   title: string;
-  Icon: Icon;
+  Icon: IconComponent;
   /** What the player has to name, and how many. */
   question: string;
 }

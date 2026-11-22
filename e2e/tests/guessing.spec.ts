@@ -56,7 +56,7 @@ test("a wrong country in a country game says how far and which way the answer is
 
   await guess(page, await wrongCountry(api, id));
 
-  await expect(page.locator(".guess-chip").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
+  await expect(page.getByTestId("wrong-guess").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
 });
 
 test("Hard difficulty, chosen on the home page, hides the distance clues", async ({ page, api }) => {
@@ -71,20 +71,20 @@ test("Hard difficulty, chosen on the home page, hides the distance clues", async
   await guess(page, wrong);
 
   await expect(page.getByText(wrong!, { exact: true })).toBeVisible();
-  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
+  await expect(page.getByTestId("wrong-guess").filter({ hasText: wrong })).not.toContainText("km");
 
   // The game is fixed as Hard: no control in the round, and the server's setting survives a reload.
   await expect(page.getByRole("group", { name: "Difficulty" })).toHaveCount(0);
   await saved;
   await reloadGamePage(page, id);
   await expect(page.getByText(wrong, { exact: true })).toBeVisible();
-  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
+  await expect(page.getByTestId("wrong-guess").filter({ hasText: wrong })).not.toContainText("km");
 
   // Clearing the browser's preference changes nothing: the server decides.
   await page.evaluate(() => localStorage.removeItem("gg-difficulty"));
   await reloadGamePage(page, id);
   await expect(page.getByText(wrong, { exact: true })).toBeVisible();
-  await expect(page.locator(".guess-chip").filter({ hasText: wrong })).not.toContainText("km");
+  await expect(page.getByTestId("wrong-guess").filter({ hasText: wrong })).not.toContainText("km");
 });
 
 test("Easy difficulty shows the continent and gives more guesses", async ({ page, api }) => {
@@ -96,13 +96,13 @@ test("Easy difficulty shows the continent and gives more guesses", async ({ page
   await expect(answerBox(page)).toBeVisible();
 
   // The continent is there from the start, with no hint taken, and the lives are increased.
-  await expect(page.locator(".round-hints li").filter({ hasText: /Continents?: / })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: /Continents?: / })).toBeVisible();
   await expect(page.getByRole("status", { name: "8 lives left" })).toBeVisible();
 
   // A wrong guess costs one life, and still gets its distance clue (Easy is not Hard).
   await guess(page, await wrongCountry(api, id));
   await expect(page.getByRole("status", { name: "7 lives left" })).toBeVisible();
-  await expect(page.locator(".guess-chip").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
+  await expect(page.getByTestId("wrong-guess").filter({ hasText: /[\d,]+ km/ })).toBeVisible();
 });
 
 test("a refresh keeps the wrong guesses, and a repeat of one is still a duplicate", async ({ page, api }) => {

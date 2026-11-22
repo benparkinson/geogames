@@ -1,17 +1,17 @@
-import { BoundingBox } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import LandBordersMapWrapper from "./LandBordersMapWrapper";
 import { hintsFrom, mapHint } from "../common/hints";
 import { firstLetterHint } from "./countryHints";
+import { LandBordersIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_LAND_BORDERS",
   title: "Land Borders",
   singular: "Country by land borders",
   description: "Name a country from its land borders alone.",
-  Icon: BoundingBox,
+  Icon: LandBordersIcon,
   hasClues: true,
   Component: makeCountryGame<CountryShapeRound>({
     MapComponent: LandBordersMapWrapper,

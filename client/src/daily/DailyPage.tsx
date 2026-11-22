@@ -1,104 +1,14 @@
 import { useEffect, useState } from "react";
-import { useWakeServer } from "../api/health";
 import { hasStatus } from "../api/http";
-import { localDateString, useCreateDailyGame } from "../api/daily";
 import { useRound } from "../api/games";
 import { FINISHED } from "../games/common/Model";
 import GameRoundPage from "../games/common/GameRoundPage";
-import PageShell from "../components/PageShell";
 import LoadingSpinner from "../components/LoadingSpinner";
-import DifficultyToggle from "../components/DifficultyToggle";
-import { useDifficulty } from "../settings/difficulty";
-import { Button, Notice, Spinner } from "../ui";
-import { useDelayedFlag } from "../ui/useDelayedFlag";
-import DailyComparison from "./DailyComparison";
-import ShareButton from "./ShareButton";
-import { clearDaily, DailyEntry, entryFor, readDaily, useDailyEntry, writeDaily } from "./dailyStorage";
+import DailyIntro from "./DailyIntro";
+import DailyFinished from "./DailyFinished";
+import { clearDaily, DailyEntry, entryFor, useDailyEntry, writeDaily } from "./dailyStorage";
 import { resultFromGame } from "./result";
-import { shareText } from "./shareText";
 import { useToday } from "./useToday";
-
-function Intro(): React.JSX.Element {
-  const { mutate, isPending, error } = useCreateDailyGame();
-  const [difficulty] = useDifficulty();
-  const slow = useDelayedFlag(isPending, 3000);
-  // Start waking a cold server while the player reads.
-  useWakeServer();
-
-  // On click and not on load: link previews and crawlers fetch this page, and must not make games.
-  function play(): void {
-    // Read the date now, so a page left open past midnight starts the new day's game.
-    const date = localDateString();
-    // Another tab may have started the game since this page loaded.
-    if (entryFor(readDaily(), date)) return;
-    mutate(
-      { date, difficulty },
-      {
-        onSuccess: (game) => {
-          writeDaily({ v: 1, date, number: game.number, gameId: game.id, difficulty });
-        },
-      },
-    );
-  }
-
-  return (
-    <PageShell>
-      <h1 className="h3 mb-1">Daily challenge</h1>
-      <p className="mb-3">
-        Five geography puzzles from a variety of game modes. Wrong answers don&apos;t lower your score, but hints do.
-      </p>
-      <div className="mb-3">
-        <DifficultyToggle />
-      </div>
-      <Button variant="primary" onClick={play} disabled={isPending}>
-        {isPending ? (
-          <>
-            <Spinner size="sm" decorative /> Starting…
-          </>
-        ) : (
-          "Play today's challenge"
-        )}
-      </Button>
-      <div aria-live="polite" className="mt-2">
-        {isPending && slow && <p className="gg-text-muted mb-0">Waking up the server…</p>}
-        {!!error && !isPending && (
-          <Notice className="mb-0">Couldn&apos;t start. The server may be down. Try again.</Notice>
-        )}
-      </div>
-    </PageShell>
-  );
-}
-
-function Finished({
-  entry,
-  onOpenGame,
-}: {
-  entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
-  onOpenGame: () => void;
-}): React.JSX.Element {
-  const text = shareText(
-    { date: entry.date, difficulty: entry.difficulty, result: entry.result },
-    window.location.origin,
-  );
-  return (
-    <PageShell>
-      <h1 className="h3 mb-1">Daily {entry.date}</h1>
-      <p className="mb-3">
-        You scored {entry.result.score} / {entry.result.maxScore}
-      </p>
-      <DailyComparison date={entry.date} difficulty={entry.difficulty} score={entry.result.score} />
-      <pre className="mb-3" aria-label="Your result">
-        {text}
-      </pre>
-      <div className="d-flex flex-wrap gap-2">
-        <ShareButton text={text} />
-        <Button variant="secondary" onClick={onOpenGame}>
-          See the rounds
-        </Button>
-      </div>
-    </PageShell>
-  );
-}
 
 /**
  * Shows the player's game and keeps their entry up to date: the result and the game's difficulty once it is
@@ -136,10 +46,10 @@ export default function DailyPage(): React.JSX.Element {
     return <LoadingSpinner fullPage className="gg-text-correct" />;
   }
   if (entry === null) {
-    return <Intro />;
+    return <DailyIntro />;
   }
   if (entry.result && !openGame) {
-    return <Finished entry={{ ...entry, result: entry.result }} onOpenGame={() => setOpenGame(true)} />;
+    return <DailyFinished entry={{ ...entry, result: entry.result }} onOpenGame={() => setOpenGame(true)} />;
   }
   return <Game entry={entry} onFinished={() => setOpenGame(true)} />;
 }

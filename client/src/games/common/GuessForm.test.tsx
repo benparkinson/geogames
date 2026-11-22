@@ -53,9 +53,9 @@ describe("GuessForm feedback", () => {
   });
 
   it("clears the text when the guesses have run out, and leaves the saying to RoundResult", async () => {
-    const { container } = await submitting({ kind: "outOfGuesses", guess: "Spain" });
+    await submitting({ kind: "outOfGuesses", guess: "Spain" });
 
-    expect(container.querySelector(".guess-feedback")).toBeEmptyDOMElement();
+    expect(screen.getByTestId("guess-feedback")).toBeEmptyDOMElement();
     expect(input()).toHaveValue("");
   });
 
@@ -73,16 +73,16 @@ describe("GuessForm feedback", () => {
   });
 
   it("shows no feedback for a guess made after the round is over", async () => {
-    const { container } = await submitting({ kind: "over" });
+    await submitting({ kind: "over" });
 
-    expect(container.querySelector(".guess-feedback")).toBeEmptyDOMElement();
+    expect(screen.getByTestId("guess-feedback")).toBeEmptyDOMElement();
   });
 
   it("puts the feedback line right after the form, as its sibling", () => {
     const { container } = renderForm();
 
     const form = container.querySelector("form") as HTMLElement;
-    expect(form.nextElementSibling).toHaveClass("guess-feedback");
+    expect(form.nextElementSibling).toBe(screen.getByTestId("guess-feedback"));
   });
 });
 
@@ -121,12 +121,11 @@ describe("GuessForm submitting", () => {
     const box = input();
 
     await user.type(box, "Spain{Enter}");
-    expect(box).toHaveClass("shake");
+    expect(box).toHaveAttribute("data-shake", "1");
     await user.type(box, "Italy{Enter}");
 
     expect(input()).toBe(box);
-    expect(box).toHaveClass("shake-again");
-    expect(box).not.toHaveClass("shake");
+    expect(box).toHaveAttribute("data-shake", "2");
     expect(box).toHaveFocus();
   });
 

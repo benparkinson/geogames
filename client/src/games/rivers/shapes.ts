@@ -1,15 +1,15 @@
-import { Water } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import { makeRiverGame } from "./RiverGame";
 import RiverShapesMapWrapper from "./RiverShapesMapWrapper";
 import { continentHint, mainCountryHint, firstLetterHint, textHints } from "./riverHints";
+import { RiverIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "RIVERS_BY_SHAPE",
   title: "River Shapes",
   singular: "River shape",
   description: "Name a river from its shape alone.",
-  Icon: Water,
+  Icon: RiverIcon,
   extraDifficult: true,
   Component: makeRiverGame({
     MapComponent: RiverShapesMapWrapper,

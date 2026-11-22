@@ -69,7 +69,7 @@ describe("DailyComparison", () => {
     const { container } = renderComparison(300);
 
     await screen.findByText(/Today's average/);
-    const bars = container.querySelectorAll(".gg-daily-chart__bar");
+    const bars = container.querySelectorAll("[data-mine]");
     expect(bars).toHaveLength(11);
     const mine = [...bars].flatMap((b, i) => (b.getAttribute("data-mine") === "true" ? [i] : []));
     expect(mine).toEqual([6]);

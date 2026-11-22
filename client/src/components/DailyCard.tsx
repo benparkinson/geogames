@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CalendarCheck } from "react-bootstrap-icons";
 import { entryFor, useDailyEntry } from "../daily/dailyStorage";
 import { useToday } from "../daily/useToday";
+import { DailyIcon } from "../ui/icons";
 
 /** The home page's link to the daily challenge, with where the player is in today's one. */
 export default function DailyCard(): React.JSX.Element {
@@ -14,9 +14,9 @@ export default function DailyCard(): React.JSX.Element {
 
   return (
     // A link, outside the radio group of games, so the arrow keys through the games don't reach it.
-    <Link href="/daily" className="daily-hero d-block w-100 text-start text-decoration-none p-4 mb-4">
-      <div className="h4 fw-bold mb-1">
-        <CalendarCheck aria-hidden="true" /> Daily challenge
+    <Link href="/daily" className="daily-hero">
+      <div className="daily-hero__title">
+        <DailyIcon aria-hidden="true" /> Daily challenge
       </div>
       <div className="daily-hero__status">{dailyStatus}</div>
     </Link>
