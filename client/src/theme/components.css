@@ -305,10 +305,6 @@
 .gg-chip--neutral {
   --gg-chip-border: var(--gg-color-rule-light);
 }
-.answer-slot-empty {
-  border: 2px dashed var(--gg-color-border);
-  border-radius: var(--gg-radius-pill);
-}
 
 /* ---- Card ---- */
 .gg-card {
@@ -922,37 +918,52 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 /* ---- Game screens: top bar, panel, results ---- */
 .top-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gg-space-2);
+  gap: var(--gg-space-1) var(--gg-space-2);
   padding: var(--gg-space-2) var(--gg-space-3);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
 .top-bar__start,
-.top-bar__rounds,
 .top-bar__end {
   display: flex;
   align-items: center;
   gap: var(--gg-space-2);
 }
-.top-bar__rounds {
+.top-bar__title {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+.top-bar__game {
   overflow: hidden;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: var(--gg-font-size-h5);
+  font-weight: var(--gg-font-weight-display);
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.top-bar__meta,
+.top-bar__end {
+  font-family: var(--gg-font-mono);
   font-size: var(--gg-font-size-sm);
+}
+.top-bar__meta {
+  color: var(--gg-color-text-muted);
 }
 .top-bar__end {
-  font-size: var(--gg-font-size-sm);
   white-space: nowrap;
 }
-.top-bar__daily {
-  font-weight: var(--gg-font-weight-semibold);
-  white-space: nowrap;
+.top-bar__rounds {
+  flex: 0 0 100%;
 }
-.top-bar__round-count,
 .top-bar__score-full {
   display: none;
-  white-space: nowrap;
 }
 @media (min-width: 576px) {
-  .top-bar__round-count,
   .top-bar__score-full {
     display: inline;
   }
@@ -961,25 +972,74 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   }
 }
 
-.gg-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gg-space-2);
+/* The guess list: a numbered, ruled list. */
+.guess-list {
   margin-bottom: var(--gg-space-2);
 }
-.gg-slots__empty {
-  padding-right: var(--gg-space-3);
-  padding-left: var(--gg-space-3);
-  font-size: var(--gg-font-size-h6);
-}
-.wrong-guesses {
+.guess-list__head {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--gg-space-1);
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: var(--gg-space-1);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
-.guess-chip__clue {
-  margin-left: var(--gg-space-2);
+.guess-list__title {
+  margin: 0;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: var(--gg-font-size-h6);
+  font-weight: var(--gg-font-weight-display);
+}
+.guess-list__count,
+.guess-list__number,
+.guess-list__clue {
+  font-family: var(--gg-font-mono);
+  font-size: var(--gg-font-size-sm);
+}
+.guess-list__rows {
+  max-height: 30dvh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.guess-list__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-1) 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+.guess-list__number {
+  flex: 0 0 1.5em;
+  color: var(--gg-color-text-muted);
+}
+.guess-list__name {
+  flex: 1 1 auto;
+  min-width: 0;
   font-weight: var(--gg-font-weight-semibold);
+}
+.guess-list__name--empty {
+  color: var(--gg-color-text-muted);
+  font-weight: normal;
+}
+.guess-list__note {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.guess-list__row[data-kind="found"] .guess-list__note {
+  color: var(--gg-color-correct);
+  font-weight: var(--gg-font-weight-semibold);
+}
+.guess-list__row[data-kind="wrong"] .guess-list__name {
+  color: var(--gg-color-text-muted);
+}
+.guess-list__row[data-outcome="missed"] .guess-list__name,
+.guess-list__row[data-outcome="missed"] .guess-list__note {
+  color: var(--gg-color-missed-text);
+}
+.guess-list__clue {
+  margin-right: var(--gg-space-1);
 }
 
 .round-status {
@@ -1023,6 +1083,13 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .round-result__banner {
   margin-bottom: var(--gg-space-2);
   font-weight: var(--gg-font-weight-semibold);
+}
+.round-result__banner[data-outcome="firstGuess"],
+.round-result__banner[data-outcome="correct"] {
+  color: var(--gg-color-correct);
+}
+.round-result__banner[data-outcome="missed"] {
+  color: var(--gg-color-missed-text);
 }
 .round-result__note {
   font-size: var(--gg-font-size-sm);

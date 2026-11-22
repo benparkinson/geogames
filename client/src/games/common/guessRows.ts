@@ -1,0 +1,32 @@
+import { foundAnswers, Guess, GuessClue, GuessState } from "./guessReducer";
+
+/** One row of the round's guess list. */
+export type GuessRow =
+  | { kind: "found"; text: string }
+  | { kind: "wrong"; text: string; clue?: GuessClue }
+  | { kind: "missed"; text: string }
+  | { kind: "empty" };
+
+/**
+ * The rows of the guess list: every guess in the order it was made (an answer found, or a wrong guess), then, once
+ * the answers are revealed, the answers that weren't found, then a placeholder for each answer still to be found.
+ * A round with one answer has no placeholder, as the question already says what is missing.
+ */
+export function guessListRows(state: GuessState, answerCount: number, allAnswers: string[]): GuessRow[] {
+  const rows: GuessRow[] = state.guesses.map((guess: Guess) =>
+    guess.answer === null
+      ? guess.clue
+        ? { kind: "wrong", text: guess.text, clue: guess.clue }
+        : { kind: "wrong", text: guess.text }
+      : { kind: "found", text: guess.answer },
+  );
+  const found = foundAnswers(state);
+  const missed = state.gaveUp ? allAnswers.filter((answer) => !found.includes(answer)) : [];
+  missed.forEach((text) => rows.push({ kind: "missed", text }));
+  if (answerCount > 1) {
+    for (let i = found.length + missed.length; i < answerCount; i++) {
+      rows.push({ kind: "empty" });
+    }
+  }
+  return rows;
+}

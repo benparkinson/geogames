@@ -36,11 +36,11 @@ describe("LakeGame", () => {
     const user = userEvent.setup();
     await renderLake();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("Continent: Asia")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Lies entirely in Russia")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “B”, not counting words like “Lake” or “River”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
@@ -50,9 +50,9 @@ describe("LakeGame", () => {
     await renderLake(makeLakeRoundData(), makeRoundProps({ hintCount: 2, difficulty: "EASY", continents: ["Asia"] }));
     expect(screen.getByText("Continent: Asia")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Lies entirely in Russia")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “B”, not counting words like “Lake” or “River”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
     expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
@@ -62,8 +62,8 @@ describe("LakeGame", () => {
     const user = userEvent.setup();
     await renderLake({ lake: { ...makeLakeData(), countries: ["Tanzania", "Kenya", "Uganda"] } });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
 
     expect(screen.getByText("Its longest shoreline is in Tanzania")).toBeInTheDocument();
   });

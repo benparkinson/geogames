@@ -1,6 +1,6 @@
-import AnswerSlots from "./AnswerSlots";
 import GuessForm from "./GuessForm";
-import { foundAnswers, GuessResult, GuessState, guessesLeft, wrongGuesses } from "./guessReducer";
+import GuessList from "./GuessList";
+import { GuessResult, GuessState, guessesLeft } from "./guessReducer";
 import type { HintConfig } from "./hints";
 import type { Round } from "./Model";
 import RoundActions from "./RoundActions";
@@ -9,7 +9,6 @@ import RoundResult from "./RoundResult";
 import RoundStatus from "./RoundStatus";
 import type { RoundView } from "./roundView";
 import type { Suggestion } from "./suggestions";
-import WrongGuessList from "./WrongGuessList";
 import { ContinentIcon, HintIcon } from "../../ui/icons";
 
 export interface RoundPanelProps {
@@ -28,7 +27,7 @@ export interface RoundPanelProps {
   takeHint: () => void;
 }
 
-/** The panel beside the map: the brief, hints, answer slots, and either the guess form or the result. */
+/** The panel beside the map: the brief, hints, the guess list, and either the guess form or the result. */
 export default function RoundPanel({
   round,
   state,
@@ -43,13 +42,20 @@ export default function RoundPanel({
   giveUp,
   takeHint,
 }: RoundPanelProps): React.JSX.Element {
-  const wrong = wrongGuesses(state);
+  const guessList = (
+    <GuessList
+      state={state}
+      answerCount={view.answerCount}
+      allAnswers={allAnswers}
+      showClues={round.difficulty !== "HARD"}
+    />
+  );
   const gameOver = state.over;
   return (
     <>
       <RoundBrief title={round.kind.title} Icon={round.kind.Icon} question={prompt} />
       {(view.continentText !== null || view.hintTexts.length > 0) && (
-        <ul className="round-hints">
+        <ul className="round-hints" aria-label="Hints">
           {view.continentText !== null && (
             <li>
               <ContinentIcon aria-hidden="true" /> {view.continentText}
@@ -62,16 +68,10 @@ export default function RoundPanel({
           ))}
         </ul>
       )}
-      <AnswerSlots
-        answerCount={view.answerCount}
-        found={foundAnswers(state)}
-        gaveUp={state.gaveUp}
-        allAnswers={allAnswers}
-      />
       <div>
         {gameOver ? (
           <>
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
+            {guessList}
             <RoundResult view={view} round={round} />
           </>
         ) : (
@@ -81,7 +81,7 @@ export default function RoundPanel({
               guessLimit={round.guessLimit}
               points={view.points}
             />
-            {wrong.length > 0 && <WrongGuessList guesses={wrong} showClues={round.difficulty !== "HARD"} />}
+            {guessList}
             <GuessForm
               submitGuess={submitGuess}
               inputPlaceholder={inputPlaceholder}

@@ -42,14 +42,14 @@ describe("Coastlines", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("Its land borders are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Longest border: Germany")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });

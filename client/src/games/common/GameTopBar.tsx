@@ -3,6 +3,7 @@ import HomeLink from "../../components/HomeLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import { Round } from "./Model";
 import RoundProgress from "./RoundProgress";
+import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import type { LiveProgress } from "./roundView";
 
 export default function GameTopBar({ round, progress }: { round: Round; progress: LiveProgress }): React.JSX.Element {
@@ -22,17 +23,32 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
     `Score ${score}`
   );
 
+  const title = round.dailyDate !== undefined ? "Daily" : round.kind.title;
+  const roundNumber = String(round.currentRound + 1).padStart(2, "0");
+  const meta = [
+    `round ${roundNumber} of ${String(round.totalRoundCount).padStart(2, "0")}`,
+    ...DIFFICULTY_LABEL[round.difficulty],
+  ];
+
   return (
     <div className={"top-bar" + (crowded ? " top-bar--wrap" : "")}>
       <div className="top-bar__start">
         <HomeLink hideTextOnMobile />
         <ThemeToggle />
       </div>
-      <div className="top-bar__rounds gg-text-muted">
-        {round.dailyDate !== undefined && <span className="top-bar__daily">Daily</span>}
-        <span className="top-bar__round-count">
-          Round {round.currentRound + 1} of {round.totalRoundCount}
-        </span>
+      <div className="top-bar__title">
+        <span className="top-bar__game">{title}</span>
+        <span className="top-bar__meta">{meta.join(" · ")}</span>
+      </div>
+      <div className="top-bar__end">
+        {scoreText}
+        {round.gameCompleted && (
+          <Button size="sm" variant="secondary" disabled={round.answerSave !== "saved"} onClick={round.showSummary}>
+            Results
+          </Button>
+        )}
+      </div>
+      <div className="top-bar__rounds">
         <RoundProgress
           states={states}
           points={points}
@@ -40,14 +56,6 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
           currentRound={round.currentRound}
           goToRound={round.goToRound}
         />
-      </div>
-      <div className="top-bar__end gg-text-muted">
-        {scoreText}
-        {round.gameCompleted && (
-          <Button size="sm" variant="secondary" disabled={round.answerSave !== "saved"} onClick={round.showSummary}>
-            Results
-          </Button>
-        )}
       </div>
     </div>
   );

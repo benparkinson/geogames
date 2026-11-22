@@ -30,8 +30,8 @@ test("the daily: play, share, come back, and a second player gets the same round
   for (let round = 0; round < 5; round++) {
     await expect(answerBox(page)).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await page.getByRole("button", { name: "Reveal answer" }).click();
-    await page.getByRole("button", { name: "Tap again to reveal" }).click();
+    await page.getByRole("button", { name: "Give up this round" }).click();
+    await page.getByRole("button", { name: "Tap again to give up" }).click();
     await page.getByRole("button", { name: round < 4 ? "Next round" : "See results" }).click();
   }
   expect(dailyPosts).toHaveLength(1);

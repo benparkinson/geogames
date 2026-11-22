@@ -28,13 +28,13 @@ describe("RoundActions reveal", () => {
     const user = userEvent.setup();
     const { props } = renderActions();
 
-    await user.click(screen.getByRole("button", { name: /Reveal answer/ }));
+    await user.click(screen.getByRole("button", { name: /Give up this round/ }));
     expect(props.onGiveUp).not.toHaveBeenCalled();
-    expect(screen.getByRole("button", { name: /Tap again to reveal/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Tap again to give up/ })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Tap again to reveal/ }));
+    await user.click(screen.getByRole("button", { name: /Tap again to give up/ }));
     expect(props.onGiveUp).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /Reveal answer/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Give up this round/ })).toBeInTheDocument();
   });
 
   it("goes back to the first state after three seconds", () => {
@@ -42,12 +42,12 @@ describe("RoundActions reveal", () => {
     vi.useFakeTimers();
     const { props } = renderActions();
 
-    fireEvent.click(screen.getByRole("button", { name: /Reveal answer/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Give up this round/ }));
     act(() => {
       vi.advanceTimersByTime(3000);
     });
 
-    expect(screen.getByRole("button", { name: /Reveal answer/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Give up this round/ })).toBeInTheDocument();
     expect(props.onGiveUp).not.toHaveBeenCalled();
   });
 
@@ -56,7 +56,7 @@ describe("RoundActions reveal", () => {
     const errors = vi.spyOn(console, "error").mockImplementation(() => {});
     const { unmount } = renderActions();
 
-    fireEvent.click(screen.getByRole("button", { name: /Reveal answer/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Give up this round/ }));
     unmount();
 
     expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
@@ -70,7 +70,7 @@ describe("RoundActions hints", () => {
   it("shows how many hints are left and uses one on click", async () => {
     const { props } = renderActions({ hintsUsed: 0, hintCount: 2 });
 
-    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
 
     expect(props.onHint).toHaveBeenCalledTimes(1);
   });

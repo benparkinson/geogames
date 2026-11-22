@@ -1,11 +1,9 @@
+import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import { Difficulty, GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
 import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
 import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
 import type { RoundResultKind } from "./roundView";
-
-/** What the end of the breakdown line says about the difficulty: nothing for Normal. */
-const DIFFICULTY_LABEL: Record<Difficulty, string[]> = { EASY: ["Easy"], NORMAL: [], HARD: ["Hard mode"] };
 
 /** The game type to start for "Play again": the one every round used, or a mix if they differed. */
 export function playAgainType(rounds: GameRoundView[]): string {

@@ -1,7 +1,11 @@
 import { answerBox, expect, startGame, test } from "../fixtures";
 
-test("the guess box suggests names, and tapping one fills the box and keeps the focus", async ({ page }, testInfo) => {
-  const countriesLoaded = page.waitForResponse(response => response.url().endsWith("/api/countries"));
+test("the guess box suggests names, and tapping one fills the box and keeps the focus", async ({
+  page,
+}, testInfo) => {
+  const countriesLoaded = page.waitForResponse((response) =>
+    response.url().endsWith("/api/countries"),
+  );
   await startGame(page, "Tripoints", 3);
   await countriesLoaded;
   const box = answerBox(page);

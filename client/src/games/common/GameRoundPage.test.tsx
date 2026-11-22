@@ -210,7 +210,7 @@ describe("GameRoundPage answer saving", () => {
     await waitFor(() => expect(next).toBeEnabled());
     await user.click(next);
 
-    expect(await screen.findByText("Round 2 of 2")).toBeInTheDocument();
+    expect(await screen.findByText("round 02 of 02")).toBeInTheDocument();
     expect(attempts).toBe(2);
   });
 });
@@ -242,7 +242,7 @@ describe("GameRoundPage playing", () => {
     renderPage();
     await screen.findByText(TRIPOINT_PROMPT);
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
 
     await waitFor(() => {
       const posts = callsTo(fetchMock).filter((c) => c.method === "POST");
@@ -271,14 +271,14 @@ describe("GameRoundPage playing", () => {
     const user = userEvent.setup();
     renderPage();
     await screen.findByText(TRIPOINT_PROMPT);
-    expect(screen.getByText("Tripoints")).toBeInTheDocument();
+    expect(screen.getAllByText("Tripoints").length).toBeGreaterThan(0);
 
     await solveTripoint(user);
     await user.click(await screen.findByRole("button", { name: /Next round/ }));
 
     await screen.findByText(RIVER_PROMPT);
-    expect(screen.getByText("River Shapes")).toBeInTheDocument();
-    expect(screen.queryByText("Tripoints")).not.toBeInTheDocument();
+    expect(screen.getAllByText("River Shapes").length).toBeGreaterThan(0);
+    expect(screen.queryAllByText("Tripoints")).toHaveLength(0);
   });
 
   it("prefetches the next round after the answer, so Next round needs no further fetch", async () => {
