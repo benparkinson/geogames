@@ -726,3 +726,163 @@
 .gg-daily-comparison__top {
   margin-bottom: var(--gg-space-2);
 }
+
+/* ---- Game screens: top bar, panel, results ---- */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-2) var(--gg-space-3);
+}
+.top-bar__start,
+.top-bar__rounds,
+.top-bar__end {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+.top-bar__rounds {
+  overflow: hidden;
+  font-size: var(--gg-font-size-sm);
+}
+.top-bar__end {
+  font-size: var(--gg-font-size-sm);
+  white-space: nowrap;
+}
+.top-bar__daily {
+  font-weight: var(--gg-font-weight-semibold);
+  white-space: nowrap;
+}
+.top-bar__round-count,
+.top-bar__score-full {
+  display: none;
+  white-space: nowrap;
+}
+@media (min-width: 576px) {
+  .top-bar__round-count,
+  .top-bar__score-full {
+    display: inline;
+  }
+  .top-bar__score-short {
+    display: none;
+  }
+}
+
+.gg-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-2);
+  margin-bottom: var(--gg-space-2);
+}
+.gg-slots__empty {
+  padding-right: var(--gg-space-3);
+  padding-left: var(--gg-space-3);
+  font-size: var(--gg-font-size-h6);
+}
+.wrong-guesses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-1);
+}
+.guess-chip__clue {
+  margin-left: var(--gg-space-2);
+  font-weight: var(--gg-font-weight-semibold);
+}
+
+.round-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gg-space-2);
+}
+.round-status__points {
+  margin-left: auto;
+  font-size: var(--gg-font-size-sm);
+}
+.guesses-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+.guesses-left__text {
+  font-size: var(--gg-font-size-sm);
+}
+.gg-guess-form {
+  display: flex;
+  gap: var(--gg-space-2);
+  margin-bottom: var(--gg-space-2);
+}
+.gg-guess-form__box {
+  flex-grow: 1;
+}
+.guess-feedback {
+  font-size: var(--gg-font-size-sm);
+}
+.round-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-2);
+}
+.round-result {
+  margin-bottom: var(--gg-space-3);
+}
+.round-result__banner {
+  margin-bottom: var(--gg-space-2);
+  font-weight: var(--gg-font-weight-semibold);
+}
+.round-result__note {
+  font-size: var(--gg-font-size-sm);
+  font-weight: normal;
+}
+.round-result__notice {
+  margin-bottom: var(--gg-space-2);
+}
+.round-result__continue {
+  position: relative;
+}
+.gg-game-error {
+  padding: var(--gg-space-4);
+}
+
+.gg-summary__title {
+  margin-bottom: var(--gg-space-1);
+}
+.gg-summary__heading {
+  margin-bottom: var(--gg-space-1);
+  font-size: var(--gg-font-size-h3);
+}
+.gg-summary__line {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-summary__error {
+  margin-bottom: var(--gg-space-2);
+  font-size: var(--gg-font-size-sm);
+}
+.gg-summary__share {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-summary__buttons {
+  display: flex;
+  gap: var(--gg-space-2);
+}
+.gg-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+  text-align: start;
+}
+.gg-summary__note {
+  font-size: var(--gg-font-size-sm);
+}
+.gg-summary__points {
+  white-space: nowrap;
+}
+/* After .gg-list, which zeroes the margin. On a desktop the list sits in its own column instead. */
+@media (max-width: 899.98px) {
+  .gg-summary__list {
+    margin-bottom: var(--gg-space-3);
+  }
+}

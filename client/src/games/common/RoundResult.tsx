@@ -10,9 +10,9 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
   const found = `${answersFound} of ${answerCount} found`;
 
   return (
-    <div className="round-result mb-3">
+    <div className="round-result">
       <div
-        className="mb-2 fw-semibold"
+        className="round-result__banner"
         data-outcome={outcome ?? undefined}
         data-result={result === "revealed" || result === "outOfGuesses" ? result : undefined}
         aria-live="polite"
@@ -42,14 +42,14 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
           </>
         )}
         {partial && hintsUsed > 0 && (
-          <div className="small fw-normal gg-text-muted">
+          <div className="round-result__note gg-text-muted">
             {hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}
           </div>
         )}
       </div>
       {round.answerSave === "failed" ? (
         <>
-          <Notice className="mb-2">Couldn&apos;t save your answer.</Notice>
+          <Notice className="round-result__notice">Couldn&apos;t save your answer.</Notice>
           <Button variant="primary" size="lg" block autoFocus onClick={round.retryAnswer}>
             Try again
           </Button>
@@ -94,7 +94,7 @@ function ContinueButton({
       variant="primary"
       size="lg"
       block
-      className="position-relative"
+      className="round-result__continue"
       disabled={saving}
       aria-busy={saving}
       onClick={onClick}

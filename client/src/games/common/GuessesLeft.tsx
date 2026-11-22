@@ -14,14 +14,14 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
       role="status"
       aria-label={label}
       title="Each wrong guess costs a life. You lose the round when you run out."
-      className="guesses-left d-flex flex-wrap align-items-center gap-2"
+      className="guesses-left"
     >
       {limit <= MAX_HEARTS && (
         <span className={"guesses-left-dots" + (last ? " gg-text-hint" : "")} aria-hidden="true">
           {Array.from({ length: limit }, (_, i) => (i < left ? <LifeIcon key={i} /> : <LifeLostIcon key={i} />))}
         </span>
       )}
-      <span className={"small " + (last ? "gg-text-warning" : "gg-text-muted")}>{text}</span>
+      <span className={"guesses-left__text " + (last ? "gg-text-warning" : "gg-text-muted")}>{text}</span>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function AnswerSlots({
   }
 
   return (
-    <div className="d-flex gap-2 flex-wrap mb-2" role="group" aria-label={label}>
+    <div className="gg-slots" role="group" aria-label={label}>
       {Array.from({ length: answerCount }, (_v, i) => {
         if (i < found.length) {
           return (
@@ -36,12 +36,12 @@ export default function AnswerSlots({
           return (
             <Chip key={i} tone="revealed" className="slot--filled" title="Revealed">
               {revealedAnswer} <RevealIcon aria-hidden="true" />
-              <span className="visually-hidden"> (revealed)</span>
+              <span className="gg-visually-hidden"> (revealed)</span>
             </Chip>
           );
         }
         return (
-          <span key={i} className="answer-slot-empty px-3 gg-text-muted fs-6" aria-label="Not found yet">
+          <span key={i} className="answer-slot-empty gg-slots__empty gg-text-muted" aria-label="Not found yet">
             ?
           </span>
         );

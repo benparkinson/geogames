@@ -16,11 +16,7 @@ export default function SummaryRow({
 }): React.JSX.Element {
   const Icon = RESULT_ICONS[row.result];
   return (
-    <button
-      type="button"
-      className="gg-list__item d-flex justify-content-between align-items-center gap-4 text-start"
-      onClick={onOpen}
-    >
+    <button type="button" className="gg-list__item gg-summary__row" onClick={onOpen}>
       <span>
         {mixed ? (
           <>
@@ -38,17 +34,19 @@ export default function SummaryRow({
         {row.outOfGuesses && (
           <>
             <br />
-            <span className="small gg-text-muted">Out of guesses</span>
+            <span className="gg-summary__note gg-text-muted">Out of guesses</span>
           </>
         )}
         {row.hintsUsed > 0 && (
           <>
             <br />
-            <span className="small gg-text-muted">{row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}</span>
+            <span className="gg-summary__note gg-text-muted">
+              {row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}
+            </span>
           </>
         )}
       </span>
-      <span className="text-nowrap" data-outcome={row.outcome ?? "missed"}>
+      <span className="gg-summary__points" data-outcome={row.outcome ?? "missed"}>
         <Icon aria-hidden="true" /> +{row.points}
       </span>
     </button>

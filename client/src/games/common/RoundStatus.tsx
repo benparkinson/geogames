@@ -12,9 +12,9 @@ export default function RoundStatus({
   points: number;
 }): React.JSX.Element {
   return (
-    <div data-testid="round-status" className="round-status d-flex justify-content-between align-items-center mb-2">
+    <div data-testid="round-status" className="round-status">
       <GuessesLeft left={guessesLeft} limit={guessLimit} />
-      <span className="small gg-text-muted ms-auto">{`Worth ${points} pts`}</span>
+      <span className="round-status__points gg-text-muted">{`Worth ${points} pts`}</span>
     </div>
   );
 }

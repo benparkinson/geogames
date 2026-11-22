@@ -162,7 +162,7 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
     <>
       <Head>{renderTitle()}</Head>
       {error ? (
-        <div className="p-4 gg-text-danger" role="alert">
+        <div className="gg-game-error gg-text-danger" role="alert">
           Couldn&apos;t load this round. Please refresh.
         </div>
       ) : isLoading || !data ? (

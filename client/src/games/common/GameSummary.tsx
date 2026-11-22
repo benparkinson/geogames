@@ -46,8 +46,8 @@ export default function GameSummary({
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
         <div className="gg-summary__head">
-          {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
-          <h1 className="h3 mb-1">
+          {gameTitle && <p className="gg-summary__title gg-text-muted">{gameTitle}</p>}
+          <h1 className="gg-summary__heading">
             {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
             {heading === "perfect" ? (
               <>
@@ -62,11 +62,11 @@ export default function GameSummary({
               `You scored ${score} / ${maxScore}`
             )}
           </h1>
-          <p className="gg-text-muted mb-3">{summaryLine}</p>
+          <p className="gg-summary__line gg-text-muted">{summaryLine}</p>
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 
-        <div className="gg-list gg-summary__list mb-3">
+        <div className="gg-list gg-summary__list">
           {summary.rows.map((row, i) => (
             <SummaryRow key={i} row={row} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
           ))}
@@ -74,16 +74,16 @@ export default function GameSummary({
 
         <div className="gg-summary__actions">
           {!!createError && (
-            <div className="gg-text-danger small mb-2" role="alert">
+            <div className="gg-summary__error gg-text-danger" role="alert">
               Couldn&apos;t start a new game. Try again.
             </div>
           )}
           {share !== null && (
-            <div className="mb-3">
+            <div className="gg-summary__share">
               <ShareButton text={share} />
             </div>
           )}
-          <div className="d-flex gap-2">
+          <div className="gg-summary__buttons">
             {daily ? (
               <Button
                 variant="secondary"

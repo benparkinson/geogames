@@ -15,26 +15,22 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
   // still fits the screen instead of widening the page.
   const scoreText = round.gameCompleted ? (
     <>
-      <span className="d-none d-sm-inline">{`Final score ${score} / ${round.maxScore}`}</span>
-      <span className="d-sm-none">{`${score} / ${round.maxScore}`}</span>
+      <span className="top-bar__score-full">{`Final score ${score} / ${round.maxScore}`}</span>
+      <span className="top-bar__score-short">{`${score} / ${round.maxScore}`}</span>
     </>
   ) : (
     `Score ${score}`
   );
 
   return (
-    <div
-      className={
-        "d-flex align-items-center justify-content-between px-3 py-2 gap-2" + (crowded ? " top-bar--wrap" : "")
-      }
-    >
-      <div className="d-flex align-items-center gap-2">
+    <div className={"top-bar" + (crowded ? " top-bar--wrap" : "")}>
+      <div className="top-bar__start">
         <HomeLink hideTextOnMobile />
         <ThemeToggle />
       </div>
-      <div className="top-bar__rounds d-flex align-items-center gap-2 small gg-text-muted overflow-hidden">
-        {round.dailyDate !== undefined && <span className="fw-semibold text-nowrap">Daily</span>}
-        <span className="d-none d-sm-inline text-nowrap">
+      <div className="top-bar__rounds gg-text-muted">
+        {round.dailyDate !== undefined && <span className="top-bar__daily">Daily</span>}
+        <span className="top-bar__round-count">
           Round {round.currentRound + 1} of {round.totalRoundCount}
         </span>
         <RoundProgress
@@ -45,7 +41,7 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
           goToRound={round.goToRound}
         />
       </div>
-      <div className="d-flex align-items-center gap-2 small gg-text-muted text-nowrap">
+      <div className="top-bar__end gg-text-muted">
         {scoreText}
         {round.gameCompleted && (
           <Button size="sm" variant="secondary" disabled={round.answerSave !== "saved"} onClick={round.showSummary}>
