@@ -13,6 +13,9 @@
 
 :root,
 [data-theme="light"] {
+  /* The browser's own colours (default button text, form controls, scrollbars) follow the theme. */
+  color-scheme: light;
+
   /* ---- Palette ---- */
   --gg-white: #fff;
   --gg-black: #000;
@@ -138,6 +141,8 @@
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --gg-blue-300: #6ea8fe;
   --gg-blue-200: #8bb9fe;
   --gg-blue-1000: #031633;
