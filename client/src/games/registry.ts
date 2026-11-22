@@ -1,5 +1,3 @@
-import { Shuffle } from "react-bootstrap-icons";
-import type { Icon } from "react-bootstrap-icons";
 import coastline from "./countries/coastline";
 import cities from "./countries/cities";
 import countryRivers from "./countries/countryRivers";
@@ -12,6 +10,7 @@ import riverCountries from "./rivers/countries";
 import riverShapes from "./rivers/shapes";
 import tripoint from "./tripoint";
 import type { AnyGameModule } from "./types";
+import { RandomIcon, type IconComponent } from "../ui/icons";
 
 /** Every type of game, in home page order. To add a game, build its module and add it here. */
 export const GAME_MODULES: AnyGameModule[] = [
@@ -37,7 +36,7 @@ export interface MenuOption {
   type: string;
   title: string;
   description: string;
-  Icon: Icon;
+  Icon: IconComponent;
   extraDifficult?: boolean;
   /** Wrong guesses get a distance clue, so the Hard mode switch is relevant. */
   hasClues?: boolean;
@@ -48,7 +47,7 @@ export const RANDOM_OPTION: MenuOption = {
   type: "RANDOM",
   title: "Mixed",
   description: "A random mix of every game.",
-  Icon: Shuffle,
+  Icon: RandomIcon,
   hasClues: true,
 };
 

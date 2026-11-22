@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { Fire } from "react-bootstrap-icons";
 import { MENU_OPTIONS, MenuOption } from "../games/registry";
+import { ExtraDifficultIcon } from "../ui/icons";
 
 const STANDARD_OPTIONS = MENU_OPTIONS.filter((option) => !option.extraDifficult);
 const EXTRA_DIFFICULT_OPTIONS = MENU_OPTIONS.filter((option) => option.extraDifficult);
@@ -60,7 +60,7 @@ export default function GameCardGrid({
       <div className="row g-3">{STANDARD_OPTIONS.map(renderCard)}</div>
       <div role="group" aria-labelledby="extra-difficult-label" className="mt-4">
         <h3 id="extra-difficult-label" className="h6 d-flex align-items-center gap-2 mb-1">
-          <Fire className="gg-text-danger" aria-hidden="true" /> Extra difficult
+          <ExtraDifficultIcon className="gg-text-danger" aria-hidden="true" /> Extra difficult
         </h3>
         <p className="small gg-text-muted mb-2">Just a shape on a blank map, with nothing around it.</p>
         <div className="row g-3">{EXTRA_DIFFICULT_OPTIONS.map(renderCard)}</div>

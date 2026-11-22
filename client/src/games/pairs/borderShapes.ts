@@ -1,16 +1,16 @@
-import { Bezier2 } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import BorderShapesMapWrapper from "./BorderShapesMapWrapper";
 import { makePairGame } from "./PairGame";
 import { hintsFrom, mapHint } from "../common/hints";
 import { bothFirstLettersHint } from "./pairHints";
+import { BorderShapeIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "BORDERS_BY_SHAPE",
   title: "Border Shapes",
   singular: "Border",
   description: "Name the two countries a border separates, from its shape alone.",
-  Icon: Bezier2,
+  Icon: BorderShapeIcon,
   hasClues: true,
   extraDifficult: true,
   Component: makePairGame({

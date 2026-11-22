@@ -1,7 +1,5 @@
-import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import type { SummaryRowView } from "./summaryView";
-
-const RESULT_ICON = { firstGuess: StarFill, correct: CheckLg, hints: CheckLg, outOfGuesses: XLg, revealed: EyeFill };
+import { RESULT_ICONS } from "../../ui/icons";
 
 /** One round of the summary: its answers, how it went and its points. A button that opens the round. */
 export default function SummaryRow({
@@ -16,7 +14,7 @@ export default function SummaryRow({
   mixed: boolean;
   onOpen: () => void;
 }): React.JSX.Element {
-  const Icon = RESULT_ICON[row.result];
+  const Icon = RESULT_ICONS[row.result];
   return (
     <button
       type="button"

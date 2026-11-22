@@ -7,13 +7,14 @@ export default defineConfig([
   ...nextTypescript,
   {
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/map/GameMap.tsx"],
+    ignores: ["src/map/GameMap.tsx", "src/ui/icons.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           paths: [
             { name: "react-leaflet", importNames: ["MapContainer"], message: "Use GameMap, which adds the credits." },
+            { name: "react-bootstrap-icons", message: "Import icons from src/ui/icons." },
           ],
         },
       ],

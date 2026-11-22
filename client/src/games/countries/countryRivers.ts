@@ -1,17 +1,17 @@
-import { Water } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import { makeCountryGame } from "./CountryGame";
 import type { CountryRiversRound } from "./model";
 import CountryRiversMapWrapper from "./CountryRiversMapWrapper";
 import { hintsFrom } from "../common/hints";
 import { coastHint, firstLetterHint, longestRiverHint } from "./countryHints";
+import { RiverIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_RIVERS",
   title: "Country Rivers",
   singular: "Country by rivers",
   description: "Name a country from its rivers and lakes.",
-  Icon: Water,
+  Icon: RiverIcon,
   hasClues: true,
   Component: makeCountryGame<CountryRiversRound>({
     MapComponent: CountryRiversMapWrapper,

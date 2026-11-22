@@ -1,17 +1,17 @@
-import { PuzzleFill } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import { makeCountryGame } from "./CountryGame";
 import type { CountryShapeRound } from "./model";
 import NeighboursMapWrapper from "./NeighboursMapWrapper";
 import { hintsFrom, mapHint } from "../common/hints";
 import { firstLetterHint, longestBorderHint, nameLengthHint } from "./countryHints";
+import { NeighboursIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_NEIGHBOURS",
   title: "Country Gaps",
   singular: "Country by neighbours",
   description: "Name the country hidden between its neighbours.",
-  Icon: PuzzleFill,
+  Icon: NeighboursIcon,
   hasClues: true,
   Component: makeCountryGame<CountryShapeRound>({
     MapComponent: NeighboursMapWrapper,

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button, buttonClass, Spinner } from "../../ui";
-import { CheckLg, StarFill } from "react-bootstrap-icons";
 import KofiBadge from "../../components/KofiBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
@@ -13,6 +12,7 @@ import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
+import { RESULT_ICONS } from "../../ui/icons";
 
 export default function GameSummary({
   gameId,
@@ -51,11 +51,12 @@ export default function GameSummary({
             {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
             {heading === "perfect" ? (
               <>
-                <StarFill aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} / {maxScore}
+                <RESULT_ICONS.firstGuess aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} /{" "}
+                {maxScore}
               </>
             ) : heading === "fullMarks" ? (
               <>
-                <CheckLg aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
+                <RESULT_ICONS.correct aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
               </>
             ) : (
               `You scored ${score} / ${maxScore}`

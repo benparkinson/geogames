@@ -1,17 +1,17 @@
-import { Buildings } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import { makeCountryGame } from "./CountryGame";
 import type { CountryCitiesRound } from "./model";
 import CountryCitiesMapWrapper from "./CountryCitiesMapWrapper";
 import { hintsFrom } from "../common/hints";
 import { capitalHint, coastHint, firstLetterHint } from "./countryHints";
+import { CitiesIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_CITIES",
   title: "Country Cities",
   singular: "Country by cities",
   description: "Name a country from where its cities are.",
-  Icon: Buildings,
+  Icon: CitiesIcon,
   hasClues: true,
   Component: makeCountryGame<CountryCitiesRound>({
     MapComponent: CountryCitiesMapWrapper,

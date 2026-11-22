@@ -1,6 +1,6 @@
-import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import { CORRECT_ANSWER, OUT_OF_GUESSES, UNANSWERED } from "./Model";
 import { RoundOutcome } from "./outcome";
+import { RESULT_ICONS } from "../../ui/icons";
 
 export default function RoundProgress({
   states,
@@ -45,10 +45,14 @@ export default function RoundProgress({
 
   function icon(i: number): React.ReactNode {
     const outcome = outcomes[i];
-    if (outcome === "firstGuess") return <StarFill aria-hidden="true" />;
+    if (outcome === "firstGuess") return <RESULT_ICONS.firstGuess aria-hidden="true" />;
     if (outcome === null || outcome === undefined) return i + 1;
-    if (states[i] === CORRECT_ANSWER) return <CheckLg aria-hidden="true" />;
-    return states[i] === OUT_OF_GUESSES ? <XLg aria-hidden="true" /> : <EyeFill aria-hidden="true" />;
+    if (states[i] === CORRECT_ANSWER) return <RESULT_ICONS.correct aria-hidden="true" />;
+    return states[i] === OUT_OF_GUESSES ? (
+      <RESULT_ICONS.outOfGuesses aria-hidden="true" />
+    ) : (
+      <RESULT_ICONS.revealed aria-hidden="true" />
+    );
   }
 
   return (

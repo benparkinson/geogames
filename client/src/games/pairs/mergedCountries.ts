@@ -1,16 +1,16 @@
-import { Union } from "react-bootstrap-icons";
 import { defineGame } from "../types";
 import MergedCountriesMapWrapper from "./MergedCountriesMapWrapper";
 import { makePairGame } from "./PairGame";
 import { hintsFrom, mapHint } from "../common/hints";
 import { bothFirstLettersHint } from "./pairHints";
+import { MergedCountriesIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "MERGED_COUNTRIES",
   title: "Merged Countries",
   singular: "Merged countries",
   description: "Name the two neighbouring countries merged into one shape.",
-  Icon: Union,
+  Icon: MergedCountriesIcon,
   hasClues: true,
   Component: makePairGame({
     MapComponent: MergedCountriesMapWrapper,

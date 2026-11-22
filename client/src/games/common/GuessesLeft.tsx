@@ -1,4 +1,4 @@
-import { Heart, HeartFill } from "react-bootstrap-icons";
+import { LifeLostIcon, LifeIcon } from "../../ui/icons";
 
 /** More lives than this are shown as text only, because a long row of hearts is noise. */
 const MAX_HEARTS = 10;
@@ -18,7 +18,7 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
     >
       {limit <= MAX_HEARTS && (
         <span className={"guesses-left-dots" + (last ? " gg-text-hint" : "")} aria-hidden="true">
-          {Array.from({ length: limit }, (_, i) => (i < left ? <HeartFill key={i} /> : <Heart key={i} />))}
+          {Array.from({ length: limit }, (_, i) => (i < left ? <LifeIcon key={i} /> : <LifeLostIcon key={i} />))}
         </span>
       )}
       <span className={"small " + (last ? "gg-text-warning" : "gg-text-muted")}>{text}</span>

@@ -1,4 +1,3 @@
-import { Globe, Lightbulb } from "react-bootstrap-icons";
 import AnswerSlots from "./AnswerSlots";
 import GuessForm from "./GuessForm";
 import { foundAnswers, GuessResult, GuessState, guessesLeft, wrongGuesses } from "./guessReducer";
@@ -11,6 +10,7 @@ import RoundStatus from "./RoundStatus";
 import type { RoundView } from "./roundView";
 import type { Suggestion } from "./suggestions";
 import WrongGuessList from "./WrongGuessList";
+import { ContinentIcon, HintIcon } from "../../ui/icons";
 
 export interface RoundPanelProps {
   round: Round;
@@ -52,12 +52,12 @@ export default function RoundPanel({
         <ul className="round-hints">
           {view.continentText !== null && (
             <li>
-              <Globe aria-hidden="true" /> {view.continentText}
+              <ContinentIcon aria-hidden="true" /> {view.continentText}
             </li>
           )}
           {view.hintTexts.map((text, index) => (
             <li key={index}>
-              <Lightbulb aria-hidden="true" /> {text}
+              <HintIcon aria-hidden="true" /> {text}
             </li>
           ))}
         </ul>

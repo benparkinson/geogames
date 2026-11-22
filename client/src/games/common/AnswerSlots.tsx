@@ -1,5 +1,5 @@
-import { CheckLg, EyeFill } from "react-bootstrap-icons";
 import { Chip } from "../../ui";
+import { FoundIcon, RevealIcon } from "../../ui/icons";
 
 export default function AnswerSlots({
   answerCount,
@@ -27,7 +27,7 @@ export default function AnswerSlots({
         if (i < found.length) {
           return (
             <Chip key={i} tone="correct" className="slot--filled">
-              {found[i]} <CheckLg aria-hidden="true" />
+              {found[i]} <FoundIcon aria-hidden="true" />
             </Chip>
           );
         }
@@ -35,7 +35,7 @@ export default function AnswerSlots({
         if (revealedAnswer) {
           return (
             <Chip key={i} tone="revealed" className="slot--filled" title="Revealed">
-              {revealedAnswer} <EyeFill aria-hidden="true" />
+              {revealedAnswer} <RevealIcon aria-hidden="true" />
               <span className="visually-hidden"> (revealed)</span>
             </Chip>
           );

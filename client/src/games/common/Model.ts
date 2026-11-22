@@ -1,5 +1,5 @@
-import type { Icon } from "react-bootstrap-icons";
 import type { Difficulty, RecordedGuess } from "../../api/types";
+import type { IconComponent } from "../../ui/icons";
 
 export type AnswerState = "UNANSWERED" | "CORRECT" | "GAVE_UP" | "OUT_OF_GUESSES";
 export type GameState = "CREATED" | "IN_PROGRESS" | "FINISHED";
@@ -35,7 +35,7 @@ export interface RoundAnswer {
 
 export interface Round {
   /** The kind of round: the game module's name and icon, shown at the top of the panel. */
-  kind: { title: string; Icon: Icon };
+  kind: { title: string; Icon: IconComponent };
   /**
    * Whether the round's answer has reached the server. Moving on (next round, results, another round) waits until
    * it is "saved", or the next page would show the round as unanswered.

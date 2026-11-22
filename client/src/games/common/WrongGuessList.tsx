@@ -1,7 +1,7 @@
-import { ArrowUp, XLg } from "react-bootstrap-icons";
 import { Chip } from "../../ui";
 import { compassPoint, formatKm } from "./distance";
 import { Guess, GuessClue } from "./guessReducer";
+import { BearingIcon, WrongGuessIcon } from "../../ui/icons";
 
 /** The wrong guesses so far, each with its distance clue unless Hard mode hides them. */
 export default function WrongGuessList({
@@ -17,7 +17,7 @@ export default function WrongGuessList({
       <div className="d-flex flex-wrap gap-1">
         {guesses.map((a, i) => (
           <Chip key={i} tone="neutral" className="guess-chip" data-testid="wrong-guess">
-            <XLg aria-hidden="true" className="guess-chip__x" /> {a.text}
+            <WrongGuessIcon aria-hidden="true" className="guess-chip__x" /> {a.text}
             {showClues && a.clue && <ClueBadge clue={a.clue} />}
           </Chip>
         ))}
@@ -30,7 +30,7 @@ export default function WrongGuessList({
 function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
   return (
     <span className="ms-2 fw-semibold">
-      {formatKm(clue.km)} km <ArrowUp aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
+      {formatKm(clue.km)} km <BearingIcon aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
       <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
     </span>
   );

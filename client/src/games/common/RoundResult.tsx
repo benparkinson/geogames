@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Button, Notice, Spinner } from "../../ui";
-import { ArrowRight, CheckCircleFill, EyeFill, StarFill, XCircleFill } from "react-bootstrap-icons";
 import { Round } from "./Model";
 import type { RoundView } from "./roundView";
+import { NextIcon, RESULT_ICONS } from "../../ui/icons";
 
 export default function RoundResult({ view, round }: { view: RoundView; round: Round }): React.JSX.Element {
   const { result, outcome, points, hintsUsed, answersFound, answerCount } = view;
@@ -19,24 +19,26 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
       >
         {result === "outOfGuesses" ? (
           <>
-            <XCircleFill aria-hidden="true" /> Out of guesses · {partial ? `${found} · +${points}` : "0 pts"}
+            <RESULT_ICONS.outOfGuesses aria-hidden="true" /> Out of guesses ·{" "}
+            {partial ? `${found} · +${points}` : "0 pts"}
           </>
         ) : result === "revealed" ? (
           <>
-            <EyeFill aria-hidden="true" /> Answer revealed · {partial ? `${found} · +${points}` : "0 pts"}
+            <RESULT_ICONS.revealed aria-hidden="true" /> Answer revealed · {partial ? `${found} · +${points}` : "0 pts"}
           </>
         ) : result === "firstGuess" ? (
           <>
-            <StarFill aria-hidden="true" /> {answerCount > 1 ? "No wrong guesses!" : "First guess!"} +{points}
+            <RESULT_ICONS.firstGuess aria-hidden="true" /> {answerCount > 1 ? "No wrong guesses!" : "First guess!"} +
+            {points}
           </>
         ) : result === "hints" ? (
           <>
-            <CheckCircleFill aria-hidden="true" /> Correct with {hintsUsed === 1 ? "a hint" : `${hintsUsed} hints`} · +
-            {points}
+            <RESULT_ICONS.hints aria-hidden="true" /> Correct with {hintsUsed === 1 ? "a hint" : `${hintsUsed} hints`} ·
+            +{points}
           </>
         ) : (
           <>
-            <CheckCircleFill aria-hidden="true" /> Correct! +{points}
+            <RESULT_ICONS.correct aria-hidden="true" /> Correct! +{points}
           </>
         )}
         {partial && hintsUsed > 0 && (
@@ -59,7 +61,7 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
         >
           {round.hasNextRound ? (
             <>
-              Next round <ArrowRight aria-hidden="true" />
+              Next round <NextIcon aria-hidden="true" />
             </>
           ) : (
             "See results"
