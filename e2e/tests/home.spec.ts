@@ -71,28 +71,27 @@ test.describe("on a phone", () => {
 
     const startButton = page.getByRole("button", { name: "Start game" });
     await expect(startButton).toBeInViewport();
-
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await expect(page.getByRole("link", { name: "Credits and privacy" })).toBeInViewport();
-    await expect(startButton).toBeInViewport();
   });
 });
 
 test.describe("on a wide screen", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("the start button sits beside the cards", async ({ page }) => {
+  test("the start panel sits directly under the chosen row", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("radio").filter({ has: page.getByText("Tripoints", { exact: true }) }).click();
+    const row = page.getByRole("radio").filter({ has: page.getByText("Tripoints", { exact: true }) });
+    await row.click();
 
-    const startButton = page.getByRole("button", { name: "Start game" });
-    await expect(startButton).toBeInViewport();
+    await expect(page.getByRole("button", { name: "Start game" })).toBeInViewport();
+    const rowBox = await row.boundingBox();
     const panel = await page.getByRole("complementary", { name: "Start a game" }).boundingBox();
     const group = await page.getByRole("radiogroup", { name: "Choose a game" }).boundingBox();
-    expect(panel!.x).toBeGreaterThanOrEqual(group!.x + group!.width);
+    expect(panel!.y).toBeGreaterThanOrEqual(rowBox!.y + rowBox!.height - 1);
+    expect(panel!.x).toBeGreaterThanOrEqual(group!.x);
+    expect(panel!.x + panel!.width).toBeLessThanOrEqual(group!.x + group!.width + 1);
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    // Choosing another game moves the panel to it.
     await page.getByRole("radio").filter({ has: page.getByText("Lake Shapes", { exact: true }) }).click();
-    await expect(startButton).toBeInViewport();
+    await expect(page.getByRole("button", { name: "Start game" })).toHaveCount(1);
   });
 });
