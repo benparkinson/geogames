@@ -1,4 +1,5 @@
 import type { PathOptions } from "leaflet";
+import { MAP_PALETTE } from "./palette";
 
 /** The self-hosted relief tiles (`public/tiles/relief`, served from the site root). */
 export const RELIEF_TILE_URL = "/tiles/relief/{z}/{x}/{y}.jpg";
@@ -6,15 +7,20 @@ export const RELIEF_TILE_URL = "/tiles/relief/{z}/{x}/{y}.jpg";
 /** The tiles stop at zoom 6; Leaflet stretches them at deeper zooms. */
 export const RELIEF_MAX_NATIVE_ZOOM = 6;
 
-const ANSWER_COLOR = "LightGoldenRodYellow";
-const REVEALED_COLOR = "darkred";
+const ANSWER_COLOR = MAP_PALETTE.answer;
+const REVEALED_COLOR = MAP_PALETTE.revealed;
 
 /** Outline style for an answer: one colour while playing, another once the player gave up. */
 export function answerPathOptions(gaveUp: boolean): PathOptions {
   return { color: gaveUp ? REVEALED_COLOR : ANSWER_COLOR };
 }
 
-const CLUE_COLOR = "#4a6fa5";
+/** Outline style for an answer that is a filled area, such as a lake. */
+export function answerFillOptions(gaveUp: boolean): PathOptions {
+  return { ...answerPathOptions(gaveUp), fillOpacity: 0.35 };
+}
+
+const CLUE_COLOR = MAP_PALETTE.clue;
 
 /** Outline style for a clue shown before the answer: distinct from the answer colours. */
 export function clueOutlineOptions(): PathOptions {
@@ -31,8 +37,8 @@ export function hintLineOptions(): PathOptions {
   return { color: CLUE_COLOR, weight: 3, fill: false, dashArray: "6 6", opacity: 0.7 };
 }
 
-const MERGED_COLOR = "#2f7a6b";
-const HIDDEN_BORDER_COLOR = "#f4f1de";
+const MERGED_COLOR = MAP_PALETTE.merged;
+const HIDDEN_BORDER_COLOR = MAP_PALETTE.hiddenBorder;
 
 /**
  * Style for the merged shape of two countries. The fill is opaque and the stroke is the same colour:
@@ -64,8 +70,8 @@ export function cityRadius(population: number, largest: number): number {
   return CITY_MIN_RADIUS + (CITY_MAX_RADIUS - CITY_MIN_RADIUS) * share;
 }
 
-const CITY_COLOR = "#4a6fa5";
-const CAPITAL_COLOR = "#d9822b";
+const CITY_COLOR = MAP_PALETTE.city;
+const CAPITAL_COLOR = MAP_PALETTE.capital;
 
 /** Style for a city dot while playing. */
 export function cityDotOptions(): PathOptions {
@@ -74,7 +80,7 @@ export function cityDotOptions(): PathOptions {
 
 /** Style for the capital's dot once a hint highlights it: a different colour, opaque and outlined in white. */
 export function capitalDotOptions(): PathOptions {
-  return { color: "#ffffff", weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
+  return { color: MAP_PALETTE.white, weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
 }
 
 /** Style for the minor rivers of Country Rivers: thinner than the clue line the major rivers use. */

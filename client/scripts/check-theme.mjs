@@ -9,10 +9,7 @@ import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Leaflet styles these from JavaScript, on the relief map or the blank map, and they don't follow light/dark.
-const COLOUR_LITERAL_EXCEPTIONS = [
-  "src/map/constants.ts", // answer, revealed and clue colours for Leaflet layers
-  "src/map/markerIcons.ts", // map pin SVGs
-];
+const COLOUR_LITERAL_EXCEPTIONS = ["src/map/palette.ts"];
 const TOKENS_FILE = "src/theme/tokens.css";
 
 const COLOUR = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(/;
