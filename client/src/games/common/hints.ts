@@ -1,3 +1,5 @@
+import { normaliseString } from "../../helper/stringHelper";
+
 /** What a game's hints say. How many there are comes from the backend: `round.hintCount`. */
 export interface HintConfig {
   description: string;
@@ -31,14 +33,40 @@ const GENERIC_WORDS = new Set([
 
 /**
  * The text of a hint that gives the first letter of a name, or null for a blank name. Leading
- * generic words ("Lake", "Rio") are skipped and mentioned, so the letter narrows the answer down.
+ * generic words ("Lake", "Rio") are skipped but never named: "Rio Negro" could give the answer away.
  */
 export function firstLetterHint(name: string): string | null {
   const first = firstLetter(name);
   if (!first) {
     return null;
   }
-  return first.prefix ? `Starts with “${first.letter}” (after “${first.prefix}”)` : `Starts with “${first.letter}”`;
+  return first.prefix
+    ? `Starts with “${first.letter}”, not counting words like “Lake” or “River”`
+    : `Starts with “${first.letter}”`;
+}
+
+function significantWords(text: string): string[] {
+  return text
+    .split(/[\s-]+/)
+    .filter((word) => word && !GENERIC_WORDS.has(word.toLowerCase()))
+    .map(normaliseString)
+    .filter((word) => word.length >= 3);
+}
+
+/**
+ * Whether a hint that says `text` (the name of a place) would show a word of the answer's name. `names` is the
+ * answer's name and its aliases. Generic words ("Lake", "of") and words under 3 letters are ignored, and Niger and
+ * Nigeria count as the same word (a shared start of up to 5 letters, in words of at least 4).
+ */
+export function revealsName(text: string, names: string[]): boolean {
+  const answerWords = names.flatMap(significantWords);
+  return significantWords(text).some((word) =>
+    answerWords.some((other) => {
+      const shorter = Math.min(word.length, other.length);
+      const share = Math.min(5, shorter);
+      return shorter >= 4 && word.slice(0, share) === other.slice(0, share);
+    }),
+  );
 }
 
 /**

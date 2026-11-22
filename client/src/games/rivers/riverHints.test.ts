@@ -15,6 +15,17 @@ describe("riverHints", () => {
     expect(mainCountryHint({ ...river, countries: [] })).toBeNull();
   });
 
+  it("says how long the name is when the country shares it", () => {
+    expect(
+      mainCountryHint({
+        ...river,
+        name: "Congo",
+        additionalNames: [],
+        countries: ["Democratic Republic of the Congo"],
+      }),
+    ).toBe("Its name has 5 letters");
+  });
+
   it("gives the first letter", () => {
     expect(firstLetterHint(river)).toBe("Starts with “D”");
     expect(firstLetterHint({ ...river, name: "  rhine" })).toBe("Starts with “R”");

@@ -41,7 +41,7 @@ describe("LakeGame", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(screen.getByText("Lies entirely in Russia")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
+    expect(screen.getByText("Starts with “B”, not counting words like “Lake” or “River”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
 
@@ -53,7 +53,7 @@ describe("LakeGame", () => {
     await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
     expect(screen.getByText("Lies entirely in Russia")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
-    expect(screen.getByText("Starts with “B” (after “Lake”)")).toBeInTheDocument();
+    expect(screen.getByText("Starts with “B”, not counting words like “Lake” or “River”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
     expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
   });

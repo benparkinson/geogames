@@ -1,4 +1,4 @@
-import { firstLetterHint as firstLetter, nameLengthHint as nameLength } from "../common/hints";
+import { firstLetterHint as firstLetter, nameLengthHint as nameLength, revealsName } from "../common/hints";
 import type { City, HasCountry } from "./model";
 
 /** A hint builder for a round with a country: the other rounds' builders only need what they use. */
@@ -27,9 +27,18 @@ export const coastHint: HintBuilder = ({ country }) =>
 export const capitalHint: HintBuilder<HasCountry & { cities: City[] }> = ({ cities }) =>
   cities.filter((city) => city.capital).length > 1 ? "Its capitals are highlighted" : "Its capital is highlighted";
 
+/** The country's longest river, or null when it has none or its name would give the country away (the Niger). */
+export function namedLongestRiver(round: HasCountry & { longestRiver: string | null }): string | null {
+  const { longestRiver, country } = round;
+  return longestRiver && !revealsName(longestRiver, [country.name, ...country.additionalNames]) ? longestRiver : null;
+}
+
 /**
  * Names the country's longest river. The name helps even when the player doesn't know the river, because its language
- * narrows the answer down. Falls back to the length of the country's name when it has no named river.
+ * narrows the answer down. Falls back to the length of the country's name when it has no named river or the river's
+ * name shows the country's.
  */
-export const longestRiverHint: HintBuilder<HasCountry & { longestRiver: string | null }> = (round) =>
-  round.longestRiver ? `Its longest river is the ${round.longestRiver}` : nameLengthHint(round);
+export const longestRiverHint: HintBuilder<HasCountry & { longestRiver: string | null }> = (round) => {
+  const river = namedLongestRiver(round);
+  return river ? `Its longest river is the ${river}` : nameLengthHint(round);
+};

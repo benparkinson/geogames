@@ -3,7 +3,7 @@ import { makeCountryGame } from "./CountryGame";
 import type { CountryRiversRound } from "./model";
 import CountryRiversMapWrapper from "./CountryRiversMapWrapper";
 import { hintsFrom } from "../common/hints";
-import { coastHint, firstLetterHint, longestRiverHint } from "./countryHints";
+import { coastHint, firstLetterHint, longestRiverHint, namedLongestRiver } from "./countryHints";
 import { RiverIcon } from "../../ui/icons";
 
 export default defineGame({
@@ -19,7 +19,7 @@ export default defineGame({
     // The second hint changes the map; it only says so.
     hints: (round) =>
       hintsFrom(
-        round.longestRiver
+        namedLongestRiver(round)
           ? "Names its longest river, then shows its coastline, then its first letter"
           : "Shows how long its name is, then its coastline, then its first letter",
         round,
