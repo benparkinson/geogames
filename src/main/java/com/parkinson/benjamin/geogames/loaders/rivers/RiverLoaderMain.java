@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Usage: RiverLoaderMain &lt;naturalEarth.geojson&gt; &lt;wikidata.json&gt; &lt;overrides.json&gt;
@@ -81,11 +82,12 @@ public class RiverLoaderMain {
   static Report run(
       Path naturalEarth, Path wikidataFile, Path overridesFile, Path countriesDir, Path outDir)
       throws IOException {
-    Map<String, NaturalEarthFeature> groups =
-        new NaturalEarthReader().read(naturalEarth, Set.of("Canal"));
-    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
     Map<String, RiverOverride> overrides =
         GeoJson.readValue(overridesFile, new TypeReference<>() {});
+    JsonNode tree = GeoJson.readTree(naturalEarth);
+    RiverQids.correct(tree, overrides);
+    Map<String, NaturalEarthFeature> groups = new NaturalEarthReader().group(tree, Set.of("Canal"));
+    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
 
     RiverAssembler.Assembly assembly = new RiverAssembler().assemble(groups, wikidata, overrides);
     FeatureSelector.Selection<RiverCandidate> selection =
