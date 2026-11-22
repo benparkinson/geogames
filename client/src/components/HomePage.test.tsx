@@ -5,7 +5,9 @@ import { callsTo, mockFetch } from "../test/fetchMock";
 import { renderWithClient } from "../test/render";
 import HomePage from "./HomePage";
 import { localDateString } from "../api/daily";
-import { resetDailyStorageForTests, writeDaily } from "../daily/dailyStorage";
+import { DailyEntry, resetDailyStorageForTests, writeDaily } from "../daily/dailyStorage";
+import { previousDay, resetDailyStreakForTests } from "../daily/dailyStreak";
+import { resetClockForTests } from "../daily/useNowSeconds";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
 vi.mock("next/router", () => ({ useRouter: () => router }));
@@ -388,7 +390,10 @@ describe("HomePage difficulty when starting", () => {
 describe("HomePage daily challenge card", () => {
   const entry = { v: 1 as const, date: localDateString(), number: 2, gameId: "g1", difficulty: "NORMAL" as const };
 
-  beforeEach(resetDailyStorageForTests);
+  beforeEach(() => {
+    resetDailyStorageForTests();
+    resetDailyStreakForTests();
+  });
 
   it("links to /daily, outside the game cards, without creating a game", () => {
     const fetchMock = mockFetch([{ url: HEALTH, body: "ok" }]);
@@ -423,11 +428,116 @@ describe("HomePage daily challenge card", () => {
     expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 430 / 500");
   });
 
+  it.each([
+    ["today", 0],
+    ["yesterday", 1],
+  ])("shows a streak ending %s", (_, daysAgo) => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const lastDate = daysAgo === 0 ? localDateString() : previousDay(localDateString());
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
+    renderHome();
+
+    const link = screen.getByRole("link", { name: /Daily challenge/ });
+    const block = link.querySelector("[data-streak]");
+    expect(block).toHaveAttribute("data-streak", "4");
+    expect(block).toHaveTextContent("4");
+    expect(link).toHaveAccessibleName(/4 day streak/);
+  });
+
+  it("shows no streak that ended two days ago", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    const lastDate = previousDay(previousDay(localDateString()));
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+  });
+
+  it("shows no streak when none is stored", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+  });
+
   it("ignores a game from another day", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     writeDaily({ ...entry, date: "2020-01-01" });
     renderHome();
 
     expect(screen.getByRole("link", { name: /Daily challenge/ })).not.toHaveTextContent("Continue");
+  });
+});
+
+describe("HomePage daily countdown", () => {
+  const finished: DailyEntry = {
+    v: 1,
+    date: localDateString(new Date(2026, 5, 10)),
+    number: 2,
+    gameId: "g1",
+    difficulty: "NORMAL",
+    result: {
+      score: 430,
+      maxScore: 500,
+      rounds: ["firstGuess", "firstGuess", "firstGuess", "firstGuess", "firstGuess"],
+    },
+  };
+  const dailyLink = () => screen.getByRole("link", { name: /Daily challenge/ });
+
+  beforeEach(() => {
+    resetDailyStorageForTests();
+    resetDailyStreakForTests();
+    resetClockForTests();
+    vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
+    vi.setSystemTime(new Date(2026, 5, 10, 23, 0, 0));
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+  });
+
+  afterEach(() => {
+    resetClockForTests();
+  });
+
+  it("counts down to the next daily once today's is finished", () => {
+    writeDaily(finished);
+    renderHome();
+
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 1:00:00");
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 0:59:59");
+  });
+
+  it("shows no countdown when there is no daily", () => {
+    renderHome();
+    expect(dailyLink().querySelector("[data-countdown]")).toBeNull();
+  });
+
+  it("shows no countdown for an unfinished daily", () => {
+    writeDaily({ ...finished, result: undefined });
+    renderHome();
+    expect(dailyLink().querySelector("[data-countdown]")).toBeNull();
+  });
+
+  it("rolls over at midnight to the intro text, with no countdown", () => {
+    writeDaily(finished);
+    renderHome();
+    expect(dailyLink()).toHaveTextContent("Done: 430 / 500");
+
+    act(() => {
+      vi.advanceTimersByTime(3600 * 1000);
+    });
+
+    expect(dailyLink()).toHaveTextContent("a new challenge every day");
+    expect(dailyLink().querySelector("[data-countdown]")).toBeNull();
+  });
+
+  it("keeps the streak next to the countdown", () => {
+    writeDaily(finished);
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: finished.date, count: 4 }));
+    renderHome();
+
+    expect(dailyLink().querySelector("[data-streak]")).toHaveAttribute("data-streak", "4");
+    expect(dailyLink()).toHaveAccessibleName(/4 day streak.*Next daily in 1:00:00/);
   });
 });

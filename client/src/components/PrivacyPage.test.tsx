@@ -29,7 +29,8 @@ describe("PrivacyPage", () => {
     expect(screen.getByText("gg-theme")).toBeInTheDocument();
     expect(screen.getByText("gg-difficulty")).toBeInTheDocument();
     expect(screen.getByText("gg-daily")).toBeInTheDocument();
-    expect(screen.getByText(/up to three items/)).toBeInTheDocument();
+    expect(screen.getByText("gg-daily-streak")).toBeInTheDocument();
+    expect(screen.getByText(/up to four items/)).toBeInTheDocument();
   });
 
   it("credits the data, imagery and icons, and links to the software licences", () => {

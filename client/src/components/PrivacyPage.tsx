@@ -50,11 +50,13 @@ function PrivacyPage(): React.JSX.Element {
 
         <h2 className="gg-page__section">On your device</h2>
         <p>
-          Your browser keeps up to three items in its local storage: <code>gg-theme</code>, <code>gg-difficulty</code>{" "}
-          (your difficulty setting) and <code>gg-daily</code>. The first two are set only if you use their control (the
-          light/dark toggle and the difficulty). The third is set only when you play the daily challenge: it holds
-          today&apos;s game id, its difficulty and, once you finish, your score and how each round ended. It is replaced
-          the next day and never sent anywhere. Clearing site data removes all three.
+          Your browser keeps up to four items in its local storage: <code>gg-theme</code>, <code>gg-difficulty</code>{" "}
+          (your difficulty setting), <code>gg-daily</code> and <code>gg-daily-streak</code>. The first two are set only
+          if you use their control (the light/dark toggle and the difficulty). The third is set only when you play the
+          daily challenge: it holds today&apos;s game id, its difficulty and, once you finish, your score and how each
+          round ended. It is replaced the next day and never sent anywhere. The fourth holds the date you last finished
+          the daily challenge and how many days in a row you have finished it. It is set only when you finish one and is
+          never sent anywhere. Clearing site data removes all four.
         </p>
         <p>
           Everyone who plays the daily challenge on a date gets the same rounds. The server stores which rounds those

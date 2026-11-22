@@ -223,6 +223,32 @@ code {
 .daily-hero__status {
   opacity: 0.9;
 }
+.daily-hero__head,
+.daily-hero__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+}
+.daily-hero__head {
+  align-items: center;
+}
+.daily-hero__foot {
+  align-items: baseline;
+}
+.daily-hero__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-1);
+  padding: var(--gg-space-1) var(--gg-space-2);
+  font-size: var(--gg-font-size-sm);
+  border: 1px solid currentColor;
+  border-radius: var(--gg-radius-pill);
+}
+.daily-hero__countdown {
+  font-size: var(--gg-font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
 .game-card--selected {
   border: 2px solid var(--gg-color-accent);
   background: var(--gg-color-accent-subtle);

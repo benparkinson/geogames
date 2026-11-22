@@ -22,6 +22,7 @@ export {
   HeartFill as LifeIcon,
   HouseFill as HomeIcon,
   Lightbulb as HintIcon,
+  LightningChargeFill as StreakIcon,
   PuzzleFill as NeighboursIcon,
   Shuffle as RandomIcon,
   Tsunami as CoastlineIcon,
