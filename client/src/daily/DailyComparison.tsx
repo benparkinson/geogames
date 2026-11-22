@@ -54,10 +54,10 @@ function Comparison({
     `. Your band: ${bandRange(mine, maxScore)}.`;
   return (
     <div className="gg-daily-comparison">
-      <p className="gg-daily-comparison__average">
+      <p className="gg-daily-comparison__average gg-mono">
         Today&apos;s average{LEAGUE_NAMES[difficulty]}: {averageScore!.toFixed(1)} / {maxScore}
       </p>
-      <p className="gg-daily-comparison__top">Top {topPercent(buckets, mine, players)}%</p>
+      <p className="gg-daily-comparison__top gg-mono">Top {topPercent(buckets, mine, players)}%</p>
       <div role="img" aria-label={alt}>
         <div className="gg-daily-chart" aria-hidden="true">
           {buckets.map((count, i) => (

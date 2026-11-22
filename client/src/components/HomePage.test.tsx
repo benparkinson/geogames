@@ -87,6 +87,23 @@ describe("HomePage choosing a game", () => {
     expect(screen.getAllByRole("button", { name: "Start game" })).toHaveLength(1);
   });
 
+  it("shows the start panel directly under the selected row", async () => {
+    const user = userEvent.setup();
+    renderHome();
+
+    await user.click(card(/River Shapes/));
+    const panel = screen.getByRole("complementary", { name: "Start a game" });
+    expect(card(/River Shapes/).parentElement).toContainElement(panel);
+    expect(card(/River Shapes/).nextElementSibling).toBe(panel);
+  });
+
+  it("shows the date and the heading on the daily ticket", () => {
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Today's five");
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Start the daily");
+  });
+
   it("selecting with the arrow keys also shows the start panel", async () => {
     const user = userEvent.setup();
     renderHome();
@@ -453,11 +470,9 @@ describe("HomePage daily challenge card", () => {
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
     renderHome();
 
-    const link = screen.getByRole("link", { name: /Daily challenge/ });
-    const block = link.querySelector("[data-streak]");
+    const block = screen.getByRole("banner").querySelector("[data-streak]");
     expect(block).toHaveAttribute("data-streak", "4");
-    expect(block).toHaveTextContent("4");
-    expect(link).toHaveAccessibleName(/4 day streak/);
+    expect(block).toHaveTextContent("4-day streak");
   });
 
   it("shows no streak that ended two days ago", () => {
@@ -466,14 +481,14 @@ describe("HomePage daily challenge card", () => {
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
     renderHome();
 
-    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toBeNull();
   });
 
   it("shows no streak when none is stored", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     renderHome();
 
-    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toBeNull();
   });
 
   it("ignores a game from another day", () => {
@@ -517,11 +532,11 @@ describe("HomePage daily countdown", () => {
     writeDaily(finished);
     renderHome();
 
-    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 1:00:00");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 1:00:00");
     act(() => {
       vi.advanceTimersByTime(1000);
     });
-    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 0:59:59");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 0:59:59");
   });
 
   it("shows no countdown when there is no daily", () => {
@@ -548,12 +563,12 @@ describe("HomePage daily countdown", () => {
     expect(dailyLink().querySelector("[data-countdown]")).toBeNull();
   });
 
-  it("keeps the streak next to the countdown", () => {
+  it("shows the streak in the header beside the countdown", () => {
     writeDaily(finished);
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: finished.date, count: 4 }));
     renderHome();
 
-    expect(dailyLink().querySelector("[data-streak]")).toHaveAttribute("data-streak", "4");
-    expect(dailyLink()).toHaveAccessibleName(/4 day streak.*Next daily in 1:00:00/);
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toHaveAttribute("data-streak", "4");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 1:00:00");
   });
 });
