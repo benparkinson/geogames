@@ -43,16 +43,20 @@ export default function RoundProgress({
     }
   }
 
-  function icon(i: number): React.ReactNode {
+  /** Which result's glyph the dot shows; null while unanswered, when it shows the round's number. */
+  function result(i: number): keyof typeof RESULT_ICONS | null {
     const outcome = outcomes[i];
-    if (outcome === "firstGuess") return <RESULT_ICONS.firstGuess aria-hidden="true" />;
-    if (outcome === null || outcome === undefined) return i + 1;
-    if (states[i] === CORRECT_ANSWER) return <RESULT_ICONS.correct aria-hidden="true" />;
-    return states[i] === OUT_OF_GUESSES ? (
-      <RESULT_ICONS.outOfGuesses aria-hidden="true" />
-    ) : (
-      <RESULT_ICONS.revealed aria-hidden="true" />
-    );
+    if (outcome === null || outcome === undefined) return null;
+    if (outcome === "firstGuess") return "firstGuess";
+    if (states[i] === CORRECT_ANSWER) return "correct";
+    return states[i] === OUT_OF_GUESSES ? "outOfGuesses" : "revealed";
+  }
+
+  function icon(i: number): React.ReactNode {
+    const shown = result(i);
+    if (shown === null) return i + 1;
+    const Icon = RESULT_ICONS[shown];
+    return <Icon aria-hidden="true" />;
   }
 
   return (
@@ -66,6 +70,7 @@ export default function RoundProgress({
               type="button"
               className="round-dot"
               data-outcome={outcomes[i] ?? undefined}
+              data-result={result(i) ?? undefined}
               aria-label={label}
               title={visitable ? label : undefined}
               aria-current={i === currentRound ? "step" : undefined}

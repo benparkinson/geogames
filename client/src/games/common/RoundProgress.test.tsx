@@ -1,8 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { RESULT_ICONS } from "../../ui/icons";
 import { RoundOutcome } from "./outcome";
 import RoundProgress from "./RoundProgress";
+
+/** The dot names its result and draws that result's glyph, whatever the icon set. */
+function expectResult(dot: HTMLElement, result: keyof typeof RESULT_ICONS): void {
+  const Icon = RESULT_ICONS[result];
+  const glyph = render(<Icon aria-hidden="true" />).container.innerHTML;
+  expect(dot).toHaveAttribute("data-result", result);
+  expect(dot.querySelector("svg")?.outerHTML).toBe(glyph);
+}
 
 const states = ["CORRECT", "GAVE_UP", "UNANSWERED", "UNANSWERED"];
 const points = [83, 0, 0, 0];
@@ -95,7 +104,7 @@ describe("RoundProgress", () => {
     const dot = screen.getByRole("button", { name: "Round 1: first guess" });
     expect(dot).toHaveAttribute("data-outcome", "firstGuess");
     expect(dot).not.toHaveAttribute("data-outcome", "correct");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expectResult(dot, "firstGuess");
   });
 
   it("shows a correct round worth 100 points but not a first guess as a green check, not a star", () => {
@@ -104,7 +113,7 @@ describe("RoundProgress", () => {
     const dot = screen.getByRole("button", { name: "Round 1: correct" });
     expect(dot).toHaveAttribute("data-outcome", "correct");
     expect(dot).not.toHaveAttribute("data-outcome", "firstGuess");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expectResult(dot, "correct");
   });
 
   it("shows a correct round with hints as a yellow check", () => {
@@ -112,7 +121,7 @@ describe("RoundProgress", () => {
 
     const dot = screen.getByRole("button", { name: "Round 1: correct with hints, 67 points" });
     expect(dot).toHaveAttribute("data-outcome", "hints");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expectResult(dot, "correct");
   });
 
   it("shows a given up round with no points as a red eye", () => {
@@ -120,7 +129,7 @@ describe("RoundProgress", () => {
 
     const dot = screen.getByRole("button", { name: "Round 1: revealed" });
     expect(dot).toHaveAttribute("data-outcome", "missed");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expectResult(dot, "revealed");
   });
 
   it("shows a round that ran out of guesses as a red cross", () => {
@@ -128,7 +137,7 @@ describe("RoundProgress", () => {
 
     const dot = screen.getByRole("button", { name: "Round 1: out of guesses" });
     expect(dot).toHaveAttribute("data-outcome", "missed");
-    expect(dot.querySelector("svg")).not.toBeNull();
+    expectResult(dot, "outOfGuesses");
   });
 
   it("shows a revealed round with points as yellow, keeping its eye or cross", () => {
@@ -145,10 +154,10 @@ describe("RoundProgress", () => {
     const gaveUp = screen.getByRole("button", { name: "Round 1: revealed, 67 points" });
     expect(gaveUp).toHaveAttribute("data-outcome", "hints");
     expect(gaveUp).not.toHaveAttribute("data-outcome", "missed");
-    expect(gaveUp.querySelector("svg")).not.toBeNull();
+    expectResult(gaveUp, "revealed");
     const outOfGuesses = screen.getByRole("button", { name: "Round 2: out of guesses, 25 points" });
     expect(outOfGuesses).toHaveAttribute("data-outcome", "hints");
-    expect(outOfGuesses.querySelector("svg")).not.toBeNull();
+    expectResult(outOfGuesses, "outOfGuesses");
   });
 
   it("shows the number of an unanswered round, and the ring on the current one", () => {
