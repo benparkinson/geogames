@@ -70,8 +70,11 @@ textarea {
   line-height: inherit;
 }
 
+/* A button's text and icons follow the page's text colour unless its own class sets one: the browser's default
+   button colour ignores the theme. */
 button {
   border-radius: 0;
+  color: inherit;
 }
 
 button:not(:disabled),

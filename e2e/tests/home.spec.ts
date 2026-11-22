@@ -39,6 +39,20 @@ test("the home page offers every game and the round counts", async ({ page }) =>
   await expect(startButton).toBeEnabled();
 });
 
+for (const theme of ["light", "dark"] as const) {
+  test(`the game cards' titles and icons follow the ${theme} theme`, async ({ page }) => {
+    await page.addInitScript((saved) => localStorage.setItem("gg-theme", saved), theme);
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+
+    // The cards are buttons, whose browser default colour ignores the theme.
+    const text = await page.locator("body").evaluate((body) => getComputedStyle(body).color);
+    const card = page.getByRole("radio").filter({ has: page.getByText("Tripoints", { exact: true }) });
+    await expect(card.getByText("Tripoints", { exact: true })).toHaveCSS("color", text);
+    await expect(card.locator("svg").first()).toHaveCSS("color", text);
+  });
+}
+
 test("the privacy page opens from the footer and loads directly", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("contentinfo").getByRole("link", { name: "Credits and privacy" }).click();
