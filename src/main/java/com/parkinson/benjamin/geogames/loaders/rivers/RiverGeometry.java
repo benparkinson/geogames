@@ -37,9 +37,10 @@ public final class RiverGeometry {
   }
 
   /**
-   * The lines of the river's main piece: lines are joined into pieces when an end of one is within
-   * {@link RiverEnds#GAP_KM} of an end of another, and the piece with the most km is kept. The kept
-   * lines stay in their original order.
+   * The lines of the river's main piece: lines are joined into pieces when an end of either is
+   * within {@link RiverEnds#GAP_KM} of any point of the other (so a branch meeting the middle of
+   * the main line joins it), and the piece with the most km is kept. The kept lines stay in their
+   * original order.
    */
   public static List<List<double[]>> mainPiece(List<List<double[]>> lines) {
     List<List<double[]>> usable = lines.stream().filter(line -> line.size() >= 2).toList();
@@ -84,9 +85,13 @@ public final class RiverGeometry {
   }
 
   private static boolean endsMeet(List<double[]> a, List<double[]> b) {
-    for (double[] p : List.of(a.get(0), a.get(a.size() - 1))) {
-      for (double[] q : List.of(b.get(0), b.get(b.size() - 1))) {
-        if (Geo.haversineKm(p, q) <= RiverEnds.GAP_KM) {
+    return endNear(a, b) || endNear(b, a);
+  }
+
+  private static boolean endNear(List<double[]> line, List<double[]> other) {
+    for (double[] end : List.of(line.get(0), line.get(line.size() - 1))) {
+      for (double[] q : other) {
+        if (Geo.haversineKm(end, q) <= RiverEnds.GAP_KM) {
           return true;
         }
       }

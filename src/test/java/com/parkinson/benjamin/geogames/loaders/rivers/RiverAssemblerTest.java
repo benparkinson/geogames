@@ -30,7 +30,7 @@ class RiverAssemblerTest {
   private static RiverOverride override(
       Boolean exclude, String name, String continent, Boolean mainPieceOnly) {
     return new RiverOverride(
-        exclude, name, continent, null, null, null, mainPieceOnly, null, null, null);
+        exclude, name, continent, null, null, null, mainPieceOnly, null, null, null, null);
   }
 
   private static RiverAssembler.Assembly assemble(

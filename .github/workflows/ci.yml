@@ -37,7 +37,18 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-          cache: maven
+
+      # One Maven cache per job. setup-java's `cache: maven` shares one key between all the Java
+      # jobs, so the first to finish (lint-backend, with only Spotless) saved it and the others
+      # downloaded everything from Maven Central on every run, until Central answered 429.
+      - name: Cache the Maven repository
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: m2-${{ github.job }}-
 
       # Fails when Java is not formatted by google-java-format. Fix with `mvn spotless:apply`.
       - name: Check Java formatting
@@ -110,7 +121,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-          cache: maven
+
+      # One Maven cache per job (see lint-backend).
+      - name: Cache the Maven repository
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: m2-${{ github.job }}-
 
       # No Node here: the Java unit tests do not need the frontend. Includes the JaCoCo coverage gate.
       - name: Java unit tests and coverage gate
@@ -170,7 +190,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-          cache: maven
+
+      # One Maven cache per job (see lint-backend).
+      - name: Cache the Maven repository
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: m2-${{ github.job }}-
 
       # Maven installs Node itself (see <nodeVersion> in pom.xml), so no setup-node here.
       # NEXT_PUBLIC_API_URL makes the bundled site call the local backend instead of production. This
@@ -209,7 +238,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-          cache: maven
+
+      # One Maven cache per job (see lint-backend).
+      - name: Cache the Maven repository
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: m2-${{ github.job }}-
 
       # HttpServerIT serves the static site from the classpath, so it needs the frontend build.
       - name: Download the built frontend
@@ -406,7 +444,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-          cache: maven
+
+      # One Maven cache per job (see lint-backend).
+      - name: Cache the Maven repository
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: m2-${{ github.job }}-
 
       # Regenerates the country, country shape, river and lake data from geodata/ and compares it with
       # src/main/resources/processed/. Fails when geodata/ or a loader changed and the data was not

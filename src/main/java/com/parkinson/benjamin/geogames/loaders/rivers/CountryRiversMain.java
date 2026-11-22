@@ -142,7 +142,7 @@ public class CountryRiversMain {
       }
     }
 
-    Clipped clipped = clipRivers(riversFile, locator);
+    Clipped clipped = clipRivers(riversFile, overridesFile, locator);
     Map<String, List<Lake>> lakesByCountry = collectLakes(lakesFile, locator);
 
     // One file for each country with at least one stretch of river.
@@ -204,11 +204,12 @@ public class CountryRiversMain {
    */
   private static Map<String, RiverCandidate> namedRivers(
       Path riversFile, Path wikidataFile, Path overridesFile) throws IOException {
-    Map<String, NaturalEarthFeature> groups =
-        new NaturalEarthReader().read(riversFile, Set.of("Canal"));
-    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
     Map<String, RiverOverride> overrides =
         GeoJson.readValue(overridesFile, new TypeReference<>() {});
+    JsonNode tree = GeoJson.readTree(riversFile);
+    RiverQids.correct(tree, overrides);
+    Map<String, NaturalEarthFeature> groups = new NaturalEarthReader().group(tree, Set.of("Canal"));
+    Map<String, WikidataEntry> wikidata = GeoJson.readValue(wikidataFile, new TypeReference<>() {});
     Map<String, RiverCandidate> candidates = new HashMap<>();
     for (RiverCandidate candidate :
         new RiverAssembler().assemble(groups, wikidata, overrides).candidates()) {
@@ -218,11 +219,16 @@ public class CountryRiversMain {
   }
 
   /** Cuts every river of the source at the country borders. */
-  private static Clipped clipRivers(Path riversFile, CountryLocator locator) throws IOException {
+  private static Clipped clipRivers(Path riversFile, Path overridesFile, CountryLocator locator)
+      throws IOException {
+    Map<String, RiverOverride> overrides =
+        GeoJson.readValue(overridesFile, new TypeReference<>() {});
+    JsonNode tree = GeoJson.readTree(riversFile);
+    RiverQids.correct(tree, overrides);
     RiverClipper clipper = new RiverClipper(locator);
     Map<String, List<Run>> runsByCountry = new TreeMap<>();
     Map<Integer, Double> kmByScalerank = new TreeMap<>();
-    for (JsonNode feature : GeoJson.readTree(riversFile).path("features")) {
+    for (JsonNode feature : tree.path("features")) {
       JsonNode props = feature.path("properties");
       int scalerank = props.path("scalerank").asInt(99);
       int rivernum = props.path("rivernum").asInt(-1);

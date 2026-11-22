@@ -15,7 +15,8 @@ class RiverFactsTest {
       new CountryLocator.Result(List.of("A", "B"), 0);
 
   private static RiverOverride override(Boolean reverse, Coordinate source, Coordinate mouth) {
-    return new RiverOverride(null, null, null, null, null, null, null, reverse, source, mouth);
+    return new RiverOverride(
+        null, null, null, null, null, null, null, null, reverse, source, mouth);
   }
 
   @Test

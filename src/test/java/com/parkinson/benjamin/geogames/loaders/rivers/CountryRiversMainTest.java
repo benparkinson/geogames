@@ -151,6 +151,19 @@ class CountryRiversMainTest {
   }
 
   @Test
+  void anUnlinkedFeatureIsNeverNamedAsTheLongestRiver() throws IOException {
+    Path unlinking = out.resolve("overrides-unlink.json");
+    Files.writeString(unlinking, "{\"Q1\": {\"unlinkNames\": [\"Crossing\"]}}");
+
+    CountryRiversMain.Report report =
+        CountryRiversMain.run(
+            rivers, wikidata, unlinking, lakes, countries, Files.createDirectory(out.resolve("o")));
+
+    assertThat(report.rivers().get("Alpha").longestRiver()).isNotEqualTo("Crossing");
+    assertThat(report.rivers().get("Beta").longestRiver()).isNotEqualTo("Crossing");
+  }
+
+  @Test
   void clearsOldFilesFromTheOutputFolder() throws IOException {
     Files.writeString(out.resolve("Old.json"), "{}");
 

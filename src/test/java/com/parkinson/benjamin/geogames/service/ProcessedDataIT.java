@@ -671,4 +671,52 @@ public class ProcessedDataIT {
           continents.containsAll(shape.continents()), shape.name() + " " + shape.continents());
     }
   }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void everyRiverIsOnePiece() {
+    for (River river : new RiverLoaderService(reader).loadRivers()) {
+      List<List<List<Number>>> raw = river.geoData().geometry().coordinates();
+      List<List<double[]>> lines = new java.util.ArrayList<>();
+      for (List<List<Number>> line : raw) {
+        lines.add(
+            line.stream()
+                .map(p -> new double[] {p.get(0).doubleValue(), p.get(1).doubleValue()})
+                .toList());
+      }
+      assertEquals(1, pieceCount(lines), river.name() + " is drawn in several pieces");
+    }
+  }
+
+  private static int pieceCount(List<List<double[]>> lines) {
+    int n = lines.size();
+    int[] piece = new int[n];
+    for (int i = 0; i < n; i++) {
+      piece[i] = i;
+    }
+    for (int i = 0; i < n; i++) {
+      for (int j = i + 1; j < n; j++) {
+        if (piece[i] != piece[j] && withinGap(lines.get(i), lines.get(j))) {
+          int from = piece[j];
+          for (int k = 0; k < n; k++) {
+            if (piece[k] == from) {
+              piece[k] = piece[i];
+            }
+          }
+        }
+      }
+    }
+    return (int) java.util.Arrays.stream(piece).distinct().count();
+  }
+
+  private static boolean withinGap(List<double[]> a, List<double[]> b) {
+    for (double[] p : a) {
+      for (double[] q : b) {
+        if (Geo.haversineKm(p, q) <= 25) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
