@@ -5,24 +5,14 @@ import KofiBadge from "../../components/KofiBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
-import { Difficulty, GameRoundView } from "../../api/types";
-import { findGameModule, RANDOM_OPTION } from "../registry";
-import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
+import { RANDOM_OPTION } from "../registry";
+import { summariseGame } from "./summaryView";
 import DailyComparison from "../../daily/DailyComparison";
 import ShareButton from "../../daily/ShareButton";
 import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
-
-/** The game type to start for "Play again": the one every round used, or a mix if they differed. */
-/** What the end of the breakdown line says about the difficulty: nothing for Normal. */
-const DIFFICULTY_LABEL: Record<Difficulty, string[]> = { EASY: ["Easy"], NORMAL: [], HARD: ["Hard mode"] };
-
-function playAgainType(rounds: GameRoundView[]): string {
-  const types = new Set(rounds.map((r) => r.gameType.name));
-  return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
-}
 
 export default function GameSummary({
   gameId,
@@ -49,25 +39,9 @@ export default function GameSummary({
     return <LoadingSpinner fullPage className="page-bg" />;
   }
 
-  // Every round carries the whole game's result.
-  const { score, maxScore, roundAnswerStates, roundPoints, roundHintsUsed, roundFirstGuess } = all[0].gameResult;
-  const counts: Record<RoundOutcome, number> = { firstGuess: 0, correct: 0, hints: 0, missed: 0 };
-  roundAnswerStates.forEach((state, i) => {
-    const outcome = roundOutcome(state, roundHintsUsed[i], roundFirstGuess[i], roundPoints[i]);
-    if (outcome) counts[outcome]++;
-  });
-  // A whole game with no hints and no wrong guesses, against full marks reached after some wrong guesses.
-  const perfectGame = counts.firstGuess === totalRoundCount;
-  const fullMarks = !perfectGame && counts.firstGuess + counts.correct === totalRoundCount;
-  const breakdown = OUTCOME_ORDER.filter((o) => counts[o] > 0).map(
-    (o) => `${counts[o]} ${counts[o] === 1 ? OUTCOME_STYLES[o].singular : OUTCOME_STYLES[o].plural}`,
-  );
-  const outcomes = breakdown.length > 0 ? breakdown : ["0 correct"];
-  const summaryLine = [...outcomes, ...DIFFICULTY_LABEL[all[0].difficulty]].join(" · ");
-  const gameType = playAgainType(all);
-  // A game of one type names it once at the top; a mixed game (the daily or Mixed) names each round's type.
-  const mixed = gameType === RANDOM_OPTION.type;
-  const gameTitle = mixed ? null : (findGameModule(gameType)?.title ?? gameType);
+  const summary = summariseGame(all);
+  const { score, maxScore, heading, summaryLine, gameTitle, mixed } = summary;
+  const gameType = summary.playAgainType;
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
@@ -75,11 +49,11 @@ export default function GameSummary({
           {gameTitle && <p className="gg-text-muted mb-1">{gameTitle}</p>}
           <h1 className="h3 mb-1">
             {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
-            {perfectGame ? (
+            {heading === "perfect" ? (
               <>
                 <StarFill aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} / {maxScore}
               </>
-            ) : fullMarks ? (
+            ) : heading === "fullMarks" ? (
               <>
                 <CheckLg aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
               </>
@@ -92,8 +66,8 @@ export default function GameSummary({
         </div>
 
         <div className="gg-list gg-summary__list mb-3">
-          {all.map((r, i) => (
-            <SummaryRow key={i} round={r} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
+          {summary.rows.map((row, i) => (
+            <SummaryRow key={i} row={row} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
           ))}
         </div>
 

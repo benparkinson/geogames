@@ -1,0 +1,102 @@
+import { Difficulty, GameRoundView } from "../../api/types";
+import { findGameModule, RANDOM_OPTION } from "../registry";
+import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
+import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
+import type { RoundResultKind } from "./roundView";
+
+/** What the end of the breakdown line says about the difficulty: nothing for Normal. */
+const DIFFICULTY_LABEL: Record<Difficulty, string[]> = { EASY: ["Easy"], NORMAL: [], HARD: ["Hard mode"] };
+
+/** The game type to start for "Play again": the one every round used, or a mix if they differed. */
+export function playAgainType(rounds: GameRoundView[]): string {
+  const types = new Set(rounds.map((r) => r.gameType.name));
+  return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
+}
+
+function roundLabel(round: GameRoundView): string {
+  return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
+}
+
+/** The answers of a round, for the summary. */
+function roundAnswers(round: GameRoundView): string[] {
+  return findGameModule(round.gameType.name)?.answerNames(round.data) ?? [];
+}
+
+/** One round of the results page. */
+export interface SummaryRowView {
+  /** The round's type name, for a mixed game. */
+  label: string;
+  answers: string[];
+  outcome: RoundOutcome | null;
+  result: RoundResultKind;
+  hintsUsed: number;
+  outOfGuesses: boolean;
+  points: number;
+}
+
+export interface GameSummaryView {
+  score: number;
+  maxScore: number;
+  /** "perfect": every round a first guess; "fullMarks": full marks after some wrong guesses. */
+  heading: "perfect" | "fullMarks" | "scored";
+  summaryLine: string;
+  playAgainType: string;
+  /** A mixed game names each round's type; a game of one type names it once, at the top. */
+  mixed: boolean;
+  gameTitle: string | null;
+  difficulty: Difficulty;
+  rows: SummaryRowView[];
+}
+
+/** Everything the results page shows, worked out from the game's rounds. `rounds` is not empty. */
+export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
+  // Every round carries the whole game's result.
+  const { score, maxScore, roundAnswerStates, roundPoints, roundHintsUsed, roundFirstGuess } = rounds[0].gameResult;
+  const counts: Record<RoundOutcome, number> = { firstGuess: 0, correct: 0, hints: 0, missed: 0 };
+  roundAnswerStates.forEach((state, i) => {
+    const outcome = roundOutcome(state, roundHintsUsed[i], roundFirstGuess[i], roundPoints[i]);
+    if (outcome) counts[outcome]++;
+  });
+  const perfect = counts.firstGuess === rounds.length;
+  const fullMarks = !perfect && counts.firstGuess + counts.correct === rounds.length;
+  const breakdown = OUTCOME_ORDER.filter((o) => counts[o] > 0).map(
+    (o) => `${counts[o]} ${counts[o] === 1 ? OUTCOME_STYLES[o].singular : OUTCOME_STYLES[o].plural}`,
+  );
+  const difficulty = rounds[0].difficulty;
+  const summaryLine = [...(breakdown.length > 0 ? breakdown : ["0 correct"]), ...DIFFICULTY_LABEL[difficulty]].join(
+    " · ",
+  );
+  const type = playAgainType(rounds);
+  const mixed = type === RANDOM_OPTION.type;
+  const rows = rounds.map((round, i): SummaryRowView => {
+    const outcome = roundOutcome(round.answerState, round.hintsUsed, round.gameResult.roundFirstGuess[i], round.points);
+    const result: RoundResultKind =
+      outcome === "firstGuess"
+        ? "firstGuess"
+        : round.answerState === CORRECT_ANSWER
+          ? "correct"
+          : round.answerState === OUT_OF_GUESSES
+            ? "outOfGuesses"
+            : "revealed";
+    return {
+      label: roundLabel(round),
+      answers: roundAnswers(round),
+      outcome,
+      result,
+      hintsUsed: round.hintsUsed,
+      outOfGuesses: round.answerState === OUT_OF_GUESSES,
+      points: round.points,
+    };
+  });
+  return {
+    score,
+    maxScore,
+    heading: perfect ? "perfect" : fullMarks ? "fullMarks" : "scored",
+    summaryLine,
+    playAgainType: type,
+    mixed,
+    gameTitle: mixed ? null : (findGameModule(type)?.title ?? type),
+    difficulty,
+    rows,
+  };
+}

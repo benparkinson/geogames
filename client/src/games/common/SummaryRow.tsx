@@ -1,37 +1,22 @@
 import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
-import { GameRoundView } from "../../api/types";
-import { findGameModule } from "../registry";
-import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
-import { roundOutcome } from "./outcome";
+import type { SummaryRowView } from "./summaryView";
 
-function roundLabel(round: GameRoundView): string {
-  return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
-}
-
-/** The answers of a round, for the summary. */
-function roundAnswers(round: GameRoundView): string[] {
-  return findGameModule(round.gameType.name)?.answerNames(round.data) ?? [];
-}
+const RESULT_ICON = { firstGuess: StarFill, correct: CheckLg, hints: CheckLg, outOfGuesses: XLg, revealed: EyeFill };
 
 /** One round of the summary: its answers, how it went and its points. A button that opens the round. */
 export default function SummaryRow({
-  round,
+  row,
   index,
   mixed,
   onOpen,
 }: {
-  round: GameRoundView;
+  row: SummaryRowView;
   index: number;
   /** A mixed game names each round's type; a game of one type names it once, at the top. */
   mixed: boolean;
   onOpen: () => void;
 }): React.JSX.Element {
-  const outcome = roundOutcome(
-    round.answerState,
-    round.hintsUsed,
-    round.gameResult.roundFirstGuess[index],
-    round.points,
-  );
+  const Icon = RESULT_ICON[row.result];
   return (
     <button
       type="button"
@@ -42,40 +27,31 @@ export default function SummaryRow({
         {mixed ? (
           <>
             <span className="gg-text-muted">
-              {index + 1}. {roundLabel(round)}
+              {index + 1}. {row.label}
             </span>
             <br />
-            {roundAnswers(round).join(", ")}
+            {row.answers.join(", ")}
           </>
         ) : (
           <>
-            <span className="gg-text-muted">{index + 1}.</span> {roundAnswers(round).join(", ")}
+            <span className="gg-text-muted">{index + 1}.</span> {row.answers.join(", ")}
           </>
         )}
-        {round.answerState === OUT_OF_GUESSES && (
+        {row.outOfGuesses && (
           <>
             <br />
             <span className="small gg-text-muted">Out of guesses</span>
           </>
         )}
-        {round.hintsUsed > 0 && (
+        {row.hintsUsed > 0 && (
           <>
             <br />
-            <span className="small gg-text-muted">{round.hintsUsed === 1 ? "1 hint" : `${round.hintsUsed} hints`}</span>
+            <span className="small gg-text-muted">{row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}</span>
           </>
         )}
       </span>
-      <span className="text-nowrap" data-outcome={outcome ?? "missed"}>
-        {outcome === "firstGuess" ? (
-          <StarFill aria-hidden="true" />
-        ) : round.answerState === CORRECT_ANSWER ? (
-          <CheckLg aria-hidden="true" />
-        ) : round.answerState === OUT_OF_GUESSES ? (
-          <XLg aria-hidden="true" />
-        ) : (
-          <EyeFill aria-hidden="true" />
-        )}{" "}
-        +{round.points}
+      <span className="text-nowrap" data-outcome={row.outcome ?? "missed"}>
+        <Icon aria-hidden="true" /> +{row.points}
       </span>
     </button>
   );
