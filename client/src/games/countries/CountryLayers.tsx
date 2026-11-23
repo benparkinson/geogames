@@ -13,7 +13,7 @@ import {
 import type { CountryGeoData, LineGeoData } from "../common/country";
 import type { CountryOutline, CountryShape } from "./model";
 
-/** Fits the map to the country's largest part, so overseas parts and the antimeridian don't zoom out to the world. */
+/** Fits the map to the focus (the largest part and big nearby islands), so overseas parts and the antimeridian don't zoom out to the world. */
 export function FocusFit({ country }: { country: CountryShape }): React.JSX.Element {
   return <FitBounds id={country.name} bounds={boundsToLatLng(country.focus)} />;
 }
