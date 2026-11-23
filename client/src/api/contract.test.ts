@@ -48,7 +48,12 @@ function roundFixtures(): Record<string, GameRoundResponse> {
   const riverOf = (name: string) => makeRiverRound({ gameType: { name, answerCount: 1, hintCount: 2, guessLimit: 5 } });
   const countriesRiver = makeRiverRound({
     gameType: { name: "RIVERS_BY_COUNTRIES", answerCount: 1, hintCount: 2, guessLimit: 5 },
-    jsonBlob: JSON.stringify(makeRiverRoundData({ countries: makeTripointData().countries })),
+    jsonBlob: JSON.stringify(
+      makeRiverRoundData({
+        countries: makeTripointData().countries,
+        focus: { west: 9, south: 43, east: 30, north: 50 },
+      }),
+    ),
   });
   return {
     TRIPOINT: makeRound(),

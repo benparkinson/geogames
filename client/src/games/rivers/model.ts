@@ -1,4 +1,5 @@
 import type { Coordinate, Country, LineGeoData } from "../common/country";
+import type { Bounds } from "../countries/model";
 
 export interface River {
   id: string;
@@ -17,4 +18,6 @@ export interface River {
 export interface RiverRound {
   river: River;
   countries: Country[];
+  /** The box the map opens on; null for the games that show no countries. */
+  focus?: Bounds | null;
 }

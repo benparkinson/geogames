@@ -6,11 +6,16 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
+import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
+import com.parkinson.benjamin.geogames.model.geojson.GeoData;
+import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
+import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
 import com.parkinson.benjamin.geogames.service.RoundGenerator;
@@ -23,6 +28,12 @@ import org.junit.jupiter.api.Test;
 class RiverGamesConfigTest {
 
   private static final Coordinate POINT = new Coordinate(1, 1);
+  private static final GeoData LINE =
+      new GeoData(
+          "Feature",
+          new GeoProperties("r"),
+          new GeoGeometry(
+              "MultiLineString", List.of(List.of(List.of(1.0, 1.0), List.of(3.0, 2.0)))));
 
   private final RiverLoaderService rivers = mock(RiverLoaderService.class);
   private final CountryShapeService countries = mock(CountryShapeService.class);
@@ -30,7 +41,7 @@ class RiverGamesConfigTest {
   private final RiverGamesConfig config = new RiverGamesConfig();
 
   private static River river(String id, Coordinate source, Coordinate mouth, List<String> where) {
-    return new River(id, "River " + id, List.of(), "Asia", null, source, mouth, where);
+    return new River(id, "River " + id, List.of(), "Asia", LINE, source, mouth, where);
   }
 
   @BeforeEach
@@ -44,6 +55,21 @@ class RiverGamesConfigTest {
                 river("D", POINT, POINT, null),
                 river("E", POINT, null, List.of("X", "Y")),
                 river("Q2251", POINT, POINT, List.of("X", "Y"))));
+    when(countries.loadShape(anyString()))
+        .thenAnswer(
+            call ->
+                new CountryShape(
+                    call.getArgument(0),
+                    List.of(),
+                    List.of(),
+                    0,
+                    0,
+                    0,
+                    List.of(),
+                    new Bounds(0, 0, 10, 10),
+                    null,
+                    null,
+                    null));
     when(countries.loadDisplayCountry(anyString()))
         .thenAnswer(call -> new Country(call.getArgument(0), List.of(), null));
   }
@@ -88,5 +114,22 @@ class RiverGamesConfigTest {
   void riversByShapeAttachesNoCountries() {
     assertThat(config.riversByShape(rivers).generate(6, Set.of(), random))
         .allSatisfy(round -> assertThat(((RiverRound) round).countries()).isEmpty());
+  }
+
+  @Test
+  void riversByCountriesOpensOnTheRiverAndTheCountries() {
+    assertThat(config.riversByCountries(rivers, countries).generate(3, Set.of(), random))
+        .allSatisfy(
+            round -> {
+              Bounds focus = ((RiverRound) round).focus();
+              assertThat(focus).isNotNull();
+              assertThat(focus.union(new Bounds(0, 0, 10, 10))).isEqualTo(focus);
+            });
+  }
+
+  @Test
+  void riversByShapeHasNoFocus() {
+    assertThat(config.riversByShape(rivers).generate(6, Set.of(), random))
+        .allSatisfy(round -> assertThat(((RiverRound) round).focus()).isNull());
   }
 }

@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -21,16 +22,19 @@ public class RiverRoundGenerator extends SubjectRoundGenerator<River> {
   private final RiverLoaderService riverLoaderService;
   private final Predicate<River> eligible;
   private final Function<River, List<Country>> countries;
+  private final Function<River, Bounds> focus;
 
   public RiverRoundGenerator(
       GameType gameType,
       RiverLoaderService riverLoaderService,
       Predicate<River> eligible,
-      Function<River, List<Country>> countries) {
+      Function<River, List<Country>> countries,
+      Function<River, Bounds> focus) {
     super(gameType, SubjectIds.RIVER, "rivers");
     this.riverLoaderService = riverLoaderService;
     this.eligible = eligible;
     this.countries = countries;
+    this.focus = focus;
   }
 
   @Override
@@ -53,6 +57,6 @@ public class RiverRoundGenerator extends SubjectRoundGenerator<River> {
 
   @Override
   GameData toRound(River river) {
-    return new RiverRound(gameType(), river, countries.apply(river));
+    return new RiverRound(gameType(), river, countries.apply(river), focus.apply(river));
   }
 }

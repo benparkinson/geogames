@@ -218,7 +218,8 @@ class GameServiceTest {
             new Coordinate(0, 0),
             new Coordinate(1, 1),
             List.of()),
-        List.of());
+        List.of(),
+        null);
   }
 
   private List<GameData> tripoints(int count) {
