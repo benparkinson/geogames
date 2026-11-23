@@ -25,6 +25,8 @@
         "additionalNames" : {
           "array" : "string"
         },
+        "lat" : "number",
+        "lon" : "number",
         "name" : "string"
       }
     },
@@ -33,6 +35,8 @@
         "additionalNames" : {
           "array" : "string"
         },
+        "lat" : "number",
+        "lon" : "number",
         "name" : "string"
       }
     },

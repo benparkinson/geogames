@@ -1,28 +1,36 @@
 import { useMemo } from "react";
-import { useCountryNames } from "../../api/placeNames";
+import { useLocatedPlaceNames, type PlaceKind } from "../../api/placeNames";
 import { normaliseString } from "../../helper/stringHelper";
 import { bearingDegrees, distanceKm, type LatLon } from "./distance";
 import type { GuessClue } from "./guessReducer";
 
+const SINGULAR: Record<PlaceKind, string> = { countries: "country", rivers: "river", lakes: "lake" };
+
 /**
- * Builds `clueFor` for a game whose answers are countries: how far the guessed country is from the
- * nearest answer still to find, and which way to go. Undefined until the country list has loaded,
+ * Builds `clueFor` for a game whose answers are countries, rivers or lakes: how far the guessed place is from the
+ * nearest answer still to find, and which way to go. Undefined until the list of places has loaded,
  * so a game that opts in has no clues until then, and always undefined when `enabled` is false (the game
  * has no clues, so the list isn't fetched for it, even if it is already cached). Everything is worked out
  * in the browser.
  */
-export function useCountryClues(enabled = true): ((guess: string, targets: string[]) => GuessClue | null) | undefined {
-  const { data } = useCountryNames(enabled);
+export function usePlaceClues(
+  kind: PlaceKind,
+  enabled = true,
+): ((guess: string, targets: string[]) => GuessClue | null) | undefined {
+  const { data } = useLocatedPlaceNames(kind, enabled);
 
   return useMemo(() => {
     if (!enabled || !data) {
       return undefined;
     }
     const positions = new Map<string, LatLon>();
-    for (const country of data) {
-      const position = { lat: country.lat, lon: country.lon };
-      positions.set(normaliseString(country.name), position);
-      country.additionalNames.forEach((alias) => positions.set(normaliseString(alias), position));
+    for (const place of data) {
+      if (place.lat === undefined || place.lon === undefined) {
+        continue;
+      }
+      const position = { lat: place.lat, lon: place.lon };
+      positions.set(normaliseString(place.name), position);
+      place.additionalNames.forEach((alias) => positions.set(normaliseString(alias), position));
     }
 
     return (guess: string, targets: string[]): GuessClue | null => {
@@ -35,7 +43,7 @@ export function useCountryClues(enabled = true): ((guess: string, targets: strin
         const to = positions.get(normaliseString(target));
         if (!to) {
           if (process.env.NODE_ENV === "development") {
-            console.error(`The answer "${target}" is not in the country list, so it has no position.`);
+            console.error(`The answer "${target}" is not in the ${SINGULAR[kind]} list, so it has no position.`);
           }
           continue;
         }
@@ -46,5 +54,5 @@ export function useCountryClues(enabled = true): ((guess: string, targets: strin
       }
       return best;
     };
-  }, [data, enabled]);
+  }, [data, enabled, kind]);
 }

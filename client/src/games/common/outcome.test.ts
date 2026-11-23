@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome } from "./outcome";
+import { OUTCOME_STYLES, roundOutcome } from "./outcome";
 
 describe("roundOutcome", () => {
   it("is null while unanswered", () => {
@@ -32,11 +32,13 @@ describe("roundOutcome", () => {
 
 describe("OUTCOME_STYLES", () => {
   it("defines every outcome, and no label says perfect", () => {
-    expect(Object.keys(OUTCOME_STYLES).sort()).toEqual([...OUTCOME_ORDER].sort());
+    expect(Object.keys(OUTCOME_STYLES).sort()).toEqual(["correct", "firstGuess", "hints", "missed"]);
     expect(JSON.stringify(OUTCOME_STYLES).toLowerCase()).not.toContain("perfect");
   });
 
   it("uses the share squares of the plan", () => {
-    expect(OUTCOME_ORDER.map((o) => OUTCOME_STYLES[o].emoji).join("")).toBe("❇️🟩🟨🟥");
+    expect((["firstGuess", "correct", "hints", "missed"] as const).map((o) => OUTCOME_STYLES[o].emoji).join("")).toBe(
+      "❇️🟩🟨🟥",
+    );
   });
 });

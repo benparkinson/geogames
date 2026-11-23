@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { countryNames, riverNames } from "../test/fixtures";
 import { mockFetch } from "../test/fetchMock";
 import { clientWrapper, newTestClient } from "../test/render";
-import { useCountryNames, usePlaceNames } from "./placeNames";
+import { useLocatedPlaceNames, usePlaceNames } from "./placeNames";
 
 describe("usePlaceNames", () => {
   it("returns the country list from the server", async () => {
@@ -66,17 +66,17 @@ describe("usePlaceNames", () => {
   });
 });
 
-describe("useCountryNames", () => {
+describe("useLocatedPlaceNames", () => {
   it("returns the countries with their positions", async () => {
     mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
-    const { result } = renderHook(() => useCountryNames(), { wrapper: clientWrapper() });
+    const { result } = renderHook(() => useLocatedPlaceNames("countries"), { wrapper: clientWrapper() });
 
     await waitFor(() => expect(result.current.data).toEqual(countryNames));
   });
 
   it("fetches nothing when it is not enabled", async () => {
     const fetchMock = mockFetch([{ url: /\/api\/countries$/, body: countryNames }]);
-    const { result } = renderHook(() => useCountryNames(false), { wrapper: clientWrapper() });
+    const { result } = renderHook(() => useLocatedPlaceNames("countries", false), { wrapper: clientWrapper() });
 
     await Promise.resolve();
 

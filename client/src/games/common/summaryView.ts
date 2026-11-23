@@ -1,9 +1,8 @@
 import { AnswerCandidate, matchAnswer } from "./answers";
-import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import { Difficulty, GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
 import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
-import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
+import { roundOutcome, RoundOutcome } from "./outcome";
 import type { RoundResultKind } from "./roundView";
 
 /** The game type to start for "Play again": the one every round used, or a mix if they differed. */
@@ -52,7 +51,6 @@ export interface GameSummaryView {
   maxScore: number;
   /** "perfect": every round a first guess; "fullMarks": full marks after some wrong guesses. */
   heading: "perfect" | "fullMarks" | "scored";
-  summaryLine: string;
   playAgainType: string;
   /** A mixed game names each round's type; a game of one type names it once, at the top. */
   mixed: boolean;
@@ -60,7 +58,6 @@ export interface GameSummaryView {
   difficulty: Difficulty;
   /** Rounds answered correctly, with or without hints. */
   solved: number;
-  wrongGuesses: number;
   hintsUsed: number;
   rows: SummaryRowView[];
 }
@@ -76,13 +73,6 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
   });
   const perfect = counts.firstGuess === rounds.length;
   const fullMarks = !perfect && counts.firstGuess + counts.correct === rounds.length;
-  const breakdown = OUTCOME_ORDER.filter((o) => counts[o] > 0).map(
-    (o) => `${counts[o]} ${counts[o] === 1 ? OUTCOME_STYLES[o].singular : OUTCOME_STYLES[o].plural}`,
-  );
-  const difficulty = rounds[0].difficulty;
-  const summaryLine = [...(breakdown.length > 0 ? breakdown : ["0 correct"]), ...DIFFICULTY_LABEL[difficulty]].join(
-    " · ",
-  );
   const type = playAgainType(rounds);
   const mixed = type === RANDOM_OPTION.type;
   const rows = rounds.map((round, i): SummaryRowView => {
@@ -112,13 +102,11 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
     score,
     maxScore,
     heading: perfect ? "perfect" : fullMarks ? "fullMarks" : "scored",
-    summaryLine,
     playAgainType: type,
     mixed,
     gameTitle: mixed ? null : (findGameModule(type)?.title ?? type),
-    difficulty,
+    difficulty: rounds[0].difficulty,
     solved: roundAnswerStates.filter((state) => state === CORRECT_ANSWER).length,
-    wrongGuesses: rows.reduce((sum, row) => sum + row.wrongGuessNames.length, 0),
     hintsUsed: rows.reduce((sum, row) => sum + row.hintsUsed, 0),
     rows,
   };

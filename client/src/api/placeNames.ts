@@ -10,10 +10,13 @@ export interface PlaceName {
   additionalNames: string[];
 }
 
-/** A country, with the position distance clues are measured from (the centroid of its largest part). */
-export interface CountryName extends PlaceName {
-  lat: number;
-  lon: number;
+/**
+ * A place with the position distance clues are measured from. Countries always have one; rivers and lakes
+ * may not (an older backend), and then give no clue.
+ */
+export interface LocatedPlaceName extends PlaceName {
+  lat?: number;
+  lon?: number;
 }
 
 function placeNamesQuery<T extends PlaceName>(kind: PlaceKind) {
@@ -32,9 +35,9 @@ export function usePlaceNames(kind: PlaceKind): UseQueryResult<PlaceName[]> {
 }
 
 /**
- * The countries with their positions. Shares its query, and so its single fetch, with `usePlaceNames("countries")`.
- * With `enabled` false it fetches nothing.
+ * The places of this kind with their positions. Shares its query, and so its single fetch, with
+ * `usePlaceNames(kind)`. With `enabled` false it fetches nothing.
  */
-export function useCountryNames(enabled = true): UseQueryResult<CountryName[]> {
-  return useQuery<CountryName[]>({ ...placeNamesQuery<CountryName>("countries"), enabled });
+export function useLocatedPlaceNames(kind: PlaceKind, enabled = true): UseQueryResult<LocatedPlaceName[]> {
+  return useQuery<LocatedPlaceName[]>({ ...placeNamesQuery<LocatedPlaceName>(kind), enabled });
 }

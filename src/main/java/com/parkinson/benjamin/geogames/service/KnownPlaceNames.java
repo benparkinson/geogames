@@ -1,7 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.helper.PlaceNames;
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.PlaceKind;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.EnumMap;
@@ -46,9 +46,9 @@ public class KnownPlaceNames {
   public synchronized Optional<String> currentCountryName(String name) {
     if (currentCountryNames == null) {
       Map<String, String> byName = new HashMap<>();
-      List<CountryName> all = countries.loadCountryNames();
+      List<LocatedPlaceName> all = countries.loadCountryNames();
       all.forEach(c -> byName.putIfAbsent(PlaceNames.normalise(c.name()), c.name()));
-      for (CountryName country : all) {
+      for (LocatedPlaceName country : all) {
         if (country.additionalNames() != null) {
           country
               .additionalNames()
@@ -79,8 +79,14 @@ public class KnownPlaceNames {
           countries.loadCountryNames().stream()
               .map(c -> new PlaceName(c.name(), c.additionalNames()))
               .toList();
-      case RIVERS -> rivers.loadRiverNames();
-      case LAKES -> lakes.loadLakeNames();
+      case RIVERS ->
+          rivers.loadRiverNames().stream()
+              .map(c -> new PlaceName(c.name(), c.additionalNames()))
+              .toList();
+      case LAKES ->
+          lakes.loadLakeNames().stream()
+              .map(c -> new PlaceName(c.name(), c.additionalNames()))
+              .toList();
     };
   }
 
