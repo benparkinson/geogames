@@ -1,4 +1,5 @@
 import { useWakeServer } from "../api/health";
+import { creationErrorMessage } from "../api/http";
 import PageShell from "../components/PageShell";
 import DifficultyToggle from "../components/DifficultyToggle";
 import { Button, Notice, Spinner } from "../ui";
@@ -31,7 +32,9 @@ export default function DailyIntro(): React.JSX.Element {
       </Button>
       <div aria-live="polite" className="gg-daily__status">
         {isPending && slow && <p className="gg-text-muted">Waking up the server…</p>}
-        {!!error && !isPending && <Notice>Couldn&apos;t start. The server may be down. Try again.</Notice>}
+        {!!error && !isPending && (
+          <Notice>{creationErrorMessage(error, "Couldn't start. The server may be down. Try again.")}</Notice>
+        )}
       </div>
     </PageShell>
   );

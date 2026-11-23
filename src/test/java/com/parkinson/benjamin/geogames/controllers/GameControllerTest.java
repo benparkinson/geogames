@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,6 +35,9 @@ import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCapacityException;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
+import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,6 +60,7 @@ class GameControllerTest {
   private static final UUID GAME_ID = UUID.fromString("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d");
 
   @MockitoBean private GameService gameService;
+  @MockitoBean private GameCreationGuard guard;
 
   private static RoundAnswerResponse answer() {
     return new RoundAnswerResponse(AnswerState.CORRECT, 0, 100, round().gameResult());
@@ -103,6 +108,37 @@ class GameControllerTest {
         .andExpect(jsonPath("$.id").value(GAME_ID.toString()));
 
     verify(gameService).createGame("TRIPOINT", 3, null);
+  }
+
+  @Test
+  void aClientOverTheLimitGetsA429WithRetryAfter() throws Exception {
+    doThrow(new TooManyGamesException(120)).when(guard).check(any());
+
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3}"))
+        .andExpect(status().isTooManyRequests())
+        .andExpect(header().string("Retry-After", "120"))
+        .andExpect(jsonPath("$.status").value(429));
+
+    verifyNoInteractions(gameService);
+  }
+
+  @Test
+  void aFullDatabaseGetsA503WithRetryAfter() throws Exception {
+    doThrow(new GameCapacityException(600)).when(guard).check(any());
+
+    mockMvc
+        .perform(
+            post("/api/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3}"))
+        .andExpect(status().isServiceUnavailable())
+        .andExpect(header().string("Retry-After", "600"));
+
+    verifyNoInteractions(gameService);
   }
 
   @Test

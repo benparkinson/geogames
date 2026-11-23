@@ -4,6 +4,7 @@ import KofiBadge from "../../components/KofiBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
+import { creationErrorMessage } from "../../api/http";
 import { RANDOM_OPTION } from "../registry";
 import { summariseGame } from "./summaryView";
 import DailyComparison from "../../daily/DailyComparison";
@@ -75,7 +76,7 @@ export default function GameSummary({
         <div className="gg-summary__actions">
           {!!createError && (
             <div className="gg-summary__error gg-text-danger" role="alert">
-              Couldn&apos;t start a new game. Try again.
+              {creationErrorMessage(createError, "Couldn't start a new game. Try again.")}
             </div>
           )}
           {share !== null && (

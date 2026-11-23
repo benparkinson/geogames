@@ -439,6 +439,16 @@ describe("GameSummary", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Couldn't start a new game. Try again.");
   });
+
+  it("says when too many games were started from the network", async () => {
+    mockFetch([roundsRoute(mixed), { method: "POST", url: /\/api\/games$/, status: 429, body: {} }]);
+    renderSummary();
+    await screen.findByText("You scored 183 / 300");
+
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Too many new games from your network");
+  });
 });
 
 describe("GameSummary with partly correct rounds", () => {
