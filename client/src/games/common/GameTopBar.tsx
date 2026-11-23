@@ -23,7 +23,8 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
     `Score ${score}`
   );
 
-  const title = round.dailyDate !== undefined ? "Daily" : round.kind.title;
+  // Not the round's game: a mixed game's rounds differ, and the client can't tell a mixed game from its rounds alone.
+  const title = round.dailyDate !== undefined ? "Daily" : "Practice";
   const roundNumber = String(round.currentRound + 1).padStart(2, "0");
   const meta = [
     `round ${roundNumber} of ${String(round.totalRoundCount).padStart(2, "0")}`,

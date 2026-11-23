@@ -17,7 +17,7 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
       className="guesses-left"
     >
       {limit <= MAX_HEARTS && (
-        <span className={"guesses-left-dots" + (last ? " gg-text-hint" : "")} aria-hidden="true">
+        <span className={"guesses-left-dots" + (last ? " gg-text-danger" : "")} aria-hidden="true">
           {Array.from({ length: limit }, (_, i) => (i < left ? <LifeIcon key={i} /> : <LifeLostIcon key={i} />))}
         </span>
       )}

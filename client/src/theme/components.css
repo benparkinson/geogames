@@ -244,9 +244,6 @@
 .gg-text-correct {
   color: var(--gg-color-correct);
 }
-.gg-text-hint {
-  color: var(--gg-color-hint);
-}
 .gg-text-warning {
   color: var(--gg-color-warning-text);
 }
@@ -1063,11 +1060,24 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .gg-guess-form {
   display: flex;
-  gap: var(--gg-space-2);
   margin-bottom: var(--gg-space-2);
 }
 .gg-guess-form__box {
   flex-grow: 1;
+}
+/* The box and the Guess button are joined: one ink outline, squared where they meet. */
+.gg-guess-form__box .gg-input {
+  border-color: var(--gg-color-rule);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.gg-guess-form__box .gg-input:focus {
+  position: relative;
+  z-index: 1;
+}
+.gg-guess-form > .gg-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .guess-feedback {
   font-size: var(--gg-font-size-sm);

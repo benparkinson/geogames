@@ -234,12 +234,6 @@ code {
   margin-bottom: 0.25rem;
   color: var(--gg-color-text);
 }
-.gg-chip.guess-chip {
-  --gg-chip-fg: var(--gg-color-text);
-}
-.guess-chip__x {
-  color: var(--gg-color-danger);
-}
 .guesses-left-dots {
   display: inline-flex;
   gap: 0.25rem;
