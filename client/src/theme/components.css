@@ -494,10 +494,13 @@
 }
 
 /* ---- Site header: name, streak and theme switch over an ink rule ---- */
+/* Full width on every page; on a phone the end (Ko-fi, streak, theme) wraps rather than widening the page. */
 .gg-site-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   gap: var(--gg-space-2);
   max-width: 1100px;
   margin: 0 auto;
@@ -510,7 +513,10 @@
 }
 .gg-site-header__end {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
+  margin-left: auto;
   gap: var(--gg-space-3);
 }
 .gg-site-header__streak {
@@ -807,7 +813,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   display: flex;
   flex-direction: column;
 }
+/* The home page's gutter on a phone (never touching the screen's edges), centred up to the card's max-width. */
 .gg-page__card {
+  width: calc(100% - 2 * var(--gg-space-3));
   margin: var(--gg-space-3) auto;
   padding: var(--gg-space-3);
 }
@@ -1275,7 +1283,6 @@ button.gg-summary__row:focus-visible {
 
 /* A page whose content (the daily ticket) draws its own border and padding. */
 .gg-page__card--bare {
-  width: 100%;
   padding: 0;
   border: 0;
   background: transparent;
