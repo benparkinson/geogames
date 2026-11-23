@@ -11,6 +11,7 @@ export default defineGame({
   description: "Name a river from its shape alone.",
   Icon: RiverIcon,
   extraDifficult: true,
+  hasClues: true,
   Component: makeRiverGame({
     MapComponent: RiverShapesMapWrapper,
     prompt: "Which river is this?",

@@ -1,7 +1,7 @@
 import type { PlaceKind } from "../../api/placeNames";
 import type { GameComponentProps } from "../types";
 import MapGame, { type MapGameProps } from "./MapGame";
-import { useCountryClues } from "./useCountryClues";
+import { usePlaceClues } from "./usePlaceClues";
 import { useGuessList } from "./useGuessList";
 
 const PLACE_TEXT: Record<PlaceKind, { inputPlaceholder: string; answerNoun: string }> = {
@@ -21,7 +21,7 @@ interface PlaceGameProps<T> extends Pick<
 /** A map game whose answers come from one of the place lists. */
 export default function PlaceGame<T>({ kind, game, ...rest }: PlaceGameProps<T>): React.JSX.Element {
   const { suggestions, isKnownGuess } = useGuessList(kind);
-  const clueFor = useCountryClues(game.round.hasClues);
+  const clueFor = usePlaceClues(kind, game.round.hasClues);
   return (
     <MapGame
       {...rest}
