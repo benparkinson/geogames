@@ -114,7 +114,7 @@ describe("HomePage choosing a game", () => {
     renderHome();
 
     expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Today's five");
-    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Start the daily");
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Start");
   });
 
   it("keeps the start panel before the Ko-fi link in the tab order", async () => {

@@ -509,7 +509,15 @@
 }
 .gg-site-header__title {
   margin: 0;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-weight: var(--gg-font-weight-display);
   font-size: var(--gg-font-size-h3);
+  line-height: 1.1;
+}
+.gg-site-header__home {
+  color: inherit;
+  text-decoration: none;
 }
 .gg-site-header__end {
   display: flex;
@@ -1080,7 +1088,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   gap: var(--gg-space-2);
 }
 .round-result {
-  margin-bottom: var(--gg-space-3);
+  margin-bottom: 0;
 }
 .round-result__banner {
   margin-bottom: var(--gg-space-2);
