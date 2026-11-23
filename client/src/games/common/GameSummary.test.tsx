@@ -443,7 +443,7 @@ describe("GameSummary", () => {
   it("says when too many games were started from the network", async () => {
     mockFetch([roundsRoute(mixed), { method: "POST", url: /\/api\/games$/, status: 429, body: {} }]);
     renderSummary();
-    await screen.findByText("You scored 183 / 300");
+    await screen.findByRole("heading", { name: "Your result" });
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
 
