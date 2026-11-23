@@ -63,7 +63,7 @@ describe("DailyPage with no game for today", () => {
     ]);
     renderWithClient(<DailyPage />);
 
-    const play = await screen.findByRole("button", { name: "Play today's challenge" });
+    const play = await screen.findByRole("button", { name: "Start" });
     expect(posts(fetchMock)).toHaveLength(0);
 
     await userEvent.click(play);
@@ -85,7 +85,7 @@ describe("DailyPage with no game for today", () => {
     ]);
     renderWithClient(<DailyPage />);
 
-    await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Start" }));
 
     await waitFor(() => expect(readDaily()?.difficulty).toBe(difficulty));
     expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, difficulty }]);
@@ -98,7 +98,7 @@ describe("DailyPage with no game for today", () => {
     ]);
     renderWithClient(<DailyPage />);
 
-    await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Start" }));
 
     expect(await screen.findByText(/Couldn't start/)).toBeInTheDocument();
     expect(readDaily()).toBeNull();
@@ -111,7 +111,7 @@ describe("DailyPage with no game for today", () => {
     ]);
     renderWithClient(<DailyPage />);
 
-    await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Start" }));
 
     expect(await screen.findByText(/Too many new games from your network/)).toBeInTheDocument();
   });
@@ -119,7 +119,7 @@ describe("DailyPage with no game for today", () => {
   it("uses a game another tab started in the meantime", async () => {
     const fetchMock = mockFetch([{ url: API + "/health", body: "ok" }]);
     renderWithClient(<DailyPage />);
-    const play = await screen.findByRole("button", { name: "Play today's challenge" });
+    const play = await screen.findByRole("button", { name: "Start" });
     // Written straight to storage: this tab hasn't heard about it.
     localStorage.setItem("gg-daily", JSON.stringify(entry));
 
@@ -133,7 +133,7 @@ describe("DailyPage with no game for today", () => {
     mockFetch([{ url: API + "/health", body: "ok" }]);
     renderWithClient(<DailyPage />);
 
-    expect(await screen.findByRole("button", { name: "Play today's challenge" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Start" })).toBeInTheDocument();
   });
 
   it("shows a waking-up note when starting is slow", async () => {
@@ -151,7 +151,7 @@ describe("DailyPage with no game for today", () => {
       renderWithClient(<DailyPage />);
       const { fireEvent } = await import("@testing-library/react");
 
-      fireEvent.click(screen.getByRole("button", { name: "Play today's challenge" }));
+      fireEvent.click(screen.getByRole("button", { name: "Start" }));
       await act(async () => {
         await vi.advanceTimersByTimeAsync(3100);
       });
@@ -181,7 +181,7 @@ describe("DailyPage with a game for today", () => {
     ]);
     renderWithClient(<DailyPage />);
 
-    expect(await screen.findByRole("button", { name: "Play today's challenge" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Start" })).toBeInTheDocument();
     expect(readDaily()).toBeNull();
   });
 
@@ -274,7 +274,7 @@ describe("DailyPage streak", () => {
     mockFetch([{ url: API + "/health", body: "ok" }]);
     renderWithClient(<DailyPage />);
 
-    await screen.findByRole("button", { name: "Play today's challenge" });
+    await screen.findByRole("button", { name: "Start" });
     expect(storedStreak()).toBeNull();
   });
 

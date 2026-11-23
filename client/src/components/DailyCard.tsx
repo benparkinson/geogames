@@ -17,7 +17,7 @@ export default function DailyCard(): React.JSX.Element {
     ? `Done: ${todaysDaily.result.score} / ${todaysDaily.result.maxScore}`
     : todaysDaily
       ? "Continue"
-      : "Start the daily";
+      : "Start";
 
   return (
     // A link, outside the list of games, so the arrow keys through the games don't reach it.
