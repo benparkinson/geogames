@@ -12,6 +12,9 @@ COPY client client
 RUN mvn clean install -DskipTests -Dskip.lint
 
 FROM eclipse-temurin:25-jre
+# Run as an unprivileged user: the app writes nothing outside /tmp.
+RUN useradd --system --no-create-home --shell /usr/sbin/nologin geogames
+USER geogames
 COPY --from=build /usr/src/app/target/geogames-0.0.1-SNAPSHOT.jar /usr/app/geogames-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "-Xmx400M", "/usr/app/geogames-0.0.1-SNAPSHOT.jar"]
