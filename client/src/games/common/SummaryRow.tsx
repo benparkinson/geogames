@@ -22,7 +22,21 @@ export default function SummaryRow({
       <span className="gg-summary__no gg-mono">{index + 1}.</span>
       <span className="gg-summary__answers">
         {mixed && <span className="gg-summary__note gg-text-muted">{row.label}</span>}
-        <span className="gg-summary__names">{row.answers.join(" · ")}</span>
+        <span className="gg-summary__names">
+          {row.answers.map((name, i) => (
+            <span key={name}>
+              {i > 0 && " · "}
+              {row.missed.includes(name) ? (
+                <span data-outcome="missed">
+                  {name}
+                  <span className="gg-visually-hidden"> (not found)</span>
+                </span>
+              ) : (
+                name
+              )}
+            </span>
+          ))}
+        </span>
         {note && <span className="gg-summary__note">{note}</span>}
         {row.hintsUsed > 0 && (
           <span className="gg-summary__note gg-text-muted">

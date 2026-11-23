@@ -1,3 +1,4 @@
+import { AnswerCandidate, matchAnswer } from "./answers";
 import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import { Difficulty, GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
@@ -16,8 +17,18 @@ function roundLabel(round: GameRoundView): string {
 }
 
 /** The answers of a round, for the summary. */
-function roundAnswers(round: GameRoundView): string[] {
-  return findGameModule(round.gameType.name)?.answerNames(round.data) ?? [];
+function roundAnswers(round: GameRoundView): AnswerCandidate[] {
+  return findGameModule(round.gameType.name)?.answers(round.data) ?? [];
+}
+
+/**
+ * The answers of a round that the player didn't find: none for a correct round, otherwise every answer no correct
+ * guess matched (a guess is stored as typed, so an alias such as Holland finds the Netherlands).
+ */
+function missedAnswers(round: GameRoundView, answers: AnswerCandidate[]): string[] {
+  if (round.answerState === CORRECT_ANSWER) return [];
+  const found = new Set(round.guesses.filter((g) => g.correct).map((g) => matchAnswer(g.text, answers)));
+  return answers.map((a) => a.name).filter((name) => !found.has(name));
 }
 
 /** One round of the results page. */
@@ -25,6 +36,8 @@ export interface SummaryRowView {
   /** The round's type name, for a mixed game. */
   label: string;
   answers: string[];
+  /** The answers the player didn't find, shown as missed. */
+  missed: string[];
   outcome: RoundOutcome | null;
   result: RoundResultKind;
   hintsUsed: number;
@@ -82,9 +95,11 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
           : round.answerState === OUT_OF_GUESSES
             ? "outOfGuesses"
             : "revealed";
+    const answers = roundAnswers(round);
     return {
       label: roundLabel(round),
-      answers: roundAnswers(round),
+      answers: answers.map((a) => a.name),
+      missed: missedAnswers(round, answers),
       outcome,
       result,
       hintsUsed: round.hintsUsed,

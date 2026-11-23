@@ -11,5 +11,5 @@ export default defineGame<LakeRound>({
   Icon: LakeIcon,
   extraDifficult: true,
   Component: LakeGame,
-  answerNames: (round) => [round.lake.name],
+  answers: (round) => [round.lake],
 });

@@ -42,48 +42,72 @@ describe("GAME_MODULES", () => {
   });
 
   it("lists the answers of a tripoint in country order", () => {
-    expect(findGameModule("TRIPOINT")?.answerNames(makeTripointData())).toEqual(["Belgium", "Netherlands", "Germany"]);
+    expect(
+      findGameModule("TRIPOINT")
+        ?.answers(makeTripointData())
+        .map((a) => a.name),
+    ).toEqual(["Belgium", "Netherlands", "Germany"]);
   });
 
   it("lists the name of a country", () => {
-    expect(findGameModule("COUNTRIES_BY_NEIGHBOURS")?.answerNames(makeCountryShapeRoundData())).toEqual([
-      "Netherlands",
-    ]);
+    expect(
+      findGameModule("COUNTRIES_BY_NEIGHBOURS")
+        ?.answers(makeCountryShapeRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Netherlands"]);
   });
 
   it("lists the name of a river", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
+    expect(
+      findGameModule("RIVERS_BY_SHAPE")
+        ?.answers(makeRiverRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Danube"]);
   });
 });
 
 describe("Country Cities", () => {
   it("lists the name of the country", () => {
-    expect(findGameModule("COUNTRIES_BY_CITIES")?.answerNames(makeCountryCitiesRoundData())).toEqual(["Netherlands"]);
+    expect(
+      findGameModule("COUNTRIES_BY_CITIES")
+        ?.answers(makeCountryCitiesRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Netherlands"]);
   });
 });
 
 describe("Country Rivers", () => {
   it("lists the name of the country", () => {
-    expect(findGameModule("COUNTRIES_BY_RIVERS")?.answerNames(makeCountryRiversRoundData())).toEqual(["Netherlands"]);
+    expect(
+      findGameModule("COUNTRIES_BY_RIVERS")
+        ?.answers(makeCountryRiversRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Netherlands"]);
   });
 });
 
 describe("pair games", () => {
   it("lists both countries, in name order", () => {
-    expect(findGameModule("BORDERS_BY_SHAPE")?.answerNames(makeCountryPairRoundData())).toEqual([
-      "Belgium",
-      "Netherlands",
-    ]);
-    expect(findGameModule("MERGED_COUNTRIES")?.answerNames(makeCountryPairRoundData())).toEqual([
-      "Belgium",
-      "Netherlands",
-    ]);
+    expect(
+      findGameModule("BORDERS_BY_SHAPE")
+        ?.answers(makeCountryPairRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Belgium", "Netherlands"]);
+    expect(
+      findGameModule("MERGED_COUNTRIES")
+        ?.answers(makeCountryPairRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Belgium", "Netherlands"]);
   });
 });
 
 describe("lake shapes", () => {
   it("lists the name of a lake", () => {
-    expect(findGameModule("LAKES_BY_SHAPE")?.answerNames(makeLakeRoundData())).toEqual(["Lake Baikal"]);
+    expect(
+      findGameModule("LAKES_BY_SHAPE")
+        ?.answers(makeLakeRoundData())
+        .map((a) => a.name),
+    ).toEqual(["Lake Baikal"]);
   });
 });
 

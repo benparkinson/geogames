@@ -83,4 +83,14 @@ describe("summariseGame totals", () => {
     ]).map((r, i) => toRoundView(i === 0 ? { ...r, guesses: [...r.guesses, { text: "Belgium", correct: true }] } : r));
     expect(summariseGame(rounds).rows.map((r) => r.wrongGuessNames)).toEqual([["France", "Spain"], []]);
   });
+
+  it("lists the answers a revealed round didn't find, matching a guess by its alias", () => {
+    const rounds = makeGameRounds([{ answerState: "GAVE_UP" }, { answerState: "CORRECT" }]).map((r, i) =>
+      toRoundView(i === 0 ? { ...r, guesses: [{ text: "Holland", correct: true }] } : r),
+    );
+    const rows = summariseGame(rounds).rows;
+    expect(rows[0].answers).toEqual(["Belgium", "Netherlands", "Germany"]);
+    expect(rows[0].missed).toEqual(["Belgium", "Germany"]);
+    expect(rows[1].missed).toEqual([]);
+  });
 });

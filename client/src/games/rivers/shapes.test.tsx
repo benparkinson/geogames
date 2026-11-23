@@ -13,7 +13,7 @@ vi.mock("./RiverShapesMapWrapper", () => ({
 describe("River Shapes", () => {
   it("is the RIVERS_BY_SHAPE game", () => {
     expect(shapes.type).toBe("RIVERS_BY_SHAPE");
-    expect(shapes.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
+    expect(shapes.answers(makeRiverRoundData()).map((a) => a.name)).toEqual(["Danube"]);
   });
 
   it("offers three hints, weakest first: continent, countries, then the first letter", async () => {

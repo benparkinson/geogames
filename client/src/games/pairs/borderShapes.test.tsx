@@ -30,7 +30,7 @@ describe("Border Shapes", () => {
   it("is the BORDERS_BY_SHAPE game, in the extra difficult section", () => {
     expect(borderShapes.type).toBe("BORDERS_BY_SHAPE");
     expect(borderShapes.extraDifficult).toBe(true);
-    expect(borderShapes.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
+    expect(borderShapes.answers(makeCountryPairRoundData()).map((a) => a.name)).toEqual(["Belgium", "Netherlands"]);
   });
 
   it("shows the prompt", () => {

@@ -496,4 +496,16 @@ describe("GameSummary stats and table", () => {
     expect(rows[1]).toHaveTextContent("Gave up");
     expect(rows[0]).toHaveTextContent("–");
   });
+
+  it("marks each answer a revealed round didn't find", async () => {
+    const rounds = makeGameRounds([{ answerState: "GAVE_UP" }, { answerState: "CORRECT" }]);
+    rounds[0] = { ...rounds[0], guesses: [{ text: "Holland", correct: true }] };
+    mockFetch([roundsRoute(rounds)]);
+    renderSummary(vi.fn(), 2);
+    await screen.findByRole("heading", { name: "Your result" });
+
+    const row = screen.getAllByRole("button").find((b) => /^1\./.test(b.textContent ?? ""))!;
+    const missed = row.querySelectorAll('[data-outcome="missed"]');
+    expect([...missed].map((el) => el.textContent)).toEqual(["Belgium (not found)", "Germany (not found)"]);
+  });
 });

@@ -29,7 +29,7 @@ function renderGame(submitAnswer = vi.fn()) {
 describe("Coastlines", () => {
   it("is the COUNTRIES_BY_COASTLINE game", () => {
     expect(coastline.type).toBe("COUNTRIES_BY_COASTLINE");
-    expect(coastline.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+    expect(coastline.answers(makeCountryShapeRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {

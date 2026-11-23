@@ -29,7 +29,7 @@ function renderGame(submitAnswer = vi.fn()) {
 describe("Land Borders", () => {
   it("is the COUNTRIES_BY_LAND_BORDERS game", () => {
     expect(landBorders.type).toBe("COUNTRIES_BY_LAND_BORDERS");
-    expect(landBorders.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+    expect(landBorders.answers(makeCountryShapeRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {

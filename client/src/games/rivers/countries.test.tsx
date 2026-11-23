@@ -33,7 +33,7 @@ describe("River Countries", () => {
   it("is the RIVERS_BY_COUNTRIES game", () => {
     expect(countries.type).toBe("RIVERS_BY_COUNTRIES");
     expect(countries.title).toBe("River Countries");
-    expect(countries.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
+    expect(countries.answers(makeRiverRoundData()).map((a) => a.name)).toEqual(["Danube"]);
   });
 
   it("asks for the river and blanks the map until the round ends", async () => {

@@ -26,7 +26,7 @@ describe("Country Rivers", () => {
   it("is the COUNTRIES_BY_RIVERS game", () => {
     expect(countryRivers.type).toBe("COUNTRIES_BY_RIVERS");
     expect(countryRivers.extraDifficult).toBeUndefined();
-    expect(countryRivers.answerNames(makeCountryRiversRoundData())).toEqual(["Netherlands"]);
+    expect(countryRivers.answers(makeCountryRiversRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {

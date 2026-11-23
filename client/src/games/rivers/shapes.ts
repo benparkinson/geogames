@@ -18,5 +18,5 @@ export default defineGame({
     hints: (river, continentShown) =>
       textHints(river, ...(continentShown ? [] : [continentHint]), mainCountryHint, firstLetterHint),
   }),
-  answerNames: (round) => [round.river.name],
+  answers: (round) => [round.river],
 });

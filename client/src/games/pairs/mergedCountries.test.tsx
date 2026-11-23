@@ -30,7 +30,7 @@ describe("Merged Countries", () => {
   it("is the MERGED_COUNTRIES game, in the standard section", () => {
     expect(mergedCountries.type).toBe("MERGED_COUNTRIES");
     expect(mergedCountries.extraDifficult).toBeUndefined();
-    expect(mergedCountries.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
+    expect(mergedCountries.answers(makeCountryPairRoundData()).map((a) => a.name)).toEqual(["Belgium", "Netherlands"]);
   });
 
   it("shows the prompt", () => {

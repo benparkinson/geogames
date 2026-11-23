@@ -23,5 +23,5 @@ export default defineGame({
         firstLetterHint,
       ),
   }),
-  answerNames: (round) => [round.river.name],
+  answers: (round) => [round.river],
 });

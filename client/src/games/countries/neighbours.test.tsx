@@ -33,7 +33,7 @@ function renderGame(
 describe("Country Gaps", () => {
   it("is the COUNTRIES_BY_NEIGHBOURS game", () => {
     expect(neighbours.type).toBe("COUNTRIES_BY_NEIGHBOURS");
-    expect(neighbours.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+    expect(neighbours.answers(makeCountryShapeRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {

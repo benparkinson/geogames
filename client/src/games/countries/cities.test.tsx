@@ -26,7 +26,7 @@ describe("Country Cities", () => {
   it("is the COUNTRIES_BY_CITIES game", () => {
     expect(cities.type).toBe("COUNTRIES_BY_CITIES");
     expect(cities.extraDifficult).toBeUndefined();
-    expect(cities.answerNames(makeCountryCitiesRoundData())).toEqual(["Netherlands"]);
+    expect(cities.answers(makeCountryCitiesRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {

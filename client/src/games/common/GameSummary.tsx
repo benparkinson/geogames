@@ -14,7 +14,6 @@ import { useDailyShareText } from "../../daily/useDailyShareText";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
 import { RESULT_ICONS } from "../../ui/icons";
-import { DIFFICULTY_LABEL } from "./difficultyLabel";
 
 export default function GameSummary({
   gameId,
@@ -44,9 +43,7 @@ export default function GameSummary({
   const summary = summariseGame(all);
   const { score, maxScore, heading, summaryLine, gameTitle, mixed } = summary;
   const gameType = summary.playAgainType;
-  const meta = daily
-    ? `Daily ${daily.date}`
-    : [gameTitle ?? "Mixed", ...DIFFICULTY_LABEL[summary.difficulty]].join(" · ");
+  const meta = daily ? `Daily ${daily.date}` : (gameTitle ?? "Mixed");
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
