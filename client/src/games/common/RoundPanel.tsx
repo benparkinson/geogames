@@ -76,12 +76,12 @@ export default function RoundPanel({
           </>
         ) : (
           <>
+            {guessList}
             <RoundStatus
               guessesLeft={guessesLeft(state, round.guessLimit)}
               guessLimit={round.guessLimit}
               points={view.points}
             />
-            {guessList}
             <GuessForm
               submitGuess={submitGuess}
               inputPlaceholder={inputPlaceholder}

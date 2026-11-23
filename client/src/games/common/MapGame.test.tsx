@@ -37,6 +37,12 @@ function renderGame(overrides: Partial<React.ComponentProps<typeof MapGame<objec
 const input = () => screen.getByRole("textbox", { name: "Country…" });
 const map = () => screen.getByTestId("map");
 
+/** The round's result banner, the live status that carries the outcome, reads `text` (label, note and points). */
+function expectResult(text: string): void {
+  const banner = screen.getAllByRole("status").find((element) => element.hasAttribute("data-outcome"));
+  expect(banner?.textContent?.replace(/\s+/g, " ").trim()).toBe(text);
+}
+
 async function guess(user: ReturnType<typeof userEvent.setup>, text: string) {
   await user.type(input(), text + "{Enter}");
 }
@@ -197,7 +203,7 @@ describe("MapGame giving up", () => {
       wrongGuesses: 0,
       answersFound: 1,
     });
-    expect(screen.getByText("Answer revealed · 1 of 2 found · +50")).toBeInTheDocument();
+    expectResult("Answer revealed 1 of 2 found +50");
   });
 
   it("reports the wrong guesses made before giving up", async () => {
@@ -229,7 +235,7 @@ describe("MapGame giving up", () => {
       wrongGuesses: 0,
       answersFound: 0,
     });
-    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
+    expectResult("Answer revealed +0");
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByRole("group", { name: "Answers: 0 of 2 found" })).toBeInTheDocument();
@@ -260,7 +266,7 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
+    expectResult("No wrong guesses! +100");
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -270,7 +276,7 @@ describe("MapGame resuming a finished round", () => {
       hints: { description: "A clue", text: (index) => `Hint number ${index}` },
     });
 
-    expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
+    expectResult("Correct with 2 hints +67");
     expect(screen.getByText("Hint number 0").closest("ul")).toBe(screen.getByRole("list", { name: "Hints" }));
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
@@ -284,7 +290,7 @@ describe("MapGame resuming a finished round", () => {
 
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
-    expect(screen.getByText("Answer revealed · 0 pts")).toBeInTheDocument();
+    expectResult("Answer revealed +0");
     expect(screen.getAllByText("(revealed)")).toHaveLength(2);
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -466,24 +472,24 @@ describe("MapGame hints", () => {
   it("shows what the round is worth, 100 then 83, 67 and 50 for three hints", async () => {
     const user = userEvent.setup();
     renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 3 }) });
-    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 100")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
-    expect(screen.getByText("Worth 83 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 83")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
-    expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 67")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
-    expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 50")).toBeInTheDocument();
   });
 
   it("shows what the round is worth, 100 then 50, for one hint", async () => {
     const user = userEvent.setup();
     renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 1 }) });
-    expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 100")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
 
-    expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 50")).toBeInTheDocument();
   });
 });
 
@@ -501,9 +507,18 @@ describe("MapGame panel", () => {
 
     const row = screen.getByTestId("round-status");
     expect(row).toContainElement(screen.getByRole("status", { name: "3 lives left" }));
-    expect(row).toHaveTextContent(/Worth \d+ pts/);
+    expect(row).toHaveTextContent(/Worth \d+$/);
     const reveal = screen.getByRole("button", { name: /Give up this round/ });
     expect(reveal.parentElement).not.toHaveTextContent("Worth");
+  });
+
+  it("puts the status row between the guess list and the input, beside the guess", () => {
+    renderGame();
+
+    const row = screen.getByTestId("round-status");
+    const list = screen.getByRole("group", { name: /^Answers:/ });
+    expect(list.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(row.compareDocumentPosition(input()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("says when it was the next to last guess", async () => {
@@ -541,7 +556,7 @@ describe("MapGame panel", () => {
   it("shows the round result instead of the form when the round is over", () => {
     renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
-    expect(screen.getByText("No wrong guesses! +100")).toBeInTheDocument();
+    expectResult("No wrong guesses! +100");
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
   });
@@ -549,9 +564,9 @@ describe("MapGame panel", () => {
   it("shows out of guesses instead of the form", () => {
     renderGame({ round: makeRoundProps({ answerState: "OUT_OF_GUESSES" }) });
 
-    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
-    expect(screen.queryByText("Answer revealed · 0 pts")).not.toBeInTheDocument();
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expectResult("Out of guesses +0");
+    expect(screen.queryByText("Answer revealed")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: /lives left/ })).not.toBeInTheDocument();
   });
 });
 
@@ -575,12 +590,12 @@ describe("MapGame guess limit", () => {
       wrongGuesses: 2,
       answersFound: 1,
     });
-    expect(screen.getByText("Out of guesses · 1 of 2 found · +50")).toBeInTheDocument();
+    expectResult("Out of guesses 1 of 2 found +50");
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
     expect(screen.getAllByText("(revealed)")).toHaveLength(1);
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: /lives left/ })).not.toBeInTheDocument();
   });
 
   it("doesn't count a correct guess between wrong ones", async () => {
@@ -597,7 +612,7 @@ describe("MapGame guess limit", () => {
   it("starts a reopened OUT_OF_GUESSES round as revealed", () => {
     const { submitAnswer } = renderGame({ round: makeRoundProps({ answerState: "OUT_OF_GUESSES" }) });
 
-    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expectResult("Out of guesses +0");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(submitAnswer).not.toHaveBeenCalled();
   });
@@ -808,7 +823,7 @@ describe("MapGame resuming an unfinished round", () => {
     const { submitAnswer } = renderGame({ round });
 
     expect(submitAnswer).not.toHaveBeenCalled();
-    expect(screen.getByText("Out of guesses · 0 pts")).toBeInTheDocument();
+    expectResult("Out of guesses +0");
   });
 });
 
@@ -851,7 +866,7 @@ describe("MapGame saving hints", () => {
 
     await guess(userEvent.setup(), "France");
 
-    expect(screen.getByText("First guess! +100")).toBeInTheDocument();
+    expectResult("First guess! +100");
   });
 
   it("says correct for a single-answer round won after a wrong guess", async () => {
@@ -861,7 +876,7 @@ describe("MapGame saving hints", () => {
     await guess(user, "Italy");
     await guess(user, "France");
 
-    expect(screen.getByText("Correct! +100")).toBeInTheDocument();
+    expectResult("Correct! +100");
     expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
   });
 
@@ -871,6 +886,6 @@ describe("MapGame saving hints", () => {
     expect(screen.getByText("Clue 0")).toBeInTheDocument();
     expect(screen.getByText("Clue 1")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ })).toBeInTheDocument();
-    expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
+    expect(screen.getByText("Worth 67")).toBeInTheDocument();
   });
 });

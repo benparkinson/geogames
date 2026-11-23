@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test";
-import { answerBox, expect, guess, startGame, test } from "../fixtures";
+import { answerBox, expect, guess, roundResult, startGame, test } from "../fixtures";
 
 /**
  * Starts listening for the next answer the page posts. Call it before the action that ends the
@@ -33,7 +33,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 3,
   });
-  await expect(page.getByText("Correct with a hint · +83")).toBeVisible();
+  await expect(roundResult(page)).toHaveText(/Correct with a hint\s*\+83/);
   await page.getByRole("button", { name: "Next round" }).click();
 
   // Round 2: find one of the three, then give up. The button asks for a second click.
@@ -49,7 +49,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 1,
   });
-  await expect(page.getByText("Answer revealed · 1 of 3 found · +33")).toBeVisible();
+  await expect(roundResult(page)).toHaveText(/Answer revealed\s*1 of 3 found\s*\+33/);
   for (const answer of second.answers) {
     await expect(page.getByRole("group", { name: /Answers:/ })).toContainText(answer.name);
   }
@@ -86,7 +86,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: third.guessLimit,
     answersFound: 0,
   });
-  await expect(page.getByText("Out of guesses · 0 pts")).toBeVisible();
+  await expect(roundResult(page)).toHaveText(/Out of guesses\s*\+0/);
   await page.getByRole("button", { name: "See results" }).click();
 
   // The summary.

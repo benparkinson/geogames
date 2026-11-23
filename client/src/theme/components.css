@@ -1118,9 +1118,22 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .round-result {
   margin-bottom: 0;
 }
+/* The label on the left, the points on the right: where the round's worth was while playing. */
 .round-result__banner {
-  margin-bottom: var(--gg-space-2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  margin: var(--gg-space-3) 0 var(--gg-space-4);
+  font-size: 1.125rem;
   font-weight: var(--gg-font-weight-semibold);
+}
+.round-result__label {
+  min-width: 0;
+}
+.round-result__points {
+  flex-shrink: 0;
+  font-size: var(--gg-font-size-h5);
 }
 .round-result__banner[data-outcome="firstGuess"],
 .round-result__banner[data-outcome="correct"] {
