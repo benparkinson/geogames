@@ -45,6 +45,6 @@ for (const { type, title } of GAMES) {
     await expect(
       page.getByRole("heading", { name: "Perfect game!" }),
     ).toBeVisible();
-    await expect(page.getByText(`/ ${ROUNDS * 100}`)).toBeVisible();
+    await expect(page.getByText(`/ ${ROUNDS * 100}`, { exact: true })).toBeVisible();
   });
 }
