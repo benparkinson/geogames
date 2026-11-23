@@ -18,7 +18,6 @@ export {
   Fire as ExtraDifficultIcon,
   GeoAltFill as TripointIcon,
   Globe as ContinentIcon,
-  HouseFill as HomeIcon,
   Lightbulb as HintIcon,
   LightningChargeFill as StreakIcon,
   PuzzleFill as NeighboursIcon,
