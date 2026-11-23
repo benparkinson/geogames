@@ -27,7 +27,7 @@ describe("GuessList", () => {
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
   });
 
-  it("numbers the rows in guess order and marks the answers still to find", () => {
+  it("lists the rows in guess order, without numbers", () => {
     renderList(
       stateOf([
         { text: "Peru", answer: null },
@@ -36,10 +36,16 @@ describe("GuessList", () => {
     );
 
     const rows = screen.getAllByRole("listitem");
-    expect(rows).toHaveLength(4);
-    expect(rows[0]).toHaveTextContent("1Peru");
-    expect(rows[1]).toHaveTextContent("2France found");
-    expect(screen.getAllByLabelText("Not found yet")).toHaveLength(2);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).toHaveTextContent("Peru");
+    expect(rows[1]).toHaveTextContent("France found");
+  });
+
+  it("shows only the count before the first guess of a multi-answer round", () => {
+    renderList(stateOf([]));
+
+    expect(screen.getByText("0/3 found")).toBeInTheDocument();
+    expect(screen.queryByRole("listitem")).toBeNull();
   });
 
   it("shows a wrong guess's distance and a hidden direction, unless clues are off", () => {
@@ -63,7 +69,6 @@ describe("GuessList", () => {
 
     const missed = screen.getAllByRole("listitem").filter((li) => li.getAttribute("data-outcome") === "missed");
     expect(missed.map((li) => within(li).getByText(/France|Spain/).textContent)).toEqual(["France", "Spain"]);
-    expect(screen.queryByLabelText("Not found yet")).not.toBeInTheDocument();
   });
 
   it("takes no room for a round with one answer until a guess is made", () => {
