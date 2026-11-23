@@ -217,6 +217,24 @@ class CountryShapeBuilderTest {
   }
 
   @Test
+  void focusIncludesBigNearbyIslandsButNotSmallOrDistantOnes() {
+    Country country =
+        multi(
+            "Archipelago",
+            square(0, 0, 10, 10),
+            square(2, 11, 6, 15), // big and near: in the frame
+            square(2, 16, 2.1, 16.1), // near but tiny: out
+            square(40, 0, 45, 5)); // big but far: out
+
+    CountryShape shape = find(CountryShapeBuilder.build(List.of(country)), "Archipelago");
+
+    assertThat(shape.focus().west()).isEqualTo(0);
+    assertThat(shape.focus().south()).isEqualTo(0);
+    assertThat(shape.focus().east()).isEqualTo(10);
+    assertThat(shape.focus().north()).isEqualTo(15);
+  }
+
+  @Test
   void neighboursAreOrderedLongestBorderFirstThenByName() {
     Country middle = polygon("Middle", ring(p(0, 0), p(3, 0), p(3, 1), p(3, 2), p(3, 3), p(0, 3)));
     Country longBorder = polygon("Long", square(-1, 0, 0, 3));
