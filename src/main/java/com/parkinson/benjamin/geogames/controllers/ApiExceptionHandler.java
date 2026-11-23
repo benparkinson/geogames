@@ -3,10 +3,13 @@ package com.parkinson.benjamin.geogames.controllers;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCapacityException;
+import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,6 +39,29 @@ public class ApiExceptionHandler {
   public ProblemDetail changedElsewhere() {
     return ProblemDetail.forStatusAndDetail(
         HttpStatus.CONFLICT, "This round was changed by another request. Please try again.");
+  }
+
+  @ExceptionHandler(TooManyGamesException.class)
+  public ResponseEntity<ProblemDetail> tooManyGames(TooManyGamesException e) {
+    return retryLater(
+        HttpStatus.TOO_MANY_REQUESTS,
+        "Too many new games from your network. Try again in a few minutes.",
+        e.retryAfterSeconds());
+  }
+
+  @ExceptionHandler(GameCapacityException.class)
+  public ResponseEntity<ProblemDetail> atCapacity(GameCapacityException e) {
+    return retryLater(
+        HttpStatus.SERVICE_UNAVAILABLE,
+        "The game server is busy. Try again later.",
+        e.retryAfterSeconds());
+  }
+
+  private static ResponseEntity<ProblemDetail> retryLater(
+      HttpStatus status, String detail, long retryAfterSeconds) {
+    return ResponseEntity.status(status)
+        .header("Retry-After", Long.toString(retryAfterSeconds))
+        .body(ProblemDetail.forStatusAndDetail(status, detail));
   }
 
   @ExceptionHandler(RoundDataMissingException.class)

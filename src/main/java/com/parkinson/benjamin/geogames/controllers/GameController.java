@@ -11,6 +11,8 @@ import com.parkinson.benjamin.geogames.api.RoundGuessesResponse;
 import com.parkinson.benjamin.geogames.api.RoundHintsResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.GameService;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -30,13 +32,17 @@ public class GameController {
 
   private final GameService gameService;
 
-  public GameController(GameService gameService) {
+  private final GameCreationGuard guard;
+
+  public GameController(GameService gameService, GameCreationGuard guard) {
     this.gameService = gameService;
+    this.guard = guard;
   }
 
   @PostMapping("/games")
-  public ResponseEntity<GameCreationResponse> createGame(@RequestBody GameCreationRequest request) {
-
+  public ResponseEntity<GameCreationResponse> createGame(
+      @RequestBody GameCreationRequest request, HttpServletRequest httpRequest) {
+    guard.check(httpRequest);
     return ResponseEntity.ok(
         gameService.createGame(
             request.gameType(),

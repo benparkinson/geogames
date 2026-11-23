@@ -1,9 +1,12 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,6 +14,9 @@ import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCapacityException;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
+import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
@@ -30,6 +36,31 @@ class DailyGameControllerTest {
   private static final UUID GAME_ID = UUID.fromString("0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d");
 
   @MockitoBean private DailyChallengeService dailyService;
+  @MockitoBean private GameCreationGuard guard;
+
+  @Test
+  void aClientOverTheLimitGetsA429AndNoGameIsMade() throws Exception {
+    doThrow(new TooManyGamesException(30)).when(guard).check(any());
+
+    mockMvc
+        .perform(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .andExpect(status().isTooManyRequests())
+        .andExpect(header().string("Retry-After", "30"));
+
+    verifyNoInteractions(dailyService);
+  }
+
+  @Test
+  void aFullDatabaseGetsA503() throws Exception {
+    doThrow(new GameCapacityException(600)).when(guard).check(any());
+
+    mockMvc
+        .perform(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .andExpect(status().isServiceUnavailable())
+        .andExpect(header().string("Retry-After", "600"));
+
+    verifyNoInteractions(dailyService);
+  }
 
   @Test
   void aDailyGameWithADateUsesThatDate() throws Exception {

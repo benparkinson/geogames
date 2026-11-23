@@ -59,8 +59,8 @@ describe("useCreateDailyGame", () => {
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ difficulty: "HARD" });
   });
 
-  it("does not retry other errors", async () => {
-    const fetchMock = stubFetch({ status: 500 });
+  it.each([429, 500, 503])("does not retry a %i", async (status) => {
+    const fetchMock = stubFetch({ status });
     const { result } = renderHook(() => useCreateDailyGame(), { wrapper: clientWrapper() });
 
     result.current.mutate({ date: "2026-11-18", difficulty: "NORMAL" });

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCreateGame } from "../api/games";
+import { creationErrorMessage } from "../api/http";
 import { useDifficulty } from "../settings/difficulty";
 import { MenuOption, ROUND_OPTIONS } from "../games/registry";
 import { Button, Notice, Spinner, ToggleGroup } from "../ui";
@@ -58,7 +59,7 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
         {isLoading && slow && (
           <p className="gg-text-muted">Waking up the server. The first game can take up to a minute.</p>
         )}
-        {!!error && !isLoading && <Notice>Couldn&apos;t start a game. The server may be down. Try again.</Notice>}
+        {!!error && !isLoading && <Notice>{creationErrorMessage(error)}</Notice>}
       </div>
     </aside>
   );
