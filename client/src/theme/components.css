@@ -856,9 +856,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   cursor: pointer;
 }
 .gg-settings__panel {
-  position: absolute;
-  bottom: calc(100% + var(--gg-space-2));
+  /* Fixed and centred in the viewport: the footer link can sit at either edge, and the panel must stay on screen. */
+  position: fixed;
+  bottom: var(--gg-space-5);
   left: 50%;
+  z-index: 1030;
   transform: translateX(-50%);
   width: max-content;
   max-width: calc(100vw - 2 * var(--gg-space-4));
