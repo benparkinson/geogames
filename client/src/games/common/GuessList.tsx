@@ -3,7 +3,7 @@ import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
 import { GuessRow, guessListRows } from "./guessRows";
 import { BearingIcon, FoundIcon, WrongGuessIcon } from "../../ui/icons";
 
-/** The round's guesses as a numbered, ruled list: found answers, wrong guesses with their clue, and what is left. */
+/** The round's guesses as a ruled list: found answers, wrong guesses with their clue, and what is left. */
 export default function GuessList({
   state,
   answerCount,
@@ -16,9 +16,9 @@ export default function GuessList({
   /** False in Hard mode, which hides the distance clues. */
   showClues: boolean;
 }): React.JSX.Element {
-  const rows = guessListRows(state, answerCount, allAnswers);
+  const rows = guessListRows(state, allAnswers);
   // With one answer there is nothing to count until a guess is made.
-  if (rows.length === 0) {
+  if (rows.length === 0 && answerCount === 1) {
     return <></>;
   }
   const found = foundAnswers(state).length;
@@ -31,20 +31,21 @@ export default function GuessList({
           <span className="guess-list__count">{`${found}/${answerCount} found`}</span>
         </div>
       )}
-      <ol className="guess-list__rows">
-        {rows.map((row, i) => (
-          <li
-            key={i}
-            className="guess-list__row"
-            data-kind={row.kind}
-            data-outcome={row.kind === "missed" ? "missed" : undefined}
-            data-testid={row.kind === "wrong" ? "wrong-guess" : undefined}
-          >
-            <span className="guess-list__number">{i + 1}</span>
-            <RowBody row={row} showClues={showClues} />
-          </li>
-        ))}
-      </ol>
+      {rows.length > 0 && (
+        <ol className="guess-list__rows">
+          {rows.map((row, i) => (
+            <li
+              key={i}
+              className="guess-list__row"
+              data-kind={row.kind}
+              data-outcome={row.kind === "missed" ? "missed" : undefined}
+              data-testid={row.kind === "wrong" ? "wrong-guess" : undefined}
+            >
+              <RowBody row={row} showClues={showClues} />
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
 }
@@ -77,12 +78,6 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
             not found<span className="gg-visually-hidden"> (revealed)</span>
           </span>
         </>
-      );
-    case "empty":
-      return (
-        <span className="guess-list__name guess-list__name--empty" aria-label="Not found yet">
-          —
-        </span>
       );
   }
 }

@@ -972,7 +972,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   }
 }
 
-/* The guess list: a numbered, ruled list. */
+/* The guess list: a ruled list. */
 .guess-list {
   margin-bottom: var(--gg-space-2);
 }
@@ -984,7 +984,6 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   border-bottom: 2px solid var(--gg-color-rule);
 }
 .guess-list__count,
-.guess-list__number,
 .guess-list__clue {
   font-family: var(--gg-font-mono);
   font-size: var(--gg-font-size-sm);
@@ -1003,18 +1002,10 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-1) 0;
   border-bottom: 1px solid var(--gg-color-rule-light);
 }
-.guess-list__number {
-  flex: 0 0 1.5em;
-  color: var(--gg-color-text-muted);
-}
 .guess-list__name {
   flex: 1 1 auto;
   min-width: 0;
   font-weight: var(--gg-font-weight-semibold);
-}
-.guess-list__name--empty {
-  color: var(--gg-color-text-muted);
-  font-weight: normal;
 }
 .guess-list__note {
   margin-left: auto;
