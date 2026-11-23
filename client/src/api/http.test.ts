@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { callsTo, mockFetch } from "../test/fetchMock";
-import { fetchJson, hasStatus, HttpError, postJson } from "./http";
+import { creationErrorMessage, fetchJson, hasStatus, HttpError, postJson } from "./http";
 
 describe("fetchJson", () => {
   it("prefixes the server endpoint and returns the parsed body", async () => {
@@ -48,5 +48,24 @@ describe("hasStatus", () => {
     expect(hasStatus(new HttpError("Failed", 500), 404)).toBe(false);
     expect(hasStatus(new Error("Failed to load thing (404)"), 404)).toBe(false);
     expect(hasStatus(undefined, 404)).toBe(false);
+  });
+});
+
+describe("creationErrorMessage", () => {
+  it("explains a rate limit", () => {
+    expect(creationErrorMessage(new HttpError("x", 429))).toBe(
+      "Too many new games from your network. Wait a few minutes and try again.",
+    );
+  });
+
+  it("explains a busy server", () => {
+    expect(creationErrorMessage(new HttpError("x", 503))).toBe("The game server is busy. Try again later.");
+  });
+
+  it("uses the fallback for anything else", () => {
+    expect(creationErrorMessage(new HttpError("x", 500))).toBe(
+      "Couldn't start a game. The server may be down. Try again.",
+    );
+    expect(creationErrorMessage(new Error("x"), "Custom")).toBe("Custom");
   });
 });

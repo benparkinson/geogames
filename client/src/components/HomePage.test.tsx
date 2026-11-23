@@ -308,6 +308,22 @@ describe("HomePage starting a game", () => {
     );
     expect(router.push).not.toHaveBeenCalled();
   });
+
+  it("says when the server is busy or the network has started too many games", async () => {
+    mockFetch([
+      { url: HEALTH, body: "ok" },
+      { method: "POST", url: /\/api\/games$/, status: 429, body: {} },
+    ]);
+    renderHome();
+
+    const user = userEvent.setup();
+    await user.click(card(/Tripoints/));
+    await user.click(startButton());
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Too many new games from your network. Wait a few minutes and try again.",
+    );
+  });
 });
 
 describe("HomePage difficulty", () => {

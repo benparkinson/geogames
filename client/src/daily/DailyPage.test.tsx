@@ -104,6 +104,18 @@ describe("DailyPage with no game for today", () => {
     expect(readDaily()).toBeNull();
   });
 
+  it("says when too many games were started from the network", async () => {
+    mockFetch([
+      { url: API + "/health", body: "ok" },
+      { method: "POST", url: API + "/api/daily-games", status: 429 },
+    ]);
+    renderWithClient(<DailyPage />);
+
+    await userEvent.click(await screen.findByRole("button", { name: "Play today's challenge" }));
+
+    expect(await screen.findByText(/Too many new games from your network/)).toBeInTheDocument();
+  });
+
   it("uses a game another tab started in the meantime", async () => {
     const fetchMock = mockFetch([{ url: API + "/health", body: "ok" }]);
     renderWithClient(<DailyPage />);
