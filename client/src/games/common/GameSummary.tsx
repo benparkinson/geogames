@@ -7,6 +7,7 @@ import { roundQuery, useCreateGame } from "../../api/games";
 import { creationErrorMessage } from "../../api/http";
 import { RANDOM_OPTION } from "../registry";
 import { summariseGame } from "./summaryView";
+import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import DailyComparison from "../../daily/DailyComparison";
 import ShareButton from "../../daily/ShareButton";
 import { type DailyInfo } from "../../daily/dailyStorage";
@@ -41,9 +42,11 @@ export default function GameSummary({
   }
 
   const summary = summariseGame(all);
-  const { score, maxScore, heading, summaryLine, gameTitle, mixed } = summary;
+  const { score, maxScore, heading, gameTitle, mixed } = summary;
   const gameType = summary.playAgainType;
-  const meta = daily ? `Daily ${daily.date}` : (gameTitle ?? "Mixed");
+  const meta = [daily ? `Daily ${daily.date}` : (gameTitle ?? "Mixed"), ...DIFFICULTY_LABEL[summary.difficulty]].join(
+    " · ",
+  );
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
@@ -73,13 +76,9 @@ export default function GameSummary({
               </span>
             </li>
             <li>
-              <span>Wrong guesses</span> <span>{summary.wrongGuesses}</span>
-            </li>
-            <li>
               <span>Hints used</span> <span>{summary.hintsUsed}</span>
             </li>
           </ul>
-          <p className="gg-summary__line gg-text-muted">{summaryLine}</p>
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 

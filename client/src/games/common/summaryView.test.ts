@@ -16,13 +16,11 @@ describe("summariseGame", () => {
     ]);
     expect(s.heading).toBe("perfect");
     expect(s.score).toBe(200);
-    expect(s.summaryLine).toBe("2 first guesses");
   });
 
   it("calls full marks after wrong guesses full marks, not perfect", () => {
     const s = summary([{ answerState: "CORRECT", firstGuess: true }, { answerState: "CORRECT" }]);
     expect(s.heading).toBe("fullMarks");
-    expect(s.summaryLine).toBe("1 first guess · 1 correct");
   });
 
   it("scores a game with hints or a revealed round", () => {
@@ -42,12 +40,11 @@ describe("summariseGame", () => {
     expect(mix.playAgainType).not.toBe(one.playAgainType);
   });
 
-  it("adds the difficulty to the summary line, nothing for Normal", () => {
+  it("returns the game's difficulty", () => {
     const specs: RoundSpec[] = [{ answerState: "CORRECT", firstGuess: true }];
-    expect(summary(specs).summaryLine).toBe("1 first guess");
-    expect(summary(specs, "EASY").summaryLine).toBe("1 first guess · Easy");
+    expect(summary(specs).difficulty).toBe("NORMAL");
+    expect(summary(specs, "EASY").difficulty).toBe("EASY");
     expect(summary(specs, "HARD").difficulty).toBe("HARD");
-    expect(summary(specs, "HARD").summaryLine).toBe("1 first guess · Hard mode");
   });
 
   it("marks an out-of-guesses row", () => {
@@ -60,20 +57,19 @@ describe("summariseGame", () => {
 });
 
 describe("summariseGame totals", () => {
-  it("counts solved rounds, wrong guesses and hints", () => {
+  it("counts solved rounds and hints", () => {
     const s = summary([
       { answerState: "CORRECT", firstGuess: true },
       { answerState: "CORRECT", hintsUsed: 2, wrongGuesses: ["France", "Spain"] },
       { river: true, answerState: "GAVE_UP", hintsUsed: 1, wrongGuesses: ["Rhine"] },
     ]);
     expect(s.solved).toBe(2);
-    expect(s.wrongGuesses).toBe(3);
     expect(s.hintsUsed).toBe(3);
   });
 
   it("is zero for a game with nothing solved, no wrong guesses and no hints", () => {
     const s = summary([{ answerState: "GAVE_UP" }]);
-    expect([s.solved, s.wrongGuesses, s.hintsUsed]).toEqual([0, 0, 0]);
+    expect([s.solved, s.hintsUsed]).toEqual([0, 0]);
   });
 
   it("lists each round's wrong guesses in order, leaving out correct ones", () => {
