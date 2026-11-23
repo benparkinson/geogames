@@ -63,7 +63,8 @@
   /* Round outcomes: "with hints" (some points, not full marks) and "missed" (revealed for no points). */
   --gg-color-hints: var(--gg-color-hint);
   --gg-color-on-hints: var(--gg-color-on-hint);
-  --gg-color-hints-text: var(--gg-marker-text);
+  /* Some points: ordinary text, so only misses read as red. */
+  --gg-color-hints-text: var(--gg-color-text);
   --gg-color-missed: var(--gg-marker);
   --gg-color-on-missed: var(--gg-white);
   --gg-color-missed-text: var(--gg-marker-text);

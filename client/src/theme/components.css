@@ -464,6 +464,11 @@
 .gg-suggestion-active,
 .gg-suggestion-active:hover {
   background: var(--gg-color-accent-subtle);
+  /* The highlighter needs dark text in both themes. */
+  color: var(--gg-color-on-hint);
+}
+.gg-suggestion-active .gg-suggestion-alias {
+  color: inherit;
 }
 .gg-suggestion-alias {
   color: var(--gg-color-text-muted);
