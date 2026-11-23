@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
@@ -42,8 +42,8 @@ async function guess(user: ReturnType<typeof userEvent.setup>, text: string) {
 }
 
 async function reveal(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: /Reveal answer/ }));
-  await user.click(screen.getByRole("button", { name: /Tap again to reveal/ }));
+  await user.click(screen.getByRole("button", { name: /Give up this round/ }));
+  await user.click(screen.getByRole("button", { name: /Tap again to give up/ }));
 }
 
 describe("MapGame fresh round", () => {
@@ -59,7 +59,7 @@ describe("MapGame fresh round", () => {
   it("shows the round name, and the question in that order, before the answer slots", () => {
     renderGame();
 
-    const name = screen.getByText("Test Game");
+    const name = screen.getAllByText("Test Game").at(-1) as HTMLElement;
     const question = screen.getByRole("heading", { level: 1, name: "Name them" });
     const slots = screen.getByRole("group", { name: /Answers:/ });
     expect(name.compareDocumentPosition(question) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -86,7 +86,7 @@ describe("MapGame guessing", () => {
     await guess(userEvent.setup(), "Italy");
 
     expect(screen.getByText("Italy")).toBeInTheDocument();
-    expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
+    expect(screen.getByTestId("wrong-guess")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -120,7 +120,7 @@ describe("MapGame guessing", () => {
     await guess(userEvent.setup(), "Atlantis");
 
     expect(screen.getByText(/We don't recognise "Atlantis"/)).toBeInTheDocument();
-    expect(screen.queryByText("Wrong guesses")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("wrong-guess")).not.toBeInTheDocument();
   });
 
   it("asks for a guess when the input is blank", async () => {
@@ -150,7 +150,7 @@ describe("MapGame guessing", () => {
     expect(screen.getByRole("button", { name: /Next round/ })).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.getByText("Name them")).toBeInTheDocument();
-    expect(screen.getByText("Test Game")).toBeInTheDocument();
+    expect(screen.getAllByText("Test Game").length).toBeGreaterThan(0);
   });
 
   it("reports only the guesses that count against the limit as wrong guesses", async () => {
@@ -271,7 +271,7 @@ describe("MapGame resuming a finished round", () => {
     });
 
     expect(screen.getByText("Correct with 2 hints · +67")).toBeInTheDocument();
-    expect(screen.getByText("Hint number 0").closest("ul")).toBe(screen.getByRole("list"));
+    expect(screen.getByText("Hint number 0").closest("ul")).toBe(screen.getByRole("list", { name: "Hints" }));
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
     expect(screen.queryByText("Hint number 2")).not.toBeInTheDocument();
@@ -295,7 +295,7 @@ describe("MapGame continent line", () => {
     renderGame({ round: makeRoundProps({ difficulty: "EASY", continents: ["Europe"] }) });
 
     const line = screen.getByText("Continent: Europe");
-    expect(line.closest("ul")).toBe(screen.getByRole("list"));
+    expect(line.closest("ul")).toBe(screen.getByRole("list", { name: "Hints" }));
     expect(line.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 
@@ -309,7 +309,7 @@ describe("MapGame continent line", () => {
     renderGame({ round: makeRoundProps({ difficulty: "NORMAL", continents: [] }) });
 
     expect(screen.queryByText(/^Continents?:/)).not.toBeInTheDocument();
-    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+    expect(screen.queryByRole("list", { name: "Hints" })).not.toBeInTheDocument();
   });
 
   it("is the first item of the list, above the hints taken", async () => {
@@ -321,7 +321,9 @@ describe("MapGame continent line", () => {
 
     await user.click(screen.getByRole("button", { name: /Hint/ }));
 
-    const items = screen.getAllByRole("listitem").map((li) => li.textContent?.trim());
+    const items = within(screen.getByRole("list", { name: "Hints" }))
+      .getAllByRole("listitem")
+      .map((li) => li.textContent?.trim());
     expect(items).toEqual(["Continent: Africa", "First letter: K"]);
   });
 
@@ -357,11 +359,11 @@ describe("MapGame hints", () => {
     const { hints, text } = hintConfig();
     renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(text).toHaveBeenLastCalledWith(0, [[]]);
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(text).toHaveBeenLastCalledWith(1, [[], []]);
   });
 
@@ -370,8 +372,8 @@ describe("MapGame hints", () => {
     const { hints } = hintConfig();
     renderGame({ hints, round: makeRoundProps({ hintCount: 2 }) });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
 
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
     expect(screen.getAllByText(/Continent/)).toHaveLength(1);
@@ -381,7 +383,7 @@ describe("MapGame hints", () => {
     const user = userEvent.setup();
     renderGame({ hints: { description: "Changes the map" }, round: makeRoundProps({ hintCount: 1 }) });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
 
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
@@ -398,7 +400,7 @@ describe("MapGame hints", () => {
       },
     });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
 
     expect(seen[0]).toBe(0);
     expect(seen[seen.length - 1]).toBe(1);
@@ -417,7 +419,7 @@ describe("MapGame hints", () => {
     });
 
     await guess(user, "France");
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
 
     expect(seen[seen.length - 1]).toEqual([["France"]]);
   });
@@ -429,7 +431,7 @@ describe("MapGame hints", () => {
       round: makeRoundProps({ hintCount: 3 }),
     });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     await guess(user, "France");
     await guess(user, "Spain");
 
@@ -449,8 +451,8 @@ describe("MapGame hints", () => {
       round: makeRoundProps({ hintCount: 3 }),
     });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     await reveal(user);
 
     expect(submitAnswer).toHaveBeenCalledWith({
@@ -466,11 +468,11 @@ describe("MapGame hints", () => {
     renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 3 }) });
     expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("Worth 83 pts")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
   });
 
@@ -479,7 +481,7 @@ describe("MapGame hints", () => {
     renderGame({ hints: { description: "A clue" }, round: makeRoundProps({ hintCount: 1 }) });
     expect(screen.getByText("Worth 100 pts")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
 
     expect(screen.getByText("Worth 50 pts")).toBeInTheDocument();
   });
@@ -500,7 +502,7 @@ describe("MapGame panel", () => {
     const row = screen.getByTestId("round-status");
     expect(row).toContainElement(screen.getByRole("status", { name: "3 lives left" }));
     expect(row).toHaveTextContent(/Worth \d+ pts/);
-    const reveal = screen.getByRole("button", { name: /Reveal answer/ });
+    const reveal = screen.getByRole("button", { name: /Give up this round/ });
     expect(reveal.parentElement).not.toHaveTextContent("Worth");
   });
 
@@ -516,7 +518,7 @@ describe("MapGame panel", () => {
   it("shows no wrong guesses heading when there are none", () => {
     renderGame();
 
-    expect(screen.queryByText("Wrong guesses")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("wrong-guess")).not.toBeInTheDocument();
   });
 
   it("has no status row or feedback line once the round is over", () => {
@@ -768,7 +770,7 @@ describe("MapGame resuming an unfinished round", () => {
       round: makeRoundProps({ guesses: [saved("Italy"), saved("France", true)] }),
     });
 
-    expect(screen.getByText("Wrong guesses")).toBeInTheDocument();
+    expect(screen.getByTestId("wrong-guess")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
     expect(screen.getByText(/4 of 5 lives left/)).toBeInTheDocument();
@@ -817,9 +819,9 @@ describe("MapGame saving hints", () => {
     const user = userEvent.setup();
     const { props } = renderGame({ hints, round: makeRoundProps({ hintCount: 3 }) });
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     await guess(user, "Italy");
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
 
     expect((props.round.recordHint as ReturnType<typeof vi.fn>).mock.calls).toEqual([
       [{ hint: 0, guessesBefore: 0 }],
@@ -838,7 +840,7 @@ describe("MapGame saving hints", () => {
     renderGame({ hints, round, submitAnswer, answerCount: 1, answers: [ANSWERS[0]] });
     const user = userEvent.setup();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     await guess(user, "France");
 
     expect(order).toEqual(["hint", "guess", "answer"]);
@@ -868,7 +870,7 @@ describe("MapGame saving hints", () => {
 
     expect(screen.getByText("Clue 0")).toBeInTheDocument();
     expect(screen.getByText("Clue 1")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(1 left\)/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ })).toBeInTheDocument();
     expect(screen.getByText("Worth 67 pts")).toBeInTheDocument();
   });
 });

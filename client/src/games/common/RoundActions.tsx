@@ -53,11 +53,12 @@ export default function RoundActions({
     <div className="round-actions">
       <span title={hintTitle}>
         <Button variant="hint" onClick={onHint} disabled={hintsLeft <= 0}>
-          <HintIcon aria-hidden="true" /> Hint ({hintsLeft} left)
+          <HintIcon aria-hidden="true" />{" "}
+          {hintsLeft > 0 ? `Hint (−${nextHintCost} pts, ${hintsLeft} left)` : "Hint (0 left)"}
         </Button>
       </span>
       <Button variant="danger" onClick={handleRevealClick}>
-        <RevealIcon aria-hidden="true" /> {confirmReveal ? "Tap again to reveal" : "Reveal answer"}
+        <RevealIcon aria-hidden="true" /> {confirmReveal ? "Tap again to give up" : "Give up this round"}
       </Button>
     </div>
   );

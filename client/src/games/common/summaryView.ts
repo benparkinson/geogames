@@ -1,11 +1,10 @@
+import { AnswerCandidate, matchAnswer } from "./answers";
+import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import { Difficulty, GameRoundView } from "../../api/types";
 import { findGameModule, RANDOM_OPTION } from "../registry";
 import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
 import { OUTCOME_ORDER, OUTCOME_STYLES, roundOutcome, RoundOutcome } from "./outcome";
 import type { RoundResultKind } from "./roundView";
-
-/** What the end of the breakdown line says about the difficulty: nothing for Normal. */
-const DIFFICULTY_LABEL: Record<Difficulty, string[]> = { EASY: ["Easy"], NORMAL: [], HARD: ["Hard mode"] };
 
 /** The game type to start for "Play again": the one every round used, or a mix if they differed. */
 export function playAgainType(rounds: GameRoundView[]): string {
@@ -18,8 +17,18 @@ function roundLabel(round: GameRoundView): string {
 }
 
 /** The answers of a round, for the summary. */
-function roundAnswers(round: GameRoundView): string[] {
-  return findGameModule(round.gameType.name)?.answerNames(round.data) ?? [];
+function roundAnswers(round: GameRoundView): AnswerCandidate[] {
+  return findGameModule(round.gameType.name)?.answers(round.data) ?? [];
+}
+
+/**
+ * The answers of a round that the player didn't find: none for a correct round, otherwise every answer no correct
+ * guess matched (a guess is stored as typed, so an alias such as Holland finds the Netherlands).
+ */
+function missedAnswers(round: GameRoundView, answers: AnswerCandidate[]): string[] {
+  if (round.answerState === CORRECT_ANSWER) return [];
+  const found = new Set(round.guesses.filter((g) => g.correct).map((g) => matchAnswer(g.text, answers)));
+  return answers.map((a) => a.name).filter((name) => !found.has(name));
 }
 
 /** One round of the results page. */
@@ -27,11 +36,15 @@ export interface SummaryRowView {
   /** The round's type name, for a mixed game. */
   label: string;
   answers: string[];
+  /** The answers the player didn't find, shown as missed. */
+  missed: string[];
   outcome: RoundOutcome | null;
   result: RoundResultKind;
   hintsUsed: number;
   outOfGuesses: boolean;
   points: number;
+  /** The round's recorded guesses that were not answers, in the order they were made. */
+  wrongGuessNames: string[];
 }
 
 export interface GameSummaryView {
@@ -45,6 +58,10 @@ export interface GameSummaryView {
   mixed: boolean;
   gameTitle: string | null;
   difficulty: Difficulty;
+  /** Rounds answered correctly, with or without hints. */
+  solved: number;
+  wrongGuesses: number;
+  hintsUsed: number;
   rows: SummaryRowView[];
 }
 
@@ -78,14 +95,17 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
           : round.answerState === OUT_OF_GUESSES
             ? "outOfGuesses"
             : "revealed";
+    const answers = roundAnswers(round);
     return {
       label: roundLabel(round),
-      answers: roundAnswers(round),
+      answers: answers.map((a) => a.name),
+      missed: missedAnswers(round, answers),
       outcome,
       result,
       hintsUsed: round.hintsUsed,
       outOfGuesses: round.answerState === OUT_OF_GUESSES,
       points: round.points,
+      wrongGuessNames: round.guesses.filter((g) => !g.correct).map((g) => g.text),
     };
   });
   return {
@@ -97,6 +117,9 @@ export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
     mixed,
     gameTitle: mixed ? null : (findGameModule(type)?.title ?? type),
     difficulty,
+    solved: roundAnswerStates.filter((state) => state === CORRECT_ANSWER).length,
+    wrongGuesses: rows.reduce((sum, row) => sum + row.wrongGuessNames.length, 0),
+    hintsUsed: rows.reduce((sum, row) => sum + row.hintsUsed, 0),
     rows,
   };
 }

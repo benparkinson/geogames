@@ -337,6 +337,8 @@ export interface RoundSpec {
   answersFound?: number;
   /** Correct with no hints and no wrong guess. */
   firstGuess?: boolean;
+  /** The wrong guesses recorded for the round. */
+  wrongGuesses?: string[];
 }
 
 /** The server's responses for a whole game, each carrying the same complete result. */
@@ -367,6 +369,7 @@ export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
       answerState: spec.answerState,
       hintsUsed: hintsUsed[i],
       points: points[i],
+      guesses: (spec.wrongGuesses ?? []).map((text) => ({ text, correct: false })),
       gameResult,
     });
   });

@@ -1,42 +1,33 @@
 import { useState } from "react";
 import { useWakeServer } from "../api/health";
-import { MENU_OPTIONS } from "../games/registry";
 import DailyCard from "./DailyCard";
 import GameCardGrid from "./GameCardGrid";
 import KofiBadge from "./KofiBadge";
 import SiteFooter from "./SiteFooter";
+import SiteHeader from "./SiteHeader";
 import StartPanel from "./StartPanel";
-import ThemeToggle from "./ThemeToggle";
 
 function HomePage(): React.JSX.Element {
   const [selected, setSelected] = useState<string | null>(null);
-  const selectedOption = MENU_OPTIONS.find((o) => o.type === selected);
   useWakeServer();
 
   return (
-    <div className={"home page-bg" + (selectedOption ? " home--selected" : "")}>
-      <header className="home-header">
-        <div className="home-header__toolbar">
-          <ThemeToggle />
-        </div>
-        <h1 className="home-header__title">GeoGauntlet</h1>
-        <p className="home-header__tagline">Quick but challenging geography puzzles.</p>
-      </header>
+    <div className="home page-bg">
+      <SiteHeader title={<h1 className="gg-site-header__title">GeoGauntlet</h1>} />
       <div className="home-layout">
-        <section className="home-main">
+        <section className="home-daily">
           <DailyCard />
-          <h2 className="home-main__heading">Practice mode</h2>
-          <p className="home-main__note gg-text-muted">Pick any game to practise.</p>
-          <GameCardGrid selected={selected} onSelect={setSelected} />
+        </section>
+        <section className="home-main">
+          <GameCardGrid
+            selected={selected}
+            onSelect={setSelected}
+            renderPanel={(option) => <StartPanel option={option} />}
+          />
         </section>
 
-        {selectedOption && <StartPanel option={selectedOption} />}
-
         <div className="home-after">
-          <div className="home-after__kofi">
-            <KofiBadge />
-          </div>
-
+          <KofiBadge />
           <SiteFooter />
         </div>
       </div>

@@ -13,7 +13,7 @@ vi.mock("./RiverShapesMapWrapper", () => ({
 describe("River Shapes", () => {
   it("is the RIVERS_BY_SHAPE game", () => {
     expect(shapes.type).toBe("RIVERS_BY_SHAPE");
-    expect(shapes.answerNames(makeRiverRoundData())).toEqual(["Danube"]);
+    expect(shapes.answers(makeRiverRoundData()).map((a) => a.name)).toEqual(["Danube"]);
   });
 
   it("offers three hints, weakest first: continent, countries, then the first letter", async () => {
@@ -29,13 +29,13 @@ describe("River Shapes", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Its longest stretch is in Romania")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });
@@ -55,9 +55,9 @@ describe("River Shapes", () => {
     // The continent is shown from the start, as the first line of the list, and not as a hint.
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Its longest stretch is in Romania")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
     expect(screen.getAllByText(/^Continent/)).toHaveLength(1);

@@ -29,7 +29,7 @@ function renderGame(submitAnswer = vi.fn()) {
 describe("Land Borders", () => {
   it("is the COUNTRIES_BY_LAND_BORDERS game", () => {
     expect(landBorders.type).toBe("COUNTRIES_BY_LAND_BORDERS");
-    expect(landBorders.answerNames(makeCountryShapeRoundData())).toEqual(["Netherlands"]);
+    expect(landBorders.answers(makeCountryShapeRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);
   });
 
   it("shows the prompt", () => {
@@ -42,15 +42,15 @@ describe("Land Borders", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Its neighbours are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });

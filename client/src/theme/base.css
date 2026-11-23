@@ -7,7 +7,7 @@
 
 body {
   margin: 0;
-  background-color: var(--gg-color-surface);
+  background-color: var(--gg-color-page-bg);
   color: var(--gg-color-text);
   font-family: var(--gg-font-sans);
   font-size: 1rem;
@@ -24,8 +24,10 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: var(--gg-space-2);
-  font-weight: 500;
-  line-height: 1.2;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-weight: var(--gg-font-weight-display);
+  line-height: 1.1;
 }
 
 p {
@@ -49,6 +51,8 @@ ol ol {
 
 a {
   color: var(--gg-color-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 a:hover {

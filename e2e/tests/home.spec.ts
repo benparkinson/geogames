@@ -21,7 +21,7 @@ test("the home page offers every game and the round counts", async ({ page }) =>
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "GeoGauntlet" })).toBeVisible();
-  const games = page.getByRole("radiogroup", { name: "Choose a game" }).getByRole("radio");
+  const games = page.getByRole("group", { name: "Choose a game" }).getByRole("button");
   await expect(games).toHaveCount(GAME_TITLES.length);
   for (const title of GAME_TITLES) {
     await expect(games.filter({ has: page.getByText(title, { exact: true }) })).toHaveCount(1);
@@ -47,7 +47,9 @@ for (const theme of ["light", "dark"] as const) {
 
     // The cards are buttons, whose browser default colour ignores the theme.
     const text = await page.locator("body").evaluate((body) => getComputedStyle(body).color);
-    const card = page.getByRole("radio").filter({ has: page.getByText("Tripoints", { exact: true }) });
+    const card = page
+      .getByRole("button")
+      .filter({ has: page.getByText("Tripoints", { exact: true }) });
     await expect(card.getByText("Tripoints", { exact: true })).toHaveCSS("color", text);
     await expect(card.locator("svg").first()).toHaveCSS("color", text);
   });
@@ -67,13 +69,12 @@ test.describe("on a phone", () => {
 
   test("the start button is on screen after choosing a game", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("radio").filter({ has: page.getByText("Lake Shapes", { exact: true }) }).click();
+    await page
+      .getByRole("button")
+      .filter({ has: page.getByText("Lake Shapes", { exact: true }) })
+      .click();
 
     const startButton = page.getByRole("button", { name: "Start game" });
-    await expect(startButton).toBeInViewport();
-
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await expect(page.getByRole("link", { name: "Credits and privacy" })).toBeInViewport();
     await expect(startButton).toBeInViewport();
   });
 });
@@ -81,18 +82,21 @@ test.describe("on a phone", () => {
 test.describe("on a wide screen", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("the start button sits beside the cards", async ({ page }) => {
+  test("the start panel sits directly under the chosen row", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("radio").filter({ has: page.getByText("Tripoints", { exact: true }) }).click();
+    const row = page.getByRole("button").filter({ has: page.getByText("Tripoints", { exact: true }) });
+    await row.click();
 
-    const startButton = page.getByRole("button", { name: "Start game" });
-    await expect(startButton).toBeInViewport();
+    await expect(page.getByRole("button", { name: "Start game" })).toBeInViewport();
+    const rowBox = await row.boundingBox();
     const panel = await page.getByRole("complementary", { name: "Start a game" }).boundingBox();
-    const group = await page.getByRole("radiogroup", { name: "Choose a game" }).boundingBox();
-    expect(panel!.x).toBeGreaterThanOrEqual(group!.x + group!.width);
+    const group = await page.getByRole("group", { name: "Choose a game" }).boundingBox();
+    expect(panel!.y).toBeGreaterThanOrEqual(rowBox!.y + rowBox!.height - 1);
+    expect(panel!.x).toBeGreaterThanOrEqual(group!.x);
+    expect(panel!.x + panel!.width).toBeLessThanOrEqual(group!.x + group!.width + 1);
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.getByRole("radio").filter({ has: page.getByText("Lake Shapes", { exact: true }) }).click();
-    await expect(startButton).toBeInViewport();
+    // Choosing another game moves the panel to it.
+    await page.getByRole("button").filter({ has: page.getByText("Lake Shapes", { exact: true }) }).click();
+    await expect(page.getByRole("button", { name: "Start game" })).toHaveCount(1);
   });
 });

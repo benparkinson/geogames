@@ -42,6 +42,9 @@ describe("PrivacyPage", () => {
     expect(href("Wikipedia")).toBe("https://en.wikipedia.org/wiki/List_of_tripoints");
     expect(href("CC BY-SA 4.0")).toBe("https://creativecommons.org/licenses/by-sa/4.0/");
     expect(href("Freepik")).toContain("flaticon.com");
+    expect(href("Archivo")).toContain("fontsource.org");
+    expect(href("IBM Plex Mono")).toContain("fontsource.org");
+    expect(href("SIL Open Font Licence 1.1")).toBe("https://openfontlicense.org/");
     expect(href("Software licences")).toBe("/third-party-licenses.txt");
     expect(screen.getByText(/positions adjusted/)).toBeInTheDocument();
   });

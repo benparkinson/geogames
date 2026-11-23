@@ -18,8 +18,6 @@ export {
   Fire as ExtraDifficultIcon,
   GeoAltFill as TripointIcon,
   Globe as ContinentIcon,
-  Heart as LifeLostIcon,
-  HeartFill as LifeIcon,
   HouseFill as HomeIcon,
   Lightbulb as HintIcon,
   LightningChargeFill as StreakIcon,

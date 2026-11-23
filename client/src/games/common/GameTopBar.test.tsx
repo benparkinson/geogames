@@ -54,7 +54,20 @@ describe("GameTopBar", () => {
   it("shows which round is being played", () => {
     renderBar({ currentRound: 1, totalRoundCount: 3 });
 
-    expect(screen.getByText("Round 2 of 3")).toBeInTheDocument();
+    expect(screen.getByText("round 02 of 03")).toBeInTheDocument();
+  });
+
+  it("calls an ordinary game Practice, and shows the difficulty only when it is not Normal", () => {
+    const { unmount } = render(
+      <GameTopBar round={makeRoundProps({ difficulty: "HARD" })} progress={progressOf(makeRoundProps())} />,
+    );
+    expect(screen.getByText("Practice")).toBeInTheDocument();
+    expect(screen.queryByText("Test Game")).not.toBeInTheDocument();
+    expect(screen.getByText("round 01 of 03 · Hard mode")).toBeInTheDocument();
+    unmount();
+
+    renderBar();
+    expect(screen.getByText(/^round 01 of \d+$/)).toBeInTheDocument();
   });
 
   it("links home", () => {

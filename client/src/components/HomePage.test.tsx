@@ -26,8 +26,10 @@ function renderHome() {
   return renderWithClient(<HomePage />);
 }
 
-const cards = () => within(screen.getByRole("radiogroup", { name: "Choose a game" }));
-const card = (name: RegExp) => cards().getByRole("radio", { name });
+const cards = () => within(screen.getByRole("group", { name: "Choose a game" }));
+const card = (name: RegExp) => cards().getByRole("button", { name });
+/** The game rows, before any is opened (an open row adds its start panel's buttons). */
+const rows = () => cards().getAllByRole("button");
 const startButton = () => screen.getByRole("button", { name: /Start game|Starting/ });
 
 describe("HomePage on load", () => {
@@ -58,18 +60,17 @@ describe("HomePage choosing a game", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
   });
 
-  it("selects no game on load, and shows no start button", () => {
+  it("opens no game on load, and shows no start button", () => {
     renderHome();
 
-    for (const radio of cards().getAllByRole("radio")) {
-      expect(radio).toHaveAttribute("aria-checked", "false");
+    for (const row of rows()) {
+      expect(row).toHaveAttribute("aria-expanded", "false");
+      expect(row).not.toHaveAttribute("aria-controls");
     }
     expect(screen.queryByRole("button", { name: /Start game/ })).toBeNull();
-    expect(card(/Tripoints/)).toHaveAttribute("tabindex", "0");
-    expect(card(/River Shapes/)).toHaveAttribute("tabindex", "-1");
   });
 
-  it("shows the start panel with the chosen game once one is selected", async () => {
+  it("shows the start panel with the chosen game once one is opened", async () => {
     const user = userEvent.setup();
     renderHome();
 
@@ -87,17 +88,33 @@ describe("HomePage choosing a game", () => {
     expect(screen.getAllByRole("button", { name: "Start game" })).toHaveLength(1);
   });
 
-  it("selecting with the arrow keys also shows the start panel", async () => {
+  it("shows the start panel directly under the opened row, which controls it", async () => {
     const user = userEvent.setup();
     renderHome();
-    card(/Tripoints/).focus();
 
-    await user.keyboard("{ArrowRight}");
+    await user.click(card(/River Shapes/));
+    const panel = screen.getByRole("complementary", { name: "Start a game" });
+    const row = card(/River Shapes/);
+    expect(row.nextElementSibling).toContainElement(panel);
+    expect(row.getAttribute("aria-controls")).toBe(row.nextElementSibling?.id);
+  });
 
-    expect(
-      within(screen.getByRole("complementary", { name: "Start a game" })).getByText("Country Cities"),
-    ).toBeInTheDocument();
-    expect(card(/Country Cities/)).toHaveFocus();
+  it("closes the panel when the open row is pressed again", async () => {
+    const user = userEvent.setup();
+    renderHome();
+
+    await user.click(card(/River Shapes/));
+    await user.click(card(/River Shapes/));
+
+    expect(card(/River Shapes/)).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("complementary", { name: "Start a game" })).toBeNull();
+  });
+
+  it("shows the date and the heading on the daily ticket", () => {
+    renderHome();
+
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Today's five");
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Start the daily");
   });
 
   it("keeps the start panel before the Ko-fi link in the tab order", async () => {
@@ -117,16 +134,18 @@ describe("HomePage choosing a game", () => {
     expect(kofi.getAttribute("rel")).toContain("noopener");
   });
 
-  it("selects a card when it is clicked", async () => {
+  it("opens one row at a time", async () => {
+    const user = userEvent.setup();
     renderHome();
 
-    await userEvent.setup().click(card(/River Shapes/));
+    await user.click(card(/Tripoints/));
+    await user.click(card(/River Shapes/));
 
-    expect(card(/River Shapes/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "false");
+    expect(card(/River Shapes/)).toHaveAttribute("aria-expanded", "true");
+    expect(card(/Tripoints/)).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("moves the selection and focus with the arrow keys across both sections, wrapping around", async () => {
+  it("moves the focus with the arrow keys across both sections, wrapping around, without opening a row", async () => {
     const user = userEvent.setup();
     renderHome();
     card(/Tripoints/).focus();
@@ -147,38 +166,47 @@ describe("HomePage choosing a game", () => {
     ];
     for (const [i, name] of order.entries()) {
       await user.keyboard(i % 2 === 0 ? "{ArrowRight}" : "{ArrowDown}");
-      expect(card(name)).toHaveAttribute("aria-checked", "true");
       expect(card(name)).toHaveFocus();
     }
 
     for (const name of [/Border Shapes/, /Lake Shapes/, /River Shapes/, /Mixed/]) {
       await user.keyboard("{ArrowLeft}");
-      expect(card(name)).toHaveAttribute("aria-checked", "true");
       expect(card(name)).toHaveFocus();
     }
 
     await user.keyboard("{ArrowUp}");
-    expect(card(/Coastlines/)).toHaveAttribute("aria-checked", "true");
+    expect(card(/Coastlines/)).toHaveFocus();
+    expect(screen.queryByRole("complementary", { name: "Start a game" })).toBeNull();
+  });
+
+  it("opens the focused row with Enter", async () => {
+    const user = userEvent.setup();
+    renderHome();
+    card(/Tripoints/).focus();
+
+    await user.keyboard("{ArrowDown}{Enter}");
+
+    expect(card(/Country Cities/)).toHaveAttribute("aria-expanded", "true");
   });
 
   it("puts the shape games in an extra difficult section", () => {
     renderHome();
 
     const extra = within(screen.getByRole("group", { name: "Extra difficult" }));
-    expect(extra.getAllByRole("radio").map((radio) => radio.textContent)).toEqual([
+    expect(extra.getAllByRole("button").map((row) => row.textContent)).toEqual([
       expect.stringContaining("River Shapes"),
       expect.stringContaining("Lake Shapes"),
       expect.stringContaining("Border Shapes"),
     ]);
   });
 
-  it("can select an extra difficult game", async () => {
+  it("can open an extra difficult game", async () => {
     renderHome();
 
     await userEvent.setup().click(card(/Lake Shapes/));
 
-    expect(card(/Lake Shapes/)).toHaveAttribute("aria-checked", "true");
-    expect(card(/Tripoints/)).toHaveAttribute("aria-checked", "false");
+    expect(card(/Lake Shapes/)).toHaveAttribute("aria-expanded", "true");
+    expect(card(/Tripoints/)).toHaveAttribute("aria-expanded", "false");
   });
 
   it("ignores other keys", async () => {
@@ -188,9 +216,7 @@ describe("HomePage choosing a game", () => {
 
     await user.keyboard("a");
 
-    for (const radio of cards().getAllByRole("radio")) {
-      expect(radio).toHaveAttribute("aria-checked", "false");
-    }
+    expect(card(/Tripoints/)).toHaveFocus();
     expect(screen.queryByRole("button", { name: /Start game/ })).toBeNull();
   });
 });
@@ -453,11 +479,9 @@ describe("HomePage daily challenge card", () => {
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
     renderHome();
 
-    const link = screen.getByRole("link", { name: /Daily challenge/ });
-    const block = link.querySelector("[data-streak]");
+    const block = screen.getByRole("banner").querySelector("[data-streak]");
     expect(block).toHaveAttribute("data-streak", "4");
-    expect(block).toHaveTextContent("4");
-    expect(link).toHaveAccessibleName(/4 day streak/);
+    expect(block).toHaveTextContent("4-day streak");
   });
 
   it("shows no streak that ended two days ago", () => {
@@ -466,14 +490,14 @@ describe("HomePage daily challenge card", () => {
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate, count: 4 }));
     renderHome();
 
-    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toBeNull();
   });
 
   it("shows no streak when none is stored", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     renderHome();
 
-    expect(screen.getByRole("link", { name: /Daily challenge/ }).querySelector("[data-streak]")).toBeNull();
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toBeNull();
   });
 
   it("ignores a game from another day", () => {
@@ -517,11 +541,11 @@ describe("HomePage daily countdown", () => {
     writeDaily(finished);
     renderHome();
 
-    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 1:00:00");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 1:00:00");
     act(() => {
       vi.advanceTimersByTime(1000);
     });
-    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next daily in 0:59:59");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 0:59:59");
   });
 
   it("shows no countdown when there is no daily", () => {
@@ -548,12 +572,12 @@ describe("HomePage daily countdown", () => {
     expect(dailyLink().querySelector("[data-countdown]")).toBeNull();
   });
 
-  it("keeps the streak next to the countdown", () => {
+  it("shows the streak in the header beside the countdown", () => {
     writeDaily(finished);
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: finished.date, count: 4 }));
     renderHome();
 
-    expect(dailyLink().querySelector("[data-streak]")).toHaveAttribute("data-streak", "4");
-    expect(dailyLink()).toHaveAccessibleName(/4 day streak.*Next daily in 1:00:00/);
+    expect(screen.getByRole("banner").querySelector("[data-streak]")).toHaveAttribute("data-streak", "4");
+    expect(dailyLink().querySelector("[data-countdown]")).toHaveTextContent("Next in 1:00:00");
   });
 });

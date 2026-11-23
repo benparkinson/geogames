@@ -26,5 +26,5 @@ export default defineGame({
         bothFirstLettersHint,
       ),
   }),
-  answerNames: (round) => round.countries.map((country) => country.name),
+  answers: (round) => round.countries,
 });

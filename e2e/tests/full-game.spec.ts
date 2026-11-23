@@ -20,8 +20,8 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
   // Round 1: one hint, then the right answers.
   await expect(answerBox(page)).toBeVisible();
   const first = await api.round(id, 0);
-  await page.getByRole("button", { name: "Hint (3 left)" }).click();
-  await expect(page.getByRole("button", { name: "Hint (2 left)" })).toBeVisible();
+  await page.getByRole("button", { name: /Hint \(.*, 3 left\)/ }).click();
+  await expect(page.getByRole("button", { name: /Hint \(.*, 2 left\)/ })).toBeVisible();
   await guess(page, first.answers[0].name);
   const firstPosted = nextAnswerPosted(page);
   for (const answer of first.answers.slice(1)) {
@@ -40,9 +40,9 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
   await expect(answerBox(page)).toBeVisible();
   const second = await api.round(id, 1);
   await guess(page, second.answers[0].name);
-  await page.getByRole("button", { name: "Reveal answer" }).click();
+  await page.getByRole("button", { name: "Give up this round" }).click();
   const secondPosted = nextAnswerPosted(page);
-  await page.getByRole("button", { name: "Tap again to reveal" }).click();
+  await page.getByRole("button", { name: "Tap again to give up" }).click();
   expect((await secondPosted).postDataJSON()).toEqual({
     answerState: "GAVE_UP",
     hintsUsed: 0,
@@ -90,13 +90,15 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
   await page.getByRole("button", { name: "See results" }).click();
 
   // The summary.
-  await expect(page.getByRole("heading", { name: "You scored 116 / 300" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your result" })).toBeVisible();
+  await expect(page.getByText("116", { exact: true })).toBeVisible();
+  await expect(page.getByText("/ 300", { exact: true })).toBeVisible();
   await expect(page.getByText("2 with hints · 1 missed")).toBeVisible();
   const rounds = page.getByRole("button").filter({ hasText: /\+\d+/ });
   await expect(rounds).toHaveCount(3);
   await expect(rounds.nth(0)).toContainText("1 hint");
   await expect(rounds.nth(0)).toContainText("+83");
   await expect(rounds.nth(1)).toContainText("+33");
-  await expect(rounds.nth(2)).toContainText("Out of guesses");
+  await expect(rounds.nth(2)).toContainText("Ran out of lives");
   await expect(rounds.nth(2)).toContainText("+0");
 });

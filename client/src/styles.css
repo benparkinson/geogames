@@ -82,6 +82,9 @@ code {
 .game-screen--keyboard .round-brief {
   margin-bottom: 0.25rem;
 }
+.game-screen--keyboard .guess-list__rows {
+  max-height: 5rem;
+}
 .game-screen--keyboard .round-brief-title,
 .game-screen--keyboard .round-status {
   display: none;
@@ -107,14 +110,17 @@ code {
   margin-bottom: 0.5rem;
 }
 .round-brief-title {
+  width: 100%;
   font-size: 0.8rem;
   color: var(--gg-color-text-muted);
 }
 .round-brief-question {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  line-height: 1.3;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: 1.5rem;
+  font-weight: var(--gg-font-weight-display);
+  line-height: 1.15;
 }
 
 @media (min-width: 992px) {
@@ -130,49 +136,45 @@ code {
   }
 }
 
-@media (max-width: 575.98px) {
-  .top-bar--wrap {
-    flex-wrap: wrap;
-  }
-  .top-bar--wrap .top-bar__rounds {
-    order: 3;
-    flex: 0 0 100%;
-    justify-content: center;
-  }
-}
-
 .round-progress {
   display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding: 3px;
-  max-width: 100%;
+  gap: 3px;
+  width: 100%;
+}
+.round-progress > span {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
 }
 .round-dot {
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 24px;
   padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  border: 1px solid var(--gg-color-text-muted);
-  background: transparent;
+  border-radius: var(--gg-radius);
+  border: 1px solid var(--gg-color-rule);
+  background: var(--gg-color-page-bg);
   color: var(--gg-color-text);
-  font-size: 0.65rem;
+  font-family: var(--gg-font-mono);
+  font-size: 0.7rem;
   line-height: 1;
+}
+.round-dot svg {
+  width: 0.8em;
+  height: 0.8em;
 }
 .round-dot[data-outcome="correct"],
 .round-dot[data-outcome="firstGuess"] {
-  background: var(--gg-color-correct);
-  border-color: var(--gg-color-correct);
-  color: var(--gg-color-on-correct);
+  background: var(--gg-color-rule);
+  color: var(--gg-color-page-bg);
 }
 .round-dot[data-outcome="hints"] {
-  background: var(--gg-color-hints);
-  border-color: var(--gg-color-hints);
-  color: var(--gg-color-on-hints);
+  background: var(--gg-color-text-muted);
+  border-color: var(--gg-color-text-muted);
+  color: var(--gg-color-page-bg);
 }
 .round-dot[data-outcome="missed"] {
   background: var(--gg-color-missed);
@@ -180,203 +182,16 @@ code {
   color: var(--gg-color-on-missed);
 }
 .round-dot[aria-current] {
-  box-shadow: 0 0 0 2px var(--gg-color-accent);
+  background: var(--gg-color-hint);
+  border-color: var(--gg-color-rule);
+  color: var(--gg-color-on-hint);
+  box-shadow: 0 2px 0 var(--gg-color-rule);
 }
 .round-dot:disabled {
   opacity: 0.5;
 }
-@media (min-width: 576px) {
-  .round-dot {
-    width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
-  }
-}
-
-.game-card {
-  width: 100%;
-  height: 100%;
-  padding: var(--gg-space-3);
-  text-align: left;
-  border: 1px solid var(--gg-color-border);
-  border-radius: var(--gg-radius-lg);
-  background: var(--gg-color-surface);
-  transition: box-shadow var(--gg-duration);
-}
-.daily-hero {
-  display: block;
-  width: 100%;
-  margin-bottom: var(--gg-space-4);
-  padding: var(--gg-space-4);
-  text-align: left;
-  text-decoration: none;
-  border-radius: var(--gg-radius-lg);
-  background: var(--gg-color-accent);
-  color: var(--gg-color-on-accent);
-  box-shadow: var(--gg-shadow-hover);
-}
-.daily-hero:hover,
-.daily-hero:focus-visible {
-  color: var(--gg-color-on-accent);
-  filter: brightness(1.08);
-}
-.daily-hero__status {
-  opacity: 0.9;
-}
-.daily-hero__head,
-.daily-hero__foot {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--gg-space-2);
-  flex-wrap: wrap;
-}
-.daily-hero__head {
-  align-items: center;
-}
-.daily-hero__foot {
-  align-items: baseline;
-}
-.daily-hero__streak {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gg-space-1);
-  padding: var(--gg-space-1) var(--gg-space-2);
-  font-size: var(--gg-font-size-sm);
-  border: 1px solid currentColor;
-  border-radius: var(--gg-radius-pill);
-}
-.daily-hero__countdown {
-  font-size: var(--gg-font-size-sm);
-  font-variant-numeric: tabular-nums;
-}
-.game-card--selected {
-  border: 2px solid var(--gg-color-accent);
-  background: var(--gg-color-accent-subtle);
-}
-.game-card:hover {
-  box-shadow: var(--gg-shadow-hover);
-}
-
-/* Home page: the cards column, and the start panel (bottom bar when narrow, right gutter when wide). */
-.home-header,
-.home-layout {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 0.75rem;
-}
-
-.home-start-button {
-  flex-grow: 1;
-}
-.home-start {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1030;
-  background: var(--gg-color-panel-bg);
-  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-  border-top-left-radius: var(--gg-radius-xl);
-  border-top-right-radius: var(--gg-radius-xl);
-  box-shadow: var(--gg-shadow-floating);
-}
-/* Room under the footer so the bar never covers the last card, Ko-fi or the credits,
-   and keyboard focus scrolling stops above the bar. */
-.home--selected {
-  padding-bottom: 10rem !important;
-  scroll-padding-bottom: 10rem;
-}
-
-@media (min-width: 1200px) {
-  .home-layout {
-    max-width: none;
-    display: grid;
-    /* The cards stay centred in the middle column; the start panel uses the right gutter. */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
-    column-gap: 1.5rem;
-    align-items: start;
-  }
-  .home-main {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .home-after {
-    grid-column: 2;
-    grid-row: 2;
-  }
-  .home-start {
-    grid-column: 3;
-    grid-row: 1 / span 2; /* spans both rows so sticky lasts the whole page */
-    position: sticky;
-    top: 1.5rem;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    width: 100%;
-    max-width: 260px;
-    border-radius: var(--gg-radius-xl);
-    padding: 1rem;
-    box-shadow: var(--gg-shadow-floating-side);
-  }
-  .home-start-button {
-    width: 100%;
-    flex-basis: 100%;
-  }
-  .home--selected {
-    padding-bottom: 1.5rem !important;
-    scroll-padding-bottom: 0;
-  }
-}
 
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes home-start-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  @keyframes home-start-side {
-    from {
-      transform: translateX(12px);
-      opacity: 0;
-    }
-    to {
-      transform: none;
-      opacity: 1;
-    }
-  }
-  .home-start {
-    animation: home-start-up var(--gg-duration-slow) ease-out;
-  }
-  @media (min-width: 1200px) {
-    .home-start {
-      animation-name: home-start-side;
-    }
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .game-card {
-    transition: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes slot-in {
-    from {
-      transform: scale(0.85);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  .slot--filled {
-    animation: slot-in var(--gg-duration) ease-out;
-  }
-
   @keyframes result-in {
     from {
       transform: translateY(8px);
@@ -392,7 +207,6 @@ code {
     animation: result-in var(--gg-duration-slow) ease-out;
   }
 
-  .game-card,
   .round-dot {
     transition:
       box-shadow var(--gg-duration-fast),
@@ -420,16 +234,30 @@ code {
   margin-bottom: 0.25rem;
   color: var(--gg-color-text);
 }
-.gg-chip.guess-chip {
-  --gg-chip-fg: var(--gg-color-text);
-}
-.guess-chip__x {
-  color: var(--gg-color-danger);
-}
-.guesses-left-dots {
+/* Lives as tally boxes: filled while left, empty once lost; the last one turns to the marker. */
+.guesses-left__boxes {
   display: inline-flex;
-  gap: 0.25rem;
-  font-size: 0.7rem;
+  gap: 3px;
+}
+.guesses-left__box {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid var(--gg-color-rule);
+}
+.guesses-left__box[data-life="left"] {
+  background: var(--gg-color-rule);
+}
+.guesses-left[data-last] .guesses-left__box {
+  border-color: var(--gg-color-missed);
+}
+.guesses-left[data-last] .guesses-left__box[data-life="left"] {
+  background: var(--gg-color-missed);
+}
+.guesses-left__text {
+  color: var(--gg-color-text-muted);
+}
+.guesses-left[data-last] .guesses-left__text {
+  color: var(--gg-color-warning-text);
 }
 
 /* Map pins drawn with an inline SVG (see map/markerIcons.ts). */

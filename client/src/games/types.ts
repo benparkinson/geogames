@@ -1,3 +1,4 @@
+import type { AnswerCandidate } from "./common/answers";
 import type { ComponentType } from "react";
 import type { Round, RoundAnswer } from "./common/Model";
 import type { IconComponent } from "../ui/icons";
@@ -31,8 +32,8 @@ export interface GameModule<T> {
   /** Wrong guesses get a distance and direction clue, so Hard mode matters (see `clueFor`). */
   hasClues?: boolean;
   Component: ComponentType<GameComponentProps<T>>;
-  /** The answers of a round, for the summary page. */
-  answerNames: (data: T) => string[];
+  /** The answers of a round with their other names, for the summary page (which ones were found). */
+  answers: (data: T) => AnswerCandidate[];
 }
 
 export type AnyGameModule = GameModule<unknown>;

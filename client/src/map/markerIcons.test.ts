@@ -5,9 +5,9 @@ import { mouthIcon, sourceIcon, targetIcon, tripointIcon } from "./markerIcons";
 const all = [sourceIcon, mouthIcon, targetIcon, tripointIcon];
 
 describe("marker icons", () => {
-  it("draws a green source pin and a red mouth pin", () => {
-    expect(sourceIcon.options.html).toContain("#1e9e4a");
-    expect(mouthIcon.options.html).toContain("#d62828");
+  it("draws a teal source pin and a red mouth pin", () => {
+    expect(sourceIcon.options.html).toContain("#1d5c63");
+    expect(mouthIcon.options.html).toContain("#d9481c");
   });
 
   it("draws every pin in a MAP_PALETTE colour", () => {

@@ -18,92 +18,89 @@
 
   /* ---- Palette ---- */
   --gg-white: #fff;
-  --gg-black: #000;
-  --gg-blue-600: #0d6efd;
-  --gg-blue-700: #0a58ca;
-  --gg-blue-100: #cfe2ff;
-  --gg-green-600: #198754;
-  --gg-yellow-500: #ffc107;
-  --gg-yellow-900: #664d03;
-  --gg-brown-900: #3d2e00;
-  --gg-red-600: #dc3545;
-  --gg-red-900: #58151c;
-  --gg-red-100: #f8d7da;
-  --gg-red-300: #f1aeb5;
-  --gg-gray-50: #f8f9fa;
-  --gg-gray-100: #e9ecef;
-  --gg-gray-300: #dee2e6;
-  --gg-gray-600: #6c757d;
-  --gg-gray-900: #212529;
-  --gg-periwinkle-200: #c8cfe8;
-  --gg-slate-700: #2f3b52;
+  --gg-ink: #1a1a1a;
+  --gg-paper: #f7f7f4;
+  --gg-sea: #cadce4;
+  --gg-highlighter: #ffd23f;
+  --gg-found: #1d5c63;
+  --gg-marker: #d9481c;
+  --gg-marker-text: #b23a14;
+  --gg-stone: #5c5c58;
   --gg-cornflower-400: #72a4f2;
 
   /* ---- Semantic: surfaces and text ---- */
-  --gg-color-page-bg: var(--gg-periwinkle-200);
+  --gg-color-page-bg: var(--gg-paper);
   --gg-color-panel-bg: var(--gg-white);
   --gg-color-surface: var(--gg-white);
-  --gg-color-surface-muted: var(--gg-gray-100);
-  --gg-color-text: var(--gg-gray-900);
-  --gg-color-text-muted: rgb(33 37 41 / 0.75);
-  --gg-color-border: var(--gg-gray-300);
-  --gg-color-border-translucent: rgb(0 0 0 / 0.175);
-  --gg-color-surface-hover: var(--gg-gray-50);
-  --gg-color-surface-active: var(--gg-gray-100);
-  --gg-color-link: var(--gg-blue-600);
-  --gg-color-link-hover: var(--gg-blue-700);
+  --gg-color-surface-muted: rgb(26 26 26 / 0.06);
+  --gg-color-text: var(--gg-ink);
+  --gg-color-text-muted: var(--gg-stone);
+  --gg-color-border: rgb(26 26 26 / 0.15);
+  --gg-color-border-translucent: rgb(26 26 26 / 0.15);
+  --gg-color-rule: var(--gg-ink);
+  --gg-color-rule-light: rgb(26 26 26 / 0.15);
+  --gg-color-surface-hover: rgb(26 26 26 / 0.04);
+  --gg-color-surface-active: rgb(26 26 26 / 0.1);
+  --gg-color-link: var(--gg-ink);
+  --gg-color-link-hover: var(--gg-found);
 
   /* ---- Semantic: roles ---- */
-  --gg-color-accent: var(--gg-blue-600);
-  --gg-color-on-accent: var(--gg-white);
-  --gg-color-accent-subtle: var(--gg-blue-100);
-  --gg-color-correct: var(--gg-green-600);
+  --gg-color-accent: var(--gg-ink);
+  --gg-color-on-accent: var(--gg-paper);
+  --gg-color-accent-subtle: var(--gg-highlighter);
+  --gg-color-correct: var(--gg-found);
   --gg-color-on-correct: var(--gg-white);
-  --gg-color-neutral: var(--gg-gray-600);
+  --gg-color-neutral: var(--gg-stone);
   --gg-color-on-neutral: var(--gg-white);
   --gg-color-revealed: var(--gg-color-neutral);
   --gg-color-on-revealed: var(--gg-white);
-  --gg-color-hint: var(--gg-yellow-500);
-  --gg-color-on-hint: var(--gg-black);
-  --gg-color-warning-text: var(--gg-yellow-900);
-  --gg-color-danger: var(--gg-red-600);
+  --gg-color-hint: var(--gg-highlighter);
+  --gg-color-on-hint: var(--gg-ink);
+  --gg-color-warning-text: var(--gg-marker-text);
+  --gg-color-danger: var(--gg-marker);
   --gg-color-on-danger: var(--gg-white);
-  --gg-color-danger-text: var(--gg-red-900);
+  --gg-color-danger-text: var(--gg-marker-text);
   /* Round outcomes: "with hints" (some points, not full marks) and "missed" (revealed for no points). */
   --gg-color-hints: var(--gg-color-hint);
   --gg-color-on-hints: var(--gg-color-on-hint);
-  --gg-color-hints-text: var(--gg-color-warning-text);
-  --gg-color-missed: var(--gg-red-600);
+  /* Some points: ordinary text, so only misses read as red. */
+  --gg-color-hints-text: var(--gg-color-text);
+  --gg-color-missed: var(--gg-marker);
   --gg-color-on-missed: var(--gg-white);
-  --gg-color-missed-text: var(--gg-color-danger-text);
-  --gg-color-danger-subtle: var(--gg-red-100);
-  --gg-color-danger-border: var(--gg-red-300);
+  --gg-color-missed-text: var(--gg-marker-text);
+  --gg-color-danger-subtle: var(--gg-white);
+  --gg-color-danger-border: var(--gg-marker);
   --gg-color-coffee: var(--gg-cornflower-400);
 
   /* ---- Semantic: map (the same in both themes) ---- */
-  --gg-color-map-blank: var(--gg-slate-700);
+  --gg-color-map-blank: var(--gg-sea);
 
   /* ---- Fonts ---- */
   --gg-font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
-  --gg-font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    "Archivo Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+  /* Headings use the condensed width of Archivo; the big score is narrower still (65%, weight 800). */
+  --gg-font-display: var(--gg-font-sans);
+  --gg-font-stretch-display: 72%;
+  --gg-font-stretch-score: 65%;
+  --gg-font-weight-display: 700;
+  --gg-font-weight-score: 800;
+  --gg-font-mono: "IBM Plex Mono", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
 
   /* ---- Shape ---- */
-  --gg-radius-sm: 0.25rem;
-  --gg-radius: 0.375rem;
-  --gg-radius-lg: 0.5rem;
-  --gg-radius-xl: 1rem;
-  --gg-radius-pill: 50rem;
+  --gg-radius-sm: 3px;
+  --gg-radius: 3px;
+  --gg-radius-lg: 3px;
+  --gg-radius-xl: 3px;
+  --gg-radius-pill: 3px;
 
-  /* ---- Shadows ---- */
-  --gg-shadow-panel: 0 -2px 12px rgb(0 0 0 / 0.12);
-  --gg-shadow-panel-side: -2px 0 12px rgb(0 0 0 / 0.08);
-  --gg-shadow-floating: 0 -2px 12px rgb(0 0 0 / 0.15);
-  --gg-shadow-floating-side: 0 4px 16px rgb(0 0 0 / 0.12);
-  --gg-shadow-hover: 0 4px 12px rgb(0 0 0 / 0.15);
+  /* ---- Shadows: none, panels are separated by ink rules ---- */
+  --gg-shadow-panel: none;
+  --gg-shadow-panel-side: none;
+  --gg-shadow-floating: none;
+  --gg-shadow-floating-side: none;
+  --gg-shadow-hover: none;
   --gg-shadow-marker: drop-shadow(0 1px 2px rgb(0 0 0 / 0.6));
-  --gg-focus-ring: 0 0 0 0.25rem color-mix(in srgb, var(--gg-color-accent) 25%, transparent);
+  --gg-focus-ring: 0 0 0 2px var(--gg-color-page-bg), 0 0 0 4px var(--gg-color-accent);
 
   /* ---- Motion ---- */
   --gg-duration-fast: 120ms;
@@ -143,35 +140,26 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --gg-blue-300: #6ea8fe;
-  --gg-blue-200: #8bb9fe;
-  --gg-blue-1000: #031633;
-  --gg-yellow-300: #ffda6a;
-  --gg-red-400: #ea868f;
-  --gg-red-1000: #2c0b0e;
-  --gg-red-800: #842029;
-  --gg-gray-850: #2b3035;
-  --gg-gray-800: #343a40;
-  --gg-gray-700: #495057;
-  --gg-gray-200: #dee2e6;
-  --gg-ink-900: #161a23;
-  --gg-ink-800: #222838;
+  --gg-ink: #edede8;
+  --gg-paper: #141414;
+  --gg-dark-panel: #1e1e1c;
+  --gg-dark-text-on-highlighter: #1a1a1a;
+  --gg-found: #5bb8c0;
+  --gg-marker-text: #ff8f66;
+  --gg-stone: #a8a8a2;
 
-  --gg-color-page-bg: var(--gg-ink-900);
-  --gg-color-panel-bg: var(--gg-ink-800);
-  --gg-color-surface: var(--gg-gray-900);
-  --gg-color-surface-muted: var(--gg-gray-800);
-  --gg-color-text: var(--gg-gray-200);
-  --gg-color-text-muted: rgb(222 226 230 / 0.75);
-  --gg-color-border: var(--gg-gray-700);
-  --gg-color-border-translucent: rgb(255 255 255 / 0.15);
-  --gg-color-surface-hover: var(--gg-gray-850);
-  --gg-color-surface-active: var(--gg-gray-800);
-  --gg-color-link: var(--gg-blue-300);
-  --gg-color-link-hover: var(--gg-blue-200);
-  --gg-color-accent-subtle: var(--gg-blue-1000);
-  --gg-color-warning-text: var(--gg-yellow-300);
-  --gg-color-danger-text: var(--gg-red-400);
-  --gg-color-danger-subtle: var(--gg-red-1000);
-  --gg-color-danger-border: var(--gg-red-800);
+  --gg-color-page-bg: var(--gg-paper);
+  --gg-color-panel-bg: var(--gg-dark-panel);
+  --gg-color-surface: var(--gg-dark-panel);
+  --gg-color-surface-muted: rgb(237 237 232 / 0.08);
+  --gg-color-border: rgb(237 237 232 / 0.2);
+  --gg-color-border-translucent: rgb(237 237 232 / 0.2);
+  --gg-color-rule-light: rgb(237 237 232 / 0.2);
+  --gg-color-surface-hover: rgb(237 237 232 / 0.06);
+  --gg-color-surface-active: rgb(237 237 232 / 0.12);
+  --gg-color-on-hint: var(--gg-dark-text-on-highlighter);
+  --gg-color-on-correct: var(--gg-paper);
+  --gg-color-on-neutral: var(--gg-paper);
+  --gg-color-on-revealed: var(--gg-paper);
+  --gg-color-danger-subtle: var(--gg-dark-panel);
 }

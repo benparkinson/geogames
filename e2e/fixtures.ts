@@ -109,8 +109,8 @@ export { expect };
  */
 export async function startGame(page: Page, title: string, rounds = 3): Promise<string> {
   await page.goto("/");
-  await page.getByRole("radio").filter({ has: page.getByText(title, { exact: true }) }).click();
-  // Click the visible label (the radio itself is hidden); Playwright waits for the start panel's slide-in to finish.
+  await page.getByRole("button").filter({ has: page.getByText(title, { exact: true }) }).click();
+  // Click the round count's visible label (its radio is hidden); Playwright waits for the panel to open.
   await page.getByRole("group", { name: "Rounds" }).getByText(String(rounds), { exact: true }).click();
   await page.getByRole("button", { name: "Start game" }).click();
   await expect(page).toHaveURL(/\/games\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);

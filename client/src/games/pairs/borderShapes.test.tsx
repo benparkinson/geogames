@@ -30,7 +30,7 @@ describe("Border Shapes", () => {
   it("is the BORDERS_BY_SHAPE game, in the extra difficult section", () => {
     expect(borderShapes.type).toBe("BORDERS_BY_SHAPE");
     expect(borderShapes.extraDifficult).toBe(true);
-    expect(borderShapes.answerNames(makeCountryPairRoundData())).toEqual(["Belgium", "Netherlands"]);
+    expect(borderShapes.answers(makeCountryPairRoundData()).map((a) => a.name)).toEqual(["Belgium", "Netherlands"]);
   });
 
   it("shows the prompt", () => {
@@ -43,15 +43,15 @@ describe("Border Shapes", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
     expect(screen.getByText("The rest of both countries' land borders are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
     expect(screen.getByText("Both coastlines are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
     expect(screen.getByText("Their names start with “B” and “N”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
   });

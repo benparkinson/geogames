@@ -43,31 +43,54 @@ export default function GameSummary({
   const summary = summariseGame(all);
   const { score, maxScore, heading, summaryLine, gameTitle, mixed } = summary;
   const gameType = summary.playAgainType;
+  const meta = daily ? `Daily ${daily.date}` : (gameTitle ?? "Mixed");
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
         <div className="gg-summary__head">
-          {gameTitle && <p className="gg-summary__title gg-text-muted">{gameTitle}</p>}
+          <p className="gg-summary__meta gg-mono gg-text-muted">{meta}</p>
+          <p className="gg-summary__score">
+            <span>{score}</span> <span className="gg-summary__max gg-mono">/ {maxScore}</span>
+          </p>
           <h1 className="gg-summary__heading">
-            {daily && <span className="gg-text-muted">Daily {daily.date}: </span>}
             {heading === "perfect" ? (
-              <>
-                <RESULT_ICONS.firstGuess aria-hidden="true" className="gg-text-correct" /> Perfect game! {score} /{" "}
-                {maxScore}
-              </>
+              <mark className="gg-mark">
+                <RESULT_ICONS.firstGuess aria-hidden="true" /> Perfect game!
+              </mark>
             ) : heading === "fullMarks" ? (
-              <>
-                <RESULT_ICONS.correct aria-hidden="true" className="gg-text-correct" /> Full marks! {score} / {maxScore}
-              </>
+              <mark className="gg-mark">
+                <RESULT_ICONS.correct aria-hidden="true" /> Full marks!
+              </mark>
             ) : (
-              `You scored ${score} / ${maxScore}`
+              "Your result"
             )}
           </h1>
+          <ul className="gg-summary__stats gg-mono">
+            <li>
+              <span>Solved</span>{" "}
+              <span>
+                {summary.solved} of {summary.rows.length}
+              </span>
+            </li>
+            <li>
+              <span>Wrong guesses</span> <span>{summary.wrongGuesses}</span>
+            </li>
+            <li>
+              <span>Hints used</span> <span>{summary.hintsUsed}</span>
+            </li>
+          </ul>
           <p className="gg-summary__line gg-text-muted">{summaryLine}</p>
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 
-        <div className="gg-list gg-summary__list">
+        <div className="gg-summary__list">
+          <h2 className="gg-summary__table-heading">Round by round</h2>
+          <div className="gg-summary__row gg-summary__row--head gg-mono" aria-hidden="true">
+            <span>No.</span>
+            <span>Answers</span>
+            <span className="gg-summary__wrong">Wrong guesses</span>
+            <span className="gg-summary__points">Points</span>
+          </div>
           {summary.rows.map((row, i) => (
             <SummaryRow key={i} row={row} index={i} mixed={mixed} onOpen={() => onOpenRound(i)} />
           ))}

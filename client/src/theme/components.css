@@ -7,7 +7,7 @@
   --gg-btn-bg: transparent;
   --gg-btn-fg: var(--gg-btn-color);
   --gg-btn-border: var(--gg-btn-color);
-  --gg-btn-ring: color-mix(in srgb, var(--gg-btn-color) 50%, transparent);
+  --gg-btn-ring: var(--gg-color-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +39,9 @@
 }
 .gg-btn:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 0.25rem var(--gg-btn-ring);
+  box-shadow:
+    0 0 0 2px var(--gg-color-page-bg),
+    0 0 0 4px var(--gg-btn-ring);
 }
 .gg-btn:disabled,
 .gg-btn[aria-disabled="true"] {
@@ -47,39 +49,64 @@
   pointer-events: none;
 }
 
+/* Primary is the one filled button on a screen: ink with paper text. The others are underlined text actions. */
 .gg-btn--primary {
   --gg-btn-color: var(--gg-color-accent);
   --gg-btn-fg-hover: var(--gg-color-on-accent);
 }
-.gg-btn--secondary {
-  --gg-btn-color: var(--gg-color-accent);
-  --gg-btn-fg-hover: var(--gg-color-on-accent);
-}
-.gg-btn--hint {
-  --gg-btn-color: var(--gg-color-hint);
-  --gg-btn-fg-hover: var(--gg-color-on-hint);
+.gg-btn--secondary,
+.gg-btn--hint,
+.gg-btn--danger,
+.gg-btn--quiet {
+  --gg-btn-color: var(--gg-color-text);
+  padding-inline: 0.25rem;
+  border-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 .gg-btn--danger {
-  --gg-btn-color: var(--gg-color-danger);
-  --gg-btn-fg-hover: var(--gg-color-on-danger);
+  --gg-btn-color: var(--gg-color-danger-text);
+}
+/* Hint: the same underline as the other text actions, in the hint list's highlighter yellow. */
+.gg-btn--hint {
+  text-decoration-color: var(--gg-color-hint);
 }
 .gg-btn--quiet {
-  --gg-btn-color: var(--gg-color-neutral);
-  --gg-btn-fg-hover: var(--gg-color-on-neutral);
+  --gg-btn-color: var(--gg-color-text-muted);
+}
+.gg-btn--secondary,
+.gg-btn--hint,
+.gg-btn--danger,
+.gg-btn--quiet {
+  --gg-btn-border: transparent;
+  --gg-btn-ring: var(--gg-color-accent);
+}
+.gg-btn--secondary:hover,
+.gg-btn--secondary:active,
+.gg-btn--hint:hover,
+.gg-btn--hint:active,
+.gg-btn--danger:hover,
+.gg-btn--danger:active,
+.gg-btn--quiet:hover,
+.gg-btn--quiet:active {
+  --gg-btn-bg: var(--gg-color-surface-muted);
+  --gg-btn-fg: var(--gg-btn-color);
+  --gg-btn-border: transparent;
 }
 
-/* Primary is solid: darker on hover and press. These come after the generic hover rule and win by specificity. */
 .gg-btn.gg-btn--primary {
   --gg-btn-bg: var(--gg-btn-color);
   --gg-btn-fg: var(--gg-btn-fg-hover);
+  --gg-btn-border: var(--gg-btn-color);
+  font-weight: var(--gg-font-weight-semibold);
 }
 .gg-btn.gg-btn--primary:hover {
-  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 85%, black);
-  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 80%, black);
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 85%, var(--gg-color-page-bg));
+  --gg-btn-border: var(--gg-btn-bg);
 }
 .gg-btn.gg-btn--primary:active {
-  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 80%, black);
-  --gg-btn-border: color-mix(in srgb, var(--gg-btn-color) 75%, black);
+  --gg-btn-bg: color-mix(in srgb, var(--gg-btn-color) 70%, var(--gg-color-page-bg));
+  --gg-btn-border: var(--gg-btn-bg);
 }
 
 .gg-btn--sm {
@@ -123,14 +150,30 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.gg-toggle__input:checked + .gg-btn {
-  --gg-btn-bg: var(--gg-btn-color);
-  --gg-btn-fg: var(--gg-btn-fg-hover);
-  --gg-btn-border: var(--gg-btn-color);
+.gg-toggle > .gg-btn {
+  --gg-btn-color: var(--gg-color-accent);
+  --gg-btn-fg: var(--gg-color-text);
+  --gg-btn-border: var(--gg-color-rule);
+  --gg-btn-bg: var(--gg-color-surface);
+  padding-inline: 0.75rem;
+  text-decoration: none;
+}
+.gg-toggle > .gg-btn:hover {
+  --gg-btn-bg: var(--gg-color-surface-active);
+  --gg-btn-fg: var(--gg-color-text);
+  --gg-btn-border: var(--gg-color-rule);
+}
+.gg-toggle__input:checked + .gg-btn,
+.gg-toggle__input:checked + .gg-btn:hover {
+  --gg-btn-bg: var(--gg-color-accent);
+  --gg-btn-fg: var(--gg-color-on-accent);
+  --gg-btn-border: var(--gg-color-accent);
 }
 .gg-toggle__input:focus-visible + .gg-btn {
   z-index: 1;
-  box-shadow: 0 0 0 0.25rem var(--gg-btn-ring);
+  box-shadow:
+    0 0 0 2px var(--gg-color-page-bg),
+    0 0 0 4px var(--gg-btn-ring);
 }
 .gg-toggle__input:disabled + .gg-btn {
   opacity: 0.65;
@@ -168,11 +211,12 @@
 .gg-notice {
   --gg-notice-fg: var(--gg-color-text);
   --gg-notice-bg: var(--gg-color-surface-muted);
-  --gg-notice-border: var(--gg-color-border);
+  --gg-notice-border: var(--gg-color-rule);
   padding: 1rem;
   color: var(--gg-notice-fg);
   background: var(--gg-notice-bg);
   border: 1px solid var(--gg-notice-border);
+  border-left-width: 4px;
   border-radius: var(--gg-radius);
 }
 .gg-notice--danger {
@@ -204,9 +248,6 @@
 .gg-text-correct {
   color: var(--gg-color-correct);
 }
-.gg-text-hint {
-  color: var(--gg-color-hint);
-}
 .gg-text-warning {
   color: var(--gg-color-warning-text);
 }
@@ -232,9 +273,10 @@
 
 /* ---- Chip ---- */
 .gg-chip {
-  --gg-chip-bg: var(--gg-color-surface-muted);
-  --gg-chip-fg: var(--gg-color-text-muted);
-  --gg-chip-border: transparent;
+  --gg-chip-bg: transparent;
+  --gg-chip-fg: var(--gg-color-text);
+  --gg-chip-border: var(--gg-color-rule);
+  font-family: var(--gg-font-mono);
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: 1rem;
@@ -254,17 +296,15 @@
 .gg-chip--correct {
   --gg-chip-bg: var(--gg-color-correct);
   --gg-chip-fg: var(--gg-color-on-correct);
+  --gg-chip-border: var(--gg-color-correct);
 }
 .gg-chip--revealed {
   --gg-chip-bg: var(--gg-color-revealed);
   --gg-chip-fg: var(--gg-color-on-revealed);
+  --gg-chip-border: var(--gg-color-revealed);
 }
 .gg-chip--neutral {
-  --gg-chip-border: var(--gg-color-border);
-}
-.answer-slot-empty {
-  border: 2px dashed var(--gg-color-border);
-  border-radius: var(--gg-radius-pill);
+  --gg-chip-border: var(--gg-color-rule-light);
 }
 
 /* ---- Card ---- */
@@ -275,82 +315,14 @@
   max-width: 560px;
   color: var(--gg-color-text);
   background: var(--gg-color-surface);
-  border: 1px solid var(--gg-color-border-translucent);
+  border: 2px solid var(--gg-color-rule);
   border-radius: var(--gg-radius);
 }
 
-/* ---- List of buttons or links with borders between them ---- */
+/* ---- Wide card ---- */
 .gg-card--wide {
   width: 100%;
   max-width: 720px;
-}
-
-/* Results page: the score and the buttons beside the list of rounds on a desktop, so nothing needs scrolling. */
-.gg-summary__list {
-  margin-bottom: 1rem;
-}
-@media (min-width: 900px) {
-  .gg-card--wide {
-    max-width: 940px;
-  }
-  .gg-summary {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 1.5rem;
-  }
-  .gg-summary__head {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .gg-summary__actions {
-    grid-column: 1;
-    grid-row: 2;
-    align-self: end;
-  }
-  .gg-summary__list {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: start;
-    margin-bottom: 0;
-  }
-}
-.gg-list {
-  display: flex;
-  flex-direction: column;
-  padding-left: 0;
-  margin-bottom: 0;
-  border-radius: var(--gg-radius);
-}
-.gg-list__item {
-  position: relative;
-  width: 100%;
-  padding: 0.5rem 1rem;
-  font: inherit;
-  text-align: inherit;
-  color: var(--gg-color-text-muted);
-  background: var(--gg-color-surface);
-  border: 1px solid var(--gg-color-border);
-}
-.gg-list__item:not(:first-child) {
-  border-top-width: 0;
-}
-.gg-list__item:first-child {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-}
-.gg-list__item:last-child {
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-}
-.gg-list__item:hover,
-.gg-list__item:focus {
-  z-index: 1;
-  background: var(--gg-color-surface-hover);
-}
-.gg-list__item:active {
-  color: var(--gg-color-text);
-  background: var(--gg-color-surface-active);
 }
 
 /* ---- Text input ---- */
@@ -421,6 +393,11 @@
 .gg-suggestion-active,
 .gg-suggestion-active:hover {
   background: var(--gg-color-accent-subtle);
+  /* The highlighter needs dark text in both themes. */
+  color: var(--gg-color-on-hint);
+}
+.gg-suggestion-active .gg-suggestion-alias {
+  color: inherit;
 }
 .gg-suggestion-alias {
   color: var(--gg-color-text-muted);
@@ -440,7 +417,7 @@
   padding: 0.5rem 0.75rem;
   color: var(--gg-color-text);
   background: var(--gg-color-surface);
-  border: 1px solid var(--gg-color-border);
+  border: 2px solid var(--gg-color-rule);
   border-radius: var(--gg-radius-lg);
   box-shadow: var(--gg-shadow-floating-side);
   animation: gg-toast-in var(--gg-duration-slow) ease-out;
@@ -473,18 +450,19 @@
   min-width: 0;
 }
 .gg-daily-chart__bar {
-  background: var(--gg-color-surface-muted);
-  border: 1px solid var(--gg-color-border);
-  border-radius: 2px 2px 0 0;
+  background: var(--gg-color-text);
+  border: 1px solid var(--gg-color-rule);
+  border-radius: 0;
 }
 .gg-daily-chart__bar[data-mine="true"] {
-  background: var(--gg-color-accent);
-  border-color: var(--gg-color-accent);
+  background: var(--gg-color-hint);
+  border-color: var(--gg-color-rule);
 }
 .gg-daily-chart__label {
   position: absolute;
   bottom: -1.1rem;
   left: 50%;
+  font-family: var(--gg-font-mono);
   font-size: 0.65rem;
   color: var(--gg-color-text-muted);
   transform: translateX(-50%);
@@ -509,61 +487,200 @@
   justify-content: center;
 }
 
+/* ---- Numbers, dates and counts ---- */
+.gg-mono {
+  font-family: var(--gg-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Site header: name, streak and theme switch over an ink rule ---- */
+/* Full width on every page; on a phone the end (Ko-fi, streak, theme) wraps rather than widening the page. */
+.gg-site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--gg-space-2);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--gg-space-2) var(--gg-space-3);
+  border-bottom: 2px solid var(--gg-color-rule);
+}
+.gg-site-header__title {
+  margin: 0;
+  font-size: var(--gg-font-size-h3);
+}
+.gg-site-header__end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: auto;
+  gap: var(--gg-space-3);
+}
+.gg-site-header__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-1);
+  font-size: var(--gg-font-size-sm);
+  white-space: nowrap;
+}
+.theme-toggle {
+  border: 1px solid var(--gg-color-rule);
+  border-radius: var(--gg-radius);
+}
+
 /* ---- Home page ---- */
 .home {
   min-height: 100vh;
-  padding-top: var(--gg-space-4);
   padding-bottom: var(--gg-space-4);
 }
-.home-header__toolbar {
+.home-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gg-space-4);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--gg-space-3) var(--gg-space-3) 0;
+}
+@media (min-width: 900px) {
+  .home-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+  }
+  .home-after {
+    grid-column: 1 / -1;
+  }
+}
+.home-after {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-3);
+  padding-top: var(--gg-space-3);
+  border-top: 2px solid var(--gg-color-rule);
 }
-.home-header__title {
-  margin-top: var(--gg-space-3);
-  text-align: center;
+.home-after .gg-footer {
+  margin-top: 0;
 }
-.home-header__tagline {
-  margin-bottom: var(--gg-space-4);
-  font-size: var(--gg-font-size-lead);
-  font-weight: 300;
-  text-align: center;
+
+/* ---- Daily ticket: highlighter strip, white body, ink footer bar ---- */
+.gg-ticket-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
-.home-main__heading {
-  font-size: var(--gg-font-size-h5);
+.gg-ticket {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--gg-color-rule);
+  border-radius: var(--gg-radius);
+  background: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  overflow: hidden;
 }
-.home-main__note,
-.gg-difficulty__description,
-.game-card__description,
-.game-picker__note,
-.gg-share__label {
+.gg-ticket__strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-2) var(--gg-space-3);
+  background: var(--gg-color-hint);
+  color: var(--gg-color-on-hint);
+  border-bottom: 2px solid var(--gg-color-rule);
+}
+.gg-ticket__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+  margin: 0;
+  font-family: var(--gg-font-sans);
+  font-stretch: 100%;
+  font-size: var(--gg-font-size-sm);
+  font-weight: var(--gg-font-weight-bold);
+}
+.gg-ticket__date {
   font-size: var(--gg-font-size-sm);
 }
-.home-after__kofi {
-  margin-top: var(--gg-space-4);
-  text-align: center;
+.gg-ticket__body {
+  padding: var(--gg-space-3);
+}
+.gg-ticket__heading {
+  margin-bottom: var(--gg-space-2);
+  font-size: var(--gg-font-size-h3);
+}
+.gg-ticket__text {
+  margin-bottom: 0;
+}
+.gg-ticket__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-2) var(--gg-space-3);
+  background: var(--gg-color-text);
+  color: var(--gg-color-page-bg);
+  font-weight: var(--gg-font-weight-semibold);
+}
+.gg-ticket__foot:empty {
+  display: none;
+}
+a.gg-ticket-link:hover .gg-ticket__foot,
+a.gg-ticket-link:focus-visible .gg-ticket__foot {
+  text-decoration: underline;
+}
+/* The one filled button on the page sits on the ink bar, so it is turned the other way round. */
+.gg-ticket__foot .gg-ticket__play {
+  --gg-btn-bg: var(--gg-color-page-bg);
+  --gg-btn-fg: var(--gg-color-text);
+  --gg-btn-border: var(--gg-color-page-bg);
+}
+
+/* The footer as one button filling the ink bar: no corners or outline of its own. */
+.gg-ticket__foot--bar {
+  padding: 0;
+}
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary,
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:hover,
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:active {
+  --gg-btn-bg: var(--gg-color-text);
+  --gg-btn-fg: var(--gg-color-page-bg);
+  --gg-btn-border: var(--gg-color-text);
+  justify-content: flex-start;
+  padding: var(--gg-space-2) var(--gg-space-3);
+  border-radius: 0;
+}
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:hover {
+  text-decoration: underline;
 }
 
 /* ---- Start panel and difficulty ---- */
+.home-start {
+  padding: var(--gg-space-3);
+  border-top: 1px solid var(--gg-color-rule-light);
+  background: var(--gg-color-surface);
+}
 .home-start__row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gg-space-2);
 }
-.home-start__title,
 .home-start__rounds,
 .gg-difficulty {
   display: flex;
   align-items: center;
   gap: var(--gg-space-2);
 }
-.home-start__title {
-  width: 100%;
-  font-weight: var(--gg-font-weight-bold);
-}
 .home-start__difficulty {
   width: 100%;
+}
+/* The panel's one filled button spans it, as a bar. */
+.home-start-button {
+  flex: 1 0 100%;
 }
 .home-start__status {
   margin-top: var(--gg-space-2);
@@ -571,49 +688,96 @@
 .home-start__status > p {
   margin-bottom: 0;
 }
+.home-start__status:empty {
+  display: none;
+}
 .gg-difficulty {
   flex-wrap: wrap;
 }
 .gg-label {
   font-weight: var(--gg-font-weight-semibold);
 }
+.gg-difficulty__description,
+.gg-share__label,
+.game-row__description {
+  font-size: var(--gg-font-size-sm);
+}
 
-/* ---- Game picker ---- */
-.game-picker {
-  margin-bottom: var(--gg-space-4);
-}
-.game-picker__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--gg-space-3);
-}
-@media (min-width: 576px) {
-  .game-picker__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.game-picker__extra {
-  margin-top: var(--gg-space-4);
-}
+/* ---- Game picker: ruled rows ---- */
 .game-picker__heading {
   display: flex;
   align-items: center;
   gap: var(--gg-space-2);
-  margin-bottom: var(--gg-space-1);
-  font-size: var(--gg-font-size-h6);
-}
-.game-picker__note {
   margin-bottom: var(--gg-space-2);
-}
-.game-card__title {
-  margin-top: var(--gg-space-2);
-  font-weight: var(--gg-font-weight-bold);
-}
-.daily-hero__title {
-  margin-bottom: var(--gg-space-1);
   font-size: var(--gg-font-size-h4);
+}
+.game-picker__list {
+  border-top: 2px solid var(--gg-color-rule);
+}
+.game-picker__extra {
+  margin-top: var(--gg-space-3);
+}
+/* Wide screens: the name and the description share a line, as columns, so every game fits above the fold. */
+@media (min-width: 900px) {
+  .game-row__text {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--gg-space-3);
+  }
+  .game-row__title {
+    flex: 0 0 10.5rem;
+  }
+}
+.game-row {
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+.game-row[data-selected="true"] {
+  background: var(--gg-color-hint);
+  border-bottom-color: var(--gg-color-rule);
+}
+.game-row[data-selected="true"] .game-row__button {
+  color: var(--gg-color-on-hint);
+}
+.game-row[data-selected="true"] .game-row__description {
+  color: inherit;
+}
+.game-row__button {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  width: 100%;
+  padding: var(--gg-space-2) var(--gg-space-1);
+  border: 0;
+  background: transparent;
+  color: var(--gg-color-text);
+  text-align: left;
+}
+.game-row__button:hover {
+  background: var(--gg-color-surface-hover);
+}
+.game-row__number {
+  flex: none;
+  width: 2ch;
+  font-size: var(--gg-font-size-sm);
+}
+.game-row__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.game-row__title {
   font-weight: var(--gg-font-weight-bold);
-  line-height: 1.2;
+}
+@media (min-width: 576px) {
+  .game-row__text {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--gg-space-3);
+  }
+  .game-row__title {
+    flex: none;
+    min-width: 12ch;
+  }
 }
 
 /* ---- Home link ---- */
@@ -649,18 +813,9 @@
   display: flex;
   flex-direction: column;
 }
-.gg-page__bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--gg-space-2) var(--gg-space-3);
-}
-.gg-page__bar-start {
-  display: flex;
-  align-items: center;
-  gap: var(--gg-space-2);
-}
+/* The home page's gutter on a phone (never touching the screen's edges), centred up to the card's max-width. */
 .gg-page__card {
+  width: calc(100% - 2 * var(--gg-space-3));
   margin: var(--gg-space-3) auto;
   padding: var(--gg-space-3);
 }
@@ -730,37 +885,52 @@
 /* ---- Game screens: top bar, panel, results ---- */
 .top-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gg-space-2);
+  gap: var(--gg-space-1) var(--gg-space-2);
   padding: var(--gg-space-2) var(--gg-space-3);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
 .top-bar__start,
-.top-bar__rounds,
 .top-bar__end {
   display: flex;
   align-items: center;
   gap: var(--gg-space-2);
 }
-.top-bar__rounds {
+.top-bar__title {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+.top-bar__game {
   overflow: hidden;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: var(--gg-font-size-h5);
+  font-weight: var(--gg-font-weight-display);
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.top-bar__meta,
+.top-bar__end {
+  font-family: var(--gg-font-mono);
   font-size: var(--gg-font-size-sm);
+}
+.top-bar__meta {
+  color: var(--gg-color-text-muted);
 }
 .top-bar__end {
-  font-size: var(--gg-font-size-sm);
   white-space: nowrap;
 }
-.top-bar__daily {
-  font-weight: var(--gg-font-weight-semibold);
-  white-space: nowrap;
+.top-bar__rounds {
+  flex: 0 0 100%;
 }
-.top-bar__round-count,
 .top-bar__score-full {
   display: none;
-  white-space: nowrap;
 }
 @media (min-width: 576px) {
-  .top-bar__round-count,
   .top-bar__score-full {
     display: inline;
   }
@@ -769,25 +939,73 @@
   }
 }
 
-.gg-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gg-space-2);
+/* The guess list: a numbered, ruled list. */
+.guess-list {
   margin-bottom: var(--gg-space-2);
 }
-.gg-slots__empty {
-  padding-right: var(--gg-space-3);
-  padding-left: var(--gg-space-3);
-  font-size: var(--gg-font-size-h6);
-}
-.wrong-guesses {
+.guess-list__head {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--gg-space-1);
+  align-items: baseline;
+  justify-content: flex-end;
+  padding-bottom: var(--gg-space-1);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
-.guess-chip__clue {
-  margin-left: var(--gg-space-2);
+.guess-list__count,
+.guess-list__number,
+.guess-list__clue {
+  font-family: var(--gg-font-mono);
+  font-size: var(--gg-font-size-sm);
+}
+.guess-list__rows {
+  max-height: 30dvh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.guess-list__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-1) 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+.guess-list__number {
+  flex: 0 0 1.5em;
+  color: var(--gg-color-text-muted);
+}
+.guess-list__name {
+  flex: 1 1 auto;
+  min-width: 0;
   font-weight: var(--gg-font-weight-semibold);
+}
+.guess-list__name--empty {
+  color: var(--gg-color-text-muted);
+  font-weight: normal;
+}
+.guess-list__note {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.guess-list__row[data-kind="found"] .guess-list__note {
+  color: var(--gg-color-correct);
+  font-weight: var(--gg-font-weight-semibold);
+}
+/* A wrong guess is greyed (muted, regular weight) beside the bold found ones, with the cross in the marker colour.
+   Muted rather than translucent text, which would fall below 4.5:1 contrast. */
+.guess-list__row[data-kind="wrong"] .guess-list__name {
+  color: var(--gg-color-text-muted);
+  font-weight: normal;
+}
+.guess-list__row[data-kind="wrong"] .guess-list__note svg {
+  color: var(--gg-color-danger);
+}
+.guess-list__row[data-outcome="missed"] .guess-list__name,
+.guess-list__row[data-outcome="missed"] .guess-list__note {
+  color: var(--gg-color-missed-text);
+}
+.guess-list__clue {
+  margin-right: var(--gg-space-1);
 }
 
 .round-status {
@@ -811,11 +1029,24 @@
 }
 .gg-guess-form {
   display: flex;
-  gap: var(--gg-space-2);
   margin-bottom: var(--gg-space-2);
 }
 .gg-guess-form__box {
   flex-grow: 1;
+}
+/* The box and the Guess button are joined: one ink outline, squared where they meet. */
+.gg-guess-form__box .gg-input {
+  border-color: var(--gg-color-rule);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.gg-guess-form__box .gg-input:focus {
+  position: relative;
+  z-index: 1;
+}
+.gg-guess-form > .gg-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .guess-feedback {
   font-size: var(--gg-font-size-sm);
@@ -832,6 +1063,13 @@
   margin-bottom: var(--gg-space-2);
   font-weight: var(--gg-font-weight-semibold);
 }
+.round-result__banner[data-outcome="firstGuess"],
+.round-result__banner[data-outcome="correct"] {
+  color: var(--gg-color-correct);
+}
+.round-result__banner[data-outcome="missed"] {
+  color: var(--gg-color-missed-text);
+}
 .round-result__note {
   font-size: var(--gg-font-size-sm);
   font-weight: normal;
@@ -846,43 +1084,213 @@
   padding: var(--gg-space-4);
 }
 
-.gg-summary__title {
+/* ---- Results page: the score and the actions on the left, the round table on the right ---- */
+.gg-summary__head,
+.gg-summary__list {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-summary__meta {
   margin-bottom: var(--gg-space-1);
+  font-size: var(--gg-font-size-sm);
+}
+.gg-summary__score {
+  margin-bottom: var(--gg-space-1);
+  font-family: var(--gg-font-display);
+  font-size: 4.5rem;
+  font-stretch: 65%;
+  font-weight: 800;
+  line-height: 1;
+}
+.gg-summary__max {
+  font-size: var(--gg-font-size-h5);
+  font-stretch: 100%;
+  font-weight: 400;
 }
 .gg-summary__heading {
-  margin-bottom: var(--gg-space-1);
+  margin-bottom: var(--gg-space-3);
   font-size: var(--gg-font-size-h3);
+}
+.gg-mark {
+  padding: 0 0.3em;
+  color: var(--gg-color-on-hint);
+  background: var(--gg-color-hint);
+}
+.gg-summary__stats {
+  padding-left: 0;
+  margin-bottom: var(--gg-space-2);
+  list-style: none;
+  border-top: 2px solid var(--gg-color-rule);
+}
+.gg-summary__stats li {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--gg-space-1) 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
 }
 .gg-summary__line {
   margin-bottom: var(--gg-space-3);
+  font-size: var(--gg-font-size-sm);
 }
 .gg-summary__error {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
 }
+/* Copy result (or Play again, when there is nothing to share) is the one filled button, as a bar. */
 .gg-summary__share {
-  margin-bottom: var(--gg-space-3);
+  margin-bottom: var(--gg-space-2);
+}
+.gg-summary__share .gg-btn--primary,
+.gg-summary__buttons > .gg-btn--primary {
+  flex: 1 1 auto;
 }
 .gg-summary__buttons {
   display: flex;
-  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gg-space-3);
+}
+.gg-summary__table-heading {
+  padding-bottom: var(--gg-space-1);
+  margin-bottom: 0;
+  font-family: var(--gg-font-display);
+  font-stretch: var(--gg-font-stretch-display);
+  font-size: var(--gg-font-size-h4);
+  font-weight: var(--gg-font-weight-display);
+  border-bottom: 2px solid var(--gg-color-rule);
 }
 .gg-summary__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gg-space-4);
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 5rem;
+  align-items: baseline;
+  gap: var(--gg-space-2);
+  width: 100%;
+  padding: var(--gg-space-2) 0;
+  font: inherit;
+  color: inherit;
   text-align: start;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+button.gg-summary__row:hover,
+button.gg-summary__row:focus-visible {
+  background: var(--gg-color-surface-hover);
+}
+.gg-summary__row--head {
+  padding: var(--gg-space-1) 0;
+  font-size: var(--gg-font-size-sm);
+  color: var(--gg-color-text-muted);
+  border-bottom-color: var(--gg-color-rule);
+}
+.gg-summary__answers {
+  display: flex;
+  flex-direction: column;
 }
 .gg-summary__note {
   font-size: var(--gg-font-size-sm);
 }
+.gg-summary__wrong {
+  display: none;
+  font-size: var(--gg-font-size-sm);
+  text-align: start;
+}
 .gg-summary__points {
+  text-align: end;
   white-space: nowrap;
 }
-/* After .gg-list, which zeroes the margin. On a desktop the list sits in its own column instead. */
+.gg-summary__points[data-missed] {
+  color: var(--gg-color-missed-text);
+}
+.gg-summary__row[data-outcome="missed"] .gg-summary__names {
+  color: var(--gg-color-missed-text);
+}
 @media (max-width: 899.98px) {
-  .gg-summary__list {
-    margin-bottom: var(--gg-space-3);
+  .gg-summary__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gg-space-1) var(--gg-space-3);
+    border-bottom: 1px solid var(--gg-color-rule-light);
   }
+  .gg-summary__stats li {
+    gap: var(--gg-space-1);
+    border-bottom: 0;
+  }
+}
+@media (min-width: 900px) {
+  .gg-card--wide {
+    max-width: 940px;
+  }
+  .gg-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--gg-space-5);
+  }
+  .gg-summary__head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .gg-summary__actions {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+  }
+  .gg-summary__list {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    margin-bottom: 0;
+  }
+  .gg-summary__row {
+    grid-template-columns: 2rem minmax(0, 1fr) 10rem 5rem;
+  }
+  .gg-summary__wrong {
+    display: block;
+  }
+}
+
+/* Leaflet's own controls: squared, white, with an ink border. */
+.leaflet-bar,
+.leaflet-touch .leaflet-bar {
+  border: 1px solid var(--gg-color-rule);
+  border-radius: var(--gg-radius);
+  box-shadow: none;
+}
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  background-color: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  border-bottom: 1px solid var(--gg-color-rule);
+  border-radius: 0;
+}
+.leaflet-bar a:last-child {
+  border-bottom: 0;
+}
+/* Opaque: a translucent hover shows the map through the button (invisible in dark mode). */
+.leaflet-bar a:hover,
+.leaflet-bar a:focus-visible {
+  color: var(--gg-color-text);
+  background-color: color-mix(in srgb, var(--gg-color-surface) 85%, var(--gg-color-text));
+}
+.leaflet-control-scale-line {
+  background: var(--gg-color-surface);
+  color: var(--gg-color-text);
+  border: 1px solid var(--gg-color-rule);
+  border-top: 0;
+  border-radius: 0;
+  font-family: var(--gg-font-mono);
+}
+
+/* A page whose content (the daily ticket) draws its own border and padding. */
+.gg-page__card--bare {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.home-start__title {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+  width: 100%;
+  font-weight: var(--gg-font-weight-bold);
 }

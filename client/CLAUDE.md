@@ -42,7 +42,7 @@ The credits live on the credits and privacy page (`components/PrivacyPage`, `/pr
 ## Structure (`src/`)
 
 - `api/` owns fetching (`fetchJson`), query keys, hooks and the one `JSON.parse` of `jsonBlob`; components never call `fetch`. `api/gateway.ts` picks the backend URL (see the root `CLAUDE.md`).
-- `games/common/` is the game-agnostic shell: round page, summary, `MapGame` (it holds the round's guesses and hints with `useRoundGuesses`, derives what to show with the pure `roundView`, and renders `RoundPanel`: `GuessForm`, `RoundActions` and `WrongGuessList`; the results page derives its values with the pure `summaryView`), answer matching and the guess reducer.
+- `games/common/` is the game-agnostic shell: round page, summary, `MapGame` (it holds the round's guesses and hints with `useRoundGuesses`, derives what to show with the pure `roundView`, and renders `RoundPanel`: `GuessList` (rows from the pure `guessRows.ts`, named apart from the component because Windows paths ignore case), `GuessForm` and `RoundActions`; the results page derives its values with the pure `summaryView`), answer matching and the guess reducer.
 - Each `games/<name>/` folder holds one game: its module, component, model types and maps.
 - `games/registry.ts` is the only list of games.
 - `map/` holds the shared Leaflet helpers.
@@ -62,7 +62,7 @@ The client checks answers, not the server. It compares guesses with the data in 
 ## Adding a game
 
 Create `src/games/<name>/` with:
-- a module built by `defineGame` (its fields are described in `games/types.ts`: the backend `type`, titles, description, icon, component and `answerNames`),
+- a module built by `defineGame` (its fields are described in `games/types.ts`: the backend `type`, titles, description, icon, component and `answers`),
 - a component built on `games/common/PlaceGame`, which is `MapGame` for answers that come from one of the place lists (countries, rivers, lakes) and adds the autocomplete, the spell check and the clues,
 - a `*Map.tsx` + `*MapWrapper.tsx` pair that takes `MapProps<T>`, with the map built on `map/GameMap` (it adds `MapCredits` and `MapResizer`).
 
@@ -72,7 +72,7 @@ Then add the module to `GAME_MODULES` in `games/registry.ts`, whose order is the
 
 Rules for a game's words (`prompt`): it is one question. It says what kind of thing to name and how many ("Which country has these rivers?"). There is no subtitle: the panel is kept short so the map keeps its room when the keyboard is up.
 
-`MapGame` takes `blankMap` (a grey map while playing). No text is drawn on the map: the top of the panel is `RoundBrief` (`games/common/RoundBrief.tsx`), which shows the round's name and icon (`round.kind`, set by `GameRoundPage` from the game module), and the question (`prompt`, the only `h1`) on one line. Wrong guesses are chips above the guess box (the chip carries the distance clue; there is no "Not X" text). The component gives `MapGame` its answers as `AnswerCandidate[]` (a name plus aliases), and matching (aliases, duplicates) is handled centrally. The component supplies `hints` (required) content for `round.hintCount` hints (the count comes from the backend `GameType.hintCount(difficulty)`, so the component doesn't set its own, though a game whose first hint is the continent drops it in Easy), and `MapGame` reports `{answerState, hintsUsed, wrongGuesses}`.
+`MapGame` takes `blankMap` (a grey map while playing). No text is drawn on the map: the top of the panel is `RoundBrief` (`games/common/RoundBrief.tsx`), which shows the round's name and icon (`round.kind`, set by `GameRoundPage` from the game module), and the question (`prompt`, the only `h1`) on one line. Guesses are the numbered rows of `GuessList` (a wrong row carries the distance clue; there is no "Not X" text). The component gives `MapGame` its answers as `AnswerCandidate[]` (a name plus aliases), and matching (aliases, duplicates) is handled centrally. The component supplies `hints` (required) content for `round.hintCount` hints (the count comes from the backend `GameType.hintCount(difficulty)`, so the component doesn't set its own, though a game whose first hint is the continent drops it in Easy), and `MapGame` reports `{answerState, hintsUsed, wrongGuesses}`.
 
 **Leaflet and SSR.** Leaflet can't render on the server. Each map has a `*MapWrapper.tsx` that is just a `dynamic(() => import("./X"), { ssr: false, ... })` call (keep the `import(...)` literally in that file), and the real `*Map.tsx` takes `MapProps<T>` (`data`, `gameOver`, `gaveUp`, `hintsUsed`). Follow this pattern for new maps.
 

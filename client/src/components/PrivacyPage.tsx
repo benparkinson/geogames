@@ -1,5 +1,5 @@
 import HomeLink from "./HomeLink";
-import ThemeToggle from "./ThemeToggle";
+import SiteHeader from "./SiteHeader";
 
 // TODO: replace with the real contact address before the site goes live.
 export const OWNER_NAME = "Ben Parkinson";
@@ -8,12 +8,7 @@ export const CONTACT_EMAIL = "privacy@example.com";
 function PrivacyPage(): React.JSX.Element {
   return (
     <div className="gg-page page-full-height page-bg">
-      <div className="gg-page__bar">
-        <div className="gg-page__bar-start">
-          <HomeLink />
-          <ThemeToggle />
-        </div>
-      </div>
+      <SiteHeader title={<HomeLink />} />
       <main className="gg-card gg-page__card gg-page__card--roomy">
         <h1 className="gg-page__heading">Credits and privacy</h1>
 
@@ -26,7 +21,10 @@ function PrivacyPage(): React.JSX.Element {
           <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">
             Freepik
           </a>{" "}
-          (Flaticon). <a href="/third-party-licenses.txt">Software licences</a>.
+          (Flaticon). Fonts: <a href="https://fontsource.org/fonts/archivo">Archivo</a> and{" "}
+          <a href="https://fontsource.org/fonts/ibm-plex-mono">IBM Plex Mono</a> (
+          <a href="https://openfontlicense.org/">SIL Open Font Licence 1.1</a>), served from this site.{" "}
+          <a href="/third-party-licenses.txt">Software licences</a>.
         </p>
 
         <h2 className="gg-page__section">Who runs this site</h2>

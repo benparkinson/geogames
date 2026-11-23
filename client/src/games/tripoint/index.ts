@@ -9,5 +9,5 @@ export default defineGame({
   description: "Name the three countries that meet at a point.",
   Icon: TripointIcon,
   Component: TripointGame,
-  answerNames: (tripoint) => tripoint.countries.map((country) => country.name),
+  answers: (tripoint) => tripoint.countries,
 });

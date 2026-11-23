@@ -5,15 +5,22 @@ import { ExtraDifficultIcon } from "../ui/icons";
 const STANDARD_OPTIONS = MENU_OPTIONS.filter((option) => !option.extraDifficult);
 const EXTRA_DIFFICULT_OPTIONS = MENU_OPTIONS.filter((option) => option.extraDifficult);
 
-/** The games to choose from, as one radio group across both sections, so the arrow keys move through every card. */
+/**
+ * The games to choose from, as ruled rows. Each row is a button that opens its start panel (`renderPanel`)
+ * directly under it, and closes it when pressed again; one row is open at a time. The arrow keys move the focus
+ * through every row of both sections without opening anything, so the panel doesn't jump while the player looks.
+ * The rows are disclosure buttons rather than a radio group because the open panel holds radios of its own.
+ */
 export default function GameCardGrid({
   selected,
   onSelect,
+  renderPanel,
 }: {
   selected: string | null;
-  onSelect: (type: string) => void;
+  onSelect: (type: string | null) => void;
+  renderPanel: (option: MenuOption) => React.ReactNode;
 }): React.JSX.Element {
-  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   function handleKeyDown(e: React.KeyboardEvent, index: number): void {
     let next: number;
@@ -25,44 +32,50 @@ export default function GameCardGrid({
       return;
     }
     e.preventDefault();
-    onSelect(MENU_OPTIONS[next].type);
-    cardRefs.current[next]?.focus();
+    rowRefs.current[next]?.focus();
   }
 
-  function renderCard(option: MenuOption): React.JSX.Element {
-    // The position in the full list, which the arrow keys and focus refs use.
+  function renderRow(option: MenuOption): React.JSX.Element {
+    // The position in the full list, which the arrow keys, focus refs and row numbers use.
     const index = MENU_OPTIONS.indexOf(option);
     const isSelected = option.type === selected;
+    const panelId = `start-${option.type}`;
     return (
-      <button
-        key={option.type}
-        type="button"
-        role="radio"
-        aria-checked={isSelected}
-        tabIndex={(selected === null ? index === 0 : isSelected) ? 0 : -1}
-        ref={(el) => {
-          cardRefs.current[index] = el;
-        }}
-        className={"game-card" + (isSelected ? " game-card--selected" : "")}
-        onClick={() => onSelect(option.type)}
-        onKeyDown={(e) => handleKeyDown(e, index)}
-      >
-        <option.Icon size={28} aria-hidden="true" />
-        <div className="game-card__title">{option.title}</div>
-        <div className="game-card__description gg-text-muted">{option.description}</div>
-      </button>
+      <div key={option.type} className="game-row" data-selected={isSelected}>
+        <button
+          type="button"
+          aria-expanded={isSelected}
+          aria-controls={isSelected ? panelId : undefined}
+          ref={(el) => {
+            rowRefs.current[index] = el;
+          }}
+          className="game-row__button"
+          onClick={() => onSelect(isSelected ? null : option.type)}
+          onKeyDown={(e) => handleKeyDown(e, index)}
+        >
+          <span className="game-row__number gg-mono" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <option.Icon size={24} aria-hidden="true" />
+          <span className="game-row__text">
+            <span className="game-row__title">{option.title}</span>
+            <span className="game-row__description gg-text-muted">{option.description}</span>
+          </span>
+        </button>
+        {isSelected && <div id={panelId}>{renderPanel(option)}</div>}
+      </div>
     );
   }
 
   return (
-    <div role="radiogroup" aria-label="Choose a game" className="game-picker">
-      <div className="game-picker__grid">{STANDARD_OPTIONS.map(renderCard)}</div>
+    <div role="group" aria-label="Choose a game" className="game-picker">
+      <h2 className="game-picker__heading">Practice</h2>
+      <div className="game-picker__list">{STANDARD_OPTIONS.map(renderRow)}</div>
       <div role="group" aria-labelledby="extra-difficult-label" className="game-picker__extra">
-        <h3 id="extra-difficult-label" className="game-picker__heading">
+        <h2 id="extra-difficult-label" className="game-picker__heading">
           <ExtraDifficultIcon className="gg-text-danger" aria-hidden="true" /> Extra difficult
-        </h3>
-        <p className="game-picker__note gg-text-muted">Just a shape on a blank map, with nothing around it.</p>
-        <div className="game-picker__grid">{EXTRA_DIFFICULT_OPTIONS.map(renderCard)}</div>
+        </h2>
+        <div className="game-picker__list">{EXTRA_DIFFICULT_OPTIONS.map(renderRow)}</div>
       </div>
     </div>
   );
