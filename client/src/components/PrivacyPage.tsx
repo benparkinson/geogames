@@ -17,11 +17,8 @@ function PrivacyPage(): React.JSX.Element {
           Maps and relief: <a href="https://www.naturalearthdata.com/">Natural Earth</a> (public domain). Names:{" "}
           <a href="https://www.wikidata.org/">Wikidata</a>. Tripoints:{" "}
           <a href="https://en.wikipedia.org/wiki/List_of_tripoints">Wikipedia</a> (
-          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, positions adjusted). Globe icon:{" "}
-          <a href="https://www.flaticon.com/free-icons/earth-globe" title="earth globe icons">
-            Freepik
-          </a>{" "}
-          (Flaticon). Fonts: <a href="https://fontsource.org/fonts/archivo">Archivo</a> and{" "}
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, positions adjusted). Fonts:{" "}
+          <a href="https://fontsource.org/fonts/archivo">Archivo</a> and{" "}
           <a href="https://fontsource.org/fonts/ibm-plex-mono">IBM Plex Mono</a> (
           <a href="https://openfontlicense.org/">SIL Open Font Licence 1.1</a>), served from this site.{" "}
           <a href="/third-party-licenses.txt">Software licences</a>.
