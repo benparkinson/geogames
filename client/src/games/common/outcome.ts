@@ -28,35 +28,21 @@ export function roundOutcome(
 
 /** What every view shares about an outcome, so no component chooses its own. Icons stay in the components; colours come from `[data-outcome]` in the CSS. */
 export interface OutcomeStyle {
-  /** The results summary noun for one round and for several. */
-  singular: string;
-  plural: string;
   /** The daily share text square. */
   emoji: string;
 }
 
 export const OUTCOME_STYLES: Record<RoundOutcome, OutcomeStyle> = {
   firstGuess: {
-    singular: "first guess",
-    plural: "first guesses",
     emoji: "❇️",
   },
   correct: {
-    singular: "correct",
-    plural: "correct",
     emoji: "🟩",
   },
   hints: {
-    singular: "with hints",
-    plural: "with hints",
     emoji: "🟨",
   },
   missed: {
-    singular: "missed",
-    plural: "missed",
     emoji: "🟥",
   },
 };
-
-/** The outcome keys in the order the summary line lists them. */
-export const OUTCOME_ORDER: RoundOutcome[] = ["firstGuess", "correct", "hints", "missed"];

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.model.Coordinate;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
@@ -108,7 +108,11 @@ class RiverLoaderServiceTest {
   void loadRiverNamesAreSortedAndNullAliasesBecomeEmpty() {
     GeoData geoData =
         new GeoData(
-            "Feature", new GeoProperties("x"), new GeoGeometry("MultiLineString", List.of()));
+            "Feature",
+            new GeoProperties("x"),
+            new GeoGeometry(
+                "MultiLineString",
+                List.of(List.of(List.of(5.0, 10.0), List.of(6.0, 11.0), List.of(7.0, 12.0)))));
     Coordinate c = new Coordinate(0.0, 0.0);
     River nile = new River("Q1", "Nile", null, "Africa", geoData, c, c, List.of());
     River danube = new River("Q2", "Danube", List.of("Donau"), "Europe", geoData, c, c, List.of());
@@ -117,6 +121,7 @@ class RiverLoaderServiceTest {
 
     assertThat(new RiverLoaderService(reader).loadRiverNames())
         .containsExactly(
-            new PlaceName("Danube", List.of("Donau")), new PlaceName("Nile", List.of()));
+            new LocatedPlaceName("Danube", List.of("Donau"), 11.0, 6.0),
+            new LocatedPlaceName("Nile", List.of(), 11.0, 6.0));
   }
 }

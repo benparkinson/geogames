@@ -134,11 +134,11 @@ describe("GameSummary for a daily challenge", () => {
     expect(await screen.findByText(/Today's average \(Easy players\)/)).toBeInTheDocument();
   });
 
-  it("ends the breakdown with Hard mode for a hard daily", async () => {
+  it("adds Hard mode to the meta line of a hard daily", async () => {
     mockFetch([roundsRoute(hard(done)), scoresRoute]);
     renderDaily();
 
-    expect(await screen.findByText("1 first guess · 1 missed · Hard mode")).toBeInTheDocument();
+    expect(await screen.findByText("Daily 2026-11-18 · Hard mode")).toBeInTheDocument();
   });
 
   it("has no Copy result button until the game is finished", async () => {
@@ -190,7 +190,6 @@ describe("GameSummary", () => {
     renderSummary();
 
     expect(await screen.findByText("183")).toBeInTheDocument();
-    expect(screen.getByText("1 first guess · 1 with hints · 1 missed")).toBeInTheDocument();
 
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows).toHaveLength(3);
@@ -205,23 +204,39 @@ describe("GameSummary", () => {
     expect(rows[2]).toHaveTextContent("1 hint");
   });
 
-  it("ends the breakdown with Hard mode for a hard game, and does not mention it otherwise", async () => {
+  it("adds Hard mode to the meta line of a hard game, and does not mention it otherwise", async () => {
     mockFetch([roundsRoute(hard(mixed))]);
     const { unmount } = renderSummary();
-    expect(await screen.findByText("1 first guess · 1 with hints · 1 missed · Hard mode")).toBeInTheDocument();
+    expect(await screen.findByText("Mixed · Hard mode")).toBeInTheDocument();
     unmount();
 
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
-    expect(await screen.findByText("1 first guess · 1 with hints · 1 missed")).toBeInTheDocument();
-    expect(screen.queryByText(/· Hard mode$/)).not.toBeInTheDocument();
+    expect(await screen.findByText("Mixed")).toBeInTheDocument();
+    expect(screen.queryByText(/Hard mode/)).not.toBeInTheDocument();
   });
 
-  it("ends the breakdown with Easy for an easy game", async () => {
+  it("adds Easy to the meta line of an easy game", async () => {
     mockFetch([roundsRoute(easy(mixed))]);
     renderSummary();
 
-    expect(await screen.findByText("1 first guess · 1 with hints · 1 missed · Easy")).toBeInTheDocument();
+    expect(await screen.findByText("Mixed · Easy")).toBeInTheDocument();
+  });
+
+  it("names the game type before the difficulty when every round is one type", async () => {
+    mockFetch([roundsRoute(hard(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "CORRECT" }])))]);
+    renderSummary(vi.fn(), 2);
+
+    expect(await screen.findByText(/^.+ · Hard mode$/)).toHaveClass("gg-summary__meta");
+  });
+
+  it("shows only Solved and Hints used in the stats, and no outcome breakdown", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+    await screen.findByRole("heading", { name: "Your result" });
+
+    expect(screen.getAllByRole("listitem").map((li) => li.textContent)).toEqual(["Solved 2 of 3", "Hints used 1"]);
+    expect(screen.queryByText(/first guess/)).not.toBeInTheDocument();
   });
 
   it("plays an easy game again as Easy", async () => {
@@ -238,11 +253,12 @@ describe("GameSummary", () => {
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toMatchObject({ difficulty: "EASY" });
   });
 
-  it("shows 0 correct with Hard mode for a hard game with no answered rounds", async () => {
+  it("shows Solved 0 with Hard mode for a hard game with no answered rounds", async () => {
     mockFetch([roundsRoute(hard(makeGameRounds([{ answerState: "UNANSWERED" }])))]);
     renderSummary(vi.fn(), 1);
 
-    expect(await screen.findByText("0 correct · Hard mode")).toBeInTheDocument();
+    expect(await screen.findByText(/· Hard mode$/)).toBeInTheDocument();
+    expect(screen.getByText("0 of 1")).toBeInTheDocument();
   });
 
   it("plays again with the game's difficulty, not the preference", async () => {
@@ -316,7 +332,6 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByText("100")).toBeInTheDocument();
-    expect(screen.getByText("1 first guess · 1 missed")).toBeInTheDocument();
     expect(screen.getByText("Ran out of lives")).toBeInTheDocument();
   });
 
@@ -332,7 +347,8 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByRole("heading", { name: "Perfect game!" })).toBeInTheDocument();
-    expect(screen.getByText("2 first guesses")).toBeInTheDocument();
+    expect(screen.getByText("Solved")).toBeInTheDocument();
+    expect(screen.getByText("2 of 2")).toBeInTheDocument();
   });
 
   it("gives full marks, not a perfect game, when every round is correct but one came after a wrong guess", async () => {
@@ -343,7 +359,7 @@ describe("GameSummary", () => {
 
     expect(await screen.findByRole("heading", { name: "Full marks!" })).toBeInTheDocument();
     expect(screen.queryByText(/Perfect game/)).not.toBeInTheDocument();
-    expect(screen.getByText("1 first guess · 1 correct")).toBeInTheDocument();
+    expect(screen.getByText("2 of 2")).toBeInTheDocument();
   });
 
   it("counts a mix of all four outcomes in order", async () => {
@@ -360,16 +376,17 @@ describe("GameSummary", () => {
     ]);
     renderSummary(vi.fn(), 5);
 
-    expect(await screen.findByText("1 first guess · 1 correct · 2 with hints · 1 missed")).toBeInTheDocument();
+    expect(await screen.findByText("Solved")).toBeInTheDocument();
+    expect(screen.getByText("3 of 5")).toBeInTheDocument();
     expect(screen.getByText("350")).toBeInTheDocument();
   });
 
-  it("leaves out the parts of the breakdown that are zero", async () => {
+  it("counts the solved rounds and the hints of a mixed result", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT", hintsUsed: 3 }, { answerState: "GAVE_UP" }]))]);
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByText("50")).toBeInTheDocument();
-    expect(screen.getByText("1 with hints · 1 missed")).toBeInTheDocument();
+    expect(screen.getByText("1 of 2")).toBeInTheDocument();
     expect(screen.getByText(/3 hints/)).toBeInTheDocument();
   });
 
@@ -462,8 +479,7 @@ describe("GameSummary with partly correct rounds", () => {
     mockFetch([roundsRoute(partly)]);
     renderSummary();
 
-    expect(await screen.findByText("1 first guess · 1 with hints · 1 missed")).toBeInTheDocument();
-    expect(screen.getByText("167")).toBeInTheDocument();
+    expect(await screen.findByText("167")).toBeInTheDocument();
   });
 
   it("shows the partly correct round as a yellow gain, not as missed", async () => {
@@ -490,7 +506,7 @@ describe("GameSummary stats and table", () => {
     await screen.findByRole("heading", { name: "Your result" });
 
     const stats = screen.getAllByRole("listitem").map((li) => li.textContent);
-    expect(stats).toEqual(["Solved 2 of 3", "Wrong guesses 2", "Hints used 1"]);
+    expect(stats).toEqual(["Solved 2 of 3", "Hints used 1"]);
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows[1]).toHaveTextContent("Rhine, Elbe");
     expect(rows[1]).toHaveTextContent("Gave up");

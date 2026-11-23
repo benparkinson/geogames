@@ -1,7 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.service.CountryNameService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
@@ -35,17 +34,17 @@ public class PlaceNameController {
   }
 
   @GetMapping("/countries")
-  public ResponseEntity<List<CountryName>> countries() {
+  public ResponseEntity<List<LocatedPlaceName>> countries() {
     return cached(countryNameService.loadCountryNames());
   }
 
   @GetMapping("/rivers")
-  public ResponseEntity<List<PlaceName>> rivers() {
+  public ResponseEntity<List<LocatedPlaceName>> rivers() {
     return cached(riverLoaderService.loadRiverNames());
   }
 
   @GetMapping("/lakes")
-  public ResponseEntity<List<PlaceName>> lakes() {
+  public ResponseEntity<List<LocatedPlaceName>> lakes() {
     return cached(lakeLoaderService.loadLakeNames());
   }
 

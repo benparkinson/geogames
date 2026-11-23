@@ -1,7 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.helper.CountryCentroid;
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.helper.PolygonCentroid;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -30,19 +30,19 @@ public class CountryNameService {
   }
 
   @Cacheable("countryNames")
-  public List<CountryName> loadCountryNames() {
+  public List<LocatedPlaceName> loadCountryNames() {
     return shapes.loadShapes().stream()
         .filter(shape -> !NOT_IN_AUTOCOMPLETE.contains(shape.name()))
         .map(
             shape -> {
-              double[] position = CountryCentroid.of(shape.outline());
-              return new CountryName(
+              double[] position = PolygonCentroid.of(shape.outline());
+              return new LocatedPlaceName(
                   shape.name(),
                   shape.additionalNames() == null ? List.of() : shape.additionalNames(),
                   position[0],
                   position[1]);
             })
-        .sorted(Comparator.comparing(CountryName::name))
+        .sorted(Comparator.comparing(LocatedPlaceName::name))
         .toList();
   }
 }

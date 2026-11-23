@@ -25,6 +25,23 @@ async function renderLake(data = makeLakeRoundData(), round = makeRoundProps({ h
 
 const input = () => screen.getByLabelText("Lake name…");
 
+describe("LakeGame clues", () => {
+  it("tells a wrong guess how far and which way the lake is in Normal, and nothing in Hard", async () => {
+    const user = userEvent.setup();
+    await renderLake(makeLakeRoundData(), makeRoundProps({ hintCount: 3, hasClues: true }));
+    await user.type(input(), "Lake Victoria{Enter}");
+    expect(await screen.findByText(/[\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
+  });
+
+  it("gives no clue in Hard mode", async () => {
+    const user = userEvent.setup();
+    await renderLake(makeLakeRoundData(), makeRoundProps({ hintCount: 3, hasClues: true, difficulty: "HARD" }));
+    await user.type(input(), "Lake Victoria{Enter}");
+    expect(await screen.findByText("Lake Victoria")).toBeInTheDocument();
+    expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
+  });
+});
+
 describe("LakeGame", () => {
   it("shows the prompt", async () => {
     await renderLake();

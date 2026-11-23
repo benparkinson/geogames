@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.model.Lake;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
@@ -24,7 +24,18 @@ class LakeLoaderServiceTest {
 
   private static Lake lake(String id, String name, List<String> aliases) {
     GeoData geoData =
-        new GeoData("Feature", new GeoProperties(name), new GeoGeometry("Polygon", List.of()));
+        new GeoData(
+            "Feature",
+            new GeoProperties(name),
+            new GeoGeometry(
+                "Polygon",
+                List.of(
+                    List.of(
+                        List.of(10.0, 20.0),
+                        List.of(12.0, 20.0),
+                        List.of(12.0, 22.0),
+                        List.of(10.0, 22.0),
+                        List.of(10.0, 20.0)))));
     return new Lake(id, name, aliases, "Asia", geoData, List.of("Russia"));
   }
 
@@ -67,6 +78,7 @@ class LakeLoaderServiceTest {
 
     assertThat(new LakeLoaderService(reader).loadLakeNames())
         .containsExactly(
-            new PlaceName("Lake Baikal", List.of("Baikal")), new PlaceName("Titicaca", List.of()));
+            new LocatedPlaceName("Lake Baikal", List.of("Baikal"), 21.0, 11.0),
+            new LocatedPlaceName("Titicaca", List.of(), 21.0, 11.0));
   }
 }

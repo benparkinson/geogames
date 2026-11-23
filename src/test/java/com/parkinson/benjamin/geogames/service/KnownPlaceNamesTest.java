@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.PlaceKind;
-import com.parkinson.benjamin.geogames.model.PlaceName;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -19,15 +18,17 @@ class KnownPlaceNamesTest {
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(
-                new CountryName("Congo", List.of("Republic of the Congo"), 0, 0),
-                new CountryName("Côte d'Ivoire", List.of("Ivory Coast"), 0, 0),
+                new LocatedPlaceName("Congo", List.of("Republic of the Congo"), 0, 0),
+                new LocatedPlaceName("Côte d'Ivoire", List.of("Ivory Coast"), 0, 0),
                 // An alias that is another place's name must not win over that name.
-                new CountryName("Guinea", List.of("Congo"), 0, 0),
-                new CountryName("Chad", null, 0, 0)));
+                new LocatedPlaceName("Guinea", List.of("Congo"), 0, 0),
+                new LocatedPlaceName("Chad", null, 0, 0)));
     RiverLoaderService rivers = mock(RiverLoaderService.class);
-    when(rivers.loadRiverNames()).thenReturn(List.of(new PlaceName("Nile", List.of())));
+    when(rivers.loadRiverNames())
+        .thenReturn(List.of(new LocatedPlaceName("Nile", List.of(), 1.5, 2.5)));
     LakeLoaderService lakes = mock(LakeLoaderService.class);
-    when(lakes.loadLakeNames()).thenReturn(List.of(new PlaceName("Victoria", List.of())));
+    when(lakes.loadLakeNames())
+        .thenReturn(List.of(new LocatedPlaceName("Victoria", List.of(), 1.5, 2.5)));
     return new KnownPlaceNames(countries, rivers, lakes);
   }
 
