@@ -42,7 +42,7 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
           </>
         )}
         {partial && hintsUsed > 0 && (
-          <div className="round-result__note gg-text-muted">
+          <div className="round-result__note gg-mono gg-text-muted">
             {hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`}
           </div>
         )}

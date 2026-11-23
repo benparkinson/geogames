@@ -79,7 +79,7 @@ export default function GameSummary({
               <span>Hints used</span> <span>{summary.hintsUsed}</span>
             </li>
           </ul>
-          <p className="gg-summary__line gg-text-muted">{summaryLine}</p>
+          <p className="gg-summary__line gg-mono gg-text-muted">{summaryLine}</p>
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 

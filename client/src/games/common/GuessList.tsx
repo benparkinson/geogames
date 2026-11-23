@@ -55,7 +55,7 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
       return (
         <>
           <span className="guess-list__name">{row.text}</span>
-          <span className="guess-list__note">
+          <span className="guess-list__note gg-mono">
             <FoundIcon aria-hidden="true" /> found
           </span>
         </>
@@ -64,7 +64,7 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
       return (
         <>
           <span className="guess-list__name">{row.text}</span>
-          <span className="guess-list__note">
+          <span className="guess-list__note gg-mono">
             {showClues && row.clue && <ClueBadge clue={row.clue} />} <WrongGuessIcon aria-hidden="true" />
           </span>
         </>
@@ -73,7 +73,7 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
       return (
         <>
           <span className="guess-list__name">{row.text}</span>
-          <span className="guess-list__note">
+          <span className="guess-list__note gg-mono">
             not found<span className="gg-visually-hidden"> (revealed)</span>
           </span>
         </>

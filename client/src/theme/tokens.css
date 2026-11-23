@@ -125,6 +125,7 @@
   --gg-font-size-h5: 1.25rem;
   --gg-font-size-h4: calc(1.275rem + 0.3vw);
   --gg-font-size-h3: calc(1.3rem + 0.6vw);
+  --gg-font-weight-medium: 500;
   --gg-font-weight-semibold: 600;
   --gg-font-weight-bold: 700;
 }
