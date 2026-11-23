@@ -218,11 +218,6 @@ code {
 .page-bg {
   background: var(--gg-color-page-bg);
 }
-.theme-toggle {
-  line-height: 1;
-  padding: 0.25rem 0.4rem;
-  background: var(--gg-color-surface);
-}
 .round-hints {
   list-style: none;
   margin: 0 0 0.5rem;

@@ -1,6 +1,5 @@
 import { Button } from "../../ui";
 import HomeLink from "../../components/HomeLink";
-import ThemeToggle from "../../components/ThemeToggle";
 import { Round } from "./Model";
 import RoundProgress from "./RoundProgress";
 import { DIFFICULTY_LABEL } from "./difficultyLabel";
@@ -47,7 +46,6 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
             Results
           </Button>
         )}
-        <ThemeToggle />
       </div>
       <div className="top-bar__rounds">
         <RoundProgress
