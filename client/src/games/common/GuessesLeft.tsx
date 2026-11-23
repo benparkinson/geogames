@@ -22,7 +22,7 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
           ))}
         </span>
       )}
-      <span className="guesses-left__text">{text}</span>
+      <span className="guesses-left__text gg-mono">{text}</span>
     </div>
   );
 }

@@ -1013,7 +1013,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .guess-list__row[data-kind="found"] .guess-list__note {
   color: var(--gg-color-correct);
-  font-weight: var(--gg-font-weight-semibold);
+  font-weight: var(--gg-font-weight-medium);
 }
 /* A wrong guess is greyed (muted, regular weight) beside the bold found ones, with the cross in the marker colour.
    Muted rather than translucent text, which would fall below 4.5:1 contrast. */

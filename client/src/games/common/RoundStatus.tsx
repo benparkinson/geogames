@@ -14,7 +14,7 @@ export default function RoundStatus({
   return (
     <div data-testid="round-status" className="round-status">
       <GuessesLeft left={guessesLeft} limit={guessLimit} />
-      <span className="round-status__points gg-text-muted">{`Worth ${points} pts`}</span>
+      <span className="round-status__points gg-mono gg-text-muted">{`Worth ${points} pts`}</span>
     </div>
   );
 }

@@ -37,9 +37,9 @@ export default function SummaryRow({
             </span>
           ))}
         </span>
-        {note && <span className="gg-summary__note">{note}</span>}
+        {note && <span className="gg-summary__note gg-mono">{note}</span>}
         {row.hintsUsed > 0 && (
-          <span className="gg-summary__note gg-text-muted">
+          <span className="gg-summary__note gg-mono gg-text-muted">
             {row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}
           </span>
         )}
