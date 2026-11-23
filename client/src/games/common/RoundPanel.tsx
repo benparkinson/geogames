@@ -53,7 +53,7 @@ export default function RoundPanel({
   const gameOver = state.over;
   return (
     <>
-      <RoundBrief title={round.kind.title} Icon={round.kind.Icon} question={prompt} />
+      <RoundBrief question={prompt} />
       {(view.continentText !== null || view.hintTexts.length > 0) && (
         <ul className="round-hints" aria-label="Hints">
           {view.continentText !== null && (

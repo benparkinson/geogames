@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
@@ -42,25 +42,35 @@ describe("GameTopBar", () => {
     expect(screen.queryByRole("button", { name: /dark mode|light mode/ })).not.toBeInTheDocument();
   });
 
-  it("shows the running score mid-game", () => {
+  it("shows the running score over its label mid-game", () => {
     renderBar({}, { score: 183 });
 
-    expect(screen.getByText("Score 183")).toBeInTheDocument();
+    const score = screen.getByRole("group", { name: "Score 183" });
+    expect(within(score).getByText("183")).toBeInTheDocument();
+    expect(within(score).getByText("score")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Results" })).not.toBeInTheDocument();
   });
 
-  it("shows the final score out of the maximum and a results button when the game is complete", async () => {
+  it("shows the final score out of the maximum over a results button when the game is complete", async () => {
     const round = renderBar({ maxScore: 300, totalRoundCount: 3, gameCompleted: true }, { score: 183 });
 
-    expect(screen.getByText("Final score 183 / 300")).toBeInTheDocument();
-    await userEvent.setup().click(screen.getByRole("button", { name: "Results" }));
+    const score = screen.getByRole("group", { name: "Final score 183 of 300" });
+    expect(within(score).getByText("183 / 300")).toBeInTheDocument();
+    await userEvent.setup().click(within(score).getByRole("button", { name: "Results" }));
     expect(round.showSummary).toHaveBeenCalledTimes(1);
   });
 
-  it("shows which round is being played", () => {
+  it("disables the results button until the answers are saved", () => {
+    renderBar({ gameCompleted: true, answerSave: "saving" });
+
+    expect(screen.getByRole("button", { name: "Results" })).toBeDisabled();
+  });
+
+  it("names the round instead of numbering it: the round dots show the number", () => {
     renderBar({ currentRound: 1, totalRoundCount: 3 });
 
-    expect(screen.getByText("round 02 of 03")).toBeInTheDocument();
+    expect(screen.getByText("Test Game")).toBeInTheDocument();
+    expect(screen.queryByText(/round 0/)).not.toBeInTheDocument();
   });
 
   it("calls an ordinary game Practice, and shows the difficulty only when it is not Normal", () => {
@@ -68,12 +78,17 @@ describe("GameTopBar", () => {
       <GameTopBar round={makeRoundProps({ difficulty: "HARD" })} progress={progressOf(makeRoundProps())} />,
     );
     expect(screen.getByText("Practice")).toBeInTheDocument();
-    expect(screen.queryByText("Test Game")).not.toBeInTheDocument();
-    expect(screen.getByText("round 01 of 03 · Hard mode")).toBeInTheDocument();
+    expect(screen.getByText("Test Game").parentElement).toHaveTextContent(/^Test Game · Hard mode$/);
     unmount();
 
+    const easy = render(
+      <GameTopBar round={makeRoundProps({ difficulty: "EASY" })} progress={progressOf(makeRoundProps())} />,
+    );
+    expect(screen.getByText("Test Game").parentElement).toHaveTextContent(/^Test Game · Easy$/);
+    easy.unmount();
+
     renderBar();
-    expect(screen.getByText(/^round 01 of \d+$/)).toBeInTheDocument();
+    expect(screen.getByText("Test Game").parentElement).toHaveTextContent(/^Test Game$/);
   });
 
   it("links home", () => {

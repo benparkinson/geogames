@@ -85,7 +85,6 @@ code {
 .game-screen--keyboard .guess-list__rows {
   max-height: 5rem;
 }
-.game-screen--keyboard .round-brief-title,
 .game-screen--keyboard .round-status {
   display: none;
 }
@@ -107,12 +106,7 @@ code {
   flex-wrap: wrap;
   align-items: baseline;
   column-gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-.round-brief-title {
-  width: 100%;
-  font-size: 0.8rem;
-  color: var(--gg-color-text-muted);
+  margin-bottom: var(--gg-space-3);
 }
 .round-brief-question {
   margin: 0;
