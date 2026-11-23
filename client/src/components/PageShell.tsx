@@ -3,7 +3,7 @@ import SiteFooter from "./SiteFooter";
 import SiteHeader from "./SiteHeader";
 
 /**
- * The frame of a page with one card on it: the site header (home link, streak and theme switch), the card and the
+ * The frame of a page with one card on it: the site header (home link and streak), the card and the
  * footer. `topBarEnd` goes in the header before the streak; `wide` makes the card wider; `bare` drops the card's
  * own border and padding, for content (the daily ticket) that draws its own.
  */

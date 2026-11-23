@@ -84,7 +84,9 @@ test.describe("on a wide screen", () => {
 
   test("the start panel sits directly under the chosen row", async ({ page }) => {
     await page.goto("/");
-    const row = page.getByRole("button").filter({ has: page.getByText("Tripoints", { exact: true }) });
+    const row = page
+      .getByRole("button")
+      .filter({ has: page.getByText("Tripoints", { exact: true }) });
     await row.click();
 
     await expect(page.getByRole("button", { name: "Start game" })).toBeInViewport();
@@ -96,7 +98,29 @@ test.describe("on a wide screen", () => {
     expect(panel!.x + panel!.width).toBeLessThanOrEqual(group!.x + group!.width + 1);
 
     // Choosing another game moves the panel to it.
-    await page.getByRole("button").filter({ has: page.getByText("Lake Shapes", { exact: true }) }).click();
+    await page
+      .getByRole("button")
+      .filter({ has: page.getByText("Lake Shapes", { exact: true }) })
+      .click();
     await expect(page.getByRole("button", { name: "Start game" })).toHaveCount(1);
   });
+});
+
+test("the Settings popup picks the theme and System default follows the device", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Settings" }).click();
+  await expect(page.getByRole("radio", { name: "System default" })).toBeChecked();
+
+  await page.getByRole("radio", { name: "Dark" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.getByRole("radio", { name: "System default" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  expect(await page.evaluate(() => localStorage.getItem("gg-theme"))).toBeNull();
 });

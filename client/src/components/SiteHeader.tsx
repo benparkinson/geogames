@@ -2,11 +2,10 @@ import { localDateString } from "../api/daily";
 import { currentStreak, useDailyStreak } from "../daily/dailyStreak";
 import { useNowSeconds } from "../daily/useNowSeconds";
 import { StreakIcon } from "../ui/icons";
-import ThemeToggle from "./ThemeToggle";
 
 /**
  * The top of the home page and the static pages: the site name (`title`) at the start, then at the far end
- * `extra`, the daily streak (from one day, never while pre-rendering) and the theme switch. An ink rule closes it.
+ * `extra`, the daily streak (from one day, never while pre-rendering). An ink rule closes it.
  */
 export default function SiteHeader({
   title,
@@ -29,7 +28,6 @@ export default function SiteHeader({
             <StreakIcon aria-hidden="true" /> {streak}-day streak
           </span>
         )}
-        <ThemeToggle />
       </div>
     </header>
   );

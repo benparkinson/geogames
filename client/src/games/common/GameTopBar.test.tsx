@@ -36,6 +36,12 @@ describe("GameTopBar", () => {
     expect(screen.queryByText(/Daily/)).not.toBeInTheDocument();
   });
 
+  it("has no theme button", () => {
+    renderBar();
+
+    expect(screen.queryByRole("button", { name: /dark mode|light mode/ })).not.toBeInTheDocument();
+  });
+
   it("shows the running score mid-game", () => {
     renderBar({}, { score: 183 });
 
