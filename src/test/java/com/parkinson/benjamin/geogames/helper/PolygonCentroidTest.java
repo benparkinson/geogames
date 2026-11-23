@@ -8,7 +8,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class CountryCentroidTest {
+class PolygonCentroidTest {
 
   private static List<List<Number>> square(double west, double south, double size) {
     return List.of(
@@ -25,7 +25,7 @@ class CountryCentroidTest {
 
   @Test
   void aUnitSquareGivesItsCentre() {
-    double[] position = CountryCentroid.of(polygon(square(10, 20, 2)));
+    double[] position = PolygonCentroid.of(polygon(square(10, 20, 2)));
 
     assertEquals(21.0, position[0], 0.001);
     assertEquals(11.0, position[1], 0.001);
@@ -40,7 +40,7 @@ class CountryCentroidTest {
             new GeoGeometry(
                 "MultiPolygon", List.of(List.of(square(-55, 4, 1)), List.of(square(0, 40, 8)))));
 
-    double[] position = CountryCentroid.of(multi);
+    double[] position = PolygonCentroid.of(multi);
 
     assertEquals(44.0, position[0], 0.001);
     assertEquals(4.0, position[1], 0.001);
@@ -49,7 +49,7 @@ class CountryCentroidTest {
   @Test
   void aRingWithNoAreaGivesTheAverageOfItsPoints() {
     double[] position =
-        CountryCentroid.of(polygon(List.of(List.of(0, 0), List.of(2, 2), List.of(4, 4))));
+        PolygonCentroid.of(polygon(List.of(List.of(0, 0), List.of(2, 2), List.of(4, 4))));
 
     assertEquals(2.0, position[0], 0.001);
     assertEquals(2.0, position[1], 0.001);
@@ -65,8 +65,8 @@ class CountryCentroidTest {
     GeoData onlyEmpty =
         new GeoData("Feature", null, new GeoGeometry("MultiPolygon", List.of(List.of())));
 
-    assertEquals(1.0, CountryCentroid.of(withEmpty)[0], 0.001);
-    assertThrows(IllegalArgumentException.class, () -> CountryCentroid.of(onlyEmpty));
+    assertEquals(1.0, PolygonCentroid.of(withEmpty)[0], 0.001);
+    assertThrows(IllegalArgumentException.class, () -> PolygonCentroid.of(onlyEmpty));
   }
 
   @Test
@@ -75,9 +75,9 @@ class CountryCentroidTest {
     List<List<Number>> clockwise = anticlockwise.reversed();
 
     assertEquals(
-        CountryCentroid.of(polygon(anticlockwise))[0], CountryCentroid.of(polygon(clockwise))[0]);
+        PolygonCentroid.of(polygon(anticlockwise))[0], PolygonCentroid.of(polygon(clockwise))[0]);
     assertEquals(
-        CountryCentroid.of(polygon(anticlockwise))[1], CountryCentroid.of(polygon(clockwise))[1]);
-    assertEquals(2.0, CountryCentroid.of(polygon(clockwise))[1], 0.001);
+        PolygonCentroid.of(polygon(anticlockwise))[1], PolygonCentroid.of(polygon(clockwise))[1]);
+    assertEquals(2.0, PolygonCentroid.of(polygon(clockwise))[1], 0.001);
   }
 }

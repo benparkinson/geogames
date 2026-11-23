@@ -7,8 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.service.CountryNameService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
@@ -35,8 +34,8 @@ class PlaceNameControllerTest {
     when(countryNameService.loadCountryNames())
         .thenReturn(
             List.of(
-                new CountryName("France", List.of(), 46.6, 2.5),
-                new CountryName("Netherlands", List.of("Holland"), 52.1, 5.3)));
+                new LocatedPlaceName("France", List.of(), 46.6, 2.5),
+                new LocatedPlaceName("Netherlands", List.of("Holland"), 52.1, 5.3)));
 
     var result =
         mockMvc
@@ -69,7 +68,9 @@ class PlaceNameControllerTest {
   void returnsRiverNames() throws Exception {
     when(riverLoaderService.loadRiverNames())
         .thenReturn(
-            List.of(new PlaceName("Danube", List.of("Donau")), new PlaceName("Nile", List.of())));
+            List.of(
+                new LocatedPlaceName("Danube", List.of("Donau"), 45.5, 25.5),
+                new LocatedPlaceName("Nile", List.of(), 26.1, 31.2)));
 
     var result =
         mockMvc
@@ -78,6 +79,8 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$.length()").value(2))
             .andExpect(jsonPath("$[0].name").value("Danube"))
             .andExpect(jsonPath("$[0].additionalNames[0]").value("Donau"))
+            .andExpect(jsonPath("$[0].lat").value(45.5))
+            .andExpect(jsonPath("$[0].lon").value(25.5))
             .andExpect(jsonPath("$[1].name").value("Nile"))
             .andExpect(jsonPath("$[1].additionalNames.length()").value(0))
             .andReturn();
@@ -100,8 +103,8 @@ class PlaceNameControllerTest {
     when(lakeLoaderService.loadLakeNames())
         .thenReturn(
             List.of(
-                new PlaceName("Lake Baikal", List.of("Baikal")),
-                new PlaceName("Titicaca", List.of())));
+                new LocatedPlaceName("Lake Baikal", List.of("Baikal"), 53.5, 108.2),
+                new LocatedPlaceName("Titicaca", List.of(), -15.9, -69.4)));
 
     var result =
         mockMvc
@@ -110,6 +113,8 @@ class PlaceNameControllerTest {
             .andExpect(jsonPath("$.length()").value(2))
             .andExpect(jsonPath("$[0].name").value("Lake Baikal"))
             .andExpect(jsonPath("$[0].additionalNames[0]").value("Baikal"))
+            .andExpect(jsonPath("$[0].lat").value(53.5))
+            .andExpect(jsonPath("$[0].lon").value(108.2))
             .andExpect(jsonPath("$[1].additionalNames.length()").value(0))
             .andReturn();
 

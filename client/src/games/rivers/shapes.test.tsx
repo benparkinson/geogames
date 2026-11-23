@@ -62,4 +62,35 @@ describe("River Shapes", () => {
     expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
     expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
   });
+
+  it.each([
+    ["NORMAL", true],
+    ["HARD", false],
+  ] as const)("in %s mode a wrong guess shows a distance clue: %s", async (difficulty, shown) => {
+    const user = userEvent.setup();
+    const Component = shapes.Component;
+    mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
+    renderWithClient(
+      <Component
+        data={makeRiverRoundData()}
+        round={makeRoundProps({ hintCount: 3, hasClues: true, difficulty })}
+        answerCount={1}
+        submitAnswer={vi.fn()}
+      />,
+    );
+    await screen.findByRole("button", { name: /Hint/ });
+
+    await user.type(screen.getByPlaceholderText("River name…"), "Thames{Enter}");
+
+    expect(await screen.findByText("Thames")).toBeInTheDocument();
+    if (shown) {
+      expect(screen.getByText(/[\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
+    } else {
+      expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
+    }
+  });
+
+  it("has clues", () => {
+    expect(shapes.hasClues).toBe(true);
+  });
 });

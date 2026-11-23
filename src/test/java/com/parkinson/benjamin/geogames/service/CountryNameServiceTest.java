@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.parkinson.benjamin.geogames.model.CountryName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -21,12 +21,13 @@ class CountryNameServiceTest {
 
   @Test
   void loadsEveryCountryNameSorted() throws IOException {
-    List<CountryName> names = service.loadCountryNames();
+    List<LocatedPlaceName> names = service.loadCountryNames();
 
     assertEquals(EXPECTED_COUNTRY_COUNT, names.size());
     assertTrue(names.stream().noneMatch(c -> "Siachen Glacier".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "US Naval Base Guantanamo Bay".equals(c.name())));
-    assertEquals(names.stream().sorted(Comparator.comparing(CountryName::name)).toList(), names);
+    assertEquals(
+        names.stream().sorted(Comparator.comparing(LocatedPlaceName::name)).toList(), names);
     assertTrue(names.stream().noneMatch(c -> "Antarctica".equals(c.name())));
     assertTrue(names.stream().noneMatch(c -> "Northern Cyprus".equals(c.name())));
     assertTrue(names.stream().anyMatch(c -> "Palestine".equals(c.name())));
@@ -36,9 +37,11 @@ class CountryNameServiceTest {
 
   @Test
   void positionsAreOnTheMainlandOfTheCountry() {
-    List<CountryName> names = service.loadCountryNames();
-    CountryName france = names.stream().filter(c -> "France".equals(c.name())).findFirst().get();
-    CountryName russia = names.stream().filter(c -> "Russia".equals(c.name())).findFirst().get();
+    List<LocatedPlaceName> names = service.loadCountryNames();
+    LocatedPlaceName france =
+        names.stream().filter(c -> "France".equals(c.name())).findFirst().get();
+    LocatedPlaceName russia =
+        names.stream().filter(c -> "Russia".equals(c.name())).findFirst().get();
 
     // Mainland France, not pulled towards French Guiana.
     assertTrue(france.lat() > 45 && france.lat() < 48, "lat " + france.lat());

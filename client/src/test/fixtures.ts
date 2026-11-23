@@ -385,14 +385,14 @@ export const countryNames = [
 
 /** What GET /api/rivers returns; matches makeRiverData() plus one other river. */
 export const riverNames = [
-  { name: "Danube", additionalNames: ["Donau"] },
-  { name: "Thames", additionalNames: [] as string[] },
+  { name: "Danube", additionalNames: ["Donau"], lat: 45.2, lon: 19.9 },
+  { name: "Thames", additionalNames: [] as string[], lat: 51.6, lon: -1.2 },
 ];
 
 /** What GET /api/lakes returns; matches makeLakeData() plus one other lake. */
 export const lakeNames = [
-  { name: "Lake Baikal", additionalNames: ["Baikal"] },
-  { name: "Lake Victoria", additionalNames: [] as string[] },
+  { name: "Lake Baikal", additionalNames: ["Baikal"], lat: 53.5, lon: 108.2 },
+  { name: "Lake Victoria", additionalNames: [] as string[], lat: -1.0, lon: 33.0 },
 ];
 
 /** The server's response for a Country Cities round. */

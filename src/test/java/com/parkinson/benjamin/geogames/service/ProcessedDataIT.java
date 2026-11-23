@@ -10,19 +10,21 @@ import com.parkinson.benjamin.geogames.helper.CountryCitiesEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryPairEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryRiversEligibility;
 import com.parkinson.benjamin.geogames.helper.CountryShapeEligibility;
+import com.parkinson.benjamin.geogames.helper.PolygonCentroid;
 import com.parkinson.benjamin.geogames.helper.RiverCountriesEligibility;
+import com.parkinson.benjamin.geogames.helper.RiverPosition;
 import com.parkinson.benjamin.geogames.loaders.features.AliasBuilder;
 import com.parkinson.benjamin.geogames.loaders.features.Geo;
 import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.City;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.CountryCities;
-import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.CountryPairRound;
 import com.parkinson.benjamin.geogames.model.CountryRivers;
 import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
 import com.parkinson.benjamin.geogames.model.CountryShape;
 import com.parkinson.benjamin.geogames.model.Lake;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.PlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.Tripoint;
@@ -212,6 +214,49 @@ public class ProcessedDataIT {
   }
 
   @Test
+  public void everyRiverPositionIsOneOfItsVertices() {
+    RiverLoaderService service = new RiverLoaderService(reader);
+    for (River river : service.loadRivers()) {
+      double[] position = RiverPosition.of(river.geoData());
+      boolean[] found = {false};
+      river
+          .geoData()
+          .geometry()
+          .forEachPosition(
+              (lon, lat) -> {
+                if (Math.abs(lon - position[1]) < 0.006 && Math.abs(lat - position[0]) < 0.006) {
+                  found[0] = true;
+                }
+              });
+      assertTrue(found[0], river.name() + " position is not one of its vertices");
+    }
+    assertEquals(service.loadRivers().size(), service.loadRiverNames().size());
+  }
+
+  @Test
+  public void everyLakePositionIsInsideItsBoundingBox() {
+    for (Lake lake : loadLakes()) {
+      double[] position = PolygonCentroid.of(lake.geoData());
+      double[] box = {180, 90, -180, -90};
+      lake.geoData()
+          .geometry()
+          .forEachPosition(
+              (lon, lat) -> {
+                box[0] = Math.min(box[0], lon);
+                box[1] = Math.min(box[1], lat);
+                box[2] = Math.max(box[2], lon);
+                box[3] = Math.max(box[3], lat);
+              });
+      assertTrue(
+          position[1] >= box[0] - 0.01
+              && position[1] <= box[2] + 0.01
+              && position[0] >= box[1] - 0.01
+              && position[0] <= box[3] + 0.01,
+          lake.name() + " position is outside its bounding box");
+    }
+  }
+
+  @Test
   public void noTwoRiversShareANormalisedNameOrAlias() {
     Set<String> seen = new HashSet<>();
     for (River river : new RiverLoaderService(reader).loadRivers()) {
@@ -354,7 +399,7 @@ public class ProcessedDataIT {
   public void everyCountryHasAPositionInsideItsFocus() {
     CountryNameService service = new CountryNameService(new CountryShapeService(reader));
     CountryShapeService shapes = new CountryShapeService(reader);
-    for (CountryName country : service.loadCountryNames()) {
+    for (LocatedPlaceName country : service.loadCountryNames()) {
       Bounds focus = shapes.loadShape(country.name()).focus();
       assertTrue(Double.isFinite(country.lat()) && Double.isFinite(country.lon()), country.name());
       assertTrue(

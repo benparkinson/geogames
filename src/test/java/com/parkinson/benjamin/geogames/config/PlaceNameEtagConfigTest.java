@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.controllers.PlaceNameController;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.service.CountryNameService;
 import com.parkinson.benjamin.geogames.service.LakeLoaderService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
@@ -30,7 +30,8 @@ class PlaceNameEtagConfigTest {
 
   @Test
   void anUnchangedListRevalidatesWithA304AndAChangedOneDoesNot() throws Exception {
-    Mockito.when(lakes.loadLakeNames()).thenReturn(List.of(new PlaceName("Baikal", List.of())));
+    Mockito.when(lakes.loadLakeNames())
+        .thenReturn(List.of(new LocatedPlaceName("Baikal", List.of(), 1.5, 2.5)));
     String etag =
         mockMvc
             .perform(get("/api/lakes"))
@@ -44,7 +45,8 @@ class PlaceNameEtagConfigTest {
         .perform(get("/api/lakes").header(HttpHeaders.IF_NONE_MATCH, etag))
         .andExpect(status().isNotModified());
 
-    Mockito.when(lakes.loadLakeNames()).thenReturn(List.of(new PlaceName("Superior", List.of())));
+    Mockito.when(lakes.loadLakeNames())
+        .thenReturn(List.of(new LocatedPlaceName("Superior", List.of(), 1.5, 2.5)));
     mockMvc
         .perform(get("/api/lakes").header(HttpHeaders.IF_NONE_MATCH, etag))
         .andExpect(status().isOk());
