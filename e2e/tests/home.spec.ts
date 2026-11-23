@@ -111,16 +111,17 @@ test("the Settings popup picks the theme and System default follows the device",
 }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
+  // The radios are hidden; click the visible labels.
   await page.getByRole("button", { name: "Settings" }).click();
   await expect(page.getByRole("radio", { name: "System default" })).toBeChecked();
 
-  await page.getByRole("radio", { name: "Dark" }).click();
+  await page.getByText("Dark", { exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 
   await page.getByRole("button", { name: "Settings" }).click();
-  await page.getByRole("radio", { name: "System default" }).click();
+  await page.getByText("System default", { exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   expect(await page.evaluate(() => localStorage.getItem("gg-theme"))).toBeNull();
 });
