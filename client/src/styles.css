@@ -234,10 +234,30 @@ code {
   margin-bottom: 0.25rem;
   color: var(--gg-color-text);
 }
-.guesses-left-dots {
+/* Lives as tally boxes: filled while left, empty once lost; the last one turns to the marker. */
+.guesses-left__boxes {
   display: inline-flex;
-  gap: 0.25rem;
-  font-size: 0.7rem;
+  gap: 3px;
+}
+.guesses-left__box {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid var(--gg-color-rule);
+}
+.guesses-left__box[data-life="left"] {
+  background: var(--gg-color-rule);
+}
+.guesses-left[data-last] .guesses-left__box {
+  border-color: var(--gg-color-missed);
+}
+.guesses-left[data-last] .guesses-left__box[data-life="left"] {
+  background: var(--gg-color-missed);
+}
+.guesses-left__text {
+  color: var(--gg-color-text-muted);
+}
+.guesses-left[data-last] .guesses-left__text {
+  color: var(--gg-color-warning-text);
 }
 
 /* Map pins drawn with an inline SVG (see map/markerIcons.ts). */

@@ -17,7 +17,14 @@ describe("GuessList", () => {
 
     expect(screen.getByRole("group", { name: "Answers: 1 of 3 found" })).toBeInTheDocument();
     expect(screen.getByText("1/3 found")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Your guesses" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading")).toBeNull();
+  });
+
+  it("shows no count for a single answer", () => {
+    renderList(stateOf([{ text: "Peru", answer: null }]), 1);
+
+    expect(screen.queryByText(/found$/)).toBeNull();
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
   });
 
   it("numbers the rows in guess order and marks the answers still to find", () => {

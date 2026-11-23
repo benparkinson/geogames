@@ -102,10 +102,15 @@ export default function GameSummary({
               {creationErrorMessage(createError, "Couldn't start a new game. Try again.")}
             </div>
           )}
+          {share !== null && (
+            <div className="gg-summary__share">
+              <ShareButton text={share} />
+            </div>
+          )}
           <div className="gg-summary__buttons">
             {daily ? (
               <Button
-                variant="primary"
+                variant="secondary"
                 onClick={() => createGame(RANDOM_OPTION.type, 5, all[0].difficulty)}
                 disabled={creating}
               >
@@ -123,7 +128,6 @@ export default function GameSummary({
             <Link href="/" className={buttonClass({ variant: "quiet" })}>
               Home
             </Link>
-            {share !== null && <ShareButton text={share} />}
           </div>
         </div>
       </div>

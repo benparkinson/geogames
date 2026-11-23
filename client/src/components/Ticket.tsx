@@ -18,11 +18,14 @@ export default function Ticket({
   stripTag: Strip = "div",
   children,
   footer,
+  footerBar = false,
 }: {
   date: string | null;
   stripTag?: "div" | "h1";
   children: React.ReactNode;
   footer: React.ReactNode;
+  /** The footer is one button, drawn as the whole ink bar (like the home page's ticket). */
+  footerBar?: boolean;
 }): React.JSX.Element {
   return (
     <div className="gg-ticket">
@@ -33,7 +36,7 @@ export default function Ticket({
         {date !== null && <span className="gg-mono gg-ticket__date">{date}</span>}
       </div>
       <div className="gg-ticket__body">{children}</div>
-      <div className="gg-ticket__foot">{footer}</div>
+      <div className={"gg-ticket__foot" + (footerBar ? " gg-ticket__foot--bar" : "")}>{footer}</div>
     </div>
   );
 }

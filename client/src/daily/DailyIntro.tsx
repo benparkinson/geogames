@@ -19,9 +19,10 @@ export default function DailyIntro(): React.JSX.Element {
     <PageShell bare>
       <Ticket
         stripTag="h1"
+        footerBar
         date={nowSeconds === null ? null : ticketDate(new Date(nowSeconds * 1000))}
         footer={
-          <Button variant="primary" className="gg-ticket__play" onClick={play} disabled={isPending}>
+          <Button variant="primary" block onClick={play} disabled={isPending}>
             {isPending ? (
               <>
                 <Spinner size="sm" decorative /> Starting…

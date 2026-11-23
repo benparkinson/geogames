@@ -67,6 +67,13 @@
 .gg-btn--danger {
   --gg-btn-color: var(--gg-color-danger-text);
 }
+/* Hint: ink text over a thick highlighter stroke, like the hint list's yellow rule; readable in both themes. */
+.gg-btn--hint {
+  text-decoration-color: var(--gg-color-hint);
+  text-decoration-thickness: 0.3em;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.1em;
+}
 .gg-btn--quiet {
   --gg-btn-color: var(--gg-color-text-muted);
 }
@@ -497,7 +504,7 @@
   gap: var(--gg-space-2);
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--gg-space-3);
+  padding: var(--gg-space-2) var(--gg-space-3);
   border-bottom: 2px solid var(--gg-color-rule);
 }
 .gg-site-header__title {
@@ -532,7 +539,7 @@
   gap: var(--gg-space-4);
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--gg-space-4) var(--gg-space-3) 0;
+  padding: var(--gg-space-3) var(--gg-space-3) 0;
 }
 @media (min-width: 900px) {
   .home-layout {
@@ -629,6 +636,24 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   --gg-btn-border: var(--gg-color-page-bg);
 }
 
+/* The footer as one button filling the ink bar: no corners or outline of its own. */
+.gg-ticket__foot--bar {
+  padding: 0;
+}
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary,
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:hover,
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:active {
+  --gg-btn-bg: var(--gg-color-text);
+  --gg-btn-fg: var(--gg-color-page-bg);
+  --gg-btn-border: var(--gg-color-text);
+  justify-content: flex-start;
+  padding: var(--gg-space-2) var(--gg-space-3);
+  border-radius: 0;
+}
+.gg-ticket__foot--bar > .gg-btn.gg-btn--primary:hover {
+  text-decoration: underline;
+}
+
 /* ---- Start panel and difficulty ---- */
 .home-start {
   padding: var(--gg-space-3);
@@ -650,8 +675,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .home-start__difficulty {
   width: 100%;
 }
+/* The panel's one filled button spans it, as a bar. */
 .home-start-button {
-  flex-grow: 1;
+  flex: 1 0 100%;
 }
 .home-start__status {
   margin-top: var(--gg-space-2);
@@ -669,7 +695,6 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   font-weight: var(--gg-font-weight-semibold);
 }
 .gg-difficulty__description,
-.game-picker__note,
 .gg-share__label,
 .game-row__description {
   font-size: var(--gg-font-size-sm);
@@ -683,14 +708,22 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-h4);
 }
-.game-picker__note {
-  margin-bottom: var(--gg-space-2);
-}
 .game-picker__list {
   border-top: 2px solid var(--gg-color-rule);
 }
 .game-picker__extra {
-  margin-top: var(--gg-space-4);
+  margin-top: var(--gg-space-3);
+}
+/* Wide screens: the name and the description share a line, as columns, so every game fits above the fold. */
+@media (min-width: 900px) {
+  .game-row__text {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--gg-space-3);
+  }
+  .game-row__title {
+    flex: 0 0 10.5rem;
+  }
 }
 .game-row {
   border-bottom: 1px solid var(--gg-color-rule-light);
@@ -908,16 +941,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .guess-list__head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding-bottom: var(--gg-space-1);
   border-bottom: 2px solid var(--gg-color-rule);
-}
-.guess-list__title {
-  margin: 0;
-  font-family: var(--gg-font-display);
-  font-stretch: var(--gg-font-stretch-display);
-  font-size: var(--gg-font-size-h6);
-  font-weight: var(--gg-font-weight-display);
 }
 .guess-list__count,
 .guess-list__number,
@@ -960,8 +986,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   color: var(--gg-color-correct);
   font-weight: var(--gg-font-weight-semibold);
 }
-.guess-list__row[data-kind="wrong"] .guess-list__name {
-  color: var(--gg-color-text-muted);
+/* A wrong guess stays readable: ordinary text, with the cross in the marker colour. */
+.guess-list__row[data-kind="wrong"] .guess-list__note svg {
+  color: var(--gg-color-danger);
 }
 .guess-list__row[data-outcome="missed"] .guess-list__name,
 .guess-list__row[data-outcome="missed"] .guess-list__note {
@@ -1098,6 +1125,14 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
 }
+/* Copy result (or Play again, when there is nothing to share) is the one filled button, as a bar. */
+.gg-summary__share {
+  margin-bottom: var(--gg-space-2);
+}
+.gg-summary__share .gg-btn--primary,
+.gg-summary__buttons > .gg-btn--primary {
+  flex: 1 1 auto;
+}
 .gg-summary__buttons {
   display: flex;
   flex-wrap: wrap;
@@ -1115,7 +1150,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .gg-summary__row {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  grid-template-columns: 2rem minmax(0, 1fr) 5rem;
   align-items: baseline;
   gap: var(--gg-space-2);
   width: 100%;
@@ -1147,6 +1182,7 @@ button.gg-summary__row:focus-visible {
 .gg-summary__wrong {
   display: none;
   font-size: var(--gg-font-size-sm);
+  text-align: start;
 }
 .gg-summary__points {
   text-align: end;
@@ -1196,7 +1232,7 @@ button.gg-summary__row:focus-visible {
     margin-bottom: 0;
   }
   .gg-summary__row {
-    grid-template-columns: 2rem minmax(0, 1fr) 9rem auto;
+    grid-template-columns: 2rem minmax(0, 1fr) 10rem 5rem;
   }
   .gg-summary__wrong {
     display: block;
@@ -1220,9 +1256,11 @@ button.gg-summary__row:focus-visible {
 .leaflet-bar a:last-child {
   border-bottom: 0;
 }
+/* Opaque: a translucent hover shows the map through the button (invisible in dark mode). */
 .leaflet-bar a:hover,
 .leaflet-bar a:focus-visible {
-  background-color: var(--gg-color-surface-hover);
+  color: var(--gg-color-text);
+  background-color: color-mix(in srgb, var(--gg-color-surface) 85%, var(--gg-color-text));
 }
 .leaflet-control-scale-line {
   background: var(--gg-color-surface);

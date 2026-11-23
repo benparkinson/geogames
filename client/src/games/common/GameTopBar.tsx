@@ -35,7 +35,6 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
     <div className={"top-bar" + (crowded ? " top-bar--wrap" : "")}>
       <div className="top-bar__start">
         <HomeLink hideTextOnMobile />
-        <ThemeToggle />
       </div>
       <div className="top-bar__title">
         <span className="top-bar__game">{title}</span>
@@ -48,6 +47,7 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
             Results
           </Button>
         )}
+        <ThemeToggle />
       </div>
       <div className="top-bar__rounds">
         <RoundProgress

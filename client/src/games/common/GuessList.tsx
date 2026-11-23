@@ -25,10 +25,12 @@ export default function GuessList({
 
   return (
     <section className="guess-list" role="group" aria-label={`Answers: ${found} of ${answerCount} found`}>
-      <div className="guess-list__head">
-        <h2 className="guess-list__title">Your guesses</h2>
-        <span className="guess-list__count">{`${found}/${answerCount} found`}</span>
-      </div>
+      {/* One answer needs no count: the question already says what is missing. */}
+      {answerCount > 1 && (
+        <div className="guess-list__head">
+          <span className="guess-list__count">{`${found}/${answerCount} found`}</span>
+        </div>
+      )}
       <ol className="guess-list__rows">
         {rows.map((row, i) => (
           <li
@@ -61,9 +63,7 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
     case "wrong":
       return (
         <>
-          <span className="guess-list__name">
-            <s>{row.text}</s>
-          </span>
+          <span className="guess-list__name">{row.text}</span>
           <span className="guess-list__note">
             {showClues && row.clue && <ClueBadge clue={row.clue} />} <WrongGuessIcon aria-hidden="true" />
           </span>

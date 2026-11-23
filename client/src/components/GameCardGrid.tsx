@@ -75,7 +75,6 @@ export default function GameCardGrid({
         <h2 id="extra-difficult-label" className="game-picker__heading">
           <ExtraDifficultIcon className="gg-text-danger" aria-hidden="true" /> Extra difficult
         </h2>
-        <p className="game-picker__note gg-text-muted">Just a shape on a blank map, with nothing around it.</p>
         <div className="game-picker__list">{EXTRA_DIFFICULT_OPTIONS.map(renderRow)}</div>
       </div>
     </div>

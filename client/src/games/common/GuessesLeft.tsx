@@ -1,9 +1,7 @@
-import { LifeLostIcon, LifeIcon } from "../../ui/icons";
+/** More lives than this are shown as text only, because a long row of boxes is noise. */
+const MAX_BOXES = 10;
 
-/** More lives than this are shown as text only, because a long row of hearts is noise. */
-const MAX_HEARTS = 10;
-
-/** The player's lives: each wrong guess costs one, and the round ends when none are left. */
+/** The player's lives as tally boxes: each wrong guess empties one, and the round ends when none are left. */
 export default function GuessesLeft({ left, limit }: { left: number; limit: number }): React.JSX.Element {
   const last = left === 1;
   const label = last ? "1 life left" : `${left} lives left`;
@@ -15,13 +13,16 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
       aria-label={label}
       title="Each wrong guess costs a life. You lose the round when you run out."
       className="guesses-left"
+      data-last={last || undefined}
     >
-      {limit <= MAX_HEARTS && (
-        <span className={"guesses-left-dots" + (last ? " gg-text-danger" : "")} aria-hidden="true">
-          {Array.from({ length: limit }, (_, i) => (i < left ? <LifeIcon key={i} /> : <LifeLostIcon key={i} />))}
+      {limit <= MAX_BOXES && (
+        <span className="guesses-left__boxes" aria-hidden="true">
+          {Array.from({ length: limit }, (_, i) => (
+            <span key={i} className="guesses-left__box" data-life={i < left ? "left" : "lost"} />
+          ))}
         </span>
       )}
-      <span className={"guesses-left__text " + (last ? "gg-text-warning" : "gg-text-muted")}>{text}</span>
+      <span className="guesses-left__text">{text}</span>
     </div>
   );
 }
