@@ -1,4 +1,4 @@
-import HomeLink from "./HomeLink";
+import SiteTitle from "./SiteTitle";
 import SiteHeader from "./SiteHeader";
 
 // TODO: replace with the real contact address before the site goes live.
@@ -8,7 +8,7 @@ export const CONTACT_EMAIL = "privacy@example.com";
 function PrivacyPage(): React.JSX.Element {
   return (
     <div className="gg-page page-full-height page-bg">
-      <SiteHeader title={<HomeLink />} />
+      <SiteHeader title={<SiteTitle />} />
       <main className="gg-card gg-page__card gg-page__card--roomy">
         <h1 className="gg-page__heading">Credits and privacy</h1>
 

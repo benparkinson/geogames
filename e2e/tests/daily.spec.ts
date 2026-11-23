@@ -25,7 +25,7 @@ test("the daily: play, share, come back, and a second player gets the same round
   await page.goto("/daily");
   await expect(page.getByRole("heading", { name: "Daily challenge" })).toBeVisible();
   expect(dailyPosts).toHaveLength(0);
-  await page.getByRole("button", { name: "Play today's challenge" }).click();
+  await page.getByRole("button", { name: "Start" }).click();
   await expect(page).toHaveURL(/\/daily$/);
   for (let round = 0; round < 5; round++) {
     await expect(answerBox(page)).toBeVisible();
@@ -69,7 +69,7 @@ test("the daily: play, share, come back, and a second player gets the same round
   try {
     const otherPage = await other.newPage();
     await otherPage.goto("/daily");
-    await otherPage.getByRole("button", { name: "Play today's challenge" }).click();
+    await otherPage.getByRole("button", { name: "Start" }).click();
     await expect(answerBox(otherPage)).toBeVisible();
     const otherId = await storedGameId(otherPage);
     expect(otherId).not.toBe(gameId);
