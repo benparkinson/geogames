@@ -61,7 +61,7 @@ test("a wrong country in a country game says how far and which way the answer is
 
 test("Hard difficulty, chosen on the home page, hides the distance clues", async ({ page, api }) => {
   await page.goto("/");
-  await page.getByRole("radio").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
+  await page.getByRole("button").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
   await page.getByRole("group", { name: "Difficulty" }).getByText("Hard", { exact: true }).click();
 
   const id = await startGame(page, "Country Gaps", 3);
@@ -89,7 +89,7 @@ test("Hard difficulty, chosen on the home page, hides the distance clues", async
 
 test("Easy difficulty shows the continent and gives more guesses", async ({ page, api }) => {
   await page.goto("/");
-  await page.getByRole("radio").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
+  await page.getByRole("button").filter({ has: page.getByText("Country Gaps", { exact: true }) }).click();
   await page.getByRole("group", { name: "Difficulty" }).getByText("Easy", { exact: true }).click();
 
   const id = await startGame(page, "Country Gaps", 3);

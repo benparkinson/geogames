@@ -20,7 +20,7 @@ export default function DailyCard(): React.JSX.Element {
       : "Start the daily";
 
   return (
-    // A link, outside the radio group of games, so the arrow keys through the games don't reach it.
+    // A link, outside the list of games, so the arrow keys through the games don't reach it.
     <Link href="/daily" className="gg-ticket-link">
       <Ticket
         date={now === null ? null : ticketDate(now)}

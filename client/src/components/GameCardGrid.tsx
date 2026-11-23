@@ -6,8 +6,10 @@ const STANDARD_OPTIONS = MENU_OPTIONS.filter((option) => !option.extraDifficult)
 const EXTRA_DIFFICULT_OPTIONS = MENU_OPTIONS.filter((option) => option.extraDifficult);
 
 /**
- * The games to choose from, as ruled rows in one radio group across both sections, so the arrow keys move through
- * every row. `renderPanel` draws the start panel directly under the selected row.
+ * The games to choose from, as ruled rows. Each row is a button that opens its start panel (`renderPanel`)
+ * directly under it, and closes it when pressed again; one row is open at a time. The arrow keys move the focus
+ * through every row of both sections without opening anything, so the panel doesn't jump while the player looks.
+ * The rows are disclosure buttons rather than a radio group because the open panel holds radios of its own.
  */
 export default function GameCardGrid({
   selected,
@@ -15,7 +17,7 @@ export default function GameCardGrid({
   renderPanel,
 }: {
   selected: string | null;
-  onSelect: (type: string) => void;
+  onSelect: (type: string | null) => void;
   renderPanel: (option: MenuOption) => React.ReactNode;
 }): React.JSX.Element {
   const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -30,7 +32,6 @@ export default function GameCardGrid({
       return;
     }
     e.preventDefault();
-    onSelect(MENU_OPTIONS[next].type);
     rowRefs.current[next]?.focus();
   }
 
@@ -38,18 +39,18 @@ export default function GameCardGrid({
     // The position in the full list, which the arrow keys, focus refs and row numbers use.
     const index = MENU_OPTIONS.indexOf(option);
     const isSelected = option.type === selected;
+    const panelId = `start-${option.type}`;
     return (
       <div key={option.type} className="game-row" data-selected={isSelected}>
         <button
           type="button"
-          role="radio"
-          aria-checked={isSelected}
-          tabIndex={(selected === null ? index === 0 : isSelected) ? 0 : -1}
+          aria-expanded={isSelected}
+          aria-controls={isSelected ? panelId : undefined}
           ref={(el) => {
             rowRefs.current[index] = el;
           }}
           className="game-row__button"
-          onClick={() => onSelect(option.type)}
+          onClick={() => onSelect(isSelected ? null : option.type)}
           onKeyDown={(e) => handleKeyDown(e, index)}
         >
           <span className="game-row__number gg-mono" aria-hidden="true">
@@ -61,13 +62,13 @@ export default function GameCardGrid({
             <span className="game-row__description gg-text-muted">{option.description}</span>
           </span>
         </button>
-        {isSelected && renderPanel(option)}
+        {isSelected && <div id={panelId}>{renderPanel(option)}</div>}
       </div>
     );
   }
 
   return (
-    <div role="radiogroup" aria-label="Choose a game" className="game-picker">
+    <div role="group" aria-label="Choose a game" className="game-picker">
       <h2 className="game-picker__heading">Practice</h2>
       <div className="game-picker__list">{STANDARD_OPTIONS.map(renderRow)}</div>
       <div role="group" aria-labelledby="extra-difficult-label" className="game-picker__extra">
