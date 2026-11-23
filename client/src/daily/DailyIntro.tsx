@@ -28,7 +28,7 @@ export default function DailyIntro(): React.JSX.Element {
                 <Spinner size="sm" decorative /> Starting…
               </>
             ) : (
-              "Play today's challenge"
+              "Start"
             )}
           </Button>
         }

@@ -1,4 +1,4 @@
-import HomeLink from "./HomeLink";
+import SiteTitle from "./SiteTitle";
 import SiteFooter from "./SiteFooter";
 import SiteHeader from "./SiteHeader";
 
@@ -20,7 +20,7 @@ export default function PageShell({
 }): React.JSX.Element {
   return (
     <div className="gg-page page-full-height page-bg">
-      <SiteHeader title={<HomeLink />} extra={topBarEnd} />
+      <SiteHeader title={<SiteTitle />} extra={topBarEnd} />
       <div className={"gg-card gg-page__card" + (wide ? " gg-card--wide" : "") + (bare ? " gg-page__card--bare" : "")}>
         {children}
       </div>

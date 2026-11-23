@@ -61,7 +61,7 @@ describe("the daily pages and the header on the server", () => {
   it("renders the intro with no date", () => {
     const html = renderToString(withClient(<DailyIntro />));
 
-    expect(html).toContain("Play today&#x27;s challenge");
+    expect(html).toContain("Start");
     expect(html).not.toContain("gg-ticket__date");
   });
 
