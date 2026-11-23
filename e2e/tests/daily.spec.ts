@@ -51,7 +51,7 @@ test("the daily: play, share, come back, and a second player gets the same round
 
   // 3. Reloading /daily works in the jar, shows the result, and creates no game.
   await page.reload();
-  await expect(page.getByText("/ 500", { exact: true })).toBeVisible();
+  await expect(page.getByText("You scored 0 / 500")).toBeVisible();
   await expect(page.getByText(/Next daily in [0-9]+:[0-9][0-9]:[0-9][0-9]/)).toBeVisible();
   expect(dailyPosts).toHaveLength(1);
 
