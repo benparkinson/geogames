@@ -67,12 +67,9 @@
 .gg-btn--danger {
   --gg-btn-color: var(--gg-color-danger-text);
 }
-/* Hint: ink text over a thick highlighter stroke, like the hint list's yellow rule; readable in both themes. */
+/* Hint: the same underline as the other text actions, in the hint list's highlighter yellow. */
 .gg-btn--hint {
   text-decoration-color: var(--gg-color-hint);
-  text-decoration-thickness: 0.3em;
-  text-decoration-skip-ink: none;
-  text-underline-offset: 0.1em;
 }
 .gg-btn--quiet {
   --gg-btn-color: var(--gg-color-text-muted);
@@ -986,7 +983,12 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   color: var(--gg-color-correct);
   font-weight: var(--gg-font-weight-semibold);
 }
-/* A wrong guess stays readable: ordinary text, with the cross in the marker colour. */
+/* A wrong guess is greyed (muted, regular weight) beside the bold found ones, with the cross in the marker colour.
+   Muted rather than translucent text, which would fall below 4.5:1 contrast. */
+.guess-list__row[data-kind="wrong"] .guess-list__name {
+  color: var(--gg-color-text-muted);
+  font-weight: normal;
+}
 .guess-list__row[data-kind="wrong"] .guess-list__note svg {
   color: var(--gg-color-danger);
 }
