@@ -43,6 +43,13 @@ public final class CountryShapeBuilder {
   static final double MIN_TOLERANCE = 0.002;
   static final double MAX_TOLERANCE = 0.02;
   static final double TOLERANCE_DIVISOR = 400;
+
+  /** A part joins the focus when it is at least this share of the largest part's area... */
+  static final double FOCUS_MIN_AREA = 0.02;
+
+  /** ...and lies within this fraction of the largest part's diagonal of it. */
+  static final double FOCUS_REACH_DIVISOR = 8;
+
   static final double TINY_ISLAND_KM = 10;
 
   private CountryShapeBuilder() {}
@@ -107,6 +114,18 @@ public final class CountryShapeBuilder {
 
   // ---- per-country facts ----
 
+  /** west, south, east, north of a ring. */
+  private static double[] box(Ring ring) {
+    double[] b = {Double.MAX_VALUE, Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    for (double[] p : ring.points()) {
+      b[0] = Math.min(b[0], p[0]);
+      b[1] = Math.min(b[1], p[1]);
+      b[2] = Math.max(b[2], p[0]);
+      b[3] = Math.max(b[3], p[1]);
+    }
+    return b;
+  }
+
   private static Info info(Source source) {
     int largest = 0;
     double largestArea = -1;
@@ -128,6 +147,30 @@ public final class CountryShapeBuilder {
       north = Math.max(north, p[1]);
     }
     double diagonal = Math.hypot(east - west, north - south);
+    // Big islands close to the main part (Canada's Arctic islands and Newfoundland) belong in the
+    // frame too, or the map crops their coast. Overseas parts stay out, so the frame never spans
+    // the world.
+    double reach = diagonal / FOCUS_REACH_DIVISOR;
+    double mainWest = west;
+    double mainSouth = south;
+    double mainEast = east;
+    double mainNorth = north;
+    for (int i = 0; i < source.parts().size(); i++) {
+      if (i == largest || area(source.parts().get(i).outer()) < FOCUS_MIN_AREA * largestArea) {
+        continue;
+      }
+      double[] box = box(source.parts().get(i).outer());
+      if (box[0] > mainEast + reach
+          || box[2] < mainWest - reach
+          || box[1] > mainNorth + reach
+          || box[3] < mainSouth - reach) {
+        continue;
+      }
+      west = Math.min(west, box[0]);
+      south = Math.min(south, box[1]);
+      east = Math.max(east, box[2]);
+      north = Math.max(north, box[3]);
+    }
     double tolerance =
         Math.max(MIN_TOLERANCE, Math.min(MAX_TOLERANCE, diagonal / TOLERANCE_DIVISOR));
     double areaKm2 = 0;
