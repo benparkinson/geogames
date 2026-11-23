@@ -1,8 +1,9 @@
 import { render } from "@testing-library/react";
+import L from "leaflet";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueOutlineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import { drawnLayers, drawnMarkers, drawnTileUrls } from "../../test/leafletMock";
+import { drawnLayers, drawnMarkers, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeCountryShapeData, makeRiverRoundData } from "../../test/fixtures";
 import RiverCountriesMap from "./RiverCountriesMap";
 import type { RiverRound } from "./model";
@@ -10,13 +11,14 @@ import type { RiverRound } from "./model";
 vi.mock("react-leaflet", async () => await import("../../test/leafletMock"));
 
 /** Two countries, whose outlines start at "1,1". The river's line starts at "0,0". */
-function roundData(): RiverRound {
+function roundData(focus: RiverRound["focus"] = null): RiverRound {
   const outline = makeCountryShapeData().outline;
   return makeRiverRoundData({
     countries: [
       { name: "Austria", additionalNames: [], geoData: outline },
       { name: "Hungary", additionalNames: [], geoData: outline },
     ],
+    focus,
   });
 }
 
@@ -72,5 +74,23 @@ describe("RiverCountriesMap", () => {
 
     const river = drawnLayers().find((layer) => layer.point === RIVER_POINT);
     expect(river?.color).toBe(answerPathOptions(true).color);
+  });
+
+  it("fits the map to the server's box when the round has one", () => {
+    renderMap({ data: roundData({ west: 9, south: 43, east: 30, north: 50 }) });
+
+    expect(fakeMap.fitBounds).toHaveBeenCalledTimes(1);
+    expect(fakeMap.fitBounds.mock.calls[0][0]).toEqual([
+      [43, 9],
+      [50, 30],
+    ]);
+  });
+
+  it("fits the map to the river when the round has no box", () => {
+    renderMap();
+
+    expect(fakeMap.fitBounds).toHaveBeenCalledTimes(1);
+    const target = fakeMap.fitBounds.mock.calls[0][0] as L.LatLngBounds;
+    expect(target.toBBoxString()).toBe("0,0,1,1");
   });
 });

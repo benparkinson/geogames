@@ -19,5 +19,5 @@ export interface RiverRound {
   river: River;
   countries: Country[];
   /** The box the map opens on; null for the games that show no countries. */
-  focus?: Bounds | null;
+  focus: Bounds | null;
 }
