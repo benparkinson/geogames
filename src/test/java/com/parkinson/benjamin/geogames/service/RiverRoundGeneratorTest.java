@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -39,7 +40,8 @@ class RiverRoundGeneratorTest {
 
   private RiverRoundGenerator generator(
       Predicate<River> eligible, Function<River, List<Country>> countries) {
-    return new RiverRoundGenerator(GameType.RIVERS_BY_SHAPE, loader, eligible, countries);
+    return new RiverRoundGenerator(
+        GameType.RIVERS_BY_SHAPE, loader, eligible, countries, river -> null);
   }
 
   private RiverRoundGenerator generator() {
@@ -49,7 +51,8 @@ class RiverRoundGeneratorTest {
   @Test
   void generatesRoundsOfTheGivenType() {
     RiverRoundGenerator onMap =
-        new RiverRoundGenerator(GameType.RIVERS_BY_SHAPE, loader, r -> true, r -> List.of());
+        new RiverRoundGenerator(
+            GameType.RIVERS_BY_SHAPE, loader, r -> true, r -> List.of(), r -> null);
 
     assertThat(onMap.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE);
     assertThat(onMap.generate(1, Set.of(), random))
@@ -57,6 +60,18 @@ class RiverRoundGeneratorTest {
         .isInstanceOfSatisfying(
             RiverRound.class,
             round -> assertThat(round.gameType()).isSameAs(GameType.RIVERS_BY_SHAPE));
+  }
+
+  @Test
+  void passesTheFocusFunctionsResultThrough() {
+    Bounds box = new Bounds(1, 2, 3, 4);
+    RiverRoundGenerator withFocus =
+        new RiverRoundGenerator(
+            GameType.RIVERS_BY_COUNTRIES, loader, r -> true, r -> List.of(), r -> box);
+    assertThat(withFocus.generate(1, Set.of(), random))
+        .singleElement()
+        .isInstanceOfSatisfying(
+            RiverRound.class, round -> assertThat(round.focus()).isEqualTo(box));
   }
 
   @Test

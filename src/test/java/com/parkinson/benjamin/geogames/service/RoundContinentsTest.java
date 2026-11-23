@@ -113,7 +113,7 @@ class RoundContinentsTest {
     River river = new River("Q1", "Nile", List.of(), "Africa", null, null, null, List.of());
     Lake lake = new Lake("Q2", "Taupo", List.of(), "Oceania", null, List.of());
 
-    assertThat(continents.of(new RiverRound(GameType.RIVERS_BY_SHAPE, river, null)))
+    assertThat(continents.of(new RiverRound(GameType.RIVERS_BY_SHAPE, river, null, null)))
         .containsExactly("Africa");
     assertThat(continents.of(new LakeRound(GameType.LAKES_BY_SHAPE, lake)))
         .containsExactly("Oceania");
@@ -123,7 +123,8 @@ class RoundContinentsTest {
   void aRiverWithTheOldContinentNameIsAnError() {
     River river = new River("Q1", "Murray", List.of(), "Australia", null, null, null, List.of());
 
-    assertThatThrownBy(() -> continents.of(new RiverRound(GameType.RIVERS_BY_SHAPE, river, null)))
+    assertThatThrownBy(
+            () -> continents.of(new RiverRound(GameType.RIVERS_BY_SHAPE, river, null, null)))
         .isInstanceOf(IllegalArgumentException.class);
   }
 

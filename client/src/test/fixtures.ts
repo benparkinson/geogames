@@ -107,7 +107,7 @@ export function makeRiverData(): River {
 
 /** The data of a round of any river game. */
 export function makeRiverRoundData(overrides: Partial<RiverRound> = {}): RiverRound {
-  return { river: makeRiverData(), countries: [], ...overrides };
+  return { river: makeRiverData(), countries: [], focus: null, ...overrides };
 }
 
 /** A square lake in Russia. */

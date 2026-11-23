@@ -108,8 +108,8 @@ public class CountryPairRoundGenerator implements RoundGenerator {
         sharedBorder,
         Math.round(neighbour.km()),
         withNeighbours ? surroundings(first, second) : List.of(),
-        union(first.focus(), second.focus()),
-        boundsOf(sharedBorder));
+        first.focus().union(second.focus()),
+        Bounds.of(sharedBorder));
   }
 
   /** The first country's lines for the second, copied out of its land borders. */
@@ -138,29 +138,5 @@ public class CountryPairRoundGenerator implements RoundGenerator {
       }
     }
     return List.copyOf(byName.values());
-  }
-
-  private static Bounds union(Bounds a, Bounds b) {
-    return new Bounds(
-        Math.min(a.west(), b.west()),
-        Math.min(a.south(), b.south()),
-        Math.max(a.east(), b.east()),
-        Math.max(a.north(), b.north()));
-  }
-
-  /** The box round every position of a MultiLineString. */
-  private static Bounds boundsOf(GeoData lines) {
-    // west, south, east, north
-    double[] box = {Double.MAX_VALUE, Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
-    lines
-        .geometry()
-        .forEachPosition(
-            (lon, lat) -> {
-              box[0] = Math.min(box[0], lon);
-              box[1] = Math.min(box[1], lat);
-              box[2] = Math.max(box[2], lon);
-              box[3] = Math.max(box[3], lat);
-            });
-    return new Bounds(box[0], box[1], box[2], box[3]);
   }
 }

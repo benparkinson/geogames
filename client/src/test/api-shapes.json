@@ -1116,6 +1116,12 @@
             "name" : "string"
           }
         },
+        "focus" : {
+          "east" : "number",
+          "north" : "number",
+          "south" : "number",
+          "west" : "number"
+        },
         "gameType" : "string",
         "river" : {
           "additionalNames" : {
@@ -1198,6 +1204,7 @@
         "countries" : {
           "array" : "empty"
         },
+        "focus" : "null",
         "gameType" : "string",
         "river" : {
           "additionalNames" : {

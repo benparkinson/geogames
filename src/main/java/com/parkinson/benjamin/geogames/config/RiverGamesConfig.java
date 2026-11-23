@@ -1,6 +1,8 @@
 package com.parkinson.benjamin.geogames.config;
 
 import com.parkinson.benjamin.geogames.helper.RiverCountriesEligibility;
+import com.parkinson.benjamin.geogames.helper.RiverFocus;
+import com.parkinson.benjamin.geogames.model.Bounds;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.CountryShapeService;
 import com.parkinson.benjamin.geogames.service.RiverLoaderService;
@@ -20,7 +22,7 @@ public class RiverGamesConfig {
   @Bean
   RoundGenerator riversByShape(RiverLoaderService rivers) {
     return new RiverRoundGenerator(
-        GameType.RIVERS_BY_SHAPE, rivers, river -> true, river -> List.of());
+        GameType.RIVERS_BY_SHAPE, rivers, river -> true, river -> List.of(), river -> null);
   }
 
   /** Only rivers through enough countries to name them: see {@link RiverCountriesEligibility}. */
@@ -30,6 +32,10 @@ public class RiverGamesConfig {
         GameType.RIVERS_BY_COUNTRIES,
         rivers,
         RiverCountriesEligibility.riverCountries(),
-        river -> river.countries().stream().map(shapes::loadDisplayCountry).toList());
+        river -> river.countries().stream().map(shapes::loadDisplayCountry).toList(),
+        river ->
+            RiverFocus.of(
+                Bounds.of(river.geoData()),
+                river.countries().stream().map(name -> shapes.loadShape(name).focus()).toList()));
   }
 }
