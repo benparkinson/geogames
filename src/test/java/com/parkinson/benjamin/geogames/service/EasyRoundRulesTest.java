@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
-import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class EasyRoundRulesTest {
   private static KnownPlaceNames namesOfTwelveCountries() {
     CountryNameService countries = mock(CountryNameService.class);
     when(countries.loadCountryNames())
-        .thenReturn(COUNTRIES.stream().map(n -> new CountryName(n, List.of(), 0, 0)).toList());
+        .thenReturn(COUNTRIES.stream().map(n -> new LocatedPlaceName(n, List.of(), 0, 0)).toList());
     return new KnownPlaceNames(
         countries, mock(RiverLoaderService.class), mock(LakeLoaderService.class));
   }

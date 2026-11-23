@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.service;
 
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.helper.RiverPosition;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import java.util.Comparator;
 import java.util.List;
@@ -22,12 +23,18 @@ public class RiverLoaderService {
     return reader.readAll("classpath*:/processed/rivers/*.json", River.class);
   }
 
-  /** The names and aliases of every river, sorted by name, for autocomplete and spell checking. */
+  /** The names, aliases and positions of every river, sorted by name, for autocomplete, spell checking
+   * and distance clues. */
   @Cacheable("riverNames")
-  public List<PlaceName> loadRiverNames() {
+  public List<LocatedPlaceName> loadRiverNames() {
     return loadRivers().stream()
-        .map(river -> PlaceName.of(river.name(), river.additionalNames()))
-        .sorted(Comparator.comparing(PlaceName::name))
+        .map(
+            river -> {
+              double[] position = RiverPosition.of(river.geoData());
+              return LocatedPlaceName.of(
+                  river.name(), river.additionalNames(), position[0], position[1]);
+            })
+        .sorted(Comparator.comparing(LocatedPlaceName::name))
         .toList();
   }
 }

@@ -29,12 +29,11 @@ import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
-import com.parkinson.benjamin.geogames.model.CountryName;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
-import com.parkinson.benjamin.geogames.model.PlaceName;
+import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
 import com.parkinson.benjamin.geogames.model.River;
 import com.parkinson.benjamin.geogames.model.RiverRound;
 import com.parkinson.benjamin.geogames.model.Scoring;
@@ -114,21 +113,22 @@ class GameServiceTest {
     when(countries.loadCountryNames())
         .thenReturn(
             List.of(
-                new CountryName("France", List.of("République française"), 0, 0),
-                new CountryName("Germany", List.of("Deutschland"), 0, 0),
-                new CountryName("Italy", List.of(), 0, 0)));
+                new LocatedPlaceName("France", List.of("République française"), 0, 0),
+                new LocatedPlaceName("Germany", List.of("Deutschland"), 0, 0),
+                new LocatedPlaceName("Italy", List.of(), 0, 0)));
     RiverLoaderService rivers = mock(RiverLoaderService.class);
-    when(rivers.loadRiverNames()).thenReturn(List.of(new PlaceName("Rhine", List.of("Rhein"))));
+    when(rivers.loadRiverNames())
+        .thenReturn(List.of(new LocatedPlaceName("Rhine", List.of("Rhein"), 1.5, 2.5)));
     LakeLoaderService lakes = mock(LakeLoaderService.class);
     when(lakes.loadLakeNames())
         .thenReturn(
             List.of(
-                new PlaceName("Garda", List.of()),
-                new PlaceName("Como", List.of()),
-                new PlaceName("Maggiore", List.of()),
-                new PlaceName("Lugano", List.of()),
-                new PlaceName("Iseo", List.of()),
-                new PlaceName("Orta", List.of())));
+                new LocatedPlaceName("Garda", List.of(), 0, 0),
+                new LocatedPlaceName("Como", List.of(), 0, 0),
+                new LocatedPlaceName("Maggiore", List.of(), 0, 0),
+                new LocatedPlaceName("Lugano", List.of(), 0, 0),
+                new LocatedPlaceName("Iseo", List.of(), 0, 0),
+                new LocatedPlaceName("Orta", List.of(), 0, 0)));
     return new KnownPlaceNames(countries, rivers, lakes);
   }
 

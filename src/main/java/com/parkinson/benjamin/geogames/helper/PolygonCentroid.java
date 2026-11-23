@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The position of a country for distance clues: the area-weighted centroid of the outer ring of its
+ * The position of a country or lake for distance clues: the area-weighted centroid of the outer ring of its
  * largest polygon part. Using only the largest part keeps France in Europe rather than pulling it
  * towards French Guiana. The centroid of a crescent-shaped country can fall outside it, which does
  * not matter for a clue measured in hundreds of kilometres.
  */
-public final class CountryCentroid {
+public final class PolygonCentroid {
 
-  private CountryCentroid() {}
+  private PolygonCentroid() {}
 
   /**
    * @param outline a Polygon or MultiPolygon
