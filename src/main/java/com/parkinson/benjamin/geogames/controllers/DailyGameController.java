@@ -5,6 +5,8 @@ import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.service.daily.DailyChallengeService;
+import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
@@ -23,14 +25,18 @@ public class DailyGameController {
 
   private final DailyChallengeService dailyChallengeService;
 
-  public DailyGameController(DailyChallengeService dailyChallengeService) {
+  private final GameCreationGuard guard;
+
+  public DailyGameController(DailyChallengeService dailyChallengeService, GameCreationGuard guard) {
     this.dailyChallengeService = dailyChallengeService;
+    this.guard = guard;
   }
 
   /** A new game from the daily challenge's pinned rounds. The body may be {@code {}}. */
   @PostMapping("/daily-games")
   public ResponseEntity<DailyGameResponse> createDailyGame(
-      @RequestBody(required = false) DailyGameRequest request) {
+      @RequestBody(required = false) DailyGameRequest request, HttpServletRequest httpRequest) {
+    guard.check(httpRequest);
     Optional<LocalDate> date = Optional.empty();
     if (request != null && request.date() != null) {
       date = Optional.of(parseDate(request.date()));
