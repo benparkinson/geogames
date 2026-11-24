@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { compassPoint, formatKm } from "./distance";
 import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
 import { GuessRow, guessListRows } from "./guessRows";
@@ -20,6 +20,14 @@ export default function GuessList({
   const rows = guessListRows(state, allAnswers);
   // Rows already there on mount (a reload, a finished round) must not play the found animation.
   const [rowsAtMount] = useState(rows.length);
+  const rowsRef = useRef<HTMLOListElement>(null);
+  // Keep the newest guess in view when the list is long enough to scroll.
+  useEffect(() => {
+    const list = rowsRef.current;
+    if (list) {
+      list.scrollTop = list.scrollHeight;
+    }
+  }, [rows.length]);
   // With one answer there is nothing to count until a guess is made.
   if (rows.length === 0 && answerCount === 1) {
     return <></>;
@@ -35,7 +43,7 @@ export default function GuessList({
         </div>
       )}
       {rows.length > 0 && (
-        <ol className="guess-list__rows">
+        <ol className="guess-list__rows" ref={rowsRef}>
           {rows.map((row, i) => (
             <li
               key={i}

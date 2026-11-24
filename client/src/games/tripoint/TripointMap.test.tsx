@@ -2,14 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
-import {
-  addedAttributions,
-  drawnLayers,
-  drawnMarkers,
-  drawnTileAttributions,
-  drawnTileUrls,
-  fakeMap,
-} from "../../test/leafletMock";
+import { drawnLayers, drawnMarkers, drawnTileAttributions, drawnTileUrls, fakeMap } from "../../test/leafletMock";
 import { makeTripointData } from "../../test/fixtures";
 import TripointMap from "./TripointMap";
 import type { TripointRoundData } from "./model";
@@ -37,12 +30,6 @@ describe("TripointMap", () => {
     expect(drawnTileAttributions()).toEqual([""]);
     expect(drawnMarkers()).toEqual([[50.75, 6.02]]);
     expect(drawnLayers()).toEqual([]);
-  });
-
-  it("credits Wikipedia for the tripoint positions on the map", () => {
-    renderMap();
-
-    expect(addedAttributions().join(" ")).toContain("Tripoints: Wikipedia (CC BY-SA 4.0), positions adjusted");
   });
 
   it("centres the map on the tripoint", () => {

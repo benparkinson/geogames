@@ -12,6 +12,18 @@ function renderList(state: GuessState, answerCount = 3, allAnswers: string[] = [
 }
 
 describe("GuessList", () => {
+  it("scrolls to the newest guess when one is added", () => {
+    const one = stateOf([{ text: "Peru", answer: null }]);
+    const { rerender } = renderList(one);
+    const list = screen.getByRole("list");
+    Object.defineProperty(list, "scrollHeight", { configurable: true, value: 300 });
+
+    const two = stateOf([...one.guesses, { text: "Chile", answer: null }]);
+    rerender(<GuessList state={two} answerCount={3} allAnswers={[]} showClues />);
+
+    expect(list.scrollTop).toBe(300);
+  });
+
   it("counts the answers found", () => {
     renderList(stateOf([{ text: "france", answer: "France" }]));
 
