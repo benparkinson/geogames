@@ -5,6 +5,7 @@ import GameCardGrid from "./GameCardGrid";
 import KofiBadge from "./KofiBadge";
 import SiteFooter from "./SiteFooter";
 import SiteHeader from "./SiteHeader";
+import { SiteHeading } from "./SiteTitle";
 import StartPanel from "./StartPanel";
 
 function HomePage(): React.JSX.Element {
@@ -13,7 +14,7 @@ function HomePage(): React.JSX.Element {
 
   return (
     <div className="home page-bg">
-      <SiteHeader title={<h1 className="gg-site-header__title">GeoGauntlet</h1>} />
+      <SiteHeader title={<SiteHeading />} />
       <div className="home-layout">
         <section className="home-daily">
           <DailyCard />

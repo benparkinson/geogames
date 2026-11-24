@@ -784,17 +784,23 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   }
 }
 
-/* ---- Home link ---- */
-.gg-home-link {
-  font-weight: var(--gg-font-weight-semibold);
-  text-decoration: none;
+/* ---- Site title: the icon and name in every header ---- */
+.gg-site-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-2);
   white-space: nowrap;
 }
-.gg-home-link__name--collapsible {
+.gg-site-title__logo {
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+}
+.gg-site-title__name--collapsible {
   display: none;
 }
 @media (min-width: 576px) {
-  .gg-home-link__name--collapsible {
+  .gg-site-title__name--collapsible {
     display: inline;
   }
 }

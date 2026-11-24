@@ -82,6 +82,14 @@ describe("GameTopBar", () => {
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
   });
 
+  it("shows the site icon and name as the home link, like every other header", () => {
+    renderBar();
+
+    const home = screen.getByRole("link", { name: "Home" });
+    expect(home).toHaveTextContent("GeoGauntlet");
+    expect(home.querySelector("img")).toHaveAttribute("src", "/logo.png");
+  });
+
   it("draws each round's outcome from the progress it is given", () => {
     const round = makeRoundProps();
     const outcomes = round.roundAnswerStates.map(() => null) as LiveProgress["outcomes"];
