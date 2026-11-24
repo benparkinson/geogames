@@ -7,6 +7,7 @@ body {
 
 code {
   font-family: var(--gg-font-mono);
+  font-weight: var(--gg-font-weight-mono);
 }
 
 @keyframes shake {
@@ -158,6 +159,7 @@ code {
   color: var(--gg-color-text);
   font-family: var(--gg-font-mono);
   font-size: 0.7rem;
+  font-weight: var(--gg-font-weight-mono);
   line-height: 1;
 }
 .round-dot svg {
@@ -247,7 +249,7 @@ code {
   background: var(--gg-color-missed);
 }
 .guesses-left__text {
-  color: var(--gg-color-text-muted);
+  color: var(--gg-color-text);
 }
 .guesses-left[data-last] .guesses-left__text {
   color: var(--gg-color-warning-text);

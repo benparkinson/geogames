@@ -1,3 +1,5 @@
+import type { DistanceUnit } from "../../settings/units";
+
 export interface LatLon {
   lat: number;
   lon: number;
@@ -50,7 +52,10 @@ export function compassPoint(bearing: number): CompassPoint {
   return COMPASS_POINTS[sector];
 }
 
-/** A distance rounded to the nearest 10 km, with thousands separators: `1,240`. */
-export function formatKm(km: number): string {
-  return (Math.round(km / 10) * 10).toLocaleString("en-GB");
+const KM_PER_MILE = 1.609344;
+
+/** A distance in km shown in the chosen unit, rounded to the nearest 10 of that unit: `1,240 km` or `770 mi`. */
+export function formatDistance(km: number, unit: DistanceUnit): string {
+  const value = unit === "mi" ? km / KM_PER_MILE : km;
+  return `${(Math.round(value / 10) * 10).toLocaleString("en-GB")} ${unit}`;
 }

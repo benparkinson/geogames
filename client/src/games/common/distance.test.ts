@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bearingDegrees, compassPoint, distanceKm, formatKm } from "./distance";
+import { bearingDegrees, compassPoint, distanceKm, formatDistance } from "./distance";
 
 const london = { lat: 51.51, lon: -0.13 };
 const paris = { lat: 48.86, lon: 2.35 };
@@ -70,10 +70,12 @@ describe("compassPoint", () => {
   });
 });
 
-describe("formatKm", () => {
-  it("rounds to 10 km with a thousands separator", () => {
-    expect(formatKm(1236)).toBe("1,240");
-    expect(formatKm(344)).toBe("340");
-    expect(formatKm(4)).toBe("0");
+describe("formatDistance", () => {
+  it("rounds to 10 of the unit with a thousands separator", () => {
+    expect(formatDistance(1236, "km")).toBe("1,240 km");
+    expect(formatDistance(344, "km")).toBe("340 km");
+    expect(formatDistance(1236, "mi")).toBe("770 mi");
+    expect(formatDistance(4, "mi")).toBe("0 mi");
+    expect(formatDistance(16093, "mi")).toBe("10,000 mi");
   });
 });

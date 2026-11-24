@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { resetDistanceUnitForTests } from "../../settings/units";
 import GuessList from "./GuessList";
 import type { Guess, GuessState } from "./guessReducer";
 
@@ -10,6 +11,11 @@ function stateOf(guesses: Guess[], overrides: Partial<GuessState> = {}): GuessSt
 function renderList(state: GuessState, answerCount = 3, allAnswers: string[] = [], showClues = true) {
   return render(<GuessList state={state} answerCount={answerCount} allAnswers={allAnswers} showClues={showClues} />);
 }
+
+beforeEach(() => {
+  resetDistanceUnitForTests();
+  localStorage.clear();
+});
 
 describe("GuessList", () => {
   it("scrolls to the newest guess when one is added", () => {
@@ -72,6 +78,15 @@ describe("GuessList", () => {
     expect(screen.getByTestId("wrong-guess")).not.toHaveTextContent(/km/);
   });
 
+  it("shows the distance in miles when chosen", () => {
+    localStorage.setItem("gg-units", "mi");
+    renderList(stateOf([{ text: "France", answer: null, clue: { km: 1236, bearing: 90 } }]));
+
+    expect(screen.getByTestId("wrong-guess")).toHaveTextContent(/770 mi/);
+    expect(screen.getByText("770 mi east")).toBeInTheDocument();
+    expect(screen.getByTestId("wrong-guess")).not.toHaveTextContent(/km/);
+  });
+
   it("shows the answers that weren't found as missed once revealed", () => {
     renderList(stateOf([{ text: "italy", answer: "Italy" }], { gaveUp: true, over: true }), 3, [
       "France",
@@ -87,5 +102,33 @@ describe("GuessList", () => {
     const { container } = renderList(stateOf([]), 1, ["France"]);
 
     expect(container).toBeEmptyDOMElement();
+  });
+
+  describe("found animation", () => {
+    const found: Guess = { text: "france", answer: "France" };
+    const wrong: Guess = { text: "Peru", answer: null };
+
+    it("does not mark a found row present on mount", () => {
+      renderList(stateOf([found]));
+
+      expect(screen.getAllByRole("listitem")[0]).not.toHaveAttribute("data-fresh");
+    });
+
+    it("marks only a found row added after mount", () => {
+      const { rerender } = renderList(stateOf([found]));
+      const next = stateOf([found, { text: "spain", answer: "Spain" }]);
+      rerender(<GuessList state={next} answerCount={3} allAnswers={[]} showClues />);
+
+      const rows = screen.getAllByRole("listitem");
+      expect(rows[0]).not.toHaveAttribute("data-fresh");
+      expect(rows[1]).toHaveAttribute("data-fresh", "true");
+    });
+
+    it("does not mark a wrong guess added after mount", () => {
+      const { rerender } = renderList(stateOf([found]));
+      rerender(<GuessList state={stateOf([found, wrong])} answerCount={3} allAnswers={[]} showClues />);
+
+      expect(screen.getAllByRole("listitem")[1]).not.toHaveAttribute("data-fresh");
+    });
   });
 });
