@@ -58,7 +58,13 @@ export default function RoundActions({
         </Button>
       </span>
       <Button variant="danger" onClick={handleRevealClick}>
-        <RevealIcon aria-hidden="true" /> {confirmReveal ? "Tap again to give up" : "Give up this round"}
+        <RevealIcon aria-hidden="true" />{" "}
+        {/* Both labels share one grid cell and only one shows, so the button is always as wide as the longer one.
+            Widening on the first tap could wrap it onto a new line, out of the panel's scrolled view on a phone. */}
+        <span className="round-actions__reveal-label">
+          <span aria-hidden={confirmReveal ? true : undefined}>Give up this round</span>
+          <span aria-hidden={confirmReveal ? undefined : true}>Tap again to give up</span>
+        </span>
       </Button>
     </div>
   );

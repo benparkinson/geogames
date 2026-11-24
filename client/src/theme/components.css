@@ -1120,6 +1120,16 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   flex-wrap: wrap;
   gap: var(--gg-space-2);
 }
+/* Both reveal labels sit in one cell, so the button keeps the longer one's width; the hidden one is aria-hidden. */
+.round-actions__reveal-label {
+  display: inline-grid;
+}
+.round-actions__reveal-label > span {
+  grid-area: 1 / 1;
+}
+.round-actions__reveal-label > span[aria-hidden="true"] {
+  visibility: hidden;
+}
 .round-result {
   margin-bottom: 0;
 }
