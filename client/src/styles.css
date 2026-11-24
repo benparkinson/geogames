@@ -92,6 +92,10 @@ code {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
+/* Leaflet sets its own Helvetica on the map's labels and credits. */
+.leaflet-container {
+  font-family: var(--gg-font-sans);
+}
 .game-map .leaflet-container {
   position: absolute;
   inset: 0;

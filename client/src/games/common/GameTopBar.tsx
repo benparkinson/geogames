@@ -1,6 +1,6 @@
 import { Button } from "../../ui";
 import { NextIcon } from "../../ui/icons";
-import HomeLink from "../../components/HomeLink";
+import SiteTitle from "../../components/SiteTitle";
 import { Round } from "./Model";
 import RoundProgress from "./RoundProgress";
 import { DIFFICULTY_LABEL } from "./difficultyLabel";
@@ -19,7 +19,7 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
   return (
     <div className="top-bar">
       <div className="top-bar__start">
-        <HomeLink hideTextOnMobile />
+        <SiteTitle collapsible />
       </div>
       <div className="top-bar__title">
         <span className="top-bar__game">{title}</span>
