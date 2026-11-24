@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The box River Countries opens its map on: the river and every country's main outline, except
+ * The box Follow the River opens its map on: the river and every country's main outline, except
  * that a huge country is cut back so it doesn't shrink the others to dots.
  */
 public final class RiverFocus {

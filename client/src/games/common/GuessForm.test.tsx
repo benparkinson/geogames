@@ -59,17 +59,11 @@ describe("GuessForm feedback", () => {
     expect(input()).toHaveValue("");
   });
 
-  it("counts the answers still to find after a correct guess", async () => {
+  it("shows no message after a correct guess", async () => {
     await submitting({ kind: "correct", remaining: 2 });
 
-    expect(screen.getByText("Correct! 2 to go.")).toBeInTheDocument();
+    expect(screen.queryByText(/Correct/)).not.toBeInTheDocument();
     expect(input()).toHaveValue("");
-  });
-
-  it("just says correct when nothing remains", async () => {
-    await submitting({ kind: "correct", remaining: 0 });
-
-    expect(screen.getByText("Correct!")).toBeInTheDocument();
   });
 
   it("shows no feedback for a guess made after the round is over", async () => {

@@ -48,7 +48,6 @@ test("an alias of an answer is accepted as that answer", async ({ page, api }) =
 
   await expect(answerBox(page)).toBeVisible();
   await guess(page, found!.alias);
-  await expect(page.getByText(/^Correct! 2 to go\.$/)).toBeVisible();
   await expect(page.getByRole("group", { name: "Answers: 1 of 3 found" })).toContainText(
     found!.canonical,
   );
@@ -71,7 +70,7 @@ test("a wrong country in a country game says how far and which way the answer is
   page,
   api,
 }) => {
-  const id = await startGame(page, "Country Gaps", 3);
+  const id = await startGame(page, "Missing Country", 3);
   await expect(answerBox(page)).toBeVisible();
 
   await guess(page, await wrongCountry(api, id));
@@ -86,11 +85,11 @@ test("Hard difficulty, chosen on the home page, hides the distance clues", async
   await page.goto("/");
   await page
     .getByRole("button")
-    .filter({ has: page.getByText("Country Gaps", { exact: true }) })
+    .filter({ has: page.getByText("Missing Country", { exact: true }) })
     .click();
   await page.getByRole("group", { name: "Difficulty" }).getByText("Hard", { exact: true }).click();
 
-  const id = await startGame(page, "Country Gaps", 3);
+  const id = await startGame(page, "Missing Country", 3);
   await expect(answerBox(page)).toBeVisible();
   const wrong = await wrongCountry(api, id);
   const saved = page.waitForResponse(
@@ -119,11 +118,11 @@ test("Easy difficulty shows the continent and gives more guesses", async ({ page
   await page.goto("/");
   await page
     .getByRole("button")
-    .filter({ has: page.getByText("Country Gaps", { exact: true }) })
+    .filter({ has: page.getByText("Missing Country", { exact: true }) })
     .click();
   await page.getByRole("group", { name: "Difficulty" }).getByText("Easy", { exact: true }).click();
 
-  const id = await startGame(page, "Country Gaps", 3);
+  const id = await startGame(page, "Missing Country", 3);
   await expect(answerBox(page)).toBeVisible();
 
   // The continent is there from the start, with no hint taken, and the lives are increased.

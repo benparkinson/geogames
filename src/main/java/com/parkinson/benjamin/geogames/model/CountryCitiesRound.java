@@ -3,7 +3,7 @@ package com.parkinson.benjamin.geogames.model;
 import java.util.List;
 
 /**
- * The data for one round of Country Cities.
+ * The data for one round of City Map.
  *
  * @param country the country's shape, from the shapes the app already holds
  * @param cities its largest cities and its capital, largest first

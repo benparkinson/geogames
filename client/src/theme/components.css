@@ -1021,7 +1021,23 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 
 /* The guess list: a ruled list. */
 .guess-list {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
   margin-bottom: var(--gg-space-2);
+}
+.round-panel__body {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.round-panel__body > * {
+  flex-shrink: 0;
+}
+.round-panel__body > .guess-list {
+  flex-shrink: 1;
 }
 .guess-list__head {
   display: flex;
@@ -1037,7 +1053,8 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   font-weight: var(--gg-font-weight-mono);
 }
 .guess-list__rows {
-  max-height: 30dvh;
+  flex: 0 1 auto;
+  min-height: 2rem;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -1146,6 +1163,16 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gg-space-2);
+}
+/* The two buttons share the row, so it stays on one line on a narrow phone. */
+.round-actions > span {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.round-actions button {
+  flex: 1 1 0;
+  min-width: 0;
 }
 /* Both reveal labels sit in one cell, so the button keeps the longer one's width; the hidden one is aria-hidden. */
 .round-actions__reveal-label {

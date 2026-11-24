@@ -29,15 +29,15 @@ describe("River Shapes", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("Its longest stretch is in Romania")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("offers two hints in Easy, where the continent is already shown, so the first is the countries", async () => {
@@ -55,11 +55,11 @@ describe("River Shapes", () => {
     // The continent is shown from the start, as the first line of the list, and not as a hint.
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("Its longest stretch is in Romania")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
     expect(screen.getAllByText(/^Continent/)).toHaveLength(1);
   });
 

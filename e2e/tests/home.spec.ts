@@ -4,12 +4,12 @@ import { expect, test } from "../fixtures";
 // option. Adding a game there means adding its title here.
 const GAME_TITLES = [
   "Tripoints",
-  "Country Cities",
+  "City Map",
   "Merged Countries",
-  "Country Gaps",
-  "River Countries",
+  "Missing Country",
+  "Follow the River",
   "Land Borders",
-  "Country Rivers",
+  "Waterways",
   "Coastlines",
   "River Shapes",
   "Lake Shapes",

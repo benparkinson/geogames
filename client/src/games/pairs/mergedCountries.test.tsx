@@ -43,14 +43,14 @@ describe("Merged Countries", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("The surrounding countries are on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("The border between them is on the map")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Their names start with “B” and “N”")).toBeInTheDocument();
   });
 

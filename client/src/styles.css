@@ -53,7 +53,8 @@ code {
   display: grid;
   height: 100vh;
   height: 100dvh;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  --gg-map-min: 45%;
+  grid-template-rows: auto minmax(var(--gg-map-min), 1fr) minmax(0, auto);
   grid-template-areas: "top" "map" "panel";
   background: var(--gg-color-page-bg);
 }
@@ -68,23 +69,40 @@ code {
 .game-panel {
   grid-area: panel;
   background: var(--gg-color-panel-bg);
-  max-height: 50dvh;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   padding: 0.75rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
   border-top-left-radius: var(--gg-radius-xl);
   border-top-right-radius: var(--gg-radius-xl);
   box-shadow: var(--gg-shadow-panel);
 }
-/* The keyboard is open: the map gets every pixel the panel doesn't need. */
+.game-panel > * {
+  flex-shrink: 0;
+}
+.game-panel > .round-panel__body {
+  flex-shrink: 1;
+}
+/* The input and the continue button stay in view when the panel scrolls. */
+.game-panel .gg-guess-form,
+.game-panel .round-result__continue {
+  position: sticky;
+  bottom: 0;
+  background: var(--gg-color-panel-bg);
+}
+/* The keyboard is open: the map keeps a smaller share, and the panel drops what can't be used while typing. */
+.game-screen--keyboard {
+  --gg-map-min: 35%;
+}
 .game-screen--keyboard .game-panel {
   padding: 0.5rem 1rem 0.5rem;
-  max-height: 45%;
+}
+.game-screen--keyboard .top-bar__rounds,
+.game-screen--keyboard .round-actions {
+  display: none;
 }
 .game-screen--keyboard .round-brief {
   margin-bottom: 0.25rem;
-}
-.game-screen--keyboard .guess-list__rows {
-  max-height: 5rem;
 }
 .game-screen--keyboard .round-status {
   display: none;

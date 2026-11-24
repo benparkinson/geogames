@@ -202,7 +202,27 @@ public class ProcessedDataIT {
         new RiverLoaderService(reader)
             .loadRivers().stream().filter(RiverCountriesEligibility.riverCountries()).count();
 
-    assertTrue(eligible >= 10, "only " + eligible + " rivers are eligible for River Countries");
+    assertTrue(eligible >= 10, "only " + eligible + " rivers are eligible for Follow the River");
+  }
+
+  @Test
+  public void noTwoRiverCountriesRoundsShareTheirCountries() {
+    var groups =
+        new RiverLoaderService(reader)
+            .loadRivers().stream()
+                .filter(RiverCountriesEligibility.riverCountries())
+                .collect(
+                    Collectors.groupingBy(
+                        river -> Set.copyOf(river.countries()),
+                        Collectors.mapping(River::name, Collectors.toList())));
+
+    var clashes = groups.entrySet().stream().filter(group -> group.getValue().size() > 1).toList();
+
+    assertTrue(
+        clashes.isEmpty(),
+        "River Countries rivers share their countries (add the less known one to"
+            + " RiverCountriesEligibility.EXCLUDED): "
+            + clashes);
   }
 
   @Test
@@ -456,7 +476,7 @@ public class ProcessedDataIT {
     }
   }
 
-  // Natural Earth marks no capital for these, so Hint 1 of Country Cities would have nothing to
+  // Natural Earth marks no capital for these, so Hint 1 of City Map would have nothing to
   // highlight. None of them is eligible for the game today; the test says so if one becomes so.
   private static final Set<String> NO_CAPITAL_EXCEPTIONS = Set.of();
 

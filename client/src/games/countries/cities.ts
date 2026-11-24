@@ -8,7 +8,7 @@ import { CitiesIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_CITIES",
-  title: "Country Cities",
+  title: "City Map",
   singular: "Country by cities",
   description: "Name a country from where its cities are.",
   Icon: CitiesIcon,

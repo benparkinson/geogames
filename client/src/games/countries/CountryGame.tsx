@@ -14,7 +14,7 @@ export interface CountryVariant<T extends HasCountry> {
 
 /**
  * Builds the game component for one variant of a game whose answer is a country: the country-shape
- * games, Country Cities and Country Rivers. The round data is anything with a `country`.
+ * games, City Map and Waterways. The round data is anything with a `country`.
  */
 export function makeCountryGame<T extends HasCountry>(variant: CountryVariant<T>) {
   function CountryGame(game: GameComponentProps<T>): React.JSX.Element {

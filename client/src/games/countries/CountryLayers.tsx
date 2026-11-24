@@ -90,7 +90,7 @@ export function AnswerOutline({
   );
 }
 
-/** The rivers of Country Rivers: the minor ones thin, the major ones over them in the clue line style. */
+/** The rivers of Waterways: the minor ones thin, the major ones over them in the clue line style. */
 export function RiverLines({
   major,
   minor,

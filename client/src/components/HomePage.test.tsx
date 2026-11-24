@@ -151,12 +151,12 @@ describe("HomePage choosing a game", () => {
     card(/Tripoints/).focus();
 
     const order = [
-      /Country Cities/,
+      /City Map/,
       /Merged Countries/,
-      /Country Gaps/,
-      /River Countries/,
+      /Missing Country/,
+      /Follow the River/,
       /Land Borders/,
-      /Country Rivers/,
+      /Waterways/,
       /Coastlines/,
       /Mixed/,
       /River Shapes/,
@@ -186,7 +186,7 @@ describe("HomePage choosing a game", () => {
 
     await user.keyboard("{ArrowDown}{Enter}");
 
-    expect(card(/Country Cities/)).toHaveAttribute("aria-expanded", "true");
+    expect(card(/City Map/)).toHaveAttribute("aria-expanded", "true");
   });
 
   it("puts the shape games in an extra difficult section", () => {
@@ -357,7 +357,7 @@ describe("HomePage difficulty", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const user = userEvent.setup();
     renderHome();
-    await user.click(card(/Country Gaps/));
+    await user.click(card(/Missing Country/));
 
     const group = screen.getByRole("group", { name: "Difficulty" });
     expect(within(group).getByRole("radio", { name: "Normal" })).toBeChecked();
@@ -403,7 +403,7 @@ describe("HomePage difficulty when starting", () => {
   }
 
   it("sends Hard for a game with clues", async () => {
-    expect((await startWith("hard", /Country Gaps/)).difficulty).toBe("HARD");
+    expect((await startWith("hard", /Missing Country/)).difficulty).toBe("HARD");
   });
 
   it("sends Hard for a Mixed game", async () => {
@@ -419,13 +419,13 @@ describe("HomePage difficulty when starting", () => {
   });
 
   it("sends Easy for a game with clues", async () => {
-    expect((await startWith("easy", /Country Gaps/)).difficulty).toBe("EASY");
+    expect((await startWith("easy", /Missing Country/)).difficulty).toBe("EASY");
   });
 
   it("treats an old Hard mode preference as Hard", async () => {
     localStorage.setItem("gg-hardcore", "on");
 
-    expect((await startWith(null, /Country Gaps/)).difficulty).toBe("HARD");
+    expect((await startWith(null, /Missing Country/)).difficulty).toBe("HARD");
   });
 });
 

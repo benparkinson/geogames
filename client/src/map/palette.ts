@@ -24,7 +24,7 @@ export const MAP_PALETTE = {
   sourcePin: "#1d5c63",
   /** Pin: where a river ends. */
   mouthPin: "#d9481c",
-  /** Pin: the country to find in Country Gaps. */
+  /** Pin: the country to find in Missing Country. */
   targetPin: "#1a1a1a",
   /** Pin: the tripoint. */
   tripointPin: "#d9481c",

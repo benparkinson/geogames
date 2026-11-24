@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
- * Makes the rounds of Country Rivers: the rivers inside a country. {@code generate} filters the
+ * Makes the rounds of Waterways: the rivers inside a country. {@code generate} filters the
  * small index, so it reads no geometry until a country is picked.
  */
 @Service

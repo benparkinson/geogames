@@ -237,7 +237,7 @@ Commit the updated `client/src/test/api-shapes.json`, and add `hardMode: false` 
 **Browser (`e2e/tests/guessing.spec.ts`)**
 
 Extend the Hard mode test, or add one next to it:
-- Start Country Gaps with Hard mode on, make a wrong guess, and see no `km`.
+- Start Missing Country with Hard mode on, make a wrong guess, and see no `km`.
 - No `group` named "Hard mode" is visible during the round.
 - `reloadGamePage(page, id)`: the wrong guess is restored and still has no `km`.
 - Clear `gg-hardcore` from localStorage and reload: still no `km`. This proves the server decides.

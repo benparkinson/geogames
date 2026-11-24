@@ -66,7 +66,7 @@ describe("GAME_MODULES", () => {
   });
 });
 
-describe("Country Cities", () => {
+describe("City Map", () => {
   it("lists the name of the country", () => {
     expect(
       findGameModule("COUNTRIES_BY_CITIES")
@@ -76,7 +76,7 @@ describe("Country Cities", () => {
   });
 });
 
-describe("Country Rivers", () => {
+describe("Waterways", () => {
   it("lists the name of the country", () => {
     expect(
       findGameModule("COUNTRIES_BY_RIVERS")

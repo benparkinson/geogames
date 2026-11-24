@@ -22,7 +22,7 @@ function renderGame(data: CountryRiversRound = makeCountryRiversRoundData(), sub
   return submitAnswer;
 }
 
-describe("Country Rivers", () => {
+describe("Waterways", () => {
   it("is the COUNTRIES_BY_RIVERS game", () => {
     expect(countryRivers.type).toBe("COUNTRIES_BY_RIVERS");
     expect(countryRivers.extraDifficult).toBeUndefined();
@@ -39,16 +39,16 @@ describe("Country Rivers", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("Its longest river is the Rhine")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "2");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("gives the length of its name first when the country has no named river, and says it has no coastline", async () => {
@@ -60,9 +60,9 @@ describe("Country Rivers", () => {
       }),
     );
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("Its name has 11 letters")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
 
     expect(screen.getByText("It has no coastline")).toBeInTheDocument();
   });

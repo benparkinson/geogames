@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
-/** Makes the rounds of Country Cities: a country's cities as dots. */
+/** Makes the rounds of City Map: a country's cities as dots. */
 @Service
 public class CountryCitiesRoundGenerator extends SubjectRoundGenerator<CountryCities> {
 

@@ -29,10 +29,10 @@ function renderGame() {
 
 const input = () => screen.getByLabelText("River name…");
 
-describe("River Countries", () => {
+describe("Follow the River", () => {
   it("is the RIVERS_BY_COUNTRIES game", () => {
     expect(countries.type).toBe("RIVERS_BY_COUNTRIES");
-    expect(countries.title).toBe("River Countries");
+    expect(countries.title).toBe("Follow the River");
     expect(countries.answers(makeRiverRoundData()).map((a) => a.name)).toEqual(["Danube"]);
   });
 
@@ -51,12 +51,12 @@ describe("River Countries", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("The start and end are marked on the map")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints-used", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 });

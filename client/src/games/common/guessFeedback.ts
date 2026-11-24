@@ -16,7 +16,8 @@ export function feedbackText(result: GuessResult, answerNoun: string): string | 
       // The round is over: RoundResult says so, and the feedback line is hidden.
       return null;
     case "correct":
-      return result.remaining > 0 ? `Correct! ${result.remaining} to go.` : "Correct!";
+      // The guess shows up in the found answers, so it needs no message.
+      return null;
     case "over":
       return null;
   }

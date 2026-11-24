@@ -55,7 +55,7 @@ export interface HasCountry {
   country: CountryShape;
 }
 
-/** One city, as Country Cities draws it. */
+/** One city, as City Map draws it. */
 export interface City {
   name: string;
   lon: number;
@@ -64,13 +64,13 @@ export interface City {
   capital: boolean;
 }
 
-/** The data of a round of Country Cities: the country and its largest cities, largest first. */
+/** The data of a round of City Map: the country and its largest cities, largest first. */
 export interface CountryCitiesRound extends HasCountry {
   cities: City[];
 }
 
 /**
- * The data of a round of Country Rivers: the rivers inside the country, clipped at its borders, and
+ * The data of a round of Waterways: the rivers inside the country, clipped at its borders, and
  * its lakes. `major` is the more important rivers, which the game draws thicker.
  */
 export interface CountryRiversRound extends HasCountry {
