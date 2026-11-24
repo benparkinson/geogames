@@ -93,6 +93,7 @@ label {
 pre,
 code {
   font-family: var(--gg-font-mono);
+  font-weight: var(--gg-font-weight-mono);
   font-size: 0.875em;
 }
 

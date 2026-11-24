@@ -280,7 +280,7 @@
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: var(--gg-font-weight-mono);
   line-height: 1;
   text-align: center;
   white-space: nowrap;
@@ -463,7 +463,8 @@
   bottom: -1.1rem;
   left: 50%;
   font-family: var(--gg-font-mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
+  font-weight: var(--gg-font-weight-mono);
   color: var(--gg-color-text-muted);
   transform: translateX(-50%);
 }
@@ -490,6 +491,7 @@
 /* ---- Numbers, dates and counts ---- */
 .gg-mono {
   font-family: var(--gg-font-mono);
+  font-weight: var(--gg-font-weight-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -968,12 +970,14 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .top-bar__score {
   font-family: var(--gg-font-mono);
+  font-weight: var(--gg-font-weight-mono-strong);
 }
 .top-bar__meta,
 .top-bar__score-label,
 .gg-btn.top-bar__results {
   font-family: var(--gg-font-mono);
-  font-size: var(--gg-font-size-sm);
+  font-size: var(--gg-font-size-mono-sm);
+  font-weight: var(--gg-font-weight-mono);
   line-height: inherit;
 }
 .top-bar__meta,
@@ -1026,7 +1030,8 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .guess-list__count,
 .guess-list__clue {
   font-family: var(--gg-font-mono);
-  font-size: var(--gg-font-size-sm);
+  font-size: var(--gg-font-size-mono-sm);
+  font-weight: var(--gg-font-weight-mono);
 }
 .guess-list__rows {
   max-height: 30dvh;
@@ -1080,7 +1085,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .round-status__points {
   margin-left: auto;
-  font-size: var(--gg-font-size-sm);
+  font-size: var(--gg-font-size-mono-sm);
 }
 .guesses-left {
   display: flex;
@@ -1089,7 +1094,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   gap: var(--gg-space-2);
 }
 .guesses-left__text {
-  font-size: var(--gg-font-size-sm);
+  font-size: var(--gg-font-size-mono-sm);
 }
 .gg-guess-form {
   display: flex;
@@ -1138,6 +1143,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .round-result__points {
   flex-shrink: 0;
+  font-weight: var(--gg-font-weight-mono-strong);
   font-size: var(--gg-font-size-h5);
 }
 .round-result__banner[data-outcome="firstGuess"],
@@ -1181,7 +1187,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .gg-summary__max {
   font-size: var(--gg-font-size-h5);
   font-stretch: 100%;
-  font-weight: 400;
+  font-weight: var(--gg-font-weight-mono);
 }
 .gg-summary__heading {
   margin-bottom: var(--gg-space-3);
@@ -1352,6 +1358,7 @@ button.gg-summary__row:focus-visible {
   border-top: 0;
   border-radius: 0;
   font-family: var(--gg-font-mono);
+  font-weight: var(--gg-font-weight-mono);
 }
 
 /* A page whose content (the daily ticket) draws its own border and padding. */

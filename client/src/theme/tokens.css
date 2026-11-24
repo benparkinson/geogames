@@ -25,7 +25,7 @@
   --gg-found: #1d5c63;
   --gg-marker: #d9481c;
   --gg-marker-text: #b23a14;
-  --gg-stone: #5c5c58;
+  --gg-stone: #4a4a46;
   --gg-cornflower-400: #72a4f2;
 
   /* ---- Semantic: surfaces and text ---- */
@@ -85,6 +85,11 @@
   --gg-font-weight-display: 700;
   --gg-font-weight-score: 800;
   --gg-font-mono: "IBM Plex Mono", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+  /* Plex Mono has thin strokes: it reads too faint at 400 beside Archivo, so it is never used below 500,
+     and its small text is a little larger than the sans small size. */
+  --gg-font-weight-mono: 500;
+  --gg-font-weight-mono-strong: 600;
+  --gg-font-size-mono-sm: 0.9em;
 
   /* ---- Shape ---- */
   --gg-radius-sm: 3px;
@@ -147,7 +152,7 @@
   --gg-dark-text-on-highlighter: #1a1a1a;
   --gg-found: #5bb8c0;
   --gg-marker-text: #ff8f66;
-  --gg-stone: #a8a8a2;
+  --gg-stone: #b8b8b2;
 
   --gg-color-page-bg: var(--gg-paper);
   --gg-color-panel-bg: var(--gg-dark-panel);
