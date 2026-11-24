@@ -242,7 +242,7 @@ describe("GameRoundPage playing", () => {
     renderPage();
     await screen.findByText(TRIPOINT_PROMPT);
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
 
     await waitFor(() => {
       const posts = callsTo(fetchMock).filter((c) => c.method === "POST");

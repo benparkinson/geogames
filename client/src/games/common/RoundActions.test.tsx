@@ -28,13 +28,13 @@ describe("RoundActions reveal", () => {
     const user = userEvent.setup();
     const { props } = renderActions();
 
-    await user.click(screen.getByRole("button", { name: /Give up this round/ }));
+    await user.click(screen.getByRole("button", { name: /^Give up$/ }));
     expect(props.onGiveUp).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: /Tap again to give up/ })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /Tap again to give up/ }));
     expect(props.onGiveUp).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /Give up this round/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Give up$/ })).toBeInTheDocument();
   });
 
   it("keeps both labels in the button, so asking for the second tap doesn't change its width", async () => {
@@ -42,10 +42,10 @@ describe("RoundActions reveal", () => {
     // of the panel's scrolled view on a narrow phone: the button seemed to vanish on the first tap.
     const user = userEvent.setup();
     renderActions();
-    const reveal = screen.getByRole("button", { name: /Give up this round/ });
+    const reveal = screen.getByRole("button", { name: /^Give up$/ });
     const labels = () => Array.from(reveal.querySelectorAll(".round-actions__reveal-label > span"));
 
-    expect(labels().map((label) => label.textContent)).toEqual(["Give up this round", "Tap again to give up"]);
+    expect(labels().map((label) => label.textContent)).toEqual(["Give up", "Tap again to give up"]);
     expect(labels().map((label) => label.getAttribute("aria-hidden"))).toEqual([null, "true"]);
 
     await user.click(reveal);
@@ -59,12 +59,12 @@ describe("RoundActions reveal", () => {
     vi.useFakeTimers();
     const { props } = renderActions();
 
-    fireEvent.click(screen.getByRole("button", { name: /Give up this round/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Give up$/ }));
     act(() => {
       vi.advanceTimersByTime(3000);
     });
 
-    expect(screen.getByRole("button", { name: /Give up this round/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Give up$/ })).toBeInTheDocument();
     expect(props.onGiveUp).not.toHaveBeenCalled();
   });
 
@@ -73,7 +73,7 @@ describe("RoundActions reveal", () => {
     const errors = vi.spyOn(console, "error").mockImplementation(() => {});
     const { unmount } = renderActions();
 
-    fireEvent.click(screen.getByRole("button", { name: /Give up this round/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Give up$/ }));
     unmount();
 
     expect(() => vi.advanceTimersByTime(5000)).not.toThrow();
@@ -87,7 +87,7 @@ describe("RoundActions hints", () => {
   it("shows how many hints are left and uses one on click", async () => {
     const { props } = renderActions({ hintsUsed: 0, hintCount: 2 });
 
-    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await userEvent.setup().click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
 
     expect(props.onHint).toHaveBeenCalledTimes(1);
   });
@@ -95,7 +95,7 @@ describe("RoundActions hints", () => {
   it("disables the hint button when none are left", () => {
     renderActions({ hintsUsed: 2, hintCount: 2 });
 
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("puts the cost of the next hint in the button's title", () => {

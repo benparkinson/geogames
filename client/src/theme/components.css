@@ -1164,6 +1164,16 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   flex-wrap: wrap;
   gap: var(--gg-space-2);
 }
+/* The two buttons share the row, so it stays on one line on a narrow phone. */
+.round-actions > span {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.round-actions button {
+  flex: 1 1 0;
+  min-width: 0;
+}
 /* Both reveal labels sit in one cell, so the button keeps the longer one's width; the hidden one is aria-hidden. */
 .round-actions__reveal-label {
   display: inline-grid;

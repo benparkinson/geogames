@@ -39,24 +39,24 @@ describe("City Map", () => {
     const user = userEvent.setup();
     renderGame();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("Its capital is highlighted")).toBeInTheDocument();
     expect(screen.getByTestId("map")).toHaveAttribute("data-hints", "1");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("Its coastline is on the map")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “N”")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("says so when a country has no coastline, which is itself a clue", async () => {
     const user = userEvent.setup();
     renderGame(makeCountryCitiesRoundData({ country: makeCountryShapeData({ coastKm: 0 }) }));
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
 
     expect(screen.getByText("It has no coastline")).toBeInTheDocument();
   });

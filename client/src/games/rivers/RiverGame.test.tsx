@@ -117,10 +117,10 @@ describe("makeRiverGame with the shape configuration", () => {
     const user = userEvent.setup();
     await renderRiver();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
 
     expect(screen.getByText("Continent: Europe")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("hides the relief map until the round ends", async () => {

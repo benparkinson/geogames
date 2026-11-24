@@ -155,19 +155,19 @@ describe("Tripoint hints", () => {
     renderTripoint();
     expect(screen.queryAllByTestId("hint-border")).toHaveLength(0);
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getAllByTestId("hint-border").map((e) => e.textContent)).toEqual(["Belgium"]);
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getAllByTestId("hint-border").map((e) => e.textContent)).toEqual(["Belgium", "Netherlands"]);
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 1 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getAllByTestId("hint-border").map((e) => e.textContent)).toEqual([
       "Belgium",
       "Netherlands",
       "Germany",
     ]);
-    expect(screen.getByRole("button", { name: /Hint \(0 left\)/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
   });
 
   it("says in the panel that a missing country is outlined", async () => {
@@ -175,7 +175,7 @@ describe("Tripoint hints", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     renderTripoint();
 
-    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await userEvent.setup().click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
 
     expect(screen.getByText("A missing country is outlined on the map")).toBeInTheDocument();
   });
@@ -188,10 +188,10 @@ describe("Tripoint hints", () => {
     await guess(user, "Belgium");
     await guess(user, "Netherlands");
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
     expect(screen.getByText("A missing country is outlined on the map")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
     expect(screen.getByText("Outlined on the map: Belgium, which you've already found")).toBeInTheDocument();
   });
 
@@ -201,8 +201,8 @@ describe("Tripoint hints", () => {
     const user = userEvent.setup();
     renderTripoint();
 
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 2 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 2 left/ }));
 
     const shown = screen.getAllByTestId("hint-border").map((e) => e.textContent);
     expect(new Set(shown).size).toBe(2);
@@ -214,7 +214,7 @@ describe("Tripoint hints", () => {
     const { tripoint } = renderTripoint();
     const before = structuredClone(tripoint);
 
-    await userEvent.setup().click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await userEvent.setup().click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
 
     expect(tripoint).toEqual(before);
   });
@@ -224,7 +224,7 @@ describe("Tripoint hints", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const user = userEvent.setup();
     const { rerender, client } = renderTripoint();
-    await user.click(screen.getByRole("button", { name: /Hint \(.*, 3 left\)/ }));
+    await user.click(screen.getByRole("button", { name: /Hint .*· 3 left/ }));
 
     rerender(
       <QueryClientProvider client={client}>
