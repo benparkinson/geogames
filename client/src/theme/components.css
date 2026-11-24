@@ -791,6 +791,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   gap: var(--gg-space-2);
   white-space: nowrap;
 }
+.gg-site-title__name {
+  /* Capitals have no descenders, so centring the line box leaves them looking high. */
+  position: relative;
+  top: 0.08em;
+}
 .gg-site-title__logo {
   flex: none;
   width: 1.2em;
