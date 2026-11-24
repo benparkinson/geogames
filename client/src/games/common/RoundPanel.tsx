@@ -68,7 +68,7 @@ export default function RoundPanel({
           ))}
         </ul>
       )}
-      <div>
+      <div className="round-panel__body">
         {gameOver ? (
           <>
             {guessList}
