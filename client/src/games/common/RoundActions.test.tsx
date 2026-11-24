@@ -37,6 +37,23 @@ describe("RoundActions reveal", () => {
     expect(screen.getByRole("button", { name: /Give up this round/ })).toBeInTheDocument();
   });
 
+  it("keeps both labels in the button, so asking for the second tap doesn't change its width", async () => {
+    // The longer "Tap again" label used to widen the button, wrap it onto a new line of the actions row and push it out
+    // of the panel's scrolled view on a narrow phone: the button seemed to vanish on the first tap.
+    const user = userEvent.setup();
+    renderActions();
+    const reveal = screen.getByRole("button", { name: /Give up this round/ });
+    const labels = () => Array.from(reveal.querySelectorAll(".round-actions__reveal-label > span"));
+
+    expect(labels().map((label) => label.textContent)).toEqual(["Give up this round", "Tap again to give up"]);
+    expect(labels().map((label) => label.getAttribute("aria-hidden"))).toEqual([null, "true"]);
+
+    await user.click(reveal);
+
+    expect(screen.getByRole("button", { name: /Tap again to give up/ })).toBe(reveal);
+    expect(labels().map((label) => label.getAttribute("aria-hidden"))).toEqual(["true", null]);
+  });
+
   it("goes back to the first state after three seconds", () => {
     // Testing Library only detects Jest's fake timers, so user-event would hang here: use fireEvent.
     vi.useFakeTimers();

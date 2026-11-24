@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import DistanceUnitSelector from "./DistanceUnitSelector";
 import ThemeSelector from "./ThemeSelector";
 
 /** The footer's "Settings" link and the small panel it opens above itself. Closed on the server. */
@@ -42,6 +43,7 @@ export default function SettingsMenu(): React.JSX.Element {
       {open && (
         <div id={panelId} className="gg-settings__panel">
           <ThemeSelector />
+          <DistanceUnitSelector />
         </div>
       )}
     </span>

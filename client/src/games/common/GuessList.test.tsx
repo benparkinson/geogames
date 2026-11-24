@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { resetDistanceUnitForTests } from "../../settings/units";
 import GuessList from "./GuessList";
 import type { Guess, GuessState } from "./guessReducer";
 
@@ -10,6 +11,11 @@ function stateOf(guesses: Guess[], overrides: Partial<GuessState> = {}): GuessSt
 function renderList(state: GuessState, answerCount = 3, allAnswers: string[] = [], showClues = true) {
   return render(<GuessList state={state} answerCount={answerCount} allAnswers={allAnswers} showClues={showClues} />);
 }
+
+beforeEach(() => {
+  resetDistanceUnitForTests();
+  localStorage.clear();
+});
 
 describe("GuessList", () => {
   it("scrolls to the newest guess when one is added", () => {
@@ -69,6 +75,15 @@ describe("GuessList", () => {
 
     view.unmount();
     renderList(stateOf(wrong), 3, [], false);
+    expect(screen.getByTestId("wrong-guess")).not.toHaveTextContent(/km/);
+  });
+
+  it("shows the distance in miles when chosen", () => {
+    localStorage.setItem("gg-units", "mi");
+    renderList(stateOf([{ text: "France", answer: null, clue: { km: 1236, bearing: 90 } }]));
+
+    expect(screen.getByTestId("wrong-guess")).toHaveTextContent(/770 mi/);
+    expect(screen.getByText("770 mi east")).toBeInTheDocument();
     expect(screen.getByTestId("wrong-guess")).not.toHaveTextContent(/km/);
   });
 
