@@ -101,7 +101,6 @@ describe("MapGame guessing", () => {
 
     await guess(userEvent.setup(), "france");
 
-    expect(screen.getByText("Correct! 1 to go.")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
   });

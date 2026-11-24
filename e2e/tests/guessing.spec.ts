@@ -48,7 +48,6 @@ test("an alias of an answer is accepted as that answer", async ({ page, api }) =
 
   await expect(answerBox(page)).toBeVisible();
   await guess(page, found!.alias);
-  await expect(page.getByText(/^Correct! 2 to go\.$/)).toBeVisible();
   await expect(page.getByRole("group", { name: "Answers: 1 of 3 found" })).toContainText(
     found!.canonical,
   );

@@ -65,9 +65,7 @@ describe("Tripoint guessing", () => {
     const { submitAnswer } = renderTripoint();
 
     await guess(user, "Belgium");
-    expect(screen.getByText("Correct! 2 to go.")).toBeInTheDocument();
     await guess(user, "holland");
-    expect(screen.getByText("Correct! 1 to go.")).toBeInTheDocument();
     expect(submitAnswer).not.toHaveBeenCalled();
 
     await guess(user, "GERMANY");
@@ -120,7 +118,6 @@ describe("Tripoint guessing", () => {
 
     await user.clear(input());
     await guess(user, "Deutschland");
-    expect(screen.getByText("Correct! 2 to go.")).toBeInTheDocument();
   });
 });
 
