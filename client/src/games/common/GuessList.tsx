@@ -1,4 +1,5 @@
-import { compassPoint, formatKm } from "./distance";
+import { useDistanceUnit } from "../../settings/units";
+import { compassPoint, formatDistance } from "./distance";
 import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
 import { GuessRow, guessListRows } from "./guessRows";
 import { BearingIcon, FoundIcon, WrongGuessIcon } from "../../ui/icons";
@@ -84,10 +85,12 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
 
 /** The distance and an arrow towards the answer. */
 function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
+  const [unit] = useDistanceUnit();
+  const distance = formatDistance(clue.km, unit);
   return (
     <span className="guess-list__clue">
-      {formatKm(clue.km)} km <BearingIcon aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
-      <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
+      {distance} <BearingIcon aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
+      <span className="gg-visually-hidden">{` ${distance} ${compassPoint(clue.bearing)}`}</span>
     </span>
   );
 }
