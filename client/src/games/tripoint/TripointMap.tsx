@@ -23,7 +23,7 @@ function TripointMap({ data: tripoint, gaveUp, gameOver, hintsUsed, foundAtHint 
     .map((country) => <GeoJSON key={country.name} data={country.geoData} pathOptions={color}></GeoJSON>);
 
   return (
-    <GameMap center={position} zoom={4} minZoom={4} credit="Tripoints: Wikipedia (CC BY-SA 4.0), positions adjusted">
+    <GameMap center={position} zoom={4} minZoom={4}>
       <ReliefTiles />
       <Marker icon={tripointIcon} position={position} />
       {gameOver && answerBorders}

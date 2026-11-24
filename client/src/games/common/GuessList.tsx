@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useDistanceUnit } from "../../settings/units";
 import { compassPoint, formatDistance } from "./distance";
 import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
@@ -18,6 +19,14 @@ export default function GuessList({
   showClues: boolean;
 }): React.JSX.Element {
   const rows = guessListRows(state, allAnswers);
+  const rowsRef = useRef<HTMLOListElement>(null);
+  // Keep the newest guess in view when the list is long enough to scroll.
+  useEffect(() => {
+    const list = rowsRef.current;
+    if (list) {
+      list.scrollTop = list.scrollHeight;
+    }
+  }, [rows.length]);
   // With one answer there is nothing to count until a guess is made.
   if (rows.length === 0 && answerCount === 1) {
     return <></>;
@@ -33,7 +42,7 @@ export default function GuessList({
         </div>
       )}
       {rows.length > 0 && (
-        <ol className="guess-list__rows">
+        <ol className="guess-list__rows" ref={rowsRef}>
           {rows.map((row, i) => (
             <li
               key={i}
