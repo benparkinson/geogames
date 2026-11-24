@@ -76,4 +76,32 @@ describe("GuessList", () => {
 
     expect(container).toBeEmptyDOMElement();
   });
+
+  describe("found animation", () => {
+    const found: Guess = { text: "france", answer: "France" };
+    const wrong: Guess = { text: "Peru", answer: null };
+
+    it("does not mark a found row present on mount", () => {
+      renderList(stateOf([found]));
+
+      expect(screen.getAllByRole("listitem")[0]).not.toHaveAttribute("data-fresh");
+    });
+
+    it("marks only a found row added after mount", () => {
+      const { rerender } = renderList(stateOf([found]));
+      const next = stateOf([found, { text: "spain", answer: "Spain" }]);
+      rerender(<GuessList state={next} answerCount={3} allAnswers={[]} showClues />);
+
+      const rows = screen.getAllByRole("listitem");
+      expect(rows[0]).not.toHaveAttribute("data-fresh");
+      expect(rows[1]).toHaveAttribute("data-fresh", "true");
+    });
+
+    it("does not mark a wrong guess added after mount", () => {
+      const { rerender } = renderList(stateOf([found]));
+      rerender(<GuessList state={stateOf([found, wrong])} answerCount={3} allAnswers={[]} showClues />);
+
+      expect(screen.getAllByRole("listitem")[1]).not.toHaveAttribute("data-fresh");
+    });
+  });
 });

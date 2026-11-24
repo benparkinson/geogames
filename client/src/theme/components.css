@@ -1034,7 +1034,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   display: flex;
   align-items: baseline;
   gap: var(--gg-space-2);
-  padding: var(--gg-space-1) 0;
+  padding: var(--gg-space-1) var(--gg-space-2);
   border-bottom: 1px solid var(--gg-color-rule-light);
 }
 .guess-list__name {
@@ -1046,9 +1046,28 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-left: auto;
   white-space: nowrap;
 }
+.guess-list__row[data-kind="found"] {
+  border-bottom-color: transparent;
+  background: var(--gg-color-correct);
+  color: var(--gg-color-on-correct);
+}
 .guess-list__row[data-kind="found"] .guess-list__note {
-  color: var(--gg-color-correct);
+  color: var(--gg-color-on-correct);
   font-weight: var(--gg-font-weight-medium);
+}
+.guess-list__row[data-kind="found"][data-fresh] {
+  animation: gg-found-in var(--gg-duration-celebrate) ease-out;
+}
+@keyframes gg-found-in {
+  from {
+    transform: scale(0.97);
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guess-list__row[data-kind="found"][data-fresh] {
+    animation: none;
+  }
 }
 /* A wrong guess is greyed (muted, regular weight) beside the bold found ones, with the cross in the marker colour.
    Muted rather than translucent text, which would fall below 4.5:1 contrast. */

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { compassPoint, formatKm } from "./distance";
 import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
 import { GuessRow, guessListRows } from "./guessRows";
@@ -17,6 +18,8 @@ export default function GuessList({
   showClues: boolean;
 }): React.JSX.Element {
   const rows = guessListRows(state, allAnswers);
+  // Rows already there on mount (a reload, a finished round) must not play the found animation.
+  const [rowsAtMount] = useState(rows.length);
   // With one answer there is nothing to count until a guess is made.
   if (rows.length === 0 && answerCount === 1) {
     return <></>;
@@ -39,6 +42,7 @@ export default function GuessList({
               className="guess-list__row"
               data-kind={row.kind}
               data-outcome={row.kind === "missed" ? "missed" : undefined}
+              data-fresh={row.kind === "found" && i >= rowsAtMount ? "true" : undefined}
               data-testid={row.kind === "wrong" ? "wrong-guess" : undefined}
             >
               <RowBody row={row} showClues={showClues} />
