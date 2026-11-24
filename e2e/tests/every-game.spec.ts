@@ -1,4 +1,4 @@
-import { answerBox, expect, guess, startGame, test } from "../fixtures";
+import { answerBox, expect, guess, roundResult, startGame, test } from "../fixtures";
 
 // Every game type the backend has (GameType) with its title on the home page, plus RANDOM, the mix of all
 // of them. A new game type needs a line here: the contract test already fails until it has a fixture.
@@ -33,9 +33,9 @@ for (const { type, title } of GAMES) {
       for (const answer of answers) {
         await guess(page, answer.name);
       }
-      await expect(
-        page.getByText(answers.length > 1 ? "No wrong guesses! +100" : "First guess! +100"),
-      ).toBeVisible();
+      await expect(roundResult(page)).toHaveText(
+        answers.length > 1 ? /No wrong guesses!\s*\+100/ : /First guess!\s*\+100/,
+      );
 
       await page
         .getByRole("button", { name: round < ROUNDS - 1 ? "Next round" : "See results" })

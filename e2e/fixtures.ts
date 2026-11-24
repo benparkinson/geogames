@@ -128,6 +128,11 @@ export function answerBox(page: Page) {
   return page.getByRole("combobox");
 }
 
+/** The finished round's banner: a live status with the outcome, its label on the left and the points on the right. */
+export function roundResult(page: Page) {
+  return page.getByRole("status").and(page.locator("[data-outcome]"));
+}
+
 /**
  * Reloads a game page. The jar doesn't serve /games/{id} itself (see deep-link.spec.ts), so the page request is
  * answered with the exported game page, which is what a working server would do. The reload is otherwise a real one.

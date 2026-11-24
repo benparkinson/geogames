@@ -210,7 +210,7 @@ describe("GameRoundPage answer saving", () => {
     await waitFor(() => expect(next).toBeEnabled());
     await user.click(next);
 
-    expect(await screen.findByText("round 02 of 02")).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Round 2: current" })).toBeInTheDocument();
     expect(attempts).toBe(2);
   });
 });

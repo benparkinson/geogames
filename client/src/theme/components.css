@@ -930,8 +930,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-2) var(--gg-space-3);
   border-bottom: 2px solid var(--gg-color-rule);
 }
-.top-bar__start,
-.top-bar__end {
+.top-bar__start {
   display: flex;
   align-items: center;
   gap: var(--gg-space-2);
@@ -942,40 +941,70 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   flex-direction: column;
   min-width: 0;
 }
+/* The score column lines up with the title's two lines: the value over its label (or the Results button). */
+.top-bar__end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  white-space: nowrap;
+}
+.top-bar__game,
+.top-bar__score {
+  font-size: var(--gg-font-size-h5);
+  line-height: 1.1;
+}
 .top-bar__game {
   overflow: hidden;
   font-family: var(--gg-font-display);
   font-stretch: var(--gg-font-stretch-display);
-  font-size: var(--gg-font-size-h5);
   font-weight: var(--gg-font-weight-display);
-  line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.top-bar__score {
+  font-family: var(--gg-font-mono);
+}
 .top-bar__meta,
-.top-bar__end {
+.top-bar__score-label,
+.gg-btn.top-bar__results {
   font-family: var(--gg-font-mono);
   font-size: var(--gg-font-size-sm);
+  line-height: inherit;
 }
-.top-bar__meta {
+.top-bar__meta,
+.top-bar__score-label {
   color: var(--gg-color-text-muted);
 }
-.top-bar__end {
+/* The round's name gives way to the difficulty when the line is too short. */
+.top-bar__meta {
+  display: flex;
+  min-width: 0;
   white-space: nowrap;
+}
+.top-bar__kind {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.top-bar__difficulty {
+  flex-shrink: 0;
+  white-space: pre;
+}
+/* The Results button sits on the label line, so it has no padding of its own; a larger invisible area keeps it
+   easy to tap. */
+.gg-btn.top-bar__results {
+  position: relative;
+  gap: 0.25rem;
+  padding: 0;
+  border: 0;
+}
+.top-bar__results::after {
+  content: "";
+  position: absolute;
+  inset: -0.75rem -0.5rem;
 }
 .top-bar__rounds {
   flex: 0 0 100%;
-}
-.top-bar__score-full {
-  display: none;
-}
-@media (min-width: 576px) {
-  .top-bar__score-full {
-    display: inline;
-  }
-  .top-bar__score-short {
-    display: none;
-  }
 }
 
 /* The guess list: a ruled list. */
@@ -1089,9 +1118,22 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .round-result {
   margin-bottom: 0;
 }
+/* The label on the left, the points on the right: where the round's worth was while playing. */
 .round-result__banner {
-  margin-bottom: var(--gg-space-2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  margin: var(--gg-space-3) 0 var(--gg-space-4);
+  font-size: 1.125rem;
   font-weight: var(--gg-font-weight-semibold);
+}
+.round-result__label {
+  min-width: 0;
+}
+.round-result__points {
+  flex-shrink: 0;
+  font-size: var(--gg-font-size-h5);
 }
 .round-result__banner[data-outcome="firstGuess"],
 .round-result__banner[data-outcome="correct"] {

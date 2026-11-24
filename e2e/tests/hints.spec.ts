@@ -1,4 +1,4 @@
-import { answerBox, expect, guess, reloadGamePage, startGame, test } from "../fixtures";
+import { answerBox, expect, guess, reloadGamePage, roundResult, startGame, test } from "../fixtures";
 
 // The numbers come from model/Scoring: 1 of Tripoint's 3 hints costs 17 points, so a correct round is worth 83.
 test("a refresh keeps a hint taken, and its cost", async ({ page, api }) => {
@@ -17,10 +17,10 @@ test("a refresh keeps a hint taken, and its cost", async ({ page, api }) => {
 
   await expect(answerBox(page)).toBeVisible();
   await expect(page.getByRole("button", { name: /Hint \(.*, 2 left\)/ })).toBeVisible();
-  await expect(page.getByText("Worth 83 pts")).toBeVisible();
+  await expect(page.getByText("Worth 83", { exact: true })).toBeVisible();
 
   for (const answer of answers) {
     await guess(page, answer.name);
   }
-  await expect(page.getByText("Correct with a hint · +83")).toBeVisible();
+  await expect(roundResult(page)).toHaveText(/Correct with a hint\s*\+83/);
 });
