@@ -206,6 +206,26 @@ public class ProcessedDataIT {
   }
 
   @Test
+  public void noTwoRiverCountriesRoundsShareTheirCountries() {
+    var groups =
+        new RiverLoaderService(reader)
+            .loadRivers().stream()
+                .filter(RiverCountriesEligibility.riverCountries())
+                .collect(
+                    Collectors.groupingBy(
+                        river -> Set.copyOf(river.countries()),
+                        Collectors.mapping(River::name, Collectors.toList())));
+
+    var clashes = groups.entrySet().stream().filter(group -> group.getValue().size() > 1).toList();
+
+    assertTrue(
+        clashes.isEmpty(),
+        "River Countries rivers share their countries (add the less known one to"
+            + " RiverCountriesEligibility.EXCLUDED): "
+            + clashes);
+  }
+
+  @Test
   public void everyExcludedRiverCountriesIdIsARealRiver() {
     Set<String> ids = new HashSet<>();
     new RiverLoaderService(reader).loadRivers().forEach(river -> ids.add(river.id()));

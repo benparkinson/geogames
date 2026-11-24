@@ -28,6 +28,7 @@ class RiverCountriesEligibilityTest {
     assertThat(rule.test(river("A", List.of("X")))).isFalse();
     assertThat(rule.test(river("Q2251", List.of("X", "Y")))).isFalse();
     assertThat(rule.test(river("Q104437", List.of("X", "Y")))).isFalse();
+    assertThat(rule.test(river("Q35591", List.of("X", "Y")))).isFalse();
   }
 
   @Test
