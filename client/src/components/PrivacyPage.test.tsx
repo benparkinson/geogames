@@ -27,10 +27,11 @@ describe("PrivacyPage", () => {
     render(<PrivacyPage />);
 
     expect(screen.getByText("gg-theme")).toBeInTheDocument();
+    expect(screen.getByText("gg-units")).toBeInTheDocument();
     expect(screen.getByText("gg-difficulty")).toBeInTheDocument();
     expect(screen.getByText("gg-daily")).toBeInTheDocument();
     expect(screen.getByText("gg-daily-streak")).toBeInTheDocument();
-    expect(screen.getByText(/up to four items/)).toBeInTheDocument();
+    expect(screen.getByText(/up to five items/)).toBeInTheDocument();
   });
 
   it("credits the data and imagery, and links to the software licences", () => {

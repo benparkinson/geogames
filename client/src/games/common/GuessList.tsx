@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import { compassPoint, formatKm } from "./distance";
+import { useEffect, useRef, useState } from "react";
+import { useDistanceUnit } from "../../settings/units";
+import { compassPoint, formatDistance } from "./distance";
 import { GuessClue, GuessState, foundAnswers } from "./guessReducer";
 import { GuessRow, guessListRows } from "./guessRows";
 import { BearingIcon, FoundIcon, WrongGuessIcon } from "../../ui/icons";
@@ -18,6 +19,8 @@ export default function GuessList({
   showClues: boolean;
 }): React.JSX.Element {
   const rows = guessListRows(state, allAnswers);
+  // Rows already there on mount (a reload, a finished round) must not play the found animation.
+  const [rowsAtMount] = useState(rows.length);
   const rowsRef = useRef<HTMLOListElement>(null);
   // Keep the newest guess in view when the list is long enough to scroll.
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function GuessList({
               className="guess-list__row"
               data-kind={row.kind}
               data-outcome={row.kind === "missed" ? "missed" : undefined}
+              data-fresh={row.kind === "found" && i >= rowsAtMount ? "true" : undefined}
               data-testid={row.kind === "wrong" ? "wrong-guess" : undefined}
             >
               <RowBody row={row} showClues={showClues} />
@@ -93,10 +97,12 @@ function RowBody({ row, showClues }: { row: GuessRow; showClues: boolean }): Rea
 
 /** The distance and an arrow towards the answer. */
 function ClueBadge({ clue }: { clue: GuessClue }): React.JSX.Element {
+  const [unit] = useDistanceUnit();
+  const distance = formatDistance(clue.km, unit);
   return (
     <span className="guess-list__clue">
-      {formatKm(clue.km)} km <BearingIcon aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
-      <span className="gg-visually-hidden">{` ${formatKm(clue.km)} km ${compassPoint(clue.bearing)}`}</span>
+      {distance} <BearingIcon aria-hidden="true" style={{ transform: `rotate(${clue.bearing}deg)` }} />
+      <span className="gg-visually-hidden">{` ${distance} ${compassPoint(clue.bearing)}`}</span>
     </span>
   );
 }
