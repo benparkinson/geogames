@@ -5,15 +5,15 @@ import { answerBox, expect, guess, roundResult, startGame, test } from "../fixtu
 const GAMES = [
   { type: "TRIPOINT", title: "Tripoints" },
   { type: "RIVERS_BY_SHAPE", title: "River Shapes" },
-  { type: "RIVERS_BY_COUNTRIES", title: "River Countries" },
-  { type: "COUNTRIES_BY_NEIGHBOURS", title: "Country Gaps" },
+  { type: "RIVERS_BY_COUNTRIES", title: "Follow the River" },
+  { type: "COUNTRIES_BY_NEIGHBOURS", title: "Missing Country" },
   { type: "COUNTRIES_BY_COASTLINE", title: "Coastlines" },
   { type: "COUNTRIES_BY_LAND_BORDERS", title: "Land Borders" },
   { type: "LAKES_BY_SHAPE", title: "Lake Shapes" },
   { type: "BORDERS_BY_SHAPE", title: "Border Shapes" },
   { type: "MERGED_COUNTRIES", title: "Merged Countries" },
-  { type: "COUNTRIES_BY_CITIES", title: "Country Cities" },
-  { type: "COUNTRIES_BY_RIVERS", title: "Country Rivers" },
+  { type: "COUNTRIES_BY_CITIES", title: "City Map" },
+  { type: "COUNTRIES_BY_RIVERS", title: "Waterways" },
   { type: "RANDOM", title: "Mixed" },
 ];
 

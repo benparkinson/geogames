@@ -8,7 +8,7 @@ import { RiverIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_RIVERS",
-  title: "Country Rivers",
+  title: "Waterways",
   singular: "Country by rivers",
   description: "Name a country from its rivers and lakes.",
   Icon: RiverIcon,

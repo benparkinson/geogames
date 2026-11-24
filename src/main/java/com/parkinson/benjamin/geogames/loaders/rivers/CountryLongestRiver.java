@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Picks the river to name in Country Rivers' first hint: the longest named river inside the
+ * Picks the river to name in Waterways' first hint: the longest named river inside the
  * country. The name helps even when the player doesn't know the river, because its language narrows
  * the answer down.
  */

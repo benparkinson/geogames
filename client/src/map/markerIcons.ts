@@ -53,7 +53,7 @@ export const sourceIcon = pinIcon(MAP_PALETTE.sourcePin, DROPLET);
 /** Red pin with waves: where a river ends. */
 export const mouthIcon = pinIcon(MAP_PALETTE.mouthPin, WAVES);
 
-/** Blue pin with a question mark: marks the country to find in Country Gaps, inside the gap. */
+/** Blue pin with a question mark: marks the country to find in Missing Country, inside the gap. */
 export const targetIcon = pinIcon(MAP_PALETTE.targetPin, QUESTION);
 
 /** Plum pin with three lines meeting: the tripoint, where three countries' borders meet. */

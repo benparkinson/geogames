@@ -30,7 +30,7 @@ function renderGame(
   return submitAnswer;
 }
 
-describe("Country Gaps", () => {
+describe("Missing Country", () => {
   it("is the COUNTRIES_BY_NEIGHBOURS game", () => {
     expect(neighbours.type).toBe("COUNTRIES_BY_NEIGHBOURS");
     expect(neighbours.answers(makeCountryShapeRoundData()).map((a) => a.name)).toEqual(["Netherlands"]);

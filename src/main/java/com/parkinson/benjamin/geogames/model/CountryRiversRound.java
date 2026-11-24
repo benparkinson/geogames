@@ -3,7 +3,7 @@ package com.parkinson.benjamin.geogames.model;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 
 /**
- * The data for one round of Country Rivers. The rivers and lakes are read from the country's file
+ * The data for one round of Waterways. The rivers and lakes are read from the country's file
  * when the round is built and are not cached.
  *
  * @param country the country's shape, from the shapes the app already holds

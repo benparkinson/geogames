@@ -4,7 +4,7 @@ import com.parkinson.benjamin.geogames.model.CountryCities;
 import java.util.function.Predicate;
 
 /**
- * Which countries the Country Cities game can ask about. Shared by the game and by the offline city
+ * Which countries the City Map game can ask about. Shared by the game and by the offline city
  * program's summary, so both agree.
  */
 public final class CountryCitiesEligibility {

@@ -22,7 +22,7 @@ function renderGame(data: CountryRiversRound = makeCountryRiversRoundData(), sub
   return submitAnswer;
 }
 
-describe("Country Rivers", () => {
+describe("Waterways", () => {
   it("is the COUNTRIES_BY_RIVERS game", () => {
     expect(countryRivers.type).toBe("COUNTRIES_BY_RIVERS");
     expect(countryRivers.extraDifficult).toBeUndefined();

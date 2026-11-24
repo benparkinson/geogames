@@ -193,7 +193,7 @@ export function makeCountryShapeRoundData(overrides: Partial<CountryShapeRound> 
 }
 
 /**
- * The data of a round of Country Cities: the Netherlands and three of its cities, largest first.
+ * The data of a round of City Map: the Netherlands and three of its cities, largest first.
  * The country's layers start at: outline 1,1; coast 2,2; land borders 3,3.
  */
 export function makeCountryCitiesRoundData(overrides: Partial<CountryCitiesRound> = {}): CountryCitiesRound {
@@ -209,7 +209,7 @@ export function makeCountryCitiesRoundData(overrides: Partial<CountryCitiesRound
 }
 
 /**
- * The data of a round of Country Rivers: the Netherlands, with its major rivers, minor rivers and a
+ * The data of a round of Waterways: the Netherlands, with its major rivers, minor rivers and a
  * lake. The layers start at: outline 1,1; coast 2,2; land borders 3,3; major rivers 10,10; minor
  * rivers 11,11; lakes 12,12.
  */
@@ -395,7 +395,7 @@ export const lakeNames = [
   { name: "Lake Victoria", additionalNames: [] as string[], lat: -1.0, lon: 33.0 },
 ];
 
-/** The server's response for a Country Cities round. */
+/** The server's response for a City Map round. */
 export function makeCountryCitiesRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeCountryCitiesRoundData()),
@@ -404,7 +404,7 @@ export function makeCountryCitiesRound(overrides: Partial<GameRoundResponse> = {
   });
 }
 
-/** The server's response for a Country Rivers round. */
+/** The server's response for a Waterways round. */
 export function makeCountryRiversRound(overrides: Partial<GameRoundResponse> = {}): GameRoundResponse {
   return makeRound({
     jsonBlob: JSON.stringify(makeCountryRiversRoundData()),

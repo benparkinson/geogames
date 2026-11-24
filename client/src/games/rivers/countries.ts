@@ -7,7 +7,7 @@ import { ContinentIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "RIVERS_BY_COUNTRIES",
-  title: "River Countries",
+  title: "Follow the River",
   singular: "River by countries",
   description: "Name a river from the countries it flows through.",
   Icon: ContinentIcon,

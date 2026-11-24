@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Which rivers the River Countries game can ask about. Shared by the game and by {@code
+ * Which rivers the Follow the River game can ask about. Shared by the game and by {@code
  * ProcessedDataIT}, so both agree.
  */
 public final class RiverCountriesEligibility {

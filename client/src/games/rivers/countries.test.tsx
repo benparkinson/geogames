@@ -29,10 +29,10 @@ function renderGame() {
 
 const input = () => screen.getByLabelText("River name…");
 
-describe("River Countries", () => {
+describe("Follow the River", () => {
   it("is the RIVERS_BY_COUNTRIES game", () => {
     expect(countries.type).toBe("RIVERS_BY_COUNTRIES");
-    expect(countries.title).toBe("River Countries");
+    expect(countries.title).toBe("Follow the River");
     expect(countries.answers(makeRiverRoundData()).map((a) => a.name)).toEqual(["Danube"]);
   });
 

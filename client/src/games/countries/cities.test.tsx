@@ -22,7 +22,7 @@ function renderGame(data: CountryCitiesRound = makeCountryCitiesRoundData(), sub
   return submitAnswer;
 }
 
-describe("Country Cities", () => {
+describe("City Map", () => {
   it("is the COUNTRIES_BY_CITIES game", () => {
     expect(cities.type).toBe("COUNTRIES_BY_CITIES");
     expect(cities.extraDifficult).toBeUndefined();

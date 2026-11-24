@@ -83,7 +83,7 @@ export function capitalDotOptions(): PathOptions {
   return { color: MAP_PALETTE.white, weight: 2, fillColor: CAPITAL_COLOR, fillOpacity: 1 };
 }
 
-/** Style for the minor rivers of Country Rivers: thinner than the clue line the major rivers use. */
+/** Style for the minor rivers of Waterways: thinner than the clue line the major rivers use. */
 export function minorRiverOptions(): PathOptions {
   return { color: CLUE_COLOR, weight: 1.25, fill: false };
 }

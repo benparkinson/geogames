@@ -4,7 +4,7 @@ import com.parkinson.benjamin.geogames.model.CountryRiversIndexEntry;
 import java.util.function.Predicate;
 
 /**
- * Which countries the Country Rivers game can ask about. Shared by the game and by the offline
+ * Which countries the Waterways game can ask about. Shared by the game and by the offline
  * rivers program's summary, so both agree.
  */
 public final class CountryRiversEligibility {
