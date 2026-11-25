@@ -9,6 +9,7 @@ export default function SettingsMenu(): React.JSX.Element {
   const rootRef = useRef<HTMLSpanElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
+  const headingId = `${panelId}-heading`;
 
   useEffect(() => {
     if (!open) return;
@@ -43,7 +44,10 @@ export default function SettingsMenu(): React.JSX.Element {
         <SettingsIcon aria-hidden="true" />
       </button>
       {open && (
-        <div id={panelId} className="gg-settings__panel">
+        <div id={panelId} className="gg-settings__panel" role="group" aria-labelledby={headingId}>
+          <h2 id={headingId} className="gg-settings__heading">
+            Settings
+          </h2>
           <ThemeSelector />
           <DistanceUnitSelector />
         </div>

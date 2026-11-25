@@ -478,6 +478,17 @@ describe("HomePage daily challenge card", () => {
     expect(block).toHaveTextContent("4-day streak");
   });
 
+  it("ends the header with the Settings cog, after the streak", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: localDateString(), count: 4 }));
+    renderHome();
+
+    const banner = screen.getByRole("banner");
+    const streak = banner.querySelector("[data-streak]")!;
+    const cog = within(banner).getByRole("button", { name: "Settings" });
+    expect(streak.compareDocumentPosition(cog) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("shows no streak that ended two days ago", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     const lastDate = previousDay(previousDay(localDateString()));

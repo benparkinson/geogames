@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -25,6 +25,15 @@ describe("SettingsMenu", () => {
     await userEvent.click(button);
     expect(button.getAttribute("aria-expanded")).toBe("true");
     expect(screen.getByRole("radio", { name: "System default" })).toBeChecked();
+  });
+
+  it("titles the panel Settings, above the Appearance and Distances rows", async () => {
+    render(<SettingsMenu />);
+    await userEvent.click(screen.getByRole("button", { name: "Settings" }));
+    const panel = screen.getByRole("group", { name: "Settings" });
+    expect(within(panel).getByRole("heading", { name: "Settings" })).toBeInTheDocument();
+    expect(within(panel).getByRole("group", { name: "Appearance" })).toBeInTheDocument();
+    expect(within(panel).getByRole("group", { name: "Distances" })).toBeInTheDocument();
   });
 
   it("shows the stored choice", async () => {
