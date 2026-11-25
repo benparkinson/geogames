@@ -6,8 +6,6 @@ import { RiverIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "RIVERS_BY_SHAPE",
-  title: "River Shapes",
-  singular: "River shape",
   description: "Name a river from its shape alone.",
   Icon: RiverIcon,
   extraDifficult: true,

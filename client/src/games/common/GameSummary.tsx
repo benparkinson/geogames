@@ -6,6 +6,7 @@ import { useQueries } from "@tanstack/react-query";
 import { roundQuery, useCreateGame } from "../../api/games";
 import { creationErrorMessage } from "../../api/http";
 import { RANDOM_OPTION } from "../registry";
+import { GAME_NAMES } from "../names";
 import { summariseGame } from "./summaryView";
 import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import DailyComparison from "../../daily/DailyComparison";
@@ -44,9 +45,10 @@ export default function GameSummary({
   const summary = summariseGame(all);
   const { score, maxScore, heading, gameTitle, mixed } = summary;
   const gameType = summary.playAgainType;
-  const meta = [daily ? `Daily ${daily.date}` : (gameTitle ?? "Mixed"), ...DIFFICULTY_LABEL[summary.difficulty]].join(
-    " · ",
-  );
+  const meta = [
+    daily ? `Daily ${daily.date}` : (gameTitle ?? GAME_NAMES.RANDOM),
+    ...DIFFICULTY_LABEL[summary.difficulty],
+  ].join(" · ");
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">

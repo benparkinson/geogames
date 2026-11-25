@@ -10,6 +10,7 @@ import riverCountries from "./rivers/countries";
 import riverShapes from "./rivers/shapes";
 import tripoint from "./tripoint";
 import type { AnyGameModule } from "./types";
+import { GAME_NAMES } from "./names";
 import { RandomIcon, type IconComponent } from "../ui/icons";
 
 /** Every type of game, in home page order. To add a game, build its module and add it here. */
@@ -45,7 +46,7 @@ export interface MenuOption {
 /** The request-only game type that mixes every registered game. It has no module of its own. */
 export const RANDOM_OPTION: MenuOption = {
   type: "RANDOM",
-  title: "Mixed",
+  title: GAME_NAMES.RANDOM,
   description: "A random mix of every game.",
   Icon: RandomIcon,
   hasClues: true,

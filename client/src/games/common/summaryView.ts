@@ -12,7 +12,7 @@ export function playAgainType(rounds: GameRoundView[]): string {
 }
 
 function roundLabel(round: GameRoundView): string {
-  return findGameModule(round.gameType.name)?.singular ?? round.gameType.name;
+  return findGameModule(round.gameType.name)?.title ?? round.gameType.name;
 }
 
 /** The answers of a round, for the summary. */

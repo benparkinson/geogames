@@ -193,11 +193,11 @@ describe("GameSummary", () => {
 
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows).toHaveLength(3);
-    expect(within(rows[0]).getByText("Tripoint")).toBeInTheDocument();
+    expect(within(rows[0]).getByText("Tripoints")).toBeInTheDocument();
     expect(rows[0]).toHaveTextContent("Belgium · Netherlands · Germany");
     expect(rows[0]).toHaveTextContent("+100");
     expect(rows[0]).not.toHaveTextContent("hint");
-    expect(within(rows[1]).getByText("River shape")).toBeInTheDocument();
+    expect(within(rows[1]).getByText("River Shapes")).toBeInTheDocument();
     expect(rows[1]).toHaveTextContent("Danube");
     expect(rows[1]).toHaveTextContent("+0");
     expect(rows[2]).toHaveTextContent("+83");
@@ -395,7 +395,7 @@ describe("GameSummary", () => {
     const { onOpenRound } = renderSummary();
     await screen.findByText("183");
 
-    await userEvent.setup().click(screen.getByRole("button", { name: /River shape/ }));
+    await userEvent.setup().click(screen.getByRole("button", { name: /River Shapes/ }));
 
     expect(onOpenRound).toHaveBeenCalledWith(1);
   });

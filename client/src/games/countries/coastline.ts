@@ -8,8 +8,6 @@ import { CoastlineIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_COASTLINE",
-  title: "Coastlines",
-  singular: "Country by coastline",
   description: "Name a country from its coastline alone.",
   Icon: CoastlineIcon,
   hasClues: true,
