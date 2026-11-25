@@ -37,10 +37,10 @@ for (const { path, name, version, license } of entries) {
 }
 
 const header = [
-  "Third-party software used in Geogames",
+  "Third-party software used in Geoggernaut",
   "=====================================",
   "",
-  "Geogames is built with the open-source packages below. Each is listed with its licence text.",
+  "Geoggernaut is built with the open-source packages below. Each is listed with its licence text.",
   "Data credits (Natural Earth, Wikidata, Wikipedia, Flaticon) are in the site footer.",
   "",
   "",

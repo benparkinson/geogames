@@ -53,7 +53,7 @@ describe("the daily pages and the header on the server", () => {
   it("renders the header with no streak, even with one stored", () => {
     localStorage.setItem("gg-daily-streak", JSON.stringify({ v: 1, lastDate: localDateString(), count: 4 }));
 
-    expect(renderToString(<SiteHeader title="GeoGauntlet" />)).not.toContain("data-streak");
+    expect(renderToString(<SiteHeader title="Geoggernaut" />)).not.toContain("data-streak");
   });
 
   it("renders the intro with no date", () => {

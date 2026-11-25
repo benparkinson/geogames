@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures";
 
-const TEXT = "A new version of Geogames is available.";
+const TEXT = "A new version of Geoggernaut is available.";
 
 test("a newer deployed version shows a toast, and Refresh clears it", async ({ page }) => {
   const newer = (route: import("@playwright/test").Route) =>

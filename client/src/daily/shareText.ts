@@ -1,3 +1,4 @@
+import { SITE_NAME } from "../siteName";
 import type { Difficulty } from "../api/types";
 import { OUTCOME_STYLES } from "../games/common/outcome";
 import type { DailyResult } from "./dailyStorage";
@@ -12,7 +13,7 @@ export function shareText(
   daily: { date: string; difficulty: Difficulty; result: DailyResult },
   origin: string,
 ): string {
-  const title = `GeoGauntlet Daily ${daily.date}` + TITLE_SUFFIX[daily.difficulty];
+  const title = `${SITE_NAME} Daily ${daily.date}` + TITLE_SUFFIX[daily.difficulty];
   return [
     title,
     `${daily.result.score} / ${daily.result.maxScore}`,
