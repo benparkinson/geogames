@@ -72,10 +72,10 @@ class RoundStatsRecorderTest {
                 type.hintCount(),
                 type.guessLimit(),
                 com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-                    AnswerState.CORRECT, 1, type.hintCount(), 1, type.answerCount()),
+                    AnswerState.CORRECT, 1, 1, type.answerCount(), 2),
                 true,
                 Difficulty.HARD));
-    assertThat(row.points()).isBetween(1, 99);
+    assertThat(row.points()).isEqualTo(7);
   }
 
   @Test
@@ -84,10 +84,9 @@ class RoundStatsRecorderTest {
 
     RoundResult row = recorded();
     assertThat(row.difficulty()).isEqualTo(Difficulty.EASY);
-    // A river by shape has no continent hint in Easy, so its two hints share the 50 points.
     assertThat(row.hintCount()).isEqualTo(2);
     assertThat(row.guessLimit()).isEqualTo(8);
-    assertThat(row.points()).isEqualTo(75);
+    assertThat(row.points()).isEqualTo(7);
   }
 
   @Test

@@ -343,10 +343,15 @@ export interface RoundSpec {
 
 /** The server's responses for a whole game, each carrying the same complete result. */
 export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
-  const hintCounts = specs.map(() => 3);
   const hintsUsed = specs.map((spec) => spec.hintsUsed ?? 0);
   const points = specs.map((spec, i) =>
-    roundPoints(spec.answerState, hintsUsed[i], hintCounts[i], spec.answersFound ?? 0, spec.river ? 1 : 3),
+    roundPoints(
+      spec.answerState,
+      hintsUsed[i],
+      spec.answersFound ?? 0,
+      spec.river ? 1 : 3,
+      spec.wrongGuesses?.length ?? 0,
+    ),
   );
   const unanswered = specs.filter((spec) => spec.answerState === "UNANSWERED").length;
   const gameResult = {
@@ -354,7 +359,7 @@ export function makeGameRounds(specs: RoundSpec[]): GameRoundResponse[] {
     roundsUnanswered: unanswered,
     score: points.reduce((sum, p) => sum + p, 0),
     roundAnswerStates: specs.map((spec) => spec.answerState),
-    maxScore: 100 * specs.length,
+    maxScore: 10 * specs.length,
     roundsCorrect: specs.filter((spec) => spec.answerState === "CORRECT").length,
     roundPoints: points,
     roundHintsUsed: hintsUsed,

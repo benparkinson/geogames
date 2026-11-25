@@ -1,3 +1,4 @@
+import { useState } from "react";
 import GuessForm from "./GuessForm";
 import GuessList from "./GuessList";
 import { GuessResult, GuessState, foundAnswers, guessesLeft } from "./guessReducer";
@@ -51,6 +52,8 @@ export default function RoundPanel({
     />
   );
   const gameOver = state.over;
+  // A round that was already over when the panel appeared (one revisited through the dots) shows its bar filled.
+  const [startedOver] = useState(state.over);
   return (
     <>
       <RoundBrief question={prompt} found={foundAnswers(state).length} answerCount={view.answerCount} />
@@ -72,7 +75,7 @@ export default function RoundPanel({
         {gameOver ? (
           <>
             {guessList}
-            <RoundResult view={view} round={round} />
+            <RoundResult view={view} round={round} animate={!startedOver} />
           </>
         ) : (
           <>

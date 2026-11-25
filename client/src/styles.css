@@ -205,16 +205,12 @@ code {
   font-weight: var(--gg-font-weight-mono);
   line-height: 1;
 }
-.round-dot svg {
-  width: 0.8em;
-  height: 0.8em;
-}
-.round-dot[data-outcome="correct"],
-.round-dot[data-outcome="firstGuess"] {
+.round-dot[data-outcome="full"],
+.round-dot[data-outcome="good"] {
   background: var(--gg-color-rule);
   color: var(--gg-color-page-bg);
 }
-.round-dot[data-outcome="hints"] {
+.round-dot[data-outcome="partial"] {
   background: var(--gg-color-text-muted);
   border-color: var(--gg-color-text-muted);
   color: var(--gg-color-page-bg);

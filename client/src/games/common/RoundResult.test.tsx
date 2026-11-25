@@ -4,13 +4,15 @@ import { describe, expect, it } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
 import RoundResult from "./RoundResult";
 import type { RoundView } from "./roundView";
+import { pointsBreakdown } from "./scoring";
 
 function makeView(overrides: Partial<RoundView> = {}): RoundView {
   return {
     answerState: "CORRECT",
-    points: 100,
-    outcome: "firstGuess",
-    result: "firstGuess",
+    points: 10,
+    breakdown: { answer: 4, noHints: 3, noMisses: 3 },
+    outcome: "full",
+    result: "correct",
     hintsUsed: 0,
     answersFound: 1,
     answerCount: 1,
@@ -21,18 +23,16 @@ function makeView(overrides: Partial<RoundView> = {}): RoundView {
   };
 }
 
-/** The banner is the live status: its outcome, the label (with an optional note under it) and the points. */
+/** The banner is the live status: its outcome, the title and the points. */
 function expectBanner({
   outcome,
   result,
   label,
-  note,
   points,
 }: {
   outcome: string;
   result?: string;
   label: string;
-  note?: string;
   points: string;
 }): void {
   const banner = screen.getByRole("status");
@@ -42,10 +42,10 @@ function expectBanner({
   } else {
     expect(banner).toHaveAttribute("data-result", result);
   }
-  expect(within(banner).getByText(label)).toBeInTheDocument();
-  expect(within(banner).getByText(points)).toBeInTheDocument();
-  expect(banner).toHaveTextContent(note === undefined ? `${label} ${points}` : `${label} ${note} ${points}`);
+  expect(banner).toHaveTextContent(`${label} ${points}`);
 }
+
+const cells = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLElement>("[data-part]"));
 
 describe("RoundResult", () => {
   it("shows a spinner on a disabled next button while saving, then focuses it", () => {
@@ -62,90 +62,87 @@ describe("RoundResult", () => {
     expect(within(screen.getByRole("button")).queryByRole("status")).not.toBeInTheDocument();
   });
 
-  it("celebrates a first guess", () => {
-    render(<RoundResult view={makeView()} round={makeRoundProps()} />);
-
-    expectBanner({ outcome: "firstGuess", label: "First guess!", points: "+100" });
-    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Answer revealed/)).not.toBeInTheDocument();
-  });
-
-  it("says no wrong guesses for a first guess in a game with several answers", () => {
-    render(<RoundResult view={makeView({ answerCount: 3, answersFound: 3 })} round={makeRoundProps()} />);
-
-    expectBanner({ outcome: "firstGuess", label: "No wrong guesses!", points: "+100" });
-  });
-
-  it("calls a win after a wrong guess correct, not a first guess", () => {
-    render(<RoundResult view={makeView({ outcome: "correct", result: "correct" })} round={makeRoundProps()} />);
-
-    expectBanner({ outcome: "correct", label: "Correct!", points: "+100" });
-    expect(screen.queryByText(/First guess/)).not.toBeInTheDocument();
-  });
-
-  it("scores a correct answer with a hint, without a separate hints line", () => {
-    const view = makeView({ outcome: "hints", result: "hints", hintsUsed: 1, points: 83 });
+  it("shows the title, the points and a bar with the three named parts", () => {
+    const view = makeView({
+      points: 9,
+      outcome: "good",
+      hintsUsed: 1,
+      breakdown: pointsBreakdown("CORRECT", 1, 1, 1, 0),
+    });
     render(<RoundResult view={view} round={makeRoundProps()} />);
 
-    expectBanner({ outcome: "hints", label: "Correct with a hint", points: "+83" });
-    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
-  });
-
-  it("pluralises the hints", () => {
-    const view = makeView({ outcome: "hints", result: "hints", hintsUsed: 2, points: 67 });
-    render(<RoundResult view={view} round={makeRoundProps()} />);
-
-    expectBanner({ outcome: "hints", label: "Correct with 2 hints", points: "+67" });
+    expectBanner({ outcome: "good", label: "Correct!", points: "+9" });
+    expect(
+      screen.getByRole("img", { name: "9 of 10: answer 4, no hints 2 of 3, no misses 3 of 3" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Answer 4")).toBeInTheDocument();
+    expect(screen.getByText("No hints 2/3")).toBeInTheDocument();
+    expect(screen.getByText("No misses 3/3")).toBeInTheDocument();
   });
 
   it("says the answer was revealed, for no points", () => {
-    const view = makeView({ outcome: "missed", result: "revealed", points: 0, answersFound: 0, hintsUsed: 2 });
+    const view = makeView({
+      outcome: "missed",
+      result: "revealed",
+      points: 0,
+      answersFound: 0,
+      hintsUsed: 2,
+      breakdown: { answer: 0, noHints: 0, noMisses: 0 },
+    });
     render(<RoundResult view={view} round={makeRoundProps()} />);
 
     expectBanner({ outcome: "missed", result: "revealed", label: "Answer revealed", points: "+0" });
     expect(screen.queryByText(/Correct/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/hints? used/)).not.toBeInTheDocument();
   });
 
   it("says the guesses ran out, for no points", () => {
-    const view = makeView({ outcome: "missed", result: "outOfGuesses", points: 0, answersFound: 0 });
+    const view = makeView({
+      outcome: "missed",
+      result: "outOfGuesses",
+      points: 0,
+      answersFound: 0,
+      breakdown: { answer: 0, noHints: 0, noMisses: 0 },
+    });
     render(<RoundResult view={view} round={makeRoundProps()} />);
 
     expectBanner({ outcome: "missed", result: "outOfGuesses", label: "Out of guesses", points: "+0" });
     expect(screen.queryByText(/Answer revealed/)).not.toBeInTheDocument();
   });
 
-  it("says how many were found and the hints used for a round given up with some found", () => {
+  it("says how many were found for a round given up with some found", () => {
     const view = makeView({
-      outcome: "hints",
+      outcome: "partial",
       result: "revealed",
-      points: 55,
+      points: 5,
       answersFound: 2,
       answerCount: 3,
-      hintsUsed: 1,
+      breakdown: pointsBreakdown("GAVE_UP", 0, 2, 3, 0),
     });
     render(<RoundResult view={view} round={makeRoundProps()} />);
 
-    expectBanner({
-      outcome: "hints",
-      result: "revealed",
-      label: "Answer revealed",
-      note: "2 of 3 found · 1 hint used",
-      points: "+55",
-    });
+    expectBanner({ outcome: "partial", result: "revealed", label: "Answer revealed", points: "+5" });
+    expect(screen.getByText("Found 2 of 3")).toBeInTheDocument();
   });
 
-  it("says how many were found for a round that ran out of guesses", () => {
-    const view = makeView({ outcome: "hints", result: "outOfGuesses", points: 50, answersFound: 1, answerCount: 2 });
-    render(<RoundResult view={view} round={makeRoundProps()} />);
+  it("fills the bar cell by cell for a round that has just ended, with every cell still present", () => {
+    const { container } = render(<RoundResult view={makeView()} round={makeRoundProps()} animate />);
 
-    expectBanner({
-      outcome: "hints",
-      result: "outOfGuesses",
-      label: "Out of guesses",
-      note: "1 of 2 found",
-      points: "+50",
-    });
+    expect(container.querySelector("[data-animate]")).not.toBeNull();
+    expect(cells(container)).toHaveLength(10);
+    expect(cells(container).every((c) => c.dataset.earned === "true")).toBe(true);
+  });
+
+  it("shows a revisited round's bar already filled, with no animation", () => {
+    const { container } = render(<RoundResult view={makeView()} round={makeRoundProps()} />);
+
+    expect(container.querySelector("[data-animate]")).toBeNull();
+    expect(cells(container)).toHaveLength(10);
+  });
+
+  it("focuses the next round button at once, while the bar fills", () => {
+    render(<RoundResult view={makeView()} round={makeRoundProps({ hasNextRound: true })} animate />);
+
+    expect(screen.getByRole("button", { name: /Next round/ })).toHaveFocus();
   });
 
   it("offers the next round when there is one", async () => {

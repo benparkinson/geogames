@@ -34,7 +34,7 @@ test("challenge a friend: finish a game, share the link, and a friend plays the 
   const gameIds: string[] = [];
   for (let i = 0; i < 2; i++) {
     await friendPage.goto(link.pathname + link.search);
-    await expect(friendPage.getByText(/They scored 0 \/ 300/)).toBeVisible();
+    await expect(friendPage.getByText(/They scored 0 \/ 30/)).toBeVisible();
     await friendPage.getByRole("button", { name: "Play" }).click();
     await expect(friendPage).toHaveURL(/\/games\/[0-9a-f-]{36}$/);
     gameIds.push(friendPage.url().split("/").pop()!);

@@ -454,14 +454,14 @@ describe("HomePage daily challenge card", () => {
     writeDaily({
       ...entry,
       result: {
-        score: 430,
-        maxScore: 500,
-        rounds: ["firstGuess", "firstGuess", "firstGuess", "firstGuess", "firstGuess"],
+        score: 50,
+        maxScore: 50,
+        rounds: ["full", "full", "full", "full", "full"],
       },
     });
     renderHome();
 
-    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 430 / 500");
+    expect(screen.getByRole("link", { name: /Daily challenge/ })).toHaveTextContent("Done: 50 / 50");
   });
 
   it.each([
@@ -522,9 +522,9 @@ describe("HomePage daily countdown", () => {
     gameId: "g1",
     difficulty: "NORMAL",
     result: {
-      score: 430,
-      maxScore: 500,
-      rounds: ["firstGuess", "firstGuess", "firstGuess", "firstGuess", "firstGuess"],
+      score: 50,
+      maxScore: 50,
+      rounds: ["full", "full", "full", "full", "full"],
     },
   };
   const dailyLink = () => screen.getByRole("link", { name: /Daily challenge/ });
@@ -567,7 +567,7 @@ describe("HomePage daily countdown", () => {
   it("rolls over at midnight to the intro text, with no countdown", () => {
     writeDaily(finished);
     renderHome();
-    expect(dailyLink()).toHaveTextContent("Done: 430 / 500");
+    expect(dailyLink()).toHaveTextContent("Done: 50 / 50");
 
     act(() => {
       vi.advanceTimersByTime(3600 * 1000);

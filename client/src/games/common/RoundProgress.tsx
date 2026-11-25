@@ -1,6 +1,5 @@
-import { CORRECT_ANSWER, OUT_OF_GUESSES, UNANSWERED } from "./Model";
+import { UNANSWERED } from "./Model";
 import { RoundOutcome } from "./outcome";
-import { RESULT_ICONS } from "../../ui/icons";
 
 export default function RoundProgress({
   states,
@@ -26,37 +25,8 @@ export default function RoundProgress({
   function describe(i: number): string {
     const n = i + 1;
     if (i === currentRound) return `Round ${n}: current`;
-    const revealed = states[i] === OUT_OF_GUESSES ? "out of guesses" : "revealed";
-    switch (outcomes[i]) {
-      case "firstGuess":
-        return `Round ${n}: first guess`;
-      case "correct":
-        return `Round ${n}: correct`;
-      case "hints":
-        return states[i] === CORRECT_ANSWER
-          ? `Round ${n}: correct with hints, ${points[i]} points`
-          : `Round ${n}: ${revealed}, ${points[i]} points`;
-      case "missed":
-        return `Round ${n}: ${revealed}`;
-      default:
-        return `Round ${n}: not played`;
-    }
-  }
-
-  /** Which result's glyph the dot shows; null while unanswered, when it shows the round's number. */
-  function result(i: number): keyof typeof RESULT_ICONS | null {
-    const outcome = outcomes[i];
-    if (outcome === null || outcome === undefined) return null;
-    if (outcome === "firstGuess") return "firstGuess";
-    if (states[i] === CORRECT_ANSWER) return "correct";
-    return states[i] === OUT_OF_GUESSES ? "outOfGuesses" : "revealed";
-  }
-
-  function icon(i: number): React.ReactNode {
-    const shown = result(i);
-    if (shown === null) return i + 1;
-    const Icon = RESULT_ICONS[shown];
-    return <Icon aria-hidden="true" />;
+    if (outcomes[i] == null) return `Round ${n}: not played`;
+    return `Round ${n}: ${points[i]} ${points[i] === 1 ? "point" : "points"}`;
   }
 
   return (
@@ -64,20 +34,20 @@ export default function RoundProgress({
       {states.map((_state, i) => {
         const label = describe(i);
         const visitable = canVisit(i);
+        const outcome = outcomes[i];
         return (
           <span key={i} title={visitable ? undefined : `Finish round ${i} first`}>
             <button
               type="button"
               className="round-dot"
-              data-outcome={outcomes[i] ?? undefined}
-              data-result={result(i) ?? undefined}
+              data-outcome={outcome ?? undefined}
               aria-label={label}
               title={visitable ? label : undefined}
               aria-current={i === currentRound ? "step" : undefined}
               disabled={!visitable}
               onClick={() => goToRound(i)}
             >
-              {icon(i)}
+              {outcome == null ? i + 1 : points[i]}
             </button>
           </span>
         );
