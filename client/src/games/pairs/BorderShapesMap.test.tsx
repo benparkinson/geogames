@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, clueLineOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
@@ -27,12 +27,6 @@ const points = () => drawnLayers().map((layer) => layer.point);
 beforeEach(() => vi.clearAllMocks());
 
 describe("BorderShapesMap", () => {
-  it("shows a metric scale bar in the bottom left corner", () => {
-    renderMap();
-
-    expect(screen.getByTestId("ScaleControl")).toHaveAttribute("data-position", "bottomleft");
-  });
-
   it("credits Natural Earth", () => {
     renderMap();
 

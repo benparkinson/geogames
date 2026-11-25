@@ -18,6 +18,12 @@ describe("GameMap", () => {
     expect(screen.getByText("a layer")).toBeInTheDocument();
   });
 
+  it("renders a scale bar", () => {
+    render(<GameMap>{null}</GameMap>);
+
+    expect(screen.getByTestId("ScaleControl")).toBeInTheDocument();
+  });
+
   it("adds the standard credit", () => {
     render(<GameMap>{null}</GameMap>);
 

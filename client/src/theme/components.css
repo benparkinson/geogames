@@ -1538,6 +1538,11 @@ button.gg-summary__row:focus-visible {
   font-weight: var(--gg-font-weight-mono);
 }
 
+/* A tighter corner margin than Leaflet's 10px, so the bar takes little of a small map. */
+.leaflet-bottom.leaflet-left .leaflet-control-scale {
+  margin: 0 0 var(--gg-space-1) var(--gg-space-1);
+}
+
 /* A page whose content (the daily ticket) draws its own border and padding. */
 .gg-page__card--bare {
   padding: 0;
