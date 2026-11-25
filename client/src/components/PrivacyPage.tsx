@@ -78,6 +78,13 @@ function PrivacyPage(): React.JSX.Element {
           slow or has none for today, the page simply shows no preview.
         </p>
 
+        <p>
+          When you finish a game that is not a daily challenge, you can challenge a friend. The server then stores the
+          rounds of your game, its mode and difficulty, your score and the date it was made (no time), so your friend
+          can play the same rounds. It holds no player data and is not linked to your game, and it is deleted after
+          seven days.
+        </p>
+
         <h2 className="gg-page__section">Who else receives data</h2>
         <p>
           Loading any web page sends your IP address to the server that hosts it.{" "}
