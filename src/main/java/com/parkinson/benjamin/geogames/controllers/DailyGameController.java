@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameRequest;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
@@ -44,8 +45,7 @@ public class DailyGameController {
     if (request != null && request.date() != null) {
       date = Optional.of(parseDate(request.date()));
     }
-    Difficulty difficulty =
-        request == null ? null : Difficulty.resolve(request.difficulty(), request.hardMode());
+    Difficulty difficulty = request == null ? null : Difficulty.resolve(request.difficulty());
     return ResponseEntity.ok(dailyChallengeService.createDailyGame(date, difficulty));
   }
 
@@ -71,15 +71,14 @@ public class DailyGameController {
   public DailyScoreResponse dailyScore(
       @PathVariable String date, @RequestParam(required = false) String difficulty) {
     return dailyChallengeService.score(
-        parseDate(date),
-        difficulty == null ? Difficulty.NORMAL : Difficulty.resolve(difficulty, null));
+        parseDate(date), difficulty == null ? Difficulty.NORMAL : Difficulty.resolve(difficulty));
   }
 
   private static LocalDate parseDate(String text) {
     try {
       return LocalDate.parse(text);
     } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("date must be YYYY-MM-DD");
+      throw new BadRequestException("date must be YYYY-MM-DD");
     }
   }
 }

@@ -48,7 +48,6 @@ final class GameResults {
     List<Integer> roundHintsUsed = new ArrayList<>(rounds.size());
     int roundsUnanswered = 0;
     int roundsCorrect = 0;
-    int perfectRounds = 0;
     int firstGuessRounds = 0;
     List<Boolean> roundFirstGuess = new ArrayList<>(rounds.size());
     int score = 0;
@@ -68,9 +67,6 @@ final class GameResults {
         roundsUnanswered++;
       } else if (state == AnswerState.CORRECT) {
         roundsCorrect++;
-        if (round.getHintsUsed() == 0) {
-          perfectRounds++;
-        }
       }
     }
     GameState gameState;
@@ -88,7 +84,6 @@ final class GameResults {
         roundAnswerStates,
         Scoring.MAX_ROUND_POINTS * rounds.size(),
         roundsCorrect,
-        perfectRounds,
         roundPoints,
         roundHintsUsed,
         roundFirstGuess,

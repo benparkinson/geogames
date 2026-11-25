@@ -58,43 +58,6 @@ describe("useDifficulty", () => {
     expect(renderHook(() => useDifficulty()).result.current[0]).toBe("NORMAL");
   });
 
-  describe("the old Hard mode preference", () => {
-    beforeEach(() => localStorage.setItem("gg-hardcore", "on"));
-
-    it("counts as Hard while there is no difficulty, without rewriting storage on read", () => {
-      const { result } = renderHook(() => useDifficulty());
-
-      expect(result.current[0]).toBe("HARD");
-      expect(localStorage.getItem("gg-hardcore")).toBe("on");
-      expect(localStorage.getItem("gg-difficulty")).toBeNull();
-    });
-
-    it("is replaced by the first write of the new key", () => {
-      const { result } = renderHook(() => useDifficulty());
-
-      act(() => result.current[1]("EASY"));
-
-      expect(result.current[0]).toBe("EASY");
-      expect(localStorage.getItem("gg-hardcore")).toBeNull();
-      expect(localStorage.getItem("gg-difficulty")).toBe("easy");
-    });
-
-    it("does not come back as Hard when the player then chooses Normal", () => {
-      const { result } = renderHook(() => useDifficulty());
-
-      act(() => result.current[1]("NORMAL"));
-
-      expect(result.current[0]).toBe("NORMAL");
-      expect(localStorage.getItem("gg-hardcore")).toBeNull();
-    });
-
-    it("loses to a difficulty that is stored", () => {
-      localStorage.setItem("gg-difficulty", "easy");
-
-      expect(renderHook(() => useDifficulty()).result.current[0]).toBe("EASY");
-    });
-  });
-
   it("still works for the page when localStorage is blocked", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new Error("blocked");

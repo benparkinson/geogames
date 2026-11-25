@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.model.GameType;
 
 /**
@@ -28,7 +29,7 @@ public final class GameSelection {
         return new GameSelection(type);
       }
     }
-    throw new IllegalArgumentException("Unknown game type %s!".formatted(name));
+    throw new BadRequestException("Unknown game type %s!".formatted(name));
   }
 
   public boolean isRandom() {

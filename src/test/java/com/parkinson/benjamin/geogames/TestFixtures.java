@@ -44,7 +44,7 @@ public final class TestFixtures {
   /**
    * Creates a game through the API, expects success and returns its public id.
    *
-   * @param extra more JSON members for the request, such as {@code ,"hardMode":true}
+   * @param extra more JSON members for the request, such as {@code ,"difficulty":"HARD"}
    */
   public static String createGame(MockMvc mockMvc, String gameType, int rounds, String extra)
       throws Exception {
