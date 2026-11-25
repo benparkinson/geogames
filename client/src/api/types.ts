@@ -44,6 +44,15 @@ export interface DailyScore {
   buckets: number[];
 }
 
+/** The JSON of GET /api/daily-challenges/{date}: the game types of a stored day, in round order. */
+export interface DailyChallenge {
+  /** The challenge date, `YYYY-MM-DD`. */
+  date: string;
+  number: number;
+  /** `GameType` names, one per round. */
+  gameTypes: string[];
+}
+
 /** The JSON of POST /api/daily-games: a new game made from the day's rounds. */
 export interface DailyGameResponse {
   id: string;
