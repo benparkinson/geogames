@@ -15,12 +15,15 @@ import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameState;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -102,6 +105,35 @@ public class GameService {
         gameRepository
             .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
             .getPublicId());
+  }
+
+  /**
+   * What a challenge copies from a game, or empty if there is no such game.
+   *
+   * @throws BadRequestException for a daily game
+   * @throws ChallengeConflictException if a round is unanswered
+   */
+  @Transactional(readOnly = true)
+  public Optional<ChallengeSource> challengeSource(UUID gameId) {
+    return gameRepository
+        .findByPublicId(gameId)
+        .map(
+            game -> {
+              if (game.getDailyDate() != null) {
+                throw new BadRequestException("A daily game has its own share");
+              }
+              GameResult result = GameResults.of(game);
+              if (result.gameState() != GameState.FINISHED) {
+                throw new ChallengeConflictException("Finish the game to challenge a friend");
+              }
+              List<PinnedRound> rounds =
+                  game.getRounds().stream()
+                      .sorted(Comparator.comparingInt(GameRoundEntity::getRoundNumber))
+                      .map(r -> new PinnedRound(r.getGameType(), r.getRoundKey()))
+                      .toList();
+              return new ChallengeSource(
+                  rounds, game.getGameMode(), game.difficulty(), result.score(), result.maxScore());
+            });
   }
 
   @Transactional(readOnly = true)
