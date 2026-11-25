@@ -9,6 +9,8 @@ export function feedbackText(result: GuessResult, answerNoun: string): string | 
       return `You've already guessed ${result.guess}.`;
     case "unknown":
       return `We don't recognise "${result.guess}" as a ${answerNoun}. Check the spelling.`;
+    case "loading":
+      return "Still loading the names. Try again in a moment.";
     case "wrong":
       // The wrong-guess chip shows the guess and its clue.
       return null;
