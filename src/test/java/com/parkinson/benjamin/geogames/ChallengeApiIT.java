@@ -77,7 +77,7 @@ class ChallengeApiIT {
         .andExpect(jsonPath("$.difficulty").value("NORMAL"))
         .andExpect(jsonPath("$.roundCount").value(2))
         .andExpect(jsonPath("$.score").value(0))
-        .andExpect(jsonPath("$.maxScore").value(200))
+        .andExpect(jsonPath("$.maxScore").value(20))
         .andExpect(jsonPath("$.rounds").doesNotExist());
 
     String first =

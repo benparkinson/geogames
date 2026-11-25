@@ -1229,8 +1229,8 @@ class GameServiceTest {
             new PinnedRound(GameType.LAKES_BY_SHAPE, "lake:Q1"));
     assertThat(source.gameMode()).isEqualTo("RANDOM");
     assertThat(source.difficulty()).isEqualTo(Difficulty.NORMAL);
-    assertThat(source.score()).isEqualTo(100);
-    assertThat(source.maxScore()).isEqualTo(200);
+    assertThat(source.score()).isEqualTo(10);
+    assertThat(source.maxScore()).isEqualTo(20);
   }
 
   @Test
