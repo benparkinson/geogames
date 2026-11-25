@@ -8,6 +8,7 @@ import {
   makeRiverRoundData,
   makeTripointData,
 } from "../test/fixtures";
+import { GAME_NAMES } from "./names";
 import { findGameModule, GAME_MODULES, MENU_OPTIONS, RANDOM_OPTION, ROUND_OPTIONS } from "./registry";
 
 describe("GAME_MODULES", () => {
@@ -34,7 +35,7 @@ describe("GAME_MODULES", () => {
   it("gives every module a title, description and icon", () => {
     for (const game of GAME_MODULES) {
       expect(game.title).not.toBe("");
-      expect(game.singular).not.toBe("");
+      expect(game.title).toBe(GAME_NAMES[game.type]);
       expect(game.description).not.toBe("");
       expect(game.Icon).toBeDefined();
       expect(game.Component).toBeDefined();
@@ -113,7 +114,7 @@ describe("lake shapes", () => {
 
 describe("findGameModule", () => {
   it("finds a module by its type", () => {
-    expect(findGameModule("RIVERS_BY_SHAPE")?.singular).toBe("River shape");
+    expect(findGameModule("RIVERS_BY_SHAPE")?.title).toBe("River Shapes");
   });
 
   it("returns undefined for an unknown type, including the request-only RANDOM", () => {

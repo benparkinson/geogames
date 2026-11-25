@@ -8,8 +8,6 @@ import { NeighboursIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_NEIGHBOURS",
-  title: "Missing Country",
-  singular: "Country by neighbours",
   description: "Name the country hidden between its neighbours.",
   Icon: NeighboursIcon,
   hasClues: true,
