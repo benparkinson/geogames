@@ -78,7 +78,7 @@ export default function GameCardGrid({
 
   return (
     <div role="group" aria-label="Choose a game" className="game-picker">
-      <h2 className="game-picker__heading">Practice</h2>
+      <h2 className="game-picker__heading">Free play</h2>
       <div className="game-picker__list">{STANDARD_OPTIONS.map(renderRow)}</div>
       <div role="group" aria-labelledby="extra-difficult-label" className="game-picker__extra">
         <h2 id="extra-difficult-label" className="game-picker__heading">

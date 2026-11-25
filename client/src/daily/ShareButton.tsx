@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "../ui";
 
 const COPIED_MS = 4000;
@@ -7,7 +7,15 @@ const COPIED_MS = 4000;
  * Copies the share text; the button briefly says Copied. `navigator.clipboard` needs a secure context and a click, so it is called straight from
  * the handler. If it is missing or refuses, the text is shown selected so the player can copy it by hand.
  */
-export default function ShareButton({ text }: { text: string }): React.JSX.Element {
+export default function ShareButton({
+  text,
+  label = "Copy result",
+}: {
+  text: string;
+  /** What the copy button says before it is clicked. */
+  label?: string;
+}): React.JSX.Element {
+  const textareaId = useId();
   const [copied, setCopied] = useState(false);
   const [manual, setManual] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
@@ -47,7 +55,7 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
           {/* Both labels share one grid cell, so the button keeps the wider width while the other is hidden. */}
           <span style={{ display: "inline-grid" }}>
             <span style={{ gridArea: "1 / 1", visibility: copied ? "hidden" : "visible" }}>
-              <span aria-hidden="true">📋</span> Copy result
+              <span aria-hidden="true">📋</span> {label}
             </span>
             <span style={{ gridArea: "1 / 1", visibility: copied ? "visible" : "hidden" }}>
               <span aria-hidden="true">✅</span> Copied
@@ -62,11 +70,11 @@ export default function ShareButton({ text }: { text: string }): React.JSX.Eleme
       </div>
       {manual && (
         <div className="gg-share__manual">
-          <label htmlFor="daily-share-text" className="gg-share__label gg-text-muted">
+          <label htmlFor={textareaId} className="gg-share__label gg-text-muted">
             Copy this text
           </label>
           <textarea
-            id="daily-share-text"
+            id={textareaId}
             ref={textarea}
             readOnly
             rows={5}

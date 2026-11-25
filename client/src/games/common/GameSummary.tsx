@@ -15,6 +15,9 @@ import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
+import ChallengeShare from "../../challenge/ChallengeShare";
+import { useChallengeScore } from "../../challenge/challengeStorage";
+import { FINISHED } from "./Model";
 
 export default function GameSummary({
   gameId,
@@ -36,6 +39,7 @@ export default function GameSummary({
   const all = results.flatMap((r) => (r.data ? [r.data] : []));
   // Called before the early return below: a hook can't be skipped.
   const share = useDailyShareText(daily, all[0]);
+  const friend = useChallengeScore(gameId);
 
   if (all.length < totalRoundCount) {
     return <LoadingSpinner fullPage className="page-bg" />;
@@ -70,6 +74,11 @@ export default function GameSummary({
               <span>Hints used</span> <span>{summary.hintsUsed}</span>
             </li>
           </ul>
+          {friend && (
+            <p className="gg-summary__friend gg-mono">
+              Your friend scored {friend.score} / {friend.maxScore}
+            </p>
+          )}
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 
@@ -97,6 +106,11 @@ export default function GameSummary({
               <ShareButton text={share} />
             </div>
           )}
+          {!daily && all[0].gameResult.gameState === FINISHED && (
+            <div className="gg-summary__share">
+              <ChallengeShare gameId={gameId} round={all[0]} />
+            </div>
+          )}
           <div className="gg-summary__buttons">
             {daily ? (
               <Button
@@ -112,7 +126,7 @@ export default function GameSummary({
                 onClick={() => createGame(gameType, totalRoundCount, all[0].difficulty)}
                 disabled={creating}
               >
-                {creating ? <Spinner size="sm" /> : "Play again"}
+                {creating ? <Spinner size="sm" /> : "Play another"}
               </Button>
             )}
             <Link href="/" className={buttonClass({ variant: "quiet" })}>

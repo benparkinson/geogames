@@ -6,16 +6,36 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.dao.GameRepository;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeStore;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.annotation.Scheduled;
 
 class GameCleanupServiceTest {
 
   private final GameRepository repository = mock(GameRepository.class);
+  private final ChallengeStore challenges = mock(ChallengeStore.class);
   private final GameCleanupService service =
-      new GameCleanupService(repository, Duration.ofHours(24));
+      new GameCleanupService(repository, challenges, Duration.ofHours(24), Duration.ofDays(7));
+
+  @Test
+  void deletesChallengesCreatedBeforeTheDateOfNowMinusTheirMaxAge() {
+    Instant now = Instant.parse("2026-11-08T12:00:00Z");
+    when(challenges.deleteCreatedBefore(LocalDate.parse("2026-11-01"))).thenReturn(2);
+
+    assertThat(service.deleteChallengesOlderThanMaxAge(now)).isEqualTo(2);
+
+    verify(challenges).deleteCreatedBefore(LocalDate.parse("2026-11-01"));
+  }
+
+  @Test
+  void theScheduledRunAlsoDeletesChallenges() {
+    service.deleteOldGames();
+
+    verify(challenges).deleteCreatedBefore(org.mockito.ArgumentMatchers.any());
+  }
 
   @Test
   void deletesGamesCreatedBeforeNowMinusMaxAge() {

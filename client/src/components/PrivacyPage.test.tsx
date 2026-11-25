@@ -41,7 +41,13 @@ describe("PrivacyPage", () => {
     expect(screen.getByText(/up to six items/)).toBeInTheDocument();
   });
 
-  it("credits the data and imagery, and links to the software licences", () => {
+  it("says what a challenge to a friend stores and for how long", () => {
+    render(<PrivacyPage />);
+
+    expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(/deleted after seven days/);
+  });
+
+  it("credits the data and imagery,and links to the software licences", () => {
     render(<PrivacyPage />);
 
     const href = (name: string) => screen.getByRole("link", { name }).getAttribute("href");
