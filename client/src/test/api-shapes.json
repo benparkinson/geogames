@@ -10,6 +10,13 @@
         "name" : "string"
       }
     },
+    "GET /api/daily-challenges/{date}" : {
+      "date" : "string",
+      "gameTypes" : {
+        "array" : "string"
+      },
+      "number" : "number"
+    },
     "GET /api/daily-scores/{date}" : {
       "averageScore" : "number",
       "buckets" : {

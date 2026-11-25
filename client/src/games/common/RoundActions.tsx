@@ -1,9 +1,43 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "../../ui";
 import { HintConfig } from "./hints";
 import { CORRECT_ANSWER } from "./Model";
 import { roundPoints } from "./scoring";
 import { RevealIcon, HintIcon } from "../../ui/icons";
+
+/**
+ * "Hint −10 · 3 left". If it has to wrap it breaks after the dot, and the dot is then hidden (kept in the layout, so
+ * hiding it can't let the label fit again and bring it back).
+ */
+function HintLabel({ cost, left }: { cost: number; left: number }): React.JSX.Element {
+  const label = useRef<HTMLSpanElement>(null);
+  const [wrapped, setWrapped] = useState(false);
+
+  useLayoutEffect(() => {
+    const element = label.current;
+    if (!element || typeof ResizeObserver === "undefined") {
+      return;
+    }
+    const measure = () => {
+      const [first, second] = Array.from(element.children) as HTMLElement[];
+      setWrapped(second.offsetTop > first.offsetTop);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [cost, left]);
+
+  return (
+    <span ref={label} className="round-actions__hint-label" data-wrapped={wrapped}>
+      <span className="round-actions__nowrap">
+        {`Hint −${cost} `}
+        <span className="round-actions__dot">·</span>
+      </span>{" "}
+      <span className="round-actions__nowrap">{`${left} left`}</span>
+    </span>
+  );
+}
 
 /** The hint and reveal buttons. Revealing asks for a second tap, which lapses after a few seconds. */
 export default function RoundActions({
@@ -54,7 +88,7 @@ export default function RoundActions({
       <span title={hintTitle}>
         <Button variant="hint" onClick={onHint} disabled={hintsLeft <= 0}>
           <HintIcon aria-hidden="true" />{" "}
-          {hintsLeft > 0 ? `Hint −${nextHintCost} · ${hintsLeft} left` : "Hint · 0 left"}
+          {hintsLeft > 0 ? <HintLabel cost={nextHintCost} left={hintsLeft} /> : "Hint · 0 left"}
         </Button>
       </span>
       <Button variant="danger" onClick={handleRevealClick}>

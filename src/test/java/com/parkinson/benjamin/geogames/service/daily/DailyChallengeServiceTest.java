@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
@@ -156,5 +159,41 @@ class DailyChallengeServiceTest {
 
   private static Supplier<List<PinnedRound>> anySupplier() {
     return ArgumentMatchers.<Supplier<List<PinnedRound>>>any();
+  }
+
+  @Test
+  void aStoredChallengeShowsItsTypesInRoundOrderAndNumber() {
+    DailyChallengeService service = service(TODAY);
+    when(store.find(TODAY))
+        .thenReturn(
+            Optional.of(
+                List.of(
+                    new PinnedRound(GameType.LAKES_BY_SHAPE, "lake:a"),
+                    new PinnedRound(GameType.TRIPOINT, "tripoint:x"))));
+
+    var challenge = service.challenge(TODAY).orElseThrow();
+
+    assertThat(challenge.date()).isEqualTo(TODAY);
+    assertThat(challenge.number()).isEqualTo(4);
+    assertThat(challenge.gameTypes()).containsExactly("LAKES_BY_SHAPE", "TRIPOINT");
+  }
+
+  @Test
+  void aDayWithNoRowIsEmptyAndNothingIsCreated() {
+    DailyChallengeService service = service(TODAY);
+    when(store.find(TODAY)).thenReturn(Optional.empty());
+
+    assertThat(service.challenge(TODAY)).isEmpty();
+
+    verify(store, never()).findOrCreate(any(), any());
+    verifyNoInteractions(scores, games);
+  }
+
+  @Test
+  void aChallengeDateTwoDaysOutIsRejected() {
+    DailyChallengeService service = service(TODAY);
+
+    assertThatThrownBy(() -> service.challenge(TODAY.plusDays(2)))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }

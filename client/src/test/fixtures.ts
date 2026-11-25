@@ -1,6 +1,7 @@
 import { vi } from "vitest";
 import type {
   DailyGameResponse,
+  DailyChallenge,
   DailyScore,
   GameRoundResponse,
   RoundAnswerResponse,
@@ -456,6 +457,16 @@ export function makeDailyScore(overrides: Partial<DailyScore> = {}): DailyScore 
     averageScore: 312.5,
     maxScore: 500,
     buckets: [0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 1],
+    ...overrides,
+  };
+}
+
+/** What GET /api/daily-challenges/{date} returns. */
+export function makeDailyChallenge(overrides: Partial<DailyChallenge> = {}): DailyChallenge {
+  return {
+    date: "2026-11-18",
+    number: 2,
+    gameTypes: ["TRIPOINT", "LAKES_BY_SHAPE", "RIVERS_BY_SHAPE", "BORDERS_BY_SHAPE", "COUNTRIES_BY_CITIES"],
     ...overrides,
   };
 }
