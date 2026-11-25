@@ -5,5 +5,6 @@ export const queryKeys = {
   appVersion: () => ["appVersion"] as const,
   game: (gameId: string) => ["games", gameId] as const,
   dailyScore: (date: string, difficulty: string) => ["dailyScore", date, difficulty] as const,
+  dailyChallenge: (date: string) => ["dailyChallenge", date] as const,
   round: (gameId: string, round: number) => [...queryKeys.game(gameId), "rounds", round] as const,
 };

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchJson, hasStatus, postJson } from "./http";
 import { queryKeys } from "./queryKeys";
-import type { DailyGameResponse, DailyScore, Difficulty } from "./types";
+import type { DailyChallenge, DailyGameResponse, DailyScore, Difficulty } from "./types";
 
 /**
  * The day's totals for one difficulty league of the daily challenge. They go stale after a minute as others finish;
@@ -12,6 +12,26 @@ export function useDailyScore(date: string, difficulty: Difficulty) {
     queryKey: queryKeys.dailyScore(date, difficulty),
     queryFn: () => fetchJson<DailyScore>(`/api/daily-scores/${date}?difficulty=${difficulty}`, "load daily scores"),
     staleTime: 60_000,
+  });
+}
+
+/** How long the home page waits for the preview before leaving the card plain (a cold server takes longer). */
+const PREVIEW_TIMEOUT_MS = 4000;
+
+/**
+ * Today's game types, for the home page's preview. Read-only: the server never creates the day for this, so a day
+ * nobody has started answers 404. Any failure means no preview, so there is no retry and no error to show.
+ */
+export function useDailyChallenge(date: string | null, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.dailyChallenge(date ?? ""),
+    queryFn: () =>
+      fetchJson<DailyChallenge>(`/api/daily-challenges/${date}`, "load daily challenge", {
+        signal: AbortSignal.timeout(PREVIEW_TIMEOUT_MS),
+      }),
+    enabled: enabled && date !== null,
+    retry: false,
+    staleTime: 5 * 60_000,
   });
 }
 

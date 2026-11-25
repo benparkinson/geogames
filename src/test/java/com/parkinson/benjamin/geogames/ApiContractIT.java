@@ -157,6 +157,14 @@ class ApiContractIT {
     return endpointShape("/api/daily-scores/" + daily.get("date").asString());
   }
 
+  /** Creates the day first: the endpoint never generates a challenge. */
+  private Object dailyChallengeShape() throws Exception {
+    JsonNode daily =
+        objectMapper.readTree(
+            body(post("/api/daily-games").contentType(MediaType.APPLICATION_JSON).content("{}")));
+    return endpointShape("/api/daily-challenges/" + daily.get("date").asString());
+  }
+
   private Object endpointShape(String path) throws Exception {
     return JsonShape.of(objectMapper.readTree(body(get(path))));
   }
@@ -175,6 +183,7 @@ class ApiContractIT {
                     post("/api/daily-games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}")))));
+    endpoints.put("GET /api/daily-challenges/{date}", dailyChallengeShape());
     endpoints.put("GET /api/daily-scores/{date}", dailyScoreShape());
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 

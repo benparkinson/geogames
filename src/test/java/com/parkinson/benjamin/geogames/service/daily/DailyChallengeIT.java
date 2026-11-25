@@ -76,6 +76,29 @@ class DailyChallengeIT {
   }
 
   @Test
+  void theChallengeEndpointIs404UntilTheDayIsStartedThenListsFiveTypes() throws Exception {
+    LocalDate tomorrow = LocalDate.now(java.time.ZoneOffset.UTC).plusDays(1);
+    jdbc.update("delete from daily_challenge where challenge_date = ?", tomorrow);
+
+    mockMvc.perform(get("/api/daily-challenges/" + tomorrow)).andExpect(status().isNotFound());
+    assertThat(store.find(tomorrow)).isEmpty();
+
+    createDaily("{\"date\":\"%s\"}".formatted(tomorrow));
+    JsonNode challenge =
+        objectMapper.readTree(
+            mockMvc
+                .perform(get("/api/daily-challenges/" + tomorrow))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
+
+    assertThat(challenge.get("date").asString()).isEqualTo(tomorrow.toString());
+    assertThat(challenge.get("gameTypes")).hasSize(5);
+    jdbc.update("delete from daily_challenge where challenge_date = ?", tomorrow);
+  }
+
+  @Test
   void twoGamesForTheSameDateAreDifferentGamesWithIdenticalRounds() throws Exception {
     LocalDate date = LocalDate.now(java.time.ZoneOffset.UTC);
     String body = "{\"date\":\"%s\"}".formatted(date);

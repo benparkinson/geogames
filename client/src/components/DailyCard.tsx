@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { localDateString } from "../api/daily";
+import { localDateString, useDailyChallenge } from "../api/daily";
 import { formatCountdown, secondsToNextDaily } from "../daily/countdown";
+import { useHasPlayedDaily } from "../daily/dailyPlayed";
 import { entryFor, useDailyEntry } from "../daily/dailyStorage";
 import { useNowSeconds } from "../daily/useNowSeconds";
+import DailyPreview from "./DailyPreview";
 import Ticket, { ticketDate } from "./Ticket";
 
 /**
@@ -13,6 +15,8 @@ export default function DailyCard(): React.JSX.Element {
   const nowSeconds = useNowSeconds();
   const now = nowSeconds === null ? null : new Date(nowSeconds * 1000);
   const todaysDaily = entryFor(useDailyEntry(), now === null ? null : localDateString(now));
+  const today = now === null ? null : localDateString(now);
+  const challenge = useDailyChallenge(today, useHasPlayedDaily());
   const dailyStatus = todaysDaily?.result
     ? `Done: ${todaysDaily.result.score} / ${todaysDaily.result.maxScore}`
     : todaysDaily
@@ -37,6 +41,7 @@ export default function DailyCard(): React.JSX.Element {
       >
         <h2 className="gg-ticket__heading">Today&apos;s five</h2>
         <p className="gg-ticket__text">Five different geography puzzles, a new challenge every day.</p>
+        {challenge.data && <DailyPreview gameTypes={challenge.data.gameTypes} />}
       </Ticket>
     </Link>
   );
