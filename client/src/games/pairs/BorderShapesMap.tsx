@@ -1,4 +1,3 @@
-import { ScaleControl } from "react-leaflet";
 import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
@@ -7,7 +6,7 @@ import { CountryPairRound } from "./model";
 import { AnswerOutlines, BoundsFit, pairId } from "./PairLayers";
 
 /**
- * The border between two countries as a lone line on a blank map, framed tightly, with a scale bar. The first hint adds
+ * The border between two countries as a lone line on a blank map, framed tightly. The first hint adds
  * both countries' other land borders and widens the frame to both countries, the second both coastlines.
  */
 function BorderShapesMap({ data, gameOver, gaveUp, hintsUsed }: MapProps<CountryPairRound>): React.JSX.Element {
@@ -15,7 +14,6 @@ function BorderShapesMap({ data, gameOver, gaveUp, hintsUsed }: MapProps<Country
   const wide = gameOver || hintsUsed >= 1;
   return (
     <GameMap>
-      <ScaleControl position="bottomleft" imperial={false} />
       <RevealTiles show={gameOver} />
       {!gameOver &&
         hintsUsed >= 1 &&

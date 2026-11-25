@@ -124,8 +124,26 @@ export function Polyline({ positions }: { positions: unknown }) {
   return <div data-testid="Polyline" data-positions={JSON.stringify(positions)} />;
 }
 
-export function ScaleControl({ position }: { position?: string }) {
-  return <div data-testid="ScaleControl" data-position={position ?? ""} />;
+export function ScaleControl({
+  position,
+  maxWidth,
+  metric,
+  imperial,
+}: {
+  position?: string;
+  maxWidth?: number;
+  metric?: boolean;
+  imperial?: boolean;
+}) {
+  return (
+    <div
+      data-testid="ScaleControl"
+      data-position={position ?? ""}
+      data-max-width={maxWidth ?? ""}
+      data-metric={String(Boolean(metric))}
+      data-imperial={String(Boolean(imperial))}
+    />
+  );
 }
 
 /** One drawn GeoJSON layer. `point` is its first coordinate, as "x,y". */

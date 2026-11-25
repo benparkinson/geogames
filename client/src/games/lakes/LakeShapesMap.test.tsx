@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { answerPathOptions, RELIEF_TILE_URL } from "../../map/constants";
 import type { MapProps } from "../../map/MapProps";
@@ -16,13 +16,12 @@ function renderMap(overrides: Partial<MapProps<LakeRound>> = {}) {
 beforeEach(() => vi.clearAllMocks());
 
 describe("LakeShapesMap", () => {
-  it("draws the lake's shape on a blank map with a metric scale bar while playing", () => {
+  it("draws the lake's shape on a blank map while playing", () => {
     renderMap();
 
     expect(drawnLayers()).toHaveLength(1);
     expect(drawnLayers()[0].color).toBe(answerPathOptions(false).color);
     expect(drawnTileUrls()).toEqual([]);
-    expect(screen.getByTestId("ScaleControl")).toHaveAttribute("data-position", "bottomleft");
   });
 
   it("shows the relief map only once the round is over", () => {
