@@ -123,7 +123,7 @@ export default function GameSummary({
                 onClick={() => createGame(gameType, totalRoundCount, all[0].difficulty)}
                 disabled={creating}
               >
-                {creating ? <Spinner size="sm" /> : "Play again"}
+                {creating ? <Spinner size="sm" /> : "Play another"}
               </Button>
             )}
             <Link href="/" className={buttonClass({ variant: "quiet" })}>
