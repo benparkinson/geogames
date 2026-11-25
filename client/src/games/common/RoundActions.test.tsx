@@ -110,4 +110,10 @@ describe("RoundActions hints", () => {
     rerender(<RoundActions {...props} hintsUsed={3} />);
     expect(screen.getByTitle("No hints left")).toBeInTheDocument();
   });
+
+  it("says the next hint costs 0 points once the hint points are used up", () => {
+    // Only the first three hints cost a point; a game with more hints than that gives the rest free.
+    renderActions({ hintsUsed: 3, hintCount: 5 });
+    expect(screen.getByTitle("Shows a clue (−0 points)")).toBeInTheDocument();
+  });
 });

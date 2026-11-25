@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -41,7 +42,9 @@ import com.parkinson.benjamin.geogames.model.Tripoint;
 import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
+import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
@@ -1201,5 +1204,55 @@ class GameServiceTest {
     assertThatThrownBy(() -> service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 3))
         .isInstanceOf(IllegalArgumentException.class);
     assertThat(game.getRounds().get(0).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
+  }
+
+  // ---------------------------------------------------------------- challenge source
+
+  private void storedGame(LocalDate dailyDate, AnswerState second) {
+    GameRoundEntity r0 = new GameRoundEntity(0, GameType.TRIPOINT, "tripoint:a");
+    GameRoundEntity r1 = new GameRoundEntity(1, GameType.LAKES_BY_SHAPE, "lake:Q1");
+    r0.recordAnswer(AnswerState.CORRECT, 0, 0, 1);
+    r1.recordAnswer(second, 0, 0, null);
+    GameEntity game = new GameEntity(new ArrayList<>(List.of(r1, r0)), "RANDOM", null, dailyDate);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+  }
+
+  @Test
+  void aFinishedGameBecomesAChallengeSourceWithItsRoundsInOrder() {
+    storedGame(null, AnswerState.GAVE_UP);
+
+    ChallengeSource source = service.challengeSource(GAME_ID).orElseThrow();
+
+    assertThat(source.rounds())
+        .containsExactly(
+            new PinnedRound(GameType.TRIPOINT, "tripoint:a"),
+            new PinnedRound(GameType.LAKES_BY_SHAPE, "lake:Q1"));
+    assertThat(source.gameMode()).isEqualTo("RANDOM");
+    assertThat(source.difficulty()).isEqualTo(Difficulty.NORMAL);
+    assertThat(source.score()).isEqualTo(10);
+    assertThat(source.maxScore()).isEqualTo(20);
+  }
+
+  @Test
+  void anUnfinishedGameCannotBeChallenged() {
+    storedGame(null, AnswerState.UNANSWERED);
+
+    assertThatThrownBy(() -> service.challengeSource(GAME_ID))
+        .isInstanceOf(ChallengeConflictException.class);
+  }
+
+  @Test
+  void aDailyGameCannotBeChallenged() {
+    storedGame(LocalDate.of(2026, 11, 20), AnswerState.CORRECT);
+
+    assertThatThrownBy(() -> service.challengeSource(GAME_ID))
+        .isInstanceOf(BadRequestException.class);
+  }
+
+  @Test
+  void anUnknownGameHasNoChallengeSource() {
+    when(gameRepository.findByPublicId(OTHER_ID)).thenReturn(Optional.empty());
+
+    assertThat(service.challengeSource(OTHER_ID)).isEmpty();
   }
 }

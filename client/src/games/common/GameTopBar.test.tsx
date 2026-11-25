@@ -73,11 +73,11 @@ describe("GameTopBar", () => {
     expect(screen.queryByText(/round 0/)).not.toBeInTheDocument();
   });
 
-  it("calls an ordinary game Practice, and shows the difficulty only when it is not Normal", () => {
+  it("calls an ordinary game Free play, and shows the difficulty only when it is not Normal", () => {
     const { unmount } = render(
       <GameTopBar round={makeRoundProps({ difficulty: "HARD" })} progress={progressOf(makeRoundProps())} />,
     );
-    expect(screen.getByText("Practice")).toBeInTheDocument();
+    expect(screen.getByText("Free play")).toBeInTheDocument();
     expect(screen.getByText("Test Game").parentElement).toHaveTextContent(/^Test Game · Hard mode$/);
     unmount();
 
