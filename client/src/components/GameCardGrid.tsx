@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MENU_OPTIONS, MenuOption } from "../games/registry";
 import { ExtraDifficultIcon } from "../ui/icons";
 
@@ -21,6 +21,11 @@ export default function GameCardGrid({
   renderPanel: (option: MenuOption) => React.ReactNode;
 }): React.JSX.Element {
   const rowRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // A panel that opens below the screen's edge (a phone, or the sticky bottom bar in the way) is scrolled into view.
+  useEffect(() => {
+    if (selected) document.getElementById(`start-${selected}`)?.scrollIntoView?.({ block: "nearest" });
+  }, [selected]);
 
   function handleKeyDown(e: React.KeyboardEvent, index: number): void {
     let next: number;
@@ -62,7 +67,11 @@ export default function GameCardGrid({
             <span className="game-row__description gg-text-muted">{option.description}</span>
           </span>
         </button>
-        {isSelected && <div id={panelId}>{renderPanel(option)}</div>}
+        {isSelected && (
+          <div id={panelId} className="game-row__panel">
+            {renderPanel(option)}
+          </div>
+        )}
       </div>
     );
   }

@@ -539,34 +539,49 @@
 
 /* ---- Home page ---- */
 .home {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  padding-bottom: var(--gg-space-4);
+  min-height: 100dvh;
 }
 .home-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gg-space-4);
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--gg-space-3) var(--gg-space-3) 0;
+  padding: var(--gg-space-3);
 }
 @media (min-width: 900px) {
   .home-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     align-items: start;
   }
-  .home-after {
-    grid-column: 1 / -1;
-  }
 }
 .home-after {
+  /* The bottom bar: at the foot of a short page, and stuck to the bottom of the screen on a long one (room for an ad later). */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  padding: var(--gg-space-3);
+  background: var(--gg-color-page-bg);
+  border-top: 2px solid var(--gg-color-rule);
+}
+.game-row__panel {
+  /* Keeps a scrolled-to panel clear of the sticky bottom bar. */
+  scroll-margin-bottom: 6rem;
+}
+.home-after__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--gg-space-3);
-  padding-top: var(--gg-space-3);
-  border-top: 2px solid var(--gg-color-rule);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 .home-after .gg-footer {
   margin-top: 0;
@@ -888,9 +903,13 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   gap: var(--gg-space-3);
 }
 .gg-footer--pinned {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
   margin-top: auto;
-  padding-top: var(--gg-space-2);
-  padding-bottom: var(--gg-space-3);
+  padding: var(--gg-space-2) 0 var(--gg-space-3);
+  background: var(--gg-color-page-bg);
+  border-top: 2px solid var(--gg-color-rule);
 }
 
 /* ---- Daily pages ---- */
@@ -1168,6 +1187,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   display: flex;
   flex: 1 1 0;
   min-width: 0;
+}
+/* The Give up column is the wider one: its longer "Tap again to give up" label then fits on one line on desktop, so the
+   reserved space doesn't make "Give up" sit off-centre. On a narrow phone the label may still wrap. */
+.round-actions > span ~ button {
+  flex-grow: 1.6;
 }
 .round-actions button {
   flex: 1 1 0;

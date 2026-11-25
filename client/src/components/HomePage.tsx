@@ -26,8 +26,9 @@ function HomePage(): React.JSX.Element {
             renderPanel={(option) => <StartPanel option={option} />}
           />
         </section>
-
-        <div className="home-after">
+      </div>
+      <div className="home-after">
+        <div className="home-after__inner">
           <KofiBadge />
           <SiteFooter />
         </div>
