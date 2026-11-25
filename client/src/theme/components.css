@@ -1169,6 +1169,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   flex: 1 1 0;
   min-width: 0;
 }
+/* The Give up column is the wider one: its longer "Tap again to give up" label then fits on one line on desktop, so the
+   reserved space doesn't make "Give up" sit off-centre. On a narrow phone the label may still wrap. */
+.round-actions > span ~ button {
+  flex-grow: 1.6;
+}
 .round-actions button {
   flex: 1 1 0;
   min-width: 0;
