@@ -95,6 +95,12 @@ function PrivacyPage(): React.JSX.Element {
           While the site is open it occasionally fetches a small file from the same server to check whether a newer
           version has been published. The request contains nothing about you.
         </p>
+        <p>
+          <a href="https://grafana.com/legal/privacy-policy/">Grafana Labs</a> (grafana.com) receives counts and timings
+          that the server adds up: how many games are started, and how many answers, hints and wrong guesses there are
+          by game type, plus request counts and response times per API path. Nothing about a single game, player,
+          address or browser is included.
+        </p>
         <p>The &quot;Buy me a coffee&quot; link opens Ko-fi. Nothing is sent to Ko-fi unless you click it.</p>
 
         <h2 className="gg-page__section">Why this is allowed</h2>
