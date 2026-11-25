@@ -9,10 +9,15 @@ const PARTS: { part: Part; size: number }[] = [
   { part: "noMisses", size: NO_MISS_POINTS },
 ];
 
-/** The words for a bar, for a screen reader and the part labels. */
+/** "No hints" only while it is true: a round that took hints keeps a share of the part, named "Hints". */
+function hintsName(b: PointsBreakdown): string {
+  return b.noHints === NO_HINT_POINTS ? "No hints" : "Hints";
+}
+
+/** The words for a bar, for a screen reader. */
 function describe(b: PointsBreakdown): string {
   const total = b.answer + b.noHints + b.noMisses;
-  const parts = `answer ${b.answer}, no hints ${b.noHints} of ${NO_HINT_POINTS}, no misses ${b.noMisses} of ${NO_MISS_POINTS}`;
+  const parts = `answer ${b.answer}, ${hintsName(b).toLowerCase()} ${b.noHints} of ${NO_HINT_POINTS}, accuracy ${b.noMisses} of ${NO_MISS_POINTS}`;
   return `${total} of 10: ${parts}${b.found ? `. Found ${b.found.found} of ${b.found.count}` : ""}`;
 }
 
@@ -58,9 +63,10 @@ export function ScoreBar({
   const labels = breakdown.found
     ? [`Found ${breakdown.found.found} of ${breakdown.found.count}`]
     : [
-        `Answer ${breakdown.answer}`,
-        `No hints ${breakdown.noHints}/${NO_HINT_POINTS}`,
-        `No misses ${breakdown.noMisses}/${NO_MISS_POINTS}`,
+        // Points, like the banner's total. No "/3": the cells show what each part was worth, and a phone fits it on one line.
+        `Answer +${breakdown.answer}`,
+        `${hintsName(breakdown)} +${breakdown.noHints}`,
+        `Accuracy +${breakdown.noMisses}`,
       ];
   return (
     <div className={["gg-score-bar", className].filter(Boolean).join(" ")}>
