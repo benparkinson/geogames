@@ -62,19 +62,19 @@ describe("ScoreBar", () => {
 
   it("names the parts underneath only when asked", () => {
     const { rerender } = render(<ScoreBar breakdown={{ answer: 4, noHints: 2, noMisses: 3 }} />);
-    expect(screen.queryByText("Hints 2/3")).not.toBeInTheDocument();
+    expect(screen.queryByText("Hints +2")).not.toBeInTheDocument();
 
     rerender(<ScoreBar breakdown={{ answer: 4, noHints: 2, noMisses: 3 }} showLabels />);
-    expect(screen.getByText("Answer 4/4")).toBeInTheDocument();
-    expect(screen.getByText("Hints 2/3")).toBeInTheDocument();
-    expect(screen.getByText("Accuracy 3/3")).toBeInTheDocument();
+    expect(screen.getByText("Answer +4")).toBeInTheDocument();
+    expect(screen.getByText("Hints +2")).toBeInTheDocument();
+    expect(screen.getByText("Accuracy +3")).toBeInTheDocument();
   });
 
   it("says No hints only when no hint was taken, and scores a wrong guess under Accuracy", () => {
     render(<ScoreBar breakdown={pointsBreakdown("CORRECT", 0, 1, 1, 1)} showLabels />);
 
-    expect(screen.getByText("No hints 3/3")).toBeInTheDocument();
-    expect(screen.getByText("Accuracy 2/3")).toBeInTheDocument();
+    expect(screen.getByText("No hints +3")).toBeInTheDocument();
+    expect(screen.getByText("Accuracy +2")).toBeInTheDocument();
     expect(
       screen.getByRole("img", { name: "9 of 10: answer 4, no hints 3 of 3, accuracy 2 of 3" }),
     ).toBeInTheDocument();

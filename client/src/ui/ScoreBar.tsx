@@ -63,9 +63,10 @@ export function ScoreBar({
   const labels = breakdown.found
     ? [`Found ${breakdown.found.found} of ${breakdown.found.count}`]
     : [
-        `Answer ${breakdown.answer}/${ANSWER_POINTS}`,
-        `${hintsName(breakdown)} ${breakdown.noHints}/${NO_HINT_POINTS}`,
-        `Accuracy ${breakdown.noMisses}/${NO_MISS_POINTS}`,
+        // Points, like the banner's total. No "/3": the cells show what each part was worth, and a phone fits it on one line.
+        `Answer +${breakdown.answer}`,
+        `${hintsName(breakdown)} +${breakdown.noHints}`,
+        `Accuracy +${breakdown.noMisses}`,
       ];
   return (
     <div className={["gg-score-bar", className].filter(Boolean).join(" ")}>
