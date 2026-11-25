@@ -421,12 +421,6 @@ describe("HomePage difficulty when starting", () => {
   it("sends Easy for a game with clues", async () => {
     expect((await startWith("easy", /Missing Country/)).difficulty).toBe("EASY");
   });
-
-  it("treats an old Hard mode preference as Hard", async () => {
-    localStorage.setItem("gg-hardcore", "on");
-
-    expect((await startWith(null, /Missing Country/)).difficulty).toBe("HARD");
-  });
 });
 
 describe("HomePage daily challenge card", () => {

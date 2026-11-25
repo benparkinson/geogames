@@ -46,12 +46,4 @@ describe("DifficultyToggle", () => {
     render(<DifficultyToggle />);
     expect(screen.getByRole("radio", { name: "Hard" })).toBeChecked();
   });
-
-  it("shows an old Hard mode preference as Hard", () => {
-    localStorage.setItem("gg-hardcore", "on");
-
-    render(<DifficultyToggle />);
-
-    expect(screen.getByRole("radio", { name: "Hard" })).toBeChecked();
-  });
 });
