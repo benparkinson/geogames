@@ -14,7 +14,7 @@ describe("shareText", () => {
         { date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } },
         "https://example.org",
       ),
-    ).toBe("GeoGauntlet Daily 2026-11-18\n430 / 500\n❇️🟨🟩🟥❇️\nhttps://example.org/daily");
+    ).toBe("Geoggernaut Daily 2026-11-18\n430 / 500\n❇️🟨🟩🟥❇️\nhttps://example.org/daily");
   });
 
   it("marks Easy and Hard mode in the title, and Normal not at all", () => {
@@ -24,9 +24,9 @@ describe("shareText", () => {
         "http://localhost:8080",
       );
 
-    expect(text("EASY").split("\n")[0]).toBe("GeoGauntlet Daily 2026-11-18 · Easy");
-    expect(text("HARD").split("\n")[0]).toBe("GeoGauntlet Daily 2026-11-18 · Hard mode");
-    expect(text("NORMAL").split("\n")[0]).toBe("GeoGauntlet Daily 2026-11-18");
+    expect(text("EASY").split("\n")[0]).toBe("Geoggernaut Daily 2026-11-18 · Easy");
+    expect(text("HARD").split("\n")[0]).toBe("Geoggernaut Daily 2026-11-18 · Hard mode");
+    expect(text("NORMAL").split("\n")[0]).toBe("Geoggernaut Daily 2026-11-18");
     expect(text("EASY").split("\n").slice(1)).toEqual(text("NORMAL").split("\n").slice(1));
     expect(text("HARD").split("\n").slice(1)).toEqual(text("NORMAL").split("\n").slice(1));
   });

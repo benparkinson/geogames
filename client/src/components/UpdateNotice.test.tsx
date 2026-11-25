@@ -9,7 +9,7 @@ vi.mock("next/router", () => ({ useRouter: () => router }));
 const update = vi.hoisted(() => ({ value: { updateAvailable: false, latestBuildId: null as string | null } }));
 vi.mock("../api/version", () => ({ useUpdateAvailable: () => update.value }));
 
-const TEXT = "A new version of Geogames is available.";
+const TEXT = "A new version of Geoggernaut is available.";
 
 beforeEach(() => {
   router.pathname = "/";

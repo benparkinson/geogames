@@ -101,7 +101,7 @@ describe("GameTopBar", () => {
     renderBar();
 
     const home = screen.getByRole("link", { name: "Home" });
-    expect(home).toHaveTextContent("GeoGauntlet");
+    expect(home).toHaveTextContent("Geoggernaut");
     expect(home.querySelector("img")).toHaveAttribute("src", "/logo.png");
   });
 

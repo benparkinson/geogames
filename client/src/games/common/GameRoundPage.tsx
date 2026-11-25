@@ -8,6 +8,7 @@ import GameSummary from "./GameSummary";
 import { FINISHED, Round, RoundAnswer, UNANSWERED } from "./Model";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { findGameModule } from "../registry";
+import { SITE_NAME } from "../../siteName";
 
 /** The callbacks of the page that a `Round` hands to the game. */
 type RoundActions = Pick<
@@ -147,15 +148,15 @@ function GameRoundPage({ gameId, daily }: { gameId: string; daily?: DailyInfo })
 
   function renderTitle() {
     if (!data) {
-      return <title>Loading... | GeoGauntlet</title>;
+      return <title>{`Loading... | ${SITE_NAME}`}</title>;
     }
     if (!gameModule) {
-      return <title>Unknown game! | GeoGauntlet</title>;
+      return <title>{`Unknown game! | ${SITE_NAME}`}</title>;
     }
     if (daily) {
-      return <title>{`Daily ${daily.date} | GeoGauntlet`}</title>;
+      return <title>{`Daily ${daily.date} | ${SITE_NAME}`}</title>;
     }
-    return <title>{`${gameModule.title} | GeoGauntlet`}</title>;
+    return <title>{`${gameModule.title} | ${SITE_NAME}`}</title>;
   }
 
   return (

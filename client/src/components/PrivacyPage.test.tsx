@@ -19,6 +19,10 @@ describe("PrivacyPage", () => {
     render(<PrivacyPage />);
 
     expect(screen.getByText(new RegExp(OWNER_NAME))).toBeInTheDocument();
+    expect(screen.getByText(/Ben Parkinson runs Geoggernaut/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "hello@geoggernaut.com" }).getAttribute("href")).toBe(
+      "mailto:hello@geoggernaut.com",
+    );
     expect(screen.getByRole("link", { name: CONTACT_EMAIL }).getAttribute("href")).toBe("mailto:" + CONTACT_EMAIL);
   });
 

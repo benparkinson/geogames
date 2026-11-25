@@ -103,7 +103,7 @@ describe("GameRoundPage loading and errors", () => {
     renderPage();
 
     expect(screen.getByRole("status")).toBeTruthy();
-    expect(title()).toBe("Loading... | GeoGauntlet");
+    expect(title()).toBe("Loading... | Geoggernaut");
   });
 
   it("shows an error when the round cannot be loaded", async () => {
@@ -124,7 +124,7 @@ describe("GameRoundPage game types", () => {
     );
 
     expect(await screen.findByText("Daily")).toBeInTheDocument();
-    expect(title()).toBe("Daily 2026-11-18 | GeoGauntlet");
+    expect(title()).toBe("Daily 2026-11-18 | Geoggernaut");
   });
 
   it("renders the tripoint game and title", async () => {
@@ -132,7 +132,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(TRIPOINT_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("Tripoints | GeoGauntlet");
+    expect(title()).toBe("Tripoints | Geoggernaut");
   });
 
   it("renders the river game and title", async () => {
@@ -140,7 +140,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
-    expect(title()).toBe("River Shapes | GeoGauntlet");
+    expect(title()).toBe("River Shapes | Geoggernaut");
   });
 
   it("copes with a game type it does not know", async () => {
@@ -153,7 +153,7 @@ describe("GameRoundPage game types", () => {
     renderPage();
 
     expect(await screen.findByText("Unknown game type...")).toBeInTheDocument();
-    expect(title()).toBe("Unknown game! | GeoGauntlet");
+    expect(title()).toBe("Unknown game! | Geoggernaut");
   });
 });
 

@@ -1,9 +1,9 @@
+import { SITE_NAME } from "../siteName";
 import SiteTitle from "./SiteTitle";
 import SiteHeader from "./SiteHeader";
 
-// TODO: replace with the real contact address before the site goes live.
 export const OWNER_NAME = "Ben Parkinson";
-export const CONTACT_EMAIL = "privacy@example.com";
+export const CONTACT_EMAIL = "hello@geoggernaut.com";
 
 function PrivacyPage(): React.JSX.Element {
   return (
@@ -32,7 +32,7 @@ function PrivacyPage(): React.JSX.Element {
 
         <h2 className="gg-page__section">Who runs this site</h2>
         <p>
-          {OWNER_NAME} runs GeoGauntlet. For privacy questions, write to{" "}
+          {OWNER_NAME} runs {SITE_NAME}. For privacy questions, write to{" "}
           <a href={"mailto:" + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>.
         </p>
 
