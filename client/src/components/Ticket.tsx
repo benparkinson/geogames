@@ -15,12 +15,15 @@ export function ticketDate(date: Date): string {
  */
 export default function Ticket({
   date,
+  label = "Daily challenge",
   stripTag: Strip = "div",
   children,
   footer,
   footerBar = false,
 }: {
   date: string | null;
+  /** The strip's title: "Daily challenge" unless this is a friend's challenge. */
+  label?: string;
   stripTag?: "div" | "h1";
   children: React.ReactNode;
   footer: React.ReactNode;
@@ -31,7 +34,7 @@ export default function Ticket({
     <div className="gg-ticket">
       <div className="gg-ticket__strip">
         <Strip className="gg-ticket__label">
-          <DailyIcon aria-hidden="true" /> Daily challenge
+          <DailyIcon aria-hidden="true" /> {label}
         </Strip>
         {date !== null && <span className="gg-mono gg-ticket__date">{date}</span>}
       </div>

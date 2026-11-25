@@ -1,8 +1,11 @@
 package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.dao.GameRepository;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeStore;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,11 +35,18 @@ public class GameCleanupService {
 
   private final GameRepository games;
   private final Duration maxAge;
+  private final ChallengeStore challenges;
+  private final Duration challengeMaxAge;
 
   public GameCleanupService(
-      GameRepository games, @Value("${geogames.games.max-age:PT24H}") Duration maxAge) {
+      GameRepository games,
+      ChallengeStore challenges,
+      @Value("${geogames.games.max-age:PT24H}") Duration maxAge,
+      @Value("${geogames.challenges.max-age:P7D}") Duration challengeMaxAge) {
     this.games = games;
+    this.challenges = challenges;
     this.maxAge = maxAge;
+    this.challengeMaxAge = challengeMaxAge;
   }
 
   @Transactional
@@ -44,6 +54,16 @@ public class GameCleanupService {
     long deleted = games.deleteCreatedBefore(now.minus(maxAge));
     if (deleted > 0) {
       log.info("Deleted {} games older than {}", deleted, maxAge);
+    }
+    return deleted;
+  }
+
+  /** Challenges are dated, so one is deleted once its creation date is older than the max age. */
+  public int deleteChallengesOlderThanMaxAge(Instant now) {
+    LocalDate cutoff = now.minus(challengeMaxAge).atZone(ZoneOffset.UTC).toLocalDate();
+    int deleted = challenges.deleteCreatedBefore(cutoff);
+    if (deleted > 0) {
+      log.info("Deleted {} challenges older than {}", deleted, challengeMaxAge);
     }
     return deleted;
   }
@@ -56,6 +76,8 @@ public class GameCleanupService {
    */
   @Scheduled(fixedDelayString = "${geogames.games.cleanup-interval:PT1H}", initialDelay = 0)
   void deleteOldGames() {
-    deleteGamesOlderThanMaxAge(Instant.now());
+    Instant now = Instant.now();
+    deleteGamesOlderThanMaxAge(now);
+    deleteChallengesOlderThanMaxAge(now);
   }
 }

@@ -24,13 +24,14 @@ public class WebConfig implements WebMvcConfigurer {
   }
 
   /**
-   * The static export writes privacy.html and daily.html, which the jar would only serve at
-   * /privacy.html and /daily.html. These forwards make /privacy and /daily load directly too (the
-   * games pages have no such forward). /daily is the daily challenge's share link and reloads.
+   * The static export writes privacy.html, daily.html and challenge.html, which the jar would only
+   * serve at /privacy.html and so on. These forwards make /privacy, /daily and /challenge load
+   * directly too (the games pages have no such forward). /daily and /challenge are share links.
    */
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/privacy").setViewName("forward:/privacy.html");
     registry.addViewController("/daily").setViewName("forward:/daily.html");
+    registry.addViewController("/challenge").setViewName("forward:/challenge.html");
   }
 }

@@ -26,6 +26,8 @@ const mixed = makeGameRounds([
 const hard = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "HARD" as const }));
 const easy = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "EASY" as const }));
 
+vi.mock("../../challenge/ChallengeShare", () => ({ default: () => <div>challenge share</div> }));
+
 afterEach(() => {
   localStorage.clear();
   Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true });
@@ -60,6 +62,7 @@ describe("GameSummary for a daily challenge", () => {
     expect(await screen.findByRole("button", { name: "Copy result" })).toBeInTheDocument();
     expect(screen.getByText(/Daily 2026-11-18/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Play another" })).not.toBeInTheDocument();
+    expect(screen.queryByText("challenge share")).not.toBeInTheDocument();
   });
 
   it("starts a five round Mixed game", async () => {
@@ -174,6 +177,26 @@ describe("GameSummary", () => {
 
     expect(screen.getByRole("status")).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Your result" })).not.toBeInTheDocument();
+  });
+
+  it("offers to challenge a friend after an ordinary finished game, but not an unfinished one", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    const { unmount } = renderSummary();
+    expect(await screen.findByText("challenge share")).toBeInTheDocument();
+    unmount();
+
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
+    renderSummary(vi.fn(), 2);
+    await screen.findByRole("heading", { name: "Your result" });
+    expect(screen.queryByText("challenge share")).not.toBeInTheDocument();
+  });
+
+  it("shows the friend's score when the game came from a challenge", async () => {
+    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    expect(await screen.findByText("Your friend scored 320 / 500")).toBeInTheDocument();
   });
 
   it("has no Copy result button and offers Play another in an ordinary game", async () => {

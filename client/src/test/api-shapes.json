@@ -1,5 +1,12 @@
 {
   "endpoints" : {
+    "GET /api/challenges/{id}" : {
+      "difficulty" : "string",
+      "gameMode" : "string",
+      "maxScore" : "number",
+      "roundCount" : "number",
+      "score" : "number"
+    },
     "GET /api/countries" : {
       "array" : {
         "additionalNames" : {
@@ -53,6 +60,9 @@
       "number" : "number"
     },
     "POST /api/games" : {
+      "id" : "string"
+    },
+    "POST /api/games/{id}/challenges" : {
       "id" : "string"
     },
     "POST /api/games/{id}/rounds/{round}/answers" : {
