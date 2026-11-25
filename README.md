@@ -1,4 +1,6 @@
-# Geogames (working title)
+# Geoggernaut
+
+The code, the Maven artifact and the repository are still called `geogames`.
 
 ## Build and run
 
