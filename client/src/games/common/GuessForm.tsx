@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../../ui";
 import { GuessBox } from "./GuessBox";
 import { feedbackText } from "./guessFeedback";
@@ -15,6 +15,11 @@ function shakeClass(shakeCount: number): string | undefined {
   return shakeCount % 2 === 1 ? "shake" : "shake-again";
 }
 
+/** How long a guess's result stays over the box. Matches `--gg-duration-flash`. */
+const FLASH_MS = 700;
+
+type Flash = { text: string; kind: "correct" | "wrong"; id: number };
+
 /** The guess box and its button, and what the last guess earned. Only shown while the round is being played. */
 export default function GuessForm({
   submitGuess,
@@ -30,7 +35,21 @@ export default function GuessForm({
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<GuessResult | null>(null);
   const [shakeCount, setShakeCount] = useState(0);
+  const [flash, setFlash] = useState<Flash | null>(null);
+  const flashId = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const shownFlashId = flash?.id;
+  useEffect(() => {
+    if (shownFlashId === undefined) return;
+    const timer = setTimeout(() => setFlash((f) => (f?.id === shownFlashId ? null : f)), FLASH_MS);
+    return () => clearTimeout(timer);
+  }, [shownFlashId]);
+
+  function showFlash(kind: Flash["kind"]) {
+    flashId.current += 1;
+    setFlash({ text: guess, kind, id: flashId.current });
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,10 +62,12 @@ export default function GuessForm({
         break;
       case "wrong":
       case "outOfGuesses":
+        showFlash("wrong");
         setGuess("");
         setShakeCount(shakeCount + 1);
         break;
       case "correct":
+        showFlash("correct");
         setGuess("");
         break;
     }
@@ -69,9 +90,21 @@ export default function GuessForm({
             autoFocus={prefersPreciseInput()}
             value={guess}
             name={inputPlaceholder}
-            onChange={setGuess}
+            onChange={(text) => {
+              setFlash(null);
+              setGuess(text);
+            }}
             suggestions={suggestions}
           />
+          {flash && (
+            <span
+              key={flash.id}
+              className="gg-guess-form__flash"
+              data-flash={flash.kind}
+              data-text={flash.text}
+              aria-hidden="true"
+            />
+          )}
         </div>
         {/* Pressing the button would take the focus from the box and close a phone's keyboard. */}
         <Button type="submit" variant="primary" onMouseDown={(e) => e.preventDefault()}>

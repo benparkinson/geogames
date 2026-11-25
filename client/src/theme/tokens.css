@@ -112,6 +112,7 @@
   --gg-duration: 150ms;
   --gg-duration-slow: 200ms;
   --gg-duration-celebrate: 400ms;
+  --gg-duration-flash: 700ms;
 
   /* ---- Layout ---- */
   --gg-panel-width: 360px;
