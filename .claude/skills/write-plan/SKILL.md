@@ -1,6 +1,6 @@
 ---
 name: write-plan
-description: Write or refresh an implementation plan in docs/plans that a fresh Sonnet session implements with /ship. Use for "write a plan (for Sonnet) to ...", "the codebase moved on, update the plan".
+description: Write or refresh an implementation plan in docs/plans that a fresh Sonnet session implements with /ship-plan. Use for "write a plan (for Sonnet) to ...", "the codebase moved on, update the plan".
 argument-hint: <feature description | plan name --refresh>
 ---
 
@@ -56,4 +56,4 @@ When main has moved on: `git fetch`, read the commits since the plan's date that
 
 ## Then
 
-Report the plan's path, the PR list in one line each, and the command that starts the work in a fresh session: `/ship <plan-name>`.
+Report the plan's path, the PR list in one line each, and the command that starts the work in a fresh session: `/ship-plan <plan-name>`.

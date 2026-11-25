@@ -1,5 +1,5 @@
 ---
-name: ship
+name: ship-plan
 description: Implement a plan from docs/plans or a small task or bug fix on its own git worktree, run the matching checks, and raise a PR. Use for "read and implement <plan>", "on a worktree ... raise a PR", "investigate and fix this bug".
 argument-hint: <plan name | task | bug report> [--base <branch>]
 ---
@@ -56,4 +56,4 @@ Run e2e locally only when you changed something a browser test drives and CI can
 
 ## 6. Stop
 
-Report the PR link and, when the plan has more phases, the command for the next one (`/ship <plan> phase N`) in a fresh session (`/clear`). Don't start the next PR unless asked.
+Report the PR link and, when the plan has more phases, the command for the next one (`/ship-plan <plan> phase N`) in a fresh session (`/clear`). Don't start the next PR unless asked.
