@@ -22,6 +22,7 @@ function MapGame<Type>({
   blankMap,
   suggestions,
   isKnownGuess,
+  namesLoading,
   hints,
   clueFor,
   submitAnswer,
@@ -31,6 +32,7 @@ function MapGame<Type>({
     answers,
     answerCount,
     isKnownGuess,
+    namesLoading,
     clueFor,
     submitAnswer,
   });
@@ -89,6 +91,8 @@ export interface MapGameProps<Type> {
   blankMap?: boolean;
   suggestions?: Suggestion[];
   isKnownGuess?: (guess: string) => boolean;
+  /** The name list is still loading, so guesses are held back. */
+  namesLoading?: boolean;
   /** What the round's hints say. The round's `hintCount` (from the backend) says how many there are. */
   hints: HintConfig;
   /**

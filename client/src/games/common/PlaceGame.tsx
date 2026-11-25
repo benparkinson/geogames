@@ -20,7 +20,7 @@ interface PlaceGameProps<T> extends Pick<
 
 /** A map game whose answers come from one of the place lists. */
 export default function PlaceGame<T>({ kind, game, ...rest }: PlaceGameProps<T>): React.JSX.Element {
-  const { suggestions, isKnownGuess } = useGuessList(kind);
+  const { suggestions, isKnownGuess, loading } = useGuessList(kind);
   const clueFor = usePlaceClues(kind, game.round.hasClues);
   return (
     <MapGame
@@ -32,6 +32,7 @@ export default function PlaceGame<T>({ kind, game, ...rest }: PlaceGameProps<T>)
       submitAnswer={game.submitAnswer}
       suggestions={suggestions}
       isKnownGuess={isKnownGuess}
+      namesLoading={loading}
       clueFor={clueFor}
     />
   );

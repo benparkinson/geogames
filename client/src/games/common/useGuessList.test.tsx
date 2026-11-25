@@ -12,7 +12,17 @@ describe("useGuessList", () => {
 
     expect(result.current.suggestions).toBeUndefined();
     expect(result.current.isKnownGuess).toBeUndefined();
+    expect(result.current.loading).toBe(true);
     await waitFor(() => expect(result.current.isKnownGuess).toBeDefined());
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("stops loading, with no list, when the fetch fails", async () => {
+    mockFetch([{ url: /\/api\/rivers$/, status: 500, body: {} }]);
+    const { result } = renderHook(() => useGuessList("rivers"), { wrapper: clientWrapper() });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.isKnownGuess).toBeUndefined();
   });
 
   it("knows names and aliases, ignoring case and accents", async () => {
