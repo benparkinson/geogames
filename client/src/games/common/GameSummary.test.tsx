@@ -23,8 +23,7 @@ const mixed = makeGameRounds([
   { answerState: "CORRECT", hintsUsed: 1 },
 ]);
 
-const hard = (rounds: GameRoundResponse[]) =>
-  rounds.map((r) => ({ ...r, hardMode: true, difficulty: "HARD" as const }));
+const hard = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "HARD" as const }));
 const easy = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "EASY" as const }));
 
 afterEach(() => {

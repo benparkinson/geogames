@@ -63,10 +63,9 @@ function isDifficulty(value: unknown): value is Difficulty {
   return value === "EASY" || value === "NORMAL" || value === "HARD";
 }
 
-/** The difficulty of an entry: its own, or for one saved before there was a difficulty, from Hard mode. */
+/** The difficulty of an entry, or null for one saved before there was a difficulty (it is unreadable). */
 function difficultyOf(e: Record<string, unknown>): Difficulty | null {
   if (isDifficulty(e.difficulty)) return e.difficulty;
-  if (typeof e.hardcore === "boolean") return e.hardcore ? "HARD" : "NORMAL";
   return null;
 }
 

@@ -86,7 +86,6 @@ class GameResultsTest {
     assertThat(result.score()).isEqualTo(258);
     assertThat(result.maxScore()).isEqualTo(500);
     assertThat(result.roundsCorrect()).isEqualTo(3);
-    assertThat(result.perfectRounds()).isEqualTo(1);
   }
 
   @Test
@@ -111,7 +110,6 @@ class GameResultsTest {
     assertThat(result.roundPoints()).containsExactly(67, 0);
     assertThat(result.score()).isEqualTo(67);
     assertThat(result.roundsCorrect()).isZero();
-    assertThat(result.perfectRounds()).isZero();
   }
 
   private static GameRoundEntity answered(

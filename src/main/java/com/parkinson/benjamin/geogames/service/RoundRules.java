@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.dao.GameRoundEntity;
 import com.parkinson.benjamin.geogames.dao.RoundGuess;
 import com.parkinson.benjamin.geogames.helper.PlaceNames;
@@ -36,16 +37,15 @@ public class RoundRules {
       return false;
     }
     if (hint != taken) {
-      throw new IllegalArgumentException(
-          "Hint %d can't be taken before hint %d".formatted(hint, taken));
+      throw new BadRequestException("Hint %d can't be taken before hint %d".formatted(hint, taken));
     }
     int hintCount = round.getGameType().hintCount(difficulty);
     if (hint >= hintCount) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s has %d hints".formatted(round.getGameType(), hintCount));
     }
     if (guessesBefore < 0) {
-      throw new IllegalArgumentException("guessesBefore can't be negative");
+      throw new BadRequestException("guessesBefore can't be negative");
     }
     // Clamped, not rejected: a guess whose request failed makes the client's count larger than the
     // server's, and that must not turn a real hint into an error.
@@ -59,7 +59,7 @@ public class RoundRules {
       throw new RoundClosedException(round.getRoundNumber());
     }
     if (guess == null || guess.isBlank() || guess.length() > MAX_GUESS_LENGTH) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A guess must be between 1 and %d characters".formatted(MAX_GUESS_LENGTH));
     }
     GameType type = round.getGameType();
@@ -68,7 +68,7 @@ public class RoundRules {
             .resolve(type.placeKind(), guess)
             .orElseThrow(
                 () ->
-                    new IllegalArgumentException(
+                    new BadRequestException(
                         "Not a known %s name".formatted(type.placeKind().name().toLowerCase())));
     String normalised = PlaceNames.normalise(resolved);
     if (round.getGuesses().stream()
@@ -78,7 +78,7 @@ public class RoundRules {
     long same = round.getGuesses().stream().filter(g -> g.isCorrect() == correct).count();
     int limit = correct ? type.answerCount() : type.guessLimit(difficulty);
     if (same >= limit) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s allows %d %s guesses"
               .formatted(type, limit, correct ? "correct" : "wrong"));
     }
@@ -114,17 +114,17 @@ public class RoundRules {
     GameType type = round.getGameType();
     int count = type.answerCount();
     if (answersFound < 0 || answersFound > count) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s has %d answers, so %d can't have been found"
               .formatted(type, count, answersFound));
     }
     if (answerState == AnswerState.CORRECT && answersFound != count) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A correct round of %s has all %d answers found, not %d"
               .formatted(type, count, answersFound));
     }
     if (answerState != AnswerState.CORRECT && answersFound == count) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s with all %d answers found is correct, so it can't be %s"
               .formatted(type, count, answerState));
     }
@@ -134,7 +134,7 @@ public class RoundRules {
       GameRoundEntity round, Difficulty difficulty, int hintsUsed) {
     int hintCount = round.getGameType().hintCount(difficulty);
     if (hintsUsed < 0 || hintsUsed > hintCount) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s has %d hints, so %d can't have been used"
               .formatted(round.getGameType(), hintCount, hintsUsed));
     }
@@ -153,17 +153,17 @@ public class RoundRules {
     GameType type = round.getGameType();
     int limit = type.guessLimit(difficulty);
     if (wrongGuesses < 0 || wrongGuesses > limit) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s allows %d wrong guesses, so %d is not possible"
               .formatted(type, limit, wrongGuesses));
     }
     if (answerState == AnswerState.OUT_OF_GUESSES && wrongGuesses != limit) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s that ran out of guesses must have %d wrong guesses, not %d"
               .formatted(type, limit, wrongGuesses));
     }
     if (answerState != AnswerState.OUT_OF_GUESSES && wrongGuesses == limit) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "A round of %s with %d wrong guesses ran out of guesses, so it can't be %s"
               .formatted(type, wrongGuesses, answerState));
     }

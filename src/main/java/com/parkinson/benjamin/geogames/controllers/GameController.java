@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.GameCreationRequest;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -47,7 +48,7 @@ public class GameController {
         gameService.createGame(
             request.gameType(),
             request.numberOfRounds(),
-            Difficulty.resolve(request.difficulty(), request.hardMode())));
+            Difficulty.resolve(request.difficulty())));
   }
 
   @GetMapping("/games/{gameId}/rounds/{round}")
@@ -81,7 +82,7 @@ public class GameController {
       @PathVariable int round,
       @RequestBody GameRoundGuessRequest request) {
     if (request.correct() == null) {
-      throw new IllegalArgumentException("correct is required");
+      throw new BadRequestException("correct is required");
     }
     return forGame(
         gameId,
@@ -96,7 +97,7 @@ public class GameController {
       @PathVariable int round,
       @RequestBody GameRoundHintRequest request) {
     if (request.hint() == null || request.guessesBefore() == null) {
-      throw new IllegalArgumentException("hint and guessesBefore are required");
+      throw new BadRequestException("hint and guessesBefore are required");
     }
     return forGame(
         gameId,

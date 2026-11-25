@@ -117,7 +117,8 @@ class RoundStatsIT {
 
   @Test
   void hardModeIsRecordedPerGameAndNullWhenNotSent() throws Exception {
-    String hard = TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1, ",\"hardMode\":true");
+    String hard =
+        TestFixtures.createGame(mockMvc, "RIVERS_BY_SHAPE", 1, ",\"difficulty\":\"HARD\"");
     String unknown = createGame("RIVERS_BY_SHAPE", 1);
     answer(hard, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");
     answer(unknown, 0, "{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0}");

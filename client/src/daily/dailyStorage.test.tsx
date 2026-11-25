@@ -66,19 +66,10 @@ describe("readDaily and writeDaily", () => {
     expect(readDaily()).toBeNull();
   });
 
-  it.each([
-    [true, "HARD"],
-    [false, "NORMAL"],
-  ])("reads an entry saved before there was a difficulty (hardcore %s) as %s", (hardcore, difficulty) => {
-    localStorage.setItem("gg-daily", JSON.stringify({ v: 1, date: "2026-11-18", number: 2, gameId: "g1", hardcore }));
-
-    expect(readDaily()).toEqual({ v: 1, date: "2026-11-18", number: 2, gameId: "g1", difficulty });
-  });
-
-  it("prefers the difficulty of an entry to its old Hard mode flag, and ignores an unknown difficulty", () => {
+  it("reads an entry saved before there was a difficulty (only hardcore) as none, and ignores an unknown difficulty", () => {
     const base = { v: 1, date: "2026-11-18", number: 2, gameId: "g1" };
-    localStorage.setItem("gg-daily", JSON.stringify({ ...base, difficulty: "EASY", hardcore: true }));
-    expect(readDaily()?.difficulty).toBe("EASY");
+    localStorage.setItem("gg-daily", JSON.stringify({ ...base, hardcore: true }));
+    expect(readDaily()).toBeNull();
 
     resetDailyStorageForTests();
     localStorage.setItem("gg-daily", JSON.stringify({ ...base, difficulty: "EXTREME" }));

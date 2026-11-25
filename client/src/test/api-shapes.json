@@ -61,7 +61,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -106,7 +105,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -135,7 +133,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -242,7 +239,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -271,7 +267,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -359,7 +354,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -388,7 +382,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -470,7 +463,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -499,7 +491,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -593,7 +584,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -622,7 +612,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -716,7 +705,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -745,7 +733,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -855,7 +842,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -884,7 +870,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -926,7 +911,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -955,7 +939,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -1074,7 +1057,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -1103,7 +1085,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -1177,7 +1158,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -1206,7 +1186,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },
@@ -1260,7 +1239,6 @@
         "firstGuessRounds" : "number",
         "gameState" : "string",
         "maxScore" : "number",
-        "perfectRounds" : "number",
         "roundAnswerStates" : {
           "array" : "string"
         },
@@ -1289,7 +1267,6 @@
           "text" : "string"
         }
       },
-      "hardMode" : "boolean",
       "hintsTakenAt" : {
         "array" : "number"
       },

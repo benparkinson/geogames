@@ -198,7 +198,7 @@ class DailyScoreIT {
 
   @Test
   void theDefaultLeagueIsNormalAndAnUnknownDifficultyCountsThere() throws Exception {
-    // The request names no difficulty and no hardMode, so the game's difficulty is unknown.
+    // The request names no difficulty, so the game's difficulty is unknown.
     finish(createDaily(), AnswerState.CORRECT, 5);
 
     JsonNode score = score();
@@ -210,11 +210,11 @@ class DailyScoreIT {
   }
 
   @Test
-  void anOldClientsHardModeCountsInTheHardLeague() throws Exception {
+  void anOldClientsHardModeIsIgnored() throws Exception {
     finish(createDaily(",\"hardMode\":true"), AnswerState.CORRECT, 5);
 
-    assertThat(score("?difficulty=HARD").get("players").asInt()).isEqualTo(1);
-    assertThat(score().get("players").asInt()).isZero();
+    assertThat(score("?difficulty=HARD").get("players").asInt()).isZero();
+    assertThat(score().get("players").asInt()).isEqualTo(1);
   }
 
   @Test
