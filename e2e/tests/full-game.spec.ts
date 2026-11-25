@@ -49,7 +49,8 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 1,
   });
-  await expect(roundResult(page)).toHaveText(/Answer revealed\s*1 of 3 found\s*\+2/);
+  await expect(roundResult(page)).toHaveText(/Answer revealed\s*\+2/);
+  await expect(page.getByRole("img", { name: /Found 1 of 3/ })).toBeVisible();
   for (const answer of second.answers) {
     await expect(page.getByRole("group", { name: /Answers:/ })).toContainText(answer.name);
   }
