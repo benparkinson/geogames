@@ -10,6 +10,7 @@ export {
   Bezier2 as BorderShapeIcon,
   BoundingBox as LandBordersIcon,
   Buildings as CitiesIcon,
+  GearFill as SettingsIcon,
   CalendarCheck as DailyIcon,
   CheckLg as FoundIcon,
   CupHotFill as SupportIcon,

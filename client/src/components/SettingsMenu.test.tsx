@@ -4,7 +4,6 @@ import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetThemeForTests } from "../settings/theme";
 import { resetDistanceUnitForTests } from "../settings/units";
-import SiteFooter from "./SiteFooter";
 import SettingsMenu from "./SettingsMenu";
 
 beforeEach(() => {
@@ -94,8 +93,9 @@ describe("SettingsMenu", () => {
   });
 
   it("renders closed on the server", () => {
-    const html = renderToString(<SiteFooter />);
+    const html = renderToString(<SettingsMenu />);
     expect(html).toContain("Settings");
+    expect(html).not.toContain(">Settings<");
     expect(html).not.toContain("Appearance");
   });
 });
