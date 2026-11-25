@@ -115,7 +115,7 @@
   --gg-duration-flash: 700ms;
 
   /* ---- Layout ---- */
-  --gg-panel-width: 360px;
+  --gg-panel-width: 420px;
   /* Media queries can't use variables. The breakpoints in use are 480, 576, 900, 992 and 1200px. */
 
   /* ---- Spacing (1 to 5) ---- */

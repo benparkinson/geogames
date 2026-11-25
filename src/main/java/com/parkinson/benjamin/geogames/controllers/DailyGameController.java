@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.controllers;
 
 import com.parkinson.benjamin.geogames.api.BadRequestException;
+import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameRequest;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +47,23 @@ public class DailyGameController {
     }
     Difficulty difficulty = request == null ? null : Difficulty.resolve(request.difficulty());
     return ResponseEntity.ok(dailyChallengeService.createDailyGame(date, difficulty));
+  }
+
+  /**
+   * The game types of a date's challenge, for a preview. Read-only: a date nobody has played yet
+   * is a 404, never generated here.
+   */
+  @GetMapping("/daily-challenges/{date}")
+  public ResponseEntity<?> dailyChallenge(@PathVariable String date) {
+    LocalDate parsed = parseDate(date);
+    Optional<DailyChallengeResponse> challenge = dailyChallengeService.challenge(parsed);
+    if (challenge.isPresent()) {
+      return ResponseEntity.ok(challenge.get());
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(
+            ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND, "No daily challenge for " + parsed + " yet"));
   }
 
   /** One day's totals: the average, and how many finished in each tenth of the score range. */

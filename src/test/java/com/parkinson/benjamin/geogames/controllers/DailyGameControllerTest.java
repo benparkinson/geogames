@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.api.BadRequestException;
+import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
@@ -20,6 +21,7 @@ import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
 import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -143,5 +145,42 @@ class DailyGameControllerTest {
         .andExpect(status().isBadRequest());
 
     verifyNoInteractions(dailyService);
+  }
+
+  @Test
+  void theChallengeEndpointReturnsTheTypes() throws Exception {
+    LocalDate date = LocalDate.of(2026, 11, 20);
+    when(dailyService.challenge(date))
+        .thenReturn(
+            Optional.of(
+                new DailyChallengeResponse(date, 4, List.of("TRIPOINT", "LAKES_BY_SHAPE"))));
+
+    mockMvc
+        .perform(get("/api/daily-challenges/2026-11-20"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.date").value("2026-11-20"))
+        .andExpect(jsonPath("$.number").value(4))
+        .andExpect(jsonPath("$.gameTypes[0]").value("TRIPOINT"))
+        .andExpect(jsonPath("$.gameTypes[1]").value("LAKES_BY_SHAPE"));
+    verifyNoInteractions(guard);
+  }
+
+  @Test
+  void aDayWithNoChallengeIsA404ProblemDetail() throws Exception {
+    when(dailyService.challenge(LocalDate.of(2026, 11, 20))).thenReturn(Optional.empty());
+
+    mockMvc
+        .perform(get("/api/daily-challenges/2026-11-20"))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.detail").value("No daily challenge for 2026-11-20 yet"));
+  }
+
+  @Test
+  void aBadChallengeDateIsABadRequest() throws Exception {
+    mockMvc.perform(get("/api/daily-challenges/yesterday")).andExpect(status().isBadRequest());
+
+    when(dailyService.challenge(LocalDate.of(2001, 1, 1)))
+        .thenThrow(new BadRequestException("too early"));
+    mockMvc.perform(get("/api/daily-challenges/2001-01-01")).andExpect(status().isBadRequest());
   }
 }
