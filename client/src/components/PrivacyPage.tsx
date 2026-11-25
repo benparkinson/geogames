@@ -24,6 +24,11 @@ function PrivacyPage(): React.JSX.Element {
           <a href="/third-party-licenses.txt">Software licences</a>.
         </p>
 
+        <p>
+          The idea for the game is original, based on the picture round in University Challenge. The code is
+          AI-assisted: it was written with the help of AI tools.
+        </p>
+
         <h2 className="gg-page__section">Who runs this site</h2>
         <p>
           {OWNER_NAME} runs GeoGauntlet. For privacy questions, write to{" "}
