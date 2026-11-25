@@ -165,6 +165,23 @@ class ApiContractIT {
     return endpointShape("/api/daily-challenges/" + daily.get("date").asString());
   }
 
+  /** Finishes a one-round game, then challenges a friend with it. */
+  private JsonNode challengeCreation() throws Exception {
+    String id = createGame(GameType.TRIPOINT).get("id").asString();
+    body(
+        post("/api/games/%s/rounds/0/answers".formatted(id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0}"));
+    // The game has 10 rounds: answer the rest so it is finished.
+    for (int round = 1; round < ROUNDS; round++) {
+      body(
+          post("/api/games/%s/rounds/%d/answers".formatted(id, round))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0}"));
+    }
+    return objectMapper.readTree(body(post("/api/games/%s/challenges".formatted(id))));
+  }
+
   private Object endpointShape(String path) throws Exception {
     return JsonShape.of(objectMapper.readTree(body(get(path))));
   }
@@ -184,6 +201,11 @@ class ApiContractIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}")))));
     endpoints.put("GET /api/daily-challenges/{date}", dailyChallengeShape());
+    JsonNode challenge = challengeCreation();
+    endpoints.put("POST /api/games/{id}/challenges", JsonShape.of(challenge));
+    endpoints.put(
+        "GET /api/challenges/{id}",
+        endpointShape("/api/challenges/" + challenge.get("id").asString()));
     endpoints.put("GET /api/daily-scores/{date}", dailyScoreShape());
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 

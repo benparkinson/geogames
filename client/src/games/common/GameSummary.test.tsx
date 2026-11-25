@@ -26,6 +26,8 @@ const mixed = makeGameRounds([
 const hard = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "HARD" as const }));
 const easy = (rounds: GameRoundResponse[]) => rounds.map((r) => ({ ...r, difficulty: "EASY" as const }));
 
+vi.mock("../../challenge/ChallengeShare", () => ({ default: () => <div>challenge share</div> }));
+
 afterEach(() => {
   localStorage.clear();
   Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true });
@@ -53,13 +55,14 @@ describe("GameSummary for a daily challenge", () => {
     return renderWithClient(<GameSummary gameId="g1" totalRoundCount={2} onOpenRound={vi.fn()} daily={daily} />);
   }
 
-  it("offers Copy result and a Mixed game instead of Play again", async () => {
+  it("offers Copy result and a Mixed game instead of Play another", async () => {
     mockFetch([roundsRoute(done), scoresRoute]);
     renderDaily();
 
     expect(await screen.findByRole("button", { name: "Copy result" })).toBeInTheDocument();
     expect(screen.getByText(/Daily 2026-11-18/)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Play again" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Play another" })).not.toBeInTheDocument();
+    expect(screen.queryByText("challenge share")).not.toBeInTheDocument();
   });
 
   it("starts a five round Mixed game", async () => {
@@ -176,11 +179,31 @@ describe("GameSummary", () => {
     expect(screen.queryByRole("heading", { name: "Your result" })).not.toBeInTheDocument();
   });
 
-  it("has no Copy result button and offers Play again in an ordinary game", async () => {
+  it("offers to challenge a friend after an ordinary finished game, but not an unfinished one", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    const { unmount } = renderSummary();
+    expect(await screen.findByText("challenge share")).toBeInTheDocument();
+    unmount();
+
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
+    renderSummary(vi.fn(), 2);
+    await screen.findByRole("heading", { name: "Your result" });
+    expect(screen.queryByText("challenge share")).not.toBeInTheDocument();
+  });
+
+  it("shows the friend's score when the game came from a challenge", async () => {
+    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
 
-    expect(await screen.findByRole("button", { name: "Play again" })).toBeInTheDocument();
+    expect(await screen.findByText("Your friend scored 320 / 500")).toBeInTheDocument();
+  });
+
+  it("has no Copy result button and offers Play another in an ordinary game", async () => {
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    expect(await screen.findByRole("button", { name: "Play another" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Copy result" })).not.toBeInTheDocument();
   });
 
@@ -246,7 +269,7 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByText("183");
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toMatchObject({ difficulty: "EASY" });
@@ -269,7 +292,7 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByText("183");
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
@@ -417,7 +440,7 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByText("183");
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
     const post = callsTo(fetchMock).find((c) => c.method === "POST")!;
@@ -436,7 +459,7 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
     await screen.findByRole("heading", { name: "Perfect game!" });
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
     expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
@@ -451,7 +474,7 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByText("183");
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Couldn't start a new game. Try again.");
   });
@@ -461,7 +484,7 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByRole("heading", { name: "Your result" });
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Play again" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Too many new games from your network");
   });

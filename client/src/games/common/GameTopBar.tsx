@@ -10,7 +10,7 @@ export default function GameTopBar({ round, progress }: { round: Round; progress
   const { states, points, outcomes, score } = progress;
 
   // Not the round's game: a mixed game's rounds differ, and the client can't tell a mixed game from its rounds alone.
-  const title = round.dailyDate !== undefined ? "Daily" : "Practice";
+  const title = round.dailyDate !== undefined ? "Daily" : "Free play";
   const { Icon, title: kindTitle } = round.kind;
   const difficulty = DIFFICULTY_LABEL[round.difficulty];
 

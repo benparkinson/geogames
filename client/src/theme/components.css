@@ -1387,11 +1387,14 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-1) 0;
   border-bottom: 1px solid var(--gg-color-rule-light);
 }
+.gg-summary__friend {
+  margin-bottom: var(--gg-space-2);
+}
 .gg-summary__error {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
 }
-/* Copy result (or Play again, when there is nothing to share) is the one filled button, as a bar. */
+/* Copy result (or Play another, when there is nothing to share) is the one filled button, as a bar. */
 .gg-summary__share {
   margin-bottom: var(--gg-space-2);
 }

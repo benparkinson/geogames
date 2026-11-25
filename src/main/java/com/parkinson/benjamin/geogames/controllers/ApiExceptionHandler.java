@@ -4,6 +4,8 @@ import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeNotFoundException;
 import com.parkinson.benjamin.geogames.service.ratelimit.GameCapacityException;
 import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
 import org.slf4j.Logger;
@@ -30,7 +32,16 @@ public class ApiExceptionHandler {
     return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
-  @ExceptionHandler({RoundAlreadyAnsweredException.class, RoundClosedException.class})
+  @ExceptionHandler(ChallengeNotFoundException.class)
+  public ProblemDetail notFound(ChallengeNotFoundException e) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+  }
+
+  @ExceptionHandler({
+    RoundAlreadyAnsweredException.class,
+    RoundClosedException.class,
+    ChallengeConflictException.class
+  })
   public ProblemDetail conflict(RuntimeException e) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
   }

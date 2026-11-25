@@ -23,7 +23,7 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class DailyChallengeStore {
 
-  private static final TypeReference<List<PinnedRound>> ROUNDS = new TypeReference<>() {};
+  private static final TypeReference<List<PinnedRound>> ROUNDS = PinnedRound.LIST;
 
   private final JdbcClient jdbc;
   private final ObjectMapper objectMapper;
