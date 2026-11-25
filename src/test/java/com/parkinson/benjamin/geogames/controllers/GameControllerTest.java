@@ -82,14 +82,12 @@ class GameControllerTest {
             List.of(AnswerState.UNANSWERED, AnswerState.UNANSWERED, AnswerState.UNANSWERED),
             300,
             0,
-            0,
             List.of(0, 0, 0),
             List.of(0, 0, 0),
             List.of(false, false, false),
             0),
         List.of(),
         List.of(),
-        false,
         "NORMAL",
         List.of());
   }
@@ -143,7 +141,7 @@ class GameControllerTest {
   }
 
   @Test
-  void hardModeIsPassedToTheService() throws Exception {
+  void aDifficultyIsPassedToTheService() throws Exception {
     when(gameService.createGame("TRIPOINT", 3, Difficulty.HARD))
         .thenReturn(new GameCreationResponse(GAME_ID));
 
@@ -151,7 +149,8 @@ class GameControllerTest {
         .perform(
             post("/api/games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"hardMode\":true}"))
+                .content(
+                    "{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"difficulty\":\"HARD\"}"))
         .andExpect(status().isOk());
 
     verify(gameService).createGame("TRIPOINT", 3, Difficulty.HARD);
@@ -197,7 +196,6 @@ class GameControllerTest {
         .andExpect(jsonPath("$.points").value(0))
         .andExpect(jsonPath("$.gameResult.maxScore").value(300))
         .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
-        .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundFirstGuess.length()").value(3))

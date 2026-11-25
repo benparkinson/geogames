@@ -42,8 +42,7 @@ public class DailyGameController {
     if (request != null && request.date() != null) {
       date = Optional.of(parseDate(request.date()));
     }
-    Difficulty difficulty =
-        request == null ? null : Difficulty.resolve(request.difficulty(), request.hardMode());
+    Difficulty difficulty = request == null ? null : Difficulty.resolve(request.difficulty());
     return ResponseEntity.ok(dailyChallengeService.createDailyGame(date, difficulty));
   }
 
@@ -52,8 +51,7 @@ public class DailyGameController {
   public DailyScoreResponse dailyScore(
       @PathVariable String date, @RequestParam(required = false) String difficulty) {
     return dailyChallengeService.score(
-        parseDate(date),
-        difficulty == null ? Difficulty.NORMAL : Difficulty.resolve(difficulty, null));
+        parseDate(date), difficulty == null ? Difficulty.NORMAL : Difficulty.resolve(difficulty));
   }
 
   private static LocalDate parseDate(String text) {

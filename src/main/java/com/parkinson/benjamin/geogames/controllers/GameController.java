@@ -48,7 +48,7 @@ public class GameController {
         gameService.createGame(
             request.gameType(),
             request.numberOfRounds(),
-            Difficulty.resolve(request.difficulty(), request.hardMode())));
+            Difficulty.resolve(request.difficulty())));
   }
 
   @GetMapping("/games/{gameId}/rounds/{round}")

@@ -81,7 +81,7 @@ class DailyGameControllerTest {
   }
 
   @Test
-  void hardModeIsPassedToTheService() throws Exception {
+  void aDifficultyIsPassedToTheService() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
     when(dailyService.createDailyGame(Optional.empty(), Difficulty.HARD))
         .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
@@ -90,7 +90,7 @@ class DailyGameControllerTest {
         .perform(
             post("/api/daily-games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"hardMode\":true}"))
+                .content("{\"difficulty\":\"HARD\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.number").value(3));
   }

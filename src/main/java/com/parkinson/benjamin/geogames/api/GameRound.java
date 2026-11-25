@@ -4,7 +4,6 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import java.util.List;
 
 /**
- * @param hardMode kept for an old client: whether the difficulty is HARD
  * @param difficulty always {@code EASY}, {@code NORMAL} or {@code HARD} (unknown reads as NORMAL)
  * @param continents the continent names to show from the start of the round: empty unless the game
  *     is Easy
@@ -19,6 +18,5 @@ public record GameRound(
     GameResult gameResult,
     List<RecordedGuess> guesses,
     List<Integer> hintsTakenAt,
-    boolean hardMode,
     String difficulty,
     List<String> continents) {}

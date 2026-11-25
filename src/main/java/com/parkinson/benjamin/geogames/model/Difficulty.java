@@ -17,22 +17,18 @@ public enum Difficulty {
   HARD;
 
   /**
-   * The difficulty a request asks for: {@code difficulty} if present (a name that is not one of the
-   * three is an {@link BadRequestException}, a 400), otherwise HARD for {@code hardMode} true
-   * and NORMAL for false, otherwise null (unknown).
+   * The difficulty a request asks for: null (unknown) when absent; a name that is not one of the
+   * three is a {@link BadRequestException}, a 400.
    */
-  public static Difficulty resolve(String difficulty, Boolean hardMode) {
-    if (difficulty != null) {
-      try {
-        return valueOf(difficulty);
-      } catch (IllegalArgumentException e) {
-        throw new BadRequestException("Unknown difficulty: " + difficulty);
-      }
-    }
-    if (hardMode == null) {
+  public static Difficulty resolve(String difficulty) {
+    if (difficulty == null) {
       return null;
     }
-    return hardMode ? HARD : NORMAL;
+    try {
+      return valueOf(difficulty);
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestException("Unknown difficulty: " + difficulty);
+    }
   }
 
   /** The difficulty to play by: unknown (null) is NORMAL. */

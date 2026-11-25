@@ -92,24 +92,6 @@ class GameApiIT {
   }
 
   @Test
-  void hardModeIsStoredWithTheGameAndReturnedOnEveryRound() throws Exception {
-    String id = TestFixtures.createGame(mockMvc, "TRIPOINT", 3, ",\"hardMode\":true");
-
-    for (int round = 0; round < 3; round++) {
-      assertThat((Boolean) JsonPath.read(getRound(id, round), "$.hardMode")).isTrue();
-    }
-  }
-
-  @Test
-  void aGameCreatedWithoutHardModeReturnsFalse() throws Exception {
-    String id = createGame("TRIPOINT", 3);
-
-    for (int round = 0; round < 3; round++) {
-      assertThat((Boolean) JsonPath.read(getRound(id, round), "$.hardMode")).isFalse();
-    }
-  }
-
-  @Test
   void anEasyGameReturnsTheDoubledLimitsAndTheContinent() throws Exception {
     String id =
         TestFixtures.createGame(mockMvc, "COUNTRIES_BY_COASTLINE", 2, ",\"difficulty\":\"EASY\"");
@@ -117,7 +99,6 @@ class GameApiIT {
     for (int round = 0; round < 2; round++) {
       String json = getRound(id, round);
       assertThat((String) JsonPath.read(json, "$.difficulty")).isEqualTo("EASY");
-      assertThat((Boolean) JsonPath.read(json, "$.hardMode")).isFalse();
       assertThat((int) JsonPath.read(json, "$.gameType.guessLimit")).isEqualTo(8);
       assertThat((int) JsonPath.read(json, "$.gameType.hintCount")).isEqualTo(3);
       assertThat((List<?>) JsonPath.read(json, "$.continents")).isNotEmpty().hasSizeLessThan(3);
@@ -158,10 +139,10 @@ class GameApiIT {
   }
 
   @Test
-  void anOldRequestWithOnlyHardModeIsHard() throws Exception {
+  void anOldRequestWithOnlyHardModeIsNormal() throws Exception {
     String id = TestFixtures.createGame(mockMvc, "TRIPOINT", 1, ",\"hardMode\":true");
 
-    assertThat((String) JsonPath.read(getRound(id, 0), "$.difficulty")).isEqualTo("HARD");
+    assertThat((String) JsonPath.read(getRound(id, 0), "$.difficulty")).isEqualTo("NORMAL");
   }
 
   @Test
@@ -233,7 +214,6 @@ class GameApiIT {
     assertThat((int) JsonPath.read(finished, "$.gameResult.score")).isEqualTo(183);
     assertThat((int) JsonPath.read(finished, "$.gameResult.maxScore")).isEqualTo(300);
     assertThat((int) JsonPath.read(finished, "$.gameResult.roundsCorrect")).isEqualTo(2);
-    assertThat((int) JsonPath.read(finished, "$.gameResult.perfectRounds")).isEqualTo(1);
     assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundPoints"))
         .containsExactly(100, 0, 83);
     assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundHintsUsed"))

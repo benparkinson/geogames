@@ -14,8 +14,6 @@ export interface GameRoundResponse {
   gameResult: GameResultResponse;
   guesses: RecordedGuess[];
   hintsTakenAt: number[];
-  /** Kept by the server for old clients (whether the difficulty is HARD). Not read. */
-  hardMode: boolean;
   /** Chosen when the game was created and never changes. */
   difficulty: Difficulty;
   /** The continents to show from the start of the round: empty unless the game is Easy. */
@@ -78,7 +76,6 @@ export interface GameResultResponse {
   score: number;
   maxScore: number;
   roundsCorrect: number;
-  perfectRounds: number;
   roundAnswerStates: AnswerState[];
   roundPoints: number[];
   roundHintsUsed: number[];
@@ -110,6 +107,5 @@ export interface GameRoundView {
   difficulty: Difficulty;
   /** The continents to show from the start of the round: empty unless the game is Easy. */
   continents: string[];
-  /** The app doesn't read `perfectRounds`: the server still sends it for the deployed client. */
-  gameResult: Omit<GameResultResponse, "roundsUnanswered" | "perfectRounds">;
+  gameResult: Omit<GameResultResponse, "roundsUnanswered">;
 }

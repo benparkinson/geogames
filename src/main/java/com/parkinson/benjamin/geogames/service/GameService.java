@@ -245,7 +245,7 @@ public class GameService {
             round.getWrongGuesses(),
             round.getAnswersFound(),
             LocalDate.now(ZoneOffset.UTC),
-            game.getHardMode(),
+            game.getDifficulty() == null ? null : game.getDifficulty() == Difficulty.HARD,
             game.getDifficulty()));
   }
 
@@ -273,7 +273,6 @@ public class GameService {
         GameResults.of(game),
         recordedGuesses(round),
         List.copyOf(round.getHintsTakenAt()),
-        game.isHardMode(),
         game.difficulty().name(),
         game.difficulty() == Difficulty.EASY ? roundContinents.of(data) : List.of());
   }
