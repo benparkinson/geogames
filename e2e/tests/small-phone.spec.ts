@@ -13,6 +13,21 @@ async function box(locator: ReturnType<Page["locator"]>) {
   return found!;
 }
 
+// The newest guess row must end above the lives row (or the answer box) and be the element drawn there.
+async function expectLastGuessClear(page: Page, name: string) {
+  const row = page.getByRole("listitem").filter({ hasText: name }).first();
+  const rowBox = await box(row);
+  const status = page.getByTestId("round-status");
+  const below = (await status.isVisible()) ? await box(status) : await box(answerBox(page));
+  expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(below.y + 1);
+  const onTop = await row.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    return hit !== null && element.contains(hit);
+  });
+  expect(onTop).toBe(true);
+}
+
 test("on a small phone the map keeps its room, and the input and buttons stay in view", async ({ page, api }) => {
   // Fake the on-screen keyboard through the visual viewport, which GameLayout watches.
   await page.addInitScript(() => {
@@ -46,6 +61,9 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
     await hint.click();
   }
 
+  const lastWrong = wrong[wrong.length - 1].name;
+  await expectLastGuessClear(page, lastWrong);
+
   const map = page.locator("main");
   expect((await box(map)).height).toBeGreaterThanOrEqual(0.45 * HEIGHT - 1);
   for (const target of [answerBox(page), page.getByRole("button", { name: "Guess", exact: true })]) {
@@ -61,6 +79,7 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
   const input = await box(answerBox(page));
   expect(input.y).toBeGreaterThanOrEqual(0);
   expect(input.y + input.height).toBeLessThanOrEqual(KEYBOARD_HEIGHT);
+  await expectLastGuessClear(page, lastWrong);
   await setKeyboard(null);
 
   for (const name of answers) {

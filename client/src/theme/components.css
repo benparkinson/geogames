@@ -1043,8 +1043,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   display: flex;
   flex-direction: column;
   flex: 0 1 auto;
-  min-height: 0;
+  min-height: 2rem;
   margin-bottom: var(--gg-space-2);
+  overflow: hidden;
 }
 .round-panel__body {
   display: flex;
@@ -1066,7 +1067,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .guess-list__rows {
   flex: 0 1 auto;
-  min-height: 2rem;
+  min-height: 0;
   margin: 0;
   padding: 0;
   overflow-y: auto;
