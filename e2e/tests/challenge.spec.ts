@@ -4,6 +4,7 @@ test("challenge a friend: finish a game, share the link, and a friend plays the 
   page,
   api,
   browser,
+  baseURL,
 }) => {
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
 
@@ -23,14 +24,16 @@ test("challenge a friend: finish a game, share the link, and a friend plays the 
   expect(copied).toContain("can you beat my score?");
   expect(copied).toContain("🟥");
   expect(copied).not.toContain("/games/");
-  const link = copied.split("\n").find((line) => line.includes("/challenge?id="))!;
+  const link = new URL(copied.split("\n").find((line) => line.includes("/challenge?id="))!);
+  expect(link.origin).toBe("https://geoggernaut.com");
 
-  // 3. A friend opens the link: nothing starts until Play, and each Play is a new game.
-  const friend = await browser.newContext({ baseURL: new URL(link).origin });
+  // 3. A friend opens the link (on this server, not the live site): nothing starts until Play, and each Play is a
+  // new game.
+  const friend = await browser.newContext({ baseURL });
   const friendPage = await friend.newPage();
   const gameIds: string[] = [];
   for (let i = 0; i < 2; i++) {
-    await friendPage.goto(link);
+    await friendPage.goto(link.pathname + link.search);
     await expect(friendPage.getByText(/They scored 0 \/ 30/)).toBeVisible();
     await friendPage.getByRole("button", { name: "Play" }).click();
     await expect(friendPage).toHaveURL(/\/games\/[0-9a-f-]{36}$/);

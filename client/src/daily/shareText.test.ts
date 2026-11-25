@@ -10,19 +10,13 @@ const result = {
 describe("shareText", () => {
   it("is the title, the score, one square per round and the link", () => {
     expect(
-      shareText(
-        { date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } },
-        "https://example.org",
-      ),
-    ).toBe("Geoggernaut Daily 2026-11-18\n33 / 50\n🟩🟧🟨🟥🟩\nhttps://example.org/daily");
+      shareText({ date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } }),
+    ).toBe("Geoggernaut Daily 2026-11-18\n33 / 50\n🟩🟧🟨🟥🟩\nhttps://geoggernaut.com/daily");
   });
 
   it("marks Easy and Hard mode in the title, and Normal not at all", () => {
     const text = (difficulty: "EASY" | "NORMAL" | "HARD") =>
-      shareText(
-        { date: "2026-11-18", difficulty, result: { ...result, rounds: [...result.rounds] } },
-        "http://localhost:8080",
-      );
+      shareText({ date: "2026-11-18", difficulty, result: { ...result, rounds: [...result.rounds] } });
 
     expect(text("EASY").split("\n")[0]).toBe("Geoggernaut Daily 2026-11-18 · Easy");
     expect(text("HARD").split("\n")[0]).toBe("Geoggernaut Daily 2026-11-18 · Hard mode");
@@ -31,17 +25,14 @@ describe("shareText", () => {
     expect(text("HARD").split("\n").slice(1)).toEqual(text("NORMAL").split("\n").slice(1));
   });
 
-  it("uses the origin it is given and links to /daily, not to a game", () => {
-    const text = shareText(
-      {
-        date: "2026-11-18",
-        difficulty: "NORMAL",
-        result: { score: 0, maxScore: 50, rounds: ["missed", "missed", "missed", "missed", "missed"] },
-      },
-      "https://a.b",
-    );
+  it("links to the site's /daily, not to a game", () => {
+    const text = shareText({
+      date: "2026-11-18",
+      difficulty: "NORMAL",
+      result: { score: 0, maxScore: 50, rounds: ["missed", "missed", "missed", "missed", "missed"] },
+    });
 
-    expect(text.endsWith("\nhttps://a.b/daily")).toBe(true);
+    expect(text.endsWith("\nhttps://geoggernaut.com/daily")).toBe(true);
     expect(text).toContain("🟥🟥🟥🟥🟥");
     expect(text).not.toContain("/games/");
   });

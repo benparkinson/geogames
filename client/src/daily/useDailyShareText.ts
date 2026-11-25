@@ -12,12 +12,9 @@ export function useDailyShareText(daily: DailyInfo | undefined, round: GameRound
   if (!daily || round?.gameResult.gameState !== FINISHED) {
     return null;
   }
-  return shareText(
-    {
-      date: daily.date,
-      difficulty: round.difficulty,
-      result: resultFromGame(round.gameResult),
-    },
-    window.location.origin,
-  );
+  return shareText({
+    date: daily.date,
+    difficulty: round.difficulty,
+    result: resultFromGame(round.gameResult),
+  });
 }
