@@ -25,8 +25,9 @@ function PrivacyPage(): React.JSX.Element {
         </p>
 
         <p>
-          Games were inspired by a picture round in the BBC TV programme <a href="https://www.bbc.co.uk/programmes/b006t6l0">University Challenge</a> in 2020. 
-          After starting by hand, the code has been written with the help of AI tools.
+          Games were inspired by a picture round in the BBC TV programme{" "}
+          <a href="https://www.bbc.co.uk/programmes/b006t6l0">University Challenge</a> in 2020. After starting by hand,
+          the code has been written with the help of AI tools.
         </p>
 
         <h2 className="gg-page__section">Who runs this site</h2>
