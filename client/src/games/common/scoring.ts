@@ -42,7 +42,7 @@ export interface PointsBreakdown {
 }
 
 /**
- * The parts of `roundPoints`. A correct round earns each part itself. A revealed round has no No misses part, and
+ * The parts of `roundPoints`. A correct round earns each part itself. A revealed round has no Accuracy part, and
  * its points fill the Answer cells first, then No hints.
  */
 export function pointsBreakdown(

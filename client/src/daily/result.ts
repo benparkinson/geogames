@@ -8,7 +8,7 @@ import type { DailyResult, RoundOutcome } from "./dailyStorage";
 export function resultFromGame(game: GameRoundView["gameResult"]): DailyResult {
   // A finished game has no unanswered round, so every round has an outcome.
   const rounds = game.roundAnswerStates.map((state, i) => roundOutcome(state, game.roundPoints[i]) as RoundOutcome);
-  // Wrong guesses aren't kept per round, but a correct round's points less its answer and hints are its No misses.
+  // Wrong guesses aren't kept per round, but a correct round's points less its answer and hints are its Accuracy part.
   const parts = game.roundAnswerStates.map((state, i) => {
     const points = game.roundPoints[i];
     if (state === CORRECT_ANSWER) {

@@ -1334,19 +1334,13 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-bottom: var(--gg-space-4);
 }
 .gg-score-bar__cells {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 3fr);
   gap: var(--gg-space-3);
 }
 .gg-score-bar__part {
   display: flex;
-  flex: 1 1 0;
   gap: 2px;
-}
-.gg-score-bar__part:first-child {
-  flex-grow: 4;
-}
-.gg-score-bar__part:not(:first-child) {
-  flex-grow: 3;
 }
 .gg-score-bar__cell {
   flex: 1 1 0;
@@ -1366,14 +1360,18 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .gg-score-bar__cell[data-part="noMisses"][data-earned="true"] {
   background: var(--gg-color-part-no-misses);
 }
+/* The same columns as the cells, so each label starts under its own part. */
 .gg-score-bar__labels {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--gg-space-2);
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 3fr);
+  gap: var(--gg-space-3);
   margin: var(--gg-space-1) 0 0;
   padding: 0;
   list-style: none;
   font-size: var(--gg-font-size-sm);
+}
+.gg-score-bar__labels > li:only-child {
+  grid-column: 1 / -1;
 }
 @media (prefers-reduced-motion: no-preference) {
   @keyframes gg-cell-fill {

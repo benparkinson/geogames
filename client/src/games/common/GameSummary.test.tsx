@@ -459,11 +459,9 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
 
     expect(
-      await screen.findByRole("img", { name: "9 of 10: answer 4, no hints 2 of 3, no misses 3 of 3" }),
+      await screen.findByRole("img", { name: "9 of 10: answer 4, hints 2 of 3, accuracy 3 of 3" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: "0 of 10: answer 0, no hints 0 of 3, no misses 0 of 3" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "0 of 10: answer 0, hints 0 of 3, accuracy 0 of 3" })).toBeInTheDocument();
   });
 
   it("opens the round that was clicked", async () => {
