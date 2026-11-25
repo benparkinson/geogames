@@ -36,7 +36,7 @@ public class GameCreationGuard {
 
   public void check(HttpServletRequest request) {
     if (limiter != null) {
-      OptionalLong wait = limiter.tryAcquire(ClientAddress.from(request, forwardedHops));
+      OptionalLong wait = limiter.tryAcquire(ClientAddress.key(request, forwardedHops));
       if (wait.isPresent()) {
         throw new TooManyGamesException(wait.getAsLong());
       }

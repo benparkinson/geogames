@@ -17,9 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * A fixed-window limit per client, held in memory. The map is keyed by a salted hash of the address
  * (the salt is made at start-up and never saved), so the address itself is never stored, logged or
  * put in a message. When the map is full, expired windows are dropped; if it is still full the
- * request is allowed (failing open, so many addresses can't lock everyone out).
+ * request is allowed (failing open, so many addresses can't lock everyone out). Expired windows
+ * are also swept at most once a minute, so the map holds only live windows.
  */
 public class ClientRateLimiter {
+
+  private static final long SWEEP_MILLIS = 60_000;
 
   private record Window(long endMillis, int count) {}
 
@@ -29,12 +32,14 @@ public class ClientRateLimiter {
   private final int maxClients;
   private final byte[] salt = new byte[16];
   private final Map<String, Window> windows = new ConcurrentHashMap<>();
+  private long lastSweepMillis;
 
   public ClientRateLimiter(Clock clock, int limit, Duration window, int maxClients) {
     this.clock = clock;
     this.limit = limit;
     this.windowMillis = window.toMillis();
     this.maxClients = maxClients;
+    this.lastSweepMillis = clock.millis();
     new SecureRandom().nextBytes(salt);
   }
 
@@ -43,6 +48,10 @@ public class ClientRateLimiter {
     String key = key(address);
     long now = clock.millis();
     synchronized (windows) {
+      if (now - lastSweepMillis >= SWEEP_MILLIS) {
+        windows.values().removeIf(w -> w.endMillis() <= now);
+        lastSweepMillis = now;
+      }
       Window window = windows.get(key);
       if (window == null && windows.size() >= maxClients) {
         windows.values().removeIf(w -> w.endMillis() <= now);
