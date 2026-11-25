@@ -42,7 +42,7 @@ class DifficultyMigrationsTest {
         "insert into daily_score (challenge_date, players, score_total, bucket_3, bucket_10)"
             + " values (date '2026-11-18', 4, 900, 3, 1)");
 
-    flyway(dataSource, "latest").migrate();
+    flyway(dataSource, "15").migrate();
 
     List<Map<String, Object>> games =
         jdbc.queryForList("select hard_mode, difficulty from game_entity");
@@ -62,6 +62,28 @@ class DifficultyMigrationsTest {
     assertThat(
             jdbc.queryForObject(
                 "select count(*) from daily_score_by_difficulty where difficulty <> 'NORMAL'",
+                Integer.class))
+        .isZero();
+  }
+
+  @Test
+  void latestMigrationDropsTheLegacyColumnAndTable() {
+    DataSource dataSource =
+        new DriverManagerDataSource(
+            "jdbc:h2:mem:" + UUID.randomUUID() + ";MODE=PostgreSQL;DB_CLOSE_DELAY=-1", "sa", "");
+    flyway(dataSource, "latest").migrate();
+    JdbcTemplate jdbc = new JdbcTemplate(dataSource);
+
+    assertThat(
+            jdbc.queryForObject(
+                "select count(*) from information_schema.columns where lower(table_name) ="
+                    + " 'game_entity' and lower(column_name) = 'hard_mode'",
+                Integer.class))
+        .isZero();
+    assertThat(
+            jdbc.queryForObject(
+                "select count(*) from information_schema.tables"
+                    + " where lower(table_name) = 'daily_score'",
                 Integer.class))
         .isZero();
   }
