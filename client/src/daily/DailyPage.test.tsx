@@ -72,6 +72,7 @@ describe("DailyPage with no game for today", () => {
       expect(readDaily()).toEqual({ v: 1, date: today, number: 7, gameId: "g1", difficulty: "NORMAL" }),
     );
     expect(posts(fetchMock).map((c) => c.body)).toEqual([{ date: today, difficulty: "NORMAL" }]);
+    expect(localStorage.getItem("gg-daily-played")).toBe("1");
   });
 
   it.each([

@@ -1523,3 +1523,23 @@ button.gg-summary__row:focus-visible {
   width: 100%;
   font-weight: var(--gg-font-weight-bold);
 }
+
+/* The daily ticket's row of today's game icons: five equal cells with thin rules. */
+.gg-ticket__rounds {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: var(--gg-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--gg-color-border);
+}
+.gg-ticket__rounds > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--gg-space-5);
+  padding: var(--gg-space-2) 0;
+}
+.gg-ticket__rounds > li + li {
+  border-left: 1px solid var(--gg-color-border);
+}
