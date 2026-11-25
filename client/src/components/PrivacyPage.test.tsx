@@ -9,6 +9,12 @@ describe("PrivacyPage", () => {
     expect(screen.getByRole("heading", { name: "Credits and privacy", level: 1 })).toBeInTheDocument();
   });
 
+  it("says the idea is original and the code is AI-assisted", () => {
+    render(<PrivacyPage />);
+    expect(screen.getByRole("link", { name: "University Challenge" })).toBeInTheDocument();
+    expect(screen.getByText(/written with the help of AI tools/)).toBeInTheDocument();
+  });
+
   it("names who runs the site and how to reach them", () => {
     render(<PrivacyPage />);
 
