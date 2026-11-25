@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch } from "../../test/fetchMock";
@@ -10,7 +10,11 @@ function MapStub() {
   return <div data-testid="map" />;
 }
 
-function renderPlaceGame(kind: "countries" | "rivers" | "lakes", hasClues: boolean) {
+function renderPlaceGame(
+  kind: "countries" | "rivers" | "lakes",
+  hasClues: boolean,
+  round = makeRoundProps({ hasClues }),
+) {
   const fetchMock = mockFetch([
     { url: /\/api\/countries$/, body: countryNames },
     { url: /\/api\/rivers$/, body: riverNames },
@@ -21,7 +25,7 @@ function renderPlaceGame(kind: "countries" | "rivers" | "lakes", hasClues: boole
       kind={kind}
       game={{
         data: {},
-        round: makeRoundProps({ hasClues }),
+        round,
         answerCount: 1,
         submitAnswer: vi.fn(),
       }}
@@ -74,5 +78,53 @@ describe("PlaceGame", () => {
     await user.type(screen.getByRole("combobox", { name: "Country name…" }), "France{Enter}");
 
     expect(screen.getByText("France")).toBeInTheDocument();
+  });
+
+  describe("before the names have loaded", () => {
+    function renderWith(fetchNames: () => Promise<Response>) {
+      const round = makeRoundProps({});
+      vi.stubGlobal("fetch", vi.fn(fetchNames));
+      renderWithClient(
+        <PlaceGame
+          kind="countries"
+          game={{ data: {}, round, answerCount: 1, submitAnswer: vi.fn() }}
+          MapComponent={MapStub}
+          answers={[{ name: "Netherlands", additionalNames: [] }]}
+          prompt="Name it"
+          hints={{ description: "A clue" }}
+        />,
+      );
+      return round;
+    }
+
+    it("holds a guess back while the names are loading, then counts it once they have", async () => {
+      const user = userEvent.setup();
+      let release: (response: Response) => void = () => {};
+      const round = renderWith(() => new Promise<Response>((resolve) => (release = resolve)));
+      const input = screen.getByPlaceholderText("Country name…");
+
+      await user.type(input, "Spaan{Enter}");
+
+      expect(screen.getByText("Still loading the names. Try again in a moment.")).toBeInTheDocument();
+      expect(round.recordGuess).not.toHaveBeenCalled();
+      expect(input).toHaveValue("Spaan");
+
+      release({ ok: true, status: 200, json: async () => countryNames } as Response);
+      await screen.findByRole("combobox", { name: "Country name…" });
+      await user.clear(input);
+      await user.type(input, "France{Enter}");
+
+      expect(round.recordGuess).toHaveBeenCalledWith({ text: "France", correct: false });
+    });
+
+    it("still takes a guess when the names failed to load", async () => {
+      const user = userEvent.setup();
+      const round = renderWith(async () => ({ ok: false, status: 500, json: async () => ({}) }) as Response);
+      await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+
+      await user.type(screen.getByPlaceholderText("Country name…"), "Spaan{Enter}");
+
+      await waitFor(() => expect(round.recordGuess).toHaveBeenCalledWith({ text: "Spaan", correct: false }));
+    });
   });
 });

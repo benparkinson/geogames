@@ -1,8 +1,9 @@
 import { useEffect, useId, useRef, useState } from "react";
 import DistanceUnitSelector from "./DistanceUnitSelector";
 import ThemeSelector from "./ThemeSelector";
+import { SettingsIcon } from "../ui/icons";
 
-/** The footer's "Settings" link and the small panel it opens above itself. Closed on the server. */
+/** The home page header's cog button and the small panel it opens. Closed on the server. */
 export default function SettingsMenu(): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -34,11 +35,12 @@ export default function SettingsMenu(): React.JSX.Element {
         type="button"
         ref={buttonRef}
         className="gg-settings__button"
+        aria-label="Settings"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((wasOpen) => !wasOpen)}
       >
-        Settings
+        <SettingsIcon aria-hidden="true" />
       </button>
       {open && (
         <div id={panelId} className="gg-settings__panel">
