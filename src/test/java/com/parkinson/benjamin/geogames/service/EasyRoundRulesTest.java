@@ -93,12 +93,12 @@ class EasyRoundRulesTest {
   }
 
   @Test
-  void twoHintsInAnEasyRiverRoundScoreFifty() {
+  void twoHintsInARiverRoundScoreEightInEveryDifficulty() {
     GameRoundEntity round = fresh(GameType.RIVERS_BY_SHAPE);
     round.recordAnswer(AnswerState.CORRECT, 2, 0, 1);
 
-    assertThat(GameResults.pointsFor(round, Difficulty.EASY)).isEqualTo(50);
-    assertThat(GameResults.pointsFor(round, Difficulty.NORMAL)).isEqualTo(67);
+    assertThat(GameResults.pointsFor(round, Difficulty.EASY)).isEqualTo(8);
+    assertThat(GameResults.pointsFor(round, Difficulty.NORMAL)).isEqualTo(8);
   }
 
   @Test

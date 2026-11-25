@@ -79,9 +79,11 @@ export default function RoundActions({
 
   const hintsLeft = hintCount - hintsUsed;
   // The drop the next hint causes, as a difference so it rounds the same way as the score.
-  const nextHintCost =
-    roundPoints(CORRECT_ANSWER, hintsUsed, hintCount) - roundPoints(CORRECT_ANSWER, hintsUsed + 1, hintCount);
-  const hintTitle = hintsLeft > 0 ? `${hints.description} (−${nextHintCost} pts)` : "No hints left";
+  const nextHintCost = roundPoints(CORRECT_ANSWER, hintsUsed) - roundPoints(CORRECT_ANSWER, hintsUsed + 1);
+  const hintTitle =
+    hintsLeft > 0
+      ? `${hints.description} (−${nextHintCost} ${nextHintCost === 1 ? "point" : "points"})`
+      : "No hints left";
 
   return (
     <div className="round-actions">

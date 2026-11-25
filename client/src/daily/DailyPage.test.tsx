@@ -192,7 +192,7 @@ describe("DailyPage with a game for today", () => {
     renderWithClient(<DailyPage />);
 
     await waitFor(() =>
-      expect(readDaily()?.result).toEqual({ score: 100, maxScore: 200, rounds: ["correct", "missed"] }),
+      expect(readDaily()?.result).toEqual({ score: 10, maxScore: 20, rounds: ["correct", "missed"] }),
     );
     expect(screen.getByText(`game g1 (daily ${today})`)).toBeInTheDocument();
   });

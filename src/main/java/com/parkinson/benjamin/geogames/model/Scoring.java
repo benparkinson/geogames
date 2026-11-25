@@ -6,22 +6,25 @@ package com.parkinson.benjamin.geogames.model;
  */
 public final class Scoring {
 
-  public static final int MAX_ROUND_POINTS = 100;
-  public static final int MAX_HINT_PENALTY = 50;
+  public static final int ANSWER_POINTS = 4;
+  public static final int NO_HINT_POINTS = 3;
+  public static final int NO_MISS_POINTS = 3;
+  public static final int MAX_ROUND_POINTS = ANSWER_POINTS + NO_HINT_POINTS + NO_MISS_POINTS;
 
   private Scoring() {}
 
   /**
-   * The points a round earns. A correct round earns 100 less the hint penalty. A revealed round
-   * ({@code GAVE_UP} or {@code OUT_OF_GUESSES}) earns the share of that which was found, {@code
-   * answersFound} of {@code answerCount} answers, rounded half up; with none found that is 0. An
-   * unanswered round earns 0.
+   * The points a round earns, out of {@value #MAX_ROUND_POINTS}: 4 for the answer, 3 for no hints
+   * (1 off per hint) and 3 for no misses (1 off per wrong guess). A correct round always earns at
+   * least the answer's 4. A revealed round ({@code GAVE_UP} or {@code OUT_OF_GUESSES}) earns the
+   * share of the answer and no-hint points that was found, {@code answersFound} of {@code
+   * answerCount} answers, rounded half up, and nothing for no misses. An unanswered round earns 0.
    */
   public static int roundPoints(
-      AnswerState answerState, int hintsUsed, int hintCount, int answersFound, int answerCount) {
-    if (hintsUsed < 0 || hintCount < 0 || hintsUsed > hintCount) {
+      AnswerState answerState, int hintsUsed, int answersFound, int answerCount, int wrongGuesses) {
+    if (hintsUsed < 0 || wrongGuesses < 0) {
       throw new IllegalArgumentException(
-          "%d hints used is not possible with %d hints".formatted(hintsUsed, hintCount));
+          "%d hints and %d wrong guesses are not possible".formatted(hintsUsed, wrongGuesses));
     }
     if (answerCount < 1 || answersFound < 0 || answersFound > answerCount) {
       throw new IllegalArgumentException(
@@ -30,20 +33,12 @@ public final class Scoring {
     if (answerState == AnswerState.UNANSWERED) {
       return 0;
     }
-    int full = fullPoints(hintsUsed, hintCount);
+    int noHints = Math.max(0, NO_HINT_POINTS - hintsUsed);
     if (answerState == AnswerState.CORRECT) {
-      return full;
+      return ANSWER_POINTS + noHints + Math.max(0, NO_MISS_POINTS - wrongGuesses);
     }
+    int full = ANSWER_POINTS + noHints;
     // round_half_up(full * answersFound / answerCount), in integers
     return (2 * full * answersFound + answerCount) / (2 * answerCount);
-  }
-
-  private static int fullPoints(int hintsUsed, int hintCount) {
-    if (hintCount == 0) {
-      return MAX_ROUND_POINTS;
-    }
-    // round_half_up(MAX_HINT_PENALTY * hintsUsed / hintCount), in integers
-    int penalty = (2 * MAX_HINT_PENALTY * hintsUsed + hintCount) / (2 * hintCount);
-    return MAX_ROUND_POINTS - penalty;
   }
 }

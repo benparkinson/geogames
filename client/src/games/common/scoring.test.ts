@@ -1,57 +1,46 @@
 import { describe, expect, it } from "vitest";
 import { roundPoints } from "./scoring";
 
-// The same table is in the backend's ScoringTest. Keep them identical.
-const table: [hintCount: number, hintsUsed: number, correct: number, gaveUp: number][] = [
-  [0, 0, 100, 0],
-  [1, 0, 100, 0],
-  [1, 1, 50, 0],
-  [2, 1, 75, 0],
-  [2, 2, 50, 0],
-  [3, 1, 83, 0],
-  [3, 2, 67, 0],
-  [3, 3, 50, 0],
+// The same tables are in the backend's ScoringTest. Keep them identical.
+const correctTable: [hintsUsed: number, wrongGuesses: number, points: number][] = [
+  [0, 0, 10],
+  [0, 1, 9],
+  [0, 3, 7],
+  [0, 6, 7],
+  [1, 0, 9],
+  [3, 0, 7],
+  [2, 2, 6],
+  [3, 4, 4],
 ];
 
-// The same table is in the backend's ScoringTest. Keep them identical.
-const partialTable: [answerCount: number, found: number, hintCount: number, hintsUsed: number, points: number][] = [
-  [3, 0, 3, 0, 0],
-  [3, 1, 3, 0, 33],
-  [3, 2, 3, 0, 67],
-  [3, 1, 3, 1, 28],
-  [3, 2, 3, 1, 55],
-  [3, 1, 3, 2, 22],
-  [3, 2, 3, 2, 45],
-  [3, 1, 3, 3, 17],
-  [3, 2, 3, 3, 33],
-  [2, 1, 3, 0, 50],
-  [2, 1, 3, 1, 42],
-  [2, 1, 3, 2, 34],
-  [2, 1, 3, 3, 25],
-  [1, 0, 0, 0, 0],
+const revealedTable: [hintsUsed: number, wrongGuesses: number, answerCount: number, found: number, points: number][] = [
+  [0, 1, 3, 2, 5],
+  [0, 1, 3, 1, 2],
+  [0, 1, 2, 1, 4],
+  [0, 1, 3, 0, 0],
+  [3, 1, 3, 1, 1],
+  [1, 1, 2, 1, 3],
 ];
 
 describe("roundPoints", () => {
-  it.each(partialTable)(
-    "with %i answers and %i found, %i hints and %i used, a revealed round is %i",
-    (answerCount, found, hintCount, hintsUsed, points) => {
-      expect(roundPoints("GAVE_UP", hintsUsed, hintCount, found, answerCount)).toBe(points);
-      expect(roundPoints("OUT_OF_GUESSES", hintsUsed, hintCount, found, answerCount)).toBe(points);
+  it.each(correctTable)("a correct round with %i hints and %i wrong guesses is %i", (hints, wrong, points) => {
+    expect(roundPoints("CORRECT", hints, 1, 1, wrong)).toBe(points);
+  });
+
+  it.each(revealedTable)(
+    "a revealed round with %i hints, %i wrong, %i answers and %i found is %i",
+    (hints, wrong, answerCount, found, points) => {
+      expect(roundPoints("GAVE_UP", hints, found, answerCount, wrong)).toBe(points);
+      expect(roundPoints("OUT_OF_GUESSES", hints, found, answerCount, wrong)).toBe(points);
     },
   );
 
   it("ignores the found count for a correct or unanswered round", () => {
-    expect(roundPoints("CORRECT", 1, 3, 3, 3)).toBe(83);
-    expect(roundPoints("UNANSWERED", 0, 3, 2, 3)).toBe(0);
+    expect(roundPoints("CORRECT", 1, 0, 3, 0)).toBe(9);
+    expect(roundPoints("UNANSWERED", 0, 2, 3, 0)).toBe(0);
   });
 
-  it.each(table)(
-    "with %i hints and %i used: correct is %i, revealed is %i",
-    (hintCount, hintsUsed, correct, gaveUp) => {
-      expect(roundPoints("CORRECT", hintsUsed, hintCount)).toBe(correct);
-      expect(roundPoints("GAVE_UP", hintsUsed, hintCount)).toBe(gaveUp);
-      expect(roundPoints("OUT_OF_GUESSES", hintsUsed, hintCount)).toBe(gaveUp);
-      expect(roundPoints("UNANSWERED", hintsUsed, hintCount)).toBe(0);
-    },
-  );
+  it("gives a revealed round nothing for no misses", () => {
+    expect(roundPoints("GAVE_UP", 0, 1, 1, 0)).toBe(7);
+  });
 });

@@ -630,7 +630,7 @@ class GameServiceTest {
                 1,
                 0,
                 List.of(AnswerState.UNANSWERED, AnswerState.GAVE_UP),
-                200,
+                20,
                 0,
                 List.of(0, 0),
                 List.of(0, 0),
@@ -663,7 +663,7 @@ class GameServiceTest {
 
     assertThat(afterFirst.answerState()).isEqualTo(AnswerState.CORRECT);
     assertThat(afterFirst.gameResult().gameState()).isEqualTo(GameState.IN_PROGRESS);
-    assertThat(afterFirst.gameResult().score()).isEqualTo(100);
+    assertThat(afterFirst.gameResult().score()).isEqualTo(10);
     assertThat(game.getRounds().get(1).getAnswerState()).isEqualTo(AnswerState.UNANSWERED);
     verify(gameRepository, times(1)).save(game);
 
@@ -671,7 +671,7 @@ class GameServiceTest {
         service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
 
     assertThat(afterSecond.gameResult().gameState()).isEqualTo(GameState.FINISHED);
-    assertThat(afterSecond.gameResult().score()).isEqualTo(100);
+    assertThat(afterSecond.gameResult().score()).isEqualTo(10);
     assertThat(afterSecond.gameResult().roundAnswerStates())
         .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP);
     verify(gameRepository, times(2)).save(game);
@@ -780,8 +780,8 @@ class GameServiceTest {
 
     assertThat(game.getRounds().get(0).getHintsUsed()).isEqualTo(1);
     assertThat(result.hintsUsed()).isEqualTo(1);
-    assertThat(result.points()).isEqualTo(83);
-    assertThat(result.gameResult().score()).isEqualTo(83);
+    assertThat(result.points()).isEqualTo(9);
+    assertThat(result.gameResult().score()).isEqualTo(9);
   }
 
   @Test
@@ -833,7 +833,7 @@ class GameServiceTest {
     RoundAnswerResponse again =
         service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 2, null, null).orElseThrow();
 
-    assertThat(again.points()).isEqualTo(67);
+    assertThat(again.points()).isEqualTo(8);
     verify(gameRepository, never()).save(any());
   }
 
@@ -926,7 +926,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 100, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 10, 20);
   }
 
   @Test
@@ -966,7 +966,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, limit, null);
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 0, 200);
+    verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 0, 20);
   }
 
   // ------------------------------------------------------------ recordGuess
@@ -1082,12 +1082,7 @@ class GameServiceTest {
     assertThat(result.hintsUsed()).isEqualTo(2);
     assertThat(result.points())
         .isEqualTo(
-            Scoring.roundPoints(
-                AnswerState.CORRECT,
-                2,
-                GameType.TRIPOINT.hintCount(),
-                3,
-                GameType.TRIPOINT.answerCount()));
+            Scoring.roundPoints(AnswerState.CORRECT, 2, 3, GameType.TRIPOINT.answerCount(), 0));
     ArgumentCaptor<RoundAnswered> event = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(event.capture());
     assertThat(event.getValue().hintsUsed()).isEqualTo(2);
@@ -1124,7 +1119,7 @@ class GameServiceTest {
     RoundAnswerResponse result =
         service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2).orElseThrow();
 
-    assertThat(result.points()).isEqualTo(67);
+    assertThat(result.points()).isEqualTo(5);
     assertThat(game.getRounds().get(0).getAnswersFound()).isEqualTo(2);
     ArgumentCaptor<RoundAnswered> event = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(event.capture());
@@ -1143,7 +1138,7 @@ class GameServiceTest {
     RoundAnswerResponse result =
         service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null).orElseThrow();
 
-    assertThat(result.points()).isEqualTo(67);
+    assertThat(result.points()).isEqualTo(5);
     assertThat(unanswered.getAnswersFound()).isEqualTo(2);
   }
 
@@ -1157,7 +1152,7 @@ class GameServiceTest {
     RoundAnswerResponse result =
         service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, 2).orElseThrow();
 
-    assertThat(result.points()).isEqualTo(67);
+    assertThat(result.points()).isEqualTo(5);
   }
 
   @Test
@@ -1182,7 +1177,7 @@ class GameServiceTest {
     RoundAnswerResponse result =
         service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
 
-    assertThat(result.points()).isEqualTo(100);
+    assertThat(result.points()).isEqualTo(10);
     assertThat(unanswered.getAnswersFound()).isEqualTo(3);
   }
 

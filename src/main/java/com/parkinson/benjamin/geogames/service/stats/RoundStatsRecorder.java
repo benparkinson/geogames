@@ -52,9 +52,9 @@ public class RoundStatsRecorder {
               Scoring.roundPoints(
                   event.answerState(),
                   event.hintsUsed(),
-                  hintCount,
                   event.answersFound() == null ? 0 : event.answersFound(),
-                  event.gameType().answerCount()),
+                  event.gameType().answerCount(),
+                  event.wrongGuesses() == null ? 0 : event.wrongGuesses()),
               event.hardMode(),
               event.difficulty()));
     } catch (Exception e) {
