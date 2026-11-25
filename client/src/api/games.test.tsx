@@ -74,7 +74,6 @@ describe("toRoundView", () => {
           roundAnswerStates: ["CORRECT", "CORRECT", "UNANSWERED"],
           maxScore: 300,
           roundsCorrect: 2,
-          perfectRounds: 1,
           roundPoints: [100, 83, 0],
           roundHintsUsed: [0, 1, 0],
           roundFirstGuess: [true, false, false],

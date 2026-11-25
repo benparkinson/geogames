@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.service.RoundAlreadyAnsweredException;
 import com.parkinson.benjamin.geogames.service.RoundClosedException;
 import com.parkinson.benjamin.geogames.service.RoundDataMissingException;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Turns exceptions into JSON problem bodies: bad input is a 400, a conflict with the game's state
+ * Turns exceptions into JSON problem bodies: bad input (a {@link BadRequestException}) is a 400, a conflict with the game's state
  * (such as changing an answered round, or a round changed by another request at the same moment) is
  * a 409, and round data that has gone is a 410. Anything else keeps Spring's default 500.
  */
@@ -24,8 +25,8 @@ public class ApiExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ProblemDetail badRequest(IllegalArgumentException e) {
+  @ExceptionHandler(BadRequestException.class)
+  public ProblemDetail badRequest(BadRequestException e) {
     return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 

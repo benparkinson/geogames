@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -81,14 +82,12 @@ class GameControllerTest {
             List.of(AnswerState.UNANSWERED, AnswerState.UNANSWERED, AnswerState.UNANSWERED),
             300,
             0,
-            0,
             List.of(0, 0, 0),
             List.of(0, 0, 0),
             List.of(false, false, false),
             0),
         List.of(),
         List.of(),
-        false,
         "NORMAL",
         List.of());
   }
@@ -142,7 +141,7 @@ class GameControllerTest {
   }
 
   @Test
-  void hardModeIsPassedToTheService() throws Exception {
+  void aDifficultyIsPassedToTheService() throws Exception {
     when(gameService.createGame("TRIPOINT", 3, Difficulty.HARD))
         .thenReturn(new GameCreationResponse(GAME_ID));
 
@@ -150,7 +149,8 @@ class GameControllerTest {
         .perform(
             post("/api/games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"hardMode\":true}"))
+                .content(
+                    "{\"gameType\":\"TRIPOINT\",\"numberOfRounds\":3,\"difficulty\":\"HARD\"}"))
         .andExpect(status().isOk());
 
     verify(gameService).createGame("TRIPOINT", 3, Difficulty.HARD);
@@ -158,7 +158,7 @@ class GameControllerTest {
 
   @Test
   void createGameWithInvalidArgumentsIsABadRequestWithAProblemBody() throws Exception {
-    when(gameService.createGame("FOO", 3, null)).thenThrow(new IllegalArgumentException("Unknown"));
+    when(gameService.createGame("FOO", 3, null)).thenThrow(new BadRequestException("Unknown"));
 
     mockMvc
         .perform(
@@ -196,7 +196,6 @@ class GameControllerTest {
         .andExpect(jsonPath("$.points").value(0))
         .andExpect(jsonPath("$.gameResult.maxScore").value(300))
         .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
-        .andExpect(jsonPath("$.gameResult.perfectRounds").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundFirstGuess.length()").value(3))
@@ -286,8 +285,7 @@ class GameControllerTest {
   void anAnswerWithTooManyHintsIsABadRequestWithAProblemBody() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 9, null, null))
         .thenThrow(
-            new IllegalArgumentException(
-                "A round of TRIPOINT has 3 hints, so 9 can't have been used"));
+            new BadRequestException("A round of TRIPOINT has 3 hints, so 9 can't have been used"));
 
     mockMvc
         .perform(
@@ -316,7 +314,7 @@ class GameControllerTest {
   @Test
   void anAnswerTheServiceRejectsIsABadRequest() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.UNANSWERED, 0, null, null))
-        .thenThrow(new IllegalArgumentException("A round can't be answered with UNANSWERED"));
+        .thenThrow(new BadRequestException("A round can't be answered with UNANSWERED"));
 
     mockMvc
         .perform(
@@ -429,7 +427,7 @@ class GameControllerTest {
   void anAnswerWithImpossibleWrongGuessesIsABadRequest() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, 3, null))
         .thenThrow(
-            new IllegalArgumentException(
+            new BadRequestException(
                 "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
 
     mockMvc

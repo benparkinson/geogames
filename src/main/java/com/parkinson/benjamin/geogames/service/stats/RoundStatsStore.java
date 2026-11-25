@@ -82,7 +82,7 @@ public class RoundStatsStore {
         .param("answerStateId", stateId)
         .param("roundNumber", row.roundNumber())
         .param("hintsUsed", row.hintsUsed())
-        .param("wrongGuesses", row.wrongGuesses(), java.sql.Types.SMALLINT)
+        .param("wrongGuesses", row.wrongGuesses(), Types.SMALLINT)
         .param("points", row.points())
         .update();
   }

@@ -8,31 +8,23 @@ import org.junit.jupiter.api.Test;
 class DifficultyTest {
 
   @Test
-  void aNamedDifficultyWinsOverHardMode() {
-    assertThat(Difficulty.resolve("EASY", null)).isEqualTo(Difficulty.EASY);
-    assertThat(Difficulty.resolve("EASY", true)).isEqualTo(Difficulty.EASY);
-    assertThat(Difficulty.resolve("NORMAL", true)).isEqualTo(Difficulty.NORMAL);
-    assertThat(Difficulty.resolve("HARD", false)).isEqualTo(Difficulty.HARD);
+  void aNamedDifficultyIsResolved() {
+    assertThat(Difficulty.resolve("EASY")).isEqualTo(Difficulty.EASY);
+    assertThat(Difficulty.resolve("NORMAL")).isEqualTo(Difficulty.NORMAL);
+    assertThat(Difficulty.resolve("HARD")).isEqualTo(Difficulty.HARD);
   }
 
   @Test
-  void hardModeAloneMapsToHardOrNormal() {
-    assertThat(Difficulty.resolve(null, true)).isEqualTo(Difficulty.HARD);
-    assertThat(Difficulty.resolve(null, false)).isEqualTo(Difficulty.NORMAL);
+  void noNameIsUnknown() {
+    assertThat(Difficulty.resolve(null)).isNull();
   }
 
   @Test
-  void neitherIsUnknown() {
-    assertThat(Difficulty.resolve(null, null)).isNull();
-  }
-
-  @Test
-  void aBadNameIsRejectedEvenWithHardMode() {
-    assertThatThrownBy(() -> Difficulty.resolve("easy", null))
+  void aBadNameIsRejected() {
+    assertThatThrownBy(() -> Difficulty.resolve("easy"))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("easy");
-    assertThatThrownBy(() -> Difficulty.resolve("", true))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Difficulty.resolve("")).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

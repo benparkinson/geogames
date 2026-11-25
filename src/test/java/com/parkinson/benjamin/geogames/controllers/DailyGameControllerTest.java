@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
@@ -82,7 +83,7 @@ class DailyGameControllerTest {
   }
 
   @Test
-  void hardModeIsPassedToTheService() throws Exception {
+  void aDifficultyIsPassedToTheService() throws Exception {
     LocalDate date = LocalDate.of(2026, 11, 20);
     when(dailyService.createDailyGame(Optional.empty(), Difficulty.HARD))
         .thenReturn(new DailyGameResponse(GAME_ID, date, 3));
@@ -91,7 +92,7 @@ class DailyGameControllerTest {
         .perform(
             post("/api/daily-games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"hardMode\":true}"))
+                .content("{\"difficulty\":\"HARD\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.number").value(3));
   }
@@ -130,7 +131,7 @@ class DailyGameControllerTest {
     mockMvc.perform(get("/api/daily-scores/yesterday")).andExpect(status().isBadRequest());
 
     when(dailyService.score(LocalDate.of(2001, 1, 1), Difficulty.NORMAL))
-        .thenThrow(new IllegalArgumentException("too early"));
+        .thenThrow(new BadRequestException("too early"));
     mockMvc.perform(get("/api/daily-scores/2001-01-01")).andExpect(status().isBadRequest());
   }
 
@@ -179,7 +180,7 @@ class DailyGameControllerTest {
     mockMvc.perform(get("/api/daily-challenges/yesterday")).andExpect(status().isBadRequest());
 
     when(dailyService.challenge(LocalDate.of(2001, 1, 1)))
-        .thenThrow(new IllegalArgumentException("too early"));
+        .thenThrow(new BadRequestException("too early"));
     mockMvc.perform(get("/api/daily-challenges/2001-01-01")).andExpect(status().isBadRequest());
   }
 }

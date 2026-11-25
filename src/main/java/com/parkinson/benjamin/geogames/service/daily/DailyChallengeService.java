@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service.daily;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
@@ -55,7 +56,7 @@ public class DailyChallengeService {
    * @param requested the player's local date, or empty for the server's UTC date. Accepted within
    *     one day of the server's UTC date, which covers every time zone (UTC-12 to UTC+14).
    * @param difficulty how the game is played, or null if the client did not say
-   * @throws IllegalArgumentException if the date is out of range
+   * @throws BadRequestException if the date is out of range
    */
   public DailyGameResponse createDailyGame(Optional<LocalDate> requested, Difficulty difficulty) {
     LocalDate date = validDate(requested, false);
@@ -90,7 +91,7 @@ public class DailyChallengeService {
    * The day's totals for one league: zeros when no game has finished. The date is checked like a
    * new game's.
    *
-   * @throws IllegalArgumentException if the date is out of range
+   * @throws BadRequestException if the date is out of range
    */
   public DailyScoreResponse score(LocalDate requested, Difficulty difficulty) {
     LocalDate date = validDate(Optional.of(requested), true);
@@ -113,10 +114,10 @@ public class DailyChallengeService {
     LocalDate date = requested.orElse(today);
     if (Math.abs(ChronoUnit.DAYS.between(today, date)) > 1
         && !(pastAllowed && date.isBefore(today))) {
-      throw new IllegalArgumentException("That date is too far from today: " + date);
+      throw new BadRequestException("That date is too far from today: " + date);
     }
     if (date.isBefore(DAILY_EPOCH)) {
-      throw new IllegalArgumentException("There is no daily challenge before " + DAILY_EPOCH);
+      throw new BadRequestException("There is no daily challenge before " + DAILY_EPOCH);
     }
     return date;
   }

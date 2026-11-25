@@ -208,7 +208,7 @@ describe("DailyPage with a game for today", () => {
 
   it("stores the server's difficulty with the result, and the finished page shares it", async () => {
     writeDaily(entry);
-    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], difficulty: "HARD", hardMode: true } }, SCORE]);
+    mockFetch([{ url: ROUND_0, body: { ...finishedGame[0], difficulty: "HARD" } }, SCORE]);
     const { unmount } = renderWithClient(<DailyPage />);
 
     await waitFor(() => expect(readDaily()?.difficulty).toBe("HARD"));

@@ -61,14 +61,6 @@ public class GameEntity {
   private String gameMode;
 
   /**
-   * The old Hard mode switch, kept because the previous version of the app still reads and writes
-   * it during a deploy: true for HARD, false for EASY and NORMAL, null for unknown. Set from {@link
-   * #difficulty} when the game is created and never changed.
-   */
-  @Column(updatable = false)
-  private Boolean hardMode;
-
-  /**
    * How the game is played, chosen when it was created and never changed. Null means unknown: the
    * game was created before this column existed, or by a client that sent neither a difficulty nor
    * Hard mode. It reads as NORMAL in the API.
@@ -113,7 +105,6 @@ public class GameEntity {
     this.playId = UUID.randomUUID();
     this.gameMode = gameMode;
     this.difficulty = difficulty;
-    this.hardMode = difficulty == null ? null : difficulty == Difficulty.HARD;
     this.dailyDate = dailyDate;
   }
 
@@ -143,19 +134,9 @@ public class GameEntity {
     return difficulty;
   }
 
-  /** For statistics (until they record the difficulty): null when unknown. */
-  public Boolean getHardMode() {
-    return hardMode;
-  }
-
   /** For the rules and the API: unknown reads as NORMAL. */
   public Difficulty difficulty() {
     return Difficulty.orNormal(difficulty);
-  }
-
-  /** For the API: whether the game is HARD. */
-  public boolean isHardMode() {
-    return difficulty() == Difficulty.HARD;
   }
 
   public List<GameRoundEntity> getRounds() {

@@ -314,27 +314,27 @@ class GameServiceTest {
   }
 
   @Test
-  void hardModeReachesTheEntityAndTheRoundResponse() {
+  void aDifficultyReachesTheEntityAndTheRoundResponse() {
     when(tripointGenerator.generate(eq(1), eq(Set.of()), any())).thenReturn(tripoints(1));
 
     service.createGame("TRIPOINT", 1, Difficulty.HARD);
 
     GameEntity saved = savedGame();
-    assertThat(saved.getHardMode()).isTrue();
+    assertThat(saved.getDifficulty()).isEqualTo(Difficulty.HARD);
     Tripoint tripoint = tripoint(0);
     when(tripointGenerator.rebuild(any())).thenReturn(tripoint);
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(saved));
-    assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().hardMode()).isTrue();
+    assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().difficulty()).isEqualTo("HARD");
   }
 
   @Test
-  void anUnknownHardModeReadsAsFalseInTheResponseButStaysNullInTheEvent() {
+  void anUnknownDifficultyReadsAsNormalInTheResponseButStaysNullInTheEvent() {
     Tripoint tripoint = tripoint(1);
     when(tripointGenerator.rebuild(tripoint.roundKey())).thenReturn(tripoint);
     GameEntity game = game(new GameRoundEntity(0, GameType.TRIPOINT, tripoint.roundKey()));
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
-    assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().hardMode()).isFalse();
+    assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().difficulty()).isEqualTo("NORMAL");
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
@@ -357,7 +357,6 @@ class GameServiceTest {
     GameRound result = readRound(Difficulty.EASY, GameType.LAKES_BY_SHAPE, "lake:Q1");
 
     assertThat(result.difficulty()).isEqualTo("EASY");
-    assertThat(result.hardMode()).isFalse();
     assertThat(result.continents()).containsExactly("Europe", "Asia");
     assertThat(result.gameType().guessLimit()).isEqualTo(8);
     assertThat(result.gameType().hintCount()).isEqualTo(2);
@@ -378,11 +377,10 @@ class GameServiceTest {
   }
 
   @Test
-  void aHardRoundIsHardInBothFields() {
+  void aHardRoundIsHard() {
     GameRound result = readRound(Difficulty.HARD, GameType.RIVERS_BY_SHAPE, "river:Q1");
 
     assertThat(result.difficulty()).isEqualTo("HARD");
-    assertThat(result.hardMode()).isTrue();
   }
 
   @Test
@@ -630,7 +628,6 @@ class GameServiceTest {
                 List.of(AnswerState.UNANSWERED, AnswerState.GAVE_UP),
                 200,
                 0,
-                0,
                 List.of(0, 0),
                 List.of(0, 0),
                 List.of(false, false),
@@ -862,7 +859,6 @@ class GameServiceTest {
     assertThat(result.points()).isZero();
     assertThat(result.gameResult().score()).isZero();
     assertThat(result.gameResult().roundsCorrect()).isZero();
-    assertThat(result.gameResult().perfectRounds()).isZero();
     assertThat(result.gameResult().gameState()).isEqualTo(GameState.FINISHED);
   }
 
