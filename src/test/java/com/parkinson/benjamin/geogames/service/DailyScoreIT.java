@@ -130,8 +130,8 @@ class DailyScoreIT {
 
     JsonNode score = score();
     assertThat(score.get("players").asInt()).isEqualTo(2);
-    assertThat(score.get("averageScore").asDouble()).isEqualTo(250.0);
-    assertThat(score.get("maxScore").asInt()).isEqualTo(500);
+    assertThat(score.get("averageScore").asDouble()).isEqualTo(25.0);
+    assertThat(score.get("maxScore").asInt()).isEqualTo(50);
     List<Integer> buckets = new ArrayList<>();
     score.get("buckets").forEach(n -> buckets.add(n.asInt()));
     assertThat(buckets).containsExactly(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
@@ -142,7 +142,7 @@ class DailyScoreIT {
                 + " where challenge_date = ?",
             DATE);
     assertThat(((Number) row.get("players")).intValue()).isEqualTo(2);
-    assertThat(((Number) row.get("average_score")).doubleValue()).isEqualTo(250.0);
+    assertThat(((Number) row.get("average_score")).doubleValue()).isEqualTo(25.0);
     assertThat(((Number) row.get("bucket_0")).intValue()).isEqualTo(1);
     assertThat(((Number) row.get("bucket_10")).intValue()).isEqualTo(1);
   }
@@ -188,7 +188,7 @@ class DailyScoreIT {
     JsonNode easy = score("?difficulty=EASY");
     assertThat(easy.get("difficulty").asString()).isEqualTo("EASY");
     assertThat(easy.get("players").asInt()).isEqualTo(1);
-    assertThat(easy.get("averageScore").asDouble()).isEqualTo(500.0);
+    assertThat(easy.get("averageScore").asDouble()).isEqualTo(50.0);
     JsonNode hard = score("?difficulty=HARD");
     assertThat(hard.get("difficulty").asString()).isEqualTo("HARD");
     assertThat(hard.get("players").asInt()).isEqualTo(2);
@@ -253,7 +253,7 @@ class DailyScoreIT {
       int found = answerCount - 1;
       expected +=
           com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-              AnswerState.GAVE_UP, 0, type.get("hintCount").asInt(), found, answerCount);
+              AnswerState.GAVE_UP, 0, found, answerCount, 0);
       mockMvc
           .perform(
               post("/api/games/%s/rounds/%d/answers".formatted(id, round))

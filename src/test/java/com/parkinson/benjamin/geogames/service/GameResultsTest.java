@@ -40,7 +40,7 @@ class GameResultsTest {
 
     assertThat(result.roundAnswerStates())
         .containsExactly(AnswerState.CORRECT, AnswerState.GAVE_UP, AnswerState.UNANSWERED);
-    assertThat(result.score()).isEqualTo(100);
+    assertThat(result.score()).isEqualTo(10);
     assertThat(result.roundsUnanswered()).isEqualTo(1);
     assertThat(result.gameState()).isEqualTo(GameState.IN_PROGRESS);
   }
@@ -80,11 +80,11 @@ class GameResultsTest {
 
     GameResult result = GameResults.of(game);
 
-    // perfect 100 + river with 1 of 2 hints 75 + tripoint with 1 of 3 hints 83 + revealed 0
-    assertThat(result.roundPoints()).containsExactly(100, 75, 83, 0, 0);
+    // perfect 10 + two correct with 1 hint 9 each + revealed with nothing found 0
+    assertThat(result.roundPoints()).containsExactly(10, 9, 9, 0, 0);
     assertThat(result.roundHintsUsed()).containsExactly(0, 1, 1, 2, 0);
-    assertThat(result.score()).isEqualTo(258);
-    assertThat(result.maxScore()).isEqualTo(500);
+    assertThat(result.score()).isEqualTo(28);
+    assertThat(result.maxScore()).isEqualTo(50);
     assertThat(result.roundsCorrect()).isEqualTo(3);
   }
 
@@ -95,7 +95,7 @@ class GameResultsTest {
     GameResult result = GameResults.of(game);
 
     assertThat(result.score()).isZero();
-    assertThat(result.maxScore()).isEqualTo(200);
+    assertThat(result.maxScore()).isEqualTo(20);
   }
 
   @Test
@@ -107,9 +107,30 @@ class GameResultsTest {
 
     GameResult result = GameResults.of(game(partial, none));
 
-    assertThat(result.roundPoints()).containsExactly(67, 0);
-    assertThat(result.score()).isEqualTo(67);
+    assertThat(result.roundPoints()).containsExactly(5, 0);
+    assertThat(result.score()).isEqualTo(5);
     assertThat(result.roundsCorrect()).isZero();
+  }
+
+  @Test
+  void wrongGuessesAreTheLargerOfReportedAndRecorded() {
+    assertThat(GameResults.wrongGuessesFor(answered(AnswerState.CORRECT, 0, null))).isZero();
+    assertThat(GameResults.wrongGuessesFor(answered(AnswerState.CORRECT, 0, 2, true))).isEqualTo(2);
+    assertThat(GameResults.wrongGuessesFor(answered(AnswerState.CORRECT, 0, null, false, false)))
+        .isEqualTo(2);
+    assertThat(GameResults.wrongGuessesFor(answered(AnswerState.CORRECT, 0, 1, false, false)))
+        .isEqualTo(2);
+    assertThat(GameResults.wrongGuessesFor(answered(AnswerState.CORRECT, 0, 3, false)))
+        .isEqualTo(3);
+  }
+
+  @Test
+  void wrongGuessesCostPointsEvenWhenOnlyRecorded() {
+    GameRoundEntity entity = answered(AnswerState.CORRECT, 0, null, false, false);
+
+    assertThat(
+            GameResults.pointsFor(entity, com.parkinson.benjamin.geogames.model.Difficulty.NORMAL))
+        .isEqualTo(8);
   }
 
   private static GameRoundEntity answered(
@@ -167,6 +188,6 @@ class GameResultsTest {
     GameRoundEntity partial = new GameRoundEntity(0, GameType.TRIPOINT, "{}");
     partial.recordAnswer(AnswerState.OUT_OF_GUESSES, 1, 5, 1);
 
-    assertThat(GameResults.pointsFor(partial, Difficulty.NORMAL)).isEqualTo(28);
+    assertThat(GameResults.pointsFor(partial, Difficulty.NORMAL)).isEqualTo(2);
   }
 }

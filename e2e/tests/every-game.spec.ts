@@ -17,7 +17,7 @@ const GAMES = [
   { type: "RANDOM", title: "Mixed" },
 ];
 
-// The home page's smallest game is 3 rounds, so each game is played for 3 rounds (300 points).
+// The home page's smallest game is 3 rounds, so each game is played for 3 rounds (30 points).
 const ROUNDS = 3;
 
 for (const { type, title } of GAMES) {
@@ -34,7 +34,7 @@ for (const { type, title } of GAMES) {
         await guess(page, answer.name);
       }
       await expect(roundResult(page)).toHaveText(
-        answers.length > 1 ? /No wrong guesses!\s*\+100/ : /First guess!\s*\+100/,
+        answers.length > 1 ? /No wrong guesses!\s*\+10/ : /First guess!\s*\+10/,
       );
 
       await page
@@ -45,6 +45,6 @@ for (const { type, title } of GAMES) {
     await expect(
       page.getByRole("heading", { name: "Perfect game!" }),
     ).toBeVisible();
-    await expect(page.getByText(`/ ${ROUNDS * 100}`, { exact: true })).toBeVisible();
+    await expect(page.getByText(`/ ${ROUNDS * 10}`, { exact: true })).toBeVisible();
   });
 }

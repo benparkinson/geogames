@@ -15,7 +15,7 @@ describe("summariseGame", () => {
       { answerState: "CORRECT", firstGuess: true },
     ]);
     expect(s.heading).toBe("perfect");
-    expect(s.score).toBe(200);
+    expect(s.score).toBe(20);
   });
 
   it("calls full marks after wrong guesses full marks, not perfect", () => {
