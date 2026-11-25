@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import GuessForm from "./GuessForm";
 import { GuessResult } from "./guessReducer";
 
@@ -180,5 +180,51 @@ describe("GuessForm suggestions", () => {
     await userEvent.setup().type(input(), "f");
 
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+});
+
+describe("GuessForm result flash", () => {
+  afterEach(() => vi.useRealTimers());
+
+  function submitFake(result: GuessResult, text: string) {
+    vi.useFakeTimers();
+    renderForm({ submitGuess: vi.fn(() => result) });
+    fireEvent.change(input(), { target: { value: text } });
+    fireEvent.submit(input().closest("form")!);
+  }
+
+  const flash = () => document.querySelector<HTMLElement>(".gg-guess-form__flash");
+
+  it("shows a correct guess over the emptied box, then removes it after 700ms", () => {
+    submitFake({ kind: "correct", remaining: 1 }, "Spain");
+
+    expect(input()).toHaveValue("");
+    expect(flash()).toHaveAttribute("data-flash", "correct");
+    expect(flash()).toHaveAttribute("data-text", "Spain");
+    expect(flash()).toHaveAttribute("aria-hidden", "true");
+
+    act(() => void vi.advanceTimersByTime(700));
+    expect(flash()).toBeNull();
+  });
+
+  it("marks a wrong guess", () => {
+    submitFake({ kind: "wrong", guess: "Spain", guessesLeft: 2 }, "Spain");
+
+    expect(flash()).toHaveAttribute("data-flash", "wrong");
+  });
+
+  it("removes the flash on the first keystroke", () => {
+    submitFake({ kind: "wrong", guess: "Spain", guessesLeft: 2 }, "Spain");
+
+    fireEvent.change(input(), { target: { value: "F" } });
+
+    expect(flash()).toBeNull();
+  });
+
+  it("shows no flash for an unknown guess and keeps the text", () => {
+    submitFake({ kind: "unknown", guess: "Spaan" }, "Spaan");
+
+    expect(flash()).toBeNull();
+    expect(input()).toHaveValue("Spaan");
   });
 });

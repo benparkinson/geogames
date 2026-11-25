@@ -1182,6 +1182,50 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .gg-guess-form__box {
   flex-grow: 1;
+  position: relative;
+}
+/* The guess just made, over the emptied box for a moment: a fill for a correct guess, struck-through red for a wrong one. */
+.gg-guess-form__flash {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  border-radius: var(--gg-radius) 0 0 var(--gg-radius);
+  border: 1px solid transparent;
+  z-index: 2;
+  animation: gg-flash-out var(--gg-duration-flash) ease-in forwards;
+}
+/* The text comes from an attribute, so it is not part of the page's text (the guess list already holds it). */
+.gg-guess-form__flash::before {
+  content: attr(data-text);
+}
+.gg-guess-form__flash[data-flash="correct"] {
+  background: var(--gg-color-correct);
+  color: var(--gg-color-on-correct);
+}
+.gg-guess-form__flash[data-flash="wrong"] {
+  background: var(--gg-color-surface);
+  color: var(--gg-color-danger-text);
+  text-decoration: line-through;
+}
+@keyframes gg-flash-out {
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gg-guess-form__flash {
+    animation: none;
+  }
 }
 /* The box and the Guess button are joined: one ink outline, squared where they meet. */
 .gg-guess-form__box .gg-input {
