@@ -33,18 +33,14 @@ for (const { type, title } of GAMES) {
       for (const answer of answers) {
         await guess(page, answer.name);
       }
-      await expect(roundResult(page)).toHaveText(
-        answers.length > 1 ? /No wrong guesses!\s*\+10/ : /First guess!\s*\+10/,
-      );
+      await expect(roundResult(page)).toHaveText(/Correct!\s*\+10/);
 
       await page
         .getByRole("button", { name: round < ROUNDS - 1 ? "Next round" : "See results" })
         .click();
     }
 
-    await expect(
-      page.getByRole("heading", { name: "Perfect game!" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Perfect game!" })).toBeVisible();
     await expect(page.getByText(`/ ${ROUNDS * 10}`, { exact: true })).toBeVisible();
   });
 }

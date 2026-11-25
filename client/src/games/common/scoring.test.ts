@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { roundPoints } from "./scoring";
+import { pointsBreakdown, roundPoints } from "./scoring";
 
 // The same tables are in the backend's ScoringTest. Keep them identical.
 const correctTable: [hintsUsed: number, wrongGuesses: number, points: number][] = [
@@ -42,5 +42,50 @@ describe("roundPoints", () => {
 
   it("gives a revealed round nothing for no misses", () => {
     expect(roundPoints("GAVE_UP", 0, 1, 1, 0)).toBe(7);
+  });
+});
+
+describe("pointsBreakdown", () => {
+  const sum = (b: { answer: number; noHints: number; noMisses: number }) => b.answer + b.noHints + b.noMisses;
+
+  it.each(correctTable)(
+    "sums to the points of a correct round with %i hints and %i wrong guesses",
+    (hints, wrong, points) => {
+      const breakdown = pointsBreakdown("CORRECT", hints, 1, 1, wrong);
+      expect(sum(breakdown)).toBe(points);
+      expect(breakdown.found).toBeUndefined();
+    },
+  );
+
+  it.each(revealedTable)(
+    "sums to the points of a revealed round with %i hints, %i wrong, %i answers and %i found",
+    (hints, wrong, answerCount, found, points) => {
+      const breakdown = pointsBreakdown("GAVE_UP", hints, found, answerCount, wrong);
+      expect(sum(breakdown)).toBe(points);
+      expect(breakdown.noMisses).toBe(0);
+    },
+  );
+
+  it("splits a correct round into its three parts", () => {
+    expect(pointsBreakdown("CORRECT", 1, 1, 1, 2)).toEqual({ answer: 4, noHints: 2, noMisses: 1 });
+  });
+
+  it("fills the Answer part first for a revealed round, then No hints, and names how many were found", () => {
+    expect(pointsBreakdown("GAVE_UP", 0, 2, 3, 0)).toEqual({
+      answer: 4,
+      noHints: 1,
+      noMisses: 0,
+      found: { found: 2, count: 3 },
+    });
+    expect(pointsBreakdown("OUT_OF_GUESSES", 0, 1, 3, 2)).toEqual({
+      answer: 2,
+      noHints: 0,
+      noMisses: 0,
+      found: { found: 1, count: 3 },
+    });
+  });
+
+  it("is empty for an unanswered round", () => {
+    expect(pointsBreakdown("UNANSWERED", 0, 0, 1, 0)).toEqual({ answer: 0, noHints: 0, noMisses: 0 });
   });
 });

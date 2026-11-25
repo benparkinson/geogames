@@ -255,11 +255,11 @@
   color: var(--gg-color-danger);
 }
 /* The colour of an outcome: a round banner or a results row's points. */
-[data-outcome="firstGuess"],
-[data-outcome="correct"] {
+[data-outcome="full"],
+[data-outcome="good"] {
   color: var(--gg-color-correct);
 }
-[data-outcome="hints"] {
+[data-outcome="partial"] {
   color: var(--gg-color-hints-text);
 }
 [data-outcome="missed"] {
@@ -1323,12 +1323,73 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   font-weight: var(--gg-font-weight-mono-strong);
   font-size: var(--gg-font-size-h5);
 }
-.round-result__banner[data-outcome="firstGuess"],
-.round-result__banner[data-outcome="correct"] {
+.round-result__banner[data-outcome="full"],
+.round-result__banner[data-outcome="good"] {
   color: var(--gg-color-correct);
 }
 .round-result__banner[data-outcome="missed"] {
   color: var(--gg-color-missed-text);
+}
+.round-result__bar {
+  margin-bottom: var(--gg-space-4);
+}
+.gg-score-bar__cells {
+  display: flex;
+  gap: var(--gg-space-3);
+}
+.gg-score-bar__part {
+  display: flex;
+  flex: 1 1 0;
+  gap: 2px;
+}
+.gg-score-bar__part:first-child {
+  flex-grow: 4;
+}
+.gg-score-bar__part:not(:first-child) {
+  flex-grow: 3;
+}
+.gg-score-bar__cell {
+  flex: 1 1 0;
+  height: 0.9rem;
+  border: 1px solid var(--gg-color-rule-light);
+  border-radius: 2px;
+}
+.gg-score-bar__cell[data-earned="true"] {
+  border-color: var(--gg-color-rule);
+}
+.gg-score-bar__cell[data-part="answer"][data-earned="true"] {
+  background: var(--gg-color-part-answer);
+}
+.gg-score-bar__cell[data-part="noHints"][data-earned="true"] {
+  background: var(--gg-color-part-no-hints);
+}
+.gg-score-bar__cell[data-part="noMisses"][data-earned="true"] {
+  background: var(--gg-color-part-no-misses);
+}
+.gg-score-bar__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  margin: var(--gg-space-1) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--gg-font-size-sm);
+}
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes gg-cell-fill {
+    from {
+      background-color: transparent;
+      transform: scaleY(0.4);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  /* Each earned cell starts after the ones before it; the fill only plays, the cells are always there. */
+  .gg-score-bar__cells[data-animate] .gg-score-bar__cell[data-earned="true"] {
+    animation: gg-cell-fill var(--gg-duration-slow) ease-out backwards;
+    animation-delay: calc(var(--i, 0) * var(--gg-duration-cell));
+  }
 }
 .round-result__note {
   font-size: var(--gg-font-size-sm);
@@ -1456,6 +1517,10 @@ button.gg-summary__row:focus-visible {
 }
 .gg-summary__points[data-missed] {
   color: var(--gg-color-missed-text);
+}
+.gg-summary__bar {
+  max-width: 14rem;
+  margin: var(--gg-space-1) 0;
 }
 .gg-summary__row[data-outcome="missed"] .gg-summary__names {
   color: var(--gg-color-missed-text);

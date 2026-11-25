@@ -1,47 +1,32 @@
 import { useEffect, useRef } from "react";
-import { Button, Notice, Spinner } from "../../ui";
+import { Button, Notice, ScoreBar, Spinner } from "../../ui";
 import { Round } from "./Model";
 import type { RoundView } from "./roundView";
-import { NextIcon, RESULT_ICONS } from "../../ui/icons";
-import type { IconComponent } from "../../ui/icons";
+import { NextIcon } from "../../ui/icons";
 
-/** What the banner says on its left: an icon, a label and an optional note under it. */
-function bannerText(view: RoundView): { Icon: IconComponent; label: string; note: string | null } {
-  const { result, points, hintsUsed, answersFound, answerCount } = view;
-  const missed = result === "revealed" || result === "outOfGuesses";
-  const partial = missed && points > 0;
-  const note = partial
-    ? [`${answersFound} of ${answerCount} found`, ...(hintsUsed > 0 ? [hintsUsedText(hintsUsed)] : [])].join(" · ")
-    : null;
+/** The title of a finished round. */
+function title(result: RoundView["result"]): string {
   switch (result) {
     case "outOfGuesses":
-      return { Icon: RESULT_ICONS.outOfGuesses, label: "Out of guesses", note };
+      return "Out of guesses";
     case "revealed":
-      return { Icon: RESULT_ICONS.revealed, label: "Answer revealed", note };
-    case "firstGuess":
-      return {
-        Icon: RESULT_ICONS.firstGuess,
-        label: answerCount > 1 ? "No wrong guesses!" : "First guess!",
-        note: null,
-      };
-    case "hints":
-      return {
-        Icon: RESULT_ICONS.hints,
-        label: `Correct with ${hintsUsed === 1 ? "a hint" : `${hintsUsed} hints`}`,
-        note: null,
-      };
+      return "Answer revealed";
     default:
-      return { Icon: RESULT_ICONS.correct, label: "Correct!", note: null };
+      return "Correct!";
   }
 }
 
-function hintsUsedText(hintsUsed: number): string {
-  return hintsUsed === 1 ? "1 hint used" : `${hintsUsed} hints used`;
-}
-
-export default function RoundResult({ view, round }: { view: RoundView; round: Round }): React.JSX.Element {
-  const { result, outcome, points } = view;
-  const { Icon, label, note } = bannerText(view);
+export default function RoundResult({
+  view,
+  round,
+  animate = false,
+}: {
+  view: RoundView;
+  round: Round;
+  /** Fill the score bar cell by cell: for a round that has just ended, not one revisited. */
+  animate?: boolean;
+}): React.JSX.Element {
+  const { result, outcome, points, breakdown } = view;
 
   // The points sit on the right, where the round's worth was while playing.
   return (
@@ -53,14 +38,10 @@ export default function RoundResult({ view, round }: { view: RoundView; round: R
         role="status"
         aria-live="polite"
       >
-        <div className="round-result__label">
-          <div>
-            <Icon aria-hidden="true" /> {label}
-          </div>{" "}
-          {note !== null && <div className="round-result__note gg-mono gg-text-muted">{note}</div>}
-        </div>{" "}
+        <div className="round-result__label">{title(result)}</div>{" "}
         <span className="round-result__points gg-mono">{`+${points}`}</span>
       </div>
+      <ScoreBar className="round-result__bar" breakdown={breakdown} animate={animate} showLabels />
       {round.answerSave === "failed" ? (
         <>
           <Notice className="round-result__notice">Couldn&apos;t save your answer.</Notice>

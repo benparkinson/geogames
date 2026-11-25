@@ -229,12 +229,15 @@ describe("GameSummary", () => {
     expect(await screen.findByText(/^.+ · Hard mode$/)).toHaveClass("gg-summary__meta");
   });
 
-  it("shows only Solved and Hints used in the stats, and no outcome breakdown", async () => {
+  it("shows only Perfect rounds and Hints used in the stats", async () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
     await screen.findByRole("heading", { name: "Your result" });
 
-    expect(screen.getAllByRole("listitem").map((li) => li.textContent)).toEqual(["Solved 2 of 3", "Hints used 1"]);
+    expect(screen.getAllByRole("listitem").map((li) => li.textContent)).toEqual([
+      "Perfect rounds 1 of 3",
+      "Hints used 1",
+    ]);
     expect(screen.queryByText(/first guess/)).not.toBeInTheDocument();
   });
 
@@ -346,22 +349,22 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByRole("heading", { name: "Perfect game!" })).toBeInTheDocument();
-    expect(screen.getByText("Solved")).toBeInTheDocument();
+    expect(screen.getByText("Perfect rounds")).toBeInTheDocument();
     expect(screen.getByText("2 of 2")).toBeInTheDocument();
   });
 
-  it("gives full marks, not a perfect game, when every round is correct but one came after a wrong guess", async () => {
+  it("is not a perfect game when a wrong guess cost a point in one round", async () => {
     mockFetch([
-      roundsRoute(makeGameRounds([{ answerState: "CORRECT", firstGuess: true }, { answerState: "CORRECT" }])),
+      roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "CORRECT", wrongGuesses: ["Spain"] }])),
     ]);
     renderSummary(vi.fn(), 2);
 
-    expect(await screen.findByRole("heading", { name: "Full marks!" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Your result" })).toBeInTheDocument();
     expect(screen.queryByText(/Perfect game/)).not.toBeInTheDocument();
-    expect(screen.getByText("2 of 2")).toBeInTheDocument();
+    expect(screen.getByText("1 of 2")).toBeInTheDocument();
   });
 
-  it("counts a mix of all four outcomes in order", async () => {
+  it("counts the perfect rounds of a mix of outcomes", async () => {
     mockFetch([
       roundsRoute(
         makeGameRounds([
@@ -375,18 +378,30 @@ describe("GameSummary", () => {
     ]);
     renderSummary(vi.fn(), 5);
 
-    expect(await screen.findByText("Solved")).toBeInTheDocument();
-    expect(screen.getByText("3 of 5")).toBeInTheDocument();
+    expect(await screen.findByText("Perfect rounds")).toBeInTheDocument();
+    expect(screen.getByText("2 of 5")).toBeInTheDocument();
     expect(screen.getByText("34")).toBeInTheDocument();
   });
 
-  it("counts the solved rounds and the hints of a mixed result", async () => {
+  it("counts the perfect rounds and the hints of a mixed result", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT", hintsUsed: 3 }, { answerState: "GAVE_UP" }]))]);
     renderSummary(vi.fn(), 2);
 
     expect(await screen.findByText("7")).toBeInTheDocument();
-    expect(screen.getByText("1 of 2")).toBeInTheDocument();
+    expect(screen.getByText("0 of 2")).toBeInTheDocument();
     expect(screen.getByText(/3 hints/)).toBeInTheDocument();
+  });
+
+  it("draws a score bar for each round, with its parts as text", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT", hintsUsed: 1 }, { answerState: "GAVE_UP" }]))]);
+    renderSummary(vi.fn(), 2);
+
+    expect(
+      await screen.findByRole("img", { name: "9 of 10: answer 4, no hints 2 of 3, no misses 3 of 3" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "0 of 10: answer 0, no hints 0 of 3, no misses 0 of 3" }),
+    ).toBeInTheDocument();
   });
 
   it("opens the round that was clicked", async () => {
@@ -486,12 +501,12 @@ describe("GameSummary with partly correct rounds", () => {
     renderSummary();
 
     const row = await screen.findByText("+5");
-    expect(row.closest("[data-outcome]")).toHaveAttribute("data-outcome", "hints");
+    expect(row.closest("[data-outcome]")).toHaveAttribute("data-outcome", "partial");
   });
 });
 
 describe("GameSummary stats and table", () => {
-  it("shows the solved, wrong guess and hint totals and each round's wrong guesses", async () => {
+  it("shows the perfect round and hint totals and each round's wrong guesses", async () => {
     mockFetch([
       roundsRoute(
         makeGameRounds([
@@ -505,7 +520,7 @@ describe("GameSummary stats and table", () => {
     await screen.findByRole("heading", { name: "Your result" });
 
     const stats = screen.getAllByRole("listitem").map((li) => li.textContent);
-    expect(stats).toEqual(["Solved 2 of 3", "Hints used 1"]);
+    expect(stats).toEqual(["Perfect rounds 1 of 3", "Hints used 1"]);
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows[1]).toHaveTextContent("Rhine, Elbe");
     expect(rows[1]).toHaveTextContent("Gave up");

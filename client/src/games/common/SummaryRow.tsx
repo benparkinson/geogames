@@ -1,5 +1,5 @@
 import type { SummaryRowView } from "./summaryView";
-import { RESULT_ICONS } from "../../ui/icons";
+import { ScoreBar } from "../../ui";
 
 /** One round of the summary: its answers, the wrong guesses, its points. A button that opens the round. */
 export default function SummaryRow({
@@ -14,7 +14,6 @@ export default function SummaryRow({
   mixed: boolean;
   onOpen: () => void;
 }): React.JSX.Element {
-  const Icon = RESULT_ICONS[row.result];
   const missed = row.outcome === null || row.outcome === "missed";
   const note = row.outOfGuesses ? "Ran out of lives" : row.result === "revealed" ? "Gave up" : null;
   return (
@@ -38,6 +37,7 @@ export default function SummaryRow({
           ))}
         </span>
         {note && <span className="gg-summary__note gg-mono">{note}</span>}
+        <ScoreBar className="gg-summary__bar" breakdown={row.breakdown} />
         {row.hintsUsed > 0 && (
           <span className="gg-summary__note gg-mono gg-text-muted">
             {row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}
@@ -48,7 +48,7 @@ export default function SummaryRow({
         {row.wrongGuessNames.length > 0 ? row.wrongGuessNames.join(", ") : "–"}
       </span>
       <span className="gg-summary__points gg-mono" data-missed={missed || undefined}>
-        <Icon aria-hidden="true" /> +{row.points}
+        +{row.points}
       </span>
     </button>
   );

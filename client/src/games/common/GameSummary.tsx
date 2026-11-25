@@ -15,7 +15,6 @@ import { type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
-import { RESULT_ICONS } from "../../ui/icons";
 
 export default function GameSummary({
   gameId,
@@ -58,23 +57,13 @@ export default function GameSummary({
             <span>{score}</span> <span className="gg-summary__max gg-mono">/ {maxScore}</span>
           </p>
           <h1 className="gg-summary__heading">
-            {heading === "perfect" ? (
-              <mark className="gg-mark">
-                <RESULT_ICONS.firstGuess aria-hidden="true" /> Perfect game!
-              </mark>
-            ) : heading === "fullMarks" ? (
-              <mark className="gg-mark">
-                <RESULT_ICONS.correct aria-hidden="true" /> Full marks!
-              </mark>
-            ) : (
-              "Your result"
-            )}
+            {heading === "perfect" ? <mark className="gg-mark">Perfect game!</mark> : "Your result"}
           </h1>
           <ul className="gg-summary__stats gg-mono">
             <li>
-              <span>Solved</span>{" "}
+              <span>Perfect rounds</span>{" "}
               <span>
-                {summary.solved} of {summary.rows.length}
+                {summary.perfectRounds} of {summary.rows.length}
               </span>
             </li>
             <li>

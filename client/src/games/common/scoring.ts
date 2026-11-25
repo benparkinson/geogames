@@ -1,4 +1,4 @@
-import { AnswerState, CORRECT_ANSWER } from "./Model";
+import { AnswerState, CORRECT_ANSWER, UNANSWERED } from "./Model";
 
 /** The same formula as the backend's model/Scoring.java. Both tests hold the same table. */
 export const ANSWER_POINTS = 4;
@@ -30,4 +30,43 @@ export function roundPoints(
   const full = ANSWER_POINTS + noHints;
   // round_half_up(full * answersFound / answerCount), in integers
   return Math.floor((2 * full * answersFound + answerCount) / (2 * answerCount));
+}
+
+/** A round's points split into the three parts of the score bar. The parts always sum to `roundPoints`. */
+export interface PointsBreakdown {
+  answer: number;
+  noHints: number;
+  noMisses: number;
+  /** Set for a revealed round that found some answers: "Found 2 of 3". */
+  found?: { found: number; count: number };
+}
+
+/**
+ * The parts of `roundPoints`. A correct round earns each part itself. A revealed round has no No misses part, and
+ * its points fill the Answer cells first, then No hints.
+ */
+export function pointsBreakdown(
+  answerState: AnswerState,
+  hintsUsed: number,
+  answersFound = 0,
+  answerCount = 1,
+  wrongGuesses = 0,
+): PointsBreakdown {
+  const points = roundPoints(answerState, hintsUsed, answersFound, answerCount, wrongGuesses);
+  if (answerState === UNANSWERED) {
+    return { answer: 0, noHints: 0, noMisses: 0 };
+  }
+  if (answerState === CORRECT_ANSWER) {
+    return {
+      answer: ANSWER_POINTS,
+      noHints: Math.max(0, NO_HINT_POINTS - hintsUsed),
+      noMisses: Math.max(0, NO_MISS_POINTS - wrongGuesses),
+    };
+  }
+  const answer = Math.min(points, ANSWER_POINTS);
+  const breakdown: PointsBreakdown = { answer, noHints: points - answer, noMisses: 0 };
+  if (answerCount > 1 && answersFound > 0) {
+    breakdown.found = { found: answersFound, count: answerCount };
+  }
+  return breakdown;
 }

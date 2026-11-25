@@ -1,34 +1,53 @@
 {
-  "name" : "Brunei",
-  "major" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Brunei"
+  "name": "Brunei",
+  "major": {
+    "type": "Feature",
+    "properties": {
+      "name": "Brunei"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": []
     }
   },
-  "minor" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Brunei"
+  "minor": {
+    "type": "Feature",
+    "properties": {
+      "name": "Brunei"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ [ [ 114.3101, 4.2311 ], [ 114.2777, 4.2742 ], [ 114.2759, 4.2892 ], [ 114.2964, 4.3168 ], [ 114.2896, 4.3615 ], [ 114.2759, 4.382 ], [ 114.2759, 4.4099 ], [ 114.2682, 4.4379 ], [ 114.2517, 4.4605 ], [ 114.2452, 4.4816 ], [ 114.2164, 4.4878 ], [ 114.2087, 4.5083 ], [ 114.1723, 4.5253 ], [ 114.1187, 4.5618 ], [ 114.0639, 4.5702 ], [ 113.9988, 4.6011 ] ] ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": [
+        [
+          [114.3101, 4.2311],
+          [114.2777, 4.2742],
+          [114.2759, 4.2892],
+          [114.2964, 4.3168],
+          [114.2896, 4.3615],
+          [114.2759, 4.382],
+          [114.2759, 4.4099],
+          [114.2682, 4.4379],
+          [114.2517, 4.4605],
+          [114.2452, 4.4816],
+          [114.2164, 4.4878],
+          [114.2087, 4.5083],
+          [114.1723, 4.5253],
+          [114.1187, 4.5618],
+          [114.0639, 4.5702],
+          [113.9988, 4.6011]
+        ]
+      ]
     }
   },
-  "lakes" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Brunei"
+  "lakes": {
+    "type": "Feature",
+    "properties": {
+      "name": "Brunei"
     },
-    "geometry" : {
-      "type" : "MultiPolygon",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiPolygon",
+      "coordinates": []
     }
   },
-  "longestRiver" : "Baram River"
+  "longestRiver": "Baram River"
 }

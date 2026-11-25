@@ -2,10 +2,10 @@ import { foundAnswers, GuessState, wrongGuessCount } from "./guessReducer";
 import type { HintConfig } from "./hints";
 import { AnswerState, CORRECT_ANSWER, finalAnswerState, Round, UNANSWERED } from "./Model";
 import { roundOutcome, RoundOutcome } from "./outcome";
-import { roundPoints } from "./scoring";
+import { pointsBreakdown, PointsBreakdown, roundPoints } from "./scoring";
 
 /** How a finished round ended, for choosing its message. */
-export type RoundResultKind = "firstGuess" | "correct" | "hints" | "revealed" | "outOfGuesses";
+export type RoundResultKind = "correct" | "revealed" | "outOfGuesses";
 
 /** Everything the round screen shows that is worked out from the round's state, so the components only render. */
 export interface RoundView {
@@ -13,6 +13,8 @@ export interface RoundView {
   answerState: AnswerState;
   /** While playing: what the round is worth now (correct with the hints used so far). Once over: what it scored. */
   points: number;
+  /** The points split into the score bar's parts. */
+  breakdown: PointsBreakdown;
   /** How the round ended; null while it is being played. */
   outcome: RoundOutcome | null;
   /** Which message the banner shows; null while the round is being played. */
@@ -41,20 +43,21 @@ export function roundView(round: Round, state: GuessState, answerCount: number, 
   const answerState = state.over ? finalAnswerState(state.gaveUp, state.outOfGuesses) : UNANSWERED;
   const scored = state.over ? answerState : CORRECT_ANSWER;
   const points = roundPoints(scored, hintsUsed, answersFound, answerCount, wrongGuesses);
-  const outcome = state.over ? roundOutcome(answerState, hintsUsed, wrongGuesses === 0, points) : null;
+  const outcome = state.over ? roundOutcome(answerState, points) : null;
   const result: RoundResultKind | null = !state.over
     ? null
     : state.outOfGuesses
       ? "outOfGuesses"
       : state.gaveUp
         ? "revealed"
-        : (outcome as "firstGuess" | "correct" | "hints");
+        : "correct";
   const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i, state.foundAtHint)).filter(
     (text): text is string => !!text,
   );
   return {
     answerState,
     points,
+    breakdown: pointsBreakdown(scored, hintsUsed, answersFound, answerCount, wrongGuesses),
     outcome,
     result,
     hintsUsed,
@@ -78,9 +81,7 @@ export interface LiveProgress {
 export function liveProgress(round: Round, view: RoundView): LiveProgress {
   const states = round.roundAnswerStates.slice();
   const points = round.roundPoints.slice();
-  const outcomes = states.map((state, i) =>
-    roundOutcome(state, round.roundHintsUsed[i], round.roundFirstGuess[i], points[i]),
-  );
+  const outcomes = states.map((state, i) => roundOutcome(state, points[i]));
   let score = round.score;
   if (view.answerState !== UNANSWERED) {
     states[round.currentRound] = view.answerState;

@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { Difficulty } from "../api/types";
+import { OUTCOME_ORDER } from "../games/common/outcome";
 import type { RoundOutcome } from "../games/common/outcome";
 import { createLocalStore } from "../settings/localStore";
 
@@ -13,11 +14,17 @@ export interface DailyInfo {
 export type { RoundOutcome };
 
 /** Entries stored by an earlier version of the site used these keys; they are read as the nearest outcome. */
-const LEGACY_OUTCOMES: Record<string, RoundOutcome> = { perfect: "correct", revealed: "missed" };
+const LEGACY_OUTCOMES: Record<string, RoundOutcome> = {
+  firstGuess: "full",
+  correct: "good",
+  perfect: "good",
+  hints: "partial",
+  revealed: "missed",
+};
 
 function currentOutcome(value: unknown): RoundOutcome | null {
   if (typeof value !== "string") return null;
-  if (value === "firstGuess" || value === "correct" || value === "hints" || value === "missed") return value;
+  if (OUTCOME_ORDER.includes(value as RoundOutcome)) return value as RoundOutcome;
   return LEGACY_OUTCOMES[value] ?? null;
 }
 

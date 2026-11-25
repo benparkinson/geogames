@@ -1,871 +1,1017 @@
-[ {
-  "name" : "Afghanistan",
-  "file" : "Afghanistan.json",
-  "riverCount" : 5,
-  "riverKm" : 2780,
-  "lakeCount" : 0
-}, {
-  "name" : "Albania",
-  "file" : "Albania.json",
-  "riverCount" : 2,
-  "riverKm" : 243,
-  "lakeCount" : 3
-}, {
-  "name" : "Angola",
-  "file" : "Angola.json",
-  "riverCount" : 13,
-  "riverKm" : 7252,
-  "lakeCount" : 0
-}, {
-  "name" : "Argentina",
-  "file" : "Argentina.json",
-  "riverCount" : 24,
-  "riverKm" : 14064,
-  "lakeCount" : 13
-}, {
-  "name" : "Armenia",
-  "file" : "Armenia.json",
-  "riverCount" : 1,
-  "riverKm" : 233,
-  "lakeCount" : 1
-}, {
-  "name" : "Australia",
-  "file" : "Australia.json",
-  "riverCount" : 25,
-  "riverKm" : 9797,
-  "lakeCount" : 29
-}, {
-  "name" : "Austria",
-  "file" : "Austria.json",
-  "riverCount" : 7,
-  "riverKm" : 1187,
-  "lakeCount" : 1
-}, {
-  "name" : "Azerbaijan",
-  "file" : "Azerbaijan.json",
-  "riverCount" : 2,
-  "riverKm" : 949,
-  "lakeCount" : 1
-}, {
-  "name" : "Bangladesh",
-  "file" : "Bangladesh.json",
-  "riverCount" : 6,
-  "riverKm" : 2110,
-  "lakeCount" : 2
-}, {
-  "name" : "Belarus",
-  "file" : "Belarus.json",
-  "riverCount" : 7,
-  "riverKm" : 1685,
-  "lakeCount" : 0
-}, {
-  "name" : "Belgium",
-  "file" : "Belgium.json",
-  "riverCount" : 2,
-  "riverKm" : 322,
-  "lakeCount" : 0
-}, {
-  "name" : "Benin",
-  "file" : "Benin.json",
-  "riverCount" : 3,
-  "riverKm" : 927,
-  "lakeCount" : 1
-}, {
-  "name" : "Bhutan",
-  "file" : "Bhutan.json",
-  "riverCount" : 1,
-  "riverKm" : 119,
-  "lakeCount" : 0
-}, {
-  "name" : "Bolivia",
-  "file" : "Bolivia.json",
-  "riverCount" : 16,
-  "riverKm" : 6745,
-  "lakeCount" : 6
-}, {
-  "name" : "Bosnia and Herzegovina",
-  "file" : "BosniaandHerzegovina.json",
-  "riverCount" : 2,
-  "riverKm" : 566,
-  "lakeCount" : 0
-}, {
-  "name" : "Botswana",
-  "file" : "Botswana.json",
-  "riverCount" : 12,
-  "riverKm" : 2555,
-  "lakeCount" : 0
-}, {
-  "name" : "Brazil",
-  "file" : "Brazil.json",
-  "riverCount" : 72,
-  "riverKm" : 50415,
-  "lakeCount" : 23
-}, {
-  "name" : "Brunei",
-  "file" : "Brunei.json",
-  "riverCount" : 1,
-  "riverKm" : 63,
-  "lakeCount" : 0
-}, {
-  "name" : "Bulgaria",
-  "file" : "Bulgaria.json",
-  "riverCount" : 3,
-  "riverKm" : 897,
-  "lakeCount" : 0
-}, {
-  "name" : "Burkina Faso",
-  "file" : "BurkinaFaso.json",
-  "riverCount" : 4,
-  "riverKm" : 1761,
-  "lakeCount" : 0
-}, {
-  "name" : "Burundi",
-  "file" : "Burundi.json",
-  "riverCount" : 2,
-  "riverKm" : 411,
-  "lakeCount" : 1
-}, {
-  "name" : "Cambodia",
-  "file" : "Cambodia.json",
-  "riverCount" : 8,
-  "riverKm" : 1732,
-  "lakeCount" : 1
-}, {
-  "name" : "Cameroon",
-  "file" : "Cameroon.json",
-  "riverCount" : 11,
-  "riverKm" : 3958,
-  "lakeCount" : 2
-}, {
-  "name" : "Canada",
-  "file" : "Canada.json",
-  "riverCount" : 105,
-  "riverKm" : 42530,
-  "lakeCount" : 13
-}, {
-  "name" : "Central African Republic",
-  "file" : "CentralAfricanRepublic.json",
-  "riverCount" : 13,
-  "riverKm" : 4930,
-  "lakeCount" : 0
-}, {
-  "name" : "Chad",
-  "file" : "Chad.json",
-  "riverCount" : 7,
-  "riverKm" : 2287,
-  "lakeCount" : 1
-}, {
-  "name" : "Chile",
-  "file" : "Chile.json",
-  "riverCount" : 5,
-  "riverKm" : 853,
-  "lakeCount" : 8
-}, {
-  "name" : "China",
-  "file" : "China.json",
-  "riverCount" : 109,
-  "riverKm" : 50302,
-  "lakeCount" : 98
-}, {
-  "name" : "Colombia",
-  "file" : "Colombia.json",
-  "riverCount" : 15,
-  "riverKm" : 9557,
-  "lakeCount" : 0
-}, {
-  "name" : "Costa Rica",
-  "file" : "CostaRica.json",
-  "riverCount" : 2,
-  "riverKm" : 199,
-  "lakeCount" : 0
-}, {
-  "name" : "Croatia",
-  "file" : "Croatia.json",
-  "riverCount" : 5,
-  "riverKm" : 858,
-  "lakeCount" : 0
-}, {
-  "name" : "Czechia",
-  "file" : "Czechia.json",
-  "riverCount" : 4,
-  "riverKm" : 899,
-  "lakeCount" : 0
-}, {
-  "name" : "Côte d'Ivoire",
-  "file" : "CotedIvoire.json",
-  "riverCount" : 8,
-  "riverKm" : 2969,
-  "lakeCount" : 2
-}, {
-  "name" : "Democratic Republic of the Congo",
-  "file" : "DemocraticRepublicoftheCongo.json",
-  "riverCount" : 33,
-  "riverKm" : 18985,
-  "lakeCount" : 9
-}, {
-  "name" : "Dominican Republic",
-  "file" : "DominicanRepublic.json",
-  "riverCount" : 1,
-  "riverKm" : 175,
-  "lakeCount" : 2
-}, {
-  "name" : "Ecuador",
-  "file" : "Ecuador.json",
-  "riverCount" : 5,
-  "riverKm" : 1209,
-  "lakeCount" : 0
-}, {
-  "name" : "Egypt",
-  "file" : "Egypt.json",
-  "riverCount" : 6,
-  "riverKm" : 2002,
-  "lakeCount" : 2
-}, {
-  "name" : "El Salvador",
-  "file" : "ElSalvador.json",
-  "riverCount" : 1,
-  "riverKm" : 266,
-  "lakeCount" : 1
-}, {
-  "name" : "Equatorial Guinea",
-  "file" : "EquatorialGuinea.json",
-  "riverCount" : 1,
-  "riverKm" : 250,
-  "lakeCount" : 0
-}, {
-  "name" : "Eritrea",
-  "file" : "Eritrea.json",
-  "riverCount" : 1,
-  "riverKm" : 145,
-  "lakeCount" : 0
-}, {
-  "name" : "Estonia",
-  "file" : "Estonia.json",
-  "riverCount" : 1,
-  "riverKm" : 173,
-  "lakeCount" : 4
-}, {
-  "name" : "Ethiopia",
-  "file" : "Ethiopia.json",
-  "riverCount" : 13,
-  "riverKm" : 5316,
-  "lakeCount" : 7
-}, {
-  "name" : "Finland",
-  "file" : "Finland.json",
-  "riverCount" : 10,
-  "riverKm" : 1311,
-  "lakeCount" : 31
-}, {
-  "name" : "France",
-  "file" : "France.json",
-  "riverCount" : 20,
-  "riverKm" : 5825,
-  "lakeCount" : 1
-}, {
-  "name" : "Gabon",
-  "file" : "Gabon.json",
-  "riverCount" : 5,
-  "riverKm" : 1768,
-  "lakeCount" : 1
-}, {
-  "name" : "Gambia",
-  "file" : "Gambia.json",
-  "riverCount" : 1,
-  "riverKm" : 289,
-  "lakeCount" : 0
-}, {
-  "name" : "Georgia",
-  "file" : "Georgia.json",
-  "riverCount" : 1,
-  "riverKm" : 288,
-  "lakeCount" : 0
-}, {
-  "name" : "Germany",
-  "file" : "Germany.json",
-  "riverCount" : 12,
-  "riverKm" : 3678,
-  "lakeCount" : 2
-}, {
-  "name" : "Ghana",
-  "file" : "Ghana.json",
-  "riverCount" : 4,
-  "riverKm" : 1956,
-  "lakeCount" : 1
-}, {
-  "name" : "Greece",
-  "file" : "Greece.json",
-  "riverCount" : 3,
-  "riverKm" : 523,
-  "lakeCount" : 1
-}, {
-  "name" : "Guatemala",
-  "file" : "Guatemala.json",
-  "riverCount" : 4,
-  "riverKm" : 985,
-  "lakeCount" : 1
-}, {
-  "name" : "Guinea",
-  "file" : "Guinea.json",
-  "riverCount" : 6,
-  "riverKm" : 1458,
-  "lakeCount" : 0
-}, {
-  "name" : "Guinea-Bissau",
-  "file" : "Guinea-Bissau.json",
-  "riverCount" : 1,
-  "riverKm" : 223,
-  "lakeCount" : 0
-}, {
-  "name" : "Guyana",
-  "file" : "Guyana.json",
-  "riverCount" : 4,
-  "riverKm" : 1612,
-  "lakeCount" : 0
-}, {
-  "name" : "Honduras",
-  "file" : "Honduras.json",
-  "riverCount" : 4,
-  "riverKm" : 790,
-  "lakeCount" : 0
-}, {
-  "name" : "Hungary",
-  "file" : "Hungary.json",
-  "riverCount" : 8,
-  "riverKm" : 1303,
-  "lakeCount" : 1
-}, {
-  "name" : "Iceland",
-  "file" : "Iceland.json",
-  "riverCount" : 2,
-  "riverKm" : 179,
-  "lakeCount" : 0
-}, {
-  "name" : "India",
-  "file" : "India.json",
-  "riverCount" : 46,
-  "riverKm" : 23671,
-  "lakeCount" : 10
-}, {
-  "name" : "Indonesia",
-  "file" : "Indonesia.json",
-  "riverCount" : 14,
-  "riverKm" : 5205,
-  "lakeCount" : 3
-}, {
-  "name" : "Iran",
-  "file" : "Iran.json",
-  "riverCount" : 9,
-  "riverKm" : 2793,
-  "lakeCount" : 1
-}, {
-  "name" : "Iraq",
-  "file" : "Iraq.json",
-  "riverCount" : 10,
-  "riverKm" : 2859,
-  "lakeCount" : 4
-}, {
-  "name" : "Ireland",
-  "file" : "Ireland.json",
-  "riverCount" : 1,
-  "riverKm" : 204,
-  "lakeCount" : 2
-}, {
-  "name" : "Israel",
-  "file" : "Israel.json",
-  "riverCount" : 1,
-  "riverKm" : 138,
-  "lakeCount" : 3
-}, {
-  "name" : "Italy",
-  "file" : "Italy.json",
-  "riverCount" : 9,
-  "riverKm" : 1663,
-  "lakeCount" : 3
-}, {
-  "name" : "Japan",
-  "file" : "Japan.json",
-  "riverCount" : 3,
-  "riverKm" : 622,
-  "lakeCount" : 1
-}, {
-  "name" : "Jordan",
-  "file" : "Jordan.json",
-  "riverCount" : 1,
-  "riverKm" : 166,
-  "lakeCount" : 2
-}, {
-  "name" : "Kazakhstan",
-  "file" : "Kazakhstan.json",
-  "riverCount" : 8,
-  "riverKm" : 5804,
-  "lakeCount" : 28
-}, {
-  "name" : "Kenya",
-  "file" : "Kenya.json",
-  "riverCount" : 3,
-  "riverKm" : 1117,
-  "lakeCount" : 4
-}, {
-  "name" : "Kosovo",
-  "file" : "Kosovo.json",
-  "riverCount" : 1,
-  "riverKm" : 50,
-  "lakeCount" : 0
-}, {
-  "name" : "Kyrgyzstan",
-  "file" : "Kyrgyzstan.json",
-  "riverCount" : 2,
-  "riverKm" : 733,
-  "lakeCount" : 2
-}, {
-  "name" : "Laos",
-  "file" : "Laos.json",
-  "riverCount" : 7,
-  "riverKm" : 2909,
-  "lakeCount" : 1
-}, {
-  "name" : "Latvia",
-  "file" : "Latvia.json",
-  "riverCount" : 1,
-  "riverKm" : 314,
-  "lakeCount" : 0
-}, {
-  "name" : "Lebanon",
-  "file" : "Lebanon.json",
-  "riverCount" : 1,
-  "riverKm" : 46,
-  "lakeCount" : 0
-}, {
-  "name" : "Lesotho",
-  "file" : "Lesotho.json",
-  "riverCount" : 2,
-  "riverKm" : 501,
-  "lakeCount" : 0
-}, {
-  "name" : "Liberia",
-  "file" : "Liberia.json",
-  "riverCount" : 2,
-  "riverKm" : 567,
-  "lakeCount" : 0
-}, {
-  "name" : "Liechtenstein",
-  "file" : "Liechtenstein.json",
-  "riverCount" : 1,
-  "riverKm" : 29,
-  "lakeCount" : 0
-}, {
-  "name" : "Lithuania",
-  "file" : "Lithuania.json",
-  "riverCount" : 2,
-  "riverKm" : 378,
-  "lakeCount" : 0
-}, {
-  "name" : "Luxembourg",
-  "file" : "Luxembourg.json",
-  "riverCount" : 1,
-  "riverKm" : 33,
-  "lakeCount" : 0
-}, {
-  "name" : "Madagascar",
-  "file" : "Madagascar.json",
-  "riverCount" : 7,
-  "riverKm" : 1980,
-  "lakeCount" : 1
-}, {
-  "name" : "Malawi",
-  "file" : "Malawi.json",
-  "riverCount" : 1,
-  "riverKm" : 357,
-  "lakeCount" : 2
-}, {
-  "name" : "Malaysia",
-  "file" : "Malaysia.json",
-  "riverCount" : 5,
-  "riverKm" : 1423,
-  "lakeCount" : 0
-}, {
-  "name" : "Mali",
-  "file" : "Mali.json",
-  "riverCount" : 9,
-  "riverKm" : 4360,
-  "lakeCount" : 1
-}, {
-  "name" : "Mauritania",
-  "file" : "Mauritania.json",
-  "riverCount" : 1,
-  "riverKm" : 716,
-  "lakeCount" : 0
-}, {
-  "name" : "Mexico",
-  "file" : "Mexico.json",
-  "riverCount" : 29,
-  "riverKm" : 8898,
-  "lakeCount" : 12
-}, {
-  "name" : "Moldova",
-  "file" : "Moldova.json",
-  "riverCount" : 2,
-  "riverKm" : 889,
-  "lakeCount" : 0
-}, {
-  "name" : "Mongolia",
-  "file" : "Mongolia.json",
-  "riverCount" : 6,
-  "riverKm" : 3003,
-  "lakeCount" : 11
-}, {
-  "name" : "Montenegro",
-  "file" : "Montenegro.json",
-  "riverCount" : 2,
-  "riverKm" : 123,
-  "lakeCount" : 1
-}, {
-  "name" : "Morocco",
-  "file" : "Morocco.json",
-  "riverCount" : 4,
-  "riverKm" : 1331,
-  "lakeCount" : 0
-}, {
-  "name" : "Mozambique",
-  "file" : "Mozambique.json",
-  "riverCount" : 12,
-  "riverKm" : 4207,
-  "lakeCount" : 2
-}, {
-  "name" : "Myanmar",
-  "file" : "Myanmar.json",
-  "riverCount" : 12,
-  "riverKm" : 6331,
-  "lakeCount" : 0
-}, {
-  "name" : "Namibia",
-  "file" : "Namibia.json",
-  "riverCount" : 9,
-  "riverKm" : 2174,
-  "lakeCount" : 0
-}, {
-  "name" : "Nepal",
-  "file" : "Nepal.json",
-  "riverCount" : 3,
-  "riverKm" : 987,
-  "lakeCount" : 0
-}, {
-  "name" : "Netherlands",
-  "file" : "Netherlands.json",
-  "riverCount" : 7,
-  "riverKm" : 664,
-  "lakeCount" : 1
-}, {
-  "name" : "New Zealand",
-  "file" : "NewZealand.json",
-  "riverCount" : 55,
-  "riverKm" : 5398,
-  "lakeCount" : 7
-}, {
-  "name" : "Nicaragua",
-  "file" : "Nicaragua.json",
-  "riverCount" : 4,
-  "riverKm" : 1506,
-  "lakeCount" : 2
-}, {
-  "name" : "Niger",
-  "file" : "Niger.json",
-  "riverCount" : 2,
-  "riverKm" : 744,
-  "lakeCount" : 0
-}, {
-  "name" : "Nigeria",
-  "file" : "Nigeria.json",
-  "riverCount" : 12,
-  "riverKm" : 5330,
-  "lakeCount" : 1
-}, {
-  "name" : "North Korea",
-  "file" : "NorthKorea.json",
-  "riverCount" : 2,
-  "riverKm" : 941,
-  "lakeCount" : 1
-}, {
-  "name" : "North Macedonia",
-  "file" : "NorthMacedonia.json",
-  "riverCount" : 1,
-  "riverKm" : 52,
-  "lakeCount" : 2
-}, {
-  "name" : "Norway",
-  "file" : "Norway.json",
-  "riverCount" : 7,
-  "riverKm" : 1053,
-  "lakeCount" : 9
-}, {
-  "name" : "Pakistan",
-  "file" : "Pakistan.json",
-  "riverCount" : 5,
-  "riverKm" : 4337,
-  "lakeCount" : 2
-}, {
-  "name" : "Palestine",
-  "file" : "Palestine.json",
-  "riverCount" : 1,
-  "riverKm" : 112,
-  "lakeCount" : 1
-}, {
-  "name" : "Panama",
-  "file" : "Panama.json",
-  "riverCount" : 2,
-  "riverKm" : 141,
-  "lakeCount" : 1
-}, {
-  "name" : "Papua New Guinea",
-  "file" : "PapuaNewGuinea.json",
-  "riverCount" : 5,
-  "riverKm" : 2200,
-  "lakeCount" : 1
-}, {
-  "name" : "Paraguay",
-  "file" : "Paraguay.json",
-  "riverCount" : 6,
-  "riverKm" : 3317,
-  "lakeCount" : 2
-}, {
-  "name" : "Peru",
-  "file" : "Peru.json",
-  "riverCount" : 17,
-  "riverKm" : 9422,
-  "lakeCount" : 1
-}, {
-  "name" : "Philippines",
-  "file" : "Philippines.json",
-  "riverCount" : 2,
-  "riverKm" : 571,
-  "lakeCount" : 2
-}, {
-  "name" : "Poland",
-  "file" : "Poland.json",
-  "riverCount" : 4,
-  "riverKm" : 2636,
-  "lakeCount" : 2
-}, {
-  "name" : "Portugal",
-  "file" : "Portugal.json",
-  "riverCount" : 5,
-  "riverKm" : 723,
-  "lakeCount" : 0
-}, {
-  "name" : "Republic of the Congo",
-  "file" : "RepublicoftheCongo.json",
-  "riverCount" : 12,
-  "riverKm" : 3173,
-  "lakeCount" : 0
-}, {
-  "name" : "Romania",
-  "file" : "Romania.json",
-  "riverCount" : 11,
-  "riverKm" : 3185,
-  "lakeCount" : 0
-}, {
-  "name" : "Russia",
-  "file" : "Russia.json",
-  "riverCount" : 46,
-  "riverKm" : 43901,
-  "lakeCount" : 19
-}, {
-  "name" : "Rwanda",
-  "file" : "Rwanda.json",
-  "riverCount" : 2,
-  "riverKm" : 231,
-  "lakeCount" : 1
-}, {
-  "name" : "Senegal",
-  "file" : "Senegal.json",
-  "riverCount" : 2,
-  "riverKm" : 1081,
-  "lakeCount" : 0
-}, {
-  "name" : "Serbia",
-  "file" : "Serbia.json",
-  "riverCount" : 6,
-  "riverKm" : 1397,
-  "lakeCount" : 0
-}, {
-  "name" : "Sierra Leone",
-  "file" : "SierraLeone.json",
-  "riverCount" : 1,
-  "riverKm" : 313,
-  "lakeCount" : 0
-}, {
-  "name" : "Slovakia",
-  "file" : "Slovakia.json",
-  "riverCount" : 3,
-  "riverKm" : 252,
-  "lakeCount" : 0
-}, {
-  "name" : "Slovenia",
-  "file" : "Slovenia.json",
-  "riverCount" : 3,
-  "riverKm" : 238,
-  "lakeCount" : 0
-}, {
-  "name" : "Somalia",
-  "file" : "Somalia.json",
-  "riverCount" : 3,
-  "riverKm" : 1587,
-  "lakeCount" : 1
-}, {
-  "name" : "South Africa",
-  "file" : "SouthAfrica.json",
-  "riverCount" : 18,
-  "riverKm" : 6819,
-  "lakeCount" : 4
-}, {
-  "name" : "South Korea",
-  "file" : "SouthKorea.json",
-  "riverCount" : 3,
-  "riverKm" : 676,
-  "lakeCount" : 0
-}, {
-  "name" : "South Sudan",
-  "file" : "SouthSudan.json",
-  "riverCount" : 9,
-  "riverKm" : 2574,
-  "lakeCount" : 0
-}, {
-  "name" : "Spain",
-  "file" : "Spain.json",
-  "riverCount" : 12,
-  "riverKm" : 3502,
-  "lakeCount" : 1
-}, {
-  "name" : "Sri Lanka",
-  "file" : "SriLanka.json",
-  "riverCount" : 2,
-  "riverKm" : 312,
-  "lakeCount" : 0
-}, {
-  "name" : "Sudan",
-  "file" : "Sudan.json",
-  "riverCount" : 6,
-  "riverKm" : 3197,
-  "lakeCount" : 2
-}, {
-  "name" : "Suriname",
-  "file" : "Suriname.json",
-  "riverCount" : 6,
-  "riverKm" : 1315,
-  "lakeCount" : 1
-}, {
-  "name" : "Sweden",
-  "file" : "Sweden.json",
-  "riverCount" : 12,
-  "riverKm" : 3360,
-  "lakeCount" : 28
-}, {
-  "name" : "Switzerland",
-  "file" : "Switzerland.json",
-  "riverCount" : 6,
-  "riverKm" : 833,
-  "lakeCount" : 3
-}, {
-  "name" : "Syria",
-  "file" : "Syria.json",
-  "riverCount" : 2,
-  "riverKm" : 549,
-  "lakeCount" : 1
-}, {
-  "name" : "Tajikistan",
-  "file" : "Tajikistan.json",
-  "riverCount" : 6,
-  "riverKm" : 1391,
-  "lakeCount" : 1
-}, {
-  "name" : "Tanzania",
-  "file" : "Tanzania.json",
-  "riverCount" : 16,
-  "riverKm" : 4975,
-  "lakeCount" : 8
-}, {
-  "name" : "Thailand",
-  "file" : "Thailand.json",
-  "riverCount" : 12,
-  "riverKm" : 4285,
-  "lakeCount" : 4
-}, {
-  "name" : "Togo",
-  "file" : "Togo.json",
-  "riverCount" : 1,
-  "riverKm" : 288,
-  "lakeCount" : 0
-}, {
-  "name" : "Turkmenistan",
-  "file" : "Turkmenistan.json",
-  "riverCount" : 4,
-  "riverKm" : 1205,
-  "lakeCount" : 1
-}, {
-  "name" : "Türkiye",
-  "file" : "Turkiye.json",
-  "riverCount" : 12,
-  "riverKm" : 4856,
-  "lakeCount" : 7
-}, {
-  "name" : "Uganda",
-  "file" : "Uganda.json",
-  "riverCount" : 4,
-  "riverKm" : 1222,
-  "lakeCount" : 5
-}, {
-  "name" : "Ukraine",
-  "file" : "Ukraine.json",
-  "riverCount" : 13,
-  "riverKm" : 4353,
-  "lakeCount" : 7
-}, {
-  "name" : "United Kingdom",
-  "file" : "UnitedKingdom.json",
-  "riverCount" : 6,
-  "riverKm" : 746,
-  "lakeCount" : 1
-}, {
-  "name" : "United States of America",
-  "file" : "UnitedStatesofAmerica.json",
-  "riverCount" : 81,
-  "riverKm" : 46298,
-  "lakeCount" : 50
-}, {
-  "name" : "Uruguay",
-  "file" : "Uruguay.json",
-  "riverCount" : 3,
-  "riverKm" : 1059,
-  "lakeCount" : 2
-}, {
-  "name" : "Uzbekistan",
-  "file" : "Uzbekistan.json",
-  "riverCount" : 4,
-  "riverKm" : 1734,
-  "lakeCount" : 4
-}, {
-  "name" : "Venezuela",
-  "file" : "Venezuela.json",
-  "riverCount" : 13,
-  "riverKm" : 6402,
-  "lakeCount" : 4
-}, {
-  "name" : "Vietnam",
-  "file" : "Vietnam.json",
-  "riverCount" : 9,
-  "riverKm" : 2176,
-  "lakeCount" : 0
-}, {
-  "name" : "Zambia",
-  "file" : "Zambia.json",
-  "riverCount" : 12,
-  "riverKm" : 5811,
-  "lakeCount" : 5
-}, {
-  "name" : "Zimbabwe",
-  "file" : "Zimbabwe.json",
-  "riverCount" : 7,
-  "riverKm" : 2228,
-  "lakeCount" : 1
-} ]
+[
+  {
+    "name": "Afghanistan",
+    "file": "Afghanistan.json",
+    "riverCount": 5,
+    "riverKm": 2780,
+    "lakeCount": 0
+  },
+  {
+    "name": "Albania",
+    "file": "Albania.json",
+    "riverCount": 2,
+    "riverKm": 243,
+    "lakeCount": 3
+  },
+  {
+    "name": "Angola",
+    "file": "Angola.json",
+    "riverCount": 13,
+    "riverKm": 7252,
+    "lakeCount": 0
+  },
+  {
+    "name": "Argentina",
+    "file": "Argentina.json",
+    "riverCount": 24,
+    "riverKm": 14064,
+    "lakeCount": 13
+  },
+  {
+    "name": "Armenia",
+    "file": "Armenia.json",
+    "riverCount": 1,
+    "riverKm": 233,
+    "lakeCount": 1
+  },
+  {
+    "name": "Australia",
+    "file": "Australia.json",
+    "riverCount": 25,
+    "riverKm": 9797,
+    "lakeCount": 29
+  },
+  {
+    "name": "Austria",
+    "file": "Austria.json",
+    "riverCount": 7,
+    "riverKm": 1187,
+    "lakeCount": 1
+  },
+  {
+    "name": "Azerbaijan",
+    "file": "Azerbaijan.json",
+    "riverCount": 2,
+    "riverKm": 949,
+    "lakeCount": 1
+  },
+  {
+    "name": "Bangladesh",
+    "file": "Bangladesh.json",
+    "riverCount": 6,
+    "riverKm": 2110,
+    "lakeCount": 2
+  },
+  {
+    "name": "Belarus",
+    "file": "Belarus.json",
+    "riverCount": 7,
+    "riverKm": 1685,
+    "lakeCount": 0
+  },
+  {
+    "name": "Belgium",
+    "file": "Belgium.json",
+    "riverCount": 2,
+    "riverKm": 322,
+    "lakeCount": 0
+  },
+  {
+    "name": "Benin",
+    "file": "Benin.json",
+    "riverCount": 3,
+    "riverKm": 927,
+    "lakeCount": 1
+  },
+  {
+    "name": "Bhutan",
+    "file": "Bhutan.json",
+    "riverCount": 1,
+    "riverKm": 119,
+    "lakeCount": 0
+  },
+  {
+    "name": "Bolivia",
+    "file": "Bolivia.json",
+    "riverCount": 16,
+    "riverKm": 6745,
+    "lakeCount": 6
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "file": "BosniaandHerzegovina.json",
+    "riverCount": 2,
+    "riverKm": 566,
+    "lakeCount": 0
+  },
+  {
+    "name": "Botswana",
+    "file": "Botswana.json",
+    "riverCount": 12,
+    "riverKm": 2555,
+    "lakeCount": 0
+  },
+  {
+    "name": "Brazil",
+    "file": "Brazil.json",
+    "riverCount": 72,
+    "riverKm": 50415,
+    "lakeCount": 23
+  },
+  {
+    "name": "Brunei",
+    "file": "Brunei.json",
+    "riverCount": 1,
+    "riverKm": 63,
+    "lakeCount": 0
+  },
+  {
+    "name": "Bulgaria",
+    "file": "Bulgaria.json",
+    "riverCount": 3,
+    "riverKm": 897,
+    "lakeCount": 0
+  },
+  {
+    "name": "Burkina Faso",
+    "file": "BurkinaFaso.json",
+    "riverCount": 4,
+    "riverKm": 1761,
+    "lakeCount": 0
+  },
+  {
+    "name": "Burundi",
+    "file": "Burundi.json",
+    "riverCount": 2,
+    "riverKm": 411,
+    "lakeCount": 1
+  },
+  {
+    "name": "Cambodia",
+    "file": "Cambodia.json",
+    "riverCount": 8,
+    "riverKm": 1732,
+    "lakeCount": 1
+  },
+  {
+    "name": "Cameroon",
+    "file": "Cameroon.json",
+    "riverCount": 11,
+    "riverKm": 3958,
+    "lakeCount": 2
+  },
+  {
+    "name": "Canada",
+    "file": "Canada.json",
+    "riverCount": 105,
+    "riverKm": 42530,
+    "lakeCount": 13
+  },
+  {
+    "name": "Central African Republic",
+    "file": "CentralAfricanRepublic.json",
+    "riverCount": 13,
+    "riverKm": 4930,
+    "lakeCount": 0
+  },
+  {
+    "name": "Chad",
+    "file": "Chad.json",
+    "riverCount": 7,
+    "riverKm": 2287,
+    "lakeCount": 1
+  },
+  {
+    "name": "Chile",
+    "file": "Chile.json",
+    "riverCount": 5,
+    "riverKm": 853,
+    "lakeCount": 8
+  },
+  {
+    "name": "China",
+    "file": "China.json",
+    "riverCount": 109,
+    "riverKm": 50302,
+    "lakeCount": 98
+  },
+  {
+    "name": "Colombia",
+    "file": "Colombia.json",
+    "riverCount": 15,
+    "riverKm": 9557,
+    "lakeCount": 0
+  },
+  {
+    "name": "Costa Rica",
+    "file": "CostaRica.json",
+    "riverCount": 2,
+    "riverKm": 199,
+    "lakeCount": 0
+  },
+  {
+    "name": "Croatia",
+    "file": "Croatia.json",
+    "riverCount": 5,
+    "riverKm": 858,
+    "lakeCount": 0
+  },
+  {
+    "name": "Czechia",
+    "file": "Czechia.json",
+    "riverCount": 4,
+    "riverKm": 899,
+    "lakeCount": 0
+  },
+  {
+    "name": "Côte d'Ivoire",
+    "file": "CotedIvoire.json",
+    "riverCount": 8,
+    "riverKm": 2969,
+    "lakeCount": 2
+  },
+  {
+    "name": "Democratic Republic of the Congo",
+    "file": "DemocraticRepublicoftheCongo.json",
+    "riverCount": 33,
+    "riverKm": 18985,
+    "lakeCount": 9
+  },
+  {
+    "name": "Dominican Republic",
+    "file": "DominicanRepublic.json",
+    "riverCount": 1,
+    "riverKm": 175,
+    "lakeCount": 2
+  },
+  {
+    "name": "Ecuador",
+    "file": "Ecuador.json",
+    "riverCount": 5,
+    "riverKm": 1209,
+    "lakeCount": 0
+  },
+  {
+    "name": "Egypt",
+    "file": "Egypt.json",
+    "riverCount": 6,
+    "riverKm": 2002,
+    "lakeCount": 2
+  },
+  {
+    "name": "El Salvador",
+    "file": "ElSalvador.json",
+    "riverCount": 1,
+    "riverKm": 266,
+    "lakeCount": 1
+  },
+  {
+    "name": "Equatorial Guinea",
+    "file": "EquatorialGuinea.json",
+    "riverCount": 1,
+    "riverKm": 250,
+    "lakeCount": 0
+  },
+  {
+    "name": "Eritrea",
+    "file": "Eritrea.json",
+    "riverCount": 1,
+    "riverKm": 145,
+    "lakeCount": 0
+  },
+  {
+    "name": "Estonia",
+    "file": "Estonia.json",
+    "riverCount": 1,
+    "riverKm": 173,
+    "lakeCount": 4
+  },
+  {
+    "name": "Ethiopia",
+    "file": "Ethiopia.json",
+    "riverCount": 13,
+    "riverKm": 5316,
+    "lakeCount": 7
+  },
+  {
+    "name": "Finland",
+    "file": "Finland.json",
+    "riverCount": 10,
+    "riverKm": 1311,
+    "lakeCount": 31
+  },
+  {
+    "name": "France",
+    "file": "France.json",
+    "riverCount": 20,
+    "riverKm": 5825,
+    "lakeCount": 1
+  },
+  {
+    "name": "Gabon",
+    "file": "Gabon.json",
+    "riverCount": 5,
+    "riverKm": 1768,
+    "lakeCount": 1
+  },
+  {
+    "name": "Gambia",
+    "file": "Gambia.json",
+    "riverCount": 1,
+    "riverKm": 289,
+    "lakeCount": 0
+  },
+  {
+    "name": "Georgia",
+    "file": "Georgia.json",
+    "riverCount": 1,
+    "riverKm": 288,
+    "lakeCount": 0
+  },
+  {
+    "name": "Germany",
+    "file": "Germany.json",
+    "riverCount": 12,
+    "riverKm": 3678,
+    "lakeCount": 2
+  },
+  {
+    "name": "Ghana",
+    "file": "Ghana.json",
+    "riverCount": 4,
+    "riverKm": 1956,
+    "lakeCount": 1
+  },
+  {
+    "name": "Greece",
+    "file": "Greece.json",
+    "riverCount": 3,
+    "riverKm": 523,
+    "lakeCount": 1
+  },
+  {
+    "name": "Guatemala",
+    "file": "Guatemala.json",
+    "riverCount": 4,
+    "riverKm": 985,
+    "lakeCount": 1
+  },
+  {
+    "name": "Guinea",
+    "file": "Guinea.json",
+    "riverCount": 6,
+    "riverKm": 1458,
+    "lakeCount": 0
+  },
+  {
+    "name": "Guinea-Bissau",
+    "file": "Guinea-Bissau.json",
+    "riverCount": 1,
+    "riverKm": 223,
+    "lakeCount": 0
+  },
+  {
+    "name": "Guyana",
+    "file": "Guyana.json",
+    "riverCount": 4,
+    "riverKm": 1612,
+    "lakeCount": 0
+  },
+  {
+    "name": "Honduras",
+    "file": "Honduras.json",
+    "riverCount": 4,
+    "riverKm": 790,
+    "lakeCount": 0
+  },
+  {
+    "name": "Hungary",
+    "file": "Hungary.json",
+    "riverCount": 8,
+    "riverKm": 1303,
+    "lakeCount": 1
+  },
+  {
+    "name": "Iceland",
+    "file": "Iceland.json",
+    "riverCount": 2,
+    "riverKm": 179,
+    "lakeCount": 0
+  },
+  {
+    "name": "India",
+    "file": "India.json",
+    "riverCount": 46,
+    "riverKm": 23671,
+    "lakeCount": 10
+  },
+  {
+    "name": "Indonesia",
+    "file": "Indonesia.json",
+    "riverCount": 14,
+    "riverKm": 5205,
+    "lakeCount": 3
+  },
+  {
+    "name": "Iran",
+    "file": "Iran.json",
+    "riverCount": 9,
+    "riverKm": 2793,
+    "lakeCount": 1
+  },
+  {
+    "name": "Iraq",
+    "file": "Iraq.json",
+    "riverCount": 10,
+    "riverKm": 2859,
+    "lakeCount": 4
+  },
+  {
+    "name": "Ireland",
+    "file": "Ireland.json",
+    "riverCount": 1,
+    "riverKm": 204,
+    "lakeCount": 2
+  },
+  {
+    "name": "Israel",
+    "file": "Israel.json",
+    "riverCount": 1,
+    "riverKm": 138,
+    "lakeCount": 3
+  },
+  {
+    "name": "Italy",
+    "file": "Italy.json",
+    "riverCount": 9,
+    "riverKm": 1663,
+    "lakeCount": 3
+  },
+  {
+    "name": "Japan",
+    "file": "Japan.json",
+    "riverCount": 3,
+    "riverKm": 622,
+    "lakeCount": 1
+  },
+  {
+    "name": "Jordan",
+    "file": "Jordan.json",
+    "riverCount": 1,
+    "riverKm": 166,
+    "lakeCount": 2
+  },
+  {
+    "name": "Kazakhstan",
+    "file": "Kazakhstan.json",
+    "riverCount": 8,
+    "riverKm": 5804,
+    "lakeCount": 28
+  },
+  {
+    "name": "Kenya",
+    "file": "Kenya.json",
+    "riverCount": 3,
+    "riverKm": 1117,
+    "lakeCount": 4
+  },
+  {
+    "name": "Kosovo",
+    "file": "Kosovo.json",
+    "riverCount": 1,
+    "riverKm": 50,
+    "lakeCount": 0
+  },
+  {
+    "name": "Kyrgyzstan",
+    "file": "Kyrgyzstan.json",
+    "riverCount": 2,
+    "riverKm": 733,
+    "lakeCount": 2
+  },
+  {
+    "name": "Laos",
+    "file": "Laos.json",
+    "riverCount": 7,
+    "riverKm": 2909,
+    "lakeCount": 1
+  },
+  {
+    "name": "Latvia",
+    "file": "Latvia.json",
+    "riverCount": 1,
+    "riverKm": 314,
+    "lakeCount": 0
+  },
+  {
+    "name": "Lebanon",
+    "file": "Lebanon.json",
+    "riverCount": 1,
+    "riverKm": 46,
+    "lakeCount": 0
+  },
+  {
+    "name": "Lesotho",
+    "file": "Lesotho.json",
+    "riverCount": 2,
+    "riverKm": 501,
+    "lakeCount": 0
+  },
+  {
+    "name": "Liberia",
+    "file": "Liberia.json",
+    "riverCount": 2,
+    "riverKm": 567,
+    "lakeCount": 0
+  },
+  {
+    "name": "Liechtenstein",
+    "file": "Liechtenstein.json",
+    "riverCount": 1,
+    "riverKm": 29,
+    "lakeCount": 0
+  },
+  {
+    "name": "Lithuania",
+    "file": "Lithuania.json",
+    "riverCount": 2,
+    "riverKm": 378,
+    "lakeCount": 0
+  },
+  {
+    "name": "Luxembourg",
+    "file": "Luxembourg.json",
+    "riverCount": 1,
+    "riverKm": 33,
+    "lakeCount": 0
+  },
+  {
+    "name": "Madagascar",
+    "file": "Madagascar.json",
+    "riverCount": 7,
+    "riverKm": 1980,
+    "lakeCount": 1
+  },
+  {
+    "name": "Malawi",
+    "file": "Malawi.json",
+    "riverCount": 1,
+    "riverKm": 357,
+    "lakeCount": 2
+  },
+  {
+    "name": "Malaysia",
+    "file": "Malaysia.json",
+    "riverCount": 5,
+    "riverKm": 1423,
+    "lakeCount": 0
+  },
+  {
+    "name": "Mali",
+    "file": "Mali.json",
+    "riverCount": 9,
+    "riverKm": 4360,
+    "lakeCount": 1
+  },
+  {
+    "name": "Mauritania",
+    "file": "Mauritania.json",
+    "riverCount": 1,
+    "riverKm": 716,
+    "lakeCount": 0
+  },
+  {
+    "name": "Mexico",
+    "file": "Mexico.json",
+    "riverCount": 29,
+    "riverKm": 8898,
+    "lakeCount": 12
+  },
+  {
+    "name": "Moldova",
+    "file": "Moldova.json",
+    "riverCount": 2,
+    "riverKm": 889,
+    "lakeCount": 0
+  },
+  {
+    "name": "Mongolia",
+    "file": "Mongolia.json",
+    "riverCount": 6,
+    "riverKm": 3003,
+    "lakeCount": 11
+  },
+  {
+    "name": "Montenegro",
+    "file": "Montenegro.json",
+    "riverCount": 2,
+    "riverKm": 123,
+    "lakeCount": 1
+  },
+  {
+    "name": "Morocco",
+    "file": "Morocco.json",
+    "riverCount": 4,
+    "riverKm": 1331,
+    "lakeCount": 0
+  },
+  {
+    "name": "Mozambique",
+    "file": "Mozambique.json",
+    "riverCount": 12,
+    "riverKm": 4207,
+    "lakeCount": 2
+  },
+  {
+    "name": "Myanmar",
+    "file": "Myanmar.json",
+    "riverCount": 12,
+    "riverKm": 6331,
+    "lakeCount": 0
+  },
+  {
+    "name": "Namibia",
+    "file": "Namibia.json",
+    "riverCount": 9,
+    "riverKm": 2174,
+    "lakeCount": 0
+  },
+  {
+    "name": "Nepal",
+    "file": "Nepal.json",
+    "riverCount": 3,
+    "riverKm": 987,
+    "lakeCount": 0
+  },
+  {
+    "name": "Netherlands",
+    "file": "Netherlands.json",
+    "riverCount": 7,
+    "riverKm": 664,
+    "lakeCount": 1
+  },
+  {
+    "name": "New Zealand",
+    "file": "NewZealand.json",
+    "riverCount": 55,
+    "riverKm": 5398,
+    "lakeCount": 7
+  },
+  {
+    "name": "Nicaragua",
+    "file": "Nicaragua.json",
+    "riverCount": 4,
+    "riverKm": 1506,
+    "lakeCount": 2
+  },
+  {
+    "name": "Niger",
+    "file": "Niger.json",
+    "riverCount": 2,
+    "riverKm": 744,
+    "lakeCount": 0
+  },
+  {
+    "name": "Nigeria",
+    "file": "Nigeria.json",
+    "riverCount": 12,
+    "riverKm": 5330,
+    "lakeCount": 1
+  },
+  {
+    "name": "North Korea",
+    "file": "NorthKorea.json",
+    "riverCount": 2,
+    "riverKm": 941,
+    "lakeCount": 1
+  },
+  {
+    "name": "North Macedonia",
+    "file": "NorthMacedonia.json",
+    "riverCount": 1,
+    "riverKm": 52,
+    "lakeCount": 2
+  },
+  {
+    "name": "Norway",
+    "file": "Norway.json",
+    "riverCount": 7,
+    "riverKm": 1053,
+    "lakeCount": 9
+  },
+  {
+    "name": "Pakistan",
+    "file": "Pakistan.json",
+    "riverCount": 5,
+    "riverKm": 4337,
+    "lakeCount": 2
+  },
+  {
+    "name": "Palestine",
+    "file": "Palestine.json",
+    "riverCount": 1,
+    "riverKm": 112,
+    "lakeCount": 1
+  },
+  {
+    "name": "Panama",
+    "file": "Panama.json",
+    "riverCount": 2,
+    "riverKm": 141,
+    "lakeCount": 1
+  },
+  {
+    "name": "Papua New Guinea",
+    "file": "PapuaNewGuinea.json",
+    "riverCount": 5,
+    "riverKm": 2200,
+    "lakeCount": 1
+  },
+  {
+    "name": "Paraguay",
+    "file": "Paraguay.json",
+    "riverCount": 6,
+    "riverKm": 3317,
+    "lakeCount": 2
+  },
+  {
+    "name": "Peru",
+    "file": "Peru.json",
+    "riverCount": 17,
+    "riverKm": 9422,
+    "lakeCount": 1
+  },
+  {
+    "name": "Philippines",
+    "file": "Philippines.json",
+    "riverCount": 2,
+    "riverKm": 571,
+    "lakeCount": 2
+  },
+  {
+    "name": "Poland",
+    "file": "Poland.json",
+    "riverCount": 4,
+    "riverKm": 2636,
+    "lakeCount": 2
+  },
+  {
+    "name": "Portugal",
+    "file": "Portugal.json",
+    "riverCount": 5,
+    "riverKm": 723,
+    "lakeCount": 0
+  },
+  {
+    "name": "Republic of the Congo",
+    "file": "RepublicoftheCongo.json",
+    "riverCount": 12,
+    "riverKm": 3173,
+    "lakeCount": 0
+  },
+  {
+    "name": "Romania",
+    "file": "Romania.json",
+    "riverCount": 11,
+    "riverKm": 3185,
+    "lakeCount": 0
+  },
+  {
+    "name": "Russia",
+    "file": "Russia.json",
+    "riverCount": 46,
+    "riverKm": 43901,
+    "lakeCount": 19
+  },
+  {
+    "name": "Rwanda",
+    "file": "Rwanda.json",
+    "riverCount": 2,
+    "riverKm": 231,
+    "lakeCount": 1
+  },
+  {
+    "name": "Senegal",
+    "file": "Senegal.json",
+    "riverCount": 2,
+    "riverKm": 1081,
+    "lakeCount": 0
+  },
+  {
+    "name": "Serbia",
+    "file": "Serbia.json",
+    "riverCount": 6,
+    "riverKm": 1397,
+    "lakeCount": 0
+  },
+  {
+    "name": "Sierra Leone",
+    "file": "SierraLeone.json",
+    "riverCount": 1,
+    "riverKm": 313,
+    "lakeCount": 0
+  },
+  {
+    "name": "Slovakia",
+    "file": "Slovakia.json",
+    "riverCount": 3,
+    "riverKm": 252,
+    "lakeCount": 0
+  },
+  {
+    "name": "Slovenia",
+    "file": "Slovenia.json",
+    "riverCount": 3,
+    "riverKm": 238,
+    "lakeCount": 0
+  },
+  {
+    "name": "Somalia",
+    "file": "Somalia.json",
+    "riverCount": 3,
+    "riverKm": 1587,
+    "lakeCount": 1
+  },
+  {
+    "name": "South Africa",
+    "file": "SouthAfrica.json",
+    "riverCount": 18,
+    "riverKm": 6819,
+    "lakeCount": 4
+  },
+  {
+    "name": "South Korea",
+    "file": "SouthKorea.json",
+    "riverCount": 3,
+    "riverKm": 676,
+    "lakeCount": 0
+  },
+  {
+    "name": "South Sudan",
+    "file": "SouthSudan.json",
+    "riverCount": 9,
+    "riverKm": 2574,
+    "lakeCount": 0
+  },
+  {
+    "name": "Spain",
+    "file": "Spain.json",
+    "riverCount": 12,
+    "riverKm": 3502,
+    "lakeCount": 1
+  },
+  {
+    "name": "Sri Lanka",
+    "file": "SriLanka.json",
+    "riverCount": 2,
+    "riverKm": 312,
+    "lakeCount": 0
+  },
+  {
+    "name": "Sudan",
+    "file": "Sudan.json",
+    "riverCount": 6,
+    "riverKm": 3197,
+    "lakeCount": 2
+  },
+  {
+    "name": "Suriname",
+    "file": "Suriname.json",
+    "riverCount": 6,
+    "riverKm": 1315,
+    "lakeCount": 1
+  },
+  {
+    "name": "Sweden",
+    "file": "Sweden.json",
+    "riverCount": 12,
+    "riverKm": 3360,
+    "lakeCount": 28
+  },
+  {
+    "name": "Switzerland",
+    "file": "Switzerland.json",
+    "riverCount": 6,
+    "riverKm": 833,
+    "lakeCount": 3
+  },
+  {
+    "name": "Syria",
+    "file": "Syria.json",
+    "riverCount": 2,
+    "riverKm": 549,
+    "lakeCount": 1
+  },
+  {
+    "name": "Tajikistan",
+    "file": "Tajikistan.json",
+    "riverCount": 6,
+    "riverKm": 1391,
+    "lakeCount": 1
+  },
+  {
+    "name": "Tanzania",
+    "file": "Tanzania.json",
+    "riverCount": 16,
+    "riverKm": 4975,
+    "lakeCount": 8
+  },
+  {
+    "name": "Thailand",
+    "file": "Thailand.json",
+    "riverCount": 12,
+    "riverKm": 4285,
+    "lakeCount": 4
+  },
+  {
+    "name": "Togo",
+    "file": "Togo.json",
+    "riverCount": 1,
+    "riverKm": 288,
+    "lakeCount": 0
+  },
+  {
+    "name": "Turkmenistan",
+    "file": "Turkmenistan.json",
+    "riverCount": 4,
+    "riverKm": 1205,
+    "lakeCount": 1
+  },
+  {
+    "name": "Türkiye",
+    "file": "Turkiye.json",
+    "riverCount": 12,
+    "riverKm": 4856,
+    "lakeCount": 7
+  },
+  {
+    "name": "Uganda",
+    "file": "Uganda.json",
+    "riverCount": 4,
+    "riverKm": 1222,
+    "lakeCount": 5
+  },
+  {
+    "name": "Ukraine",
+    "file": "Ukraine.json",
+    "riverCount": 13,
+    "riverKm": 4353,
+    "lakeCount": 7
+  },
+  {
+    "name": "United Kingdom",
+    "file": "UnitedKingdom.json",
+    "riverCount": 6,
+    "riverKm": 746,
+    "lakeCount": 1
+  },
+  {
+    "name": "United States of America",
+    "file": "UnitedStatesofAmerica.json",
+    "riverCount": 81,
+    "riverKm": 46298,
+    "lakeCount": 50
+  },
+  {
+    "name": "Uruguay",
+    "file": "Uruguay.json",
+    "riverCount": 3,
+    "riverKm": 1059,
+    "lakeCount": 2
+  },
+  {
+    "name": "Uzbekistan",
+    "file": "Uzbekistan.json",
+    "riverCount": 4,
+    "riverKm": 1734,
+    "lakeCount": 4
+  },
+  {
+    "name": "Venezuela",
+    "file": "Venezuela.json",
+    "riverCount": 13,
+    "riverKm": 6402,
+    "lakeCount": 4
+  },
+  {
+    "name": "Vietnam",
+    "file": "Vietnam.json",
+    "riverCount": 9,
+    "riverKm": 2176,
+    "lakeCount": 0
+  },
+  {
+    "name": "Zambia",
+    "file": "Zambia.json",
+    "riverCount": 12,
+    "riverKm": 5811,
+    "lakeCount": 5
+  },
+  {
+    "name": "Zimbabwe",
+    "file": "Zimbabwe.json",
+    "riverCount": 7,
+    "riverKm": 2228,
+    "lakeCount": 1
+  }
+]

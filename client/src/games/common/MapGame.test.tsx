@@ -202,7 +202,7 @@ describe("MapGame giving up", () => {
       wrongGuesses: 0,
       answersFound: 1,
     });
-    expectResult("Answer revealed 1 of 2 found +4");
+    expectResult("Answer revealed +4");
   });
 
   it("reports the wrong guesses made before giving up", async () => {
@@ -265,7 +265,7 @@ describe("MapGame resuming a finished round", () => {
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "false");
     expect(screen.getByRole("group", { name: "Answers: 2 of 2 found" })).toBeInTheDocument();
-    expectResult("No wrong guesses! +10");
+    expectResult("Correct! +10");
     expect(submitAnswer).not.toHaveBeenCalled();
   });
 
@@ -275,7 +275,7 @@ describe("MapGame resuming a finished round", () => {
       hints: { description: "A clue", text: (index) => `Hint number ${index}` },
     });
 
-    expectResult("Correct with 2 hints +8");
+    expectResult("Correct! +8");
     expect(screen.getByText("Hint number 0").closest("ul")).toBe(screen.getByRole("list", { name: "Hints" }));
     expect(screen.getByText("Hint number 0")).toBeInTheDocument();
     expect(screen.getByText("Hint number 1")).toBeInTheDocument();
@@ -555,7 +555,7 @@ describe("MapGame panel", () => {
   it("shows the round result instead of the form when the round is over", () => {
     renderGame({ round: makeRoundProps({ answerState: "CORRECT" }) });
 
-    expectResult("No wrong guesses! +10");
+    expectResult("Correct! +10");
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Guess" })).not.toBeInTheDocument();
   });
@@ -589,7 +589,7 @@ describe("MapGame guess limit", () => {
       wrongGuesses: 2,
       answersFound: 1,
     });
-    expectResult("Out of guesses 1 of 2 found +4");
+    expectResult("Out of guesses +4");
     expect(map()).toHaveAttribute("data-game-over", "true");
     expect(map()).toHaveAttribute("data-gave-up", "true");
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
@@ -860,12 +860,12 @@ describe("MapGame saving hints", () => {
     expect(order).toEqual(["hint", "guess", "answer"]);
   });
 
-  it("says first guess for a single-answer round won straight away", async () => {
+  it("scores a single-answer round won straight away out of 10", async () => {
     renderGame({ answerCount: 1, answers: [ANSWERS[0]] });
 
     await guess(userEvent.setup(), "France");
 
-    expectResult("First guess! +10");
+    expectResult("Correct! +10");
   });
 
   it("says correct for a single-answer round won after a wrong guess", async () => {

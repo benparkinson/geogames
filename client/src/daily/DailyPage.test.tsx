@@ -191,19 +191,17 @@ describe("DailyPage with a game for today", () => {
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
     renderWithClient(<DailyPage />);
 
-    await waitFor(() =>
-      expect(readDaily()?.result).toEqual({ score: 10, maxScore: 20, rounds: ["correct", "missed"] }),
-    );
+    await waitFor(() => expect(readDaily()?.result).toEqual({ score: 10, maxScore: 20, rounds: ["full", "missed"] }));
     expect(screen.getByText(`game g1 (daily ${today})`)).toBeInTheDocument();
   });
 
-  it("counts a round with hints as 'hints'", async () => {
+  it("scores a round with a hint as 'good'", async () => {
     writeDaily(entry);
     const rounds = makeGameRounds([{ answerState: "CORRECT", hintsUsed: 1 }, { answerState: "CORRECT" }]);
     mockFetch([{ url: ROUND_0, body: rounds[0] }]);
     renderWithClient(<DailyPage />);
 
-    await waitFor(() => expect(readDaily()?.result?.rounds).toEqual(["hints", "correct"]));
+    await waitFor(() => expect(readDaily()?.result?.rounds).toEqual(["good", "full"]));
   });
 
   it("stores the server's difficulty with the result, and the finished page shares it", async () => {
@@ -231,25 +229,25 @@ describe("DailyPage with a game for today", () => {
 
   it("shows a finished entry's result without fetching the game", async () => {
     const result = {
-      score: 430,
-      maxScore: 500,
-      rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"] as const,
+      score: 33,
+      maxScore: 50,
+      rounds: ["full", "partial", "good", "missed", "full"] as const,
     };
     writeDaily({ ...entry, number: 42, difficulty: "HARD", result: { ...result, rounds: [...result.rounds] } });
     const hardScore = { ...SCORE, url: SCORE.url.replace("NORMAL", "HARD") };
     const fetchMock = mockFetch([hardScore]);
     renderWithClient(<DailyPage />);
 
-    expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
+    expect(await screen.findByText("You scored 33 / 50")).toBeInTheDocument();
     expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
-    expect(screen.getByLabelText("Your result")).toHaveTextContent("❇️🟨🟩🟥❇️");
+    expect(screen.getByLabelText("Your result")).toHaveTextContent("🟩🟧🟨🟥🟩");
     expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
     // Only the optional comparison is fetched, from the game's own league, never the game.
     expect(callsTo(fetchMock).map((c) => c.url)).toEqual([hardScore.url]);
   });
 
   it("opens the rounds of a finished entry", async () => {
-    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["firstGuess", "missed"] } });
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["full", "missed"] } });
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }, SCORE]);
     renderWithClient(<DailyPage />);
 
@@ -259,7 +257,7 @@ describe("DailyPage with a game for today", () => {
   });
 
   it("keeps a finished entry's result even if the game has been deleted", async () => {
-    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["firstGuess", "missed"] } });
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["full", "missed"] } });
     mockFetch([{ url: ROUND_0, status: 404 }, SCORE]);
     renderWithClient(<DailyPage />);
 
@@ -308,7 +306,7 @@ describe("DailyPage streak", () => {
   it("does not count an already finished daily again", async () => {
     const stored = JSON.stringify({ v: 1, lastDate: previousDay(today), count: 3 });
     localStorage.setItem("gg-daily-streak", stored);
-    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["firstGuess", "missed"] } });
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["full", "missed"] } });
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }, SCORE]);
     renderWithClient(<DailyPage />);
 
@@ -320,7 +318,7 @@ describe("DailyPage streak", () => {
 
 describe("DailyPage finished view", () => {
   it("shows the day's average", async () => {
-    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["firstGuess", "missed"] } });
+    writeDaily({ ...entry, result: { score: 100, maxScore: 200, rounds: ["full", "missed"] } });
     mockFetch([SCORE]);
     renderWithClient(<DailyPage />);
 
@@ -330,9 +328,9 @@ describe("DailyPage finished view", () => {
 
 describe("DailyPage countdown", () => {
   const rounds: DailyEntry["result"] = {
-    score: 430,
-    maxScore: 500,
-    rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"],
+    score: 33,
+    maxScore: 50,
+    rounds: ["full", "partial", "good", "missed", "full"],
   };
   const finishedEntry: DailyEntry = { ...entry, date: localDateString(new Date(2026, 5, 10)), result: rounds };
 

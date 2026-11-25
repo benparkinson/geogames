@@ -4,6 +4,8 @@ import { findGameModule, RANDOM_OPTION } from "../registry";
 import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
 import { roundOutcome, RoundOutcome } from "./outcome";
 import type { RoundResultKind } from "./roundView";
+import { MAX_ROUND_POINTS, pointsBreakdown } from "./scoring";
+import type { PointsBreakdown } from "./scoring";
 
 /** The game type to start for "Play again": the one every round used, or a mix if they differed. */
 export function playAgainType(rounds: GameRoundView[]): string {
@@ -42,6 +44,7 @@ export interface SummaryRowView {
   hintsUsed: number;
   outOfGuesses: boolean;
   points: number;
+  breakdown: PointsBreakdown;
   /** The round's recorded guesses that were not answers, in the order they were made. */
   wrongGuessNames: string[];
 }
@@ -49,15 +52,15 @@ export interface SummaryRowView {
 export interface GameSummaryView {
   score: number;
   maxScore: number;
-  /** "perfect": every round a first guess; "fullMarks": full marks after some wrong guesses. */
-  heading: "perfect" | "fullMarks" | "scored";
+  /** "perfect": every round earned all 10 points. */
+  heading: "perfect" | "scored";
+  /** Rounds that earned all 10 points. */
+  perfectRounds: number;
   playAgainType: string;
   /** A mixed game names each round's type; a game of one type names it once, at the top. */
   mixed: boolean;
   gameTitle: string | null;
   difficulty: Difficulty;
-  /** Rounds answered correctly, with or without hints. */
-  solved: number;
   hintsUsed: number;
   rows: SummaryRowView[];
 }
@@ -65,48 +68,50 @@ export interface GameSummaryView {
 /** Everything the results page shows, worked out from the game's rounds. `rounds` is not empty. */
 export function summariseGame(rounds: GameRoundView[]): GameSummaryView {
   // Every round carries the whole game's result.
-  const { score, maxScore, roundAnswerStates, roundPoints, roundHintsUsed, roundFirstGuess } = rounds[0].gameResult;
-  const counts: Record<RoundOutcome, number> = { firstGuess: 0, correct: 0, hints: 0, missed: 0 };
-  roundAnswerStates.forEach((state, i) => {
-    const outcome = roundOutcome(state, roundHintsUsed[i], roundFirstGuess[i], roundPoints[i]);
-    if (outcome) counts[outcome]++;
-  });
-  const perfect = counts.firstGuess === rounds.length;
-  const fullMarks = !perfect && counts.firstGuess + counts.correct === rounds.length;
+  const { score, maxScore, roundPoints } = rounds[0].gameResult;
+  const perfectRounds = roundPoints.filter((points) => points >= MAX_ROUND_POINTS).length;
+  const perfect = perfectRounds === rounds.length;
   const type = playAgainType(rounds);
   const mixed = type === RANDOM_OPTION.type;
-  const rows = rounds.map((round, i): SummaryRowView => {
-    const outcome = roundOutcome(round.answerState, round.hintsUsed, round.gameResult.roundFirstGuess[i], round.points);
+  const rows = rounds.map((round): SummaryRowView => {
+    const outcome = roundOutcome(round.answerState, round.points);
     const result: RoundResultKind =
-      outcome === "firstGuess"
-        ? "firstGuess"
-        : round.answerState === CORRECT_ANSWER
-          ? "correct"
-          : round.answerState === OUT_OF_GUESSES
-            ? "outOfGuesses"
-            : "revealed";
+      round.answerState === CORRECT_ANSWER
+        ? "correct"
+        : round.answerState === OUT_OF_GUESSES
+          ? "outOfGuesses"
+          : "revealed";
     const answers = roundAnswers(round);
+    const missed = missedAnswers(round, answers);
+    const wrongGuessNames = round.guesses.filter((g) => !g.correct).map((g) => g.text);
     return {
       label: roundLabel(round),
       answers: answers.map((a) => a.name),
-      missed: missedAnswers(round, answers),
+      missed,
       outcome,
       result,
       hintsUsed: round.hintsUsed,
       outOfGuesses: round.answerState === OUT_OF_GUESSES,
       points: round.points,
-      wrongGuessNames: round.guesses.filter((g) => !g.correct).map((g) => g.text),
+      breakdown: pointsBreakdown(
+        round.answerState,
+        round.hintsUsed,
+        answers.length - missed.length,
+        answers.length,
+        wrongGuessNames.length,
+      ),
+      wrongGuessNames,
     };
   });
   return {
     score,
     maxScore,
-    heading: perfect ? "perfect" : fullMarks ? "fullMarks" : "scored",
+    heading: perfect ? "perfect" : "scored",
+    perfectRounds,
     playAgainType: type,
     mixed,
     gameTitle: mixed ? null : (findGameModule(type)?.title ?? type),
     difficulty: rounds[0].difficulty,
-    solved: roundAnswerStates.filter((state) => state === CORRECT_ANSWER).length,
     hintsUsed: rows.reduce((sum, row) => sum + row.hintsUsed, 0),
     rows,
   };

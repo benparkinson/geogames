@@ -1,34 +1,59 @@
 {
-  "name" : "Iceland",
-  "major" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Iceland"
+  "name": "Iceland",
+  "major": {
+    "type": "Feature",
+    "properties": {
+      "name": "Iceland"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": []
     }
   },
-  "minor" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Iceland"
+  "minor": {
+    "type": "Feature",
+    "properties": {
+      "name": "Iceland"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ [ [ -19.5514, 64.1859 ], [ -19.7953, 64.0633 ], [ -19.9605, 64.0796 ], [ -20.3, 63.9985 ], [ -20.4755, 63.9992 ], [ -20.6283, 63.9294 ], [ -20.6856, 63.8634 ] ], [ [ -18.3969, 64.7362 ], [ -18.7127, 64.5581 ], [ -18.8611, 64.5181 ], [ -18.9112, 64.473 ], [ -19.252, 64.3438 ], [ -19.3613, 64.2551 ], [ -19.5514, 64.1859 ] ], [ [ -18.1729, 64.9138 ], [ -18.2104, 64.8958 ], [ -18.2367, 64.8185 ], [ -18.3969, 64.7362 ] ] ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": [
+        [
+          [-19.5514, 64.1859],
+          [-19.7953, 64.0633],
+          [-19.9605, 64.0796],
+          [-20.3, 63.9985],
+          [-20.4755, 63.9992],
+          [-20.6283, 63.9294],
+          [-20.6856, 63.8634]
+        ],
+        [
+          [-18.3969, 64.7362],
+          [-18.7127, 64.5581],
+          [-18.8611, 64.5181],
+          [-18.9112, 64.473],
+          [-19.252, 64.3438],
+          [-19.3613, 64.2551],
+          [-19.5514, 64.1859]
+        ],
+        [
+          [-18.1729, 64.9138],
+          [-18.2104, 64.8958],
+          [-18.2367, 64.8185],
+          [-18.3969, 64.7362]
+        ]
+      ]
     }
   },
-  "lakes" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Iceland"
+  "lakes": {
+    "type": "Feature",
+    "properties": {
+      "name": "Iceland"
     },
-    "geometry" : {
-      "type" : "MultiPolygon",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiPolygon",
+      "coordinates": []
     }
   },
-  "longestRiver" : null
+  "longestRiver": null
 }

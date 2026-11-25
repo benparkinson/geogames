@@ -1,34 +1,49 @@
 {
-  "name" : "Lebanon",
-  "major" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Lebanon"
+  "name": "Lebanon",
+  "major": {
+    "type": "Feature",
+    "properties": {
+      "name": "Lebanon"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": []
     }
   },
-  "minor" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Lebanon"
+  "minor": {
+    "type": "Feature",
+    "properties": {
+      "name": "Lebanon"
     },
-    "geometry" : {
-      "type" : "MultiLineString",
-      "coordinates" : [ [ [ 35.8639, 33.5964 ], [ 35.8163, 33.5529 ], [ 35.8034, 33.5115 ], [ 35.7793, 33.5001 ], [ 35.7612, 33.477 ], [ 35.7307, 33.4666 ], [ 35.6956, 33.4309 ] ], [ [ 35.6956, 33.4309 ], [ 35.6649, 33.389 ], [ 35.6282, 33.2545 ] ] ]
+    "geometry": {
+      "type": "MultiLineString",
+      "coordinates": [
+        [
+          [35.8639, 33.5964],
+          [35.8163, 33.5529],
+          [35.8034, 33.5115],
+          [35.7793, 33.5001],
+          [35.7612, 33.477],
+          [35.7307, 33.4666],
+          [35.6956, 33.4309]
+        ],
+        [
+          [35.6956, 33.4309],
+          [35.6649, 33.389],
+          [35.6282, 33.2545]
+        ]
+      ]
     }
   },
-  "lakes" : {
-    "type" : "Feature",
-    "properties" : {
-      "name" : "Lebanon"
+  "lakes": {
+    "type": "Feature",
+    "properties": {
+      "name": "Lebanon"
     },
-    "geometry" : {
-      "type" : "MultiPolygon",
-      "coordinates" : [ ]
+    "geometry": {
+      "type": "MultiPolygon",
+      "coordinates": []
     }
   },
-  "longestRiver" : null
+  "longestRiver": null
 }
