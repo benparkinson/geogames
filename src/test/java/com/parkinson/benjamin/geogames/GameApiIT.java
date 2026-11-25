@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -695,11 +696,17 @@ class GameApiIT {
     }
   }
 
-  @Test
-  void theProductionFrontendOriginIsAllowed() throws Exception {
-    // https://geogauntlet.onrender.com is the production frontend. Removing it from
-    // geogames.cors.allowed-origins breaks production while every other test still passes.
-    String production = "https://geogauntlet.onrender.com";
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "https://geogauntlet.onrender.com",
+        "https://geoggernaut.com",
+        "https://www.geoggernaut.com"
+      })
+  void theProductionFrontendOriginsAreAllowed(String production) throws Exception {
+    // The production frontend is served from Render's own address and from the custom domain
+    // (with and without www). Removing one from geogames.cors.allowed-origins breaks the site
+    // on that address while every other test still passes.
     mockMvc
         .perform(
             options("/api/games")

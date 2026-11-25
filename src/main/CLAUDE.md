@@ -12,5 +12,6 @@ The default profile needs no database or secrets (H2 in memory). The `prod` prof
 **Privacy:** a game stores no user data, `created_at` is rounded down to the hour, and the `prod` profile turns Logbook request logging off (it logs each client address), so a game can't be matched to a person. Keep it that way: don't add exact timestamps, client addresses or request logging to production.
 
 To try it locally against a Postgres: `DATABASE_URL=... DATABASE_USERNAME=... DATABASE_PASSWORD=... java -jar target/geogames-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod`.
+Metrics (Micrometer, pushed over OTLP) are exported only when `GEOGAMES_METRICS_ENABLED=true` in `prod`, to `OTLP_METRICS_URL` with the `OTLP_METRICS_AUTHORIZATION` header; otherwise nothing is sent.
 
 Production uses Neon's free plan (1 GB, 100 compute-hours a month, sleeps after 5 minutes idle; reaching the compute limit suspends the database until next month). Move to Render's paid web service plus Render Postgres Basic (about $13 a month) when Neon's compute use is on course for about 70 of the 100 hours, or storage passes 0.5 GB. Slow first loads are the free web service waking up, not the database, so upgrade the web service first. Moving needs no data migration: games are disposable, so change the three variables and Flyway creates the schema.
