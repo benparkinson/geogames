@@ -17,6 +17,7 @@ import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -46,6 +47,7 @@ public class GameService {
   private final KnownPlaceNames placeNames;
   private final DailyScoreStore dailyScores;
   private final RoundContinents roundContinents;
+  private final GameMetrics metrics;
 
   public GameService(
       GameRepository gameRepository,
@@ -56,7 +58,8 @@ public class GameService {
       ApplicationEventPublisher events,
       KnownPlaceNames placeNames,
       DailyScoreStore dailyScores,
-      RoundContinents roundContinents) {
+      RoundContinents roundContinents,
+      GameMetrics metrics) {
     this.gameRepository = gameRepository;
     this.generators = generators;
     this.objectMapper = objectMapper;
@@ -66,6 +69,7 @@ public class GameService {
     this.placeNames = placeNames;
     this.dailyScores = dailyScores;
     this.roundContinents = roundContinents;
+    this.metrics = metrics;
   }
 
   @Transactional
@@ -98,10 +102,13 @@ public class GameService {
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
-    return new GameCreationResponse(
-        gameRepository
-            .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
-            .getPublicId());
+    GameCreationResponse response =
+        new GameCreationResponse(
+            gameRepository
+                .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
+                .getPublicId());
+    metrics.gameStarted(gameMode, difficulty);
+    return response;
   }
 
   @Transactional(readOnly = true)

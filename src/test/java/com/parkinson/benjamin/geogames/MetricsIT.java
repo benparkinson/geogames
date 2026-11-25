@@ -55,6 +55,33 @@ class MetricsIT {
   }
 
   @Test
+  void gamesAndAnsweredRoundsAreCounted() {
+    String id = create("{\"gameType\":\"LAKES_BY_SHAPE\",\"numberOfRounds\":1}");
+    create("{}", "/api/daily-games");
+    client
+        .post()
+        .uri("/api/games/{id}/rounds/0/answers", id)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body("{\"answerState\":\"CORRECT\",\"hintsUsed\":1,\"wrongGuesses\":2}")
+        .exchange()
+        .expectStatus()
+        .isOk();
+
+    assertThat(sum("geogames.games.started", "mode", "LAKES_BY_SHAPE")).isEqualTo(1);
+    assertThat(sum("geogames.games.started", "mode", "DAILY")).isEqualTo(1);
+    assertThat(
+            registry
+                .get("geogames.rounds.answered")
+                .tag("answer_state", "CORRECT")
+                .tag("hinted", "true")
+                .counter()
+                .count())
+        .isEqualTo(1);
+    assertThat(sum("geogames.rounds.hints", "game_type", "LAKES_BY_SHAPE")).isEqualTo(1);
+    assertThat(sum("geogames.rounds.wrong_guesses", "game_type", "LAKES_BY_SHAPE")).isEqualTo(2);
+  }
+
+  @Test
   void noActuatorEndpointsAreExposed() {
     client.get().uri("/actuator/health").exchange().expectStatus().isNotFound();
     client.get().uri("/actuator/metrics").exchange().expectStatus().isNotFound();
@@ -63,6 +90,32 @@ class MetricsIT {
   @Test
   void exportIsOffByDefault() {
     assertThat(context.getBeansOfType(OtlpMeterRegistry.class)).isEmpty();
+  }
+
+  private String create(String body) {
+    return create(body, "/api/games");
+  }
+
+  private String create(String body, String uri) {
+    byte[] created =
+        client
+            .post()
+            .uri(uri)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(body)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody()
+            .returnResult()
+            .getResponseBody();
+    return JsonPath.read(new String(created), "$.id");
+  }
+
+  private double sum(String name, String tag, String value) {
+    return registry.find(name).tag(tag, value).counters().stream()
+        .mapToDouble(c -> c.count())
+        .sum();
   }
 
   private Timer requests(String uri, String status) {
