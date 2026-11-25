@@ -45,6 +45,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -153,7 +154,8 @@ class GameServiceTest {
         events,
         names,
         dailyScores,
-        roundContinents);
+        roundContinents,
+        mock(GameMetrics.class));
   }
 
   private List<GameData> roundsOf(GameType type, int count) {
@@ -170,7 +172,8 @@ class GameServiceTest {
         events,
         names,
         dailyScores,
-        roundContinents);
+        roundContinents,
+        mock(GameMetrics.class));
   }
 
   private static GameRoundEntity round(int index, AnswerState state) {
@@ -546,7 +549,8 @@ class GameServiceTest {
               events,
               names,
               dailyScores,
-              mock(RoundContinents.class))
+              mock(RoundContinents.class),
+              mock(GameMetrics.class))
           .createGame("RANDOM", 10, Difficulty.NORMAL);
       ArgumentCaptor<GameEntity> captor = ArgumentCaptor.forClass(GameEntity.class);
       verify(repository).save(captor.capture());
