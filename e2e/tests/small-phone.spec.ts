@@ -20,7 +20,7 @@ async function expectLastGuessClear(page: Page, name: string) {
   const status = page.getByTestId("round-status");
   const below = (await status.isVisible()) ? await box(status) : await box(answerBox(page));
   expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(below.y + 1);
-  const onTop = await row.evaluate((element) => {
+  const onTop = await row.evaluate(element => {
     const rect = element.getBoundingClientRect();
     const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
     return hit !== null && element.contains(hit);
@@ -28,10 +28,7 @@ async function expectLastGuessClear(page: Page, name: string) {
   expect(onTop).toBe(true);
 }
 
-test("on a small phone the map keeps its room, and the input and buttons stay in view", async ({
-  page,
-  api,
-}) => {
+test("on a small phone the map keeps its room, and the input and buttons stay in view", async ({ page, api }) => {
   // Fake the on-screen keyboard through the visual viewport, which GameLayout watches.
   await page.addInitScript(() => {
     const original = Object.getOwnPropertyDescriptor(VisualViewport.prototype, "height")!;
@@ -42,7 +39,7 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
     });
   });
   const setKeyboard = (height: number | null) =>
-    page.evaluate((h) => {
+    page.evaluate(h => {
       (window as unknown as { __vvh?: number | null }).__vvh = h ?? undefined;
       window.visualViewport!.dispatchEvent(new Event("resize"));
     }, height);
@@ -52,23 +49,21 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
   await expect(answerBox(page)).toBeVisible();
   const gameId = JSON.parse((await page.evaluate(() => localStorage.getItem("gg-daily")))!).gameId;
   const round = await api.round(gameId, 0);
-  const answers = new Set(round.answers.map((answer) => answer.name));
-  const wrong = (await api.countries()).filter((country) => !answers.has(country.name)).slice(0, 3);
+  const answers = new Set(round.answers.map(answer => answer.name));
+  const wrong = (await api.countries()).filter(country => !answers.has(country.name)).slice(0, 3);
 
   for (const country of wrong) {
     await guess(page, country.name);
-    await expect(
-      page.getByRole("listitem").filter({ hasText: country.name }).first(),
-    ).toBeVisible();
+    await expect(page.getByRole("listitem").filter({ hasText: country.name }).first()).toBeVisible();
   }
   // Short wrong guesses sit side by side as chips.
   const chipYs = await Promise.all(
-    wrong.slice(0, 2).map(async (country) => {
+    wrong.slice(0, 2).map(async country => {
       const chip = page.getByRole("listitem").filter({ hasText: country.name }).first();
       return (await box(chip)).y;
     }),
   );
-  if (wrong.slice(0, 2).every((country) => country.name.length <= 10)) {
+  if (wrong.slice(0, 2).every(country => country.name.length <= 10)) {
     expect(chipYs[0]).toBe(chipYs[1]);
   }
   const hint = page.getByRole("button", { name: /^Hint/ });
@@ -81,10 +76,7 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
 
   const map = page.locator("main");
   expect((await box(map)).height).toBeGreaterThanOrEqual(0.45 * HEIGHT - 1);
-  for (const target of [
-    answerBox(page),
-    page.getByRole("button", { name: "Guess", exact: true }),
-  ]) {
+  for (const target of [answerBox(page), page.getByRole("button", { name: "Guess", exact: true })]) {
     const found = await box(target);
     expect(found.y).toBeGreaterThanOrEqual(0);
     expect(found.y + found.height).toBeLessThanOrEqual(HEIGHT);

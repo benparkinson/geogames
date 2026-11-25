@@ -3,18 +3,7 @@
   "additionalNames": [],
   "geoData": {
     "type": "Feature",
-    "properties": { "name": "Alpha" },
-    "geometry": {
-      "type": "Polygon",
-      "coordinates": [
-        [
-          [0, 0],
-          [10, 0],
-          [10, 10],
-          [0, 10],
-          [0, 0]
-        ]
-      ]
-    }
+    "properties": {"name": "Alpha"},
+    "geometry": {"type": "Polygon", "coordinates": [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]]}
   }
 }

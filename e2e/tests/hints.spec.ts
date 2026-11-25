@@ -1,12 +1,4 @@
-import {
-  answerBox,
-  expect,
-  guess,
-  reloadGamePage,
-  roundResult,
-  startGame,
-  test,
-} from "../fixtures";
+import { answerBox, expect, guess, reloadGamePage, roundResult, startGame, test } from "../fixtures";
 
 // The numbers come from model/Scoring: each hint costs 1 point, so a correct round with one hint is worth 9.
 test("a refresh keeps a hint taken, and its cost", async ({ page, api }) => {

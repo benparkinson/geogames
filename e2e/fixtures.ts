@@ -28,16 +28,11 @@ export class Api {
     const blob = JSON.parse(body.jsonBlob);
     const gameType: string = body.gameType.name;
     // A river round also lists the countries the river flows through, so the river comes first.
-    const places: Answer[] = blob.river
-      ? [blob.river]
-      : (blob.countries ?? [blob.lake ?? blob.country]);
+    const places: Answer[] = blob.river ? [blob.river] : (blob.countries ?? [blob.lake ?? blob.country]);
     return {
       gameType,
       guessLimit: body.gameType.guessLimit,
-      answers: places.map((place) => ({
-        name: place.name,
-        additionalNames: place.additionalNames ?? [],
-      })),
+      answers: places.map(place => ({ name: place.name, additionalNames: place.additionalNames ?? [] })),
     };
   }
 
@@ -66,7 +61,7 @@ export const test = base.extend<{ api: Api; guard: void }>({
       const blockedHosts: string[] = [];
       const problems: string[] = [];
 
-      await context.route("**/*", (route) => {
+      await context.route("**/*", route => {
         const url = new URL(route.request().url());
         if (isLocal(url)) {
           return route.continue();
@@ -76,10 +71,8 @@ export const test = base.extend<{ api: Api; guard: void }>({
         return route.abort();
       });
 
-      page.on("pageerror", (error) =>
-        problems.push(`Uncaught error in the page: ${error.message}`),
-      );
-      page.on("console", (message) => {
+      page.on("pageerror", error => problems.push(`Uncaught error in the page: ${error.message}`));
+      page.on("console", message => {
         if (message.type() !== "error") {
           return;
         }
@@ -95,7 +88,7 @@ export const test = base.extend<{ api: Api; guard: void }>({
       await use();
 
       const production = blockedHosts.filter(
-        (host) => host === "onrender.com" || host.endsWith(".onrender.com"),
+        host => host === "onrender.com" || host.endsWith(".onrender.com"),
       );
       expect(
         production,
@@ -116,19 +109,11 @@ export { expect };
  */
 export async function startGame(page: Page, title: string, rounds = 3): Promise<string> {
   await page.goto("/");
-  await page
-    .getByRole("button")
-    .filter({ has: page.getByText(title, { exact: true }) })
-    .click();
+  await page.getByRole("button").filter({ has: page.getByText(title, { exact: true }) }).click();
   // Click the round count's visible label (its radio is hidden); Playwright waits for the panel to open.
-  await page
-    .getByRole("group", { name: "Rounds" })
-    .getByText(String(rounds), { exact: true })
-    .click();
+  await page.getByRole("group", { name: "Rounds" }).getByText(String(rounds), { exact: true }).click();
   await page.getByRole("button", { name: "Start game" }).click();
-  await expect(page).toHaveURL(
-    /\/games\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
-  );
+  await expect(page).toHaveURL(/\/games\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   return page.url().split("/").pop()!;
 }
 
@@ -153,14 +138,12 @@ export function roundResult(page: Page) {
  * answered with the exported game page, which is what a working server would do. The reload is otherwise a real one.
  */
 export async function reloadGamePage(page: Page, id: string): Promise<void> {
-  await page.route(`**/games/${id}`, async (route) => {
+  await page.route(`**/games/${id}`, async route => {
     if (route.request().resourceType() !== "document") {
       return route.continue();
     }
     const origin = new URL(route.request().url()).origin;
-    return route.fulfill({
-      response: await route.fetch({ url: `${origin}/games/%5BgameId%5D.html` }),
-    });
+    return route.fulfill({ response: await route.fetch({ url: `${origin}/games/%5BgameId%5D.html` }) });
   });
   await page.reload();
 }

@@ -1,46 +1,34 @@
 {
-  "name": "Liechtenstein",
-  "major": {
-    "type": "Feature",
-    "properties": {
-      "name": "Liechtenstein"
+  "name" : "Liechtenstein",
+  "major" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Liechtenstein"
     },
-    "geometry": {
-      "type": "MultiLineString",
-      "coordinates": [
-        [
-          [9.477, 47.0599],
-          [9.4753, 47.0735],
-          [9.5023, 47.095],
-          [9.5119, 47.1083],
-          [9.5112, 47.1297],
-          [9.4844, 47.1766],
-          [9.4868, 47.2103],
-          [9.5039, 47.244],
-          [9.5527, 47.3001]
-        ]
-      ]
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ [ [ 9.477, 47.0599 ], [ 9.4753, 47.0735 ], [ 9.5023, 47.095 ], [ 9.5119, 47.1083 ], [ 9.5112, 47.1297 ], [ 9.4844, 47.1766 ], [ 9.4868, 47.2103 ], [ 9.5039, 47.244 ], [ 9.5527, 47.3001 ] ] ]
     }
   },
-  "minor": {
-    "type": "Feature",
-    "properties": {
-      "name": "Liechtenstein"
+  "minor" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Liechtenstein"
     },
-    "geometry": {
-      "type": "MultiLineString",
-      "coordinates": []
+    "geometry" : {
+      "type" : "MultiLineString",
+      "coordinates" : [ ]
     }
   },
-  "lakes": {
-    "type": "Feature",
-    "properties": {
-      "name": "Liechtenstein"
+  "lakes" : {
+    "type" : "Feature",
+    "properties" : {
+      "name" : "Liechtenstein"
     },
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": []
+    "geometry" : {
+      "type" : "MultiPolygon",
+      "coordinates" : [ ]
     }
   },
-  "longestRiver": null
+  "longestRiver" : null
 }

@@ -18,7 +18,6 @@ Build games with `TestFixtures` (`game(...)` for an entity, `createGame(mockMvc,
 ## API
 
 `GameController` → `GameService`; the validation rules are in "API rules" below.
-
 - `POST /api/games` with `{gameType, numberOfRounds, difficulty}` (1–10 rounds; `difficulty` is `EASY`, `NORMAL` or `HARD`; without it the difficulty is stored as unknown and reads as `NORMAL`; a bad name is a 400). `gameType` is a `GameType` constant or `RANDOM` (a mix of every type). Returns `{id}`, the game's **public id** (a random UUID; the `long` primary key never leaves the server).
 - `POST /api/daily-games` with `{date, difficulty}` (the player's local `YYYY-MM-DD`, within one day of the server's UTC date) or `{}` (the server's UTC date); `difficulty` is optional and means what it does for `POST /api/games`. Makes a new game (`gameMode` `DAILY`) from that date's pinned rounds and returns `{id, date, number}`. Everyone gets the same five rounds on a date; see "Daily challenge" below.
 - `GET /api/daily-challenges/{date}` returns `{date, number, gameTypes}` (the five `GameType` names in round order) for a stored day, for the home page's preview. It only reads: a day nobody has started is a 404 `ProblemDetail` and is never generated; the date is checked like a new game's (400). No `GameCreationGuard`, no round keys.
@@ -63,7 +62,6 @@ Anonymity rules: never store an IP, a header, either game id, a timestamp (only 
 `GameType` is persisted with `@Enumerated(EnumType.STRING)` and sent to clients as `api/GameTypeResponse` (`{name, answerCount, hintCount, guessLimit}`), so the JSON shape doesn't depend on the enum. `RANDOM` is a request-only value, parsed by `service/GameSelection`, and is not a `GameType`.
 
 Adding a type (the root `CLAUDE.md` has the four steps):
-
 - **The `GameData` record** in `model/`: `gameType()` returns the constant, `subjectId()` says what the round is about, and `roundKey()` (defaults to `subjectId()`) is what is stored. The key must be unique within the type, so override it as `Tripoint` does when `subjectId()` isn't.
 - **The generator** implements `service/RoundGenerator`: a `@Service`, or a `@Bean` in a `@Configuration` when several types share one class. `RoundGenerators` fails start-up with an `IllegalStateException` if a `GameType` has no generator, or has two. `generate` takes the `Random` to pick with (use `helper/RandomPicker`): `GameService` passes the shared bean (`config/RandomConfig`), a daily challenge a seeded one, and tests a seeded one.
   - A generator whose round is about one item (a country, a river, a lake) extends `service/SubjectRoundGenerator`: it supplies `candidates()`, `id`, `find(id)` and `toRound`, and the shared `generate` and `rebuild` apply the prefix from `model/SubjectIds`, the exclusions and the single `RandomPicker.pickDistinct` call. Keep that call and the candidate order as they are: a daily challenge is seeded, so changing either changes which rounds it picks. Pairs and tripoints implement `RoundGenerator` directly.

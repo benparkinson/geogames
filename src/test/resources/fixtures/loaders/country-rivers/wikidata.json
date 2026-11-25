@@ -1,16 +1,4 @@
 {
-  "Q1": {
-    "label": "Crossing",
-    "sitelinks": 40,
-    "aliases": [],
-    "continents": ["Europe"],
-    "countryContinents": []
-  },
-  "Q2": {
-    "label": "Along the border",
-    "sitelinks": 10,
-    "aliases": [],
-    "continents": ["Europe"],
-    "countryContinents": []
-  }
+  "Q1": {"label": "Crossing", "sitelinks": 40, "aliases": [], "continents": ["Europe"], "countryContinents": []},
+  "Q2": {"label": "Along the border", "sitelinks": 10, "aliases": [], "continents": ["Europe"], "countryContinents": []}
 }

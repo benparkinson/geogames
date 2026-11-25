@@ -1,98 +1,11 @@
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Populated place",
-        "name": "Big",
-        "adm0name": "Alpha",
-        "adm0cap": 0,
-        "pop_max": 1000
-      },
-      "geometry": { "type": "Point", "coordinates": [5.123456, 5.654321] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Admin-0 capital",
-        "name": "Capitalville",
-        "adm0name": "Alpha",
-        "adm0cap": 1,
-        "pop_max": 10
-      },
-      "geometry": { "type": "Point", "coordinates": [1, 1] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Populated place",
-        "name": "Coast",
-        "adm0name": "Alpha",
-        "adm0cap": 0,
-        "pop_max": 50
-      },
-      "geometry": { "type": "Point", "coordinates": [-0.02, 5] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Populated place",
-        "name": "Offshore",
-        "adm0name": "Beta",
-        "adm0cap": 0,
-        "pop_max": 70
-      },
-      "geometry": { "type": "Point", "coordinates": [30, 30] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Populated place",
-        "name": "Lost",
-        "adm0name": "Nowhere",
-        "adm0cap": 0,
-        "pop_max": 5
-      },
-      "geometry": { "type": "Point", "coordinates": [50, 50] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Admin-0 capital",
-        "name": "Betaville",
-        "adm0name": "Beta",
-        "adm0cap": 0,
-        "pop_max": 500
-      },
-      "geometry": { "type": "Point", "coordinates": [15, 5] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Admin-0 region capital",
-        "name": "Region Town",
-        "adm0name": "Beta",
-        "adm0cap": 0,
-        "pop_max": 900
-      },
-      "geometry": { "type": "Point", "coordinates": [18, 8] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "featurecla": "Populated place",
-        "name": "No Population",
-        "adm0name": "Beta",
-        "adm0cap": 0,
-        "pop_max": null
-      },
-      "geometry": { "type": "Point", "coordinates": [12, 2] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "featurecla": "Populated place", "name": "No Point", "adm0name": "Beta" },
-      "geometry": { "type": "Point", "coordinates": [] }
-    }
-  ]
-}
+{"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"Big","adm0name":"Alpha","adm0cap":0,"pop_max":1000},"geometry":{"type":"Point","coordinates":[5.123456,5.654321]}},
+{"type":"Feature","properties":{"featurecla":"Admin-0 capital","name":"Capitalville","adm0name":"Alpha","adm0cap":1,"pop_max":10},"geometry":{"type":"Point","coordinates":[1,1]}},
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"Coast","adm0name":"Alpha","adm0cap":0,"pop_max":50},"geometry":{"type":"Point","coordinates":[-0.02,5]}},
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"Offshore","adm0name":"Beta","adm0cap":0,"pop_max":70},"geometry":{"type":"Point","coordinates":[30,30]}},
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"Lost","adm0name":"Nowhere","adm0cap":0,"pop_max":5},"geometry":{"type":"Point","coordinates":[50,50]}},
+{"type":"Feature","properties":{"featurecla":"Admin-0 capital","name":"Betaville","adm0name":"Beta","adm0cap":0,"pop_max":500},"geometry":{"type":"Point","coordinates":[15,5]}},
+{"type":"Feature","properties":{"featurecla":"Admin-0 region capital","name":"Region Town","adm0name":"Beta","adm0cap":0,"pop_max":900},"geometry":{"type":"Point","coordinates":[18,8]}},
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"No Population","adm0name":"Beta","adm0cap":0,"pop_max":null},"geometry":{"type":"Point","coordinates":[12,2]}},
+{"type":"Feature","properties":{"featurecla":"Populated place","name":"No Point","adm0name":"Beta"},"geometry":{"type":"Point","coordinates":[]}}
+]}

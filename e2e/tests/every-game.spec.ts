@@ -40,7 +40,9 @@ for (const { type, title } of GAMES) {
         .click();
     }
 
-    await expect(page.getByRole("heading", { name: "Perfect game!" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Perfect game!" }),
+    ).toBeVisible();
     await expect(page.getByText(`/ ${ROUNDS * 10}`, { exact: true })).toBeVisible();
   });
 }

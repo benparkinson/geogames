@@ -10,9 +10,7 @@ export default defineConfig({
   // A test that needs a retry to pass is flaky, and CI should say so.
   retries: 0,
   forbidOnly: inCI,
-  reporter: inCI
-    ? [["github"], ["html", { open: "never" }]]
-    : [["list"], ["html", { open: "never" }]],
+  reporter: inCI ? [["github"], ["html", { open: "never" }]] : [["list"], ["html", { open: "never" }]],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   use: {
