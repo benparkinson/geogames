@@ -40,7 +40,7 @@ export function roundView(round: Round, state: GuessState, answerCount: number, 
   const wrongGuesses = wrongGuessCount(state);
   const answerState = state.over ? finalAnswerState(state.gaveUp, state.outOfGuesses) : UNANSWERED;
   const scored = state.over ? answerState : CORRECT_ANSWER;
-  const points = roundPoints(scored, hintsUsed, round.hintCount, answersFound, answerCount);
+  const points = roundPoints(scored, hintsUsed, answersFound, answerCount, wrongGuesses);
   const outcome = state.over ? roundOutcome(answerState, hintsUsed, wrongGuesses === 0, points) : null;
   const result: RoundResultKind | null = !state.over
     ? null

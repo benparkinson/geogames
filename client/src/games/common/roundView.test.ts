@@ -16,7 +16,7 @@ describe("roundView", () => {
   it("shows what a round in play is worth now, with no outcome yet", () => {
     const view = roundView(makeRoundProps(), playing({ hintsUsed: 1 }), 1, HINTS);
 
-    expect(view).toMatchObject({ answerState: "UNANSWERED", points: 83, outcome: null, result: null });
+    expect(view).toMatchObject({ answerState: "UNANSWERED", points: 9, outcome: null, result: null });
   });
 
   it("calls a win with no hints and no wrong guess a first guess", () => {
@@ -24,7 +24,7 @@ describe("roundView", () => {
 
     expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({
       answerState: "CORRECT",
-      points: 100,
+      points: 10,
       outcome: "firstGuess",
       result: "firstGuess",
     });
@@ -43,7 +43,7 @@ describe("roundView", () => {
   it("scores a win with a hint less, as hints", () => {
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
 
-    expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({ points: 83, result: "hints" });
+    expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({ points: 9, result: "hints" });
   });
 
   it("scores the share found of a round given up, as hints, not missed", () => {
@@ -51,7 +51,7 @@ describe("roundView", () => {
 
     expect(roundView(makeRoundProps(), state, 3, HINTS)).toMatchObject({
       answerState: "GAVE_UP",
-      points: 67,
+      points: 5,
       answersFound: 2,
       outcome: "hints",
       result: "revealed",
@@ -69,7 +69,7 @@ describe("roundView", () => {
 
     expect(roundView(makeRoundProps(), state, 2, HINTS)).toMatchObject({
       answerState: "OUT_OF_GUESSES",
-      points: 50,
+      points: 4,
       result: "outOfGuesses",
     });
   });
@@ -93,38 +93,38 @@ describe("roundView", () => {
 
 describe("liveProgress", () => {
   it("leaves the server's results alone while the round is in play", () => {
-    const round = makeRoundProps({ score: 183 });
+    const round = makeRoundProps({ score: 19 });
     const progress = liveProgress(round, roundView(round, playing(), 1, HINTS));
 
-    expect(progress.score).toBe(183);
+    expect(progress.score).toBe(19);
     expect(progress.states).toEqual(round.roundAnswerStates);
     expect(progress.outcomes[round.currentRound]).toBeNull();
   });
 
   it("adds a round just finished here to the score before the server's copy is refetched", () => {
-    const round = makeRoundProps({ score: 100 });
+    const round = makeRoundProps({ score: 10 });
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
     const progress = liveProgress(round, roundView(round, state, 1, HINTS));
 
-    // A tripoint round (3 hints) answered with one hint is worth 83.
-    expect(progress.score).toBe(183);
-    expect(progress.points[round.currentRound]).toBe(83);
+    // A tripoint round (3 hints) answered with one hint is worth 9.
+    expect(progress.score).toBe(19);
+    expect(progress.points[round.currentRound]).toBe(9);
     expect(progress.outcomes[round.currentRound]).toBe("hints");
   });
 
   it("does not count an already answered round twice", () => {
-    const round = makeRoundProps({ score: 183, answerState: "CORRECT", hintsUsed: 1, points: 83 });
+    const round = makeRoundProps({ score: 19, answerState: "CORRECT", hintsUsed: 1, points: 83 });
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
 
-    expect(liveProgress(round, roundView(round, state, 1, HINTS)).score).toBe(183);
+    expect(liveProgress(round, roundView(round, state, 1, HINTS)).score).toBe(19);
   });
 
   it("adds nothing for a round revealed here with nothing found", () => {
-    const round = makeRoundProps({ score: 100 });
+    const round = makeRoundProps({ score: 10 });
     const state = playing({ over: true, gaveUp: true, hintsUsed: 2 });
     const progress = liveProgress(round, roundView(round, state, 1, HINTS));
 
-    expect(progress.score).toBe(100);
+    expect(progress.score).toBe(10);
     expect(progress.outcomes[round.currentRound]).toBe("missed");
   });
 

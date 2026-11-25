@@ -128,7 +128,7 @@ class DailyChallengeServiceTest {
 
     assertThat(response.players()).isZero();
     assertThat(response.averageScore()).isNull();
-    assertThat(response.maxScore()).isEqualTo(500);
+    assertThat(response.maxScore()).isEqualTo(50);
     assertThat(response.buckets()).hasSize(11).containsOnly(0);
   }
 

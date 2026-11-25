@@ -211,18 +211,18 @@ describe("GameSummary", () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
 
-    expect(await screen.findByText("183")).toBeInTheDocument();
+    expect(await screen.findByText("19")).toBeInTheDocument();
 
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows).toHaveLength(3);
     expect(within(rows[0]).getByText("Tripoints")).toBeInTheDocument();
     expect(rows[0]).toHaveTextContent("Belgium · Netherlands · Germany");
-    expect(rows[0]).toHaveTextContent("+100");
+    expect(rows[0]).toHaveTextContent("+10");
     expect(rows[0]).not.toHaveTextContent("hint");
     expect(within(rows[1]).getByText("River Shapes")).toBeInTheDocument();
     expect(rows[1]).toHaveTextContent("Danube");
     expect(rows[1]).toHaveTextContent("+0");
-    expect(rows[2]).toHaveTextContent("+83");
+    expect(rows[2]).toHaveTextContent("+9");
     expect(rows[2]).toHaveTextContent("1 hint");
   });
 
@@ -267,7 +267,7 @@ describe("GameSummary", () => {
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
@@ -290,7 +290,7 @@ describe("GameSummary", () => {
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
@@ -306,7 +306,7 @@ describe("GameSummary", () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
 
-    await screen.findByText("183");
+    await screen.findByText("19");
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 
@@ -353,7 +353,7 @@ describe("GameSummary", () => {
     ]);
     renderSummary(vi.fn(), 2);
 
-    expect(await screen.findByText("100")).toBeInTheDocument();
+    expect(await screen.findByText("10")).toBeInTheDocument();
     expect(screen.getByText("Ran out of lives")).toBeInTheDocument();
   });
 
@@ -400,14 +400,14 @@ describe("GameSummary", () => {
 
     expect(await screen.findByText("Solved")).toBeInTheDocument();
     expect(screen.getByText("3 of 5")).toBeInTheDocument();
-    expect(screen.getByText("350")).toBeInTheDocument();
+    expect(screen.getByText("34")).toBeInTheDocument();
   });
 
   it("counts the solved rounds and the hints of a mixed result", async () => {
     mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT", hintsUsed: 3 }, { answerState: "GAVE_UP" }]))]);
     renderSummary(vi.fn(), 2);
 
-    expect(await screen.findByText("50")).toBeInTheDocument();
+    expect(await screen.findByText("7")).toBeInTheDocument();
     expect(screen.getByText("1 of 2")).toBeInTheDocument();
     expect(screen.getByText(/3 hints/)).toBeInTheDocument();
   });
@@ -415,7 +415,7 @@ describe("GameSummary", () => {
   it("opens the round that was clicked", async () => {
     mockFetch([roundsRoute(mixed)]);
     const { onOpenRound } = renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     await userEvent.setup().click(screen.getByRole("button", { name: /River Shapes/ }));
 
@@ -425,7 +425,7 @@ describe("GameSummary", () => {
   it("links home from the header and from the button", async () => {
     mockFetch([roundsRoute(mixed)]);
     renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     const links = screen.getAllByRole("link", { name: "Home" });
     expect(links).toHaveLength(2);
@@ -438,7 +438,7 @@ describe("GameSummary", () => {
       { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
     ]);
     renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
@@ -472,7 +472,7 @@ describe("GameSummary", () => {
   it("tells the player when a new game could not be started", async () => {
     mockFetch([roundsRoute(mixed), { method: "POST", url: /\/api\/games$/, status: 500, body: {} }]);
     renderSummary();
-    await screen.findByText("183");
+    await screen.findByText("19");
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
@@ -501,14 +501,14 @@ describe("GameSummary with partly correct rounds", () => {
     mockFetch([roundsRoute(partly)]);
     renderSummary();
 
-    expect(await screen.findByText("167")).toBeInTheDocument();
+    expect(await screen.findByText("15")).toBeInTheDocument();
   });
 
   it("shows the partly correct round as a yellow gain, not as missed", async () => {
     mockFetch([roundsRoute(partly)]);
     renderSummary();
 
-    const row = await screen.findByText("+67");
+    const row = await screen.findByText("+5");
     expect(row.closest("[data-outcome]")).toHaveAttribute("data-outcome", "hints");
   });
 });
