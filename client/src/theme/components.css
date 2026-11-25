@@ -1387,6 +1387,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-1) 0;
   border-bottom: 1px solid var(--gg-color-rule-light);
 }
+.gg-summary__friend {
+  margin-bottom: var(--gg-space-2);
+}
 .gg-summary__error {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
