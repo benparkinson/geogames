@@ -15,7 +15,7 @@ function HomePage(): React.JSX.Element {
 
   return (
     <div className="home page-bg">
-      <SiteHeader title={<SiteHeading />} extra={<SettingsMenu />} />
+      <SiteHeader title={<SiteHeading />} trailing={<SettingsMenu />} />
       <div className="home-layout">
         <section className="home-daily">
           <DailyCard />

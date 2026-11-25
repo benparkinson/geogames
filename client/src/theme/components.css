@@ -885,23 +885,44 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   cursor: pointer;
 }
 .gg-settings__panel {
-  /* Fixed and centred in the viewport so the panel stays on screen at any width. */
-  position: fixed;
-  top: var(--gg-space-5);
-  left: 50%;
+  /* Drops down from the cog, which ends the header, so it grows leftwards and stays on screen. */
+  position: absolute;
+  top: calc(100% + var(--gg-space-2));
+  right: 0;
   z-index: 1030;
-  transform: translateX(-50%);
   width: max-content;
-  max-width: calc(100vw - 2 * var(--gg-space-4));
+  max-width: calc(100vw - 2 * var(--gg-space-3));
   padding: var(--gg-space-3);
   background: var(--gg-color-surface);
   border: 1px solid var(--gg-color-rule);
   border-radius: var(--gg-radius);
   box-shadow: var(--gg-shadow-floating);
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gg-space-3);
+  /* One column of row labels and one of controls, so both line up. */
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  gap: var(--gg-space-3) var(--gg-space-4);
+}
+.gg-settings__panel > .gg-difficulty {
+  display: contents;
+}
+.gg-settings__heading {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-bottom: var(--gg-space-2);
+  border-bottom: 1px solid var(--gg-color-rule);
+  font-size: var(--gg-font-size-h5);
+}
+/* Too narrow for the two columns: each label sits above its controls. */
+@media (max-width: 30rem) {
+  .gg-settings__panel {
+    grid-template-columns: max-content;
+    row-gap: var(--gg-space-1);
+  }
+  .gg-settings__panel > .gg-difficulty + .gg-difficulty > .gg-label {
+    margin-top: var(--gg-space-2);
+  }
 }
 .gg-footer--pinned {
   position: sticky;

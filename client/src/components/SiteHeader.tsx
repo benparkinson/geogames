@@ -5,14 +5,16 @@ import { StreakIcon } from "../ui/icons";
 
 /**
  * The top of the home page and the static pages: the site name (`title`) at the start, then at the far end
- * `extra`, the daily streak (from one day, never while pre-rendering). An ink rule closes it.
+ * `extra`, the daily streak (from one day, never while pre-rendering), then `trailing`. An ink rule closes it.
  */
 export default function SiteHeader({
   title,
   extra,
+  trailing,
 }: {
   title: React.ReactNode;
   extra?: React.ReactNode;
+  trailing?: React.ReactNode;
 }): React.JSX.Element {
   const nowSeconds = useNowSeconds();
   const today = nowSeconds === null ? null : localDateString(new Date(nowSeconds * 1000));
@@ -28,6 +30,7 @@ export default function SiteHeader({
             <StreakIcon aria-hidden="true" /> {streak}-day streak
           </span>
         )}
+        {trailing}
       </div>
     </header>
   );
