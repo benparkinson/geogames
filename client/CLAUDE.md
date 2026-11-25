@@ -62,7 +62,7 @@ The client checks answers, not the server. It compares guesses with the data in 
 ## Adding a game
 
 Create `src/games/<name>/` with:
-- a module built by `defineGame` (its fields are described in `games/types.ts`: the backend `type`, titles, description, icon, component and `answers`),
+- a module built by `defineGame` (its fields are described in `games/types.ts`: the backend `type`, description, icon, component and `answers`; add its name to `GAME_NAMES` in `games/names.ts`, the only place a game name is written),
 - a component built on `games/common/PlaceGame`, which is `MapGame` for answers that come from one of the place lists (countries, rivers, lakes) and adds the autocomplete, the spell check and the clues,
 - a `*Map.tsx` + `*MapWrapper.tsx` pair that takes `MapProps<T>`, with the map built on `map/GameMap` (it adds `MapCredits` and `MapResizer`).
 

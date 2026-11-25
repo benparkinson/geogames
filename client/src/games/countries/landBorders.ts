@@ -8,8 +8,6 @@ import { LandBordersIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "COUNTRIES_BY_LAND_BORDERS",
-  title: "Land Borders",
-  singular: "Country by land borders",
   description: "Name a country from its land borders alone.",
   Icon: LandBordersIcon,
   hasClues: true,

@@ -7,8 +7,6 @@ import { MergedCountriesIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "MERGED_COUNTRIES",
-  title: "Merged Countries",
-  singular: "Merged countries",
   description: "Name the two neighbouring countries merged into one shape.",
   Icon: MergedCountriesIcon,
   hasClues: true,

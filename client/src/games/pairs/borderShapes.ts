@@ -7,8 +7,6 @@ import { BorderShapeIcon } from "../../ui/icons";
 
 export default defineGame({
   type: "BORDERS_BY_SHAPE",
-  title: "Border Shapes",
-  singular: "Border",
   description: "Name the two countries a border separates, from its shape alone.",
   Icon: BorderShapeIcon,
   hasClues: true,

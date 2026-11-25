@@ -2,6 +2,7 @@ import type { AnswerCandidate } from "./common/answers";
 import type { ComponentType } from "react";
 import type { Round, RoundAnswer } from "./common/Model";
 import type { IconComponent } from "../ui/icons";
+import { GAME_NAMES, type GameTypeName } from "./names";
 
 export interface GameComponentProps<T> {
   /** This round's data: the parsed jsonBlob of the server's round. */
@@ -19,11 +20,9 @@ export interface GameModule<T> {
    * The number of hints comes from the backend GameType.hintCount (`round.hintCount`). The
    * component supplies the hints' content and must offer exactly that many.
    */
-  type: string;
-  /** Plural name: the home page card and the browser tab title. */
+  type: Exclude<GameTypeName, "RANDOM">;
+  /** The game's name, `GAME_NAMES[type]`: set by `defineGame`, never written in a module. */
   title: string;
-  /** Singular name: the label of a round on the summary page. */
-  singular: string;
   /** The home page card text. */
   description: string;
   Icon: IconComponent;
@@ -45,6 +44,6 @@ export type AnyGameModule = GameModule<unknown>;
  * the right module by game type name. Each module trusts that the server sent its own shape, so
  * this is the one place the data type is erased.
  */
-export function defineGame<T>(module: GameModule<T>): AnyGameModule {
-  return module as unknown as AnyGameModule;
+export function defineGame<T>(module: Omit<GameModule<T>, "title">): AnyGameModule {
+  return { ...module, title: GAME_NAMES[module.type] } as unknown as AnyGameModule;
 }
