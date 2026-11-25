@@ -37,12 +37,6 @@ export default function GuessList({
 
   return (
     <section className="guess-list" role="group" aria-label={`Answers: ${found} of ${answerCount} found`}>
-      {/* One answer needs no count: the question already says what is missing. */}
-      {answerCount > 1 && (
-        <div className="guess-list__head">
-          <span className="guess-list__count">{`${found}/${answerCount} found`}</span>
-        </div>
-      )}
       {rows.length > 0 && (
         <ol className="guess-list__rows" ref={rowsRef}>
           {rows.map((row, i) => (

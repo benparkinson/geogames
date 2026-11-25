@@ -88,7 +88,6 @@ code {
 .game-panel .round-result__continue {
   position: sticky;
   bottom: 0;
-  background: var(--gg-color-panel-bg);
 }
 /* The keyboard is open: the map keeps a smaller share, and the panel drops what can't be used while typing. */
 .game-screen--keyboard {
@@ -130,6 +129,10 @@ code {
   align-items: baseline;
   column-gap: 0.5rem;
   margin-bottom: var(--gg-space-3);
+}
+.round-brief__count {
+  margin-left: auto;
+  white-space: nowrap;
 }
 .round-brief-question {
   margin: 0;
