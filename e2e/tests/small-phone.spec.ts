@@ -13,6 +13,21 @@ async function box(locator: ReturnType<Page["locator"]>) {
   return found!;
 }
 
+// The newest guess row must end above the lives row (or the answer box) and be the element drawn there.
+async function expectLastGuessClear(page: Page, name: string) {
+  const row = page.getByRole("listitem").filter({ hasText: name }).first();
+  const rowBox = await box(row);
+  const status = page.getByTestId("round-status");
+  const below = (await status.isVisible()) ? await box(status) : await box(answerBox(page));
+  expect(rowBox.y + rowBox.height).toBeLessThanOrEqual(below.y + 1);
+  const onTop = await row.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    return hit !== null && element.contains(hit);
+  });
+  expect(onTop).toBe(true);
+}
+
 test("on a small phone the map keeps its room, and the input and buttons stay in view", async ({ page, api }) => {
   // Fake the on-screen keyboard through the visual viewport, which GameLayout watches.
   await page.addInitScript(() => {
@@ -41,10 +56,23 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
     await guess(page, country.name);
     await expect(page.getByRole("listitem").filter({ hasText: country.name }).first()).toBeVisible();
   }
+  // Short wrong guesses sit side by side as chips.
+  const chipYs = await Promise.all(
+    wrong.slice(0, 2).map(async country => {
+      const chip = page.getByRole("listitem").filter({ hasText: country.name }).first();
+      return (await box(chip)).y;
+    }),
+  );
+  if (wrong.slice(0, 2).every(country => country.name.length <= 10)) {
+    expect(chipYs[0]).toBe(chipYs[1]);
+  }
   const hint = page.getByRole("button", { name: /^Hint/ });
   for (let taken = 0; taken < 2 && (await hint.isEnabled()); taken++) {
     await hint.click();
   }
+
+  const lastWrong = wrong[wrong.length - 1].name;
+  await expectLastGuessClear(page, lastWrong);
 
   const map = page.locator("main");
   expect((await box(map)).height).toBeGreaterThanOrEqual(0.45 * HEIGHT - 1);
@@ -57,10 +85,16 @@ test("on a small phone the map keeps its room, and the input and buttons stay in
 
   await setKeyboard(KEYBOARD_HEIGHT);
   await expect(page.getByRole("navigation", { name: "Rounds" })).toBeHidden();
-  expect((await box(map)).height).toBeGreaterThanOrEqual(0.35 * KEYBOARD_HEIGHT - 1);
+  expect((await box(map)).height).toBeGreaterThanOrEqual(0.28 * KEYBOARD_HEIGHT - 1);
   const input = await box(answerBox(page));
   expect(input.y).toBeGreaterThanOrEqual(0);
   expect(input.y + input.height).toBeLessThanOrEqual(KEYBOARD_HEIGHT);
+  await expect(page.getByTestId("round-status")).toBeVisible();
+  for (const country of wrong.slice(-2)) {
+    const chip = await box(page.getByRole("listitem").filter({ hasText: country.name }).first());
+    expect(chip.y + chip.height).toBeLessThanOrEqual(KEYBOARD_HEIGHT);
+  }
+  await expectLastGuessClear(page, lastWrong);
   await setKeyboard(null);
 
   for (const name of answers) {

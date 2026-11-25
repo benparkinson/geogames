@@ -70,6 +70,32 @@ describe("GameLayout and the on-screen keyboard", () => {
     expect(viewport.removeEventListener).toHaveBeenCalled();
   });
 
+  it("detects the keyboard when the layout viewport shrinks too", () => {
+    Object.defineProperty(window, "innerWidth", { value: 400, configurable: true });
+    viewport.height = 800;
+    const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);
+    const screenEl = container.firstElementChild as HTMLElement;
+    expect(screenEl).not.toHaveAttribute("data-keyboard");
+
+    Object.defineProperty(window, "innerHeight", { value: 450, configurable: true });
+    viewport.height = 450;
+    act(() => resize());
+    expect(screenEl).toHaveAttribute("data-keyboard", "open");
+  });
+
+  it("a width change resets the baseline", () => {
+    Object.defineProperty(window, "innerWidth", { value: 400, configurable: true });
+    viewport.height = 800;
+    const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);
+    const screenEl = container.firstElementChild as HTMLElement;
+
+    Object.defineProperty(window, "innerWidth", { value: 800, configurable: true });
+    Object.defineProperty(window, "innerHeight", { value: 400, configurable: true });
+    viewport.height = 400;
+    act(() => resize());
+    expect(screenEl).not.toHaveAttribute("data-keyboard");
+  });
+
   it("does nothing without a visual viewport", () => {
     vi.stubGlobal("visualViewport", null);
     const { container } = render(<GameLayout topBar="t" map="m" panel="p" />);

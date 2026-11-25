@@ -18,8 +18,17 @@ function useVisualViewport(): { height: number | null; keyboardOpen: boolean } {
     if (!viewport) {
       return;
     }
+    // Some Android browsers shrink the layout viewport with the keyboard, so compare with the
+    // tallest visual viewport seen at this width instead of with innerHeight alone.
+    let baseline = window.innerHeight;
+    let baselineWidth = window.innerWidth;
     function update(visible: VisualViewport) {
-      const keyboardOpen = visible.height < window.innerHeight * KEYBOARD_RATIO;
+      if (window.innerWidth !== baselineWidth) {
+        baselineWidth = window.innerWidth;
+        baseline = window.innerHeight;
+      }
+      baseline = Math.max(baseline, visible.height, window.innerHeight);
+      const keyboardOpen = visible.height < baseline * KEYBOARD_RATIO;
       const height = keyboardOpen ? visible.height : null;
       setState((previous) =>
         previous.height === height && previous.keyboardOpen === keyboardOpen ? previous : { height, keyboardOpen },
