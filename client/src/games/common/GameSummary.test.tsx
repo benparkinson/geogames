@@ -40,6 +40,14 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
   return { ...view, onOpenRound };
 }
 
+/** Makes creating a game hang, so the pending state can be seen. */
+function holdGameCreation(): void {
+  const original = globalThis.fetch;
+  vi.stubGlobal("fetch", (input: RequestInfo | URL, init?: RequestInit) =>
+    init?.method === "POST" ? new Promise<Response>(() => {}) : original(input, init),
+  );
+}
+
 describe("GameSummary for a daily challenge", () => {
   const daily = { date: "2026-11-18" };
   const done = makeGameRounds([
@@ -82,6 +90,22 @@ describe("GameSummary for a daily challenge", () => {
           .map((c) => c.body),
       ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5, difficulty: "NORMAL" }]),
     );
+  });
+
+  it("disables the Mixed game button and shows a spinner while the game is created", async () => {
+    mockFetch([
+      roundsRoute(done),
+      scoresRoute,
+      { method: "POST", url: "http://localhost:8080/api/games", body: { id: "new" } },
+    ]);
+    renderDaily();
+    holdGameCreation();
+
+    const button = await screen.findByRole("button", { name: "Play a Mixed game" });
+    await userEvent.click(button);
+
+    expect(button).toBeDisabled();
+    expect(within(button).getByRole("status")).toBeInTheDocument();
   });
 
   it("starts the Mixed game in Hard mode after a hard daily, whatever the preference", async () => {
@@ -284,6 +308,21 @@ describe("GameSummary", () => {
 
     expect(await screen.findByText(/· Hard mode$/)).toBeInTheDocument();
     expect(screen.getByText("0 of 1")).toBeInTheDocument();
+  });
+
+  it("disables Play another and shows a spinner while the game is created", async () => {
+    mockFetch([
+      roundsRoute(mixed),
+      { method: "POST", url: /\/api\/games$/, body: { id: "0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d" } },
+    ]);
+    renderSummary();
+    await screen.findByText("19");
+    holdGameCreation();
+    const button = screen.getByRole("button", { name: "Play another" });
+    await userEvent.setup().click(button);
+
+    expect(button).toBeDisabled();
+    expect(within(button).getByRole("status")).toBeInTheDocument();
   });
 
   it("plays again with the game's difficulty, not the preference", async () => {

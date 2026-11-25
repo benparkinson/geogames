@@ -42,6 +42,16 @@ describe("the score popup fields", () => {
   });
 });
 
+describe("bars that are not objects", () => {
+  it("rejects a parts list holding something other than bars", () => {
+    localStorage.setItem(
+      "gg-daily",
+      JSON.stringify({ ...finished, result: { ...finished.result, parts: Array.from({ length: 5 }, () => null) } }),
+    );
+    expect(readDaily()).toBeNull();
+  });
+});
+
 describe("readDaily and writeDaily", () => {
   it("round-trips an entry, with or without a result", () => {
     expect(readDaily()).toBeNull();
