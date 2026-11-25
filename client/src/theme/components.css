@@ -569,6 +569,10 @@
   background: var(--gg-color-page-bg);
   border-top: 2px solid var(--gg-color-rule);
 }
+.game-row__panel {
+  /* Keeps a scrolled-to panel clear of the sticky bottom bar. */
+  scroll-margin-bottom: 6rem;
+}
 .home-after__inner {
   display: flex;
   flex-wrap: wrap;
