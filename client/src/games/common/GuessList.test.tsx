@@ -34,14 +34,12 @@ describe("GuessList", () => {
     renderList(stateOf([{ text: "france", answer: "France" }]));
 
     expect(screen.getByRole("group", { name: "Answers: 1 of 3 found" })).toBeInTheDocument();
-    expect(screen.getByText("1/3 found")).toBeInTheDocument();
     expect(screen.queryByRole("heading")).toBeNull();
   });
 
-  it("shows no count for a single answer", () => {
+  it("lists a single answer's guess", () => {
     renderList(stateOf([{ text: "Peru", answer: null }]), 1);
 
-    expect(screen.queryByText(/found$/)).toBeNull();
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
   });
 
@@ -59,10 +57,10 @@ describe("GuessList", () => {
     expect(rows[1]).toHaveTextContent("France found");
   });
 
-  it("shows only the count before the first guess of a multi-answer round", () => {
+  it("shows no rows before the first guess of a multi-answer round", () => {
     renderList(stateOf([]));
 
-    expect(screen.getByText("0/3 found")).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Answers: 0 of 3 found" })).toBeInTheDocument();
     expect(screen.queryByRole("listitem")).toBeNull();
   });
 

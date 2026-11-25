@@ -10,4 +10,16 @@ describe("RoundBrief", () => {
     expect(screen.getAllByRole("heading")).toHaveLength(1);
     expect(container).toHaveTextContent(/^Which country\?$/);
   });
+
+  it("shows the count found beside the question when there are several answers", () => {
+    render(<RoundBrief question="Which countries?" found={1} answerCount={3} />);
+
+    expect(screen.getByText("1/3 found")).toBeInTheDocument();
+  });
+
+  it("shows no count for a single answer", () => {
+    render(<RoundBrief question="Which country?" found={0} answerCount={1} />);
+
+    expect(screen.queryByText(/found$/)).toBeNull();
+  });
 });

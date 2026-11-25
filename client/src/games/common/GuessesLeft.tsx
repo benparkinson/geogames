@@ -5,7 +5,7 @@ const MAX_BOXES = 10;
 export default function GuessesLeft({ left, limit }: { left: number; limit: number }): React.JSX.Element {
   const last = left === 1;
   const label = last ? "1 life left" : `${left} lives left`;
-  const text = last ? "Last life!" : `${left} of ${limit} lives left`;
+  const text = last ? "Last life!" : `${left} lives left`;
 
   return (
     <div
@@ -22,7 +22,7 @@ export default function GuessesLeft({ left, limit }: { left: number; limit: numb
           ))}
         </span>
       )}
-      <span className="guesses-left__text gg-mono">{text}</span>
+      <span className="guesses-left__text gg-mono" data-boxes={limit <= MAX_BOXES || undefined}>{text}</span>
     </div>
   );
 }

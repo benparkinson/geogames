@@ -787,7 +787,7 @@ describe("MapGame resuming an unfinished round", () => {
     expect(screen.getByTestId("wrong-guess")).toBeInTheDocument();
     expect(screen.getByText("Italy")).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Answers: 1 of 2 found" })).toBeInTheDocument();
-    expect(screen.getByText(/4 of 5 lives left/)).toBeInTheDocument();
+    expect(screen.getByText(/4 lives left/)).toBeInTheDocument();
   });
 
   it("rejects a repeat of a saved guess as a duplicate and saves nothing", async () => {

@@ -1,6 +1,6 @@
 import GuessForm from "./GuessForm";
 import GuessList from "./GuessList";
-import { GuessResult, GuessState, guessesLeft } from "./guessReducer";
+import { GuessResult, GuessState, foundAnswers, guessesLeft } from "./guessReducer";
 import type { HintConfig } from "./hints";
 import type { Round } from "./Model";
 import RoundActions from "./RoundActions";
@@ -53,7 +53,7 @@ export default function RoundPanel({
   const gameOver = state.over;
   return (
     <>
-      <RoundBrief question={prompt} />
+      <RoundBrief question={prompt} found={foundAnswers(state).length} answerCount={view.answerCount} />
       {(view.continentText !== null || view.hintTexts.length > 0) && (
         <ul className="round-hints" aria-label="Hints">
           {view.continentText !== null && (

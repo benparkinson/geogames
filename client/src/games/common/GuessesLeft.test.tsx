@@ -7,7 +7,7 @@ describe("GuessesLeft", () => {
     const { container } = render(<GuessesLeft left={3} limit={5} />);
 
     expect(screen.getByRole("status", { name: "3 lives left" })).toBeInTheDocument();
-    expect(screen.getByText("3 of 5 lives left")).toBeInTheDocument();
+    expect(screen.getByText("3 lives left")).toBeInTheDocument();
     expect(container.querySelectorAll("[data-life]")).toHaveLength(5);
     expect(container.querySelectorAll('[data-life="lost"]')).toHaveLength(2);
   });
@@ -16,7 +16,7 @@ describe("GuessesLeft", () => {
     render(<GuessesLeft left={8} limit={8} />);
 
     expect(screen.getByRole("status", { name: "8 lives left" })).toBeInTheDocument();
-    expect(screen.getByText("8 of 8 lives left")).toBeInTheDocument();
+    expect(screen.getByText("8 lives left")).toBeInTheDocument();
   });
 
   it("explains that a wrong guess costs a life", () => {
@@ -47,7 +47,7 @@ describe("GuessesLeft", () => {
   it("shows only the text for a long limit", () => {
     const { container } = render(<GuessesLeft left={11} limit={12} />);
 
-    expect(screen.getByText("11 of 12 lives left")).toBeInTheDocument();
+    expect(screen.getByText("11 lives left")).toBeInTheDocument();
     expect(container.querySelectorAll("[data-life]")).toHaveLength(0);
   });
 });

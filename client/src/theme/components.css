@@ -1039,14 +1039,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .round-panel__body > .guess-list {
   flex-shrink: 1;
 }
-.guess-list__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  padding-bottom: var(--gg-space-1);
-  border-bottom: 2px solid var(--gg-color-rule);
-}
-.guess-list__count,
+.round-brief__count,
 .guess-list__clue {
   font-family: var(--gg-font-mono);
   font-size: var(--gg-font-size-mono-sm);
@@ -1134,6 +1127,12 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .guesses-left__text {
   font-size: var(--gg-font-size-mono-sm);
+}
+/* On a very narrow phone the boxes alone show the lives; the status keeps its aria-label. */
+@media (max-width: 340px) {
+  .guesses-left:not([data-last]) .guesses-left__text[data-boxes] {
+    display: none;
+  }
 }
 .gg-guess-form {
   display: flex;
