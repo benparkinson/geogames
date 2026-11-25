@@ -31,7 +31,7 @@ describe("ChallengeShare", () => {
     expect(callsTo(fetchMock).filter((c) => c.url === CREATE)).toHaveLength(1);
     const text = writeText.mock.calls[0][0] as string;
     expect(text).toContain("can you beat my score?");
-    expect(text).toContain(`${window.location.origin}/challenge?id=abc`);
+    expect(text).toContain("https://geoggernaut.com/challenge?id=abc");
     await waitFor(() => expect(screen.getByRole("button", { name: "Copied" })).toBeInTheDocument());
   });
 

@@ -8,7 +8,7 @@ function ChallengeRoute(): React.JSX.Element {
   return (
     <>
       <Head>
-        <title>Challenge | GeoGauntlet</title>
+        <title>Challenge | Geoggernaut</title>
       </Head>
       <div id="root">
         <ChallengePage id={router.isReady ? (typeof id === "string" ? id : "") : null} />

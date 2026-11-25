@@ -16,10 +16,7 @@ export default function DailyFinished({
   entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
   onOpenGame: () => void;
 }): React.JSX.Element {
-  const text = shareText(
-    { date: entry.date, difficulty: entry.difficulty, result: entry.result },
-    window.location.origin,
-  );
+  const text = shareText({ date: entry.date, difficulty: entry.difficulty, result: entry.result });
   const nowSeconds = useNowSeconds();
   const now = nowSeconds === null ? null : new Date(nowSeconds * 1000);
   // The date of the finished game, from its stored `YYYY-MM-DD`.

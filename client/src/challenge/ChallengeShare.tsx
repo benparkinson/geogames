@@ -22,6 +22,6 @@ export default function ChallengeShare({ gameId, round }: { gameId: string; roun
       </Button>
     );
   }
-  const text = challengeShareText(resultFromGame(round.gameResult), data.id, window.location.origin);
+  const text = challengeShareText(resultFromGame(round.gameResult), data.id);
   return <ShareButton text={text} label="Challenge a friend" />;
 }
