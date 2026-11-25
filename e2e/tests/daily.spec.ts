@@ -44,7 +44,7 @@ test("the daily: play, share, come back, and a second player gets the same round
   await page.getByRole("button", { name: "Copy result" }).click();
   await expect(page.getByRole("button", { name: "Copied" })).toBeVisible();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expect(copied).toContain("GeoGauntlet Daily 20");
+  expect(copied).toContain("Geoggernaut Daily 20");
   expect(copied).toContain("🟥🟥🟥🟥🟥");
   expect(copied).toContain("/daily");
   expect(copied).not.toContain("/games/");

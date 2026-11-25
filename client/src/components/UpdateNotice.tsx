@@ -1,3 +1,4 @@
+import { SITE_NAME } from "../siteName";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useUpdateAvailable } from "../api/version";
@@ -27,7 +28,7 @@ export function UpdateNotice(): React.JSX.Element | null {
         </Button>
       }
     >
-      A new version of Geogames is available.
+      A new version of {SITE_NAME} is available.
     </Toast>
   );
 }

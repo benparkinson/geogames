@@ -1,3 +1,4 @@
+import { SITE_NAME } from "../siteName";
 import Link from "next/link";
 
 /** The site icon and name. `collapsible` hides the name on a phone, leaving the icon. */
@@ -7,7 +8,7 @@ function SiteName({ collapsible }: { collapsible: boolean }): React.JSX.Element 
       {/* eslint-disable-next-line @next/next/no-img-element -- a static export can't optimise images; this one is a small fixed PNG */}
       <img className="gg-site-title__logo" src="/logo.png" alt="" width={128} height={128} />
       <span className={collapsible ? "gg-site-title__name gg-site-title__name--collapsible" : "gg-site-title__name"}>
-        GeoGauntlet
+        {SITE_NAME}
       </span>
     </>
   );

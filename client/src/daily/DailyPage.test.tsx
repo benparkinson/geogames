@@ -216,7 +216,7 @@ describe("DailyPage with a game for today", () => {
     unmount();
 
     renderWithClient(<DailyPage />);
-    expect(await screen.findByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
+    expect(await screen.findByLabelText("Your result")).toHaveTextContent(`Geoggernaut Daily ${today} · Hard mode`);
   });
 
   it("does not take the difficulty from the preference alone", async () => {
@@ -241,7 +241,7 @@ describe("DailyPage with a game for today", () => {
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText("You scored 430 / 500")).toBeInTheDocument();
-    expect(screen.getByLabelText("Your result")).toHaveTextContent(`GeoGauntlet Daily ${today} · Hard mode`);
+    expect(screen.getByLabelText("Your result")).toHaveTextContent(`Geoggernaut Daily ${today} · Hard mode`);
     expect(screen.getByLabelText("Your result")).toHaveTextContent("❇️🟨🟩🟥❇️");
     expect(screen.getByRole("button", { name: "Copy result" })).toBeInTheDocument();
     // Only the optional comparison is fetched, from the game's own league, never the game.
