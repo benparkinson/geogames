@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -71,7 +72,7 @@ public class GameService {
   public GameCreationResponse createGame(
       String gameType, int numberOfRounds, Difficulty difficulty) {
     if (numberOfRounds < 1 || numberOfRounds > MAX_ROUNDS) {
-      throw new IllegalArgumentException(
+      throw new BadRequestException(
           "Number of rounds must be between 1 and %d, was %d!"
               .formatted(MAX_ROUNDS, numberOfRounds));
     }
@@ -164,7 +165,7 @@ public class GameService {
       Integer wrongGuesses,
       Integer answersFound) {
     if (answerState == AnswerState.UNANSWERED) {
-      throw new IllegalArgumentException("A round can't be answered with " + answerState);
+      throw new BadRequestException("A round can't be answered with " + answerState);
     }
 
     return withRound(

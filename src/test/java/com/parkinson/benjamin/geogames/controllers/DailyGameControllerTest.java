@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
@@ -128,7 +129,7 @@ class DailyGameControllerTest {
     mockMvc.perform(get("/api/daily-scores/yesterday")).andExpect(status().isBadRequest());
 
     when(dailyService.score(LocalDate.of(2001, 1, 1), Difficulty.NORMAL))
-        .thenThrow(new IllegalArgumentException("too early"));
+        .thenThrow(new BadRequestException("too early"));
     mockMvc.perform(get("/api/daily-scores/2001-01-01")).andExpect(status().isBadRequest());
   }
 

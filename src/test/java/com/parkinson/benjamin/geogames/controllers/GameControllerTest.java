@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.api.GameResult;
 import com.parkinson.benjamin.geogames.api.GameRound;
@@ -158,7 +159,7 @@ class GameControllerTest {
 
   @Test
   void createGameWithInvalidArgumentsIsABadRequestWithAProblemBody() throws Exception {
-    when(gameService.createGame("FOO", 3, null)).thenThrow(new IllegalArgumentException("Unknown"));
+    when(gameService.createGame("FOO", 3, null)).thenThrow(new BadRequestException("Unknown"));
 
     mockMvc
         .perform(
@@ -286,8 +287,7 @@ class GameControllerTest {
   void anAnswerWithTooManyHintsIsABadRequestWithAProblemBody() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 9, null, null))
         .thenThrow(
-            new IllegalArgumentException(
-                "A round of TRIPOINT has 3 hints, so 9 can't have been used"));
+            new BadRequestException("A round of TRIPOINT has 3 hints, so 9 can't have been used"));
 
     mockMvc
         .perform(
@@ -316,7 +316,7 @@ class GameControllerTest {
   @Test
   void anAnswerTheServiceRejectsIsABadRequest() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.UNANSWERED, 0, null, null))
-        .thenThrow(new IllegalArgumentException("A round can't be answered with UNANSWERED"));
+        .thenThrow(new BadRequestException("A round can't be answered with UNANSWERED"));
 
     mockMvc
         .perform(
@@ -429,7 +429,7 @@ class GameControllerTest {
   void anAnswerWithImpossibleWrongGuessesIsABadRequest() throws Exception {
     when(gameService.submitAnswer(GAME_ID, 0, AnswerState.OUT_OF_GUESSES, 0, 3, null))
         .thenThrow(
-            new IllegalArgumentException(
+            new BadRequestException(
                 "A round of TRIPOINT that ran out of guesses must have 5 wrong guesses, not 3"));
 
     mockMvc

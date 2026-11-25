@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.controllers;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.DailyGameRequest;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
@@ -59,7 +60,7 @@ public class DailyGameController {
     try {
       return LocalDate.parse(text);
     } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("date must be YYYY-MM-DD");
+      throw new BadRequestException("date must be YYYY-MM-DD");
     }
   }
 }

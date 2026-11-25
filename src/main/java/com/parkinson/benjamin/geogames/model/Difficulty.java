@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.model;
 
+import com.parkinson.benjamin.geogames.api.BadRequestException;
+
 /**
  * How a game is played, chosen when it is created and never changed. Stored by name.
  *
@@ -16,7 +18,7 @@ public enum Difficulty {
 
   /**
    * The difficulty a request asks for: {@code difficulty} if present (a name that is not one of the
-   * three is an {@link IllegalArgumentException}, a 400), otherwise HARD for {@code hardMode} true
+   * three is an {@link BadRequestException}, a 400), otherwise HARD for {@code hardMode} true
    * and NORMAL for false, otherwise null (unknown).
    */
   public static Difficulty resolve(String difficulty, Boolean hardMode) {
@@ -24,7 +26,7 @@ public enum Difficulty {
       try {
         return valueOf(difficulty);
       } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException("Unknown difficulty: " + difficulty, e);
+        throw new BadRequestException("Unknown difficulty: " + difficulty);
       }
     }
     if (hardMode == null) {
