@@ -1,4 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import { beforeEach, describe, expect, it } from "vitest";
 import { resetChallengeStorageForTests, saveChallengeScore, useChallengeScore } from "./challengeStorage";
 
@@ -17,6 +18,14 @@ describe("challengeStorage", () => {
       maxScore: 500,
     });
     expect(renderHook(() => useChallengeScore("g2")).result.current).toBeNull();
+  });
+
+  it("finds no score while rendering on the server", () => {
+    saveChallengeScore({ gameId: "g1", score: 5, maxScore: 10 });
+    function Probe(): React.JSX.Element {
+      return <span>{useChallengeScore("g1") === null ? "none" : "found"}</span>;
+    }
+    expect(renderToString(<Probe />)).toContain("none");
   });
 
   it("updates a mounted hook when a score is saved", () => {

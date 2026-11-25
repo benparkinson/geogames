@@ -15,10 +15,10 @@ const base: Pick<
   | "roundHintsUsed"
 > = {
   gameState: "FINISHED",
-  score: 233,
-  maxScore: 400,
+  score: 25,
+  maxScore: 40,
   roundsCorrect: 3,
-  roundPoints: [100, 83, 50, 0],
+  roundPoints: [10, 9, 6, 0],
   roundAnswerStates: ["CORRECT", "CORRECT", "CORRECT", "OUT_OF_GUESSES"],
   roundHintsUsed: [0, 1, 3, 0],
   roundFirstGuess: [true, false, false, false],
@@ -26,39 +26,49 @@ const base: Pick<
 };
 
 describe("resultFromGame", () => {
-  it("tells first guess, correct, hinted and missed rounds apart", () => {
+  it("tells full, good, partial and missed rounds apart", () => {
     expect(
       resultFromGame({
         ...base,
-        roundPoints: [100, 100, 83, 0],
+        roundPoints: [10, 8, 5, 0],
         roundAnswerStates: ["CORRECT", "CORRECT", "CORRECT", "OUT_OF_GUESSES"],
         roundHintsUsed: [0, 0, 1, 0],
         roundFirstGuess: [true, false, false, false],
       }),
-    ).toEqual({ score: 233, maxScore: 400, rounds: ["firstGuess", "correct", "hints", "missed"] });
+    ).toEqual({
+      score: 25,
+      maxScore: 40,
+      rounds: ["full", "good", "partial", "missed"],
+      parts: [
+        { answer: 4, noHints: 3, noMisses: 3 },
+        { answer: 4, noHints: 3, noMisses: 1 },
+        { answer: 4, noHints: 2, noMisses: 0 },
+        { answer: 0, noHints: 0, noMisses: 0 },
+      ],
+    });
   });
 
   it("counts a given up round with no points as missed, and treats a missing hint count as none", () => {
     expect(
       resultFromGame({
         ...base,
-        roundPoints: [0, 100],
+        roundPoints: [0, 10],
         roundAnswerStates: ["GAVE_UP", "CORRECT"],
         roundHintsUsed: [2],
         roundFirstGuess: [false, true],
       }).rounds,
-    ).toEqual(["missed", "firstGuess"]);
+    ).toEqual(["missed", "full"]);
   });
 
-  it("counts a revealed round that earned points as hints, and one that earned none as missed", () => {
+  it("counts a revealed round that earned points as partial, and one that earned none as missed", () => {
     expect(
       resultFromGame({
         ...base,
-        roundPoints: [67, 0, 25],
+        roundPoints: [5, 0, 2],
         roundAnswerStates: ["GAVE_UP", "GAVE_UP", "OUT_OF_GUESSES"],
         roundHintsUsed: [0, 0, 1],
         roundFirstGuess: [false, false, false],
       }).rounds,
-    ).toEqual(["hints", "missed", "hints"]);
+    ).toEqual(["partial", "missed", "partial"]);
   });
 });

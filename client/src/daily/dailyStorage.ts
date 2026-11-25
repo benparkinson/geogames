@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { Difficulty } from "../api/types";
+import { OUTCOME_ORDER } from "../games/common/outcome";
 import type { RoundOutcome } from "../games/common/outcome";
 import { createLocalStore } from "../settings/localStore";
 
@@ -13,18 +14,33 @@ export interface DailyInfo {
 export type { RoundOutcome };
 
 /** Entries stored by an earlier version of the site used these keys; they are read as the nearest outcome. */
-const LEGACY_OUTCOMES: Record<string, RoundOutcome> = { perfect: "correct", revealed: "missed" };
+const LEGACY_OUTCOMES: Record<string, RoundOutcome> = {
+  firstGuess: "full",
+  correct: "good",
+  perfect: "good",
+  hints: "partial",
+  revealed: "missed",
+};
 
 function currentOutcome(value: unknown): RoundOutcome | null {
   if (typeof value !== "string") return null;
-  if (value === "firstGuess" || value === "correct" || value === "hints" || value === "missed") return value;
+  if (OUTCOME_ORDER.includes(value as RoundOutcome)) return value as RoundOutcome;
   return LEGACY_OUTCOMES[value] ?? null;
+}
+
+/** How many cells of a round's score bar are earned in each part. */
+export interface RoundParts {
+  answer: number;
+  noHints: number;
+  noMisses: number;
 }
 
 export interface DailyResult {
   score: number;
   maxScore: number;
   rounds: RoundOutcome[];
+  /** The bar of each round, for the score popup. Missing in a result stored before the popup existed. */
+  parts?: RoundParts[];
 }
 
 /** Today's daily, kept in this browser so coming back to /daily resumes it or shows the result. */
@@ -38,6 +54,8 @@ export interface DailyEntry {
   difficulty: Difficulty;
   /** Set once the game is finished. */
   result?: DailyResult;
+  /** Set once the end-of-daily score popup has been shown. A result with no `parts` never shows it. */
+  revealSeen?: true;
 }
 
 /** `useSyncExternalStore` compares snapshots with `Object.is`, so the same string must give the same object. */
@@ -48,6 +66,12 @@ function isOutcome(value: unknown): boolean {
   return currentOutcome(value) !== null;
 }
 
+function isParts(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const p = value as Record<string, unknown>;
+  return typeof p.answer === "number" && typeof p.noHints === "number" && typeof p.noMisses === "number";
+}
+
 function isResult(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const r = value as Record<string, unknown>;
@@ -55,7 +79,8 @@ function isResult(value: unknown): boolean {
     typeof r.score === "number" &&
     typeof r.maxScore === "number" &&
     Array.isArray(r.rounds) &&
-    r.rounds.every(isOutcome)
+    r.rounds.every(isOutcome) &&
+    (r.parts === undefined || (Array.isArray(r.parts) && r.parts.length === r.rounds.length && r.parts.every(isParts)))
   );
 }
 
@@ -91,6 +116,7 @@ function parse(raw: string | null): DailyEntry | null {
       const result = e.result as DailyResult;
       entry.result = { ...result, rounds: result.rounds.map((r) => currentOutcome(r) as RoundOutcome) };
     }
+    if (e.revealSeen === true) entry.revealSeen = true;
     return entry;
   } catch {
     return null;

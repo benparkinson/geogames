@@ -1,6 +1,5 @@
 // The only file that imports react-bootstrap-icons (ESLint enforces it). Icons are named by meaning, so a redesign
 // swaps a glyph here and nowhere else.
-import { CheckLg, EyeFill, StarFill, XLg } from "react-bootstrap-icons";
 import type { Icon } from "react-bootstrap-icons";
 
 export type IconComponent = Icon;
@@ -30,12 +29,3 @@ export {
   XLg as WrongGuessIcon,
   ArrowRight as NextIcon,
 } from "react-bootstrap-icons";
-
-/** One glyph per round result, shared by the progress dots, the round banner and the results rows. */
-export const RESULT_ICONS: Record<"firstGuess" | "correct" | "hints" | "revealed" | "outOfGuesses", IconComponent> = {
-  firstGuess: StarFill,
-  correct: CheckLg,
-  hints: CheckLg,
-  revealed: EyeFill,
-  outOfGuesses: XLg,
-};

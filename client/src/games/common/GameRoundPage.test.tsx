@@ -324,7 +324,7 @@ describe("GameRoundPage playing", () => {
     renderPage();
     await screen.findByText(TRIPOINT_PROMPT);
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: revealed" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: 0 points" }));
 
     expect(await screen.findByText(RIVER_PROMPT)).toBeInTheDocument();
     expect(roundGets(fetchMock, 1).length).toBeGreaterThanOrEqual(1);
@@ -352,7 +352,7 @@ describe("GameRoundPage results", () => {
 
     await user.click(screen.getByRole("button", { name: /Belgium/ }));
     await screen.findByText(TRIPOINT_PROMPT);
-    await user.click(screen.getByRole("button", { name: "Round 2: revealed" }));
+    await user.click(screen.getByRole("button", { name: "Round 2: 0 points" }));
     await screen.findByText(RIVER_PROMPT);
     await user.click(screen.getByRole("button", { name: "See results" }));
 

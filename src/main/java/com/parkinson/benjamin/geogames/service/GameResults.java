@@ -22,9 +22,19 @@ final class GameResults {
     return Scoring.roundPoints(
         round.getAnswerState(),
         round.getHintsUsed(),
-        round.getGameType().hintCount(difficulty),
         found == null ? 0 : found,
-        round.getGameType().answerCount());
+        round.getGameType().answerCount(),
+        wrongGuessesFor(round));
+  }
+
+  /**
+   * The wrong guesses a round is charged for: the larger of the count the client reported ({@code
+   * null}, from an older client, as 0) and the wrong guesses recorded.
+   */
+  static int wrongGuessesFor(GameRoundEntity round) {
+    Integer reported = round.getWrongGuesses();
+    long recorded = round.getGuesses().stream().filter(g -> !g.isCorrect()).count();
+    return Math.max(reported == null ? 0 : reported, (int) recorded);
   }
 
   /**

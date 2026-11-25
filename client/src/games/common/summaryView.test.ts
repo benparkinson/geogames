@@ -9,18 +9,21 @@ function summary(specs: RoundSpec[], difficulty?: "EASY" | "HARD") {
 }
 
 describe("summariseGame", () => {
-  it("calls a game of first guesses perfect", () => {
+  it("calls a game of rounds worth 10 points perfect", () => {
     const s = summary([
       { answerState: "CORRECT", firstGuess: true },
       { answerState: "CORRECT", firstGuess: true },
     ]);
     expect(s.heading).toBe("perfect");
-    expect(s.score).toBe(200);
+    expect(s.perfectRounds).toBe(2);
+    expect(s.score).toBe(20);
   });
 
-  it("calls full marks after wrong guesses full marks, not perfect", () => {
-    const s = summary([{ answerState: "CORRECT", firstGuess: true }, { answerState: "CORRECT" }]);
-    expect(s.heading).toBe("fullMarks");
+  it("does not call a game perfect when a wrong guess cost a point", () => {
+    const s = summary([{ answerState: "CORRECT" }, { answerState: "CORRECT", wrongGuesses: ["Spain"] }]);
+    expect(s.heading).toBe("scored");
+    expect(s.perfectRounds).toBe(1);
+    expect(s.rows[1].breakdown).toEqual({ answer: 4, noHints: 3, noMisses: 2 });
   });
 
   it("scores a game with hints or a revealed round", () => {
@@ -57,19 +60,19 @@ describe("summariseGame", () => {
 });
 
 describe("summariseGame totals", () => {
-  it("counts solved rounds and hints", () => {
+  it("counts perfect rounds and hints", () => {
     const s = summary([
       { answerState: "CORRECT", firstGuess: true },
       { answerState: "CORRECT", hintsUsed: 2, wrongGuesses: ["France", "Spain"] },
       { river: true, answerState: "GAVE_UP", hintsUsed: 1, wrongGuesses: ["Rhine"] },
     ]);
-    expect(s.solved).toBe(2);
+    expect(s.perfectRounds).toBe(1);
     expect(s.hintsUsed).toBe(3);
   });
 
-  it("is zero for a game with nothing solved, no wrong guesses and no hints", () => {
+  it("is zero for a game with no perfect round, no wrong guesses and no hints", () => {
     const s = summary([{ answerState: "GAVE_UP" }]);
-    expect([s.solved, s.hintsUsed]).toEqual([0, 0]);
+    expect([s.perfectRounds, s.hintsUsed]).toEqual([0, 0]);
   });
 
   it("lists each round's wrong guesses in order, leaving out correct ones", () => {

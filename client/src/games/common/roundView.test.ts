@@ -16,45 +16,53 @@ describe("roundView", () => {
   it("shows what a round in play is worth now, with no outcome yet", () => {
     const view = roundView(makeRoundProps(), playing({ hintsUsed: 1 }), 1, HINTS);
 
-    expect(view).toMatchObject({ answerState: "UNANSWERED", points: 83, outcome: null, result: null });
+    expect(view).toMatchObject({ answerState: "UNANSWERED", points: 9, outcome: null, result: null });
   });
 
-  it("calls a win with no hints and no wrong guess a first guess", () => {
+  it("gives a win with no hints and no wrong guess all 10 points", () => {
     const state = playing({ over: true, guesses: [right("France")] });
 
     expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({
       answerState: "CORRECT",
-      points: 100,
-      outcome: "firstGuess",
-      result: "firstGuess",
+      points: 10,
+      outcome: "full",
+      result: "correct",
+      breakdown: { answer: 4, noHints: 3, noMisses: 3 },
     });
   });
 
-  it("calls a win after a wrong guess correct", () => {
+  it("takes a point off the No misses part for a wrong guess", () => {
     const state = playing({ over: true, guesses: [wrong("Spain"), right("France")] });
 
     expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({
-      outcome: "correct",
+      points: 9,
+      outcome: "good",
       result: "correct",
       wrongGuesses: 1,
+      breakdown: { answer: 4, noHints: 3, noMisses: 2 },
     });
   });
 
-  it("scores a win with a hint less, as hints", () => {
+  it("scores a win with a hint a point less", () => {
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
 
-    expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({ points: 83, result: "hints" });
+    expect(roundView(makeRoundProps(), state, 1, HINTS)).toMatchObject({
+      points: 9,
+      result: "correct",
+      outcome: "good",
+    });
   });
 
-  it("scores the share found of a round given up, as hints, not missed", () => {
+  it("scores the share found of a round given up, as partial, not missed", () => {
     const state = playing({ over: true, gaveUp: true, guesses: [right("A"), right("B")] });
 
     expect(roundView(makeRoundProps(), state, 3, HINTS)).toMatchObject({
       answerState: "GAVE_UP",
-      points: 67,
+      points: 5,
       answersFound: 2,
-      outcome: "hints",
+      outcome: "partial",
       result: "revealed",
+      breakdown: { answer: 4, noHints: 1, noMisses: 0, found: { found: 2, count: 3 } },
     });
   });
 
@@ -69,7 +77,7 @@ describe("roundView", () => {
 
     expect(roundView(makeRoundProps(), state, 2, HINTS)).toMatchObject({
       answerState: "OUT_OF_GUESSES",
-      points: 50,
+      points: 4,
       result: "outOfGuesses",
     });
   });
@@ -93,38 +101,38 @@ describe("roundView", () => {
 
 describe("liveProgress", () => {
   it("leaves the server's results alone while the round is in play", () => {
-    const round = makeRoundProps({ score: 183 });
+    const round = makeRoundProps({ score: 19 });
     const progress = liveProgress(round, roundView(round, playing(), 1, HINTS));
 
-    expect(progress.score).toBe(183);
+    expect(progress.score).toBe(19);
     expect(progress.states).toEqual(round.roundAnswerStates);
     expect(progress.outcomes[round.currentRound]).toBeNull();
   });
 
   it("adds a round just finished here to the score before the server's copy is refetched", () => {
-    const round = makeRoundProps({ score: 100 });
+    const round = makeRoundProps({ score: 10 });
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
     const progress = liveProgress(round, roundView(round, state, 1, HINTS));
 
-    // A tripoint round (3 hints) answered with one hint is worth 83.
-    expect(progress.score).toBe(183);
-    expect(progress.points[round.currentRound]).toBe(83);
-    expect(progress.outcomes[round.currentRound]).toBe("hints");
+    // A tripoint round (3 hints) answered with one hint is worth 9.
+    expect(progress.score).toBe(19);
+    expect(progress.points[round.currentRound]).toBe(9);
+    expect(progress.outcomes[round.currentRound]).toBe("good");
   });
 
   it("does not count an already answered round twice", () => {
-    const round = makeRoundProps({ score: 183, answerState: "CORRECT", hintsUsed: 1, points: 83 });
+    const round = makeRoundProps({ score: 19, answerState: "CORRECT", hintsUsed: 1, points: 83 });
     const state = playing({ over: true, hintsUsed: 1, guesses: [right("France")] });
 
-    expect(liveProgress(round, roundView(round, state, 1, HINTS)).score).toBe(183);
+    expect(liveProgress(round, roundView(round, state, 1, HINTS)).score).toBe(19);
   });
 
   it("adds nothing for a round revealed here with nothing found", () => {
-    const round = makeRoundProps({ score: 100 });
+    const round = makeRoundProps({ score: 10 });
     const state = playing({ over: true, gaveUp: true, hintsUsed: 2 });
     const progress = liveProgress(round, roundView(round, state, 1, HINTS));
 
-    expect(progress.score).toBe(100);
+    expect(progress.score).toBe(10);
     expect(progress.outcomes[round.currentRound]).toBe("missed");
   });
 

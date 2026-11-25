@@ -14,12 +14,42 @@ const entry: DailyEntry = { v: 1, date: "2026-11-18", number: 2, gameId: "g1", d
 const finished: DailyEntry = {
   ...entry,
   difficulty: "HARD",
-  result: { score: 430, maxScore: 500, rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"] },
+  result: { score: 33, maxScore: 50, rounds: ["full", "partial", "good", "missed", "full"] },
 };
 
 beforeEach(resetDailyStorageForTests);
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+describe("the score popup fields", () => {
+  it("round-trips the bars and revealSeen", () => {
+    const withReveal: DailyEntry = {
+      ...finished,
+      revealSeen: true,
+      result: { ...finished.result!, parts: Array.from({ length: 5 }, () => ({ answer: 4, noHints: 3, noMisses: 1 })) },
+    };
+    writeDaily(withReveal);
+    expect(readDaily()).toEqual(withReveal);
+  });
+
+  it("rejects bars that don't match the rounds", () => {
+    localStorage.setItem(
+      "gg-daily",
+      JSON.stringify({ ...finished, result: { ...finished.result, parts: [{ answer: 4, noHints: 3, noMisses: 3 }] } }),
+    );
+    expect(readDaily()).toBeNull();
+  });
+});
+
+describe("bars that are not objects", () => {
+  it("rejects a parts list holding something other than bars", () => {
+    localStorage.setItem(
+      "gg-daily",
+      JSON.stringify({ ...finished, result: { ...finished.result, parts: Array.from({ length: 5 }, () => null) } }),
+    );
+    expect(readDaily()).toBeNull();
+  });
 });
 
 describe("readDaily and writeDaily", () => {
@@ -35,10 +65,13 @@ describe("readDaily and writeDaily", () => {
   });
 
   it("still loads an entry stored with the old outcome keys, mapped to the new ones", () => {
-    const old = { ...entry, result: { score: 300, maxScore: 500, rounds: ["perfect", "hints", "revealed"] } };
+    const old = {
+      ...entry,
+      result: { score: 30, maxScore: 50, rounds: ["perfect", "hints", "revealed", "firstGuess", "correct"] },
+    };
     localStorage.setItem("gg-daily", JSON.stringify(old));
 
-    expect(readDaily()?.result?.rounds).toEqual(["correct", "hints", "missed"]);
+    expect(readDaily()?.result?.rounds).toEqual(["good", "partial", "missed", "full", "good"]);
   });
 
   it("keeps only the latest entry, and clearDaily removes it", () => {

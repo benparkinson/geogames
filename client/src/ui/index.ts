@@ -5,3 +5,5 @@ export { Spinner } from "./Spinner";
 export { ToggleGroup } from "./ToggleGroup";
 export { Chip } from "./Chip";
 export { Toast } from "./Toast";
+export { ScoreBar } from "./ScoreBar";
+export { Dialog } from "./Dialog";

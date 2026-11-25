@@ -64,7 +64,7 @@ class GameControllerTest {
   @MockitoBean private GameCreationGuard guard;
 
   private static RoundAnswerResponse answer() {
-    return new RoundAnswerResponse(AnswerState.CORRECT, 0, 100, round().gameResult());
+    return new RoundAnswerResponse(AnswerState.CORRECT, 0, 10, round().gameResult());
   }
 
   private static GameRound round() {
@@ -80,7 +80,7 @@ class GameControllerTest {
             3,
             0,
             List.of(AnswerState.UNANSWERED, AnswerState.UNANSWERED, AnswerState.UNANSWERED),
-            300,
+            30,
             0,
             List.of(0, 0, 0),
             List.of(0, 0, 0),
@@ -194,7 +194,7 @@ class GameControllerTest {
         .andExpect(jsonPath("$.gameType.guessLimit").value(5))
         .andExpect(jsonPath("$.hintsUsed").value(0))
         .andExpect(jsonPath("$.points").value(0))
-        .andExpect(jsonPath("$.gameResult.maxScore").value(300))
+        .andExpect(jsonPath("$.gameResult.maxScore").value(30))
         .andExpect(jsonPath("$.gameResult.roundsCorrect").value(0))
         .andExpect(jsonPath("$.gameResult.roundPoints.length()").value(3))
         .andExpect(jsonPath("$.gameResult.roundHintsUsed.length()").value(3))
@@ -259,8 +259,8 @@ class GameControllerTest {
                 .content("{\"answerState\":\"CORRECT\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.answerState").value("CORRECT"))
-        .andExpect(jsonPath("$.points").value(100))
-        .andExpect(jsonPath("$.gameResult.maxScore").value(300))
+        .andExpect(jsonPath("$.points").value(10))
+        .andExpect(jsonPath("$.gameResult.maxScore").value(30))
         .andExpect(jsonPath("$.jsonBlob").doesNotExist());
 
     verify(gameService).submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);

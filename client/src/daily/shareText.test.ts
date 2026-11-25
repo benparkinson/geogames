@@ -2,16 +2,16 @@ import { describe, expect, it } from "vitest";
 import { shareText } from "./shareText";
 
 const result = {
-  score: 430,
-  maxScore: 500,
-  rounds: ["firstGuess", "hints", "correct", "missed", "firstGuess"] as const,
+  score: 33,
+  maxScore: 50,
+  rounds: ["full", "partial", "good", "missed", "full"] as const,
 };
 
 describe("shareText", () => {
   it("is the title, the score, one square per round and the link", () => {
     expect(
       shareText({ date: "2026-11-18", difficulty: "NORMAL", result: { ...result, rounds: [...result.rounds] } }),
-    ).toBe("Geoggernaut Daily 2026-11-18\n430 / 500\n❇️🟨🟩🟥❇️\nhttps://geoggernaut.com/daily");
+    ).toBe("Geoggernaut Daily 2026-11-18\n33 / 50\n🟩🟧🟨🟥🟩\nhttps://geoggernaut.com/daily");
   });
 
   it("marks Easy and Hard mode in the title, and Normal not at all", () => {
@@ -29,7 +29,7 @@ describe("shareText", () => {
     const text = shareText({
       date: "2026-11-18",
       difficulty: "NORMAL",
-      result: { score: 0, maxScore: 500, rounds: ["missed", "missed", "missed", "missed", "missed"] },
+      result: { score: 0, maxScore: 50, rounds: ["missed", "missed", "missed", "missed", "missed"] },
     });
 
     expect(text.endsWith("\nhttps://geoggernaut.com/daily")).toBe(true);
