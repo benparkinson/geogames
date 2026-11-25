@@ -54,7 +54,15 @@ export default function RoundActions({
       <span title={hintTitle}>
         <Button variant="hint" onClick={onHint} disabled={hintsLeft <= 0}>
           <HintIcon aria-hidden="true" />{" "}
-          {hintsLeft > 0 ? `Hint −${nextHintCost} · ${hintsLeft} left` : "Hint · 0 left"}
+          {/* If the label has to wrap, it breaks after the dot, never inside either half. */}
+          {hintsLeft > 0 ? (
+            <>
+              <span className="round-actions__nowrap">{`Hint −${nextHintCost} ·`}</span>{" "}
+              <span className="round-actions__nowrap">{`${hintsLeft} left`}</span>
+            </>
+          ) : (
+            "Hint · 0 left"
+          )}
         </Button>
       </span>
       <Button variant="danger" onClick={handleRevealClick}>
