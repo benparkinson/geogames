@@ -41,6 +41,7 @@
   --gg-color-rule-light: rgb(26 26 26 / 0.15);
   --gg-color-surface-hover: rgb(26 26 26 / 0.04);
   --gg-color-surface-active: rgb(26 26 26 / 0.1);
+  --gg-color-backdrop: rgb(0 0 0 / 0.5);
   --gg-color-link: var(--gg-ink);
   --gg-color-link-hover: var(--gg-found);
 
@@ -65,6 +66,10 @@
   --gg-color-on-hints: var(--gg-color-on-hint);
   /* Some points: ordinary text, so only misses read as red. */
   --gg-color-hints-text: var(--gg-color-text);
+  /* The three parts of a round's score bar. */
+  --gg-color-part-answer: var(--gg-found);
+  --gg-color-part-no-hints: var(--gg-highlighter);
+  --gg-color-part-no-misses: var(--gg-cornflower-400);
   --gg-color-missed: var(--gg-marker);
   --gg-color-on-missed: var(--gg-white);
   --gg-color-missed-text: var(--gg-marker-text);
@@ -113,6 +118,7 @@
   --gg-duration-slow: 200ms;
   --gg-duration-celebrate: 400ms;
   --gg-duration-flash: 700ms;
+  --gg-duration-cell: 80ms;
 
   /* ---- Layout ---- */
   --gg-panel-width: 420px;
@@ -165,9 +171,13 @@
   --gg-color-rule-light: rgb(237 237 232 / 0.2);
   --gg-color-surface-hover: rgb(237 237 232 / 0.06);
   --gg-color-surface-active: rgb(237 237 232 / 0.12);
+  --gg-color-backdrop: rgb(0 0 0 / 0.6);
   --gg-color-on-hint: var(--gg-dark-text-on-highlighter);
   --gg-color-on-correct: var(--gg-paper);
   --gg-color-on-neutral: var(--gg-paper);
   --gg-color-on-revealed: var(--gg-paper);
   --gg-color-danger-subtle: var(--gg-dark-panel);
+  --gg-color-part-answer: var(--gg-found);
+  --gg-color-part-no-hints: var(--gg-highlighter);
+  --gg-color-part-no-misses: var(--gg-cornflower-400);
 }

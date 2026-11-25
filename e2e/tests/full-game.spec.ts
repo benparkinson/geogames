@@ -33,7 +33,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 3,
   });
-  await expect(roundResult(page)).toHaveText(/Correct with a hint\s*\+83/);
+  await expect(roundResult(page)).toHaveText(/Correct!\s*\+9/);
   await page.getByRole("button", { name: "Next round" }).click();
 
   // Round 2: find one of the three, then give up. The button asks for a second click.
@@ -49,7 +49,8 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
     wrongGuesses: 0,
     answersFound: 1,
   });
-  await expect(roundResult(page)).toHaveText(/Answer revealed\s*1 of 3 found\s*\+33/);
+  await expect(roundResult(page)).toHaveText(/Answer revealed\s*\+2/);
+  await expect(page.getByRole("img", { name: /Found 1 of 3/ })).toBeVisible();
   for (const answer of second.answers) {
     await expect(page.getByRole("group", { name: /Answers:/ })).toContainText(answer.name);
   }
@@ -91,14 +92,14 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
 
   // The summary.
   await expect(page.getByRole("heading", { name: "Your result" })).toBeVisible();
-  await expect(page.getByText("116", { exact: true })).toBeVisible();
-  await expect(page.getByText("/ 300", { exact: true })).toBeVisible();
-  await expect(page.getByRole("listitem").filter({ hasText: "Solved" })).toHaveText("Solved 1 of 3");
+  await expect(page.getByText("11", { exact: true })).toBeVisible();
+  await expect(page.getByText("/ 30", { exact: true })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Perfect rounds" })).toHaveText("Perfect rounds 0 of 3");
   const rounds = page.getByRole("button").filter({ hasText: /\+\d+/ });
   await expect(rounds).toHaveCount(3);
   await expect(rounds.nth(0)).toContainText("1 hint");
-  await expect(rounds.nth(0)).toContainText("+83");
-  await expect(rounds.nth(1)).toContainText("+33");
+  await expect(rounds.nth(0)).toContainText("+9");
+  await expect(rounds.nth(1)).toContainText("+2");
   await expect(rounds.nth(2)).toContainText("Ran out of lives");
   await expect(rounds.nth(2)).toContainText("+0");
 });

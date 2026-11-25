@@ -1,37 +1,72 @@
-import { AnswerState, CORRECT_ANSWER } from "./Model";
+import { AnswerState, CORRECT_ANSWER, UNANSWERED } from "./Model";
 
 /** The same formula as the backend's model/Scoring.java. Both tests hold the same table. */
-export const MAX_ROUND_POINTS = 100;
-export const MAX_HINT_PENALTY = 50;
+export const ANSWER_POINTS = 4;
+export const NO_HINT_POINTS = 3;
+export const NO_MISS_POINTS = 3;
+export const MAX_ROUND_POINTS = ANSWER_POINTS + NO_HINT_POINTS + NO_MISS_POINTS;
 
 /**
- * The points a round earns: a correct round earns 100 if correct without hints, less the hint penalty otherwise. A revealed round
- * (gave up, or out of guesses) earns the share of that which was found, `answersFound` of
- * `answerCount` answers, rounded half up; with none found that is 0. An unanswered round earns 0.
+ * The points a round earns, out of 10: 4 for the answer, 3 for no hints (1 off per hint) and 3 for
+ * no misses (1 off per wrong guess). A correct round always earns at least the answer's 4. A
+ * revealed round (gave up, or out of guesses) earns the share of the answer and no-hint points
+ * that was found, `answersFound` of `answerCount` answers, rounded half up, and nothing for no
+ * misses. An unanswered round earns 0.
  */
 export function roundPoints(
   answerState: AnswerState,
   hintsUsed: number,
-  hintCount: number,
   answersFound = 0,
   answerCount = 1,
+  wrongGuesses = 0,
 ): number {
   if (answerState === "UNANSWERED") {
     return 0;
   }
-  const full = fullPoints(hintsUsed, hintCount);
+  const noHints = Math.max(0, NO_HINT_POINTS - hintsUsed);
   if (answerState === CORRECT_ANSWER) {
-    return full;
+    return ANSWER_POINTS + noHints + Math.max(0, NO_MISS_POINTS - wrongGuesses);
   }
+  const full = ANSWER_POINTS + noHints;
   // round_half_up(full * answersFound / answerCount), in integers
   return Math.floor((2 * full * answersFound + answerCount) / (2 * answerCount));
 }
 
-function fullPoints(hintsUsed: number, hintCount: number): number {
-  if (hintCount === 0) {
-    return MAX_ROUND_POINTS;
+/** A round's points split into the three parts of the score bar. The parts always sum to `roundPoints`. */
+export interface PointsBreakdown {
+  answer: number;
+  noHints: number;
+  noMisses: number;
+  /** Set for a revealed round that found some answers: "Found 2 of 3". */
+  found?: { found: number; count: number };
+}
+
+/**
+ * The parts of `roundPoints`. A correct round earns each part itself. A revealed round has no No misses part, and
+ * its points fill the Answer cells first, then No hints.
+ */
+export function pointsBreakdown(
+  answerState: AnswerState,
+  hintsUsed: number,
+  answersFound = 0,
+  answerCount = 1,
+  wrongGuesses = 0,
+): PointsBreakdown {
+  const points = roundPoints(answerState, hintsUsed, answersFound, answerCount, wrongGuesses);
+  if (answerState === UNANSWERED) {
+    return { answer: 0, noHints: 0, noMisses: 0 };
   }
-  // round_half_up(MAX_HINT_PENALTY * hintsUsed / hintCount), in integers
-  const penalty = Math.floor((2 * MAX_HINT_PENALTY * hintsUsed + hintCount) / (2 * hintCount));
-  return MAX_ROUND_POINTS - penalty;
+  if (answerState === CORRECT_ANSWER) {
+    return {
+      answer: ANSWER_POINTS,
+      noHints: Math.max(0, NO_HINT_POINTS - hintsUsed),
+      noMisses: Math.max(0, NO_MISS_POINTS - wrongGuesses),
+    };
+  }
+  const answer = Math.min(points, ANSWER_POINTS);
+  const breakdown: PointsBreakdown = { answer, noHints: points - answer, noMisses: 0 };
+  if (answerCount > 1 && answersFound > 0) {
+    breakdown.found = { found: answersFound, count: answerCount };
+  }
+  return breakdown;
 }

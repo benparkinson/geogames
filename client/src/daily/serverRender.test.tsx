@@ -42,7 +42,7 @@ describe("the daily card on the server with a finished daily", () => {
       number: 9,
       gameId: "g1",
       difficulty: "NORMAL",
-      result: { score: 1, maxScore: 5, rounds: ["correct"] },
+      result: { score: 1, maxScore: 5, rounds: ["good"] },
     });
 
     expect(renderToString(withClient(<DailyCard />))).not.toContain("data-countdown");
@@ -70,7 +70,7 @@ describe("the daily pages and the header on the server", () => {
       number: 9,
       gameId: "g1",
       difficulty: "NORMAL" as const,
-      result: { score: 1, maxScore: 5, rounds: ["correct" as const] },
+      result: { score: 1, maxScore: 5, rounds: ["good" as const] },
     };
 
     const html = renderToString(withClient(<DailyFinished entry={entry} onOpenGame={() => {}} />));

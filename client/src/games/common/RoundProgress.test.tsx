@@ -1,21 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { RESULT_ICONS } from "../../ui/icons";
 import { RoundOutcome } from "./outcome";
 import RoundProgress from "./RoundProgress";
 
-/** The dot names its result and draws that result's glyph, whatever the icon set. */
-function expectResult(dot: HTMLElement, result: keyof typeof RESULT_ICONS): void {
-  const Icon = RESULT_ICONS[result];
-  const glyph = render(<Icon aria-hidden="true" />).container.innerHTML;
-  expect(dot).toHaveAttribute("data-result", result);
-  expect(dot.querySelector("svg")?.outerHTML).toBe(glyph);
-}
-
 const states = ["CORRECT", "GAVE_UP", "UNANSWERED", "UNANSWERED"];
-const points = [83, 0, 0, 0];
-const outcomes: (RoundOutcome | null)[] = ["hints", "missed", null, null];
+const points = [9, 0, 0, 0];
+const outcomes: (RoundOutcome | null)[] = ["good", "missed", null, null];
 
 function renderProgress(goToRound = vi.fn(), currentRound = 2) {
   render(
@@ -49,11 +40,11 @@ describe("RoundProgress", () => {
     expect(screen.getAllByRole("button")).toHaveLength(4);
   });
 
-  it("labels each round by its status", () => {
+  it("labels each round by its points", () => {
     renderProgress();
 
-    expect(screen.getByRole("button", { name: "Round 1: correct with hints, 83 points" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 2: revealed" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 1: 9 points" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 2: 0 points" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 3: current" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 4: not played" })).toBeInTheDocument();
   });
@@ -71,7 +62,7 @@ describe("RoundProgress", () => {
 
     // currentRound 0 is answered; round 3 (index 2) is the first unanswered; index 3 is locked.
     expect(screen.getByRole("button", { name: "Round 1: current" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Round 2: revealed" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Round 2: 0 points" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Round 3: not played" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Round 4: not played" })).toBeDisabled();
   });
@@ -85,7 +76,7 @@ describe("RoundProgress", () => {
   it("goes to the clicked round", async () => {
     const goToRound = renderProgress();
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: revealed" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: 0 points" }));
 
     expect(goToRound).toHaveBeenCalledWith(1);
   });
@@ -98,72 +89,32 @@ describe("RoundProgress", () => {
     expect(goToRound).not.toHaveBeenCalled();
   });
 
-  it("shows a first guess as a green star", () => {
-    renderOne("CORRECT", "firstGuess", 100);
+  it.each([
+    ["CORRECT", "full", 10],
+    ["CORRECT", "good", 8],
+    ["GAVE_UP", "partial", 5],
+    ["OUT_OF_GUESSES", "missed", 0],
+  ] as const)("shows a %s round's score on its dot, coloured by its %s outcome", (state, outcome, pts) => {
+    renderOne(state, outcome, pts);
 
-    const dot = screen.getByRole("button", { name: "Round 1: first guess" });
-    expect(dot).toHaveAttribute("data-outcome", "firstGuess");
-    expect(dot).not.toHaveAttribute("data-outcome", "correct");
-    expectResult(dot, "firstGuess");
+    const dot = screen.getByRole("button", { name: `Round 1: ${pts} points` });
+    expect(dot).toHaveAttribute("data-outcome", outcome);
+    expect(dot).toHaveTextContent(String(pts));
+    expect(dot.querySelector("svg")).toBeNull();
   });
 
-  it("shows a correct round worth 100 points but not a first guess as a green check, not a star", () => {
-    renderOne("CORRECT", "correct", 100);
+  it("says '1 point' in the singular", () => {
+    renderOne("GAVE_UP", "partial", 1);
 
-    const dot = screen.getByRole("button", { name: "Round 1: correct" });
-    expect(dot).toHaveAttribute("data-outcome", "correct");
-    expect(dot).not.toHaveAttribute("data-outcome", "firstGuess");
-    expectResult(dot, "correct");
+    expect(screen.getByRole("button", { name: "Round 1: 1 point" })).toBeInTheDocument();
   });
 
-  it("shows a correct round with hints as a yellow check", () => {
-    renderOne("CORRECT", "hints", 67);
-
-    const dot = screen.getByRole("button", { name: "Round 1: correct with hints, 67 points" });
-    expect(dot).toHaveAttribute("data-outcome", "hints");
-    expectResult(dot, "correct");
-  });
-
-  it("shows a given up round with no points as a red eye", () => {
-    renderOne("GAVE_UP", "missed", 0);
-
-    const dot = screen.getByRole("button", { name: "Round 1: revealed" });
-    expect(dot).toHaveAttribute("data-outcome", "missed");
-    expectResult(dot, "revealed");
-  });
-
-  it("shows a round that ran out of guesses as a red cross", () => {
-    renderOne("OUT_OF_GUESSES", "missed", 0);
-
-    const dot = screen.getByRole("button", { name: "Round 1: out of guesses" });
-    expect(dot).toHaveAttribute("data-outcome", "missed");
-    expectResult(dot, "outOfGuesses");
-  });
-
-  it("shows a revealed round with points as yellow, keeping its eye or cross", () => {
-    render(
-      <RoundProgress
-        states={["GAVE_UP", "OUT_OF_GUESSES", "UNANSWERED"]}
-        points={[67, 25, 0]}
-        outcomes={["hints", "hints", null]}
-        currentRound={2}
-        goToRound={vi.fn()}
-      />,
-    );
-
-    const gaveUp = screen.getByRole("button", { name: "Round 1: revealed, 67 points" });
-    expect(gaveUp).toHaveAttribute("data-outcome", "hints");
-    expect(gaveUp).not.toHaveAttribute("data-outcome", "missed");
-    expectResult(gaveUp, "revealed");
-    const outOfGuesses = screen.getByRole("button", { name: "Round 2: out of guesses, 25 points" });
-    expect(outOfGuesses).toHaveAttribute("data-outcome", "hints");
-    expectResult(outOfGuesses, "outOfGuesses");
-  });
-
-  it("shows the number of an unanswered round, and the ring on the current one", () => {
+  it("shows the number of an unanswered round, with no outcome, and marks the current one", () => {
     renderProgress(vi.fn(), 3);
 
-    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveAttribute("aria-current", "step");
-    expect(screen.getByRole("button", { name: "Round 4: current" })).toHaveTextContent("4");
+    const current = screen.getByRole("button", { name: "Round 4: current" });
+    expect(current).toHaveAttribute("aria-current", "step");
+    expect(current).toHaveTextContent("4");
+    expect(current).not.toHaveAttribute("data-outcome");
   });
 });

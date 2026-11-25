@@ -203,20 +203,20 @@ class GameApiIT {
     String afterFirst = answer(id, 0, "CORRECT");
     assertThat((String) JsonPath.read(afterFirst, "$.gameResult.gameState"))
         .isEqualTo("IN_PROGRESS");
-    assertThat((int) JsonPath.read(afterFirst, "$.gameResult.score")).isEqualTo(100);
-    assertThat((int) JsonPath.read(afterFirst, "$.points")).isEqualTo(100);
+    assertThat((int) JsonPath.read(afterFirst, "$.gameResult.score")).isEqualTo(10);
+    assertThat((int) JsonPath.read(afterFirst, "$.points")).isEqualTo(10);
 
     answer(id, 1, "GAVE_UP");
     String finished = answer(id, 2, "CORRECT", 1);
     assertThat((String) JsonPath.read(finished, "$.gameResult.gameState")).isEqualTo("FINISHED");
-    // a tripoint round answered with 1 of 3 hints is worth 83
+    // a tripoint round answered with 1 of 3 hints is worth 9
     assertThat((int) JsonPath.read(finished, "$.hintsUsed")).isEqualTo(1);
-    assertThat((int) JsonPath.read(finished, "$.points")).isEqualTo(83);
-    assertThat((int) JsonPath.read(finished, "$.gameResult.score")).isEqualTo(183);
-    assertThat((int) JsonPath.read(finished, "$.gameResult.maxScore")).isEqualTo(300);
+    assertThat((int) JsonPath.read(finished, "$.points")).isEqualTo(9);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.score")).isEqualTo(19);
+    assertThat((int) JsonPath.read(finished, "$.gameResult.maxScore")).isEqualTo(30);
     assertThat((int) JsonPath.read(finished, "$.gameResult.roundsCorrect")).isEqualTo(2);
     assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundPoints"))
-        .containsExactly(100, 0, 83);
+        .containsExactly(10, 0, 9);
     assertThat((List<Integer>) JsonPath.read(finished, "$.gameResult.roundHintsUsed"))
         .containsExactly(0, 0, 1);
     List<String> states = JsonPath.read(finished, "$.gameResult.roundAnswerStates");
@@ -236,8 +236,8 @@ class GameApiIT {
     assertThat((List<Boolean>) JsonPath.read(result, "$.gameResult.roundFirstGuess"))
         .containsExactly(true, false);
     assertThat((int) JsonPath.read(result, "$.gameResult.firstGuessRounds")).isEqualTo(1);
-    // both rounds score the same: the outcome is only a label
-    assertThat((int) JsonPath.read(result, "$.gameResult.score")).isEqualTo(200);
+    // the two wrong guesses cost two points
+    assertThat((int) JsonPath.read(result, "$.gameResult.score")).isEqualTo(18);
   }
 
   @Test
@@ -490,7 +490,7 @@ class GameApiIT {
 
     String body = answer(id, 0, "CORRECT", 0, null);
 
-    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(100);
+    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(10);
   }
 
   @Test
@@ -523,7 +523,7 @@ class GameApiIT {
             .getResponse()
             .getContentAsString();
 
-    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(100);
+    assertThat((int) JsonPath.read(body, "$.points")).isEqualTo(10);
   }
 
   @Test
@@ -592,7 +592,7 @@ class GameApiIT {
 
     assertThat((int) JsonPath.read(again, "$.gameResult.score"))
         .isEqualTo(JsonPath.<Integer>read(first, "$.gameResult.score"));
-    assertThat((int) JsonPath.read(again, "$.points")).isEqualTo(83);
+    assertThat((int) JsonPath.read(again, "$.points")).isEqualTo(9);
 
     mockMvc
         .perform(
@@ -814,7 +814,7 @@ class GameApiIT {
     assertThat((int) JsonPath.read(result, "$.points"))
         .isEqualTo(
             com.parkinson.benjamin.geogames.model.Scoring.roundPoints(
-                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, hintCount, 1, 1));
+                com.parkinson.benjamin.geogames.model.AnswerState.CORRECT, 1, 1, 1, 0));
     assertThat(postHint(id, 0, 1, 0)).isEqualTo(409);
   }
 
@@ -841,8 +841,8 @@ class GameApiIT {
 
     String round = getRound(id, 0);
     assertThat((String) JsonPath.read(round, "$.answerState")).isEqualTo("GAVE_UP");
-    assertThat((int) JsonPath.read(round, "$.points")).isEqualTo(67);
-    assertThat((int) JsonPath.read(round, "$.gameResult.score")).isEqualTo(67);
+    assertThat((int) JsonPath.read(round, "$.points")).isEqualTo(5);
+    assertThat((int) JsonPath.read(round, "$.gameResult.score")).isEqualTo(5);
     assertThat((int) JsonPath.read(round, "$.gameResult.roundsCorrect")).isZero();
     // A retry is harmless; a different count is a conflict.
     assertThat(postAnswerWithFound(id, "GAVE_UP", 2)).isEqualTo(200);

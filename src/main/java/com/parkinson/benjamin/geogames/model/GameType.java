@@ -60,8 +60,8 @@ public enum GameType {
   }
 
   /**
-   * How many hints the client offers for a round of this type at Normal difficulty. Using all of
-   * them costs {@code Scoring.MAX_HINT_PENALTY} points. A rule check must use {@link
+   * How many hints the client offers for a round of this type at Normal difficulty. Each hint
+   * used costs one point ({@code Scoring.NO_HINT_POINTS}). A rule check must use {@link
    * #hintCount(Difficulty)} with the game's difficulty instead; this is for the Normal values (the
    * daily round picker and stats lookups).
    */

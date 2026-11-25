@@ -100,14 +100,20 @@ describe("RoundActions hints", () => {
 
   it("puts the cost of the next hint in the button's title", () => {
     const { rerender, props } = renderActions({ hintsUsed: 0, hintCount: 3 });
-    // 100 -> 83 -> 67 -> 50: the drops are 17, 16 and 17, not 50 / 3.
-    expect(screen.getByTitle("Shows a clue (−17 pts)")).toBeInTheDocument();
+    // Every hint costs one point.
+    expect(screen.getByTitle("Shows a clue (−1 point)")).toBeInTheDocument();
 
     rerender(<RoundActions {...props} hintsUsed={1} />);
-    expect(screen.getByTitle("Shows a clue (−16 pts)")).toBeInTheDocument();
+    expect(screen.getByTitle("Shows a clue (−1 point)")).toBeInTheDocument();
     rerender(<RoundActions {...props} hintsUsed={2} />);
-    expect(screen.getByTitle("Shows a clue (−17 pts)")).toBeInTheDocument();
+    expect(screen.getByTitle("Shows a clue (−1 point)")).toBeInTheDocument();
     rerender(<RoundActions {...props} hintsUsed={3} />);
     expect(screen.getByTitle("No hints left")).toBeInTheDocument();
+  });
+
+  it("says the next hint costs 0 points once the hint points are used up", () => {
+    // Only the first three hints cost a point; a game with more hints than that gives the rest free.
+    renderActions({ hintsUsed: 3, hintCount: 5 });
+    expect(screen.getByTitle("Shows a clue (−0 points)")).toBeInTheDocument();
   });
 });
