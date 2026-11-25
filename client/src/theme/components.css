@@ -872,21 +872,22 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .gg-settings {
   position: relative;
-  display: inline;
+  display: inline-flex;
 }
 .gg-settings__button {
-  padding: 0;
+  display: inline-flex;
+  padding: var(--gg-space-1);
   border: 0;
   background: none;
   color: inherit;
-  font: inherit;
-  text-decoration: underline;
+  font-size: 1.25rem;
+  line-height: 1;
   cursor: pointer;
 }
 .gg-settings__panel {
-  /* Fixed and centred in the viewport: the footer link can sit at either edge, and the panel must stay on screen. */
+  /* Fixed and centred in the viewport so the panel stays on screen at any width. */
   position: fixed;
-  bottom: var(--gg-space-5);
+  top: var(--gg-space-5);
   left: 50%;
   z-index: 1030;
   transform: translateX(-50%);
