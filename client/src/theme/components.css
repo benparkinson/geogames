@@ -1128,6 +1128,28 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .guess-list__clue {
   margin-right: var(--gg-space-1);
 }
+/* Below the desktop layout the panel sits under the map: guesses are chips that share rows. */
+@media (max-width: 991.98px) {
+  .guess-list__rows {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gg-space-1);
+  }
+  .guess-list__row {
+    border: 1px solid var(--gg-color-rule-light);
+    border-radius: var(--gg-radius-sm);
+    padding: 2px var(--gg-space-2);
+  }
+  .guess-list__row[data-kind="found"] {
+    border-color: transparent;
+  }
+  .guess-list__name {
+    flex: 0 1 auto;
+  }
+  .game-screen--keyboard .guess-list__rows {
+    max-height: 4.5rem;
+  }
+}
 
 .round-status {
   display: flex;

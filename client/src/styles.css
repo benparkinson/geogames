@@ -91,7 +91,7 @@ code {
 }
 /* The keyboard is open: the map keeps a smaller share, and the panel drops what can't be used while typing. */
 .game-screen--keyboard {
-  --gg-map-min: 35%;
+  --gg-map-min: 28%;
 }
 .game-screen--keyboard .game-panel {
   padding: 0.5rem 1rem 0.5rem;
@@ -103,7 +103,29 @@ code {
 .game-screen--keyboard .round-brief {
   margin-bottom: 0.25rem;
 }
+.game-screen--keyboard .round-brief {
+  flex-wrap: nowrap;
+}
+.game-screen--keyboard .round-brief-question {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.game-screen--keyboard .round-hints {
+  margin-bottom: 0.25rem;
+}
+.game-screen--keyboard .round-hints li {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* The lives matter while guessing: keep the boxes, drop the text unless it's the last life. */
 .game-screen--keyboard .round-status {
+  margin-bottom: 0.25rem;
+}
+.game-screen--keyboard .guesses-left:not([data-last]) .guesses-left__text[data-boxes] {
   display: none;
 }
 .game-screen--keyboard .game-top > * {
