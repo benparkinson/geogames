@@ -38,6 +38,7 @@ export type GuessResult =
   | { kind: "wrong"; guess: string; guessesLeft: number; clue?: GuessClue }
   | { kind: "outOfGuesses"; guess: string; clue?: GuessClue }
   | { kind: "correct"; remaining: number }
+  | { kind: "loading" }
   | { kind: "over" };
 
 export interface GuessConfig {

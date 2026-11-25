@@ -9,12 +9,14 @@ export function useGuessList(kind: PlaceKind): {
   suggestions?: Suggestion[];
   /** Whether the guess is a name or alias, via normaliseString. */
   isKnownGuess?: (guess: string) => boolean;
+  /** True while the list is still being fetched: a guess can't be checked yet. A failed fetch isn't loading. */
+  loading: boolean;
 } {
-  const { data } = usePlaceNames(kind);
+  const { data, isPending } = usePlaceNames(kind);
 
   return useMemo(() => {
     if (!data) {
-      return {};
+      return { loading: isPending };
     }
     const byName = new Map<string, Set<string>>();
     data.forEach((place) => {
@@ -32,6 +34,6 @@ export function useGuessList(kind: PlaceKind): {
       known.add(normaliseString(place.name));
       place.additionalNames.forEach((alias) => known.add(normaliseString(alias)));
     });
-    return { suggestions, isKnownGuess: (guess: string) => known.has(normaliseString(guess)) };
-  }, [data]);
+    return { suggestions, isKnownGuess: (guess: string) => known.has(normaliseString(guess)), loading: false };
+  }, [data, isPending]);
 }

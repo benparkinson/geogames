@@ -95,7 +95,7 @@ describe("Tripoint guessing", () => {
     expect(screen.queryByText(/ km /)).not.toBeInTheDocument();
   });
 
-  it("does not check names against the country list until it has loaded", async () => {
+  it("holds a guess back until the country list has loaded", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() => new Promise(() => {})),
@@ -104,7 +104,7 @@ describe("Tripoint guessing", () => {
 
     await guess(userEvent.setup(), "Atlantis");
 
-    expect(screen.getByText("Atlantis")).toBeInTheDocument();
+    expect(screen.getByText("Still loading the names. Try again in a moment.")).toBeInTheDocument();
   });
 
   it("rejects a name that is not a country once the list has loaded, and accepts aliases", async () => {
