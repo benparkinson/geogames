@@ -3,6 +3,7 @@ import { useWakeServer } from "../api/health";
 import DailyCard from "./DailyCard";
 import GameCardGrid from "./GameCardGrid";
 import KofiBadge from "./KofiBadge";
+import SettingsMenu from "./SettingsMenu";
 import SiteFooter from "./SiteFooter";
 import SiteHeader from "./SiteHeader";
 import { SiteHeading } from "./SiteTitle";
@@ -14,7 +15,7 @@ function HomePage(): React.JSX.Element {
 
   return (
     <div className="home page-bg">
-      <SiteHeader title={<SiteHeading />} />
+      <SiteHeader title={<SiteHeading />} extra={<SettingsMenu />} />
       <div className="home-layout">
         <section className="home-daily">
           <DailyCard />

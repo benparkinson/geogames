@@ -22,6 +22,7 @@ export function useRoundGuesses({
   answers,
   answerCount,
   isKnownGuess,
+  namesLoading = false,
   clueFor,
   submitAnswer,
 }: {
@@ -29,6 +30,8 @@ export function useRoundGuesses({
   answers: AnswerCandidate[];
   answerCount: number;
   isKnownGuess?: (guess: string) => boolean;
+  /** The name list is still loading: a guess is not taken, as it could not be checked. */
+  namesLoading?: boolean;
   clueFor?: GuessConfig["clueFor"];
   submitAnswer: (answer: RoundAnswer) => void;
 }): {
@@ -102,6 +105,9 @@ export function useRoundGuesses({
   }
 
   function submitGuess(text: string): GuessResult {
+    if (namesLoading && !state.over && text.trim() !== "") {
+      return { kind: "loading" };
+    }
     return dispatch({ type: "guess", text }).result ?? { kind: "over" };
   }
 
