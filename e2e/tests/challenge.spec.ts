@@ -7,12 +7,14 @@ test("challenge a friend: finish a game, share the link, and a friend plays the 
 }) => {
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
 
-  // 1. Play a one-round game and give up.
-  const sourceId = await startGame(page, "Tripoints", 1);
-  await expect(answerBox(page)).toBeVisible();
-  await page.getByRole("button", { name: "Give up", exact: true }).click();
-  await page.getByRole("button", { name: "Tap again to give up" }).click();
-  await page.getByRole("button", { name: "See results" }).click();
+  // 1. Play a three-round game, giving up on every round.
+  const sourceId = await startGame(page, "Tripoints", 3);
+  for (let round = 0; round < 3; round++) {
+    await expect(answerBox(page)).toBeVisible();
+    await page.getByRole("button", { name: "Give up", exact: true }).click();
+    await page.getByRole("button", { name: "Tap again to give up" }).click();
+    await page.getByRole("button", { name: round < 2 ? "Next round" : "See results" }).click();
+  }
 
   // 2. The summary copies a spoiler-free text with a challenge link.
   await page.getByRole("button", { name: "Challenge a friend" }).click();

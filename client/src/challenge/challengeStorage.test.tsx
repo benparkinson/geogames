@@ -37,6 +37,8 @@ describe("challengeStorage", () => {
   });
 
   it("ignores stored text it can't read", () => {
+    localStorage.setItem("gg-challenges", '{"gameId":"g1"}');
+    expect(renderHook(() => useChallengeScore("g1")).result.current).toBeNull();
     localStorage.setItem("gg-challenges", "not json");
     expect(renderHook(() => useChallengeScore("g1")).result.current).toBeNull();
     localStorage.setItem(

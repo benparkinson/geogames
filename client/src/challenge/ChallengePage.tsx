@@ -50,6 +50,8 @@ export default function ChallengePage({ id }: { id: string | null }): React.JSX.
     );
   }
 
+  const challenge = data;
+  const challengeId = id;
   const name = GAME_NAMES[data.gameMode as GameTypeName] ?? data.gameMode;
   const settings = [
     name,
@@ -58,10 +60,9 @@ export default function ChallengePage({ id }: { id: string | null }): React.JSX.
   ];
 
   function start(): void {
-    if (id === null || !data) return;
-    const { score, maxScore } = data;
+    const { score, maxScore } = challenge;
     // Remember the score to beat, for the summary of the new game.
-    play.mutate(id, { onSuccess: (game) => saveChallengeScore({ gameId: game.id, score, maxScore }) });
+    play.mutate(challengeId, { onSuccess: (game) => saveChallengeScore({ gameId: game.id, score, maxScore }) });
   }
 
   return (

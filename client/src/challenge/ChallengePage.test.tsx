@@ -72,4 +72,26 @@ describe("ChallengePage", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Too many new games");
     expect(router.replace).not.toHaveBeenCalled();
   });
+
+  it("says it couldn't load the challenge when the server is down", async () => {
+    mockFetch([{ url: INFO, status: 500, body: {} }, wake]);
+
+    renderWithClient(<ChallengePage id="c1" />);
+
+    expect(await screen.findByRole("heading", { name: "Couldn't load the challenge" })).toBeInTheDocument();
+  });
+
+  it("shows Starting while the game is made, and names a mode it doesn't know as it is", async () => {
+    mockFetch([
+      { url: INFO, body: makeChallengeResponse({ gameMode: "NEW_MODE", roundCount: 1 }) },
+      { method: "POST", url: PLAY, body: () => new Promise(() => {}) },
+      wake,
+    ]);
+
+    renderWithClient(<ChallengePage id="c1" />);
+    expect(await screen.findByText(/^NEW_MODE .+ 1 round$/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Play" }));
+
+    expect(await screen.findByRole("button", { name: /Starting/ })).toBeDisabled();
+  });
 });
