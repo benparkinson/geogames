@@ -1388,7 +1388,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   /* Each earned cell starts after the ones before it; the fill only plays, the cells are always there. */
   .gg-score-bar__cells[data-animate] .gg-score-bar__cell[data-earned="true"] {
     animation: gg-cell-fill var(--gg-duration-slow) ease-out backwards;
-    animation-delay: calc(var(--i, 0) * var(--gg-duration-cell));
+    animation-delay: calc(var(--start, 0ms) + var(--i, 0) * var(--gg-duration-cell));
   }
 }
 .round-result__note {
@@ -1640,4 +1640,44 @@ button.gg-summary__row:focus-visible {
 }
 .gg-ticket__rounds > li + li {
   border-left: 1px solid var(--gg-color-border);
+}
+
+.gg-dialog {
+  width: min(28rem, calc(100vw - 2 * var(--gg-space-3)));
+  padding: var(--gg-space-4);
+  border: 1px solid var(--gg-color-rule);
+  border-radius: var(--gg-radius);
+  background: var(--gg-color-surface);
+  color: var(--gg-color-text);
+}
+.gg-dialog::backdrop {
+  background: var(--gg-color-backdrop);
+}
+.gg-dialog__title {
+  margin: 0 0 var(--gg-space-3);
+}
+.gg-dialog__close {
+  display: block;
+  margin: var(--gg-space-3) 0 0 auto;
+}
+.gg-reveal__bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gg-reveal__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+.gg-reveal__bar .gg-score-bar {
+  flex: 1;
+}
+.gg-reveal__total {
+  margin: var(--gg-space-3) 0 0;
+  font-size: var(--gg-font-size-lead);
+  text-align: center;
 }

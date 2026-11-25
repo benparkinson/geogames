@@ -35,7 +35,17 @@ describe("resultFromGame", () => {
         roundHintsUsed: [0, 0, 1, 0],
         roundFirstGuess: [true, false, false, false],
       }),
-    ).toEqual({ score: 25, maxScore: 40, rounds: ["full", "good", "partial", "missed"] });
+    ).toEqual({
+      score: 25,
+      maxScore: 40,
+      rounds: ["full", "good", "partial", "missed"],
+      parts: [
+        { answer: 4, noHints: 3, noMisses: 3 },
+        { answer: 4, noHints: 3, noMisses: 1 },
+        { answer: 4, noHints: 2, noMisses: 0 },
+        { answer: 0, noHints: 0, noMisses: 0 },
+      ],
+    });
   });
 
   it("counts a given up round with no points as missed, and treats a missing hint count as none", () => {

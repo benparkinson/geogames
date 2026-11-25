@@ -55,6 +55,44 @@ describe("DailyPage intro", () => {
   });
 });
 
+describe("DailyPage score popup", () => {
+  const withParts = {
+    score: 10,
+    maxScore: 20,
+    rounds: ["full", "missed"] as ("full" | "missed")[],
+    parts: [
+      { answer: 4, noHints: 3, noMisses: 3 },
+      { answer: 0, noHints: 0, noMisses: 0 },
+    ],
+  };
+
+  it("shows once for a finished daily and not again on reload", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: true, media: query }));
+    writeDaily({ ...entry, result: withParts });
+    mockFetch([SCORE]);
+    const first = renderWithClient(<DailyPage />);
+
+    expect(await screen.findByRole("heading", { name: "Your daily score" })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "See results" }));
+    expect(readDaily()?.revealSeen).toBe(true);
+    first.unmount();
+
+    renderWithClient(<DailyPage />);
+    expect(await screen.findByLabelText("Your result")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your daily score" })).not.toBeInTheDocument();
+    vi.unstubAllGlobals();
+  });
+
+  it("is skipped for a result stored before it existed", async () => {
+    writeDaily({ ...entry, result: { score: 10, maxScore: 20, rounds: ["full", "missed"] } });
+    mockFetch([SCORE]);
+    renderWithClient(<DailyPage />);
+
+    expect(await screen.findByLabelText("Your result")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Your daily score" })).not.toBeInTheDocument();
+  });
+});
+
 describe("DailyPage with no game for today", () => {
   it("offers to play and creates nothing until it is clicked", async () => {
     const fetchMock = mockFetch([
@@ -191,7 +229,17 @@ describe("DailyPage with a game for today", () => {
     mockFetch([{ url: ROUND_0, body: finishedGame[0] }]);
     renderWithClient(<DailyPage />);
 
-    await waitFor(() => expect(readDaily()?.result).toEqual({ score: 10, maxScore: 20, rounds: ["full", "missed"] }));
+    await waitFor(() =>
+      expect(readDaily()?.result).toEqual({
+        score: 10,
+        maxScore: 20,
+        rounds: ["full", "missed"],
+        parts: [
+          { answer: 4, noHints: 3, noMisses: 3 },
+          { answer: 0, noHints: 0, noMisses: 0 },
+        ],
+      }),
+    );
     expect(screen.getByText(`game g1 (daily ${today})`)).toBeInTheDocument();
   });
 

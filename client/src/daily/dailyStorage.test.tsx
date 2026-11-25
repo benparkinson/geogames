@@ -22,6 +22,26 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+describe("the score popup fields", () => {
+  it("round-trips the bars and revealSeen", () => {
+    const withReveal: DailyEntry = {
+      ...finished,
+      revealSeen: true,
+      result: { ...finished.result!, parts: Array.from({ length: 5 }, () => ({ answer: 4, noHints: 3, noMisses: 1 })) },
+    };
+    writeDaily(withReveal);
+    expect(readDaily()).toEqual(withReveal);
+  });
+
+  it("rejects bars that don't match the rounds", () => {
+    localStorage.setItem(
+      "gg-daily",
+      JSON.stringify({ ...finished, result: { ...finished.result, parts: [{ answer: 4, noHints: 3, noMisses: 3 }] } }),
+    );
+    expect(readDaily()).toBeNull();
+  });
+});
+
 describe("readDaily and writeDaily", () => {
   it("round-trips an entry, with or without a result", () => {
     expect(readDaily()).toBeNull();

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import PageShell from "../components/PageShell";
 import Ticket, { ticketDate } from "../components/Ticket";
 import { localDateString } from "../api/daily";
@@ -5,7 +6,8 @@ import { Button, buttonClass } from "../ui";
 import DailyComparison from "./DailyComparison";
 import ShareButton from "./ShareButton";
 import { formatCountdown, secondsToNextDaily } from "./countdown";
-import { DailyEntry } from "./dailyStorage";
+import DailyScoreReveal from "./DailyScoreReveal";
+import { DailyEntry, writeDaily } from "./dailyStorage";
 import { shareText } from "./shareText";
 import { useNowSeconds } from "./useNowSeconds";
 
@@ -16,6 +18,12 @@ export default function DailyFinished({
   entry: DailyEntry & { result: NonNullable<DailyEntry["result"]> };
   onOpenGame: () => void;
 }): React.JSX.Element {
+  // Shown once: `revealSeen` is stored when it closes. An older result with no bars has nothing to reveal.
+  const [revealOpen, setRevealOpen] = useState(() => entry.revealSeen !== true && entry.result.parts !== undefined);
+  const closeReveal = () => {
+    setRevealOpen(false);
+    writeDaily({ ...entry, revealSeen: true });
+  };
   const text = shareText(
     { date: entry.date, difficulty: entry.difficulty, result: entry.result },
     window.location.origin,
@@ -41,6 +49,15 @@ export default function DailyFinished({
     );
   return (
     <PageShell bare>
+      {revealOpen && entry.result.parts && (
+        <DailyScoreReveal
+          date={entry.date}
+          difficulty={entry.difficulty}
+          result={entry.result}
+          parts={entry.result.parts}
+          onClose={closeReveal}
+        />
+      )}
       <Ticket stripTag="h1" date={ticketDate(new Date(year, month - 1, day))} footer={footer}>
         <h2 className="gg-ticket__heading">Daily {entry.date}</h2>
         <p className="gg-daily__text">

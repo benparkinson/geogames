@@ -51,6 +51,10 @@ test("the daily: play, share, come back, and a second player gets the same round
 
   // 3. Reloading /daily works in the jar, shows the result, and creates no game.
   await page.reload();
+  // The score popup shows once, on the first visit to the finished page.
+  await expect(page.getByRole("heading", { name: "Your daily score" })).toBeVisible();
+  await page.getByRole("button", { name: "See results" }).click();
+  await expect(page.getByRole("heading", { name: "Your daily score" })).toBeHidden();
   await expect(page.getByText("You scored 0 / 50")).toBeVisible();
   await expect(page.getByText(/Next daily in [0-9]+:[0-9][0-9]:[0-9][0-9]/)).toBeVisible();
   expect(dailyPosts).toHaveLength(1);
