@@ -11,7 +11,8 @@ describe("PrivacyPage", () => {
 
   it("says the idea is original and the code is AI-assisted", () => {
     render(<PrivacyPage />);
-    expect(screen.getByText(/University Challenge/)).toHaveTextContent(/AI-assisted/);
+    expect(screen.getByRole("link", { name: "University Challenge" })).toBeInTheDocument();
+    expect(screen.getByText(/written with the help of AI tools/)).toBeInTheDocument();
   });
 
   it("names who runs the site and how to reach them", () => {
