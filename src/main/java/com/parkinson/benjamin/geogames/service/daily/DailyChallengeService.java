@@ -1,5 +1,6 @@
 package com.parkinson.benjamin.geogames.service.daily;
 
+import com.parkinson.benjamin.geogames.api.DailyChallengeResponse;
 import com.parkinson.benjamin.geogames.api.DailyGameResponse;
 import com.parkinson.benjamin.geogames.api.DailyScoreResponse;
 import com.parkinson.benjamin.geogames.model.Difficulty;
@@ -67,6 +68,22 @@ public class DailyChallengeService {
     scores.ensureDay(date, difficulty);
     UUID id = gameService.createGame(rounds, GAME_MODE, difficulty, date).id();
     return new DailyGameResponse(id, date, number(date));
+  }
+
+  /**
+   * The game types of a date's stored challenge, or empty if nobody has asked for that date yet.
+   * Never generates a challenge. The date is checked like a new game's.
+   *
+   * @throws IllegalArgumentException if the date is out of range
+   */
+  public Optional<DailyChallengeResponse> challenge(LocalDate requested) {
+    LocalDate date = validDate(Optional.of(requested), false);
+    return store
+        .find(date)
+        .map(
+            rounds ->
+                new DailyChallengeResponse(
+                    date, number(date), rounds.stream().map(r -> r.gameType().name()).toList()));
   }
 
   /**

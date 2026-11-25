@@ -1,5 +1,6 @@
 import { localDateString, useCreateDailyGame } from "../api/daily";
 import { useDifficulty } from "../settings/difficulty";
+import { markDailyPlayed } from "./dailyPlayed";
 import { entryFor, readDaily, writeDaily } from "./dailyStorage";
 
 /** Starts today's daily game and saves it. Call `play` on a click, never on load: crawlers fetch the page. */
@@ -17,6 +18,7 @@ export function useStartDaily(): { play: () => void; isPending: boolean; error: 
       {
         onSuccess: (game) => {
           writeDaily({ v: 1, date, number: game.number, gameId: game.id, difficulty });
+          markDailyPlayed();
         },
       },
     );

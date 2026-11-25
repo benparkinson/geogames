@@ -872,21 +872,22 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 }
 .gg-settings {
   position: relative;
-  display: inline;
+  display: inline-flex;
 }
 .gg-settings__button {
-  padding: 0;
+  display: inline-flex;
+  padding: var(--gg-space-1);
   border: 0;
   background: none;
   color: inherit;
-  font: inherit;
-  text-decoration: underline;
+  font-size: 1.25rem;
+  line-height: 1;
   cursor: pointer;
 }
 .gg-settings__panel {
-  /* Fixed and centred in the viewport: the footer link can sit at either edge, and the panel must stay on screen. */
+  /* Fixed and centred in the viewport so the panel stays on screen at any width. */
   position: fixed;
-  bottom: var(--gg-space-5);
+  top: var(--gg-space-5);
   left: 50%;
   z-index: 1030;
   transform: translateX(-50%);
@@ -1265,6 +1266,12 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   min-width: 0;
 }
 /* Both reveal labels sit in one cell, so the button keeps the longer one's width; the hidden one is aria-hidden. */
+.round-actions__hint-label[data-wrapped="true"] .round-actions__dot {
+  opacity: 0;
+}
+.round-actions__nowrap {
+  white-space: nowrap;
+}
 .round-actions__reveal-label {
   display: inline-grid;
 }
@@ -1522,4 +1529,24 @@ button.gg-summary__row:focus-visible {
   gap: var(--gg-space-2);
   width: 100%;
   font-weight: var(--gg-font-weight-bold);
+}
+
+/* The daily ticket's row of today's game icons: five equal cells with thin rules. */
+.gg-ticket__rounds {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: var(--gg-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--gg-color-border);
+}
+.gg-ticket__rounds > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--gg-space-5);
+  padding: var(--gg-space-2) 0;
+}
+.gg-ticket__rounds > li + li {
+  border-left: 1px solid var(--gg-color-border);
 }

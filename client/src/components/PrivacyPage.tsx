@@ -52,14 +52,16 @@ function PrivacyPage(): React.JSX.Element {
 
         <h2 className="gg-page__section">On your device</h2>
         <p>
-          Your browser keeps up to five items in its local storage: <code>gg-theme</code>, <code>gg-difficulty</code>{" "}
-          (your difficulty setting), <code>gg-units</code>, <code>gg-daily</code> and <code>gg-daily-streak</code>. The
-          first three are set only if you use their control (the Appearance, difficulty and Distances settings; System
-          default removes the first, Kilometres removes the third, and it is never sent anywhere). The fourth is set
-          only when you play the daily challenge: it holds today&apos;s game id, its difficulty and, once you finish,
-          your score and how each round ended. It is replaced the next day and never sent anywhere. The fifth holds the
-          date you last finished the daily challenge and how many days in a row you have finished it. It is set only
-          when you finish one and is never sent anywhere. Clearing site data removes all five.
+          Your browser keeps up to six items in its local storage: <code>gg-theme</code>, <code>gg-difficulty</code>{" "}
+          (your difficulty setting), <code>gg-units</code>, <code>gg-daily</code>, <code>gg-daily-streak</code> and{" "}
+          <code>gg-daily-played</code>. The first three are set only if you use their control (the Appearance,
+          difficulty and Distances settings; System default removes the first, Kilometres removes the third, and it is
+          never sent anywhere). The fourth is set only when you play the daily challenge: it holds today&apos;s game id,
+          its difficulty and, once you finish, your score and how each round ended. It is replaced the next day and
+          never sent anywhere. The fifth holds the date you last finished the daily challenge and how many days in a row
+          you have finished it. It is set only when you finish one and is never sent anywhere. The sixth is set when you
+          start a daily challenge and only records that you have played one, so the home page can show you today&apos;s
+          games; it is never sent anywhere. Clearing site data removes all six.
         </p>
         <p>
           Everyone who plays the daily challenge on a date gets the same rounds. The server stores which rounds those
@@ -68,6 +70,11 @@ function PrivacyPage(): React.JSX.Element {
           of their scores, and how many scored in each tenth of the range. Nothing in the totals links back to a game or
           a player, and they are kept indefinitely. Copying your result writes to your clipboard only when you click
           Copy result.
+        </p>
+        <p>
+          If you have played the daily challenge before, the home page also asks the server for the game types of
+          today&apos;s challenge. The request holds only the date. It never creates the challenge, and if the server is
+          slow or has none for today, the page simply shows no preview.
         </p>
 
         <h2 className="gg-page__section">Who else receives data</h2>
