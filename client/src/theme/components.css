@@ -1265,6 +1265,9 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   min-width: 0;
 }
 /* Both reveal labels sit in one cell, so the button keeps the longer one's width; the hidden one is aria-hidden. */
+.round-actions__hint-label[data-wrapped="true"] .round-actions__dot {
+  opacity: 0;
+}
 .round-actions__nowrap {
   white-space: nowrap;
 }
