@@ -51,6 +51,26 @@ export interface DailyChallenge {
   gameTypes: string[];
 }
 
+/** The JSON of POST /api/games and POST /api/challenges/{id}/games. */
+export interface GameCreationResponse {
+  id: string;
+}
+
+/** The JSON of GET /api/challenges/{id}: what a friend sees before playing. */
+export interface ChallengeResponse {
+  /** A `GameType` name, or `RANDOM` for a mixed game. */
+  gameMode: string;
+  difficulty: Difficulty;
+  roundCount: number;
+  score: number;
+  maxScore: number;
+}
+
+/** The JSON of POST /api/games/{id}/challenges. */
+export interface ChallengeCreationResponse {
+  id: string;
+}
+
 /** The JSON of POST /api/daily-games: a new game made from the day's rounds. */
 export interface DailyGameResponse {
   id: string;

@@ -5,7 +5,7 @@ import { CORRECT_ANSWER, OUT_OF_GUESSES } from "./Model";
 import { roundOutcome, RoundOutcome } from "./outcome";
 import type { RoundResultKind } from "./roundView";
 
-/** The game type to start for "Play again": the one every round used, or a mix if they differed. */
+/** The game type to start for "Play another": the one every round used, or a mix if they differed. */
 export function playAgainType(rounds: GameRoundView[]): string {
   const types = new Set(rounds.map((r) => r.gameType.name));
   return types.size === 1 ? rounds[0].gameType.name : RANDOM_OPTION.type;
