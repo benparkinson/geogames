@@ -40,9 +40,16 @@ import java.util.TreeSet;
  */
 public final class CountryShapeBuilder {
 
-  static final double MIN_TOLERANCE = 0.002;
+  /** An outline's tolerance is a sixteen-hundredth of the diagonal, within these limits. */
+  static final double MIN_TOLERANCE = 0.0005;
+
   static final double MAX_TOLERANCE = 0.02;
-  static final double TOLERANCE_DIVISOR = 400;
+  static final double TOLERANCE_DIVISOR = 1600;
+
+  /** What is drawn inside a country is coarser: a four-hundredth of the diagonal. */
+  static final double RIVER_MIN_TOLERANCE = 0.002;
+
+  static final double RIVER_TOLERANCE_DIVISOR = 400;
 
   /** A part joins the focus when it is at least this share of the largest part's area... */
   static final double FOCUS_MIN_AREA = 0.02;
@@ -55,7 +62,13 @@ public final class CountryShapeBuilder {
   private CountryShapeBuilder() {}
 
   /** What is worked out once for each country before any simplifying. */
-  private record Info(int largest, Bounds focus, double tolerance, long areaKm2) {}
+  private record Info(int largest, Bounds focus, double diagonal, long areaKm2) {
+
+    /** The tolerance, in degrees, the country's outline, coast and borders are simplified with. */
+    double outlineTolerance() {
+      return tolerance(diagonal, TOLERANCE_DIVISOR, MIN_TOLERANCE);
+    }
+  }
 
   /** The length of a country's coast and borders, from the edge labels. */
   private record Borders(
@@ -73,12 +86,17 @@ public final class CountryShapeBuilder {
       Map<String, List<Integer>> neighbourLines) {}
 
   /**
-   * The tolerance, in degrees, this builder simplifies a country's lines with: a four-hundredth of
-   * the diagonal of its largest part, within limits. Other programs that draw things inside a
-   * country (its rivers) simplify with the same tolerance, so they match the outline.
+   * The tolerance, in degrees, to simplify the rivers and lakes drawn inside a country with: a
+   * four-hundredth of the diagonal of its largest part, within limits. It is coarser than the
+   * outline's, so the river and lake point caps still hold.
    */
-  public static double tolerance(Country country) {
-    return info(CountryRings.read(country)).tolerance();
+  public static double riverTolerance(Country country) {
+    double diagonal = info(CountryRings.read(country)).diagonal();
+    return tolerance(diagonal, RIVER_TOLERANCE_DIVISOR, RIVER_MIN_TOLERANCE);
+  }
+
+  private static double tolerance(double diagonal, double divisor, double min) {
+    return Math.max(min, Math.min(MAX_TOLERANCE, diagonal / divisor));
   }
 
   public static List<CountryShape> build(List<Country> countries) {
@@ -171,15 +189,13 @@ public final class CountryShapeBuilder {
       east = Math.max(east, box[2]);
       north = Math.max(north, box[3]);
     }
-    double tolerance =
-        Math.max(MIN_TOLERANCE, Math.min(MAX_TOLERANCE, diagonal / TOLERANCE_DIVISOR));
     double areaKm2 = 0;
     List<Ring> rings = source.parts().get(largest).rings();
     for (int r = 0; r < rings.size(); r++) {
       double ringKm2 = Geo.ringAreaKm2(rings.get(r).points());
       areaKm2 += r == 0 ? ringKm2 : -ringKm2;
     }
-    return new Info(largest, new Bounds(west, south, east, north), tolerance, Math.round(areaKm2));
+    return new Info(largest, new Bounds(west, south, east, north), diagonal, Math.round(areaKm2));
   }
 
   // ---- one country ----
@@ -327,9 +343,9 @@ public final class CountryShapeBuilder {
   // ---- simplifying ----
 
   private static List<double[]> simplify(Run run, Map<String, Info> infos, Info own) {
-    double tolerance = own.tolerance();
+    double tolerance = own.outlineTolerance();
     if (!run.label().equals(COAST) && !run.label().equals(SEAM)) {
-      tolerance = Math.min(tolerance, infos.get(run.label()).tolerance());
+      tolerance = Math.min(tolerance, infos.get(run.label()).outlineTolerance());
     }
     List<double[]> points = run.points();
     boolean closed = vertexKey(points.get(0)).equals(vertexKey(points.get(points.size() - 1)));
