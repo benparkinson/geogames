@@ -6,8 +6,10 @@ import com.parkinson.benjamin.geogames.api.ChallengeResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +24,14 @@ public class ChallengeService {
   private final ChallengeStore store;
   private final GameService gameService;
 
-  public ChallengeService(Clock clock, ChallengeStore store, GameService gameService) {
+  private final GameMetrics metrics;
+
+  public ChallengeService(
+      Clock clock, ChallengeStore store, GameService gameService, GameMetrics metrics) {
     this.clock = clock;
     this.store = store;
     this.gameService = gameService;
+    this.metrics = metrics;
   }
 
   /**
@@ -48,11 +54,14 @@ public class ChallengeService {
             source.score(),
             source.maxScore(),
             LocalDate.now(clock)));
+    metrics.challengeCreated(source.gameMode(), source.difficulty());
     return new ChallengeCreationResponse(id);
   }
 
   public ChallengeResponse find(UUID id) {
-    Challenge challenge = load(id);
+    Optional<Challenge> found = store.find(id);
+    metrics.challengeOpened(found.isPresent());
+    Challenge challenge = found.orElseThrow(ChallengeService::expired);
     return new ChallengeResponse(
         challenge.gameMode(),
         challenge.difficulty().name(),
@@ -64,13 +73,22 @@ public class ChallengeService {
   /** A new game with the challenge's rounds, mode and difficulty; each call makes another. */
   public GameCreationResponse createGame(UUID id) {
     Challenge challenge = load(id);
-    return gameService.createGame(
-        challenge.rounds(), challenge.gameMode(), challenge.difficulty(), null, challenge.score());
+    GameCreationResponse game =
+        gameService.createGame(
+            challenge.rounds(),
+            challenge.gameMode(),
+            challenge.difficulty(),
+            null,
+            challenge.score());
+    metrics.challengeStarted(challenge.gameMode(), challenge.difficulty());
+    return game;
   }
 
   private Challenge load(UUID id) {
-    return store
-        .find(id)
-        .orElseThrow(() -> new ChallengeNotFoundException("This challenge has expired"));
+    return store.find(id).orElseThrow(ChallengeService::expired);
+  }
+
+  private static ChallengeNotFoundException expired() {
+    return new ChallengeNotFoundException("This challenge has expired");
   }
 }

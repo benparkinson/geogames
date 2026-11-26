@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.parkinson.benjamin.geogames.api.BadRequestException;
@@ -14,6 +15,7 @@ import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,9 +35,13 @@ class ChallengeServiceTest {
 
   private final ChallengeStore store = mock(ChallengeStore.class);
   private final GameService games = mock(GameService.class);
+  private final GameMetrics metrics = mock(GameMetrics.class);
   private final ChallengeService service =
       new ChallengeService(
-          Clock.fixed(Instant.parse("2026-11-25T10:15:30Z"), ZoneOffset.UTC), store, games);
+          Clock.fixed(Instant.parse("2026-11-25T10:15:30Z"), ZoneOffset.UTC),
+          store,
+          games,
+          metrics);
 
   @Test
   void createCopiesTheRoundKeysModeDifficultyAndScore() {
@@ -45,6 +51,7 @@ class ChallengeServiceTest {
 
     UUID id = service.create(gameId).id();
 
+    verify(metrics).challengeCreated("RANDOM", Difficulty.HARD);
     ArgumentCaptor<Challenge> stored = ArgumentCaptor.forClass(Challenge.class);
     verify(store).insert(stored.capture());
     assertThat(stored.getValue())
@@ -91,6 +98,7 @@ class ChallengeServiceTest {
     assertThat(response.roundCount()).isEqualTo(2);
     assertThat(response.score()).isEqualTo(150);
     assertThat(response.maxScore()).isEqualTo(200);
+    verify(metrics).challengeOpened(true);
   }
 
   @Test
@@ -100,6 +108,9 @@ class ChallengeServiceTest {
 
     assertThatThrownBy(() -> service.find(id)).isInstanceOf(ChallengeNotFoundException.class);
     assertThatThrownBy(() -> service.createGame(id)).isInstanceOf(ChallengeNotFoundException.class);
+    // Only opening the link is counted, not the attempt to start it.
+    verify(metrics).challengeOpened(false);
+    verifyNoMoreInteractions(metrics);
   }
 
   @Test
@@ -116,5 +127,6 @@ class ChallengeServiceTest {
     assertThat(service.createGame(id)).isSameAs(created);
 
     verify(games).createGame(ROUNDS, "RANDOM", Difficulty.HARD, null, 1);
+    verify(metrics).challengeStarted("RANDOM", Difficulty.HARD);
   }
 }

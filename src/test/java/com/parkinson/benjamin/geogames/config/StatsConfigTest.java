@@ -2,7 +2,11 @@ package com.parkinson.benjamin.geogames.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DropReason;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -12,8 +16,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 class StatsConfigTest {
 
+  private final GameMetrics metrics = mock(GameMetrics.class);
   private final ThreadPoolTaskExecutor executor =
-      (ThreadPoolTaskExecutor) new StatsConfig().statsExecutor();
+      (ThreadPoolTaskExecutor) new StatsConfig().statsExecutor(metrics);
 
   @Test
   void runsTasksOnOneThreadNamedStats() throws Exception {
@@ -45,6 +50,7 @@ class StatsConfigTest {
     }
 
     assertThatCode(() -> stats.execute(() -> {})).doesNotThrowAnyException();
+    verify(metrics).statsDropped(DropReason.QUEUE_FULL);
 
     release.countDown();
     executor.shutdown();
