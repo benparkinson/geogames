@@ -51,6 +51,12 @@ describe("DailyScoreReveal", () => {
     expect(screen.getByText("41 / 50")).toBeInTheDocument();
   });
 
+  it("heads the bar columns with the part names", () => {
+    stubMotion(true);
+    show();
+    for (const name of ["Answer", "Hints", "Lives"]) expect(screen.getByText(name)).toBeInTheDocument();
+  });
+
   it("jumps to the end on a tap", async () => {
     stubMotion(false);
     show();

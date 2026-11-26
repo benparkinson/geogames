@@ -1,3 +1,4 @@
+import { RESULT_ICONS } from "./resultIcons";
 import type { SummaryRowView } from "./summaryView";
 import { ScoreBar } from "../../ui";
 
@@ -16,6 +17,8 @@ export default function SummaryRow({
 }): React.JSX.Element {
   const missed = row.outcome === null || row.outcome === "missed";
   const note = row.outOfGuesses ? "Ran out of lives" : row.result === "revealed" ? "Gave up" : null;
+  // The same icon as the tracker dot, for a round that ended without the answer.
+  const NoteIcon = RESULT_ICONS[row.outOfGuesses ? "outOfGuesses" : "revealed"];
   return (
     <button type="button" className="gg-summary__row" onClick={onOpen} data-outcome={row.outcome ?? "missed"}>
       <span className="gg-summary__no gg-mono">{index + 1}.</span>
@@ -36,13 +39,13 @@ export default function SummaryRow({
             </span>
           ))}
         </span>
-        {note && <span className="gg-summary__note gg-mono">{note}</span>}
-        <ScoreBar className="gg-summary__bar" breakdown={row.breakdown} />
-        {row.hintsUsed > 0 && (
-          <span className="gg-summary__note gg-mono gg-text-muted">
-            {row.hintsUsed === 1 ? "1 hint" : `${row.hintsUsed} hints`}
+        {note && (
+          <span className="gg-summary__note gg-mono">
+            <NoteIcon aria-hidden="true" />
+            {note}
           </span>
         )}
+        <ScoreBar className="gg-summary__bar" breakdown={row.breakdown} />
       </span>
       <span className="gg-summary__wrong gg-mono gg-text-muted">
         {row.wrongGuessNames.length > 0 ? row.wrongGuessNames.join(", ") : "–"}

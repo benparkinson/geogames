@@ -1373,6 +1373,32 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .gg-score-bar__labels > li:only-child {
   grid-column: 1 / -1;
 }
+.gg-score-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-1) var(--gg-space-3);
+  margin: var(--gg-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--gg-font-size-sm);
+}
+.gg-score-key__swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: var(--gg-space-1);
+  border: 1px solid var(--gg-color-rule);
+  border-radius: 2px;
+}
+.gg-score-key__swatch[data-part="answer"] {
+  background: var(--gg-color-part-answer);
+}
+.gg-score-key__swatch[data-part="noHints"] {
+  background: var(--gg-color-part-no-hints);
+}
+.gg-score-key__swatch[data-part="noMisses"] {
+  background: var(--gg-color-part-no-misses);
+}
 @media (prefers-reduced-motion: no-preference) {
   @keyframes gg-cell-fill {
     from {
@@ -1506,6 +1532,10 @@ button.gg-summary__row:focus-visible {
 }
 .gg-summary__note {
   font-size: var(--gg-font-size-sm);
+}
+.gg-summary__note svg {
+  margin-right: var(--gg-space-1);
+  vertical-align: -0.125em;
 }
 .gg-summary__wrong {
   display: none;
@@ -1676,6 +1706,20 @@ button.gg-summary__row:focus-visible {
 }
 .gg-reveal__bar .gg-score-bar {
   flex: 1;
+}
+/* A fixed width, so the empty label above the bars indents the column headers to match. */
+.gg-reveal__label {
+  flex: none;
+  width: 1ch;
+}
+.gg-reveal__header {
+  display: flex;
+  gap: var(--gg-space-2);
+  margin-bottom: var(--gg-space-1);
+}
+.gg-reveal__header .gg-score-bar__labels {
+  flex: 1;
+  margin: 0;
 }
 .gg-reveal__total {
   margin: var(--gg-space-3) 0 0;
