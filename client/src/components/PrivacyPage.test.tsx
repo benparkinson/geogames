@@ -51,6 +51,12 @@ describe("PrivacyPage", () => {
     expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(/deleted after seven days/);
   });
 
+  it("says that a game from a challenge stores the score to beat", () => {
+    render(<PrivacyPage />);
+
+    expect(screen.getByText(/A game is a random id/)).toHaveTextContent(/also stores the score to beat/);
+  });
+
   it("credits the data and imagery,and links to the software licences", () => {
     render(<PrivacyPage />);
 

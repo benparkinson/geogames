@@ -65,7 +65,7 @@ public class ChallengeService {
   public GameCreationResponse createGame(UUID id) {
     Challenge challenge = load(id);
     return gameService.createGame(
-        challenge.rounds(), challenge.gameMode(), challenge.difficulty(), null);
+        challenge.rounds(), challenge.gameMode(), challenge.difficulty(), null, challenge.score());
   }
 
   private Challenge load(UUID id) {

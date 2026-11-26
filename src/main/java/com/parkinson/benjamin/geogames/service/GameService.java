@@ -101,6 +101,17 @@ public class GameService {
   @Transactional
   public GameCreationResponse createGame(
       List<PinnedRound> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
+    return createGame(rounds, gameMode, difficulty, dailyDate, null);
+  }
+
+  /** The same, with the score to beat for a game started from a challenge. */
+  @Transactional
+  public GameCreationResponse createGame(
+      List<PinnedRound> rounds,
+      String gameMode,
+      Difficulty difficulty,
+      LocalDate dailyDate,
+      Integer challengeScore) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
@@ -108,7 +119,7 @@ public class GameService {
     GameCreationResponse response =
         new GameCreationResponse(
             gameRepository
-                .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
+                .save(new GameEntity(entities, gameMode, difficulty, dailyDate, challengeScore))
                 .getPublicId());
     metrics.gameStarted(gameMode, difficulty);
     return response;

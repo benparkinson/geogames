@@ -111,10 +111,10 @@ class ChallengeServiceTest {
                 new Challenge(
                     id, "RANDOM", Difficulty.HARD, ROUNDS, 1, 2, LocalDate.parse("2026-11-25"))));
     GameCreationResponse created = new GameCreationResponse(UUID.randomUUID());
-    when(games.createGame(any(), any(), any(), any())).thenReturn(created);
+    when(games.createGame(any(), any(), any(), any(), any())).thenReturn(created);
 
     assertThat(service.createGame(id)).isSameAs(created);
 
-    verify(games).createGame(ROUNDS, "RANDOM", Difficulty.HARD, null);
+    verify(games).createGame(ROUNDS, "RANDOM", Difficulty.HARD, null, 1);
   }
 }
