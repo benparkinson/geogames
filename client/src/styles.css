@@ -205,6 +205,10 @@ code {
   font-weight: var(--gg-font-weight-mono);
   line-height: 1;
 }
+.round-dot svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
 .round-dot[data-outcome="full"],
 .round-dot[data-outcome="good"] {
   background: var(--gg-color-rule);

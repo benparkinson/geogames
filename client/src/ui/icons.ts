@@ -27,5 +27,6 @@ export {
   Water as RiverIcon,
   X as CloseIcon,
   XLg as WrongGuessIcon,
+  XLg as OutOfLivesIcon,
   ArrowRight as NextIcon,
 } from "react-bootstrap-icons";

@@ -1,11 +1,17 @@
 import { foundAnswers, GuessState, wrongGuessCount } from "./guessReducer";
 import type { HintConfig } from "./hints";
-import { AnswerState, CORRECT_ANSWER, finalAnswerState, Round, UNANSWERED } from "./Model";
+import { AnswerState, CORRECT_ANSWER, finalAnswerState, OUT_OF_GUESSES, Round, UNANSWERED } from "./Model";
 import { roundOutcome, RoundOutcome } from "./outcome";
 import { pointsBreakdown, PointsBreakdown, roundPoints } from "./scoring";
 
 /** How a finished round ended, for choosing its message. */
 export type RoundResultKind = "correct" | "revealed" | "outOfGuesses";
+
+/** How a round with this final answer state ended. Not for an unanswered round. */
+export function roundResultKind(answerState: AnswerState): RoundResultKind {
+  if (answerState === CORRECT_ANSWER) return "correct";
+  return answerState === OUT_OF_GUESSES ? "outOfGuesses" : "revealed";
+}
 
 /** Everything the round screen shows that is worked out from the round's state, so the components only render. */
 export interface RoundView {
@@ -44,13 +50,7 @@ export function roundView(round: Round, state: GuessState, answerCount: number, 
   const scored = state.over ? answerState : CORRECT_ANSWER;
   const points = roundPoints(scored, hintsUsed, answersFound, answerCount, wrongGuesses);
   const outcome = state.over ? roundOutcome(answerState, points) : null;
-  const result: RoundResultKind | null = !state.over
-    ? null
-    : state.outOfGuesses
-      ? "outOfGuesses"
-      : state.gaveUp
-        ? "revealed"
-        : "correct";
+  const result = state.over ? roundResultKind(answerState) : null;
   const hintTexts = Array.from({ length: hintsUsed }, (_, i) => hints.text?.(i, state.foundAtHint)).filter(
     (text): text is string => !!text,
   );
