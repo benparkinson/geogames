@@ -51,8 +51,8 @@ Run e2e locally only when you changed something a browser test drives and CI can
 
 - Never commit a plan file or anything under `docs/plans/`. Don't link to plans from code, CLAUDE.md or the PR: they aren't in the repo.
 - Commit with a message that says what changed and why. Push with `git push -u origin <branch>`.
-- `gh pr create --base <base>`. If `gh` isn't on PATH, use `"/c/Program Files/GitHub CLI/gh.exe"`. The description: what changed, how it was checked, anything left out or done differently from the plan, and for a stack, the merge order and which PR this one builds on.
-- Wait for nothing: CI results arrive later, and `/fix-pr` handles a red check.
+- `gh pr create --draft --base <base>`: always a draft, and leave it one (CI runs nothing until it is ready; `/fix-pr` does that when its turn to merge comes). The local checks above are the only ones it has had. If `gh` isn't on PATH, use `"/c/Program Files/GitHub CLI/gh.exe"`. The description: what changed, how it was checked, anything left out or done differently from the plan, and for a stack, the merge order and which PR this one builds on.
+- Wait for nothing.
 
 ## 6. Stop
 

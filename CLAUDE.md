@@ -44,9 +44,9 @@ Full builds:
 
 ## Git workflow
 
-`main` is protected: changes must go through a pull request and the required `test` status check, so pushes to `main` are rejected. Never commit to or push `main`. Create a feature branch first, push that, and open a PR.
+`main` is protected: changes must go through a pull request and the required `test` status check, so pushes to `main` are rejected. Never commit to or push `main`. Create a feature branch first, push that, and open a PR **as a draft** (`gh pr create --draft`). A draft runs no CI: PRs are raised in bulk, then merged one by one, so don't mark one ready (`gh pr ready`) unless the user asks, and then only after it is up to date with `main` (`/fix-pr`).
 
-The skills in `.claude/skills/` hold the usual workflows: `/write-plan` (a plan for a fresh session), `/ship-plan` (a plan or task on its own worktree, through to a PR) and `/fix-pr` (red checks, merge conflicts, stacks).
+The skills in `.claude/skills/` hold the usual workflows: `/write-plan` (a plan for a fresh session), `/ship-plan` (a plan or task on its own worktree, through to a PR) and `/fix-pr` (red checks, merge conflicts, stacks, readying a draft).
 
 **Keep PRs easy to review.** Plan several focused PRs before starting; each passes CI alone and leaves the product working. A feature that crosses layers usually splits into: 1. the backend (the schema, the new API field, which starts optional, `api-shapes.json` and the client fixture the contract test needs); 2. separate backend concerns such as usage statistics, with their own migration; 3. the frontend that uses the field. Refactors and test-helper changes go first, in their own PR. Don't split a change that is already small or whose parts make no sense apart; if a PR is still large, say why in its description.
 

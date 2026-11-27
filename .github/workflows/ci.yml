@@ -5,10 +5,11 @@ name: CI
 
 # No run on a push to main: branch protection makes every PR up to date with main before it merges,
 # so the merge commit is what its PR's last run tested. A draft PR runs nothing (every job, `test`
-# included, is skipped) until it is marked ready for review; a draft cannot be merged.
+# included, is skipped) until it is marked ready for review; a draft cannot be merged. Turning a PR
+# back into a draft starts a run that skips everything and so cancels the one in progress.
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
   # Monday morning: finds breakage that arrives without a commit (the runner image, the floating
   # Docker base tags Render also builds from, Playwright's system packages).
   schedule:
