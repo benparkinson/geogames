@@ -30,13 +30,13 @@ class GameCleanupServiceTest {
           Duration.ofDays(7));
 
   @Test
-  void deletesChallengesCreatedBeforeTheDateOfNowMinusTheirMaxAge() {
+  void deletesChallengesUnusedSinceTheDateOfNowMinusTheirMaxAge() {
     Instant now = Instant.parse("2026-11-08T12:00:00Z");
-    when(challenges.deleteCreatedBefore(LocalDate.parse("2026-11-01"))).thenReturn(2);
+    when(challenges.deleteUnusedBefore(LocalDate.parse("2026-11-01"))).thenReturn(2);
 
     assertThat(service.deleteChallengesOlderThanMaxAge(now)).isEqualTo(2);
 
-    verify(challenges).deleteCreatedBefore(LocalDate.parse("2026-11-01"));
+    verify(challenges).deleteUnusedBefore(LocalDate.parse("2026-11-01"));
     verify(metrics).deleted(DeletedKind.CHALLENGE, 2);
   }
 
@@ -44,7 +44,7 @@ class GameCleanupServiceTest {
   void theScheduledRunAlsoDeletesChallenges() {
     service.deleteOldGames();
 
-    verify(challenges).deleteCreatedBefore(org.mockito.ArgumentMatchers.any());
+    verify(challenges).deleteUnusedBefore(org.mockito.ArgumentMatchers.any());
   }
 
   @Test

@@ -44,6 +44,7 @@ import com.parkinson.benjamin.geogames.model.geojson.GeoData;
 import com.parkinson.benjamin.geogames.model.geojson.GeoGeometry;
 import com.parkinson.benjamin.geogames.model.geojson.GeoProperties;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeEntryStore;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
@@ -88,6 +89,7 @@ class GameServiceTest {
   private GameService service;
   private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
   private final DailyScoreStore dailyScores = mock(DailyScoreStore.class);
+  private final ChallengeEntryStore challengeEntries = mock(ChallengeEntryStore.class);
   private final RoundContinents roundContinents = mock(RoundContinents.class);
   private final KnownPlaceNames names = testNames();
 
@@ -156,6 +158,7 @@ class GameServiceTest {
         events,
         names,
         dailyScores,
+        challengeEntries,
         roundContinents,
         mock(GameMetrics.class));
   }
@@ -174,6 +177,7 @@ class GameServiceTest {
         events,
         names,
         dailyScores,
+        challengeEntries,
         roundContinents,
         mock(GameMetrics.class));
   }
@@ -551,6 +555,7 @@ class GameServiceTest {
               events,
               names,
               dailyScores,
+              challengeEntries,
               mock(RoundContinents.class),
               mock(GameMetrics.class))
           .createGame("RANDOM", 10, Difficulty.NORMAL);
@@ -997,7 +1002,8 @@ class GameServiceTest {
             "TRIPOINT",
             Difficulty.HARD,
             null,
-            7);
+            7,
+            null);
     when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
@@ -1275,6 +1281,54 @@ class GameServiceTest {
     assertThat(source.difficulty()).isEqualTo(Difficulty.NORMAL);
     assertThat(source.score()).isEqualTo(10);
     assertThat(source.maxScore()).isEqualTo(20);
+    assertThat(source.challengeId()).isNull();
+  }
+
+  private GameEntity lastRoundOfAGame(Long challengeId) {
+    GameEntity game =
+        new GameEntity(
+            new ArrayList<>(
+                List.of(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED))),
+            "TRIPOINT",
+            Difficulty.NORMAL,
+            null,
+            challengeId == null ? null : 10,
+            challengeId);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+    return game;
+  }
+
+  @Test
+  void finishingAGameFromAChallengeAddsItsEntryOnce() {
+    GameEntity game = lastRoundOfAGame(7L);
+    when(challengeEntries.insert(7L, 10)).thenReturn(8L);
+
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, 0, null);
+    // A repeat is a no-op.
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, 0, null);
+
+    verify(challengeEntries).insert(7L, 10);
+    assertThat(game.getChallengeEntryId()).isEqualTo(8L);
+  }
+
+  @Test
+  void finishingAGameWithNoChallengeOrWithItsEntryAddsNone() {
+    lastRoundOfAGame(null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, 0, null);
+    lastRoundOfAGame(7L).linkChallenge(7, 8);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, 0, null);
+
+    verifyNoInteractions(challengeEntries);
+  }
+
+  @Test
+  void linkingAChallengeSetsItOnTheGame() {
+    GameEntity game = lastRoundOfAGame(null);
+
+    service.linkChallenge(GAME_ID, 3, 4);
+
+    assertThat(game.getChallengeId()).isEqualTo(3L);
+    assertThat(game.getChallengeEntryId()).isEqualTo(4L);
   }
 
   @Test

@@ -12,80 +12,100 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Challenges a friend to play the rounds of a finished game. Not {@code @Transactional}: the store
- * commits its own insert and {@link GameService} makes the game in its own transaction.
+ * Challenges a friend to play the rounds of a finished game. A game has at most one challenge: the
+ * one it made, or the one it was started from, and sharing it again reuses that link.
  */
 @Service
 public class ChallengeService {
 
   private final Clock clock;
   private final ChallengeStore store;
+  private final ChallengeEntryStore entries;
   private final GameService gameService;
-
   private final GameMetrics metrics;
 
   public ChallengeService(
-      Clock clock, ChallengeStore store, GameService gameService, GameMetrics metrics) {
+      Clock clock,
+      ChallengeStore store,
+      ChallengeEntryStore entries,
+      GameService gameService,
+      GameMetrics metrics) {
     this.clock = clock;
     this.store = store;
+    this.entries = entries;
     this.gameService = gameService;
     this.metrics = metrics;
   }
 
   /**
+   * The game's challenge, making one with this game's score as its first entry if it has none (or
+   * it has expired). One transaction, so a challenge is never stored without its entry.
+   *
    * @throws ChallengeNotFoundException for an unknown game
    * @throws ChallengeConflictException for an unfinished game
    * @throws BadRequestException for a daily game, which has its own share
    */
+  @Transactional
   public ChallengeCreationResponse create(UUID gameId) {
     ChallengeSource source =
         gameService
             .challengeSource(gameId)
             .orElseThrow(() -> new ChallengeNotFoundException("No such game"));
-    UUID id = UUID.randomUUID();
-    store.insert(
-        new Challenge(
-            id,
-            source.gameMode(),
-            source.difficulty(),
-            source.rounds(),
-            source.score(),
-            source.maxScore(),
-            LocalDate.now(clock)));
+    LocalDate today = LocalDate.now(clock);
+    Optional<StoredChallenge> existing =
+        Optional.ofNullable(source.challengeId()).flatMap(store::findById);
+    if (existing.isPresent()) {
+      store.touch(existing.get().id(), today);
+      return new ChallengeCreationResponse(existing.get().challenge().publicId());
+    }
+    UUID publicId = UUID.randomUUID();
+    long challengeId =
+        store.insert(
+            new Challenge(
+                publicId,
+                source.gameMode(),
+                source.difficulty(),
+                source.rounds(),
+                source.maxScore(),
+                today,
+                today));
+    gameService.linkChallenge(gameId, challengeId, entries.insert(challengeId, source.score()));
     metrics.challengeCreated(source.gameMode(), source.difficulty());
-    return new ChallengeCreationResponse(id);
+    return new ChallengeCreationResponse(publicId);
   }
 
   public ChallengeResponse find(UUID id) {
-    Optional<Challenge> found = store.find(id);
+    Optional<StoredChallenge> found = store.find(id);
     metrics.challengeOpened(found.isPresent());
-    Challenge challenge = found.orElseThrow(ChallengeService::expired);
+    StoredChallenge stored = found.orElseThrow(ChallengeService::expired);
+    Challenge challenge = stored.challenge();
     return new ChallengeResponse(
         challenge.gameMode(),
         challenge.difficulty().name(),
         challenge.rounds().size(),
-        challenge.score(),
+        entries.topScore(stored.id()),
         challenge.maxScore());
   }
 
   /** A new game with the challenge's rounds, mode and difficulty; each call makes another. */
   public GameCreationResponse createGame(UUID id) {
-    Challenge challenge = load(id);
+    StoredChallenge stored = store.find(id).orElseThrow(ChallengeService::expired);
+    Challenge challenge = stored.challenge();
+    // Touched first, so cleanup can't delete it before the new game points at it.
+    store.touch(stored.id(), LocalDate.now(clock));
     GameCreationResponse game =
         gameService.createGame(
             challenge.rounds(),
             challenge.gameMode(),
             challenge.difficulty(),
             null,
-            challenge.score());
+            entries.topScore(stored.id()),
+            stored.id());
     metrics.challengeStarted(challenge.gameMode(), challenge.difficulty());
     return game;
-  }
-
-  private Challenge load(UUID id) {
-    return store.find(id).orElseThrow(ChallengeService::expired);
   }
 
   private static ChallengeNotFoundException expired() {

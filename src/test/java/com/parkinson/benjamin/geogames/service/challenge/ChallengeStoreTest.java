@@ -25,41 +25,56 @@ class ChallengeStoreTest {
     return new ChallengeStore(JdbcClient.create(jdbcTemplate), JsonMapper.builder().build());
   }
 
-  private static Challenge challenge(UUID id, LocalDate createdOn) {
+  private static Challenge challenge(LocalDate lastUsedOn) {
     return new Challenge(
-        id,
+        UUID.randomUUID(),
         "RANDOM",
         Difficulty.EASY,
         List.of(
             new PinnedRound(GameType.TRIPOINT, "tripoint:x"),
             new PinnedRound(GameType.LAKES_BY_SHAPE, "lake:Q1")),
-        120,
         200,
-        createdOn);
+        LocalDate.of(2026, 11, 1),
+        lastUsedOn);
   }
 
   @Test
-  void aStoredChallengeIsFoundByItsPublicId() {
+  void aStoredChallengeIsFoundByEitherId() {
     ChallengeStore store = store();
-    Challenge stored = challenge(UUID.randomUUID(), LocalDate.of(2026, 11, 25));
+    Challenge challenge = challenge(LocalDate.of(2026, 11, 25));
 
-    store.insert(stored);
+    long id = store.insert(challenge);
 
-    assertThat(store.find(stored.publicId())).contains(stored);
+    assertThat(store.find(challenge.publicId())).contains(new StoredChallenge(id, challenge));
+    assertThat(store.findById(id)).contains(new StoredChallenge(id, challenge));
     assertThat(store.find(UUID.randomUUID())).isEmpty();
+    assertThat(store.findById(id + 1000)).isEmpty();
   }
 
   @Test
-  void deleteRemovesOnlyChallengesCreatedBeforeTheCutoff() {
+  void touchOnlyMovesTheLastUsedDateForward() {
     ChallengeStore store = store();
-    Challenge old = challenge(UUID.randomUUID(), LocalDate.of(2026, 11, 1));
-    Challenge recent = challenge(UUID.randomUUID(), LocalDate.of(2026, 11, 20));
-    store.insert(old);
-    store.insert(recent);
+    long id = store.insert(challenge(LocalDate.of(2026, 11, 20)));
 
-    assertThat(store.deleteCreatedBefore(LocalDate.of(2026, 11, 10))).isEqualTo(1);
+    store.touch(id, LocalDate.of(2026, 11, 10));
+    assertThat(store.findById(id).orElseThrow().challenge().lastUsedOn())
+        .isEqualTo(LocalDate.of(2026, 11, 20));
 
-    assertThat(store.find(old.publicId())).isEmpty();
-    assertThat(store.find(recent.publicId())).contains(recent);
+    store.touch(id, LocalDate.of(2026, 11, 22));
+    assertThat(store.findById(id).orElseThrow().challenge().lastUsedOn())
+        .isEqualTo(LocalDate.of(2026, 11, 22));
+  }
+
+  @Test
+  void deleteGoesByWhenAChallengeWasLastUsed() {
+    ChallengeStore store = store();
+    long unused = store.insert(challenge(LocalDate.of(2026, 11, 1)));
+    long touched = store.insert(challenge(LocalDate.of(2026, 11, 1)));
+    store.touch(touched, LocalDate.of(2026, 11, 20));
+
+    store.deleteUnusedBefore(LocalDate.of(2026, 11, 10));
+
+    assertThat(store.findById(unused)).isEmpty();
+    assertThat(store.findById(touched)).isPresent();
   }
 }

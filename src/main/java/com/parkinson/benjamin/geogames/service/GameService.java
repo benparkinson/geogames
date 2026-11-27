@@ -17,6 +17,7 @@ import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeEntryStore;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
@@ -50,6 +51,7 @@ public class GameService {
   private final RoundRules rules;
   private final KnownPlaceNames placeNames;
   private final DailyScoreStore dailyScores;
+  private final ChallengeEntryStore challengeEntries;
   private final RoundContinents roundContinents;
   private final GameMetrics metrics;
 
@@ -62,6 +64,7 @@ public class GameService {
       ApplicationEventPublisher events,
       KnownPlaceNames placeNames,
       DailyScoreStore dailyScores,
+      ChallengeEntryStore challengeEntries,
       RoundContinents roundContinents,
       GameMetrics metrics) {
     this.gameRepository = gameRepository;
@@ -72,6 +75,7 @@ public class GameService {
     this.rules = rules;
     this.placeNames = placeNames;
     this.dailyScores = dailyScores;
+    this.challengeEntries = challengeEntries;
     this.roundContinents = roundContinents;
     this.metrics = metrics;
   }
@@ -102,22 +106,24 @@ public class GameService {
   @Transactional
   public GameCreationResponse createGame(
       List<PinnedRound> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
-    return createGame(rounds, gameMode, difficulty, dailyDate, null);
+    return createGame(rounds, gameMode, difficulty, dailyDate, null, null);
   }
 
-  /** The same, with the score to beat for a game started from a challenge. */
+  /** The same, with the score to beat and the challenge for a game started from one. */
   @Transactional
   public GameCreationResponse createGame(
       List<PinnedRound> rounds,
       String gameMode,
       Difficulty difficulty,
       LocalDate dailyDate,
-      Integer challengeScore) {
+      Integer challengeScore,
+      Long challengeId) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
-    GameEntity game = new GameEntity(entities, gameMode, difficulty, dailyDate, challengeScore);
+    GameEntity game =
+        new GameEntity(entities, gameMode, difficulty, dailyDate, challengeScore, challengeId);
     GameCreationResponse response =
         new GameCreationResponse(gameRepository.save(game).getPublicId());
     metrics.gameStarted(gameMode, difficulty, game.origin());
@@ -149,8 +155,21 @@ public class GameService {
                       .map(r -> new PinnedRound(r.getGameType(), r.getRoundKey()))
                       .toList();
               return new ChallengeSource(
-                  rounds, game.getGameMode(), game.difficulty(), result.score(), result.maxScore());
+                  rounds,
+                  game.getGameMode(),
+                  game.difficulty(),
+                  result.score(),
+                  result.maxScore(),
+                  game.getChallengeId());
             });
+  }
+
+  /** Records the challenge a game has made, and the game's entry in it. */
+  @Transactional
+  public void linkChallenge(UUID gameId, long challengeId, long entryId) {
+    gameRepository
+        .findByPublicId(gameId)
+        .ifPresent(game -> game.linkChallenge(challengeId, entryId));
   }
 
   @Transactional(readOnly = true)
@@ -251,15 +270,20 @@ public class GameService {
   }
 
   /**
-   * Counts a game whose last round was just answered. The daily score is written in this
-   * transaction, so a rolled-back answer rolls the count back too; the event is handled after the
-   * commit.
+   * Counts a game whose last round was just answered. The daily score and a challenge entry are
+   * written in this transaction, so a rolled-back answer rolls them back too; the event is handled
+   * after the commit.
    */
   private void finished(GameEntity game) {
     GameResult result = GameResults.of(game);
     if (game.getDailyDate() != null) {
       dailyScores.recordFinished(
           game.getDailyDate(), game.difficulty(), result.score(), result.maxScore());
+    }
+    // The creator's game already has its entry. An expired challenge has nulled the id.
+    Long challengeId = game.getChallengeId();
+    if (challengeId != null && game.getChallengeEntryId() == null) {
+      game.linkChallenge(challengeId, challengeEntries.insert(challengeId, result.score()));
     }
     events.publishEvent(
         new GameFinished(

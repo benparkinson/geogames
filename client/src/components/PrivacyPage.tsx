@@ -41,8 +41,9 @@ function PrivacyPage(): React.JSX.Element {
           There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the questions
           asked, the guesses made (only names from our lists), the hints taken, the difficulty (Easy, Normal or Hard),
           how each round ended and how many of its answers you found. A game started from a challenge also stores the
-          score to beat. It is deleted after 24 hours. To stop abuse, the server keeps a scrambled form of your network
-          address in memory for about ten minutes after each request. It is never stored on disk or logged.
+          score to beat, and a game that made a challenge or was started from one records which, and its score there. It
+          is deleted after 24 hours. To stop abuse, the server keeps a scrambled form of your network address in memory
+          for about ten minutes after each request. It is never stored on disk or logged.
         </p>
 
         <h2 className="gg-page__section">Anonymous statistics</h2>
@@ -80,9 +81,10 @@ function PrivacyPage(): React.JSX.Element {
 
         <p>
           When you finish a game that is not a daily challenge, you can challenge a friend. The server then stores the
-          rounds of your game, its mode and difficulty, your score and the date it was made (no time), so your friend
-          can play the same rounds. It holds no player data and is not linked to your game, and it is deleted after
-          seven days.
+          rounds of your game, its mode and difficulty, your score, and the dates it was made and last played (no time),
+          so your friend can play the same rounds. The score of every finished game played from the link is stored with
+          it. It holds no player data, no score links back to a game or a player, and it is all deleted seven days after
+          the challenge was last played or shared.
         </p>
 
         <h2 className="gg-page__section">Who else receives data</h2>
@@ -119,7 +121,7 @@ function PrivacyPage(): React.JSX.Element {
         </p>
 
         <h2 className="gg-page__section">Changes</h2>
-        <p className="gg-page__last">Last updated: 26 November 2026.</p>
+        <p className="gg-page__last">Last updated: 27 November 2026.</p>
       </main>
     </div>
   );

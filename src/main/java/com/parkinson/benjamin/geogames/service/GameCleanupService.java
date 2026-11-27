@@ -78,13 +78,13 @@ public class GameCleanupService {
     return deleted;
   }
 
-  /** Challenges are dated, so one is deleted once its creation date is older than the max age. */
+  /** Challenges are dated, so one is deleted once the date it was last used is past the max age. */
   public int deleteChallengesOlderThanMaxAge(Instant now) {
     LocalDate cutoff = now.minus(challengeMaxAge).atZone(ZoneOffset.UTC).toLocalDate();
-    int deleted = challenges.deleteCreatedBefore(cutoff);
+    int deleted = challenges.deleteUnusedBefore(cutoff);
     metrics.deleted(DeletedKind.CHALLENGE, deleted);
     if (deleted > 0) {
-      log.info("Deleted {} challenges older than {}", deleted, challengeMaxAge);
+      log.info("Deleted {} challenges unused for {}", deleted, challengeMaxAge);
     }
     return deleted;
   }
