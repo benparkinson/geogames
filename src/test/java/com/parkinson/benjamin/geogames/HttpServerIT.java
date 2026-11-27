@@ -136,7 +136,7 @@ class HttpServerIT {
             .expectBody(String.class)
             .returnResult()
             .getResponseBody();
-    assertThat(html).contains("Daily challenge");
+    assertThat(html).contains("Daily geography challenge");
   }
 
   @Test
@@ -151,7 +151,7 @@ class HttpServerIT {
             .expectBody(String.class)
             .returnResult()
             .getResponseBody();
-    assertThat(html).contains("Challenge");
+    assertThat(html).contains("been challenged on Geoggernaut");
   }
 
   @Test
