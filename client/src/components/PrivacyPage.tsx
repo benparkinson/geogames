@@ -41,8 +41,8 @@ function PrivacyPage(): React.JSX.Element {
           There are no accounts, no cookies, no analytics and no advertising. A game is a random id plus the questions
           asked, the guesses made (only names from our lists), the hints taken, the difficulty (Easy, Normal or Hard),
           how each round ended and how many of its answers you found. It is deleted after 24 hours. To stop abuse, when
-          you start a game the server keeps a scrambled form of your network address in memory for up to ten minutes. It
-          is never stored on disk or logged.
+          the server keeps a scrambled form of your network address in memory for about ten minutes after each request.
+          It is never stored on disk or logged.
         </p>
 
         <h2 className="gg-page__section">Anonymous statistics</h2>

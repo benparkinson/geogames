@@ -8,6 +8,7 @@ import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictExcept
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeNotFoundException;
 import com.parkinson.benjamin.geogames.service.ratelimit.GameCapacityException;
 import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
+import com.parkinson.benjamin.geogames.service.ratelimit.TooManyRequestsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,14 @@ public class ApiExceptionHandler {
     return retryLater(
         HttpStatus.TOO_MANY_REQUESTS,
         "Too many new games from your network. Try again in a few minutes.",
+        e.retryAfterSeconds());
+  }
+
+  @ExceptionHandler(TooManyRequestsException.class)
+  public ResponseEntity<ProblemDetail> tooManyRequests(TooManyRequestsException e) {
+    return retryLater(
+        HttpStatus.TOO_MANY_REQUESTS,
+        "Too many requests from your network. Try again in a minute.",
         e.retryAfterSeconds());
   }
 

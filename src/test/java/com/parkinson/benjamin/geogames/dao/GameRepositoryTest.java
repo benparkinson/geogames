@@ -115,6 +115,32 @@ class GameRepositoryTest {
   }
 
   @Test
+  void deletingUnplayedGamesKeepsPlayedAndRecentOnes() {
+    Instant now = Instant.now();
+    GameEntity unplayedOld = gameWithRounds("tripoint:unplayed-old");
+    unplayedOld.setCreatedAt(now.minus(Duration.ofHours(3)));
+    GameEntity playedOld = gameWithRounds("tripoint:played-old");
+    playedOld.setCreatedAt(now.minus(Duration.ofHours(3)));
+    playedOld.getRounds().get(1).recordAnswer(AnswerState.GAVE_UP, 0, 0, null);
+    GameEntity unplayedRecent = gameWithRounds("tripoint:unplayed-recent");
+    unplayedRecent.setCreatedAt(now.minus(Duration.ofHours(1)));
+    repository.save(unplayedOld);
+    long playedId = repository.save(playedOld).getId();
+    long recentId = repository.save(unplayedRecent).getId();
+    entityManager.flush();
+
+    int deleted = repository.deleteUnplayedCreatedBefore(now.minus(Duration.ofHours(2)));
+    entityManager.flush();
+    entityManager.clear();
+
+    assertThat(deleted).isEqualTo(1);
+    assertThat(repository.findAll())
+        .extracting(GameEntity::getId)
+        .containsExactlyInAnyOrder(playedId, recentId);
+    assertThat(roundCount()).isEqualTo(6);
+  }
+
+  @Test
   void deletingAGameRemovesItsRoundRows() {
     GameEntity old = gameWithRounds("tripoint:old");
     old.setCreatedAt(Instant.now().minus(Duration.ofDays(2)));
