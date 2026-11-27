@@ -1,0 +1,13 @@
+# Geoggernaut
+
+> Geography quiz games and tricky map puzzles: name countries from their shapes, borders, rivers and cities.
+
+Geoggernaut is free, needs no account and is played in the browser. The daily challenge is five puzzles, the same for everyone that day. Free Play is practice: pick a game, or a mix of them, and play as many rounds as you like.
+
+There is no public API. To send someone to a game, link them to one of the pages below; do not call the site's `/api` endpoints.
+
+## Pages
+
+- [Home](https://geoggernaut.com/): choose a game to play.
+- [Daily challenge](https://geoggernaut.com/daily): today's five puzzles.
+- [Credits and privacy](https://geoggernaut.com/privacy): data sources and what the site stores.

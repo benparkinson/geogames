@@ -6,19 +6,22 @@ const SITE_URL = "https://geoggernaut.com";
 const PAGES = [
   {
     path: "/",
-    title: "Geoggernaut: tricky geography puzzles",
+    title: "Geoggernaut: tricky geography puzzles and map quizzes",
+    canonical: `${SITE_URL}/`,
     description:
       "Name countries from their shapes, borders, rivers and cities. " +
       "Take the daily challenge or play freely, as many rounds as you like.",
   },
   {
     path: "/daily",
-    title: "Geoggernaut daily challenge",
+    title: "Daily geography challenge | Geoggernaut",
+    canonical: `${SITE_URL}/daily`,
     description: "Five tricky geography puzzles, the same for everyone today. How many can you solve?",
   },
   {
     path: "/challenge?id=x",
     // The apostrophe is escaped in the HTML.
+    canonical: null,
     title: "You&#x27;ve been challenged on Geoggernaut",
     description: "A friend played these geography puzzles. Can you beat their score?",
   },
@@ -31,13 +34,21 @@ function metaContents(html: string, key: string): string[] {
     .map((tag) => /content="([^"]*)"/.exec(tag)?.[1] ?? "");
 }
 
-for (const { path, title, description } of PAGES) {
-  test(`${path} has its link preview in the HTML`, async ({ request }) => {
+/** The `href` of every canonical link. */
+function canonicals(html: string): string[] {
+  return (html.match(/<link [^>]*rel="canonical"[^>]*>/g) ?? []).map((tag) => /href="([^"]*)"/.exec(tag)?.[1] ?? "");
+}
+
+for (const { path, title, description, canonical } of PAGES) {
+  test(`${path} has its head tags in the HTML`, async ({ request }) => {
     const response = await request.get(path);
     expect(response.ok()).toBe(true);
     const html = await response.text();
 
     // Exactly one of each: a page's tags replace the site defaults.
+    expect([...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((match) => match[1])).toEqual([title]);
+    expect(canonicals(html)).toEqual(canonical ? [canonical] : []);
+    expect(metaContents(html, "robots")).toEqual(canonical ? [] : ["noindex"]);
     expect(metaContents(html, "og:title")).toEqual([title]);
     expect(metaContents(html, "og:description")).toEqual([description]);
     expect(metaContents(html, "description")).toEqual([description]);
@@ -51,3 +62,15 @@ test("the link preview image is served", async ({ request }) => {
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"]).toBe("image/png");
 });
+
+test("the home page has structured data that parses", async ({ request }) => {
+  const html = await (await request.get("/")).text();
+  const scripts = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)];
+  expect(scripts.map((match) => JSON.parse(match[1])["@type"])).toEqual(["WebSite", "Organization"]);
+});
+
+for (const path of ["/robots.txt", "/sitemap.xml", "/llms.txt"]) {
+  test(`${path} is served`, async ({ request }) => {
+    expect((await request.get(path)).status()).toBe(200);
+  });
+}
