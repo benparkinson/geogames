@@ -106,6 +106,24 @@ test.describe("on a wide screen", () => {
   });
 });
 
+// 576px is the narrowest screen with the description beside the name (and long ones wrap there); 1440px is a desktop.
+for (const width of [576, 1440]) {
+  test(`the game descriptions line up in one column at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const descriptions = page
+      .getByRole("group", { name: "Choose a game" })
+      .getByRole("button")
+      .locator("span > span:last-child");
+    await expect(descriptions).toHaveCount(GAME_TITLES.length);
+
+    const lefts = await descriptions.evaluateAll((spans) =>
+      spans.map((span) => Math.round(span.getBoundingClientRect().left)),
+    );
+    expect(new Set(lefts).size).toBe(1);
+  });
+}
+
 test("the Settings popup picks the theme and System default follows the device", async ({
   page,
 }) => {
