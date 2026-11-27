@@ -18,6 +18,7 @@ import com.parkinson.benjamin.geogames.model.GameData;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeEntryStore;
+import com.parkinson.benjamin.geogames.service.challenge.ChallengeService;
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
@@ -296,8 +297,14 @@ public class GameService {
     }
     // The creator's game already has its entry. An expired challenge has nulled the id.
     Long challengeId = game.getChallengeId();
+    GameFinished.ChallengeEntry added = null;
     if (challengeId != null && game.getChallengeEntryId() == null) {
-      game.linkChallenge(challengeId, challengeEntries.insert(challengeId, result.score()));
+      long entryId = challengeEntries.insert(challengeId, result.score());
+      game.linkChallenge(challengeId, entryId);
+      added =
+          new GameFinished.ChallengeEntry(
+              challengeEntries.rank(entryId) <= ChallengeService.TABLE_SIZE,
+              challengeEntries.count(challengeId));
     }
     events.publishEvent(
         new GameFinished(
@@ -305,7 +312,8 @@ public class GameService {
             game.getDifficulty(),
             result.score(),
             result.maxScore(),
-            game.getChallengeScore()));
+            game.getChallengeScore(),
+            added));
   }
 
   /**

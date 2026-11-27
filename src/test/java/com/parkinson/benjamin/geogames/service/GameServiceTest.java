@@ -991,7 +991,7 @@ class GameServiceTest {
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
 
     verify(events, times(1))
-        .publishEvent(new GameFinished(GameOrigin.FREE_PLAY, null, 10, 20, null));
+        .publishEvent(new GameFinished(GameOrigin.FREE_PLAY, null, 10, 20, null, null));
   }
 
   @Test
@@ -1008,7 +1008,8 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(events).publishEvent(new GameFinished(GameOrigin.CHALLENGE, Difficulty.HARD, 0, 10, 7));
+    verify(events)
+        .publishEvent(new GameFinished(GameOrigin.CHALLENGE, Difficulty.HARD, 0, 10, 7, null));
   }
 
   @Test
@@ -1302,6 +1303,8 @@ class GameServiceTest {
   void finishingAGameFromAChallengeAddsItsEntryOnce() {
     GameEntity game = lastRoundOfAGame(7L);
     when(challengeEntries.insert(7L, 10)).thenReturn(8L);
+    when(challengeEntries.rank(8L)).thenReturn(5);
+    when(challengeEntries.count(7L)).thenReturn(6);
 
     service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, 0, null);
     // A repeat is a no-op.
@@ -1309,6 +1312,10 @@ class GameServiceTest {
 
     verify(challengeEntries).insert(7L, 10);
     assertThat(game.getChallengeEntryId()).isEqualTo(8L);
+    ArgumentCaptor<GameFinished> finished = ArgumentCaptor.forClass(GameFinished.class);
+    verify(events).publishEvent(finished.capture());
+    assertThat(finished.getValue().challengeEntry())
+        .isEqualTo(new GameFinished.ChallengeEntry(true, 6));
   }
 
   @Test

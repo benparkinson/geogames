@@ -1,6 +1,6 @@
 package com.parkinson.benjamin.geogames.service.challenge;
 
-import com.parkinson.benjamin.geogames.api.BadRequestException;
+import com.parkinson.benjamin.geogames.service.challenge.InitialsRejectedException.Problem;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
@@ -33,17 +33,18 @@ public class Initials {
   /**
    * The initials trimmed and upper-cased.
    *
-   * @throws BadRequestException if they are missing, not one to three letters, or blocked
+   * @throws InitialsRejectedException if they are missing, not one to three letters, or blocked
    */
   public String normalise(String initials) {
     String trimmed = initials == null ? "" : initials.strip();
     // Matched before upper-casing, which turns some other characters into A-Z (a sharp s into SS).
     if (!LETTERS.matcher(trimmed).matches()) {
-      throw new BadRequestException("Initials must be one to three letters, A to Z");
+      throw new InitialsRejectedException(
+          Problem.INVALID, "Initials must be one to three letters, A to Z");
     }
     String upper = trimmed.toUpperCase(Locale.ROOT);
     if (blocked.contains(upper)) {
-      throw new BadRequestException("Choose different initials");
+      throw new InitialsRejectedException(Problem.BLOCKED, "Choose different initials");
     }
     return upper;
   }

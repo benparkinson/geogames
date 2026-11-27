@@ -47,6 +47,14 @@ public class GameMetrics {
     CHALLENGE
   }
 
+  /** What became of a request to set initials. */
+  public enum InitialsResult {
+    SAVED,
+    INVALID,
+    BLOCKED,
+    NOT_TOP5
+  }
+
   private enum ChallengeLookup {
     FOUND,
     EXPIRED
@@ -60,6 +68,7 @@ public class GameMetrics {
 
   private static final String UNKNOWN = "UNKNOWN";
   private static final int TOP_BAND = 10;
+  private static final List<String> TABLE_SIZE_BANDS = List.of("1", "2", "3-5", "6-10", "11+");
 
   private static final String GAMES_STARTED = "geogames.games.started";
   private static final String GAMES_FINISHED = "geogames.games.finished";
@@ -72,6 +81,8 @@ public class GameMetrics {
   private static final String CHALLENGES_OPENED = "geogames.challenges.opened";
   private static final String CHALLENGES_STARTED = "geogames.challenges.started";
   private static final String CHALLENGES_FINISHED = "geogames.challenges.finished";
+  private static final String CHALLENGES_ENTRIES = "geogames.challenges.entries";
+  private static final String CHALLENGES_INITIALS = "geogames.challenges.initials";
   private static final String STATS_DROPPED = "geogames.stats.dropped";
   private static final String CLEANUP_DELETED = "geogames.cleanup.deleted";
 
@@ -131,10 +142,32 @@ public class GameMetrics {
             "score_band",
             Integer.toString(band))
         .increment();
-    if (event.challengeScore() != null) {
-      Outcome outcome = outcome(event.score(), event.challengeScore());
-      counter(CHALLENGES_FINISHED, "difficulty", difficulty, "outcome", outcome.name()).increment();
+    GameFinished.ChallengeEntry entry = event.challengeEntry();
+    if (entry != null) {
+      challengeEntryAdded(entry.tableSize());
     }
+    if (event.challengeScore() != null) {
+      // No entry means the challenge had expired, so there was no table to be in the top of.
+      boolean top5 = entry != null && entry.top5();
+      counter(
+              CHALLENGES_FINISHED,
+              "difficulty",
+              difficulty,
+              "outcome",
+              outcome(event.score(), event.challengeScore()).name(),
+              "top5",
+              Boolean.toString(top5))
+          .increment();
+    }
+  }
+
+  /** A score joined a league table, which now holds {@code tableSize} entries. */
+  public void challengeEntryAdded(int tableSize) {
+    counter(CHALLENGES_ENTRIES, "table_size", tableSizeBand(tableSize)).increment();
+  }
+
+  public void challengeInitials(InitialsResult result) {
+    counter(CHALLENGES_INITIALS, "result", result.name()).increment();
   }
 
   public void challengeCreated(String gameMode, Difficulty difficulty) {
@@ -208,7 +241,10 @@ public class GameMetrics {
     register(
         CHALLENGES_FINISHED,
         new Tag("difficulty", difficulties),
-        new Tag("outcome", names(Outcome.values())));
+        new Tag("outcome", names(Outcome.values())),
+        new Tag("top5", List.of("false", "true")));
+    register(CHALLENGES_ENTRIES, new Tag("table_size", TABLE_SIZE_BANDS));
+    register(CHALLENGES_INITIALS, new Tag("result", names(InitialsResult.values())));
     register(STATS_DROPPED, new Tag("reason", names(DropReason.values())));
     register(CLEANUP_DELETED, new Tag("kind", names(DeletedKind.values())));
   }
@@ -244,6 +280,16 @@ public class GameMetrics {
       return Outcome.BEAT;
     }
     return score == toBeat ? Outcome.TIED : Outcome.LOST;
+  }
+
+  private static String tableSizeBand(int size) {
+    if (size <= 2) {
+      return Integer.toString(size);
+    }
+    if (size <= 5) {
+      return "3-5";
+    }
+    return size <= 10 ? "6-10" : "11+";
   }
 
   private static List<String> names(Enum<?>[] values) {

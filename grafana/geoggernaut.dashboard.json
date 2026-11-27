@@ -290,6 +290,15 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           }
+        },
+        {
+          "expr": "sum(increase(geogames_challenges_initials_total{result=\"SAVED\"}[$__range]))",
+          "legendFormat": "Entered initials",
+          "refId": "F",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
         }
       ],
       "title": "Challenge funnel",
@@ -333,7 +342,7 @@
           }
         }
       ],
-      "title": "Friend's result",
+      "title": "Result against the top score",
       "type": "piechart"
     },
     {
@@ -455,12 +464,163 @@
       "type": "bargauge"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 22
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (table_size) (increase(geogames_challenges_entries_total{table_size=\"1\"}[$__range]))",
+          "legendFormat": "{{table_size}}",
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        },
+        {
+          "expr": "sum by (table_size) (increase(geogames_challenges_entries_total{table_size=\"2\"}[$__range]))",
+          "legendFormat": "{{table_size}}",
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        },
+        {
+          "expr": "sum by (table_size) (increase(geogames_challenges_entries_total{table_size=\"3-5\"}[$__range]))",
+          "legendFormat": "{{table_size}}",
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        },
+        {
+          "expr": "sum by (table_size) (increase(geogames_challenges_entries_total{table_size=\"6-10\"}[$__range]))",
+          "legendFormat": "{{table_size}}",
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        },
+        {
+          "expr": "sum by (table_size) (increase(geogames_challenges_entries_total{table_size=\"11+\"}[$__range]))",
+          "legendFormat": "{{table_size}}",
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "Challenge table sizes",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 22
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (result) (increase(geogames_challenges_initials_total[$__range]))",
+          "legendFormat": "{{result}}",
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "Initials entered",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 22
+      },
+      "id": 30,
+      "targets": [
+        {
+          "expr": "sum(increase(geogames_challenges_finished_total{top5=\"true\"}[$__range])) / sum(increase(geogames_challenges_finished_total[$__range]))",
+          "legendFormat": "Top 5",
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "Finished in the top 5",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 30
       },
       "id": 12,
       "title": "Games",
@@ -488,7 +648,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 31
       },
       "id": 13,
       "interval": "1h",
@@ -523,7 +683,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 31
       },
       "id": 14,
       "options": {
@@ -564,7 +724,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 39
       },
       "id": 15,
       "options": {
@@ -605,7 +765,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 39
       },
       "id": 16,
       "options": {
@@ -637,7 +797,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 47
       },
       "id": 17,
       "title": "Rounds",
@@ -660,7 +820,7 @@
         "h": 10,
         "w": 8,
         "x": 0,
-        "y": 40
+        "y": 48
       },
       "id": 18,
       "options": {
@@ -703,7 +863,7 @@
         "h": 10,
         "w": 8,
         "x": 8,
-        "y": 40
+        "y": 48
       },
       "id": 19,
       "options": {
@@ -744,7 +904,7 @@
         "h": 10,
         "w": 8,
         "x": 16,
-        "y": 40
+        "y": 48
       },
       "id": 20,
       "options": {
@@ -776,7 +936,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 58
       },
       "id": 21,
       "title": "Health",
@@ -801,7 +961,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 51
+        "y": 59
       },
       "id": 22,
       "interval": "1h",
@@ -838,7 +998,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 51
+        "y": 59
       },
       "id": 23,
       "interval": "1h",
@@ -875,7 +1035,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 51
+        "y": 59
       },
       "id": 24,
       "interval": "1h",
@@ -912,7 +1072,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 59
+        "y": 67
       },
       "id": 25,
       "interval": "1h",
@@ -945,7 +1105,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 59
+        "y": 67
       },
       "id": 26,
       "targets": [
@@ -977,7 +1137,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 59
+        "y": 67
       },
       "id": 27,
       "targets": [

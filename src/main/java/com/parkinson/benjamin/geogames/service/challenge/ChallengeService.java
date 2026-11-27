@@ -10,6 +10,7 @@ import com.parkinson.benjamin.geogames.service.ChallengeLink;
 import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.InitialsResult;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChallengeService {
 
   /** The rows of the league table, and the ranks that may enter initials. */
-  static final int TABLE_SIZE = 5;
+  public static final int TABLE_SIZE = 5;
 
   private final Clock clock;
   private final ChallengeStore store;
@@ -86,6 +87,7 @@ public class ChallengeService {
                 today));
     gameService.linkChallenge(gameId, challengeId, entries.insert(challengeId, source.score()));
     metrics.challengeCreated(source.gameMode(), source.difficulty());
+    metrics.challengeEntryAdded(1);
     return new ChallengeCreationResponse(publicId);
   }
 
@@ -148,15 +150,31 @@ public class ChallengeService {
    * @throws ChallengeConflictException for an entry below the top of the table
    */
   public void setInitials(UUID gameId, String text) {
-    String normalised = initials.normalise(text);
+    String normalised = normalise(text);
     Long entryId = link(gameId).entryId();
     if (entryId == null) {
       throw new ChallengeNotFoundException("This game has no challenge score");
     }
     if (entries.rank(entryId) > TABLE_SIZE) {
+      metrics.challengeInitials(InitialsResult.NOT_TOP5);
       throw new ChallengeConflictException("Only the top " + TABLE_SIZE + " can enter initials");
     }
     entries.setInitials(entryId, normalised);
+    metrics.challengeInitials(InitialsResult.SAVED);
+  }
+
+  /** {@link Initials#normalise}, counting what it rejects. */
+  private String normalise(String text) {
+    try {
+      return initials.normalise(text);
+    } catch (InitialsRejectedException e) {
+      metrics.challengeInitials(
+          switch (e.problem()) {
+            case INVALID -> InitialsResult.INVALID;
+            case BLOCKED -> InitialsResult.BLOCKED;
+          });
+      throw e;
+    }
   }
 
   private ChallengeLink link(UUID gameId) {

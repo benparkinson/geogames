@@ -101,9 +101,10 @@ function PrivacyPage(): React.JSX.Element {
         <p>
           <a href="https://grafana.com/legal/privacy-policy/">Grafana Labs</a> (grafana.com) receives counts and timings
           that the server adds up: how many games are started, and how many answers, hints and wrong guesses there are
-          by game type, how many challenges are shared, opened, played and won, and how many games are finished with
-          what score band, plus request counts and response times per API path. Nothing about a single game, player,
-          address or browser is included.
+          by game type, how many challenges are shared, opened, played and won, how big their league tables get, how
+          often a score reaches the top five and initials are saved or refused (never the initials themselves), and how
+          many games are finished with what score band, plus request counts and response times per API path. Nothing
+          about a single game, player, address or browser is included.
         </p>
         <p>The &quot;Buy me a coffee&quot; link opens Ko-fi. Nothing is sent to Ko-fi unless you click it.</p>
 

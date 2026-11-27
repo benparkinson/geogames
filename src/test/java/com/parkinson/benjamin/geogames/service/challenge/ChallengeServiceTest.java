@@ -22,6 +22,7 @@ import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.InitialsResult;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -82,6 +83,7 @@ class ChallengeServiceTest {
         .isEqualTo(new Challenge(id, "RANDOM", Difficulty.HARD, ROUNDS, 200, TODAY, TODAY));
     verify(games).linkChallenge(gameId, 5, 6);
     verify(metrics).challengeCreated("RANDOM", Difficulty.HARD);
+    verify(metrics).challengeEntryAdded(1);
   }
 
   @Test
@@ -259,6 +261,8 @@ class ChallengeServiceTest {
     service.setInitials(linkedGame(5L, 6L, false), " ab ");
 
     verify(entries).setInitials(6, "AB");
+    verify(metrics).challengeInitials(InitialsResult.SAVED);
+    verifyNoMoreInteractions(metrics);
   }
 
   @Test
@@ -273,7 +277,14 @@ class ChallengeServiceTest {
         .isInstanceOf(ChallengeNotFoundException.class);
     assertThatThrownBy(() -> service.setInitials(low, "A1"))
         .isInstanceOf(BadRequestException.class);
+    assertThatThrownBy(() -> service.setInitials(low, "bad"))
+        .isInstanceOf(BadRequestException.class);
     verify(entries, never()).setInitials(anyLong(), any());
+    // The game with no entry is a 404, which isn't counted.
+    verify(metrics).challengeInitials(InitialsResult.NOT_TOP5);
+    verify(metrics).challengeInitials(InitialsResult.INVALID);
+    verify(metrics).challengeInitials(InitialsResult.BLOCKED);
+    verifyNoMoreInteractions(metrics);
   }
 
   @Test
