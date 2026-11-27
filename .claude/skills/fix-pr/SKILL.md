@@ -1,10 +1,10 @@
 ---
 name: fix-pr
-description: Fix a pull request whose CI checks fail or that has merge conflicts, including a PR in a stack, and push the fix. Use for "the build/e2e/unit-frontend failed", "PR N has merge conflicts", "main broke after merging".
+description: Fix a pull request whose CI checks fail or that has merge conflicts, including a PR in a stack, and push the fix; or bring a draft PR up to date and mark it ready to merge. Use for "the build/e2e/unit-frontend failed", "PR N has merge conflicts", "main broke after merging", "get PR N ready to merge".
 argument-hint: [PR number | branch | run URL]
 ---
 
-# Fix a red or conflicting PR
+# Fix a red or conflicting PR, or get one ready to merge
 
 With no argument, use the PR of the current branch (`gh pr view`). If `gh` isn't on PATH, use `"/c/Program Files/GitHub CLI/gh.exe"`. For a failure on `main`, take the run URL or `gh run list --branch main --limit 3`.
 
@@ -58,3 +58,7 @@ When the PR's base is another feature branch, fix the lowest broken PR first, th
 ## 5. Push and report
 
 Commit with a message that names the failure fixed. Push without force unless you rebased; after a rebase use `--force-with-lease`. Report what broke, why, and what you changed, in a few lines.
+
+## Getting a draft ready to merge
+
+PRs are raised as drafts, which run no CI, and are merged one at a time. Only when the user asks for this PR to be made ready: merge `origin/<base>` (section 3, even without conflicts), run the checks for what the PR touches, push, and only then `gh pr ready <pr>`. That order gives one CI run, on the code that will merge. Don't ready any other PR, and never merge: the user does.

@@ -1479,12 +1479,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-sm);
 }
-/* Copy result (or Play another, when there is nothing to share) is the one filled button, as a bar. */
+/* The filled buttons are the ones that bring players back (share, challenge, daily). The rest are text actions. */
 .gg-summary__share {
   margin-bottom: var(--gg-space-2);
 }
-.gg-summary__share .gg-btn--primary,
-.gg-summary__buttons > .gg-btn--primary {
+.gg-summary__share .gg-btn--primary {
   flex: 1 1 auto;
 }
 .gg-summary__buttons {
