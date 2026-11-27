@@ -16,7 +16,8 @@ const PAGES = [
     path: "/daily",
     title: "Daily geography challenge | Geoggernaut",
     canonical: `${SITE_URL}/daily`,
-    description: "Five tricky geography puzzles, the same for everyone today. How many can you solve?",
+    description:
+      "Five tricky geography puzzles, the same for everyone today. How many can you solve?",
   },
   {
     path: "/challenge?id=x",
@@ -36,7 +37,9 @@ function metaContents(html: string, key: string): string[] {
 
 /** The `href` of every canonical link. */
 function canonicals(html: string): string[] {
-  return (html.match(/<link [^>]*rel="canonical"[^>]*>/g) ?? []).map((tag) => /href="([^"]*)"/.exec(tag)?.[1] ?? "");
+  return (html.match(/<link [^>]*rel="canonical"[^>]*>/g) ?? []).map(
+    (tag) => /href="([^"]*)"/.exec(tag)?.[1] ?? "",
+  );
 }
 
 for (const { path, title, description, canonical } of PAGES) {
@@ -46,7 +49,9 @@ for (const { path, title, description, canonical } of PAGES) {
     const html = await response.text();
 
     // Exactly one of each: a page's tags replace the site defaults.
-    expect([...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((match) => match[1])).toEqual([title]);
+    expect([...html.matchAll(/<title[^>]*>([^<]*)<\/title>/g)].map((match) => match[1])).toEqual([
+      title,
+    ]);
     expect(canonicals(html)).toEqual(canonical ? [canonical] : []);
     expect(metaContents(html, "robots")).toEqual(canonical ? [] : ["noindex"]);
     expect(metaContents(html, "og:title")).toEqual([title]);
@@ -66,7 +71,32 @@ test("the link preview image is served", async ({ request }) => {
 test("the home page has structured data that parses", async ({ request }) => {
   const html = await (await request.get("/")).text();
   const scripts = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)];
-  expect(scripts.map((match) => JSON.parse(match[1])["@type"])).toEqual(["WebSite", "Organization"]);
+  expect(scripts.map((match) => JSON.parse(match[1])["@type"])).toEqual([
+    "WebSite",
+    "Organization",
+  ]);
+});
+
+test("a game's landing page is in the HTML, with its canonical link and structured data", async ({
+  request,
+}) => {
+  const response = await request.get("/play/tripoints");
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+
+  expect(html).toContain("Tripoints: name the three countries that meet at a point</h1>");
+  expect(canonicals(html)).toEqual([`${SITE_URL}/play/tripoints`]);
+  const scripts = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)];
+  expect(scripts.map((match) => JSON.parse(match[1])["@type"])).toEqual([
+    "WebApplication",
+    "BreadcrumbList",
+  ]);
+});
+
+test("a game starts from its landing page", async ({ page }) => {
+  await page.goto("/play/tripoints");
+  await page.getByRole("button", { name: "Start game" }).click();
+  await expect(page).toHaveURL(/\/games\/[0-9a-f-]+$/);
 });
 
 for (const path of ["/robots.txt", "/sitemap.xml", "/llms.txt"]) {

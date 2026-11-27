@@ -684,6 +684,11 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   border-top: 1px solid var(--gg-color-rule-light);
   background: var(--gg-color-surface);
 }
+.home-start__help {
+  margin-left: auto;
+  font-size: var(--gg-font-size-sm);
+  font-weight: 400;
+}
 .home-start__row {
   display: flex;
   flex-wrap: wrap;
@@ -1724,4 +1729,41 @@ button.gg-summary__row:focus-visible {
   margin: var(--gg-space-3) 0 0;
   font-size: var(--gg-font-size-lead);
   text-align: center;
+}
+
+/* ---- Footer: the list of games, closed until asked for, so a footer stuck to the screen stays small ---- */
+.gg-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  column-gap: var(--gg-space-3);
+}
+/* Open, the list takes a line of its own. */
+.gg-footer__games[open] {
+  flex-basis: 100%;
+}
+.gg-footer__games > summary {
+  cursor: pointer;
+}
+.gg-footer__list,
+.gg-landing__games {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-2) var(--gg-space-3);
+  margin: var(--gg-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.gg-footer__list {
+  justify-content: center;
+}
+
+/* ---- Landing page of one game ---- */
+.gg-landing__start {
+  margin: var(--gg-space-3) 0 var(--gg-space-4);
+  border: 1px solid var(--gg-color-rule);
+}
+.gg-landing__games {
+  margin-bottom: var(--gg-space-3);
 }

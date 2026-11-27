@@ -1,7 +1,14 @@
+import { LANDING, LANDING_TYPES, landingPath, type LandingType } from "./games/landing";
+import { GAME_NAMES } from "./games/names";
 import { SITE_NAME, SITE_URL } from "./siteName";
 
-/** The pages with their own head tags; any other page gets only the site's description and link preview. */
-export type PageKey = "site" | "daily" | "privacy" | "challenge" | "game";
+type FixedPageKey = "site" | "daily" | "privacy" | "challenge" | "game";
+
+/**
+ * The pages with their own head tags (a game type is its landing page); any other page gets only the site's
+ * description and link preview.
+ */
+export type PageKey = FixedPageKey | LandingType;
 
 /** One `<meta>` element. `key` is its name or property, so a page's tag replaces the site default. */
 export interface MetaTag {
@@ -33,7 +40,7 @@ const SITE_DESCRIPTION =
   "Name countries from their shapes, borders, rivers and cities. " +
   "Take the daily challenge or play freely, as many rounds as you like.";
 
-const PAGES: Record<PageKey, Page> = {
+const FIXED_PAGES: Record<FixedPageKey, Page> = {
   site: { path: "/", title: SITE_TITLE, description: SITE_DESCRIPTION, indexable: true },
   daily: {
     path: "/daily",
@@ -57,6 +64,16 @@ const PAGES: Record<PageKey, Page> = {
   game: { path: "/", description: SITE_DESCRIPTION, indexable: false },
 };
 
+const PAGES = {
+  ...FIXED_PAGES,
+  ...Object.fromEntries(
+    LANDING_TYPES.map((type) => {
+      const { title, description } = LANDING[type];
+      return [type, { path: landingPath(type), title, description, indexable: true }];
+    }),
+  ),
+} as Record<PageKey, Page>;
+
 /** The paths of the pages search engines should list: what `public/sitemap.xml` holds. */
 export const INDEXABLE_PATHS: string[] = Object.values(PAGES)
   .filter((page) => page.indexable)
@@ -77,6 +94,39 @@ export function siteJsonLd(): object[] {
     },
     { "@context": context, "@type": "Organization", name: SITE_NAME, url, logo: `${SITE_URL}/logo.png` },
   ];
+}
+
+/** Structured data for a game's landing page: a free web game, and where it sits on the site. */
+function landingJsonLd(type: LandingType): object[] {
+  const context = "https://schema.org";
+  const url = `${SITE_URL}${landingPath(type)}`;
+  const name = GAME_NAMES[type];
+  return [
+    {
+      "@context": context,
+      "@type": "WebApplication",
+      name,
+      url,
+      description: LANDING[type].description,
+      applicationCategory: "GameApplication",
+      operatingSystem: "Any",
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+    },
+    {
+      "@context": context,
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: SITE_NAME, item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name, item: url },
+      ],
+    },
+  ];
+}
+
+function jsonLdFor(page: PageKey): object[] | undefined {
+  if (page === "site") return siteJsonLd();
+  return page in LANDING ? landingJsonLd(page as LandingType) : undefined;
 }
 
 /**
@@ -109,6 +159,6 @@ export function pageMeta(page: PageKey): PageHead {
     title,
     tags,
     canonical: indexable ? `${SITE_URL}${path}` : undefined,
-    jsonLd: page === "site" ? siteJsonLd() : undefined,
+    jsonLd: jsonLdFor(page),
   };
 }

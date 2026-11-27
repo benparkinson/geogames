@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { INDEXABLE_PATHS, pageMeta, type PageKey } from "./siteMeta";
 import { SITE_URL } from "./siteName";
+import { LANDING_TYPES, landingPath } from "./games/landing";
 
 const REQUIRED = [
   "description",
@@ -20,6 +21,7 @@ const INDEXABLE: [PageKey, string][] = [
   ["site", "/"],
   ["daily", "/daily"],
   ["privacy", "/privacy"],
+  ...LANDING_TYPES.map((type): [PageKey, string] => [type, landingPath(type)]),
 ];
 const HIDDEN: PageKey[] = ["challenge", "game"];
 
@@ -82,6 +84,22 @@ describe("pageMeta", () => {
       expect(data["@context"]).toBe("https://schema.org");
     }
     expect(pageMeta("daily").jsonLd).toBeUndefined();
+  });
+
+  it("describes a game's landing page as a free web game under the home page", () => {
+    const [app, breadcrumbs] = pageMeta("TRIPOINT").jsonLd as Record<string, unknown>[];
+    expect(app).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: "Tripoints",
+      url: `${SITE_URL}/play/tripoints`,
+      isAccessibleForFree: true,
+      offers: { price: "0" },
+    });
+    expect(breadcrumbs).toMatchObject({
+      "@type": "BreadcrumbList",
+      itemListElement: [{ item: `${SITE_URL}/` }, { name: "Tripoints", item: `${SITE_URL}/play/tripoints` }],
+    });
   });
 
   it("pitches both the daily challenge and free play for the site", () => {

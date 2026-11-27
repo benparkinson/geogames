@@ -6,6 +6,20 @@ Geoggernaut is free, needs no account and is played in the browser. The daily ch
 
 There is no public API. To send someone to a game, link them to one of the pages below; do not call the site's `/api` endpoints.
 
+## Games
+
+- [Tripoints](https://geoggernaut.com/play/tripoints): Name the three countries that meet at a point.
+- [City Map](https://geoggernaut.com/play/city-map): Name a country from where its cities are.
+- [Merged Countries](https://geoggernaut.com/play/merged-countries): Name the two neighbouring countries merged into one shape.
+- [Missing Country](https://geoggernaut.com/play/missing-country): Name the country hidden between its neighbours.
+- [Follow the River](https://geoggernaut.com/play/follow-the-river): Name a river from the countries it flows through.
+- [Land Borders](https://geoggernaut.com/play/land-borders): Name a country from its land borders alone.
+- [Waterways](https://geoggernaut.com/play/waterways): Name a country from its rivers and lakes.
+- [Coastlines](https://geoggernaut.com/play/coastlines): Name a country from its coastline alone.
+- [River Shapes](https://geoggernaut.com/play/river-shapes): Name a river from its shape alone.
+- [Lake Shapes](https://geoggernaut.com/play/lake-shapes): Name a lake from its shape alone.
+- [Border Shapes](https://geoggernaut.com/play/border-shapes): Name the two countries a border separates, from its shape alone.
+
 ## Pages
 
 - [Home](https://geoggernaut.com/): choose a game to play.

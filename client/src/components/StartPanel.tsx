@@ -1,14 +1,25 @@
 import { useState } from "react";
+import Link from "next/link";
 import { useCreateGame } from "../api/games";
 import { creationErrorMessage } from "../api/http";
+import { LANDING, landingPath, type LandingType } from "../games/landing";
 import { useDifficulty } from "../settings/difficulty";
 import { MenuOption, ROUND_OPTIONS } from "../games/registry";
 import { Button, Notice, Spinner, ToggleGroup } from "../ui";
 import { useDelayedFlag } from "../ui/useDelayedFlag";
 import DifficultyToggle from "./DifficultyToggle";
 
-/** The chosen game with its round count, Difficulty control and start button. It creates the game. */
-export default function StartPanel({ option }: { option: MenuOption }): React.JSX.Element {
+/**
+ * The chosen game with its round count, Difficulty control and start button. It creates the game. `howToPlayLink`
+ * links to the game's landing page (Mixed has none); the landing page itself turns it off.
+ */
+export default function StartPanel({
+  option,
+  howToPlayLink = true,
+}: {
+  option: MenuOption;
+  howToPlayLink?: boolean;
+}): React.JSX.Element {
   const { createGame, isLoading, error } = useCreateGame();
   const [difficulty] = useDifficulty();
   const [rounds, setRounds] = useState(5);
@@ -20,6 +31,11 @@ export default function StartPanel({ option }: { option: MenuOption }): React.JS
         <div className="home-start__title">
           <option.Icon size={20} aria-hidden="true" />
           <span>{option.title}</span>
+          {howToPlayLink && option.type in LANDING && (
+            <Link className="home-start__help" href={landingPath(option.type as LandingType)}>
+              How to play
+            </Link>
+          )}
         </div>
         <div className="home-start__rounds">
           <span id="rounds-label" className="gg-label">
