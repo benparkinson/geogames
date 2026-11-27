@@ -56,12 +56,12 @@ export function NeighbourOutlines({
   );
 }
 
-/** Lines that are the clue while playing. */
+/** Solid lines: the clue while playing, or a hint's lines that can't be mistaken for any others on the map. */
 export function ClueLines({ data, id }: { data: LineGeoData; id: string }): React.JSX.Element {
   return <GeoJSON key={id} data={data} pathOptions={clueLineOptions()} />;
 }
 
-/** Lines a hint adds: dashed and fainter. */
+/** Lines a hint adds beside other lines: dashed and fainter, to tell them apart. */
 export function HintLines({ data, id }: { data: LineGeoData; id: string }): React.JSX.Element {
   return <GeoJSON key={id} data={data} pathOptions={hintLineOptions()} />;
 }

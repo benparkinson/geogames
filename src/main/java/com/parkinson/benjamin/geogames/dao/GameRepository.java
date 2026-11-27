@@ -25,4 +25,16 @@ public interface GameRepository extends CrudRepository<GameEntity, Long> {
   @Modifying
   @Query("delete from GameEntity g where g.createdAt < :cutoff")
   int deleteCreatedBefore(@Param("cutoff") Instant cutoff);
+
+  /**
+   * Deletes games created before the cutoff in which no round has been answered. As with {@link
+   * #deleteCreatedBefore}, the rounds go through the foreign key's cascade.
+   */
+  @Transactional
+  @Modifying
+  @Query(
+      "delete from GameEntity g where g.createdAt < :cutoff and not exists "
+          + "(select r.id from GameEntity g2 join g2.rounds r where g2 = g "
+          + "and r.answerState <> com.parkinson.benjamin.geogames.model.AnswerState.UNANSWERED)")
+  int deleteUnplayedCreatedBefore(@Param("cutoff") Instant cutoff);
 }

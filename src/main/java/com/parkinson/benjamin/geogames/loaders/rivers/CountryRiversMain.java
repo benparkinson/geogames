@@ -138,7 +138,7 @@ public class CountryRiversMain {
     Map<String, Double> tolerances = new HashMap<>();
     for (Country country : countries) {
       if (!Geo.ANTARCTICA.equals(country.name())) {
-        tolerances.put(country.name(), CountryShapeBuilder.tolerance(country));
+        tolerances.put(country.name(), CountryShapeBuilder.riverTolerance(country));
       }
     }
 

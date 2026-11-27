@@ -1,7 +1,7 @@
 import { GameMap } from "../../map/GameMap";
 import { MapProps } from "../../map/MapProps";
 import { RevealTiles } from "../../map/RevealTiles";
-import { AnswerOutline, HintLines } from "./CountryLayers";
+import { AnswerOutline, ClueLines } from "./CountryLayers";
 import { CapitalDots, CitiesFit, CityDots } from "./CityLayers";
 import { CountryCitiesRound } from "./model";
 
@@ -22,7 +22,7 @@ function CountryCitiesMap({
     <GameMap>
       <RevealTiles show={gameOver} />
       {gameOver && <AnswerOutline country={country} gaveUp={gaveUp} labelled={false} />}
-      {!gameOver && hintsUsed >= 2 && hasCoast && <HintLines data={country.coast} id={`${country.name}/coast`} />}
+      {!gameOver && hintsUsed >= 2 && hasCoast && <ClueLines data={country.coast} id={`${country.name}/coast`} />}
       <CityDots cities={cities} labelled={gameOver} />
       {(gameOver || hintsUsed >= 1) && <CapitalDots cities={cities} labelled={gameOver} />}
       <CitiesFit country={country} cities={cities} />

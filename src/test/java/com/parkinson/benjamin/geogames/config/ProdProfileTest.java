@@ -30,7 +30,8 @@ class ProdProfileTest {
         .containsEntry("spring.datasource.driver-class-name", "org.postgresql.Driver")
         // Logbook logs each client's address, so it must stay quiet in production.
         .containsEntry("logging.level.org.zalando.logbook", "INFO")
-        .containsEntry("geogames.rate-limit.games-per-window", "60");
+        .containsEntry("geogames.rate-limit.games-per-window", "60")
+        .containsEntry("geogames.rate-limit.requests-per-window", "1200");
   }
 
   @Test

@@ -1,8 +1,10 @@
 package com.parkinson.benjamin.geogames.config;
 
+import com.parkinson.benjamin.geogames.service.ratelimit.RequestRateLimitInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -10,9 +12,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
   private final String[] allowedOrigins;
+  private final RequestRateLimitInterceptor rateLimit;
 
-  public WebConfig(@Value("${geogames.cors.allowed-origins}") String[] allowedOrigins) {
+  public WebConfig(
+      @Value("${geogames.cors.allowed-origins}") String[] allowedOrigins,
+      RequestRateLimitInterceptor rateLimit) {
     this.allowedOrigins = allowedOrigins;
+    this.rateLimit = rateLimit;
+  }
+
+  /** The per-client request limit on every API call (Render's /health check is outside /api). */
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(rateLimit).addPathPatterns("/api/**");
   }
 
   @Override
