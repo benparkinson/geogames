@@ -22,12 +22,23 @@ export default function GuessList({
   // Rows already there on mount (a reload, a finished round) must not play the found animation.
   const [rowsAtMount] = useState(rows.length);
   const rowsRef = useRef<HTMLOListElement>(null);
-  // Keep the newest guess in view when the list is long enough to scroll.
+  // Keep the newest guess in view when the list scrolls: after a new guess, and when the list is resized (a hint or the
+  // keyboard takes some of its room).
   useEffect(() => {
     const list = rowsRef.current;
-    if (list) {
-      list.scrollTop = list.scrollHeight;
+    if (!list) {
+      return;
     }
+    const showNewest = () => {
+      list.scrollTop = list.scrollHeight;
+    };
+    showNewest();
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+    const observer = new ResizeObserver(showNewest);
+    observer.observe(list);
+    return () => observer.disconnect();
   }, [rows.length]);
   // With one answer there is nothing to count until a guess is made.
   if (rows.length === 0 && answerCount === 1) {
