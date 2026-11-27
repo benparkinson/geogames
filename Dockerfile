@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-25 AS build
+FROM maven:3.9-eclipse-temurin-26 AS build
 WORKDIR /usr/src/app
 # Maven Central answers 429 to busy shared addresses (CI runners): retry for longer than the default 3.
 ENV MAVEN_ARGS="-B -Daether.connector.http.retryHandler.count=10"
