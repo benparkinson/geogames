@@ -46,6 +46,7 @@ The credits live on the credits and privacy page (`components/PrivacyPage`, `/pr
 - Each `games/<name>/` folder holds one game: its module, component, model types and maps.
 - `games/registry.ts` is the only list of games.
 - `map/` holds the shared Leaflet helpers.
+- Link preview tags (`siteMeta.ts`, `components/SocialMeta`) are read by crawlers that run no JavaScript, so they must be static. Regenerate `public/og-image.png` with `scripts/og-image/render.mjs` (repo root).
 - `useGuessList(kind)` (in `games/common/`) gives the autocomplete (`{name, aliases}` suggestions) and spell check for countries, rivers and lakes. `GuessBox` draws its own suggestion list (portalled to the body, ranked by `games/common/suggestions.ts`) instead of a native `<datalist>`, because Opera and Firefox on Android show no datalist dropdown. A game whose answers come from a fixed list gets it through `PlaceGame`, and game components don't call it themselves.
 - The `QueryClientProvider` lives in `pages/_app.tsx`.
 
