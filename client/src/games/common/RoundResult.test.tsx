@@ -72,10 +72,10 @@ describe("RoundResult", () => {
     render(<RoundResult view={view} round={makeRoundProps()} />);
 
     expectBanner({ outcome: "good", label: "Correct!", points: "+9" });
-    expect(screen.getByRole("img", { name: "9 of 10: answer 4, hints 2 of 3, accuracy 3 of 3" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "9 of 10: answer 4 of 4, hints 2 of 3, lives 3 of 3" })).toBeInTheDocument();
     expect(screen.getByText("Answer +4")).toBeInTheDocument();
     expect(screen.getByText("Hints +2")).toBeInTheDocument();
-    expect(screen.getByText("Accuracy +3")).toBeInTheDocument();
+    expect(screen.getByText("Lives +3")).toBeInTheDocument();
   });
 
   it("says the answer was revealed, for no points", () => {

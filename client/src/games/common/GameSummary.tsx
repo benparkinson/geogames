@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, buttonClass, Spinner } from "../../ui";
+import { Button, buttonClass, ScoreKey, Spinner } from "../../ui";
 import KofiBadge from "../../components/KofiBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useQueries } from "@tanstack/react-query";
@@ -84,6 +84,7 @@ export default function GameSummary({
 
         <div className="gg-summary__list">
           <h2 className="gg-summary__table-heading">Round by round</h2>
+          <ScoreKey />
           <div className="gg-summary__row gg-summary__row--head gg-mono" aria-hidden="true">
             <span>No.</span>
             <span>Answers</span>

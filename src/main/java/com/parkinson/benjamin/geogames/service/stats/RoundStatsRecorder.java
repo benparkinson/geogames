@@ -3,6 +3,8 @@ package com.parkinson.benjamin.geogames.service.stats;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.Scoring;
 import com.parkinson.benjamin.geogames.model.stats.RoundResult;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DropReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,8 +26,11 @@ public class RoundStatsRecorder {
 
   private final RoundStatsStore store;
 
-  public RoundStatsRecorder(RoundStatsStore store) {
+  private final GameMetrics metrics;
+
+  public RoundStatsRecorder(RoundStatsStore store, GameMetrics metrics) {
     this.store = store;
+    this.metrics = metrics;
   }
 
   @Async("statsExecutor")
@@ -60,6 +65,7 @@ public class RoundStatsRecorder {
     } catch (Exception e) {
       // The message only: never the play id, and a stack trace adds nothing for a dropped row.
       log.warn("Dropped a round statistics row: {}", e.toString());
+      metrics.statsDropped(DropReason.ERROR);
     }
   }
 }

@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import type { AnswerState } from "./Model";
 import { RoundOutcome } from "./outcome";
 import RoundProgress from "./RoundProgress";
 
-const states = ["CORRECT", "GAVE_UP", "UNANSWERED", "UNANSWERED"];
+const states: AnswerState[] = ["CORRECT", "GAVE_UP", "UNANSWERED", "UNANSWERED"];
 const points = [9, 0, 0, 0];
 const outcomes: (RoundOutcome | null)[] = ["good", "missed", null, null];
 
@@ -21,7 +22,7 @@ function renderProgress(goToRound = vi.fn(), currentRound = 2) {
   return goToRound;
 }
 
-function renderOne(state: string, outcome: RoundOutcome, pts: number) {
+function renderOne(state: AnswerState, outcome: RoundOutcome, pts: number) {
   render(
     <RoundProgress
       states={[state, "UNANSWERED"]}
@@ -40,11 +41,11 @@ describe("RoundProgress", () => {
     expect(screen.getAllByRole("button")).toHaveLength(4);
   });
 
-  it("labels each round by its points", () => {
+  it("labels each round by how it ended and its points", () => {
     renderProgress();
 
-    expect(screen.getByRole("button", { name: "Round 1: 9 points" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Round 2: 0 points" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 1: correct, 9 points" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 2: gave up, 0 points" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 3: current" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Round 4: not played" })).toBeInTheDocument();
   });
@@ -62,7 +63,7 @@ describe("RoundProgress", () => {
 
     // currentRound 0 is answered; round 3 (index 2) is the first unanswered; index 3 is locked.
     expect(screen.getByRole("button", { name: "Round 1: current" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Round 2: 0 points" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Round 2: gave up, 0 points" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Round 3: not played" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Round 4: not played" })).toBeDisabled();
   });
@@ -76,7 +77,7 @@ describe("RoundProgress", () => {
   it("goes to the clicked round", async () => {
     const goToRound = renderProgress();
 
-    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: 0 points" }));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Round 2: gave up, 0 points" }));
 
     expect(goToRound).toHaveBeenCalledWith(1);
   });
@@ -90,23 +91,36 @@ describe("RoundProgress", () => {
   });
 
   it.each([
-    ["CORRECT", "full", 10],
-    ["CORRECT", "good", 8],
-    ["GAVE_UP", "partial", 5],
-    ["OUT_OF_GUESSES", "missed", 0],
-  ] as const)("shows a %s round's score on its dot, coloured by its %s outcome", (state, outcome, pts) => {
-    renderOne(state, outcome, pts);
+    ["CORRECT", "full", 10, "correct", "correct"],
+    ["CORRECT", "good", 8, "correct", "correct"],
+    ["GAVE_UP", "partial", 5, "revealed", "gave up"],
+    ["OUT_OF_GUESSES", "missed", 0, "outOfGuesses", "out of lives"],
+  ] as const)(
+    "shows how a %s round ended with an icon, coloured by its %s outcome",
+    (state, outcome, pts, result, words) => {
+      renderOne(state, outcome, pts);
 
-    const dot = screen.getByRole("button", { name: `Round 1: ${pts} points` });
-    expect(dot).toHaveAttribute("data-outcome", outcome);
-    expect(dot).toHaveTextContent(String(pts));
-    expect(dot.querySelector("svg")).toBeNull();
+      const dot = screen.getByRole("button", { name: `Round 1: ${words}, ${pts} points` });
+      expect(dot).toHaveAttribute("title", `Round 1: ${words}, ${pts} points`);
+      expect(dot).toHaveAttribute("data-outcome", outcome);
+      expect(dot).toHaveAttribute("data-result", result);
+      expect(dot).toHaveTextContent("");
+      expect(dot.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    },
+  );
+
+  it("keeps the icon on a finished round that is revisited", () => {
+    renderProgress(vi.fn(), 0);
+
+    const current = screen.getByRole("button", { name: "Round 1: current" });
+    expect(current).toHaveAttribute("data-result", "correct");
+    expect(current).toHaveTextContent("");
   });
 
   it("says '1 point' in the singular", () => {
     renderOne("GAVE_UP", "partial", 1);
 
-    expect(screen.getByRole("button", { name: "Round 1: 1 point" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Round 1: gave up, 1 point" })).toBeInTheDocument();
   });
 
   it("shows the number of an unanswered round, with no outcome, and marks the current one", () => {
@@ -116,5 +130,7 @@ describe("RoundProgress", () => {
     expect(current).toHaveAttribute("aria-current", "step");
     expect(current).toHaveTextContent("4");
     expect(current).not.toHaveAttribute("data-outcome");
+    expect(current).not.toHaveAttribute("data-result");
+    expect(screen.getByRole("button", { name: "Round 3: not played" })).toHaveTextContent("3");
   });
 });

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { makeRoundProps } from "../../test/fixtures";
 import type { Guess, GuessState } from "./guessReducer";
-import { liveProgress, roundView } from "./roundView";
+import { liveProgress, roundResultKind, roundView } from "./roundView";
 
 const HINTS = { description: "", text: (i: number) => `hint ${i + 1}` };
 
@@ -11,6 +11,16 @@ function playing(overrides: Partial<GuessState> = {}): GuessState {
 
 const right = (name: string): Guess => ({ text: name, answer: name });
 const wrong = (text: string): Guess => ({ text, answer: null });
+
+describe("roundResultKind", () => {
+  it.each([
+    ["CORRECT", "correct"],
+    ["GAVE_UP", "revealed"],
+    ["OUT_OF_GUESSES", "outOfGuesses"],
+  ] as const)("says how a %s round ended", (state, kind) => {
+    expect(roundResultKind(state)).toBe(kind);
+  });
+});
 
 describe("roundView", () => {
   it("shows what a round in play is worth now, with no outcome yet", () => {

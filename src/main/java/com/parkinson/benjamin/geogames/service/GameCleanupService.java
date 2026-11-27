@@ -2,6 +2,8 @@ package com.parkinson.benjamin.geogames.service;
 
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeStore;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DeletedKind;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -39,14 +41,18 @@ public class GameCleanupService {
   private final ChallengeStore challenges;
   private final Duration challengeMaxAge;
 
+  private final GameMetrics metrics;
+
   public GameCleanupService(
       GameRepository games,
       ChallengeStore challenges,
+      GameMetrics metrics,
       @Value("${geogames.games.max-age:PT24H}") Duration maxAge,
       @Value("${geogames.games.unplayed-max-age:PT2H}") Duration unplayedMaxAge,
       @Value("${geogames.challenges.max-age:P7D}") Duration challengeMaxAge) {
     this.games = games;
     this.challenges = challenges;
+    this.metrics = metrics;
     this.maxAge = maxAge;
     this.unplayedMaxAge = unplayedMaxAge;
     this.challengeMaxAge = challengeMaxAge;
@@ -55,6 +61,7 @@ public class GameCleanupService {
   /** Games nobody answered a round of: a flood of these is how the live-game cap would fill. */
   public long deleteUnplayedGamesOlderThanMaxAge(Instant now) {
     long deleted = games.deleteUnplayedCreatedBefore(now.minus(unplayedMaxAge));
+    metrics.deleted(DeletedKind.GAME, deleted);
     if (deleted > 0) {
       log.info("Deleted {} unplayed games older than {}", deleted, unplayedMaxAge);
     }
@@ -64,6 +71,7 @@ public class GameCleanupService {
   @Transactional
   public long deleteGamesOlderThanMaxAge(Instant now) {
     long deleted = games.deleteCreatedBefore(now.minus(maxAge));
+    metrics.deleted(DeletedKind.GAME, deleted);
     if (deleted > 0) {
       log.info("Deleted {} games older than {}", deleted, maxAge);
     }
@@ -74,6 +82,7 @@ public class GameCleanupService {
   public int deleteChallengesOlderThanMaxAge(Instant now) {
     LocalDate cutoff = now.minus(challengeMaxAge).atZone(ZoneOffset.UTC).toLocalDate();
     int deleted = challenges.deleteCreatedBefore(cutoff);
+    metrics.deleted(DeletedKind.CHALLENGE, deleted);
     if (deleted > 0) {
       log.info("Deleted {} challenges older than {}", deleted, challengeMaxAge);
     }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Difficulty } from "../api/types";
-import { Dialog, ScoreBar } from "../ui";
+import { Dialog, ScoreBar, ScoreBarHeader } from "../ui";
 import DailyComparison from "./DailyComparison";
 import type { DailyResult, RoundParts } from "./dailyStorage";
 
@@ -48,6 +48,10 @@ export default function DailyScoreReveal({
     <Dialog title="Your daily score" onClose={onClose} closeLabel="See results">
       {/* A tap anywhere on the scores jumps to the end. */}
       <div className="gg-reveal" data-testid="reveal" onClick={() => setSkipped(true)}>
+        <div className="gg-reveal__header">
+          <span className="gg-mono gg-reveal__label" />
+          <ScoreBarHeader />
+        </div>
         <ul className="gg-reveal__bars">
           {result.rounds.map((_, i) => (
             <li

@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.parkinson.benjamin.geogames.dao.GameRepository;
+import com.parkinson.benjamin.geogames.model.GameOrigin;
 import com.parkinson.benjamin.geogames.service.challenge.Challenge;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeStore;
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ class ChallengeApiIT {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ChallengeStore store;
+  @Autowired private GameRepository games;
 
   private String finishedGame(int rounds) throws Exception {
     String id = TestFixtures.createGame(mockMvc, "TRIPOINT", rounds);
@@ -92,6 +95,9 @@ class ChallengeApiIT {
             .asString();
 
     assertThat(first).isNotEqualTo(second).isNotEqualTo(source);
+    var copied = games.findByPublicId(UUID.fromString(first)).orElseThrow();
+    assertThat(copied.getChallengeScore()).isZero();
+    assertThat(copied.origin()).isEqualTo(GameOrigin.CHALLENGE);
     for (String copy : new String[] {first, second}) {
       for (int round = 0; round < 2; round++) {
         assertThat(blob(copy, round)).isEqualTo(blob(source, round));

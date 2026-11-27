@@ -97,7 +97,7 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
   await expect(page.getByRole("listitem").filter({ hasText: "Perfect rounds" })).toHaveText("Perfect rounds 0 of 3");
   const rounds = page.getByRole("button").filter({ hasText: /\+\d+/ });
   await expect(rounds).toHaveCount(3);
-  await expect(rounds.nth(0)).toContainText("1 hint");
+  await expect(rounds.nth(0)).not.toContainText("1 hint");
   await expect(rounds.nth(0)).toContainText("+9");
   await expect(rounds.nth(1)).toContainText("+2");
   await expect(rounds.nth(2)).toContainText("Ran out of lives");

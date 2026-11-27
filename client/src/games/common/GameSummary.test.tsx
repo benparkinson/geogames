@@ -247,7 +247,8 @@ describe("GameSummary", () => {
     expect(rows[1]).toHaveTextContent("Danube");
     expect(rows[1]).toHaveTextContent("+0");
     expect(rows[2]).toHaveTextContent("+9");
-    expect(rows[2]).toHaveTextContent("1 hint");
+    expect(rows[2]).not.toHaveTextContent("1 hint");
+    for (const name of ["Answer", "Hints", "Lives"]) expect(screen.getByText(name)).toBeInTheDocument();
   });
 
   it("adds Hard mode to the meta line of a hard game, and does not mention it otherwise", async () => {
@@ -281,10 +282,11 @@ describe("GameSummary", () => {
     renderSummary();
     await screen.findByRole("heading", { name: "Your result" });
 
-    expect(screen.getAllByRole("listitem").map((li) => li.textContent)).toEqual([
-      "Perfect rounds 1 of 3",
-      "Hints used 1",
-    ]);
+    expect(
+      within(screen.getByText("Hints used").closest("ul")!)
+        .getAllByRole("listitem")
+        .map((li) => li.textContent),
+    ).toEqual(["Perfect rounds 1 of 3", "Hints used 1"]);
     expect(screen.queryByText(/first guess/)).not.toBeInTheDocument();
   });
 
@@ -451,7 +453,8 @@ describe("GameSummary", () => {
 
     expect(await screen.findByText("7")).toBeInTheDocument();
     expect(screen.getByText("0 of 2")).toBeInTheDocument();
-    expect(screen.getByText(/3 hints/)).toBeInTheDocument();
+    expect(screen.getByText("Hints used").parentElement).toHaveTextContent("Hints used 3");
+    expect(screen.queryByText(/3 hints/)).not.toBeInTheDocument();
   });
 
   it("draws a score bar for each round, with its parts as text", async () => {
@@ -459,9 +462,9 @@ describe("GameSummary", () => {
     renderSummary(vi.fn(), 2);
 
     expect(
-      await screen.findByRole("img", { name: "9 of 10: answer 4, hints 2 of 3, accuracy 3 of 3" }),
+      await screen.findByRole("img", { name: "9 of 10: answer 4 of 4, hints 2 of 3, lives 3 of 3" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "0 of 10: answer 0, hints 0 of 3, accuracy 0 of 3" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "0 of 10: answer 0 of 4, hints 0 of 3, lives 0 of 3" })).toBeInTheDocument();
   });
 
   it("opens the round that was clicked", async () => {
@@ -579,7 +582,9 @@ describe("GameSummary stats and table", () => {
     renderSummary();
     await screen.findByRole("heading", { name: "Your result" });
 
-    const stats = screen.getAllByRole("listitem").map((li) => li.textContent);
+    const stats = within(screen.getByText("Hints used").closest("ul")!)
+      .getAllByRole("listitem")
+      .map((li) => li.textContent);
     expect(stats).toEqual(["Perfect rounds 1 of 3", "Hints used 1"]);
     const rows = screen.getAllByRole("button").filter((b) => /^\d\./.test(b.textContent ?? ""));
     expect(rows[1]).toHaveTextContent("Rhine, Elbe");

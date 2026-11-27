@@ -11,6 +11,8 @@ import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.stats.RoundResult;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DropReason;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,8 @@ import org.mockito.ArgumentCaptor;
 class RoundStatsRecorderTest {
 
   private final RoundStatsStore store = mock(RoundStatsStore.class);
-  private final RoundStatsRecorder recorder = new RoundStatsRecorder(store);
+  private final GameMetrics metrics = mock(GameMetrics.class);
+  private final RoundStatsRecorder recorder = new RoundStatsRecorder(store, metrics);
 
   private static RoundAnswered event(Integer wrongGuesses) {
     return event(wrongGuesses, Difficulty.HARD);
@@ -111,5 +114,6 @@ class RoundStatsRecorderTest {
     doThrow(new IllegalStateException("db down")).when(store).insert(any());
 
     assertThatCode(() -> recorder.record(event(0))).doesNotThrowAnyException();
+    verify(metrics).statsDropped(DropReason.ERROR);
   }
 }
