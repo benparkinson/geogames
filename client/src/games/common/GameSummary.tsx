@@ -11,8 +11,9 @@ import { summariseGame } from "./summaryView";
 import { DIFFICULTY_LABEL } from "./difficultyLabel";
 import DailyComparison from "../../daily/DailyComparison";
 import ShareButton from "../../daily/ShareButton";
-import { type DailyInfo } from "../../daily/dailyStorage";
+import { entryFor, useDailyEntry, type DailyInfo } from "../../daily/dailyStorage";
 import { useDailyShareText } from "../../daily/useDailyShareText";
+import { useToday } from "../../daily/useToday";
 import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
 import ChallengeShare from "../../challenge/ChallengeShare";
@@ -40,6 +41,8 @@ export default function GameSummary({
   // Called before the early return below: a hook can't be skipped.
   const share = useDailyShareText(daily, all[0]);
   const friend = useChallengeScore(gameId);
+  const today = useToday();
+  const todaysDaily = entryFor(useDailyEntry(), today);
 
   if (all.length < totalRoundCount) {
     return <LoadingSpinner fullPage className="page-bg" />;
@@ -52,6 +55,9 @@ export default function GameSummary({
     daily ? `Daily ${daily.date}` : (gameTitle ?? GAME_NAMES.RANDOM),
     ...DIFFICULTY_LABEL[summary.difficulty],
   ].join(" · ");
+  const freePlayFinished = !daily && all[0].gameResult.gameState === FINISHED;
+  // A daily that was started but not finished still counts as not done.
+  const offerDaily = freePlayFinished && today !== null && !todaysDaily?.result;
   return (
     <PageShell wide topBarEnd={<KofiBadge />}>
       <div className="gg-summary">
@@ -107,9 +113,16 @@ export default function GameSummary({
               <ShareButton text={share} />
             </div>
           )}
-          {!daily && all[0].gameResult.gameState === FINISHED && (
+          {freePlayFinished && (
             <div className="gg-summary__share">
               <ChallengeShare gameId={gameId} round={all[0]} />
+            </div>
+          )}
+          {offerDaily && (
+            <div className="gg-summary__share">
+              <Link href="/daily" className={buttonClass({ variant: "secondary", block: true })}>
+                Play today&apos;s daily
+              </Link>
             </div>
           )}
           <div className="gg-summary__buttons">

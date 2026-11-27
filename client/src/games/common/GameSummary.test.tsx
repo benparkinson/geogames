@@ -6,6 +6,8 @@ import { makeDailyScore, makeGameRounds } from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
 import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";
+import { localDateString } from "../../api/daily";
+import { resetDailyStorageForTests, writeDaily, type DailyEntry } from "../../daily/dailyStorage";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), query: {} }));
 vi.mock("next/router", () => ({ useRouter: () => router }));
@@ -30,6 +32,7 @@ vi.mock("../../challenge/ChallengeShare", () => ({ default: () => <div>challenge
 
 afterEach(() => {
   localStorage.clear();
+  resetDailyStorageForTests();
   Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true });
 });
 
@@ -201,6 +204,47 @@ describe("GameSummary", () => {
 
     expect(screen.getByRole("status")).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Your result" })).not.toBeInTheDocument();
+  });
+
+  const dailyLink = () => screen.queryByRole("link", { name: "Play today's daily" });
+  const entry = (date: string, finished: boolean): DailyEntry => ({
+    v: 1,
+    date,
+    number: 1,
+    gameId: "d1",
+    difficulty: "NORMAL",
+    ...(finished && { result: { score: 30, maxScore: 50, rounds: ["full"] } }),
+  });
+
+  it.each([
+    ["no daily has been played", null],
+    ["today's daily is unfinished", entry(localDateString(), false)],
+    ["only an earlier daily was finished", entry("2020-01-01", true)],
+  ])("links to the daily after the challenge button when %s", async (_name, stored) => {
+    if (stored) writeDaily(stored);
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    const link = await screen.findByRole("link", { name: "Play today's daily" });
+    expect(link).toHaveAttribute("href", "/daily");
+    expect(screen.getByText("challenge share").compareDocumentPosition(link)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it("does not link to the daily once today's is done", async () => {
+    writeDaily(entry(localDateString(), true));
+    mockFetch([roundsRoute(mixed)]);
+    renderSummary();
+
+    await screen.findByRole("heading", { name: "Your result" });
+    expect(dailyLink()).not.toBeInTheDocument();
+  });
+
+  it("does not link to the daily from an unfinished game", async () => {
+    mockFetch([roundsRoute(makeGameRounds([{ answerState: "CORRECT" }, { answerState: "UNANSWERED" }]))]);
+    renderSummary(vi.fn(), 2);
+
+    await screen.findByRole("heading", { name: "Your result" });
+    expect(dailyLink()).not.toBeInTheDocument();
   });
 
   it("offers to challenge a friend after an ordinary finished game, but not an unfinished one", async () => {
