@@ -1434,6 +1434,68 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   padding: var(--gg-space-4);
 }
 
+/* ---- A challenge's league table, and the form for a top score's initials ---- */
+.gg-league {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-league__heading {
+  margin-bottom: var(--gg-space-1);
+  font-size: var(--gg-font-size-sm);
+}
+.gg-league__list {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  border-top: 2px solid var(--gg-color-rule);
+}
+.gg-league__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-1);
+  border-bottom: 1px solid var(--gg-color-rule-light);
+}
+.gg-league__row[data-you] {
+  color: var(--gg-color-on-hint);
+  background: var(--gg-color-hint);
+}
+/* The player's own row below the top of the table. */
+.gg-league__row[data-gap] {
+  margin-top: var(--gg-space-3);
+  border-top: 1px solid var(--gg-color-rule-light);
+}
+.gg-league__rank {
+  min-width: 2ch;
+  text-align: right;
+}
+.gg-league__initials {
+  min-width: 3ch;
+}
+.gg-league__note {
+  font-size: var(--gg-font-size-sm);
+}
+.gg-league__score {
+  margin-left: auto;
+}
+.gg-initials {
+  margin-bottom: var(--gg-space-3);
+}
+.gg-initials__label {
+  display: block;
+  margin-bottom: var(--gg-space-1);
+  font-size: var(--gg-font-size-sm);
+}
+.gg-initials__row {
+  display: flex;
+  gap: var(--gg-space-2);
+}
+.gg-initials__row .gg-input {
+  width: 7em;
+}
+.gg-initials .gg-notice {
+  margin-top: var(--gg-space-2);
+}
+
 /* ---- Results page: the score and the actions on the left, the round table on the right ---- */
 .gg-summary__head,
 .gg-summary__list {
@@ -1476,9 +1538,6 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   justify-content: space-between;
   padding: var(--gg-space-1) 0;
   border-bottom: 1px solid var(--gg-color-rule-light);
-}
-.gg-summary__friend {
-  margin-bottom: var(--gg-space-2);
 }
 .gg-summary__error {
   margin-bottom: var(--gg-space-2);
