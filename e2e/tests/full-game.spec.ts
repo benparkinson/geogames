@@ -92,8 +92,8 @@ test("a Tripoint game with a hint, a reveal and running out of guesses", async (
 
   // The summary.
   await expect(page.getByRole("heading", { name: "Your result" })).toBeVisible();
-  await expect(page.getByText("11", { exact: true })).toBeVisible();
-  await expect(page.getByText("/ 30", { exact: true })).toBeVisible();
+  // The whole line: the league table below it shows the score too.
+  await expect(page.getByRole("paragraph").filter({ hasText: "/ 30" })).toHaveText("11 / 30");
   await expect(page.getByRole("listitem").filter({ hasText: "Perfect rounds" })).toHaveText("Perfect rounds 0 of 3");
   const rounds = page.getByRole("button").filter({ hasText: /\+\d+/ });
   await expect(rounds).toHaveCount(3);

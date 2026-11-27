@@ -48,7 +48,13 @@ describe("PrivacyPage", () => {
   it("says what a challenge to a friend stores and for how long", () => {
     render(<PrivacyPage />);
 
-    expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(/deleted after seven days/);
+    expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(
+      /deleted seven days after the challenge was last played or shared/,
+    );
+    expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(/score of every finished game/);
+    expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(
+      /initials, which are stored with the challenge and shown to anyone with the link/,
+    );
   });
 
   it("says that a game from a challenge stores the score to beat", () => {

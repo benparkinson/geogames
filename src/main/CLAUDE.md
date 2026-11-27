@@ -7,7 +7,7 @@
 
 ## Profiles and the production database
 
-The default profile needs no database or secrets (H2 in memory). The `prod` profile (`application-prod.properties`, turned on in Render with `SPRING_PROFILES_ACTIVE=prod`) reads `DATABASE_URL` (a JDBC URL, `jdbc:postgresql://<host>/<db>?sslmode=require&channelBinding=require`, Neon's direct endpoint, not `-pooler`), `DATABASE_USERNAME` and `DATABASE_PASSWORD`, and fails at start-up naming any that is missing (`ProdDatabaseCheck`). Never set `SPRING_DATASOURCE_*` variables in Render.
+The default profile needs no database or secrets (H2 in memory). The `prod` profile (`application-prod.properties`, turned on in Render with `SPRING_PROFILES_ACTIVE=prod`) reads `DATABASE_URL` (a JDBC URL, `jdbc:postgresql://<host>/<db>?sslmode=require&channelBinding=require`, Neon's direct endpoint, not `-pooler`), `DATABASE_USERNAME` and `DATABASE_PASSWORD`, and fails at start-up naming any that is missing (`ProdDatabaseCheck`). Never set `SPRING_DATASOURCE_*` variables in Render. The optional `BLOCKED_INITIALS` (comma separated) blocks more league-table initials, and hides stored ones, after a restart.
 
 **Privacy:** a game stores no user data, `created_at` is rounded down to the hour, and the `prod` profile turns Logbook request logging off (it logs each client address), so a game can't be matched to a person. Keep it that way: don't add exact timestamps, client addresses or request logging to production.
 

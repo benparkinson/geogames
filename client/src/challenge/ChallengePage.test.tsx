@@ -29,9 +29,27 @@ describe("ChallengePage", () => {
 
     renderWithClient(<ChallengePage id="c1" />);
 
-    expect(await screen.findByText("They scored 320 / 500. Can you beat it?")).toBeInTheDocument();
+    expect(await screen.findByText("The score to beat is 320 / 500. Can you beat it?")).toBeInTheDocument();
     expect(screen.getByText("Mixed · 5 rounds · Hard mode")).toBeInTheDocument();
     expect(callsTo(fetchMock).filter((c) => c.method === "POST")).toHaveLength(0);
+  });
+
+  it("shows the league table with the score to beat labelled", async () => {
+    mockFetch([{ url: INFO, body: makeChallengeResponse() }, wake]);
+
+    renderWithClient(<ChallengePage id="c1" />);
+
+    const table = await screen.findByRole("list", { name: "League table" });
+    expect(table).toHaveTextContent("1 ABC To beat 320");
+  });
+
+  it("shows no table when the server sends no entries", async () => {
+    mockFetch([{ url: INFO, body: makeChallengeResponse({ entries: undefined }) }, wake]);
+
+    renderWithClient(<ChallengePage id="c1" />);
+
+    await screen.findByRole("button", { name: "Play" });
+    expect(screen.queryByRole("list", { name: "League table" })).not.toBeInTheDocument();
   });
 
   it("says the challenge has expired, with a way home, on a 404", async () => {

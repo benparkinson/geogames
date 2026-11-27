@@ -10,10 +10,13 @@ const COPIED_MS = 4000;
 export default function ShareButton({
   text,
   label = "Copy result",
+  variant = "primary",
 }: {
   text: string;
   /** What the copy button says before it is clicked. */
   label?: string;
+  /** The copy button's variant. */
+  variant?: "primary" | "secondary";
 }): React.JSX.Element {
   const textareaId = useId();
   const [copied, setCopied] = useState(false);
@@ -51,7 +54,7 @@ export default function ShareButton({
   return (
     <div>
       <div className="gg-share__row">
-        <Button variant="primary" onClick={copy}>
+        <Button variant={variant} onClick={copy}>
           {/* Both labels share one grid cell, so the button keeps the wider width while the other is hidden. */}
           <span style={{ display: "inline-grid" }}>
             <span style={{ gridArea: "1 / 1", visibility: copied ? "hidden" : "visible" }}>

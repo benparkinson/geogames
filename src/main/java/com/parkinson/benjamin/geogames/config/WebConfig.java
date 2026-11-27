@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
     registry
         .addMapping("/api/**")
         .allowedOrigins(allowedOrigins)
-        .allowedMethods("GET", "POST", "HEAD");
+        .allowedMethods("GET", "POST", "PUT", "HEAD");
   }
 
   /**

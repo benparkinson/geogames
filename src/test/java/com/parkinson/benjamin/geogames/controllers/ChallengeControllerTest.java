@@ -7,25 +7,31 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.ChallengeCreationResponse;
+import com.parkinson.benjamin.geogames.api.ChallengeEntryView;
 import com.parkinson.benjamin.geogames.api.ChallengeResponse;
+import com.parkinson.benjamin.geogames.api.ChallengeTableResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictException;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeNotFoundException;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeService;
 import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
 import com.parkinson.benjamin.geogames.service.ratelimit.TooManyGamesException;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @WebMvcTest(ChallengeController.class)
 class ChallengeControllerTest {
@@ -69,7 +75,8 @@ class ChallengeControllerTest {
 
   @Test
   void findReturnsTheChallengeWithoutRounds() throws Exception {
-    when(challenges.find(ID)).thenReturn(new ChallengeResponse("RANDOM", "EASY", 5, 300, 500));
+    when(challenges.find(ID))
+        .thenReturn(new ChallengeResponse("RANDOM", "EASY", 5, 300, 500, List.of(), 0));
 
     mockMvc
         .perform(get("/api/challenges/" + ID))
@@ -101,6 +108,53 @@ class ChallengeControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(game.toString()));
     mockMvc.perform(post("/api/challenges/nope/games")).andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void theTableIsReturnedForAGame() throws Exception {
+    UUID challenge = UUID.randomUUID();
+    when(challenges.table(ID))
+        .thenReturn(
+            new ChallengeTableResponse(
+                challenge,
+                500,
+                1,
+                true,
+                List.of(new ChallengeEntryView(1, 300, null, true)),
+                null,
+                true));
+
+    mockMvc
+        .perform(get("/api/games/" + ID + "/challenge-table"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.challengeId").value(challenge.toString()))
+        .andExpect(jsonPath("$.entries[0].rank").value(1));
+    mockMvc.perform(get("/api/games/nope/challenge-table")).andExpect(status().isBadRequest());
+  }
+
+  private ResultActions putInitials(UUID game, String body) throws Exception {
+    return mockMvc.perform(
+        put("/api/games/" + game + "/challenge-initials")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body));
+  }
+
+  @Test
+  void initialsAreNoContentOrTheServiceError() throws Exception {
+    UUID invalid = UUID.randomUUID();
+    UUID unknown = UUID.randomUUID();
+    UUID low = UUID.randomUUID();
+    doThrow(new BadRequestException("bad")).when(challenges).setInitials(invalid, "AB");
+    doThrow(new ChallengeNotFoundException("none")).when(challenges).setInitials(unknown, "AB");
+    doThrow(new ChallengeConflictException("low")).when(challenges).setInitials(low, "AB");
+    String body = "{\"initials\":\"AB\"}";
+
+    putInitials(ID, body).andExpect(status().isNoContent());
+    verify(challenges).setInitials(ID, "AB");
+    putInitials(invalid, body).andExpect(status().isBadRequest());
+    putInitials(unknown, body).andExpect(status().isNotFound());
+    putInitials(low, body).andExpect(status().isConflict());
+    putInitials(ID, "not json").andExpect(status().isBadRequest());
   }
 
   @Test

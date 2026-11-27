@@ -9,6 +9,7 @@ import { DIFFICULTY_LABEL } from "../games/common/difficultyLabel";
 import { GAME_NAMES, type GameTypeName } from "../games/names";
 import { Button, buttonClass, Notice, Spinner } from "../ui";
 import { saveChallengeScore } from "./challengeStorage";
+import LeagueTable from "./LeagueTable";
 
 /**
  * A friend's challenge: what they played and what to beat, and a Play button. A game is only made on the click,
@@ -87,8 +88,9 @@ export default function ChallengePage({ id }: { id: string | null }): React.JSX.
         <h2 className="gg-ticket__heading">A friend challenged you</h2>
         <p className="gg-daily__text gg-mono">{settings.join(" · ")}</p>
         <p className="gg-daily__text">
-          They scored {data.score} / {data.maxScore}. Can you beat it?
+          The score to beat is {data.score} / {data.maxScore}. Can you beat it?
         </p>
+        {!!data.entries?.length && <LeagueTable entries={data.entries} topLabel="To beat" />}
         <div aria-live="polite" className="gg-daily__status">
           {!!play.error && !play.isPending && (
             <Notice>{creationErrorMessage(play.error, "Couldn't start. The server may be down. Try again.")}</Notice>

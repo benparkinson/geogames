@@ -2,7 +2,12 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
-import { makeDailyScore, makeGameRounds } from "../../test/fixtures";
+import {
+  makeChallengeCreationResponse,
+  makeChallengeTableResponse,
+  makeDailyScore,
+  makeGameRounds,
+} from "../../test/fixtures";
 import { renderWithClient } from "../../test/render";
 import { GameRoundResponse } from "../../api/types";
 import GameSummary from "./GameSummary";
@@ -42,6 +47,8 @@ function renderSummary(onOpenRound = vi.fn(), totalRoundCount = 3) {
   );
   return { ...view, onOpenRound };
 }
+
+const isGameCreation = (c: { method: string; url: string }) => c.method === "POST" && c.url.endsWith("/api/games");
 
 /** Makes creating a game hang, so the pending state can be seen. */
 function holdGameCreation(): void {
@@ -89,7 +96,7 @@ describe("GameSummary for a daily challenge", () => {
     await waitFor(() =>
       expect(
         callsTo(fetchMock)
-          .filter((c) => c.method === "POST")
+          .filter((c) => isGameCreation(c))
           .map((c) => c.body),
       ).toEqual([{ gameType: "RANDOM", numberOfRounds: 5, difficulty: "NORMAL" }]),
     );
@@ -122,7 +129,7 @@ describe("GameSummary for a daily challenge", () => {
     await userEvent.click(await screen.findByRole("button", { name: "Play a Mixed game" }));
 
     await waitFor(() =>
-      expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
+      expect(callsTo(fetchMock).find((c) => isGameCreation(c))!.body).toEqual({
         gameType: "RANDOM",
         numberOfRounds: 5,
         difficulty: "HARD",
@@ -259,12 +266,38 @@ describe("GameSummary", () => {
     expect(screen.queryByText("challenge share")).not.toBeInTheDocument();
   });
 
-  it("shows the friend's score when the game came from a challenge", async () => {
-    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
-    mockFetch([roundsRoute(mixed)]);
+  const tableRoute = (overrides: Parameters<typeof makeChallengeTableResponse>[0] = {}): Route => ({
+    url: "http://localhost:8080/api/games/g1/challenge-table",
+    body: makeChallengeTableResponse(overrides),
+  });
+
+  it("shows the league table once the game has made its challenge", async () => {
+    mockFetch([
+      roundsRoute(mixed),
+      { method: "POST", url: "http://localhost:8080/api/games/g1/challenges", body: makeChallengeCreationResponse() },
+      tableRoute(),
+    ]);
     renderSummary();
 
-    expect(await screen.findByText("Your friend scored 320 / 500")).toBeInTheDocument();
+    const table = await screen.findByRole("list", { name: "League table" });
+    expect(within(table).getAllByRole("listitem")).toHaveLength(3);
+    expect(screen.queryByRole("textbox", { name: "Your initials" })).not.toBeInTheDocument();
+  });
+
+  it("shows the table in a game from a challenge, and asks a top score for initials", async () => {
+    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
+    mockFetch([
+      roundsRoute(mixed),
+      tableRoute({
+        entries: [{ rank: 1, score: 320, initials: "ZZ", you: true }],
+        yours: null,
+        canEnterInitials: true,
+      }),
+    ]);
+    renderSummary();
+
+    expect(await screen.findByRole("list", { name: "League table" })).toHaveTextContent("1 ZZ You 320");
+    expect(screen.getByRole("textbox", { name: "Your initials" })).toHaveValue("ZZ");
   });
 
   it("has no Copy result button and offers Play another in an ordinary game", async () => {
@@ -344,8 +377,8 @@ describe("GameSummary", () => {
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
-    await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
-    expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toMatchObject({ difficulty: "EASY" });
+    await waitFor(() => expect(callsTo(fetchMock).some((c) => isGameCreation(c))).toBe(true));
+    expect(callsTo(fetchMock).find((c) => isGameCreation(c))!.body).toMatchObject({ difficulty: "EASY" });
   });
 
   it("shows Solved 0 with Hard mode for a hard game with no answered rounds", async () => {
@@ -382,8 +415,8 @@ describe("GameSummary", () => {
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
-    await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
-    expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
+    await waitFor(() => expect(callsTo(fetchMock).some((c) => isGameCreation(c))).toBe(true));
+    expect(callsTo(fetchMock).find((c) => isGameCreation(c))!.body).toEqual({
       gameType: "RANDOM",
       numberOfRounds: 3,
       difficulty: "NORMAL",
@@ -542,7 +575,7 @@ describe("GameSummary", () => {
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
     await waitFor(() => expect(router.push).toHaveBeenCalledWith("/games/0b7c2a8e-4f1d-4c3a-9e5b-1d2f3a4b5c6d"));
-    const post = callsTo(fetchMock).find((c) => c.method === "POST")!;
+    const post = callsTo(fetchMock).find((c) => isGameCreation(c))!;
     expect(post.body).toEqual({ gameType: "RANDOM", numberOfRounds: 3, difficulty: "NORMAL" });
   });
 
@@ -560,8 +593,8 @@ describe("GameSummary", () => {
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Play another" }));
 
-    await waitFor(() => expect(callsTo(fetchMock).some((c) => c.method === "POST")).toBe(true));
-    expect(callsTo(fetchMock).find((c) => c.method === "POST")!.body).toEqual({
+    await waitFor(() => expect(callsTo(fetchMock).some((c) => isGameCreation(c))).toBe(true));
+    expect(callsTo(fetchMock).find((c) => isGameCreation(c))!.body).toEqual({
       gameType: "RIVERS_BY_SHAPE",
       numberOfRounds: 2,
       difficulty: "NORMAL",

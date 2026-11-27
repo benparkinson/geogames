@@ -1,24 +1,29 @@
 package com.parkinson.benjamin.geogames;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.dao.GameRepository;
 import com.parkinson.benjamin.geogames.model.GameOrigin;
-import com.parkinson.benjamin.geogames.service.challenge.Challenge;
-import com.parkinson.benjamin.geogames.service.challenge.ChallengeStore;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -29,7 +34,7 @@ class ChallengeApiIT {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private ChallengeStore store;
+  @Autowired private JdbcClient jdbc;
   @Autowired private GameRepository games;
 
   private String finishedGame(int rounds) throws Exception {
@@ -154,24 +159,116 @@ class ChallengeApiIT {
         .andExpect(status().isNotFound());
   }
 
-  @Test
-  void theStoreInsertsFindsAndDeletesByDate() {
-    UUID id = UUID.randomUUID();
-    Challenge old =
-        new Challenge(
-            id,
-            "TRIPOINT",
-            com.parkinson.benjamin.geogames.model.Difficulty.EASY,
-            java.util.List.of(
-                new com.parkinson.benjamin.geogames.service.daily.PinnedRound(
-                    com.parkinson.benjamin.geogames.model.GameType.TRIPOINT, "tripoint:x")),
-            10,
-            100,
-            LocalDate.of(2000, 1, 1));
-    store.insert(old);
+  private int rows(String table) {
+    return jdbc.sql("select count(*) from " + table).query(Integer.class).single();
+  }
 
-    assertThat(store.find(id)).contains(old);
-    assertThat(store.deleteCreatedBefore(LocalDate.of(2000, 1, 2))).isGreaterThanOrEqualTo(1);
-    assertThat(store.find(id)).isEmpty();
+  private void answer(String game, int round, String state) throws Exception {
+    mockMvc
+        .perform(
+            post("/api/games/%s/rounds/%d/answers".formatted(game, round))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"answerState\":\"%s\",\"hintsUsed\":0,\"wrongGuesses\":0}".formatted(state)))
+        .andExpect(status().isOk());
+  }
+
+  private ResultActions initials(String game, String initials) throws Exception {
+    return mockMvc.perform(
+        put("/api/games/%s/challenge-initials".formatted(game))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"initials\":\"%s\"}".formatted(initials)));
+  }
+
+  @Test
+  void theTopFiveCanEnterInitialsWhichTheTableAndTheChallengeShow() throws Exception {
+    String creator = finishedGame(1);
+    String challenge = createChallenge(creator);
+    List<String> players = new ArrayList<>(List.of(creator));
+    for (int i = 0; i < 5; i++) {
+      String friend =
+          objectMapper
+              .readTree(body(post("/api/challenges/%s/games".formatted(challenge))))
+              .get("id")
+              .asString();
+      // Everyone scores 0, so the order of finishing is the order of the table.
+      answer(friend, 0, "GAVE_UP");
+      players.add(friend);
+    }
+
+    initials(players.get(4), "abc").andExpect(status().isNoContent());
+    initials(players.get(5), "xyz").andExpect(status().isConflict());
+    initials(players.get(4), "a1").andExpect(status().isBadRequest());
+
+    mockMvc
+        .perform(get("/api/games/%s/challenge-table".formatted(players.get(4))))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.challengeId").value(challenge))
+        .andExpect(jsonPath("$.entryCount").value(6))
+        .andExpect(jsonPath("$.creator").value(false))
+        .andExpect(jsonPath("$.entries.length()").value(5))
+        .andExpect(jsonPath("$.entries[4].initials").value("ABC"))
+        .andExpect(jsonPath("$.entries[4].you").value(true))
+        .andExpect(jsonPath("$.yours").value(nullValue()))
+        .andExpect(jsonPath("$.canEnterInitials").value(true));
+    mockMvc
+        .perform(get("/api/games/%s/challenge-table".formatted(players.get(5))))
+        .andExpect(jsonPath("$.yours.rank").value(6))
+        .andExpect(jsonPath("$.canEnterInitials").value(false));
+    mockMvc
+        .perform(get("/api/games/%s/challenge-table".formatted(creator)))
+        .andExpect(jsonPath("$.creator").value(true));
+    mockMvc
+        .perform(get("/api/challenges/" + challenge))
+        .andExpect(jsonPath("$.entryCount").value(6))
+        .andExpect(jsonPath("$.entries.length()").value(5))
+        .andExpect(jsonPath("$.entries[4].initials").value("ABC"))
+        .andExpect(jsonPath("$.entries[4].you").doesNotExist());
+  }
+
+  @Test
+  void aGameWithNoChallengeHasNoTable() throws Exception {
+    mockMvc
+        .perform(get("/api/games/%s/challenge-table".formatted(finishedGame(1))))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void theSiteMayPutInitialsFromItsOwnOrigin() throws Exception {
+    mockMvc
+        .perform(
+            options("/api/games/%s/challenge-initials".formatted(UUID.randomUUID()))
+                .header("Origin", "http://localhost:3000")
+                .header("Access-Control-Request-Method", "PUT"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"));
+  }
+
+  @Test
+  void aPlayedChallengeGetsAnEntryAndIsSharedOnUnderTheSameLink() throws Exception {
+    String source = finishedGame(2);
+    int challengesBefore = rows("challenge");
+    int entriesBefore = rows("challenge_entry");
+    String challenge = createChallenge(source);
+    assertThat(createChallenge(source)).isEqualTo(challenge);
+
+    String friend =
+        objectMapper
+            .readTree(body(post("/api/challenges/%s/games".formatted(challenge))))
+            .get("id")
+            .asString();
+    answer(friend, 0, "CORRECT");
+    assertThat(rows("challenge_entry")).isEqualTo(entriesBefore + 1);
+    answer(friend, 1, "GAVE_UP");
+
+    assertThat(rows("challenge_entry")).isEqualTo(entriesBefore + 2);
+    assertThat(createChallenge(friend)).isEqualTo(challenge);
+    assertThat(rows("challenge")).isEqualTo(challengesBefore + 1);
+    assertThat(rows("challenge_entry")).isEqualTo(entriesBefore + 2);
+    // The creator gave up both rounds, so the friend's score is now the one to beat.
+    mockMvc
+        .perform(get("/api/challenges/" + challenge))
+        .andExpect(jsonPath("$.score").value(10))
+        .andExpect(jsonPath("$.maxScore").value(20));
   }
 }

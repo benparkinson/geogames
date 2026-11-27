@@ -3,6 +3,7 @@ package com.parkinson.benjamin.geogames;
 import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.parkinson.benjamin.geogames.model.GameType;
@@ -165,21 +166,45 @@ class ApiContractIT {
     return endpointShape("/api/daily-challenges/" + daily.get("date").asString());
   }
 
-  /** Finishes a one-round game, then challenges a friend with it. */
-  private JsonNode challengeCreation() throws Exception {
-    String id = createGame(GameType.TRIPOINT).get("id").asString();
-    body(
-        post("/api/games/%s/rounds/0/answers".formatted(id))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0}"));
-    // The game has 10 rounds: answer the rest so it is finished.
-    for (int round = 1; round < ROUNDS; round++) {
+  private void giveUpAllRounds(String id) throws Exception {
+    for (int round = 0; round < ROUNDS; round++) {
       body(
           post("/api/games/%s/rounds/%d/answers".formatted(id, round))
               .contentType(MediaType.APPLICATION_JSON)
               .content("{\"answerState\":\"GAVE_UP\",\"hintsUsed\":0,\"wrongGuesses\":0}"));
     }
-    return objectMapper.readTree(body(post("/api/games/%s/challenges".formatted(id))));
+  }
+
+  /**
+   * A challenge, its table and its public page. Five friends play it, so the last is below the top
+   * five and its table has every field.
+   */
+  private void challengeShapes(Map<String, Object> endpoints) throws Exception {
+    String creator = createGame(GameType.TRIPOINT).get("id").asString();
+    giveUpAllRounds(creator);
+    JsonNode challenge =
+        objectMapper.readTree(body(post("/api/games/%s/challenges".formatted(creator))));
+    String challengeId = challenge.get("id").asString();
+    mockMvc
+        .perform(
+            put("/api/games/%s/challenge-initials".formatted(creator))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"initials\":\"abc\"}"))
+        .andExpect(status().isNoContent());
+    String friend = creator;
+    for (int i = 0; i < 5; i++) {
+      friend =
+          objectMapper
+              .readTree(body(post("/api/challenges/%s/games".formatted(challengeId))))
+              .get("id")
+              .asString();
+      giveUpAllRounds(friend);
+    }
+    endpoints.put("POST /api/games/{id}/challenges", JsonShape.of(challenge));
+    endpoints.put("GET /api/challenges/{id}", endpointShape("/api/challenges/" + challengeId));
+    endpoints.put(
+        "GET /api/games/{id}/challenge-table",
+        endpointShape("/api/games/%s/challenge-table".formatted(friend)));
   }
 
   private Object endpointShape(String path) throws Exception {
@@ -201,11 +226,7 @@ class ApiContractIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}")))));
     endpoints.put("GET /api/daily-challenges/{date}", dailyChallengeShape());
-    JsonNode challenge = challengeCreation();
-    endpoints.put("POST /api/games/{id}/challenges", JsonShape.of(challenge));
-    endpoints.put(
-        "GET /api/challenges/{id}",
-        endpointShape("/api/challenges/" + challenge.get("id").asString()));
+    challengeShapes(endpoints);
     endpoints.put("GET /api/daily-scores/{date}", dailyScoreShape());
     endpoints.put("POST /api/games/{id}/rounds/{round}/answers", answerShape());
 

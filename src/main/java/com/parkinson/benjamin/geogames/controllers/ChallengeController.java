@@ -3,15 +3,21 @@ package com.parkinson.benjamin.geogames.controllers;
 import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.ChallengeCreationResponse;
 import com.parkinson.benjamin.geogames.api.ChallengeResponse;
+import com.parkinson.benjamin.geogames.api.ChallengeTableResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.api.InitialsRequest;
 import com.parkinson.benjamin.geogames.service.challenge.ChallengeService;
 import com.parkinson.benjamin.geogames.service.ratelimit.GameCreationGuard;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,6 +38,17 @@ public class ChallengeController {
       @PathVariable String gameId, HttpServletRequest httpRequest) {
     guard.check(httpRequest);
     return challenges.create(parse(gameId));
+  }
+
+  @GetMapping("/games/{gameId}/challenge-table")
+  public ChallengeTableResponse table(@PathVariable String gameId) {
+    return challenges.table(parse(gameId));
+  }
+
+  @PutMapping("/games/{gameId}/challenge-initials")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void setInitials(@PathVariable String gameId, @RequestBody InitialsRequest request) {
+    challenges.setInitials(parse(gameId), request.initials());
   }
 
   @GetMapping("/challenges/{id}")

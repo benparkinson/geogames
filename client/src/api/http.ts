@@ -33,18 +33,28 @@ export function creationErrorMessage(
  * throws an `HttpError` that says what failed and the HTTP status, for example "Failed to load round 3 (404)".
  */
 export async function fetchJson<T>(path: string, what: string, init?: RequestInit): Promise<T> {
+  const response = await request(path, what, init);
+  return response.json();
+}
+
+async function request(path: string, what: string, init?: RequestInit): Promise<Response> {
   const url = serverEndpoint() + path;
   const response = await (init ? fetch(url, init) : fetch(url));
   if (!response.ok) {
     throw new HttpError(`Failed to ${what} (${response.status})`, response.status);
   }
-  return response.json();
+  return response;
+}
+
+function jsonRequest(method: string, body: unknown): RequestInit {
+  return { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+}
+
+/** PUTs `body` to a path that answers with no content. Errors are those of `fetchJson`. */
+export async function putJson(path: string, what: string, body: unknown): Promise<void> {
+  await request(path, what, jsonRequest("PUT", body));
 }
 
 export function postJson<T>(path: string, what: string, body: unknown): Promise<T> {
-  return fetchJson<T>(path, what, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  return fetchJson<T>(path, what, jsonRequest("POST", body));
 }
