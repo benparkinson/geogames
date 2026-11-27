@@ -145,6 +145,7 @@ jobs:
             target/surefire-reports
             target/site/jacoco
           if-no-files-found: ignore
+          retention-days: 3
 
   unit-frontend:
     name: unit-frontend
@@ -176,6 +177,7 @@ jobs:
           name: unit-frontend-coverage
           path: client/coverage
           if-no-files-found: ignore
+          retention-days: 3
 
   build:
     name: build
@@ -216,6 +218,7 @@ jobs:
           name: jar
           path: target/geogames-0.0.1-SNAPSHOT.jar
           if-no-files-found: error
+          retention-days: 1
 
       - name: Upload the built frontend
         uses: actions/upload-artifact@v7
@@ -223,6 +226,7 @@ jobs:
           name: client-out
           path: client/out
           if-no-files-found: error
+          retention-days: 1
 
   integration:
     name: integration
@@ -266,6 +270,7 @@ jobs:
           name: failsafe-reports
           path: target/failsafe-reports
           if-no-files-found: ignore
+          retention-days: 3
 
   # Duplicates one file of unit-frontend on purpose, so a contract break shows under its own name.
   contract-frontend:
@@ -342,6 +347,7 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           if-no-files-found: ignore
+          retention-days: 3
 
   docker:
     name: docker

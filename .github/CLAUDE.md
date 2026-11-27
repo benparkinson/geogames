@@ -5,5 +5,6 @@
 - `test` is the aggregate: it needs all of them and fails unless each succeeded, and it is the one required status check on `main`, so keep its id and name.
 - Each Java job caches `~/.m2` with `actions/cache` under its own key (`m2-<job>-…`). Never use `setup-java`'s `cache: maven`: it shares one key, the first job to finish saves only its own dependencies, and the rest download from Maven Central until it answers 429.
 - Pull requests cancel superseded runs; every other run has its own concurrency group, so each push to `main` gets its own run (a shared group keeps one pending run and cancels the rest).
+- Every `upload-artifact` step sets `retention-days` (1 for the `jar` and `client-out` passed between jobs, 3 for reports): the default 90 days filled the account's artifact quota and every upload step then failed.
 - CI also runs every Monday morning and on demand (`workflow_dispatch`), with no push: it finds breakage that arrives without a commit (the runner image, the floating Docker base tags Render also builds from, Playwright's system packages).
 - `smoke-production.yml` is the only workflow that touches the network (it calls the deployed services, on demand and daily) and never runs on a PR. Nothing run on a PR may reach the internet, and no test may hit the network.
