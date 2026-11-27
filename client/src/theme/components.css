@@ -743,17 +743,6 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .game-picker__extra {
   margin-top: var(--gg-space-3);
 }
-/* Wide screens: the name and the description share a line, as columns, so every game fits above the fold. */
-@media (min-width: 900px) {
-  .game-row__text {
-    flex-direction: row;
-    align-items: baseline;
-    gap: var(--gg-space-3);
-  }
-  .game-row__title {
-    flex: 0 0 10.5rem;
-  }
-}
 .game-row {
   border-bottom: 1px solid var(--gg-color-rule-light);
 }
@@ -781,6 +770,10 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .game-row__button:hover {
   background: var(--gg-color-surface-hover);
 }
+/* A description that wraps must not squeeze the icon, which would shift that row's columns. */
+.game-row__button > svg {
+  flex: none;
+}
 .game-row__number {
   flex: none;
   width: 2ch;
@@ -794,6 +787,8 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
 .game-row__title {
   font-weight: var(--gg-font-weight-bold);
 }
+/* Wider than a phone: the name and the description share a line, so every game fits above the fold. The name has a
+   fixed width, wide enough for the longest, so the descriptions line up in one column. */
 @media (min-width: 576px) {
   .game-row__text {
     flex-direction: row;
@@ -801,8 +796,7 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
     gap: var(--gg-space-3);
   }
   .game-row__title {
-    flex: none;
-    min-width: 12ch;
+    flex: 0 0 10.5rem;
   }
 }
 
