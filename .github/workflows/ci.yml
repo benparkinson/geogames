@@ -145,7 +145,7 @@ jobs:
             target/surefire-reports
             target/site/jacoco
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
   unit-frontend:
     name: unit-frontend
@@ -177,7 +177,7 @@ jobs:
           name: unit-frontend-coverage
           path: client/coverage
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
   build:
     name: build
@@ -270,7 +270,7 @@ jobs:
           name: failsafe-reports
           path: target/failsafe-reports
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
   # Duplicates one file of unit-frontend on purpose, so a contract break shows under its own name.
   contract-frontend:
@@ -347,7 +347,7 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
   docker:
     name: docker
