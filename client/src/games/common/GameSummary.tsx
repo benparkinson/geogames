@@ -120,7 +120,7 @@ export default function GameSummary({
           )}
           {offerDaily && (
             <div className="gg-summary__share">
-              <Link href="/daily" className={buttonClass({ variant: "secondary", block: true })}>
+              <Link href="/daily" className={buttonClass({ variant: "primary", block: true })}>
                 Play today&apos;s daily
               </Link>
             </div>
@@ -136,7 +136,7 @@ export default function GameSummary({
               </Button>
             ) : (
               <Button
-                variant="primary"
+                variant="quiet"
                 onClick={() => createGame(gameType, totalRoundCount, all[0].difficulty)}
                 disabled={creating}
               >
