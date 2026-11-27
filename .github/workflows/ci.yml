@@ -4,9 +4,11 @@ name: CI
 # that branch protection requires: keep its id and name.
 
 # No run on a push to main: branch protection makes every PR up to date with main before it merges,
-# so the merge commit is what its PR's last run tested.
+# so the merge commit is what its PR's last run tested. A draft PR runs nothing (every job, `test`
+# included, is skipped) until it is marked ready for review; a draft cannot be merged.
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   # Monday morning: finds breakage that arrives without a commit (the runner image, the floating
   # Docker base tags Render also builds from, Playwright's system packages).
   schedule:
@@ -28,16 +30,15 @@ jobs:
   # workflows or scripts/, and every run that is not a pull request, runs everything.
   changes:
     name: changes
+    if: github.event.pull_request.draft != true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      lint-backend: ${{ steps.filter.outputs.lint-backend }}
       lint-frontend: ${{ steps.filter.outputs.lint-frontend }}
       unit-backend: ${{ steps.filter.outputs.unit-backend }}
       unit-frontend: ${{ steps.filter.outputs.unit-frontend }}
       build: ${{ steps.filter.outputs.build }}
       integration: ${{ steps.filter.outputs.integration }}
-      contract-frontend: ${{ steps.filter.outputs.contract-frontend }}
       e2e: ${{ steps.filter.outputs.e2e }}
       docker: ${{ steps.filter.outputs.docker }}
       data: ${{ steps.filter.outputs.data }}
@@ -65,7 +66,6 @@ jobs:
           frontend='^client/'
           e2e='^e2e/'
           set_job() { if changed "$2"; then echo "$1=true"; else echo "$1=false"; fi >> "$GITHUB_OUTPUT"; }
-          set_job lint-backend "$backend"
           # Also scripts/check-versions.sh (pom.xml, the Dockerfile) and the @Disabled scan of src/test/.
           set_job lint-frontend "$frontend|$e2e|^pom\.xml$|^Dockerfile$|^src/test/"
           set_job unit-backend "$backend"
@@ -73,44 +73,11 @@ jobs:
           set_job build "$backend|$frontend|$e2e"
           # HttpServerIT serves the built frontend and ApiContractIT reads client/src/test/api-shapes.json.
           set_job integration "$backend|$frontend"
-          set_job contract-frontend "$frontend"
           set_job e2e "$backend|$frontend|$e2e"
           set_job docker "$backend|$frontend|^Dockerfile$|^\.dockerignore$"
           # The loaders may use any main class.
           set_job data '^src/main/|^geodata/|^pom\.xml$'
           cat "$GITHUB_OUTPUT"
-
-  lint-backend:
-    name: lint-backend
-    needs: changes
-    if: needs.changes.outputs.lint-backend == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 25
-
-      # One Maven cache per job. setup-java's `cache: maven` shares one key between all the Java
-      # jobs, so the first to finish (lint-backend, with only Spotless) saved it and the others
-      # downloaded everything from Maven Central on every run, until Central answered 429.
-      - name: Cache the Maven repository
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.m2/repository
-            ~/.m2/wrapper
-          key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
-          restore-keys: m2-${{ github.job }}-
-
-      # Fails when Java is not formatted by google-java-format. Fix with `mvn spotless:apply`.
-      - name: Check Java formatting
-        run: ./mvnw -B spotless:check
 
   lint-frontend:
     name: lint-frontend
@@ -184,7 +151,9 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      # One Maven cache per job (see lint-backend).
+      # One Maven cache per job. setup-java's `cache: maven` shares one key between all the Java
+      # jobs, so the first to finish (a Spotless-only job, then) saved it and the others downloaded
+      # everything from Maven Central on every run, until Central answered 429.
       - name: Cache the Maven repository
         uses: actions/cache@v6
         with:
@@ -193,6 +162,12 @@ jobs:
             ~/.m2/wrapper
           key: m2-${{ github.job }}-${{ hashFiles('pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}
           restore-keys: m2-${{ github.job }}-
+
+      # A step of this job rather than a job of its own: a job is billed by the whole minute, and
+      # Spotless takes about 20 seconds. Fails when Java is not formatted by google-java-format; fix
+      # with `mvn spotless:apply`.
+      - name: Check Java formatting
+        run: ./mvnw -B spotless:check
 
       # No Node here: the Java unit tests do not need the frontend. Includes the JaCoCo coverage gate.
       - name: Java unit tests and coverage gate
@@ -230,6 +205,12 @@ jobs:
         working-directory: client
         run: npm ci
 
+      # Run first and on its own, so a contract break is named in the failing step. Fails when the
+      # frontend fixtures no longer match the backend shapes in client/src/test/api-shapes.json.
+      - name: Frontend contract test
+        working-directory: client
+        run: npx vitest run src/api/contract.test.ts
+
       - name: Vitest with coverage thresholds
         working-directory: client
         run: npm run coverage -- --reporter=default --reporter=github-actions
@@ -259,7 +240,7 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      # One Maven cache per job (see lint-backend).
+      # One Maven cache per job (see unit-backend).
       - name: Cache the Maven repository
         uses: actions/cache@v6
         with:
@@ -278,21 +259,17 @@ jobs:
           NEXT_PUBLIC_API_URL: http://localhost:8080
         run: ./mvnw -B package -DskipTests -Dskip.lint -Dspotless.check.skip=true -Djacoco.skip=true
 
-      - name: Upload the jar
-        uses: actions/upload-artifact@v7
+      # Handed to integration and e2e through the Actions cache, not as artifacts: artifact storage
+      # counts against the account's quota, the cache does not. The paths must be the same in every
+      # save and restore. The key is per run, so a rerun of a later job finds it; GitHub evicts the
+      # entry after a week unused (or sooner, least recently used first, when the repo passes 10 GB).
+      - name: Save the jar and the built frontend
+        uses: actions/cache/save@v6
         with:
-          name: jar
-          path: target/geogames-0.0.1-SNAPSHOT.jar
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Upload the built frontend
-        uses: actions/upload-artifact@v7
-        with:
-          name: client-out
-          path: client/out
-          if-no-files-found: error
-          retention-days: 1
+          path: |
+            target/geogames-0.0.1-SNAPSHOT.jar
+            client/out
+          key: ci-build-${{ github.run_id }}
 
   integration:
     name: integration
@@ -310,7 +287,7 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      # One Maven cache per job (see lint-backend).
+      # One Maven cache per job (see unit-backend).
       - name: Cache the Maven repository
         uses: actions/cache@v6
         with:
@@ -321,11 +298,14 @@ jobs:
           restore-keys: m2-${{ github.job }}-
 
       # HttpServerIT serves the static site from the classpath, so it needs the frontend build.
-      - name: Download the built frontend
-        uses: actions/download-artifact@v8
+      - name: Restore the jar and the built frontend
+        uses: actions/cache/restore@v6
         with:
-          name: client-out
-          path: client/out
+          path: |
+            target/geogames-0.0.1-SNAPSHOT.jar
+            client/out
+          key: ci-build-${{ github.run_id }}
+          fail-on-cache-miss: true
 
       - name: Backend integration tests (including the contract and data checks)
         run: ./mvnw -B verify -Dskip.frontend -DskipUnitTests -Dspotless.check.skip=true -Djacoco.skip=true
@@ -338,33 +318,6 @@ jobs:
           path: target/failsafe-reports
           if-no-files-found: ignore
           retention-days: 3
-
-  # Duplicates one file of unit-frontend on purpose, so a contract break shows under its own name.
-  contract-frontend:
-    name: contract-frontend
-    needs: changes
-    if: needs.changes.outputs.contract-frontend == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: client/.nvmrc
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-
-      - name: Install dependencies
-        working-directory: client
-        run: npm ci
-
-      # Fails when the frontend fixtures no longer match the backend shapes in client/src/test/api-shapes.json.
-      - name: Frontend contract test
-        working-directory: client
-        run: npx vitest run src/api/contract.test.ts
 
   e2e:
     name: e2e
@@ -390,11 +343,15 @@ jobs:
           cache: npm
           cache-dependency-path: e2e/package-lock.json
 
-      - name: Download the jar
-        uses: actions/download-artifact@v8
+      # Saved by build (see there).
+      - name: Restore the jar and the built frontend
+        uses: actions/cache/restore@v6
         with:
-          name: jar
-          path: target
+          path: |
+            target/geogames-0.0.1-SNAPSHOT.jar
+            client/out
+          key: ci-build-${{ github.run_id }}
+          fail-on-cache-miss: true
 
       - name: Install dependencies
         working-directory: e2e
@@ -525,7 +482,7 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      # One Maven cache per job (see lint-backend).
+      # One Maven cache per job (see unit-backend).
       - name: Cache the Maven repository
         uses: actions/cache@v6
         with:
@@ -547,17 +504,16 @@ jobs:
     # because `changes` said the pull request does not need it.
     needs:
       - changes
-      - lint-backend
       - lint-frontend
       - unit-backend
       - unit-frontend
       - build
       - integration
-      - contract-frontend
       - e2e
       - docker
       - data
-    if: always()
+    # Skipped on a draft, like every other job (see `on:`).
+    if: always() && github.event.pull_request.draft != true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
