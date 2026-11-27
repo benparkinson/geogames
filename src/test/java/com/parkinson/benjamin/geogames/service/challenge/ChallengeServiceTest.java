@@ -49,7 +49,8 @@ class ChallengeServiceTest {
           store,
           entries,
           games,
-          metrics);
+          metrics,
+          new Initials(new String[] {"BAD"}));
 
   private static final LocalDate TODAY = LocalDate.parse("2026-11-25");
 
@@ -231,6 +232,24 @@ class ChallengeServiceTest {
       assertThatThrownBy(() -> service.table(gameId))
           .isInstanceOf(ChallengeNotFoundException.class);
     }
+  }
+
+  @Test
+  void initialsBlockedSinceTheyWereSetAreNotShown() {
+    UUID id = UUID.randomUUID();
+    when(store.find(id)).thenReturn(Optional.of(stored(id, Difficulty.HARD)));
+    when(store.findById(5)).thenReturn(Optional.of(stored(id, Difficulty.HARD)));
+    when(entries.top(5, 5)).thenReturn(List.of(entry(3, 190, "BAD")));
+    when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, "BAD")));
+    when(entries.rank(6)).thenReturn(6);
+
+    var table = service.table(linkedGame(5L, 6L, false));
+
+    assertThat(table.entries()).extracting(ChallengeEntryView::initials).containsOnlyNulls();
+    assertThat(table.yours().initials()).isNull();
+    assertThat(service.find(id).entries())
+        .extracting(ChallengeEntryView::initials)
+        .containsOnlyNulls();
   }
 
   @Test

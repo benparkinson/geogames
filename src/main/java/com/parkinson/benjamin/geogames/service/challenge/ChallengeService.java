@@ -6,7 +6,6 @@ import com.parkinson.benjamin.geogames.api.ChallengeEntryView;
 import com.parkinson.benjamin.geogames.api.ChallengeResponse;
 import com.parkinson.benjamin.geogames.api.ChallengeTableResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
-import com.parkinson.benjamin.geogames.model.Initials;
 import com.parkinson.benjamin.geogames.service.ChallengeLink;
 import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
@@ -36,18 +35,21 @@ public class ChallengeService {
   private final ChallengeEntryStore entries;
   private final GameService gameService;
   private final GameMetrics metrics;
+  private final Initials initials;
 
   public ChallengeService(
       Clock clock,
       ChallengeStore store,
       ChallengeEntryStore entries,
       GameService gameService,
-      GameMetrics metrics) {
+      GameMetrics metrics,
+      Initials initials) {
     this.clock = clock;
     this.store = store;
     this.entries = entries;
     this.gameService = gameService;
     this.metrics = metrics;
+    this.initials = initials;
   }
 
   /**
@@ -122,7 +124,10 @@ public class ChallengeService {
             ? null
             : entries
                 .find(own)
-                .map(e -> new ChallengeEntryView(entries.rank(own), e.score(), e.initials(), true))
+                .map(
+                    e ->
+                        new ChallengeEntryView(
+                            entries.rank(own), e.score(), initials.visible(e.initials()), true))
                 .orElse(null);
     return new ChallengeTableResponse(
         stored.challenge().publicId(),
@@ -142,8 +147,8 @@ public class ChallengeService {
    * @throws ChallengeNotFoundException for an unknown game, or one with no entry
    * @throws ChallengeConflictException for an entry below the top of the table
    */
-  public void setInitials(UUID gameId, String initials) {
-    String normalised = Initials.normalise(initials);
+  public void setInitials(UUID gameId, String text) {
+    String normalised = initials.normalise(text);
     Long entryId = link(gameId).entryId();
     if (entryId == null) {
       throw new ChallengeNotFoundException("This game has no challenge score");
@@ -161,14 +166,14 @@ public class ChallengeService {
   }
 
   /** The entries as rows, ranked by their order; {@code you} may return null to leave it out. */
-  private static List<ChallengeEntryView> rows(
+  private List<ChallengeEntryView> rows(
       List<ChallengeEntryStore.Entry> top, Function<ChallengeEntryStore.Entry, Boolean> you) {
     return IntStream.range(0, top.size())
         .mapToObj(
             i -> {
               ChallengeEntryStore.Entry entry = top.get(i);
               return new ChallengeEntryView(
-                  i + 1, entry.score(), entry.initials(), you.apply(entry));
+                  i + 1, entry.score(), initials.visible(entry.initials()), you.apply(entry));
             })
         .toList();
   }
