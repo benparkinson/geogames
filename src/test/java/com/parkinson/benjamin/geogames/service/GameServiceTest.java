@@ -32,6 +32,7 @@ import com.parkinson.benjamin.geogames.model.Coordinate;
 import com.parkinson.benjamin.geogames.model.Country;
 import com.parkinson.benjamin.geogames.model.Difficulty;
 import com.parkinson.benjamin.geogames.model.GameData;
+import com.parkinson.benjamin.geogames.model.GameOrigin;
 import com.parkinson.benjamin.geogames.model.GameState;
 import com.parkinson.benjamin.geogames.model.GameType;
 import com.parkinson.benjamin.geogames.model.LocatedPlaceName;
@@ -46,6 +47,7 @@ import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictExcept
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.stats.GameFinished;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -343,9 +345,9 @@ class GameServiceTest {
     assertThat(service.getGameRound(GAME_ID, 0).orElseThrow().difficulty()).isEqualTo("NORMAL");
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
-    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    ArgumentCaptor<RoundAnswered> captor = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(captor.capture());
-    assertThat(((RoundAnswered) captor.getValue()).hardMode()).isNull();
+    assertThat(captor.getValue().hardMode()).isNull();
   }
 
   private GameRound readRound(Difficulty difficulty, GameType type, String key) {
@@ -400,9 +402,9 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
-    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    ArgumentCaptor<RoundAnswered> captor = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(captor.capture());
-    assertThat(((RoundAnswered) captor.getValue()).hardMode()).isTrue();
+    assertThat(captor.getValue().hardMode()).isTrue();
   }
 
   @Test
@@ -690,7 +692,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 1, AnswerState.CORRECT, 1, 2, null);
 
-    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    ArgumentCaptor<RoundAnswered> captor = ArgumentCaptor.forClass(RoundAnswered.class);
     verify(events).publishEvent(captor.capture());
     assertThat(captor.getValue())
         .isEqualTo(
@@ -718,7 +720,7 @@ class GameServiceTest {
 
     service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
 
-    verify(events, times(1)).publishEvent(any(Object.class));
+    verify(events, times(1)).publishEvent(any(RoundAnswered.class));
   }
 
   @Test
@@ -972,6 +974,48 @@ class GameServiceTest {
     verify(dailyScores).recordFinished(DAILY_DATE, Difficulty.NORMAL, 0, 20);
   }
 
+  // ---------------------------------------------------------- finished games
+
+  @Test
+  void theAnswerThatFinishesAGamePublishesItsResultOnce() {
+    when(gameRepository.findByPublicId(GAME_ID))
+        .thenReturn(
+            Optional.of(game(round(0, AnswerState.CORRECT), round(1, AnswerState.UNANSWERED))));
+
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
+    service.submitAnswer(GAME_ID, 1, AnswerState.GAVE_UP, 0, null, null);
+
+    verify(events, times(1))
+        .publishEvent(new GameFinished(GameOrigin.FREE_PLAY, null, 10, 20, null));
+  }
+
+  @Test
+  void aFinishedChallengeGamePublishesTheScoreToBeat() {
+    GameEntity game =
+        new GameEntity(
+            new ArrayList<>(List.of(round(0, AnswerState.UNANSWERED))),
+            "TRIPOINT",
+            Difficulty.HARD,
+            null,
+            7);
+    when(gameRepository.findByPublicId(GAME_ID)).thenReturn(Optional.of(game));
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.GAVE_UP, 0, null, null);
+
+    verify(events).publishEvent(new GameFinished(GameOrigin.CHALLENGE, Difficulty.HARD, 0, 10, 7));
+  }
+
+  @Test
+  void anUnfinishedGamePublishesNoResult() {
+    when(gameRepository.findByPublicId(GAME_ID))
+        .thenReturn(
+            Optional.of(game(round(0, AnswerState.UNANSWERED), round(1, AnswerState.UNANSWERED))));
+
+    service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null);
+
+    verify(events, never()).publishEvent(any(GameFinished.class));
+  }
+
   // ------------------------------------------------------------ recordGuess
 
   private GameRoundEntity guessRound(GameType type, AnswerState state) {
@@ -1101,7 +1145,7 @@ class GameServiceTest {
         service.submitAnswer(GAME_ID, 0, AnswerState.CORRECT, 0, null, null).orElseThrow();
 
     assertThat(again.hintsUsed()).isEqualTo(1);
-    verify(events, times(1)).publishEvent(any(Object.class));
+    verify(events, times(1)).publishEvent(any(RoundAnswered.class));
   }
 
   @Test

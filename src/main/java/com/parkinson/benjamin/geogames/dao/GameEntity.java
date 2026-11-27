@@ -1,6 +1,7 @@
 package com.parkinson.benjamin.geogames.dao;
 
 import com.parkinson.benjamin.geogames.model.Difficulty;
+import com.parkinson.benjamin.geogames.model.GameOrigin;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,11 +77,24 @@ public class GameEntity {
   @Column(updatable = false)
   private LocalDate dailyDate;
 
+  /**
+   * The score to beat, for a game started from a challenge: set when it is created and never
+   * changed. Null for every other game. No challenge id is kept, so the game isn't linked to one.
+   */
+  @Column(updatable = false)
+  private Integer challengeScore;
+
   public GameEntity() {}
 
   /** A game that is not a daily challenge. */
   public GameEntity(List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty) {
     this(rounds, gameMode, difficulty, null);
+  }
+
+  /** A game that was not started from a challenge. */
+  public GameEntity(
+      List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
+    this(rounds, gameMode, difficulty, dailyDate, null);
   }
 
   /**
@@ -89,9 +103,14 @@ public class GameEntity {
    * @param gameMode what was requested: a {@code GameType} name, or {@code RANDOM}
    * @param difficulty how the game is played, or null if unknown
    * @param dailyDate the challenge's date for a daily game, or null
+   * @param challengeScore the score to beat for a game started from a challenge, or null
    */
   public GameEntity(
-      List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
+      List<GameRoundEntity> rounds,
+      String gameMode,
+      Difficulty difficulty,
+      LocalDate dailyDate,
+      Integer challengeScore) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -106,11 +125,25 @@ public class GameEntity {
     this.gameMode = gameMode;
     this.difficulty = difficulty;
     this.dailyDate = dailyDate;
+    this.challengeScore = challengeScore;
   }
 
   /** The daily challenge's date, or null for a game that isn't one. */
   public LocalDate getDailyDate() {
     return dailyDate;
+  }
+
+  /** The score to beat, or null for a game that wasn't started from a challenge. */
+  public Integer getChallengeScore() {
+    return challengeScore;
+  }
+
+  /** Derived from the daily date and the challenge score, not stored. */
+  public GameOrigin origin() {
+    if (dailyDate != null) {
+      return GameOrigin.DAILY;
+    }
+    return challengeScore != null ? GameOrigin.CHALLENGE : GameOrigin.FREE_PLAY;
   }
 
   public long getId() {

@@ -20,6 +20,7 @@ import com.parkinson.benjamin.geogames.service.challenge.ChallengeConflictExcept
 import com.parkinson.benjamin.geogames.service.daily.DailyScoreStore;
 import com.parkinson.benjamin.geogames.service.daily.PinnedRound;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.stats.GameFinished;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -101,16 +102,25 @@ public class GameService {
   @Transactional
   public GameCreationResponse createGame(
       List<PinnedRound> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
+    return createGame(rounds, gameMode, difficulty, dailyDate, null);
+  }
+
+  /** The same, with the score to beat for a game started from a challenge. */
+  @Transactional
+  public GameCreationResponse createGame(
+      List<PinnedRound> rounds,
+      String gameMode,
+      Difficulty difficulty,
+      LocalDate dailyDate,
+      Integer challengeScore) {
     List<GameRoundEntity> entities = new ArrayList<>(rounds.size());
     for (int i = 0; i < rounds.size(); i++) {
       entities.add(new GameRoundEntity(i, rounds.get(i).gameType(), rounds.get(i).roundKey()));
     }
+    GameEntity game = new GameEntity(entities, gameMode, difficulty, dailyDate, challengeScore);
     GameCreationResponse response =
-        new GameCreationResponse(
-            gameRepository
-                .save(new GameEntity(entities, gameMode, difficulty, dailyDate))
-                .getPublicId());
-    metrics.gameStarted(gameMode, difficulty);
+        new GameCreationResponse(gameRepository.save(game).getPublicId());
+    metrics.gameStarted(gameMode, difficulty, game.origin());
     return response;
   }
 
@@ -232,15 +242,32 @@ public class GameService {
     if (rules.recordAnswer(round, answerState, effectiveHints, wrongGuesses, effectiveFound)) {
       gameRepository.save(game);
       publishRoundAnswered(game, round);
-      // Counted here, in this transaction, so a rolled-back answer rolls the count back too. This
-      // is the first answer to the round, so a repeat never gets here.
-      if (game.getDailyDate() != null && allAnswered(game)) {
-        GameResult result = GameResults.of(game);
-        dailyScores.recordFinished(
-            game.getDailyDate(), game.difficulty(), result.score(), result.maxScore());
+      // This is the first answer to the round, so a repeat never gets here.
+      if (allAnswered(game)) {
+        finished(game);
       }
     }
     return toAnswerResponse(game, round);
+  }
+
+  /**
+   * Counts a game whose last round was just answered. The daily score is written in this
+   * transaction, so a rolled-back answer rolls the count back too; the event is handled after the
+   * commit.
+   */
+  private void finished(GameEntity game) {
+    GameResult result = GameResults.of(game);
+    if (game.getDailyDate() != null) {
+      dailyScores.recordFinished(
+          game.getDailyDate(), game.difficulty(), result.score(), result.maxScore());
+    }
+    events.publishEvent(
+        new GameFinished(
+            game.origin(),
+            game.getDifficulty(),
+            result.score(),
+            result.maxScore(),
+            game.getChallengeScore()));
   }
 
   /**

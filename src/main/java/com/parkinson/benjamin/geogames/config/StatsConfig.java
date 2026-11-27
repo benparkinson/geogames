@@ -1,5 +1,7 @@
 package com.parkinson.benjamin.geogames.config;
 
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DropReason;
 import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +22,17 @@ public class StatsConfig {
   private static final Logger log = LoggerFactory.getLogger(StatsConfig.class);
 
   @Bean(name = "statsExecutor")
-  public Executor statsExecutor() {
+  public Executor statsExecutor(GameMetrics metrics) {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
     executor.setCorePoolSize(1);
     executor.setMaxPoolSize(1);
     executor.setQueueCapacity(1000);
     executor.setThreadNamePrefix("stats-");
     executor.setRejectedExecutionHandler(
-        (task, pool) -> log.warn("Dropped a round statistics row: the queue is full"));
+        (task, pool) -> {
+          log.warn("Dropped a round statistics row: the queue is full");
+          metrics.statsDropped(DropReason.QUEUE_FULL);
+        });
     // So a redeploy doesn't lose the rows still queued.
     executor.setWaitForTasksToCompleteOnShutdown(true);
     executor.setAwaitTerminationSeconds(5);

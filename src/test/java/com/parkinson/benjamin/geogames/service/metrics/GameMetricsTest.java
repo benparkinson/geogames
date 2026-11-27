@@ -4,12 +4,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.parkinson.benjamin.geogames.model.AnswerState;
 import com.parkinson.benjamin.geogames.model.Difficulty;
+import com.parkinson.benjamin.geogames.model.GameOrigin;
 import com.parkinson.benjamin.geogames.model.GameType;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DeletedKind;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.DropReason;
+import com.parkinson.benjamin.geogames.service.metrics.GameMetrics.RejectReason;
+import com.parkinson.benjamin.geogames.service.stats.GameFinished;
 import com.parkinson.benjamin.geogames.service.stats.RoundAnswered;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GameMetricsTest {
 
@@ -18,12 +25,14 @@ class GameMetricsTest {
 
   @Test
   void countsGamesStartedByModeAndDifficulty() {
-    metrics.gameStarted("DAILY", Difficulty.HARD);
-    metrics.gameStarted("DAILY", Difficulty.HARD);
-    metrics.gameStarted("RANDOM", null);
+    metrics.gameStarted("DAILY", Difficulty.HARD, GameOrigin.DAILY);
+    metrics.gameStarted("DAILY", Difficulty.HARD, GameOrigin.DAILY);
+    metrics.gameStarted("RANDOM", null, GameOrigin.FREE_PLAY);
 
     assertThat(started("DAILY", "HARD")).isEqualTo(2);
     assertThat(started("RANDOM", "UNKNOWN")).isEqualTo(1);
+    assertThat(value("geogames.games.started", "mode", "RANDOM", "origin", "FREE_PLAY"))
+        .isEqualTo(1);
   }
 
   @Test
@@ -42,28 +51,105 @@ class GameMetricsTest {
   void anUnknownWrongGuessCountIsNotCounted() {
     metrics.onRoundAnswered(event(AnswerState.CORRECT, 0, null, null));
 
-    assertThat(registry.find("geogames.rounds.answered").tag("difficulty", "UNKNOWN").counter())
-        .isNotNull();
-    assertThat(registry.find("geogames.rounds.wrong_guesses").counter()).isNull();
-    assertThat(registry.find("geogames.rounds.guess_reported").counter()).isNull();
+    assertThat(count("geogames.rounds.answered")).isEqualTo(1);
+    assertThat(count("geogames.rounds.wrong_guesses")).isZero();
+    assertThat(count("geogames.rounds.guess_reported")).isZero();
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0,50,0", "4,50,0", "5,50,1", "49,50,9", "50,50,10", "100,100,10", "60,50,10"})
+  void aFinishedGameIsCountedInItsScoreBand(int score, int maxScore, String band) {
+    metrics.onGameFinished(
+        new GameFinished(GameOrigin.DAILY, Difficulty.EASY, score, maxScore, null));
+
+    assertThat(
+            value(
+                "geogames.games.finished",
+                "origin",
+                "DAILY",
+                "difficulty",
+                "EASY",
+                "score_band",
+                band))
+        .isEqualTo(1);
+    assertThat(count("geogames.games.finished")).isEqualTo(1);
+    assertThat(count("geogames.challenges.finished")).isZero();
+  }
+
+  @ParameterizedTest
+  @CsvSource({"31,BEAT", "30,TIED", "29,LOST"})
+  void aFinishedChallengeGameIsCountedByItsOutcome(int score, String outcome) {
+    metrics.onGameFinished(new GameFinished(GameOrigin.CHALLENGE, null, score, 50, 30));
+
+    assertThat(value("geogames.challenges.finished", "difficulty", "UNKNOWN", "outcome", outcome))
+        .isEqualTo(1);
+    assertThat(count("geogames.challenges.finished")).isEqualTo(1);
+  }
+
+  @Test
+  void countsChallengesByModeDifficultyAndResult() {
+    metrics.challengeCreated("RANDOM", Difficulty.HARD);
+    metrics.challengeStarted("TRIPOINT", Difficulty.EASY);
+    metrics.challengeOpened(true);
+    metrics.challengeOpened(false);
+
+    assertThat(value("geogames.challenges.created", "mode", "RANDOM", "difficulty", "HARD"))
+        .isEqualTo(1);
+    assertThat(value("geogames.challenges.started", "mode", "TRIPOINT", "difficulty", "EASY"))
+        .isEqualTo(1);
+    assertThat(value("geogames.challenges.opened", "result", "FOUND")).isEqualTo(1);
+    assertThat(value("geogames.challenges.opened", "result", "EXPIRED")).isEqualTo(1);
+  }
+
+  @Test
+  void countsRefusedGamesDroppedRowsAndDeletions() {
+    metrics.gameRejected(RejectReason.CAPACITY);
+    metrics.statsDropped(DropReason.QUEUE_FULL);
+    metrics.deleted(DeletedKind.GAME, 3);
+
+    assertThat(value("geogames.games.rejected", "reason", "CAPACITY")).isEqualTo(1);
+    assertThat(value("geogames.games.rejected", "reason", "RATE_LIMITED")).isZero();
+    assertThat(value("geogames.games.rejected", "reason", "GLOBAL_RATE")).isZero();
+    assertThat(value("geogames.stats.dropped", "reason", "QUEUE_FULL")).isEqualTo(1);
+    assertThat(value("geogames.cleanup.deleted", "kind", "GAME")).isEqualTo(3);
+    assertThat(value("geogames.cleanup.deleted", "kind", "CHALLENGE")).isZero();
+  }
+
+  @Test
+  void everySeriesExistsAtZeroFromTheStartAndCountingAddsNone() {
+    int registered = registry.getMeters().size();
+    assertThat(registered).isLessThan(1500);
+    assertThat(
+            value(
+                "geogames.games.finished",
+                "origin",
+                "CHALLENGE",
+                "difficulty",
+                "HARD",
+                "score_band",
+                "10"))
+        .isZero();
+
+    for (GameType type : GameType.values()) {
+      metrics.gameStarted(type.name(), null, GameOrigin.CHALLENGE);
+      metrics.challengeCreated(type.name(), Difficulty.NORMAL);
+    }
+    metrics.onRoundAnswered(event(AnswerState.OUT_OF_GUESSES, 1, 1, null));
+    metrics.onGameFinished(new GameFinished(GameOrigin.FREE_PLAY, null, 7, 10, null));
+
+    assertThat(registry.getMeters()).hasSize(registered);
+  }
+
+  private double value(String name, String... tags) {
+    return registry.get(name).tags(tags).counters().stream().mapToDouble(c -> c.count()).sum();
   }
 
   private double started(String mode, String difficulty) {
-    return registry
-        .get("geogames.games.started")
-        .tag("mode", mode)
-        .tag("difficulty", difficulty)
-        .counter()
-        .count();
+    return value("geogames.games.started", "mode", mode, "difficulty", difficulty);
   }
 
   private double answered(String state, String hinted) {
-    return registry
-        .get("geogames.rounds.answered")
-        .tag("answer_state", state)
-        .tag("hinted", hinted)
-        .counter()
-        .count();
+    return value("geogames.rounds.answered", "answer_state", state, "hinted", hinted);
   }
 
   private double count(String name) {

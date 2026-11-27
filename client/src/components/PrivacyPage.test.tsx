@@ -51,6 +51,20 @@ describe("PrivacyPage", () => {
     expect(screen.getByText(/you can challenge a friend/)).toHaveTextContent(/deleted after seven days/);
   });
 
+  it("says that a game from a challenge stores the score to beat", () => {
+    render(<PrivacyPage />);
+
+    expect(screen.getByText(/A game is a random id/)).toHaveTextContent(/also stores the score to beat/);
+  });
+
+  it("says which challenge and score counts Grafana receives", () => {
+    render(<PrivacyPage />);
+
+    const sentence = screen.getByText(/receives counts and timings/);
+    expect(sentence).toHaveTextContent(/challenges are shared, opened, played and won/);
+    expect(sentence).toHaveTextContent(/finished with what score band/);
+  });
+
   it("credits the data and imagery,and links to the software licences", () => {
     render(<PrivacyPage />);
 

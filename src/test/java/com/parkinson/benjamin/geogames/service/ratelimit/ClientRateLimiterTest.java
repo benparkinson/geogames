@@ -93,6 +93,17 @@ class ClientRateLimiterTest {
   }
 
   @Test
+  void expiredWindowsAreSweptAboutOnceAMinute() {
+    ClientRateLimiter limiter = limiter(1, 100);
+    limiter.tryAcquire("a");
+    clock.advance(Duration.ofMinutes(11));
+
+    limiter.tryAcquire("b");
+
+    assertThat(limiter.keys()).hasSize(1);
+  }
+
+  @Test
   void theKeysAreNotTheAddress() {
     ClientRateLimiter limiter = limiter(1, 100);
     limiter.tryAcquire("203.0.113.7");
