@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetDistanceUnitForTests } from "../../settings/units";
 import GuessList from "./GuessList";
 import type { Guess, GuessState } from "./guessReducer";
@@ -17,6 +17,10 @@ beforeEach(() => {
   localStorage.clear();
 });
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe("GuessList", () => {
   it("scrolls to the newest guess when one is added", () => {
     const one = stateOf([{ text: "Peru", answer: null }]);
@@ -26,6 +30,27 @@ describe("GuessList", () => {
 
     const two = stateOf([...one.guesses, { text: "Chile", answer: null }]);
     rerender(<GuessList state={two} answerCount={3} allAnswers={[]} showClues />);
+
+    expect(list.scrollTop).toBe(300);
+  });
+
+  it("stays at the newest guess when the list is resized, as when a hint takes its room", () => {
+    let resize = () => {};
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(callback: () => void) {
+          resize = callback;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
+    renderList(stateOf([{ text: "Peru", answer: null }]));
+    const list = screen.getByRole("list");
+    Object.defineProperty(list, "scrollHeight", { configurable: true, value: 300 });
+
+    resize();
 
     expect(list.scrollTop).toBe(300);
   });
