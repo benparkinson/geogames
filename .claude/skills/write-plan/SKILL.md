@@ -19,6 +19,7 @@ The plan is read cold by a cheaper model in a new session, so it must carry ever
   - What is stored or who receives requests changes: the `/privacy` page.
   - New data or a new cache: heap measured with `scripts/measure-heap.sh`; nothing cached per round, pair or game.
   - Usage statistics (`stat_*` tables): their own PR and migration.
+  - Metrics (`GameMetrics`, a tag, a timer): the panels to add or change in `grafana/geoggernaut.dashboard.json` (PromQL names: `.` → `_`, counters end in `_total`), and a note that the owner re-imports it after deploy.
   - UI: theme tokens and `client/src/ui/` controls only, mobile with the keyboard up, light and dark.
 
 ## The plan
