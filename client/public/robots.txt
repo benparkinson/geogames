@@ -1,3 +1,27 @@
 # https://www.robotstxt.org/robotstxt.html
+# A bot that matches a named group ignores "*", so each group repeats the rules.
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /games/
+
+# AI search and assistants: welcome.
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+Allow: /
+Disallow: /games/
+
+# AI model training: not welcome.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: CCBot
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://geoggernaut.com/sitemap.xml

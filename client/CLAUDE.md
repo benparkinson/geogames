@@ -37,7 +37,7 @@ A tab left open keeps its old bundle, so the site tells the player when a newer 
 
 ## Credits
 
-The credits live on the credits and privacy page (`components/PrivacyPage`, `/privacy`); every other page's footer (`components/SiteFooter`) is only a "Credits and privacy" link to it, never a block of text. The map credits are in `map/MapCredits` (every map, through Leaflet's attribution control). They name Natural Earth (all geometry), Wikidata (names) and the tripoint list (Wikipedia, CC BY-SA, positions adjusted) only on the credits page, not on the map. The map pins are drawn in `map/markerIcons.ts`. The relief tiles are Natural Earth II (public domain), self-hosted in `public/tiles/relief/` (zooms 0–6, made by `ReliefTilesMain`, committed), so no browser request for a map leaves the site; always draw them with `map/ReliefTiles`, never a bare `TileLayer`. Every map is built on `map/GameMap`, which adds `MapCredits` and `MapResizer` (ESLint rejects a bare `MapContainer`); pass `credit` for a credit only that map needs. A new data source or tile layer needs a credit on that page. A new data source or third party that receives requests from the browser also needs a line on the privacy page (`components/PrivacyPage`).
+The credits live on the credits and privacy page (`components/PrivacyPage`, `/privacy`); every other page's footer (`components/SiteFooter`) is only a "Credits and privacy" link to it and a closed "Games" list of landing pages, never a block of text. The map credits are in `map/MapCredits` (every map, through Leaflet's attribution control). They name Natural Earth (all geometry), Wikidata (names) and the tripoint list (Wikipedia, CC BY-SA, positions adjusted) only on the credits page, not on the map. The map pins are drawn in `map/markerIcons.ts`. The relief tiles are Natural Earth II (public domain), self-hosted in `public/tiles/relief/` (zooms 0–6, made by `ReliefTilesMain`, committed), so no browser request for a map leaves the site; always draw them with `map/ReliefTiles`, never a bare `TileLayer`. Every map is built on `map/GameMap`, which adds `MapCredits` and `MapResizer` (ESLint rejects a bare `MapContainer`); pass `credit` for a credit only that map needs. A new data source or tile layer needs a credit on that page. A new data source or third party that receives requests from the browser also needs a line on the privacy page (`components/PrivacyPage`).
 
 ## Structure (`src/`)
 
@@ -46,7 +46,7 @@ The credits live on the credits and privacy page (`components/PrivacyPage`, `/pr
 - Each `games/<name>/` folder holds one game: its module, component, model types and maps.
 - `games/registry.ts` is the only list of games.
 - `map/` holds the shared Leaflet helpers.
-- Link preview tags (`siteMeta.ts`, `components/SocialMeta`) are read by crawlers that run no JavaScript, so they must be static. Regenerate `public/og-image.png` with `scripts/og-image/render.mjs` (repo root).
+- Head tags (title, description, canonical, robots, link preview, JSON-LD) come only from `siteMeta.ts`, rendered by `components/PageMeta`, and are static because crawlers run no JavaScript. A new indexable page goes in `public/sitemap.xml` and `public/llms.txt` too. Each game has a landing page at `/play/<slug>` (`games/landing.ts`). Regenerate `public/og-image.png` with `scripts/og-image/render.mjs` (repo root).
 - `useGuessList(kind)` (in `games/common/`) gives the autocomplete (`{name, aliases}` suggestions) and spell check for countries, rivers and lakes. `GuessBox` draws its own suggestion list (portalled to the body, ranked by `games/common/suggestions.ts`) instead of a native `<datalist>`, because Opera and Firefox on Android show no datalist dropdown. A game whose answers come from a fixed list gets it through `PlaceGame`, and game components don't call it themselves.
 - The `QueryClientProvider` lives in `pages/_app.tsx`.
 
@@ -68,6 +68,8 @@ Create `src/games/<name>/` with:
 - a `*Map.tsx` + `*MapWrapper.tsx` pair that takes `MapProps<T>`, with the map built on `map/GameMap` (it adds `MapCredits` and `MapResizer`).
 
 A game whose answers are countries and whose map hides the location only sets `hasClues: true` on its module: `PlaceGame` does the rest. Build the hints with `hintsFrom(description, round, ...builders)` from `games/common/hints.ts` (one builder per hint, `mapHint(text)` for a hint that only changes the map, `cluesDescription(count)` for the description of text hints).
+
+Add its landing page to `games/landing.ts`, `public/sitemap.xml` and `public/llms.txt`.
 
 Then add the module to `GAME_MODULES` in `games/registry.ts`, whose order is the home page order. Set `extraDifficult: true` on the module to show it in the home page's "Extra difficult" section, after Mixed (River Shapes and Lake Shapes do this). Nothing in `games/common/`, `GameRoundPage`, `GameSummary` or `HomePage` needs to change.
 

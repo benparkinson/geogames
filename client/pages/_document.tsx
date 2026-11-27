@@ -19,6 +19,8 @@ export default function Document(): React.JSX.Element {
   return (
     <Html lang="en">
       <Head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </Head>
       <body>

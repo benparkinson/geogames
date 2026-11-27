@@ -136,7 +136,27 @@ class HttpServerIT {
             .expectBody(String.class)
             .returnResult()
             .getResponseBody();
-    assertThat(html).contains("Daily challenge");
+    assertThat(html).contains("Daily geography challenge");
+  }
+
+  @Test
+  void landingPageLoadsDirectly() {
+    String html =
+        client
+            .get()
+            .uri("/play/tripoints")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
+    assertThat(html).contains("name the three countries that meet at a point");
+  }
+
+  @Test
+  void anUnknownLandingPageIsA404() {
+    client.get().uri("/play/nowhere").exchange().expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   @Test
@@ -151,7 +171,7 @@ class HttpServerIT {
             .expectBody(String.class)
             .returnResult()
             .getResponseBody();
-    assertThat(html).contains("Challenge");
+    assertThat(html).contains("been challenged on Geoggernaut");
   }
 
   @Test

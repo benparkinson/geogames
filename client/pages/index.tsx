@@ -1,13 +1,10 @@
-import { SITE_NAME } from "../src/siteName";
 import HomePage from "../src/components/HomePage";
-import Head from "next/head";
+import { PageMeta } from "../src/components/PageMeta";
 
 function MenuPage(): React.JSX.Element {
   return (
     <>
-      <Head>
-        <title>{SITE_NAME}</title>
-      </Head>
+      <PageMeta page="site" />
       <div id="root">
         <HomePage />
       </div>

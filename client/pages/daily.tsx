@@ -1,15 +1,10 @@
-import { SITE_NAME } from "../src/siteName";
-import Head from "next/head";
 import DailyPage from "../src/daily/DailyPage";
-import { SocialMeta } from "../src/components/SocialMeta";
+import { PageMeta } from "../src/components/PageMeta";
 
 function DailyRoute(): React.JSX.Element {
   return (
     <>
-      <Head>
-        <title>{`Daily challenge | ${SITE_NAME}`}</title>
-      </Head>
-      <SocialMeta page="daily" />
+      <PageMeta page="daily" />
       <div id="root">
         <DailyPage />
       </div>

@@ -50,6 +50,7 @@ Run e2e locally only when you changed something a browser test drives and CI can
 ## 5. Commit, push, PR
 
 - Never commit a plan file or anything under `docs/plans/`. Don't link to plans from code, CLAUDE.md or the PR: they aren't in the repo.
+- **A plan with more than one PR:** end the PR title with the plan's file name (no `.md`) and `X/Y`, so the stack can be put in order from the PR list: `League table UI (challenge-replies 3/4)`. X is this PR's number in the plan and Y the plan's total, merged PRs included. Start the description with the same, e.g. `Plan challenge-replies, PR 3/4.` (the name only, no path or link). A one-PR plan or a task gets neither.
 - Commit with a message that says what changed and why. Push with `git push -u origin <branch>`.
 - `gh pr create --draft --base <base>`: always a draft, and leave it one (CI runs nothing until it is ready; `/fix-pr` does that when its turn to merge comes). The local checks above are the only ones it has had. If `gh` isn't on PATH, use `"/c/Program Files/GitHub CLI/gh.exe"`. The description: what changed, how it was checked, anything left out or done differently from the plan, and for a stack, the merge order and which PR this one builds on.
 - Wait for nothing.
