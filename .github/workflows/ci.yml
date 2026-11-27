@@ -69,7 +69,8 @@ jobs:
           set_job() { if changed "$2"; then echo "$1=true"; else echo "$1=false"; fi >> "$GITHUB_OUTPUT"; }
           # Also scripts/check-versions.sh (pom.xml, the Dockerfile) and the @Disabled scan of src/test/.
           set_job lint-frontend "$frontend|$e2e|^pom\.xml$|^Dockerfile$|^src/test/"
-          set_job unit-backend "$backend"
+          # DashboardMetricsTest reads grafana/.
+          set_job unit-backend "$backend|^grafana/"
           set_job unit-frontend "$frontend"
           set_job build "$backend|$frontend|$e2e"
           # HttpServerIT serves the built frontend and ApiContractIT reads client/src/test/api-shapes.json.
