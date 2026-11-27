@@ -25,12 +25,12 @@ Read only the failed job's log, and grep it rather than reading it whole. `test`
 
 | CI job | Local |
 |---|---|
-| `lint-backend` | `bash scripts/check-java.sh` (runs `spotless:apply`) |
+| `unit-backend`, step "Check Java formatting" | `bash scripts/check-java.sh` (runs `spotless:apply`) |
 | `lint-frontend` | `bash scripts/check-frontend.sh`, plus `check-versions.sh` and `check-no-skipped-tests.sh` |
 | `unit-backend` | `bash scripts/check-java.sh` (JaCoCo gate included) |
 | `unit-frontend` | `bash scripts/check-frontend.sh` (the coverage thresholds need `npx vitest run --coverage` in `client/`) |
 | `integration`, `build` | `bash scripts/check-it.sh -Dit.test=<Class>` |
-| `contract-frontend` | regenerate `api-shapes.json` as in the root CLAUDE.md, then fix the client fixtures |
+| `unit-frontend`, step "Frontend contract test" | regenerate `api-shapes.json` as in the root CLAUDE.md, then fix the client fixtures |
 | `data` | `bash scripts/check-processed-data.sh` |
 | `e2e` | see `e2e/CLAUDE.md`; read the failing spec and the Playwright error first, it's usually enough |
 | `docker` | read the log: usually an `ERROR` line logged at startup or a migration that fails on Postgres |

@@ -37,6 +37,7 @@ public class GameCleanupService {
 
   private final GameRepository games;
   private final Duration maxAge;
+  private final Duration unplayedMaxAge;
   private final ChallengeStore challenges;
   private final Duration challengeMaxAge;
 
@@ -47,12 +48,24 @@ public class GameCleanupService {
       ChallengeStore challenges,
       GameMetrics metrics,
       @Value("${geogames.games.max-age:PT24H}") Duration maxAge,
+      @Value("${geogames.games.unplayed-max-age:PT2H}") Duration unplayedMaxAge,
       @Value("${geogames.challenges.max-age:P7D}") Duration challengeMaxAge) {
     this.games = games;
     this.challenges = challenges;
     this.metrics = metrics;
     this.maxAge = maxAge;
+    this.unplayedMaxAge = unplayedMaxAge;
     this.challengeMaxAge = challengeMaxAge;
+  }
+
+  /** Games nobody answered a round of: a flood of these is how the live-game cap would fill. */
+  public long deleteUnplayedGamesOlderThanMaxAge(Instant now) {
+    long deleted = games.deleteUnplayedCreatedBefore(now.minus(unplayedMaxAge));
+    metrics.deleted(DeletedKind.GAME, deleted);
+    if (deleted > 0) {
+      log.info("Deleted {} unplayed games older than {}", deleted, unplayedMaxAge);
+    }
+    return deleted;
   }
 
   @Transactional
@@ -85,6 +98,7 @@ public class GameCleanupService {
   @Scheduled(fixedDelayString = "${geogames.games.cleanup-interval:PT1H}", initialDelay = 0)
   void deleteOldGames() {
     Instant now = Instant.now();
+    deleteUnplayedGamesOlderThanMaxAge(now);
     deleteGamesOlderThanMaxAge(now);
     deleteChallengesOlderThanMaxAge(now);
   }

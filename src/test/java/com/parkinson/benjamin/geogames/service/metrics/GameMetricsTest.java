@@ -109,6 +109,7 @@ class GameMetricsTest {
 
     assertThat(value("geogames.games.rejected", "reason", "CAPACITY")).isEqualTo(1);
     assertThat(value("geogames.games.rejected", "reason", "RATE_LIMITED")).isZero();
+    assertThat(value("geogames.games.rejected", "reason", "GLOBAL_RATE")).isZero();
     assertThat(value("geogames.stats.dropped", "reason", "QUEUE_FULL")).isEqualTo(1);
     assertThat(value("geogames.cleanup.deleted", "kind", "GAME")).isEqualTo(3);
     assertThat(value("geogames.cleanup.deleted", "kind", "CHALLENGE")).isZero();

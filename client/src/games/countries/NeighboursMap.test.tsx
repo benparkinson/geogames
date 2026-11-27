@@ -39,11 +39,11 @@ describe("NeighboursMap", () => {
     expect(points()).not.toContain(OUTLINE);
   });
 
-  it("adds the coastline as a dashed hint line from the first hint", () => {
+  it("adds the coastline as a solid line from the first hint", () => {
     renderMap({ hintsUsed: 1 });
 
     const coast = drawnLayers().find((layer) => layer.point === COAST);
-    expect(coast?.dashed).toBe(true);
+    expect(coast?.dashed).toBe(false);
   });
 
   it("never draws the land borders", () => {

@@ -22,7 +22,12 @@ class GameCleanupServiceTest {
   private final GameMetrics metrics = mock(GameMetrics.class);
   private final GameCleanupService service =
       new GameCleanupService(
-          repository, challenges, metrics, Duration.ofHours(24), Duration.ofDays(7));
+          repository,
+          challenges,
+          metrics,
+          Duration.ofHours(24),
+          Duration.ofHours(2),
+          Duration.ofDays(7));
 
   @Test
   void deletesChallengesCreatedBeforeTheDateOfNowMinusTheirMaxAge() {
@@ -40,6 +45,24 @@ class GameCleanupServiceTest {
     service.deleteOldGames();
 
     verify(challenges).deleteCreatedBefore(org.mockito.ArgumentMatchers.any());
+  }
+
+  @Test
+  void deletesUnplayedGamesCreatedBeforeNowMinusTheirShorterMaxAge() {
+    Instant now = Instant.parse("2026-11-08T12:00:00Z");
+    when(repository.deleteUnplayedCreatedBefore(Instant.parse("2026-11-08T10:00:00Z")))
+        .thenReturn(4);
+
+    assertThat(service.deleteUnplayedGamesOlderThanMaxAge(now)).isEqualTo(4);
+
+    verify(metrics).deleted(DeletedKind.GAME, 4);
+  }
+
+  @Test
+  void theScheduledRunDeletesUnplayedGames() {
+    service.deleteOldGames();
+
+    verify(repository).deleteUnplayedCreatedBefore(org.mockito.ArgumentMatchers.any());
   }
 
   @Test

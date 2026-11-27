@@ -116,11 +116,11 @@ describe("CountryCitiesMap", () => {
     expect(drawnCircles()[2].radius).toBeGreaterThanOrEqual(6);
   });
 
-  it("adds the coastline as a dashed hint line at the second hint", () => {
+  it("adds the coastline as a solid line at the second hint", () => {
     renderMap({ hintsUsed: 2 });
 
     expect(points()).toEqual([COAST]);
-    expect(drawnLayers()[0].dashed).toBe(true);
+    expect(drawnLayers()[0].dashed).toBe(false);
   });
 
   it("draws no coastline for a country without one", () => {

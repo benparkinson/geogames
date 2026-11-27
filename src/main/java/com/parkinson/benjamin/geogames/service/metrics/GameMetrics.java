@@ -31,6 +31,7 @@ public class GameMetrics {
   /** Why a new game was refused. */
   public enum RejectReason {
     RATE_LIMITED,
+    GLOBAL_RATE,
     CAPACITY
   }
 
