@@ -79,10 +79,19 @@ public class GameEntity {
 
   /**
    * The score to beat, for a game started from a challenge: set when it is created and never
-   * changed. Null for every other game. No challenge id is kept, so the game isn't linked to one.
+   * changed. Null for every other game.
    */
   @Column(updatable = false)
   private Integer challengeScore;
+
+  /**
+   * The challenge this game made or was started from, or null. The database nulls it when the
+   * challenge expires.
+   */
+  private Long challengeId;
+
+  /** This game's entry in that challenge; null until the game is finished. */
+  private Long challengeEntryId;
 
   public GameEntity() {}
 
@@ -94,7 +103,7 @@ public class GameEntity {
   /** A game that was not started from a challenge. */
   public GameEntity(
       List<GameRoundEntity> rounds, String gameMode, Difficulty difficulty, LocalDate dailyDate) {
-    this(rounds, gameMode, difficulty, dailyDate, null);
+    this(rounds, gameMode, difficulty, dailyDate, null, null);
   }
 
   /**
@@ -104,13 +113,15 @@ public class GameEntity {
    * @param difficulty how the game is played, or null if unknown
    * @param dailyDate the challenge's date for a daily game, or null
    * @param challengeScore the score to beat for a game started from a challenge, or null
+   * @param challengeId the challenge a game was started from, or null
    */
   public GameEntity(
       List<GameRoundEntity> rounds,
       String gameMode,
       Difficulty difficulty,
       LocalDate dailyDate,
-      Integer challengeScore) {
+      Integer challengeScore,
+      Long challengeId) {
     if (rounds == null || rounds.isEmpty()) {
       throw new IllegalArgumentException("A game needs at least one round");
     }
@@ -126,6 +137,21 @@ public class GameEntity {
     this.difficulty = difficulty;
     this.dailyDate = dailyDate;
     this.challengeScore = challengeScore;
+    this.challengeId = challengeId;
+  }
+
+  /** Records the challenge this game made or was started from, and its entry there. */
+  public void linkChallenge(long challengeId, long entryId) {
+    this.challengeId = challengeId;
+    this.challengeEntryId = entryId;
+  }
+
+  public Long getChallengeId() {
+    return challengeId;
+  }
+
+  public Long getChallengeEntryId() {
+    return challengeEntryId;
   }
 
   /** The daily challenge's date, or null for a game that isn't one. */

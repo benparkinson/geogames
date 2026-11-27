@@ -12,6 +12,6 @@ public record Challenge(
     String gameMode,
     Difficulty difficulty,
     List<PinnedRound> rounds,
-    int score,
     int maxScore,
-    LocalDate createdOn) {}
+    LocalDate createdOn,
+    LocalDate lastUsedOn) {}

@@ -18,6 +18,9 @@ import PageShell from "../../components/PageShell";
 import SummaryRow from "./SummaryRow";
 import ChallengeShare from "../../challenge/ChallengeShare";
 import { useChallengeScore } from "../../challenge/challengeStorage";
+import InitialsForm from "../../challenge/InitialsForm";
+import LeagueTable from "../../challenge/LeagueTable";
+import { useChallengeTable, useCreateChallenge } from "../../api/challenges";
 import { FINISHED } from "./Model";
 
 export default function GameSummary({
@@ -43,6 +46,11 @@ export default function GameSummary({
   const friend = useChallengeScore(gameId);
   const today = useToday();
   const todaysDaily = entryFor(useDailyEntry(), today);
+  const freePlayFinished = !daily && all[0]?.gameResult.gameState === FINISHED;
+  // The table exists once this game has made its challenge (ChallengeShare shares this request), and from the
+  // start in a game that came from one.
+  const challenge = useCreateChallenge(gameId, freePlayFinished);
+  const { data: table } = useChallengeTable(gameId, freePlayFinished && (!!challenge.data || friend !== null));
 
   if (all.length < totalRoundCount) {
     return <LoadingSpinner fullPage className="page-bg" />;
@@ -55,7 +63,6 @@ export default function GameSummary({
     daily ? `Daily ${daily.date}` : (gameTitle ?? GAME_NAMES.RANDOM),
     ...DIFFICULTY_LABEL[summary.difficulty],
   ].join(" · ");
-  const freePlayFinished = !daily && all[0].gameResult.gameState === FINISHED;
   // A daily that was started but not finished still counts as not done.
   const offerDaily = freePlayFinished && today !== null && !todaysDaily?.result;
   return (
@@ -80,10 +87,9 @@ export default function GameSummary({
               <span>Hints used</span> <span>{summary.hintsUsed}</span>
             </li>
           </ul>
-          {friend && (
-            <p className="gg-summary__friend gg-mono">
-              Your friend scored {friend.score} / {friend.maxScore}
-            </p>
+          {table && <LeagueTable entries={table.entries} yours={table.yours} />}
+          {table?.canEnterInitials && (
+            <InitialsForm gameId={gameId} initials={table.entries.find((e) => e.you)?.initials ?? ""} />
           )}
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>

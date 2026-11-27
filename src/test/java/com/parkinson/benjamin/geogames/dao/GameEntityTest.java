@@ -17,7 +17,8 @@ class GameEntityTest {
         "TRIPOINT",
         Difficulty.NORMAL,
         dailyDate,
-        challengeScore);
+        challengeScore,
+        null);
   }
 
   @Test
@@ -26,5 +27,17 @@ class GameEntityTest {
     assertThat(game(LocalDate.parse("2026-11-26"), null).origin()).isEqualTo(GameOrigin.DAILY);
     // A score of 0 still has to be beaten.
     assertThat(game(null, 0).origin()).isEqualTo(GameOrigin.CHALLENGE);
+  }
+
+  @Test
+  void linkingAChallengeKeepsItsIdAndTheEntryAndLeavesTheOrigin() {
+    GameEntity game = game(null, null);
+
+    game.linkChallenge(3, 4);
+
+    assertThat(game.getChallengeId()).isEqualTo(3L);
+    assertThat(game.getChallengeEntryId()).isEqualTo(4L);
+    // The creator's game is still free play.
+    assertThat(game.origin()).isEqualTo(GameOrigin.FREE_PLAY);
   }
 }

@@ -2,6 +2,7 @@ import { vi } from "vitest";
 import type {
   ChallengeCreationResponse,
   ChallengeResponse,
+  ChallengeTableResponse,
   DailyGameResponse,
   DailyChallenge,
   DailyScore,
@@ -481,7 +482,33 @@ export function makeDailyGameResponse(overrides: Partial<DailyGameResponse> = {}
 
 /** What GET /api/challenges/{id} returns. */
 export function makeChallengeResponse(overrides: Partial<ChallengeResponse> = {}): ChallengeResponse {
-  return { gameMode: "RANDOM", difficulty: "NORMAL", roundCount: 5, score: 320, maxScore: 500, ...overrides };
+  return {
+    gameMode: "RANDOM",
+    difficulty: "NORMAL",
+    roundCount: 5,
+    score: 320,
+    maxScore: 500,
+    entries: [{ rank: 1, score: 320, initials: "ABC" }],
+    entryCount: 1,
+    ...overrides,
+  };
+}
+
+/** What GET /api/games/{id}/challenge-table returns to a game below the top five. */
+export function makeChallengeTableResponse(overrides: Partial<ChallengeTableResponse> = {}): ChallengeTableResponse {
+  return {
+    challengeId: "5d0c1c1e-8f4b-4d55-a1a8-2b0f3c6a7e90",
+    maxScore: 500,
+    entryCount: 6,
+    creator: false,
+    entries: [
+      { rank: 1, score: 320, initials: "ABC", you: false },
+      { rank: 2, score: 300, initials: null, you: false },
+    ],
+    yours: { rank: 6, score: 120, initials: null, you: true },
+    canEnterInitials: false,
+    ...overrides,
+  };
 }
 
 /** What POST /api/games/{id}/challenges returns. */
