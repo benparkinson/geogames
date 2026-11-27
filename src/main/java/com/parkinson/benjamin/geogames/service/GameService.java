@@ -164,6 +164,20 @@ public class GameService {
             });
   }
 
+  /** Empty for an unknown game. */
+  @Transactional(readOnly = true)
+  public Optional<ChallengeLink> challengeLink(UUID gameId) {
+    return gameRepository
+        .findByPublicId(gameId)
+        .map(
+            game ->
+                new ChallengeLink(
+                    game.getChallengeId(),
+                    game.getChallengeEntryId(),
+                    // Only a game started from a challenge has a score to beat.
+                    game.getChallengeScore() == null));
+  }
+
   /** Records the challenge a game has made, and the game's entry in it. */
   @Transactional
   public void linkChallenge(UUID gameId, long challengeId, long entryId) {

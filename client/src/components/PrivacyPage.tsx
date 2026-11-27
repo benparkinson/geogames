@@ -83,8 +83,9 @@ function PrivacyPage(): React.JSX.Element {
           When you finish a game that is not a daily challenge, you can challenge a friend. The server then stores the
           rounds of your game, its mode and difficulty, your score, and the dates it was made and last played (no time),
           so your friend can play the same rounds. The score of every finished game played from the link is stored with
-          it. It holds no player data, no score links back to a game or a player, and it is all deleted seven days after
-          the challenge was last played or shared.
+          it. If a score is in the top five, its player can add up to three initials, which are stored with the
+          challenge and shown to anyone with the link. Apart from those initials it holds no player data, no score links
+          back to a game or a player, and it is all deleted seven days after the challenge was last played or shared.
         </p>
 
         <h2 className="gg-page__section">Who else receives data</h2>

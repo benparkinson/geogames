@@ -68,6 +68,27 @@ class ChallengeEntryStoreTest {
   }
 
   @Test
+  void theTableIsByScoreWithTheEarlierEntryWinningATie() {
+    ChallengeEntryStore entries = entries();
+    long challengeId = challenge();
+    long four = entries.insert(challengeId, 4);
+    long firstNine = entries.insert(challengeId, 9);
+    long secondNine = entries.insert(challengeId, 9);
+    entries.insert(challenge(), 10);
+
+    entries.setInitials(secondNine, "AB");
+
+    assertThat(entries.top(challengeId, 2))
+        .containsExactly(
+            new ChallengeEntryStore.Entry(firstNine, 9, null),
+            new ChallengeEntryStore.Entry(secondNine, 9, "AB"));
+    assertThat(entries.rank(firstNine)).isEqualTo(1);
+    assertThat(entries.rank(secondNine)).isEqualTo(2);
+    assertThat(entries.rank(four)).isEqualTo(3);
+    assertThat(entries.find(four)).contains(new ChallengeEntryStore.Entry(four, 4, null));
+  }
+
+  @Test
   void deletingAChallengeDeletesItsEntriesAndUnlinksItsGames() {
     long challengeId = challenge();
     long entryId = entries().insert(challengeId, 4);

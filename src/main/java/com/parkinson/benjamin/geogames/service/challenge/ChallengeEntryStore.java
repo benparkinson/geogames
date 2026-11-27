@@ -1,5 +1,9 @@
 package com.parkinson.benjamin.geogames.service.challenge;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
@@ -25,6 +29,49 @@ public class ChallengeEntryStore {
         .param("score", score)
         .update(key, "id");
     return key.getKey().longValue();
+  }
+
+  /** One entry; {@code initials} is null until entered. */
+  public record Entry(long id, int score, String initials) {}
+
+  /** The best entries in rank order: by score, and the earlier entry wins a tie. */
+  public List<Entry> top(long challengeId, int limit) {
+    return jdbc.sql(
+            "select id, score, initials from challenge_entry where challenge_id = :challenge"
+                + " order by score desc, id limit :limit")
+        .param("challenge", challengeId)
+        .param("limit", limit)
+        .query(ChallengeEntryStore::entry)
+        .list();
+  }
+
+  public Optional<Entry> find(long entryId) {
+    return jdbc.sql("select id, score, initials from challenge_entry where id = :id")
+        .param("id", entryId)
+        .query(ChallengeEntryStore::entry)
+        .optional();
+  }
+
+  /** 1 plus the number of entries that beat this one. The entry must exist. */
+  public int rank(long entryId) {
+    return jdbc.sql(
+            "select count(other.id) + 1 from challenge_entry me left join challenge_entry other"
+                + " on other.challenge_id = me.challenge_id and (other.score > me.score"
+                + " or (other.score = me.score and other.id < me.id)) where me.id = :id")
+        .param("id", entryId)
+        .query(Integer.class)
+        .single();
+  }
+
+  public void setInitials(long entryId, String initials) {
+    jdbc.sql("update challenge_entry set initials = :initials where id = :id")
+        .param("initials", initials)
+        .param("id", entryId)
+        .update();
+  }
+
+  private static Entry entry(ResultSet rs, int row) throws SQLException {
+    return new Entry(rs.getLong("id"), rs.getInt("score"), rs.getString("initials"));
   }
 
   /** The score to beat: the best entry's, or 0 with no entries. */

@@ -2,6 +2,14 @@
   "endpoints" : {
     "GET /api/challenges/{id}" : {
       "difficulty" : "string",
+      "entries" : {
+        "array" : {
+          "initials" : "string",
+          "rank" : "number",
+          "score" : "number"
+        }
+      },
+      "entryCount" : "number",
       "gameMode" : "string",
       "maxScore" : "number",
       "roundCount" : "number",
@@ -33,6 +41,27 @@
       "difficulty" : "string",
       "maxScore" : "number",
       "players" : "number"
+    },
+    "GET /api/games/{id}/challenge-table" : {
+      "canEnterInitials" : "boolean",
+      "challengeId" : "string",
+      "creator" : "boolean",
+      "entries" : {
+        "array" : {
+          "initials" : "string",
+          "rank" : "number",
+          "score" : "number",
+          "you" : "boolean"
+        }
+      },
+      "entryCount" : "number",
+      "maxScore" : "number",
+      "yours" : {
+        "initials" : "null",
+        "rank" : "number",
+        "score" : "number",
+        "you" : "boolean"
+      }
     },
     "GET /api/lakes" : {
       "array" : {

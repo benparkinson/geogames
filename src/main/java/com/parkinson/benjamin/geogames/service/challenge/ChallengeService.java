@@ -2,15 +2,22 @@ package com.parkinson.benjamin.geogames.service.challenge;
 
 import com.parkinson.benjamin.geogames.api.BadRequestException;
 import com.parkinson.benjamin.geogames.api.ChallengeCreationResponse;
+import com.parkinson.benjamin.geogames.api.ChallengeEntryView;
 import com.parkinson.benjamin.geogames.api.ChallengeResponse;
+import com.parkinson.benjamin.geogames.api.ChallengeTableResponse;
 import com.parkinson.benjamin.geogames.api.GameCreationResponse;
+import com.parkinson.benjamin.geogames.model.Initials;
+import com.parkinson.benjamin.geogames.service.ChallengeLink;
 import com.parkinson.benjamin.geogames.service.ChallengeSource;
 import com.parkinson.benjamin.geogames.service.GameService;
 import com.parkinson.benjamin.geogames.service.metrics.GameMetrics;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ChallengeService {
+
+  /** The rows of the league table, and the ranks that may enter initials. */
+  static final int TABLE_SIZE = 5;
 
   private final Clock clock;
   private final ChallengeStore store;
@@ -87,7 +97,80 @@ public class ChallengeService {
         challenge.difficulty().name(),
         challenge.rounds().size(),
         entries.topScore(stored.id()),
-        challenge.maxScore());
+        challenge.maxScore(),
+        rows(entries.top(stored.id(), TABLE_SIZE), entry -> null),
+        entries.count(stored.id()));
+  }
+
+  /**
+   * The league table of the game's challenge.
+   *
+   * @throws ChallengeNotFoundException for an unknown game, or one with no challenge (or an expired
+   *     one)
+   */
+  public ChallengeTableResponse table(UUID gameId) {
+    ChallengeLink link = link(gameId);
+    StoredChallenge stored =
+        Optional.ofNullable(link.challengeId())
+            .flatMap(store::findById)
+            .orElseThrow(() -> new ChallengeNotFoundException("This game has no challenge"));
+    List<ChallengeEntryStore.Entry> top = entries.top(stored.id(), TABLE_SIZE);
+    Long own = link.entryId();
+    boolean inTop = own != null && top.stream().anyMatch(entry -> entry.id() == own);
+    ChallengeEntryView yours =
+        own == null || inTop
+            ? null
+            : entries
+                .find(own)
+                .map(e -> new ChallengeEntryView(entries.rank(own), e.score(), e.initials(), true))
+                .orElse(null);
+    return new ChallengeTableResponse(
+        stored.challenge().publicId(),
+        stored.challenge().maxScore(),
+        entries.count(stored.id()),
+        link.creator(),
+        rows(top, entry -> own != null && entry.id() == own),
+        yours,
+        inTop);
+  }
+
+  /**
+   * Sets the initials on the game's entry, which must rank in the top of the table. They can be
+   * changed for as long as the game exists.
+   *
+   * @throws BadRequestException for initials {@link Initials} rejects
+   * @throws ChallengeNotFoundException for an unknown game, or one with no entry
+   * @throws ChallengeConflictException for an entry below the top of the table
+   */
+  public void setInitials(UUID gameId, String initials) {
+    String normalised = Initials.normalise(initials);
+    Long entryId = link(gameId).entryId();
+    if (entryId == null) {
+      throw new ChallengeNotFoundException("This game has no challenge score");
+    }
+    if (entries.rank(entryId) > TABLE_SIZE) {
+      throw new ChallengeConflictException("Only the top " + TABLE_SIZE + " can enter initials");
+    }
+    entries.setInitials(entryId, normalised);
+  }
+
+  private ChallengeLink link(UUID gameId) {
+    return gameService
+        .challengeLink(gameId)
+        .orElseThrow(() -> new ChallengeNotFoundException("No such game"));
+  }
+
+  /** The entries as rows, ranked by their order; {@code you} may return null to leave it out. */
+  private static List<ChallengeEntryView> rows(
+      List<ChallengeEntryStore.Entry> top, Function<ChallengeEntryStore.Entry, Boolean> you) {
+    return IntStream.range(0, top.size())
+        .mapToObj(
+            i -> {
+              ChallengeEntryStore.Entry entry = top.get(i);
+              return new ChallengeEntryView(
+                  i + 1, entry.score(), entry.initials(), you.apply(entry));
+            })
+        .toList();
   }
 
   /** A new game with the challenge's rounds, mode and difficulty; each call makes another. */

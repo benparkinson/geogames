@@ -62,8 +62,41 @@ export interface ChallengeResponse {
   gameMode: string;
   difficulty: Difficulty;
   roundCount: number;
+  /** The score to beat: the best entry's. */
   score: number;
   maxScore: number;
+  /** The top of the league table, without `you`. Optional: an older server doesn't send it. */
+  entries?: ChallengeEntry[];
+  entryCount?: number;
+}
+
+/** One row of a challenge's league table. */
+export interface ChallengeEntry {
+  rank: number;
+  score: number;
+  /** Null until entered. */
+  initials: string | null;
+  /** Whether this is the asking game's row; only in a game's table. */
+  you?: boolean;
+}
+
+/** The JSON of GET /api/games/{id}/challenge-table. */
+export interface ChallengeTableResponse {
+  challengeId: string;
+  maxScore: number;
+  entryCount: number;
+  /** Whether this game made the challenge. */
+  creator: boolean;
+  /** The top five. */
+  entries: ChallengeEntry[];
+  /** This game's own row when it is below `entries`. */
+  yours: ChallengeEntry | null;
+  canEnterInitials: boolean;
+}
+
+/** The body of PUT /api/games/{id}/challenge-initials. */
+export interface InitialsRequest {
+  initials: string;
 }
 
 /** The JSON of POST /api/games/{id}/challenges. */
