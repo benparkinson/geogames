@@ -84,6 +84,27 @@ class CountryShapeBuilderTest {
     }
   }
 
+  /** A diagonal of 1 degree, with a bump of 0.001 degrees in the middle of the bottom edge. */
+  private static Country bumpy() {
+    return polygon("Bumpy", ring(p(0, 0), p(0.3, 0.001), p(0.6, 0), p(0.6, 0.8), p(0, 0.8)));
+  }
+
+  @Test
+  void aSmallBumpSurvivesInTheOutlineAndTheCoast() {
+    CountryShape shape = CountryShapeBuilder.build(List.of(bumpy())).get(0);
+
+    assertThat(pointSet(shape.outline().geometry().coordinates())).contains("0.3,0.001");
+    assertThat(pointSet(shape.coast().geometry().coordinates())).contains("0.3,0.001");
+  }
+
+  @Test
+  void riversAreSimplifiedMoreCoarselyThanTheOutline() {
+    Country tiny = polygon("Tiny", square(0, 0, 0.06, 0.08)); // a diagonal of 0.1 degrees
+
+    assertThat(CountryShapeBuilder.riverTolerance(bumpy())).isEqualTo(0.0025);
+    assertThat(CountryShapeBuilder.riverTolerance(tiny)).isEqualTo(0.002);
+  }
+
   @Test
   void sharedEdgeIsALandBorderForBothCountries() {
     Country a = polygon("A", ring(p(0, 0), p(1, 0), p(1, 0.5), p(1, 1), p(0, 1)));
