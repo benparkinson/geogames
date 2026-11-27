@@ -955,6 +955,13 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   align-items: center;
   gap: var(--gg-space-2);
 }
+/* A challenger's two share buttons, side by side until they no longer fit. */
+.gg-share__choices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--gg-space-2);
+}
 .gg-daily__status {
   margin-top: var(--gg-space-2);
 }
