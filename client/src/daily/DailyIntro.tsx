@@ -35,7 +35,7 @@ export default function DailyIntro(): React.JSX.Element {
       >
         <h2 className="gg-ticket__heading">Today&apos;s five</h2>
         <p className="gg-daily__text">
-          Five geography puzzles from a variety of game modes. Wrong answers don&apos;t lower your score, but hints do.
+          Five geography puzzles from a variety of game modes. Each hint and each wrong guess costs a point.
         </p>
         <div className="gg-daily__block">
           <DifficultyToggle />

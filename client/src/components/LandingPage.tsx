@@ -37,8 +37,9 @@ export default function LandingPage({ type }: { type: LandingType }): React.JSX.
         <h2 className="gg-page__section">Scoring</h2>
         <p>
           Each round is worth up to 10 points: for the right answer, for taking no hints and for making no wrong
-          guesses. Geoggernaut is free, needs no account and is played in your browser.
+          guesses.
         </p>
+        <p>Geoggernaut is free, needs no account and is played in your browser.</p>
 
         <h2 className="gg-page__section">More games</h2>
         <GameLinks className="gg-landing__games" except={type} />

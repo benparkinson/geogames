@@ -737,6 +737,13 @@ a.gg-ticket-link:focus-visible .gg-ticket__foot {
   margin-bottom: var(--gg-space-2);
   font-size: var(--gg-font-size-h4);
 }
+.game-picker__heading--sub {
+  font-size: var(--gg-font-size-h6);
+}
+.game-picker__intro {
+  margin-bottom: var(--gg-space-2);
+  font-size: var(--gg-font-size-sm);
+}
 .game-picker__list {
   border-top: 2px solid var(--gg-color-rule);
 }
