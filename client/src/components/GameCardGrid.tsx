@@ -79,11 +79,14 @@ export default function GameCardGrid({
   return (
     <div role="group" aria-label="Choose a game" className="game-picker">
       <h2 className="game-picker__heading">Free play</h2>
+      <p className="game-picker__intro gg-text-muted">
+        Every game below, as often as you like. Finish one to challenge a friend to the same rounds.
+      </p>
       <div className="game-picker__list">{STANDARD_OPTIONS.map(renderRow)}</div>
       <div role="group" aria-labelledby="extra-difficult-label" className="game-picker__extra">
-        <h2 id="extra-difficult-label" className="game-picker__heading">
+        <h3 id="extra-difficult-label" className="game-picker__heading game-picker__heading--sub">
           <ExtraDifficultIcon className="gg-text-danger" aria-hidden="true" /> Extra difficult
-        </h2>
+        </h3>
         <div className="game-picker__list">{EXTRA_DIFFICULT_OPTIONS.map(renderRow)}</div>
       </div>
     </div>

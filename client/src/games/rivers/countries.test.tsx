@@ -12,14 +12,14 @@ vi.mock("./RiverCountriesMapWrapper", () => ({
   ),
 }));
 
-function renderGame() {
+function renderGame(round: Parameters<typeof makeRoundProps>[0] = {}) {
   const submitAnswer = vi.fn();
   const Component = countries.Component;
   mockFetch([{ url: /\/api\/rivers$/, body: riverNames }]);
   renderWithClient(
     <Component
       data={makeRiverRoundData()}
-      round={makeRoundProps({ hintCount: 2 })}
+      round={makeRoundProps({ hintCount: 2, ...round })}
       answerCount={1}
       submitAnswer={submitAnswer}
     />,
@@ -58,5 +58,26 @@ describe("Follow the River", () => {
     await user.click(screen.getByRole("button", { name: /Hint .*· 1 left/ }));
     expect(screen.getByText("Starts with “D”")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Hint · 0 left/ })).toBeDisabled();
+  });
+
+  it("has clues", () => {
+    expect(countries.hasClues).toBe(true);
+  });
+
+  it.each([
+    ["NORMAL", true],
+    ["HARD", false],
+  ] as const)("in %s mode a wrong guess shows a distance clue: %s", async (difficulty, shown) => {
+    renderGame({ hasClues: true, difficulty });
+    await screen.findByRole("button", { name: /Hint/ });
+
+    await userEvent.setup().type(input(), "Thames{Enter}");
+
+    expect(await screen.findByText("Thames")).toBeInTheDocument();
+    if (shown) {
+      expect(screen.getByText(/[\d,]+ km (north|south|east|west)/)).toBeInTheDocument();
+    } else {
+      expect(screen.queryByText(/ km/)).not.toBeInTheDocument();
+    }
   });
 });

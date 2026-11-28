@@ -200,6 +200,14 @@ describe("HomePage choosing a game", () => {
     ]);
   });
 
+  it("puts the extra difficult games under Free play and mentions challenging a friend", () => {
+    renderHome();
+
+    expect(screen.getByRole("heading", { level: 2, name: "Free play" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Extra difficult" })).toBeInTheDocument();
+    expect(screen.getByText(/challenge a friend/)).toBeInTheDocument();
+  });
+
   it("can open an extra difficult game", async () => {
     renderHome();
 

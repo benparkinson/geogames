@@ -9,6 +9,7 @@ export default defineGame({
   type: "RIVERS_BY_COUNTRIES",
   description: "Name a river from the countries it flows through.",
   Icon: ContinentIcon,
+  hasClues: true,
   Component: makeRiverGame({
     MapComponent: RiverCountriesMapWrapper,
     prompt: "Which river flows through all of these countries?",
