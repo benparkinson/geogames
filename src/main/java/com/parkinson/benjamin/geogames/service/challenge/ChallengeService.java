@@ -131,6 +131,11 @@ public class ChallengeService {
                         new ChallengeEntryView(
                             entries.rank(own), e.score(), initials.visible(e.initials()), true))
                 .orElse(null);
+    boolean canEnterInitials =
+        top.stream()
+            .anyMatch(
+                entry ->
+                    own != null && entry.id() == own && initials.visible(entry.initials()) == null);
     return new ChallengeTableResponse(
         stored.challenge().publicId(),
         stored.challenge().maxScore(),
@@ -138,16 +143,17 @@ public class ChallengeService {
         link.creator(),
         rows(top, entry -> own != null && entry.id() == own),
         yours,
-        inTop);
+        canEnterInitials);
   }
 
   /**
-   * Sets the initials on the game's entry, which must rank in the top of the table. They can be
-   * changed for as long as the game exists.
+   * Sets the initials on the game's entry, which must rank in the top of the table. They are entered
+   * once: only initials that have since been blocked (and so aren't shown) can be replaced.
    *
    * @throws BadRequestException for initials {@link Initials} rejects
    * @throws ChallengeNotFoundException for an unknown game, or one with no entry
-   * @throws ChallengeConflictException for an entry below the top of the table
+   * @throws ChallengeConflictException for an entry below the top of the table, or one that already
+   *     has initials
    */
   public void setInitials(UUID gameId, String text) {
     String normalised = normalise(text);
@@ -159,7 +165,16 @@ public class ChallengeService {
       metrics.challengeInitials(InitialsResult.NOT_TOP5);
       throw new ChallengeConflictException("Only the top " + TABLE_SIZE + " can enter initials");
     }
-    entries.setInitials(entryId, normalised);
+    String stored =
+        entries
+            .find(entryId)
+            .orElseThrow(() -> new ChallengeNotFoundException("This game has no challenge score"))
+            .initials();
+    // The update is refused if another request set them since they were read.
+    if (initials.visible(stored) != null || !entries.setInitials(entryId, stored, normalised)) {
+      metrics.challengeInitials(InitialsResult.ALREADY_SET);
+      throw new ChallengeConflictException("Initials are already set");
+    }
     metrics.challengeInitials(InitialsResult.SAVED);
   }
 

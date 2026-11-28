@@ -52,7 +52,8 @@ public class GameMetrics {
     SAVED,
     INVALID,
     BLOCKED,
-    NOT_TOP5
+    NOT_TOP5,
+    ALREADY_SET
   }
 
   private enum ChallengeLookup {

@@ -88,9 +88,7 @@ export default function GameSummary({
             </li>
           </ul>
           {table && <LeagueTable entries={table.entries} yours={table.yours} />}
-          {table?.canEnterInitials && (
-            <InitialsForm gameId={gameId} initials={table.entries.find((e) => e.you)?.initials ?? ""} />
-          )}
+          {table?.canEnterInitials && <InitialsForm gameId={gameId} />}
           {daily && <DailyComparison date={daily.date} difficulty={all[0].difficulty} score={score} />}
         </div>
 

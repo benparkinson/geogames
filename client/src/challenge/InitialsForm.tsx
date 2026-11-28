@@ -5,10 +5,10 @@ import { Button, Notice, Spinner } from "../ui";
 
 const MAX_LENGTH = 3;
 
-/** Arcade-style initials for a score near the top of a league table. `initials` are the ones already saved. */
-export default function InitialsForm({ gameId, initials }: { gameId: string; initials: string }): React.JSX.Element {
+/** Arcade-style initials for a score near the top of a league table. They are entered once: saving removes the box. */
+export default function InitialsForm({ gameId }: { gameId: string }): React.JSX.Element | null {
   const inputId = useId();
-  const [value, setValue] = useState(initials);
+  const [value, setValue] = useState("");
   const save = useSetInitials(gameId);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -21,6 +21,9 @@ export default function InitialsForm({ gameId, initials }: { gameId: string; ini
     e.preventDefault();
     if (value && !save.isPending) save.mutate(value);
   }
+
+  // Not left to the table refetch, so the box doesn't linger after a save.
+  if (save.isSuccess) return null;
 
   return (
     <form className="gg-initials" onSubmit={handleSubmit}>

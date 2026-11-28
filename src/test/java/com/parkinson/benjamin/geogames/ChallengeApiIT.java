@@ -198,6 +198,7 @@ class ChallengeApiIT {
 
     initials(players.get(4), "abc").andExpect(status().isNoContent());
     initials(players.get(5), "xyz").andExpect(status().isConflict());
+    initials(players.get(4), "xyz").andExpect(status().isConflict());
     initials(players.get(4), "a1").andExpect(status().isBadRequest());
 
     mockMvc
@@ -210,7 +211,7 @@ class ChallengeApiIT {
         .andExpect(jsonPath("$.entries[4].initials").value("ABC"))
         .andExpect(jsonPath("$.entries[4].you").value(true))
         .andExpect(jsonPath("$.yours").value(nullValue()))
-        .andExpect(jsonPath("$.canEnterInitials").value(true));
+        .andExpect(jsonPath("$.canEnterInitials").value(false));
     mockMvc
         .perform(get("/api/games/%s/challenge-table".formatted(players.get(5))))
         .andExpect(jsonPath("$.yours.rank").value(6))

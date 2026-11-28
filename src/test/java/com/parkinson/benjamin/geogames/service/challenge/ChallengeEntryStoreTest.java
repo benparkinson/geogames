@@ -76,7 +76,7 @@ class ChallengeEntryStoreTest {
     long secondNine = entries.insert(challengeId, 9);
     entries.insert(challenge(), 10);
 
-    entries.setInitials(secondNine, "AB");
+    entries.setInitials(secondNine, null, "AB");
 
     assertThat(entries.top(challengeId, 2))
         .containsExactly(
@@ -86,6 +86,20 @@ class ChallengeEntryStoreTest {
     assertThat(entries.rank(secondNine)).isEqualTo(2);
     assertThat(entries.rank(four)).isEqualTo(3);
     assertThat(entries.find(four)).contains(new ChallengeEntryStore.Entry(four, 4, null));
+  }
+
+  @Test
+  void initialsAreOnlySetOverTheExpectedValue() {
+    ChallengeEntryStore entries = entries();
+    long entryId = entries.insert(challenge(), 4);
+
+    assertThat(entries.setInitials(entryId, "XY", "AB")).isFalse();
+    assertThat(entries.find(entryId).orElseThrow().initials()).isNull();
+    assertThat(entries.setInitials(entryId, null, "AB")).isTrue();
+    assertThat(entries.setInitials(entryId, null, "CD")).isFalse();
+    assertThat(entries.find(entryId).orElseThrow().initials()).isEqualTo("AB");
+    assertThat(entries.setInitials(entryId, "AB", "CD")).isTrue();
+    assertThat(entries.find(entryId).orElseThrow().initials()).isEqualTo("CD");
   }
 
   @Test

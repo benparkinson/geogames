@@ -199,6 +199,17 @@ class ChallengeServiceTest {
   }
 
   @Test
+  void initialsCanBeEnteredOnlyForATopRowThatShowsNone() {
+    when(store.findById(5)).thenReturn(Optional.of(stored(UUID.randomUUID(), Difficulty.HARD)));
+    when(entries.top(5, 5))
+        .thenReturn(List.of(entry(3, 190, "ABC"), entry(1, 150, null), entry(4, 100, "BAD")));
+
+    assertThat(service.table(linkedGame(5L, 3L, false)).canEnterInitials()).isFalse();
+    assertThat(service.table(linkedGame(5L, 1L, false)).canEnterInitials()).isTrue();
+    assertThat(service.table(linkedGame(5L, 4L, false)).canEnterInitials()).isTrue();
+  }
+
+  @Test
   void tableAddsTheGamesRowWhenItIsBelowTheTopFive() {
     tableOfSix(UUID.randomUUID());
     when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, null)));
@@ -257,11 +268,53 @@ class ChallengeServiceTest {
   @Test
   void initialsAreStoredUpperCasedForATopFiveEntry() {
     when(entries.rank(6)).thenReturn(5);
+    when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, null)));
+    when(entries.setInitials(6, null, "AB")).thenReturn(true);
 
     service.setInitials(linkedGame(5L, 6L, false), " ab ");
 
-    verify(entries).setInitials(6, "AB");
+    verify(entries).setInitials(6, null, "AB");
     verify(metrics).challengeInitials(InitialsResult.SAVED);
+    verifyNoMoreInteractions(metrics);
+  }
+
+  @Test
+  void initialsAreEnteredOnlyOnce() {
+    when(entries.rank(6)).thenReturn(1);
+    when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, "AB")));
+    UUID gameId = linkedGame(5L, 6L, false);
+
+    assertThatThrownBy(() -> service.setInitials(gameId, "CD"))
+        .isInstanceOf(ChallengeConflictException.class);
+
+    verify(entries, never()).setInitials(anyLong(), any(), any());
+    verify(metrics).challengeInitials(InitialsResult.ALREADY_SET);
+    verifyNoMoreInteractions(metrics);
+  }
+
+  @Test
+  void initialsBlockedSinceTheyWereSetCanBeReplaced() {
+    when(entries.rank(6)).thenReturn(1);
+    when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, "BAD")));
+    when(entries.setInitials(6, "BAD", "CD")).thenReturn(true);
+
+    service.setInitials(linkedGame(5L, 6L, false), "CD");
+
+    verify(entries).setInitials(6, "BAD", "CD");
+    verify(metrics).challengeInitials(InitialsResult.SAVED);
+  }
+
+  @Test
+  void initialsSetByAnotherRequestSinceTheyWereReadAreKept() {
+    when(entries.rank(6)).thenReturn(1);
+    when(entries.find(6)).thenReturn(Optional.of(entry(6, 10, null)));
+    when(entries.setInitials(6, null, "CD")).thenReturn(false);
+    UUID gameId = linkedGame(5L, 6L, false);
+
+    assertThatThrownBy(() -> service.setInitials(gameId, "CD"))
+        .isInstanceOf(ChallengeConflictException.class);
+
+    verify(metrics).challengeInitials(InitialsResult.ALREADY_SET);
     verifyNoMoreInteractions(metrics);
   }
 
@@ -279,7 +332,7 @@ class ChallengeServiceTest {
         .isInstanceOf(BadRequestException.class);
     assertThatThrownBy(() -> service.setInitials(low, "bad"))
         .isInstanceOf(BadRequestException.class);
-    verify(entries, never()).setInitials(anyLong(), any());
+    verify(entries, never()).setInitials(anyLong(), any(), any());
     // The game with no entry is a 404, which isn't counted.
     verify(metrics).challengeInitials(InitialsResult.NOT_TOP5);
     verify(metrics).challengeInitials(InitialsResult.INVALID);

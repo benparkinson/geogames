@@ -10,7 +10,7 @@ import java.util.UUID;
  * @param creator whether this game made the challenge
  * @param entries the top of the table
  * @param yours this game's own row when it is below {@code entries}, otherwise null
- * @param canEnterInitials whether this game's row is in {@code entries}
+ * @param canEnterInitials whether this game's row is in {@code entries} and shows no initials
  */
 public record ChallengeTableResponse(
     UUID challengeId,
