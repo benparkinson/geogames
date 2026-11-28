@@ -25,6 +25,15 @@ describe("LandingPage", () => {
     expect(fetchMock).toHaveBeenCalledWith(HEALTH, { mode: "no-cors" });
   });
 
+  it("says the site is free apart from the scoring", () => {
+    mockFetch([{ url: HEALTH, body: "ok" }]);
+    renderWithClient(<LandingPage type="TRIPOINT" />);
+
+    const free = screen.getByText(/Geoggernaut is free/);
+    expect(free).toHaveTextContent("Geoggernaut is free, needs no account and is played in your browser.");
+    expect(screen.getByText(/Each round is worth up to 10 points/)).not.toHaveTextContent(/free/);
+  });
+
   it("links to the other games' pages", () => {
     mockFetch([{ url: HEALTH, body: "ok" }]);
     renderWithClient(<LandingPage type="TRIPOINT" />);

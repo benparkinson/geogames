@@ -50,7 +50,7 @@ describe("DailyPage intro", () => {
     renderWithClient(<DailyPage />);
 
     expect(await screen.findByText(/Five geography puzzles from a variety of game modes/)).toHaveTextContent(
-      "Wrong answers don't lower your score, but hints do.",
+      "Each hint and each wrong guess costs a point.",
     );
   });
 });
