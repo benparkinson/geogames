@@ -6,7 +6,7 @@ import { roundPoints } from "./scoring";
 import { RevealIcon, HintIcon } from "../../ui/icons";
 
 /**
- * "Hint −10 · 3 left". If it has to wrap it breaks after the dot, and the dot is then hidden (kept in the layout, so
+ * "Hint −1 pt · 3 left". If it has to wrap it breaks after the dot, and the dot is then hidden (kept in the layout, so
  * hiding it can't let the label fit again and bring it back).
  */
 function HintLabel({ cost, left }: { cost: number; left: number }): React.JSX.Element {
@@ -31,7 +31,7 @@ function HintLabel({ cost, left }: { cost: number; left: number }): React.JSX.El
   return (
     <span ref={label} className="round-actions__hint-label" data-wrapped={wrapped}>
       <span className="round-actions__nowrap">
-        {`Hint −${cost} `}
+        {`Hint −${cost} pt `}
         <span className="round-actions__dot">·</span>
       </span>{" "}
       <span className="round-actions__nowrap">{`${left} left`}</span>

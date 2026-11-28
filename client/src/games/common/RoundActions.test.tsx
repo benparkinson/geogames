@@ -92,6 +92,12 @@ describe("RoundActions hints", () => {
     expect(props.onHint).toHaveBeenCalledTimes(1);
   });
 
+  it("gives the cost a unit, so it can't be read as a count of hints", () => {
+    renderActions({ hintsUsed: 0, hintCount: 3 });
+
+    expect(screen.getByRole("button", { name: "Hint −1 pt · 3 left" })).toBeInTheDocument();
+  });
+
   it("disables the hint button when none are left", () => {
     renderActions({ hintsUsed: 2, hintCount: 2 });
 
