@@ -1,5 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { focusManager } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { callsTo, mockFetch, Route } from "../../test/fetchMock";
 import {
@@ -289,15 +290,45 @@ describe("GameSummary", () => {
     mockFetch([
       roundsRoute(mixed),
       tableRoute({
-        entries: [{ rank: 1, score: 320, initials: "ZZ", you: true }],
+        entries: [{ rank: 1, score: 320, initials: null, you: true }],
         yours: null,
         canEnterInitials: true,
       }),
     ]);
     renderSummary();
 
+    expect(await screen.findByRole("list", { name: "League table" })).toHaveTextContent("You 320");
+    expect(screen.getByRole("textbox", { name: "Your initials" })).toHaveValue("");
+  });
+
+  it("shows saved initials in the table without the box", async () => {
+    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
+    mockFetch([
+      roundsRoute(mixed),
+      tableRoute({
+        entries: [{ rank: 1, score: 320, initials: "ZZ", you: true }],
+        yours: null,
+        canEnterInitials: false,
+      }),
+    ]);
+    renderSummary();
+
     expect(await screen.findByRole("list", { name: "League table" })).toHaveTextContent("1 ZZ You 320");
-    expect(screen.getByRole("textbox", { name: "Your initials" })).toHaveValue("ZZ");
+    expect(screen.queryByRole("textbox", { name: "Your initials" })).not.toBeInTheDocument();
+  });
+
+  it("takes the box away when returning to the tab shows the player was pushed out of the top", async () => {
+    localStorage.setItem("gg-challenges", JSON.stringify([{ gameId: "g1", score: 320, maxScore: 500 }]));
+    mockFetch([roundsRoute(mixed), tableRoute({ canEnterInitials: true })]);
+    renderSummary();
+    await screen.findByRole("textbox", { name: "Your initials" });
+
+    mockFetch([roundsRoute(mixed), tableRoute({ canEnterInitials: false })]);
+    focusManager.setFocused(false);
+    focusManager.setFocused(true);
+
+    await waitFor(() => expect(screen.queryByRole("textbox", { name: "Your initials" })).not.toBeInTheDocument());
+    focusManager.setFocused(undefined);
   });
 
   it("has no Copy result button and offers Play another in an ordinary game", async () => {

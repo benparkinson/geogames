@@ -2,6 +2,7 @@ package com.parkinson.benjamin.geogames.service.challenge;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -63,11 +64,19 @@ public class ChallengeEntryStore {
         .single();
   }
 
-  public void setInitials(long entryId, String initials) {
-    jdbc.sql("update challenge_entry set initials = :initials where id = :id")
-        .param("initials", initials)
-        .param("id", entryId)
-        .update();
+  /**
+   * Sets the initials only if the entry still holds {@code expected} (which may be null). Returns
+   * whether it did.
+   */
+  public boolean setInitials(long entryId, String expected, String initials) {
+    return jdbc.sql(
+                "update challenge_entry set initials = :initials where id = :id"
+                    + " and initials is not distinct from :expected")
+            .param("initials", initials)
+            .param("id", entryId)
+            .param("expected", expected, Types.VARCHAR)
+            .update()
+        == 1;
   }
 
   private static Entry entry(ResultSet rs, int row) throws SQLException {

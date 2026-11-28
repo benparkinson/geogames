@@ -54,13 +54,18 @@ export function useCreateChallengeGame() {
   });
 }
 
-/** The league table of a finished game's challenge. A game with no live challenge is a 404, which isn't retried. */
+/**
+ * The league table of a finished game's challenge. A game with no live challenge is a 404, which isn't retried.
+ * It is refetched on returning to the tab: others may have pushed this player out of the top, where initials are
+ * refused.
+ */
 export function useChallengeTable(gameId: string, enabled: boolean) {
   return useQuery({
     queryKey: queryKeys.challengeTable(gameId),
     queryFn: () => fetchJson<ChallengeTableResponse>(`/api/games/${gameId}/challenge-table`, "load league table"),
     enabled,
     retry: false,
+    refetchOnWindowFocus: true,
   });
 }
 
